@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS authsrv_accountresourcerole;
+DROP SEQUENCE IF EXISTS authsrv_accountresourcerole_id_seq;

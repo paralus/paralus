@@ -1,0 +1,379 @@
+syntax = "proto3";
+
+package rafay.dev.types.common.v3;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/api/field_behavior.proto";
+
+message File {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "File"
+      description : "file represents an file (or a directory) on the File "
+                    "System by relative path"
+      required : [ "name" ]
+    }
+    example : "{"
+              "\"name\": \"some-name\","
+              "\"project\": \"defaultproject\""
+              "}"
+  };
+  string name = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Name",
+        description : "relative path of a artifact"
+      } ];
+  bytes data = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Data",
+        description : "data is the base64 encoded contents of the file"
+      } ];
+}
+
+message UploadedYAMLArtifact {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Uploaded YAML Artifact"
+      description : "represents a list of YAML files"
+      required : [ "paths" ]
+    }
+    example : "{"
+              "\"paths\": [{"
+              "\"name\": \"file://relative/path/to/some/file.yaml\""
+              "}]"
+              "}"
+  };
+  repeated File paths = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Paths",
+        description : "list of YAML files represented by their relative path"
+      } ];
+}
+
+message UploadedHelmArtifact {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Uploaded Helm Artifact"
+      description : "represents an Helm chart and zero or more values files"
+      required : [ "chartPath" ]
+    }
+    example : "{"
+              "\"chartPath\": [{"
+              "\"name\": \"file://relative/path/to/some/chart.tgz\""
+              "}]"
+              "}"
+  };
+  File chartPath = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "ChartPath",
+        description : "represents a Helm Chart by its relative path"
+      } ];
+  repeated File valuesPaths = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "ValuesPaths",
+        description : "represents a Helm Values by their relative path"
+      } ];
+}
+
+message YAMLInGitRepo {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "YAML In Git Repo Artifact"
+      description : "represents YAML files in a Git repo"
+      required : [ "repository", "revision", "paths" ]
+    }
+    example : "{"
+              "\"repository\": \"some-repo\","
+              "\"revision\": \"master\","
+              "\"paths\": [{"
+              "\"name\": \"relative/path/to/some/file.yaml\""
+              "}]"
+              "}"
+  };
+  string repository = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Repository",
+        description : "name of the git repository"
+      } ];
+  string revision = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Revision",
+        description : "branch or tag in the git repository"
+      } ];
+  repeated File paths = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Paths",
+        description : "relative paths to file in the git repository"
+      } ];
+}
+
+message HelmInGitRepo {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Helm in Git Repo Artifact"
+      description : "represents Helm files in a Git repo"
+      required : [ "repository", "revision", "chartPath" ]
+    }
+    example : "{"
+              "\"repository\": \"some-repo\","
+              "\"revision\": \"master\","
+              "\"chartPath\": {"
+              "\"name\": \"relative/path/to/some/chart.tgz\""
+              "}"
+              "}"
+  };
+  string repository = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Repository",
+        description : "name of the git repository"
+      } ];
+  string revision = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Revision",
+        description : "branch or tag in the git repository"
+      } ];
+  File chartPath = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Chart Path",
+        description : "relative path to chart file in the git repository"
+      } ];
+  repeated File valuesPaths = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Value Paths",
+        description : "relative paths to value file in the git repository"
+      } ];
+}
+
+message HelmInHelmRepo {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Helm in Helm Repo"
+      description : "represents Helm chart in a Helm repo"
+      required : [ "repository", "chartName", "chartVersion" ]
+    }
+    example : "{"
+              "\"repository\": \"some-repo\","
+              "\"chartName\": \"some-chart\","
+              "\"chartVersion\": \"1.2.3\""
+              "}"
+  };
+  string repository = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Repository",
+        description : "name of the helm repository"
+      } ];
+  string chartName = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Chart Name",
+        description : "name of the chart"
+      } ];
+  string chartVersion = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Chart Version",
+        description : "version of the chart"
+      } ];
+  repeated File valuesPaths = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Values Paths",
+        description : "relative paths to values files"
+      } ];
+}
+
+message ManagedAlertManager {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Managed Alert Manager"
+      description : "represents managed alert manager"
+      required : [ "configmap", "secret", "configuration", "statefulset" ]
+    }
+    example : "{"
+              "\"configmap\": {"
+              "\"name\": \"file://path/to/some-configmap.yaml\""
+              "},"
+              "\"secret\": {"
+              "\"name\": \"file://path/to/some-secret.yaml\""
+              "},"
+              "\"configuration\": {"
+              "\"name\": \"file://path/to/some-configuration.yaml\""
+              "},"
+              "\"statefulset\": {"
+              "\"name\": \"file://path/to/some-statefulset.yaml\""
+              "}"
+              "}"
+  };
+  File configmap = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Config Map",
+        description : "relative paths to alert manager configmap file"
+      } ];
+  File secret = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Secret",
+        description : "relative paths to alert manager secret file"
+      } ];
+  File configuration = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Secret",
+        description : "relative paths to alert manager configuration file"
+      } ];
+  File statefulset = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Secret",
+        description : "relative paths to alert manager statefulset file"
+      } ];
+}
+
+message ArtifactSpec {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "ArtifactSpec"
+      description : "ArtifactSpec"
+      required : [ "type", "artifact" ]
+    }
+    example : "{"
+              "\"type\": \"Helm\","
+              "\"artifact\": {"
+              "\"repository\": \"some-repo\","
+              "\"revision\": \"master\","
+              "\"chartPath\": {"
+              "\"name\": \"relative/path/to/some/chart.tgz\""
+              "}"
+              "}"
+              "}"
+  };
+  string type = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Artifact Type",
+        description : "type of the artifact"
+        enum : [ "Helm", "Yaml", "AlertManager" ]
+      } ];
+
+  oneof artifact {
+    UploadedYAMLArtifact uploadedYAML = 10;
+    UploadedHelmArtifact uploadedHelm = 11;
+    YAMLInGitRepo yamlInGitRepo = 12;
+    HelmInGitRepo helmInGitRepo = 13;
+    HelmInHelmRepo helmInHelmRepo = 14;
+    ManagedAlertManager managedAlertManger = 15;
+  }
+  oneof options {
+    HelmOptions helmOptions = 30;
+    YAMLOptions yamlOptions = 31;
+  }
+}
+
+// $title: Helm Options
+// $description: options for deploying Helm artifacts
+message HelmOptions {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Helm Options"
+      description : "options for deploying Helm artifacts"
+    }
+    example : "{"
+              "\"atomic\": false,"
+              "\"noHooks\": true,"
+              "\"skipCRDs\": true,"
+              "\"setString\": [\"key1=val1\", \"key2=val2\"]"
+              "}"
+  };
+  bool atomic = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Atomic",
+        description : "deploy Helm artifact with atomic flag"
+      } ];
+  bool wait = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Wait",
+        description : "deploy Helm artifact with wait flag"
+      } ];
+  bool force = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Force",
+        description : "deploy Helm artifact with force flag"
+      } ];
+  bool noHooks = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "No Hooks",
+        description : "deploy Helm artifact without hooks"
+      } ];
+  sint32 maxHistory = 5
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Max History",
+        description : "limit Helm artifact history"
+      } ];
+  bool renderSubChartNotes = 6
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Render Sub Chart Notes",
+        description : "render sub chart notes"
+      } ];
+  bool resetValues = 7
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Reset Values",
+        description : "reset existing helm values"
+      } ];
+  bool reuseValues = 8
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Reuse Values",
+        description : "reuse existing values"
+      } ];
+  repeated string setString = 9
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Set String",
+        description : "pass custom helm values as key=value"
+      } ];
+  bool skipCRDs = 10
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Skip CRDs",
+        description : "skip deploying crds"
+      } ];
+  string timeout = 11
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Timeout",
+        description : "timeout for waiting for the resources to become ready"
+      } ];
+  bool cleanUpOnFail = 12
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Cleanup on fail",
+        description : "cleanup deployed resources when chart fails to deploy"
+      } ];
+  string description = 13
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Description",
+        description : "custom description for the release"
+      } ];
+  bool disableOpenAPIValidation = 14
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Disable OpenAPI Validation",
+        description : "disable OpenAPI validation while deploying the chart"
+      } ];
+  bool keepHistory = 15
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Keep History",
+        description : "keep release history after uninstalling"
+      } ];
+}
+
+message YAMLOptions {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "YAML Options"
+      description : "options for deploying YAML artifacts"
+    }
+    example : "{"
+              "\"force\": false,"
+              "\"disableOpenAPIValidation\": true"
+              "}"
+  };
+
+  bool force = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Force",
+        description : "deploy YAML artifact with force flag"
+      } ];
+  bool disableOpenAPIValidation = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Disable OpenAPI Validation",
+        description : "disable OpenAPI validation while deploying the YAML"
+      } ];
+}

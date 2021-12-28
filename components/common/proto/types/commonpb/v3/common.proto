@@ -1,0 +1,231 @@
+syntax = "proto3";
+package rafay.dev.types.common.v3;
+
+import "google/protobuf/timestamp.proto";
+import "google/api/field_behavior.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+message Metadata {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Metadata"
+      description : "metadata of the resource"
+      required : [ "name", "project" ]
+    }
+    example : "{"
+              "\"name\": \"some-name\","
+              "\"project\": \"defaultproject\""
+              "}"
+  };
+  string name = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Name",
+        description : "name of the resource"
+      } ];
+  string description = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Description",
+        description : "description of the resource"
+      } ];
+  map<string, string> labels = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Lables",
+        description : "labels of the resource"
+      } ];
+  map<string, string> annotations = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Annotations",
+        description : "annotations of the resource"
+      } ];
+  string project = 5
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Project",
+        description : "Project of the resource"
+      } ];
+  string partner = 6
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Project",
+    description : "Project of the resource"
+  } ];
+  string id = 7 [ (google.api.field_behavior) = OUTPUT_ONLY ];
+  google.protobuf.Timestamp modifiedAt = 8
+      [ (google.api.field_behavior) = OUTPUT_ONLY ];
+}
+
+message ProjectMeta {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "ProjectMeta"
+      description : "metadata of the project"
+      required : [ "name" ]
+    }
+    example : "{\"name\": \"defaultproject\"}"
+  };
+  string name = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Name",
+        description : "name of the project"
+      } ];
+  string id = 2 [ (google.api.field_behavior) = OUTPUT_ONLY ];
+}
+
+message SharingSpec {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "SharingSpec"
+      description : "sharing specification for a resource"
+      required : [ "enabled" ]
+    }
+    example : "{"
+              "\"enabled\": true,"
+              "\"projects\": [{\"name\": \"some-project\"}]"
+              "}"
+  };
+  bool enabled = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Enabled",
+        description : "flag to specify if sharing is enabled for resource"
+      } ];
+  repeated ProjectMeta projects = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Projects",
+        description : "list of projects this resource is shared to"
+      } ];
+}
+
+message DriftSpec {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "DriftSpec"
+      description : "drift reconcillation specification for a resource"
+      required : [ "enabled" ]
+    }
+    example : "{"
+              "\"enabled\": true,"
+              "\"action\": \"Deny\""
+              "}"
+  };
+  bool enabled = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Enabled",
+        description : "flag to specify if drift reconcillation is enabled for "
+                      "resource"
+      } ];
+  string action = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Action",
+        description : "flag to specify if sharing is enabled for resource"
+        enum : [ "Notify", "Deny" ]
+      } ];
+}
+
+// $title: ListMetadata
+// $description: metadata for a list of resources
+// $required: enabled
+message ListMetadata {
+  sint64 count = 1;
+  sint64 offset = 2;
+  sint64 limt = 3;
+}
+
+message PlacementLabel {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "PlacementLabel"
+      description : "labels for placement of resource"
+      required : [ "key", "value" ]
+    }
+    example : "{"
+              "\"key\": \"some-key\","
+              "\"value\": \"some-value\""
+              "}"
+  };
+  string key = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Key",
+        description : "Key of the placement label"
+      } ];
+  string value = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Value",
+        description : "Value of the placement label"
+      } ];
+  ;
+}
+
+message PlacementSpec {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "PlacementSpec"
+      description : "placement specification for a resource"
+      required : []
+    }
+    example : "{"
+              "\"labels\": [{\"key\": \"some-key\"},{\"key\": \"some-key\"}]"
+              "}"
+  };
+  repeated PlacementLabel labels = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Labels",
+        description : "list of labels for placement"
+      } ];
+  string selector = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Selector",
+        description : "Kubernetes style label selector"
+      } ];
+}
+
+// $title: ConditionStatus
+// $description: status of a condition for a resource
+enum ConditionStatus {
+  StatusNotSet = 0;
+  StatusSubmitted = 1;
+  StatusOK = 2;
+  StatusFailed = 3;
+}
+
+message Status {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Status",
+      description : "status of a resource",
+      read_only : true,
+    }
+  };
+  string conditionType = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Condition Type",
+        description : "type of the status condition",
+        read_only : true
+      } ];
+  ConditionStatus conditionStatus = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Condition Status",
+        description : "status of the condition",
+        read_only : true
+        enum: ["StatusNotSet", "StatusSubmitted", "StatusOK", "StatusFailed"]
+      } ];
+  google.protobuf.Timestamp lastUpdated = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Last Updated",
+        description : "when the condition status is last updated",
+        read_only : true
+      } ];
+  string reason = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Reason",
+        description : "reason of the last condition status",
+        read_only : true
+      } ];
+}
+
+// HttpBody represents arbitrary HTTP Body. It should only be used for
+// payload formats that can't be represented as JSON
+message HttpBody {
+  // The HTTP Content-Type header value specifying the content type of the body.
+  string content_type = 1;
+
+  // The HTTP request/response body as raw binary.
+  bytes data = 2;
+}

@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS authsrv_projectgroupnamespacerole;
+DROP SEQUENCE IF EXISTS authsrv_projectgroupnamespacerole_id_seq;
