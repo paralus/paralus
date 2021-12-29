@@ -1,0 +1,11 @@
+User management for rcloud
+
+Dependencies:
+- ory/kratos
+
+Components:
+- Glue between frontend and kratos
+- Auth validation for use in other modules
+
+TBD:
+- Will casbin be integrated in same module or separate api call? (Probably separate api call)

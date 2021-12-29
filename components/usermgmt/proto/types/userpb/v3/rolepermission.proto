@@ -1,0 +1,31 @@
+syntax = "proto3";
+package rafay.dev.types.user.v3;
+
+import "proto/types/commonpb/v3/common.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+// import "google/api/field_behavior.proto";
+
+message RolePermission {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "RolePermission"
+      description : "Role Permission"
+      required : [ "apiVersion", "kind", "metadata", "spec" ]
+    }
+  };
+
+  string apiVersion = 1; // default : "usermgmt.k8smgmt.io/v3"
+  string kind = 2;       // default : "RolePermission"
+  rafay.dev.types.common.v3.Metadata metadata = 3;
+  RolePermissionSpec spec = 4;
+  rafay.dev.types.common.v3.Status status = 5;
+}
+
+message RolePermissionSpec { repeated string permissions = 1; }
+
+message RolePermissionList {
+  string apiVersion = 1;
+  string kind = 2;
+  rafay.dev.types.common.v3.ListMetadata metadata = 3;
+  repeated RolePermission items = 4;
+}

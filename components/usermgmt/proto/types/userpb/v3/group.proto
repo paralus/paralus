@@ -1,0 +1,35 @@
+syntax = "proto3";
+package rafay.dev.types.user.v3;
+
+import "proto/types/commonpb/v3/common.proto";
+import "proto/types/systempb/v3/project.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+// import "google/api/field_behavior.proto";
+
+message Group {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Group"
+      description : "Group"
+      required : [ "apiVersion", "kind", "metadata", "spec" ]
+    }
+  };
+  string apiVersion = 1; // usermgmt.k8smgmt.io/v3
+  string kind = 2;       // default : "Group"
+  rafay.dev.types.common.v3.Metadata metadata = 3;
+  GroupSpec spec = 4;
+  rafay.dev.types.common.v3.Status status = 5;
+}
+
+message GroupSpec {
+  repeated rafay.dev.types.system.v3.Project projects = 1;
+  repeated string users = 2;
+  string type = 3;
+}
+
+message GroupList {
+  string apiVersion = 1;
+  string kind = 2;
+  rafay.dev.types.common.v3.ListMetadata metadata = 3;
+  repeated Group items = 4;
+}
