@@ -20,7 +20,7 @@ option (gogoproto.messagename_all) = true;
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
     title: "Partner Service"
-    version: "2.0"
+    version: "3.0"
     contact: { name: "Rafay Dev" }
   }
   schemes: HTTPS
@@ -77,7 +77,7 @@ service Partner {
         value : {
           description : "Returned when partner is created successfully."
         }
-      }
+      } 
     };
   };
 

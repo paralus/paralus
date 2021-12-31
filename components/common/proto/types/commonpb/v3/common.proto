@@ -42,13 +42,18 @@ message Metadata {
         title : "Project",
         description : "Project of the resource"
       } ];
-  string partner = 6
-  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-    title : "Project",
-    description : "Project of the resource"
-  } ];
-  string id = 7 [ (google.api.field_behavior) = OUTPUT_ONLY ];
-  google.protobuf.Timestamp modifiedAt = 8
+  string organization = 6
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Organization",
+        description : "Organization to which the resource belongs"
+      } ];
+  string partner = 7
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Partner",
+        description : "Partner to which the resource belongs"
+      } ];
+  string id = 8 [ (google.api.field_behavior) = OUTPUT_ONLY ];
+  google.protobuf.Timestamp modifiedAt = 9
       [ (google.api.field_behavior) = OUTPUT_ONLY ];
 }
 

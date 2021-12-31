@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS authsrv_account (
     password character varying(128) NOT NULL,
     last_login timestamp with time zone,
-    id integer NOT NULL,
+    id uuid NOT NULL default uuid_generate_v4(),
     name character varying(256) NOT NULL,
     description character varying(512) NOT NULL,
     created_at timestamp with time zone NOT NULL,
@@ -19,24 +19,11 @@ CREATE TABLE IF NOT EXISTS authsrv_account (
     totp_required boolean NOT NULL,
     totp_secret character varying(64) NOT NULL,
     totp_verified boolean NOT NULL,
-    organization_id integer,
+    organization_id uuid,
     user_type character varying(256) default 'CONSOLE'
 );
 
 ALTER TABLE authsrv_account OWNER TO admindbuser;
-
-CREATE SEQUENCE IF NOT EXISTS authsrv_account_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER TABLE authsrv_account_id_seq OWNER TO admindbuser;
-
-ALTER SEQUENCE authsrv_account_id_seq OWNED BY authsrv_account.id;
-
-ALTER TABLE ONLY authsrv_account ALTER COLUMN id SET DEFAULT nextval('authsrv_account_id_seq'::regclass);
 
 ALTER TABLE ONLY authsrv_account ADD CONSTRAINT authsrv_account_pkey PRIMARY KEY (id);
 
@@ -57,9 +44,9 @@ ALTER TABLE ONLY authsrv_account
 CREATE TABLE IF NOT EXISTS authsrv_ssoaccount (
     password character varying(128) NOT NULL,
     last_login timestamp with time zone,
-    id integer NOT NULL,
+    id uuid NOT NULL default uuid_generate_v4(),
     name character varying(256) NOT NULL,
-    organization_id integer,
+    organization_id uuid,
     description character varying(512) NOT NULL,
     created_at timestamp with time zone NOT NULL,
     modified_at timestamp with time zone NOT NULL,
@@ -73,19 +60,6 @@ CREATE TABLE IF NOT EXISTS authsrv_ssoaccount (
 );
 
 ALTER TABLE authsrv_ssoaccount OWNER TO admindbuser;
-
-CREATE SEQUENCE IF NOT EXISTS authsrv_ssoaccount_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER TABLE authsrv_ssoaccount_id_seq OWNER TO admindbuser;
-
-ALTER SEQUENCE authsrv_ssoaccount_id_seq OWNED BY authsrv_ssoaccount.id;
-
-ALTER TABLE ONLY authsrv_ssoaccount ALTER COLUMN id SET DEFAULT nextval('authsrv_ssoaccount_id_seq'::regclass);
 
 ALTER TABLE ONLY authsrv_ssoaccount ADD CONSTRAINT authsrv_ssoaccount_pkey PRIMARY KEY (id);
 

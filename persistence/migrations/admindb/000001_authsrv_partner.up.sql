@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS authsrv_partner (
-    id integer NOT NULL,
+    id uuid NOT NULL default uuid_generate_v4(),
     name character varying(256) NOT NULL,
     description character varying(512) NOT NULL,
     created_at timestamp with time zone NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS authsrv_partner (
     tos_link character varying(256) NOT NULL,
     logo_link character varying(256) NOT NULL,
     notification_email character varying(254) NOT NULL,
-    parent_id integer,
+    parent_id uuid,
     partner_helpdesk_email character varying(254) NOT NULL,
     partner_product_name character varying(256) NOT NULL,
     support_team_name character varying(256) NOT NULL,
@@ -23,19 +23,6 @@ CREATE TABLE IF NOT EXISTS authsrv_partner (
 
 
 ALTER TABLE authsrv_partner OWNER TO admindbuser;
-
-CREATE SEQUENCE IF NOT EXISTS authsrv_partner_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER TABLE authsrv_partner_id_seq OWNER TO admindbuser;
-
-ALTER SEQUENCE authsrv_partner_id_seq OWNED BY authsrv_partner.id;
-
-ALTER TABLE ONLY authsrv_partner ALTER COLUMN id SET DEFAULT nextval('authsrv_partner_id_seq'::regclass);
 
 ALTER TABLE ONLY authsrv_partner ADD CONSTRAINT authsrv_partner_pkey PRIMARY KEY (id);
 

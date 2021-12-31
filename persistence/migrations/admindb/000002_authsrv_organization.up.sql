@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS authsrv_organization (
-    id integer NOT NULL,
+    id uuid NOT NULL default uuid_generate_v4(),
     name character varying(256) NOT NULL,
     description character varying(512) NOT NULL,
     created_at timestamp with time zone NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS authsrv_organization (
     trash boolean NOT NULL,
     settings jsonb NOT NULL,
     billing_address text NOT NULL,
-    partner_id integer NOT NULL,
+    partner_id uuid NOT NULL,
     active boolean NOT NULL,
     approved boolean NOT NULL,
     type character varying(64) NOT NULL,
@@ -29,19 +29,6 @@ CREATE TABLE IF NOT EXISTS authsrv_organization (
 );
 
 ALTER TABLE authsrv_organization OWNER TO admindbuser;
-
-CREATE SEQUENCE IF NOT EXISTS authsrv_organization_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER TABLE authsrv_organization_id_seq OWNER TO admindbuser;
-
-ALTER SEQUENCE authsrv_organization_id_seq OWNED BY authsrv_organization.id;
-
-ALTER TABLE ONLY authsrv_organization ALTER COLUMN id SET DEFAULT nextval('authsrv_organization_id_seq'::regclass);
 
 ALTER TABLE ONLY authsrv_organization
     ADD CONSTRAINT authsrv_organization_name_partner_id_7d1113b9_uniq UNIQUE (name, partner_id);

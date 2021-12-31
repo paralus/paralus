@@ -2,3 +2,4 @@ version: v1
 directories:
   - common
   - adminsrv
+  - usermgmt

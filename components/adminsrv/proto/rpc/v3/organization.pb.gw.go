@@ -718,7 +718,7 @@ func RegisterOrganizationHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/CreateOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organizations"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/CreateOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -764,7 +764,7 @@ func RegisterOrganizationHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/GetOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organizations/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/GetOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -787,7 +787,7 @@ func RegisterOrganizationHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/GetOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organizations/{metadata.id}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/GetOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -810,7 +810,7 @@ func RegisterOrganizationHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/UpdateOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organizations/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/UpdateOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -833,7 +833,7 @@ func RegisterOrganizationHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/UpdateOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organizations/{metadata.id}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/UpdateOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -856,7 +856,7 @@ func RegisterOrganizationHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/DeleteOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organizations/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/DeleteOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -879,7 +879,7 @@ func RegisterOrganizationHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/DeleteOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organizations/{metadata.id}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/DeleteOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -941,7 +941,7 @@ func RegisterOrganizationHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/CreateOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organizations"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/CreateOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -981,7 +981,7 @@ func RegisterOrganizationHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/GetOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organizations/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/GetOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1001,7 +1001,7 @@ func RegisterOrganizationHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/GetOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organizations/{metadata.id}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/GetOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1021,7 +1021,7 @@ func RegisterOrganizationHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/UpdateOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organizations/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/UpdateOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1041,7 +1041,7 @@ func RegisterOrganizationHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/UpdateOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organizations/{metadata.id}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/UpdateOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1061,7 +1061,7 @@ func RegisterOrganizationHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/DeleteOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organizations/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/DeleteOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1081,7 +1081,7 @@ func RegisterOrganizationHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/DeleteOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organizations/{metadata.id}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Organization/DeleteOrganization", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1101,21 +1101,21 @@ func RegisterOrganizationHandlerClient(ctx context.Context, mux *runtime.ServeMu
 }
 
 var (
-	pattern_Organization_CreateOrganization_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"auth", "v3", "partner", "metadata.partner", "organizations"}, ""))
+	pattern_Organization_CreateOrganization_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"auth", "v3", "partner", "metadata.partner", "organization"}, ""))
 
 	pattern_Organization_GetOrganizations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"auth", "v3", "partner", "metadata.partner", "organizations"}, ""))
 
-	pattern_Organization_GetOrganization_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "partner", "metadata.partner", "organizations", "metadata.name"}, ""))
+	pattern_Organization_GetOrganization_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "partner", "metadata.partner", "organization", "metadata.name"}, ""))
 
-	pattern_Organization_GetOrganization_1 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "partner", "metadata.partner", "organizations", "metadata.id"}, ""))
+	pattern_Organization_GetOrganization_1 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "partner", "metadata.partner", "organization", "metadata.id"}, ""))
 
-	pattern_Organization_UpdateOrganization_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "partner", "metadata.partner", "organizations", "metadata.name"}, ""))
+	pattern_Organization_UpdateOrganization_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "partner", "metadata.partner", "organization", "metadata.name"}, ""))
 
-	pattern_Organization_UpdateOrganization_1 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "partner", "metadata.partner", "organizations", "metadata.id"}, ""))
+	pattern_Organization_UpdateOrganization_1 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "partner", "metadata.partner", "organization", "metadata.id"}, ""))
 
-	pattern_Organization_DeleteOrganization_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "partner", "metadata.partner", "organizations", "metadata.name"}, ""))
+	pattern_Organization_DeleteOrganization_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "partner", "metadata.partner", "organization", "metadata.name"}, ""))
 
-	pattern_Organization_DeleteOrganization_1 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "partner", "metadata.partner", "organizations", "metadata.id"}, ""))
+	pattern_Organization_DeleteOrganization_1 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "partner", "metadata.partner", "organization", "metadata.id"}, ""))
 )
 
 var (

@@ -20,7 +20,7 @@ option (gogoproto.messagename_all) = true;
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
     title: "Organization Service"
-    version: "2.0"
+    version: "3.0"
     contact: { name: "Rafay Dev" }
   }
   schemes: HTTPS
@@ -67,7 +67,7 @@ service Organization {
   rpc CreateOrganization(rafay.dev.types.system.v3.Organization)
       returns (rafay.dev.types.system.v3.Organization) {
     option (google.api.http) = {
-      post : "/auth/v3/partner/{metadata.partner}/organizations"
+      post : "/auth/v3/partner/{metadata.partner}/organization"
       body : "*"
     };
 
@@ -91,10 +91,10 @@ service Organization {
   rpc GetOrganization(rafay.dev.types.system.v3.Organization)
       returns (rafay.dev.types.system.v3.Organization) {
     option (google.api.http) = {
-      get : "/auth/v3/partner/{metadata.partner}/organizations/"
+      get : "/auth/v3/partner/{metadata.partner}/organization/"
             "{metadata.name}"
       additional_bindings {
-        get : "/auth/v3/partner/{metadata.partner}/organizations/"
+        get : "/auth/v3/partner/{metadata.partner}/organization/"
               "{metadata.id}"
       }
     };
@@ -103,11 +103,11 @@ service Organization {
   rpc UpdateOrganization(rafay.dev.types.system.v3.Organization)
       returns (rafay.dev.types.system.v3.Organization) {
     option (google.api.http) = {
-      put : "/auth/v3/partner/{metadata.partner}/organizations/"
+      put : "/auth/v3/partner/{metadata.partner}/organization/"
             "{metadata.name}"
       body : "*"
       additional_bindings {
-        put : "/auth/v3/partner/{metadata.partner}/organizations/"
+        put : "/auth/v3/partner/{metadata.partner}/organization/"
               "{metadata.id}"
         body : "*"
       }
@@ -117,10 +117,10 @@ service Organization {
   rpc DeleteOrganization(rafay.dev.types.system.v3.Organization)
       returns (rafay.dev.types.system.v3.Organization) {
     option (google.api.http) = {
-      delete : "/auth/v3/partner/{metadata.partner}/organizations/"
+      delete : "/auth/v3/partner/{metadata.partner}/organization/"
                "{metadata.name}"
       additional_bindings {
-        delete : "/auth/v3/partner/{metadata.partner}/organizations/"
+        delete : "/auth/v3/partner/{metadata.partner}/organization/"
                  "{metadata.id}"
       }
     };

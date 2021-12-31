@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS authsrv_projectaccountnamespacerole (
-    id integer NOT NULL,
+    id uuid NOT NULL default uuid_generate_v4(),
     name character varying(256) NOT NULL,
     description character varying(512) NOT NULL,
     created_at timestamp with time zone NOT NULL,
@@ -7,27 +7,14 @@ CREATE TABLE IF NOT EXISTS authsrv_projectaccountnamespacerole (
     trash boolean NOT NULL,
     namespace_id integer NOT NULL,
     active boolean NOT NULL,
-    account_id integer NOT NULL,
-    organization_id integer,
-    partner_id integer,
-    project_id integer,
-    role_id integer NOT NULL
+    account_id uuid NOT NULL,
+    organization_id uuid,
+    partner_id uuid,
+    project_id uuid,
+    role_id uuid NOT NULL
 );
 
 ALTER TABLE authsrv_projectaccountnamespacerole OWNER TO admindbuser;
-
-CREATE SEQUENCE IF NOT EXISTS authsrv_projectaccountnamespacerole_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER TABLE authsrv_projectaccountnamespacerole_id_seq OWNER TO admindbuser;
-
-ALTER SEQUENCE authsrv_projectaccountnamespacerole_id_seq OWNED BY authsrv_projectaccountnamespacerole.id;
-
-ALTER TABLE ONLY authsrv_projectaccountnamespacerole ALTER COLUMN id SET DEFAULT nextval('authsrv_projectaccountnamespacerole_id_seq'::regclass);
 
 ALTER TABLE ONLY authsrv_projectaccountnamespacerole ADD CONSTRAINT authsrv_projectaccountnamespacerole_pkey PRIMARY KEY (id);
 

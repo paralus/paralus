@@ -53,6 +53,8 @@ var (
 	dev                 bool
 	db                  *bun.DB
 	ps                  service.PartnerService
+	os                  service.OrganizationService
+	pps                 service.ProjectService
 	_log                = logv2.GetLogger()
 	authPool            authv3.AuthPool
 	configPool          configrpc.ConfigPool
@@ -108,6 +110,8 @@ func setup() {
 	configPool = configrpc.NewConfigPool(configAddr, 5*goruntime.NumCPU())
 
 	ps = service.NewPartnerService(db)
+	os = service.NewOrganizationService(db)
+	pps = service.NewProjectService(db)
 }
 
 func run() {
@@ -137,6 +141,8 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 		fmt.Sprintf(":%d", rpcPort),
 		make([]runtime.ServeMuxOption, 0),
 		pbrpcv3.RegisterPartnerHandlerFromEndpoint,
+		pbrpcv3.RegisterOrganizationHandlerFromEndpoint,
+		pbrpcv3.RegisterProjectHandlerFromEndpoint,
 	)
 	if err != nil {
 		_log.Fatalw("unable to create gateway", "error", err)
@@ -167,6 +173,8 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	defer configPool.Close()
 
 	partnerServer := rpcv3.NewPartnerServer(ps)
+	organizationServer := rpcv3.NewOrganizationServer(os)
+	projectServer := rpcv3.NewProjectServer(pps)
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", rpcPort))
 	if err != nil {
@@ -201,6 +209,8 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	}()
 
 	rpcv3.RegisterPartnerServer(s, partnerServer)
+	rpcv3.RegisterOrganizationServer(s, organizationServer)
+	rpcv3.RegisterProjectServer(s, projectServer)
 
 	_log.Infow("starting rpc server", "port", rpcPort)
 	err = s.Serve(l)

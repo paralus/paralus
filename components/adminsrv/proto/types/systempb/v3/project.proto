@@ -33,24 +33,27 @@ message Project {
   string apiVersion = 1
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "API Version",
-        description : "API Version of the project resource"
+        description : "API Version of the resource"
         default : "system.k8smgmt.io/v3"
+        read_only : true
+        
       } ];
   string kind = 2
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Kind",
-        description : "Kind of the project resource"
-        default : "Pipeline"
+        description : "Kind of the resource"
+        default : "Project"
+        read_only : true
       } ];
   rafay.dev.types.common.v3.Metadata metadata = 3
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Metadata",
-        description : "Metadata of the project resource"
+        description : "Metadata of the resource"
       } ];
   ProjectSpec spec = 4
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        title : "Metadata",
-        description : "Metadata of the project resource"
+        title : "Spec",
+        description : "Spec of the resource"
       } ];
   rafay.dev.types.common.v3.Status status = 5
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
@@ -65,32 +68,33 @@ message ProjectList {
     json_schema : {
       title : "ProjectList"
       description : "Project list"
-      read_only : true
     }
   };
 
   string apiVersion = 1
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "API Version",
-        description : "API Version of the project list resource"
+        description : "API Version of the list resource"
         read_only : true
+        default : "system.k8smgmt.io/v3"
       } ];
   string kind = 2
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Kind",
-        description : "Kind of the project list resource"
+        description : "Kind of the list resource"
         read_only : true
+        default : "Project"
       } ];
   rafay.dev.types.common.v3.ListMetadata metadata = 3
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        title : "Metadata",
-        description : "Metadata of the project list resource"
+        title : "ListMetadata",
+        description : "Metadata of the list resource"
         read_only : true
       } ];
   repeated Project items = 4
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Items",
-        description : "List of the project resources"
+        description : "List of the resources"
         read_only : true
       } ];
 }

@@ -6,25 +6,106 @@ import "proto/types/commonpb/v3/common.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 message PartnerSpec {
-  string host = 1;
-  string domain = 2;
-  string tosLink = 3;
-  string logoLink = 4;
-  string notificationEmail = 5;
-  string helpdeskEmail = 6;
-  string productName = 7;
-  string supportTeamName = 8;
-  string opsHost = 9;
-  string favIconLink = 10;
-  bool isTOTPEnabled = 11;
-  google.protobuf.Struct settings = 12;
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Partner Specification"
+      description : "Partner Specification"
+    }
+  };
+  string host = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Host"
+        description : "Host of the partner"
+      } ];
+  string domain = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Domain"
+        description : "Domain of the partner"
+      } ];
+  string tosLink = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "TOS"
+        description : "Terms of service url of the partner"
+      } ];
+  string logoLink = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Logo"
+        description : "Logo url of the partner"
+      } ];
+  string notificationEmail = 5
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Notification Email"
+        description : "Notification email of the partner"
+      } ];
+  string helpdeskEmail = 6
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Helpdesk Email"
+        description : "Helpdesk email of the partner"
+      } ];
+  string productName = 7
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Product Name"
+        description : "Product Name"
+      } ];
+  string supportTeamName = 8
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Support Team Name"
+        description : "Support Team Name"
+      } ];
+  string opsHost = 9
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "OPS Host"
+        description : "Operations host of the partner"
+      } ];
+  string favIconLink = 10
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Fav Icon Link"
+        description : "Fav Icon Link"
+      } ];
+  bool isTOTPEnabled = 11
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "TOTP Enabled"
+        description : "TOTP Enabled flag at the partner level"
+      } ];
+  google.protobuf.Struct settings = 12
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Settings"
+        description : "Settings of the partner"
+      } ];
 }
 
 message Partner {
-  string apiVersion = 1; // default: core.rafay.dev/v3
-  string kind = 2; // default: Partner
-  rafay.dev.types.common.v3.Metadata metadata = 3;
-  PartnerSpec spec = 4;
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Partner"
+      description : "Partner"
+      required : [ "apiVersion", "kind", "metadata", "spec" ]
+    }
+  };
+  string apiVersion = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "API Version",
+        description : "API Version of the resource"
+        default : "system.k8smgmt.io/v3"
+        read_only : true
+      } ];
+  string kind = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Kind",
+        description : "Kind of the resource"
+        default : "Partner"
+        read_only : true
+      } ];
+  rafay.dev.types.common.v3.Metadata metadata = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Metadata",
+        description : "Metadata of the resource"
+      } ];
+  PartnerSpec spec = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Spec",
+        description : "Spec of the resource"
+      } ];
   rafay.dev.types.common.v3.Status status = 5
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Status",

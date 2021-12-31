@@ -1,28 +1,15 @@
 CREATE TABLE IF NOT EXISTS authsrv_resourcerolepermission (
-    id integer NOT NULL,
+    id uuid NOT NULL default uuid_generate_v4(),
     name character varying(256) NOT NULL,
     description character varying(512) NOT NULL,
     created_at timestamp with time zone NOT NULL,
     modified_at timestamp with time zone NOT NULL,
     trash boolean NOT NULL,
-    resource_permission_id integer NOT NULL,
-    resource_role_id integer NOT NULL
+    resource_permission_id uuid NOT NULL,
+    resource_role_id uuid NOT NULL
 );
 
 ALTER TABLE authsrv_resourcerolepermission OWNER TO admindbuser;
-
-CREATE SEQUENCE IF NOT EXISTS authsrv_resourcerolepermission_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER TABLE authsrv_resourcerolepermission_id_seq OWNER TO admindbuser;
-
-ALTER SEQUENCE authsrv_resourcerolepermission_id_seq OWNED BY authsrv_resourcerolepermission.id;
-
-ALTER TABLE ONLY authsrv_resourcerolepermission ALTER COLUMN id SET DEFAULT nextval('authsrv_resourcerolepermission_id_seq'::regclass);
 
 ALTER TABLE ONLY authsrv_resourcerolepermission ADD CONSTRAINT authsrv_resourcerolepermission_pkey PRIMARY KEY (id);
 

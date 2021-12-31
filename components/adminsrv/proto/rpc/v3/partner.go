@@ -11,7 +11,7 @@ type partnerServer struct {
 	service.PartnerService
 }
 
-// NewPartnerServer returns new placement server implementation
+// NewPartnerServer returns new partner server implementation
 func NewPartnerServer(ps service.PartnerService) PartnerServer {
 	return &partnerServer{ps}
 }
@@ -25,18 +25,29 @@ func (s *partnerServer) CreatePartner(ctx context.Context, p *systempbv3.Partner
 }
 func (s *partnerServer) GetPartner(ctx context.Context, p *systempbv3.Partner) (*systempbv3.Partner, error) {
 
-	partner, err := s.GetByID(ctx, p.Metadata.Id)
+	partner, err := s.GetByName(ctx, p.Metadata.Name)
 	if err != nil {
-		return nil, err
+		partner, err = s.GetByID(ctx, p.Metadata.Id)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return partner, nil
 }
 
-func (s *partnerServer) DeletePartner(context.Context, *systempbv3.Partner) (*systempbv3.Partner, error) {
-	return nil, nil
+func (s *partnerServer) DeletePartner(ctx context.Context, p *systempbv3.Partner) (*systempbv3.Partner, error) {
+	partner, err := s.Delete(ctx, p)
+	if err != nil {
+		return nil, err
+	}
+	return partner, nil
 }
 
-func (s *partnerServer) UpdatePartner(context.Context, *systempbv3.Partner) (*systempbv3.Partner, error) {
-	return nil, nil
+func (s *partnerServer) UpdatePartner(ctx context.Context, p *systempbv3.Partner) (*systempbv3.Partner, error) {
+	partner, err := s.Update(ctx, p)
+	if err != nil {
+		return nil, err
+	}
+	return partner, nil
 }
