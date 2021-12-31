@@ -1,0 +1,794 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "User management Service",
+    "version": "2.0",
+    "contact": {
+      "name": "Rafay Dev"
+    }
+  },
+  "tags": [
+    {
+      "name": "User"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json",
+    "application/yaml"
+  ],
+  "produces": [
+    "application/json",
+    "application/yaml"
+  ],
+  "paths": {
+    "/auth/v3/user/{userid}": {
+      "get": {
+        "operationId": "User_GetUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3User"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "delete": {
+        "operationId": "User_DeleteUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3UserResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "put": {
+        "operationId": "User_UpdateUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3UserResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3User"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/auth/v3/users": {
+      "get": {
+        "operationId": "User_GetUsers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3GetUsersResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "project",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "post": {
+        "operationId": "User_CreateUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3User"
+            }
+          },
+          "201": {
+            "description": "Returned when user is created successfully.",
+            "schema": {}
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3User"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "commonv3Status": {
+      "type": "object",
+      "properties": {
+        "conditionType": {
+          "type": "string",
+          "description": "type of the status condition",
+          "title": "Condition Type",
+          "readOnly": true
+        },
+        "conditionStatus": {
+          "$ref": "#/definitions/v3ConditionStatus",
+          "enum": [
+            "StatusNotSet",
+            "StatusSubmitted",
+            "StatusOK",
+            "StatusFailed"
+          ],
+          "description": "status of the condition",
+          "title": "Condition Status",
+          "readOnly": true
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "when the condition status is last updated",
+          "title": "Last Updated",
+          "readOnly": true
+        },
+        "reason": {
+          "type": "string",
+          "description": "reason of the last condition status",
+          "title": "Reason",
+          "readOnly": true
+        }
+      },
+      "description": "status of a resource",
+      "title": "Status",
+      "readOnly": true
+    },
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "v3ConditionStatus": {
+      "type": "string",
+      "enum": [
+        "StatusNotSet",
+        "StatusSubmitted",
+        "StatusOK",
+        "StatusFailed"
+      ],
+      "default": "StatusNotSet",
+      "title": "$title: ConditionStatus\n$description: status of a condition for a resource"
+    },
+    "v3GetUsersResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3User"
+          }
+        }
+      }
+    },
+    "v3Group": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "usermgmt.k8smgmt.io/v3",
+          "description": "API Version of the group resource",
+          "title": "API Version"
+        },
+        "kind": {
+          "type": "string",
+          "default": "Pipeline",
+          "description": "Kind of the group resource",
+          "title": "Kind"
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3Metadata",
+          "description": "Metadata of the group resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3GroupSpec",
+          "description": "Metadata of the group resource",
+          "title": "Metadata"
+        },
+        "status": {
+          "$ref": "#/definitions/commonv3Status",
+          "description": "Status of the resource",
+          "title": "Status",
+          "readOnly": true
+        }
+      },
+      "description": "Group",
+      "title": "Group",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+      ]
+    },
+    "v3GroupSpec": {
+      "type": "object",
+      "properties": {
+        "projectroles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3ProjectRole"
+          },
+          "description": "ProjectRole groups for permission",
+          "title": "ProjectRoles"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of users for group",
+          "title": "Users"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of group",
+          "title": "Type"
+        }
+      },
+      "description": "Group specification",
+      "title": "Group Specification"
+    },
+    "v3Metadata": {
+      "type": "object",
+      "example": {
+        "name": "some-name",
+        "project": "defaultproject"
+      },
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "name of the resource",
+          "title": "Name"
+        },
+        "description": {
+          "type": "string",
+          "description": "description of the resource",
+          "title": "Description"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "labels of the resource",
+          "title": "Lables"
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "annotations of the resource",
+          "title": "Annotations"
+        },
+        "project": {
+          "type": "string",
+          "description": "Project of the resource",
+          "title": "Project"
+        },
+        "partner": {
+          "type": "string",
+          "description": "Project of the resource",
+          "title": "Project"
+        },
+        "id": {
+          "type": "string",
+          "readOnly": true
+        },
+        "modifiedAt": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        }
+      },
+      "description": "metadata of the resource",
+      "title": "Metadata",
+      "required": [
+        "name",
+        "project"
+      ]
+    },
+    "v3Project": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "system.k8smgmt.io/v3",
+          "description": "API Version of the project resource",
+          "title": "API Version"
+        },
+        "kind": {
+          "type": "string",
+          "default": "Pipeline",
+          "description": "Kind of the project resource",
+          "title": "Kind"
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3Metadata",
+          "description": "Metadata of the project resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3ProjectSpec",
+          "description": "Metadata of the project resource",
+          "title": "Metadata"
+        },
+        "status": {
+          "$ref": "#/definitions/commonv3Status",
+          "description": "Status of the resource",
+          "title": "Status",
+          "readOnly": true
+        }
+      },
+      "description": "Project",
+      "title": "Project",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+      ]
+    },
+    "v3ProjectRole": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "$ref": "#/definitions/v3Project",
+          "description": "Project",
+          "title": "Project"
+        },
+        "role": {
+          "$ref": "#/definitions/v3Role",
+          "description": "Role",
+          "title": "Role"
+        }
+      },
+      "description": "Project and role pairing for permission",
+      "title": "ProjectRole"
+    },
+    "v3ProjectSpec": {
+      "type": "object",
+      "properties": {
+        "default": {
+          "type": "boolean",
+          "description": "flag to indicate if this is the default project in the organization",
+          "title": "Default"
+        }
+      },
+      "description": "project specification",
+      "title": "Project Specification"
+    },
+    "v3Role": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "usermgmt.k8smgmt.io/v3",
+          "description": "API Version of the Role resource",
+          "title": "API Version"
+        },
+        "kind": {
+          "type": "string",
+          "default": "Role",
+          "description": "Kind of the role resource",
+          "title": "Kind"
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3Metadata",
+          "description": "Metadata of the role resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3RoleSpec",
+          "description": "Spec of the role resource",
+          "title": "Spec"
+        },
+        "status": {
+          "$ref": "#/definitions/commonv3Status",
+          "description": "Status of the resource",
+          "title": "Status",
+          "readOnly": true
+        }
+      },
+      "description": "Role",
+      "title": "Role",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+      ]
+    },
+    "v3RolePermission": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "usermgmt.k8smgmt.io/v3",
+          "description": "API Version of the role permission resource",
+          "title": "API Version"
+        },
+        "kind": {
+          "type": "string",
+          "default": "RolePermission",
+          "description": "Kind of the role permission resource",
+          "title": "Kind"
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3Metadata",
+          "description": "Metadata of the role permission resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3RolePermissionSpec",
+          "description": "Metadata of the role permission resource",
+          "title": "Metadata"
+        },
+        "status": {
+          "$ref": "#/definitions/commonv3Status",
+          "description": "Status of the resource",
+          "title": "Status",
+          "readOnly": true
+        }
+      },
+      "description": "Role Permission",
+      "title": "RolePermission",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+      ]
+    },
+    "v3RolePermissionSpec": {
+      "type": "object",
+      "properties": {
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of permisions for role",
+          "title": "Permissions"
+        }
+      },
+      "description": "RolePermisson specification",
+      "title": "RolePermission Specification"
+    },
+    "v3RoleSpec": {
+      "type": "object",
+      "properties": {
+        "rolepermissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3RolePermission"
+          },
+          "description": "Permissions for the role",
+          "title": "RolePermissions"
+        }
+      },
+      "description": "Role specification",
+      "title": "Role Specification"
+    },
+    "v3User": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "usermgmt.k8smgmt.io/v3",
+          "description": "API Version of the user resource",
+          "title": "API Version"
+        },
+        "kind": {
+          "type": "string",
+          "default": "User",
+          "description": "Kind of the user resource",
+          "title": "Kind"
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3Metadata",
+          "description": "Metadata of the user resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3UserSpec",
+          "description": "Spec of the user resource",
+          "title": "Spec"
+        },
+        "status": {
+          "$ref": "#/definitions/commonv3Status",
+          "description": "Status of the resource",
+          "title": "Status",
+          "readOnly": true
+        }
+      },
+      "description": "User",
+      "title": "User",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+      ]
+    },
+    "v3UserResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "v3UserSpec": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "description": "First name of the user",
+          "title": "FirstName"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Last name of the user",
+          "title": "LastName"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username of the user",
+          "title": "Username"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number of the user",
+          "title": "Phone"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password of the user",
+          "title": "Password"
+        },
+        "totpRequired": {
+          "type": "string",
+          "description": "Flag to specify if TOTP is required",
+          "title": "TotpRequired"
+        },
+        "totpSecret": {
+          "type": "string",
+          "description": "Secret for TOTP",
+          "title": "TotpSecret"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3Role"
+          },
+          "description": "Roles of the user",
+          "title": "Roles"
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3Group"
+          },
+          "description": "Groups of the user",
+          "title": "Group"
+        },
+        "projects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3Project"
+          },
+          "description": "Projects of the user",
+          "title": "Projects"
+        },
+        "emailVerified": {
+          "type": "boolean",
+          "description": "Flag to show if the email of the user was verified",
+          "title": "EmailVerified",
+          "readOnly": true
+        },
+        "phoneVerified": {
+          "type": "boolean",
+          "description": "Flag to show if phone number of the user was verified",
+          "title": "PhoneVerified",
+          "readOnly": true
+        },
+        "totpVerified": {
+          "type": "boolean",
+          "description": "Flag to show if the TOTP of the user was verified",
+          "title": "TotpVerified",
+          "readOnly": true
+        }
+      },
+      "description": "User specification",
+      "title": "User Specification"
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "X-RAFAY-API-KEYID",
+      "in": "header"
+    },
+    "BasicAuth": {
+      "type": "basic"
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": [],
+      "BasicAuth": []
+    }
+  ]
+}
