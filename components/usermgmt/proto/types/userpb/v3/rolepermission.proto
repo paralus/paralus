@@ -14,18 +14,80 @@ message RolePermission {
     }
   };
 
-  string apiVersion = 1; // default : "usermgmt.k8smgmt.io/v3"
-  string kind = 2;       // default : "RolePermission"
-  rafay.dev.types.common.v3.Metadata metadata = 3;
-  RolePermissionSpec spec = 4;
-  rafay.dev.types.common.v3.Status status = 5;
+  string apiVersion = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "API Version",
+        description : "API Version of the role permission resource"
+        default : "usermgmt.k8smgmt.io/v3"
+      } ];
+  string kind = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Kind",
+        description : "Kind of the role permission resource"
+        default : "RolePermission"
+      } ];
+  rafay.dev.types.common.v3.Metadata metadata = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Metadata",
+        description : "Metadata of the role permission resource"
+      } ];
+  RolePermissionSpec spec = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Metadata",
+        description : "Metadata of the role permission resource"
+      } ];
+  rafay.dev.types.common.v3.Status status = 5
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Status",
+        description : "Status of the resource"
+        read_only : true
+      } ];
 }
 
-message RolePermissionSpec { repeated string permissions = 1; }
+message RolePermissionSpec {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "RolePermission Specification"
+      description : "RolePermisson specification"
+    }
+  };
+  repeated string permissions = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Permissions"
+        description : "List of permisions for role"
+      } ];
+}
 
 message RolePermissionList {
-  string apiVersion = 1;
-  string kind = 2;
-  rafay.dev.types.common.v3.ListMetadata metadata = 3;
-  repeated RolePermission items = 4;
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "RolePermissionList"
+      description : "RolePeList list"
+      read_only : true
+    }
+  };
+  string apiVersion = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "API Version",
+        description : "API Version of the role permission list resource"
+        read_only : true
+      } ];
+  string kind = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Kind",
+        description : "Kind of the role permission list resource"
+        read_only : true
+      } ];
+  rafay.dev.types.common.v3.ListMetadata metadata = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Metadata",
+        description : "Metadata of the role permission list resource"
+        read_only : true
+      } ];
+  repeated RolePermission items = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Items",
+        description : "List of the role permission resources"
+        read_only : true
+      } ];
 }

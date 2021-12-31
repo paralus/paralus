@@ -18,32 +18,146 @@ message User {
     }
   };
 
-  string apiVersion = 1; // default : "usermgmt.k8smgmt.io/v3"
-  string kind = 2;       // default : "User"
-  rafay.dev.types.common.v3.Metadata metadata = 3;
-  UserSpec spec = 4;
-  rafay.dev.types.common.v3.Status status = 5;
+  string apiVersion = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "API Version",
+        description : "API Version of the user resource"
+        default : "usermgmt.k8smgmt.io/v3"
+      } ];
+  string kind = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Kind",
+        description : "Kind of the user resource"
+        default : "User"
+      } ];
+  rafay.dev.types.common.v3.Metadata metadata = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Metadata",
+        description : "Metadata of the user resource"
+      } ];
+  UserSpec spec = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Spec",
+        description : "Spec of the user resource"
+      } ];
+
+  rafay.dev.types.common.v3.Status status = 5
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Status",
+        description : "Status of the resource"
+        read_only : true
+      } ];
 }
 
 message UserSpec {
-  string firstName = 1;
-  string lastName = 2;
-  string username = 3;
-  string phone = 4;
-  string password = 5;
-  string totpRequired = 6;
-  string totpSecret = 7;
-  repeated rafay.dev.types.user.v3.Role roles = 8;
-  repeated rafay.dev.types.user.v3.Group group = 9;
-  repeated rafay.dev.types.system.v3.Project project = 10;
-  bool emailVerified = 11;
-  bool phoneVerified = 12;
-  bool totpVerified = 13;
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "User Specification"
+      description : "User specification"
+    }
+  };
+  string firstName = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "FirstName"
+        description : "First name of the user"
+      } ];
+  string lastName = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "LastName"
+        description : "Last name of the user"
+      } ];
+  string username = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Username"
+        description : "Username of the user"
+      } ];
+  string phone = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Phone"
+        description : "Phone number of the user"
+      } ];
+  string password = 5
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Password"
+        description : "Password of the user"
+      } ];
+  string totpRequired = 6
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "TotpRequired"
+        description : "Flag to specify if TOTP is required"
+      } ];
+  string totpSecret = 7
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "TotpSecret"
+        description : "Secret for TOTP"
+      } ];
+  repeated rafay.dev.types.user.v3.Role roles = 8
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Roles"
+        description : "Roles of the user"
+      } ];
+  repeated rafay.dev.types.user.v3.Group groups = 9
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Group"
+        description : "Groups of the user"
+      } ];
+  repeated rafay.dev.types.system.v3.Project projects = 10
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Projects"
+        description : "Projects of the user"
+      } ];
+  bool emailVerified = 11
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "EmailVerified"
+        description : "Flag to show if the email of the user was verified"
+        read_only : true
+      } ];
+  bool phoneVerified = 12
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "PhoneVerified"
+        description : "Flag to show if phone number of the user was verified"
+        read_only : true
+      } ];
+  bool totpVerified = 13
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "TotpVerified"
+        description : "Flag to show if the TOTP of the user was verified"
+        read_only : true
+      } ];
 }
 
 message UserList {
-  string apiVersion = 1;
-  string kind = 2;
-  rafay.dev.types.common.v3.ListMetadata metadata = 3;
-  repeated User items = 4;
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "UserList"
+      description : "User list"
+      read_only : true
+    }
+  };
+  string apiVersion = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "API Version",
+        description : "API Version of the user list resource"
+        default : "usermgmt.k8smgmt.io/v3"
+        read_only : true
+      } ];
+  string kind = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Kind",
+        description : "Kind of the user list resource"
+        default : "UserList"
+        read_only : true
+      } ];
+  rafay.dev.types.common.v3.ListMetadata metadata = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Metadata",
+        description : "Metadata of the user list resource"
+        read_only : true
+      } ];
+  repeated User items = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Items",
+        description : "List of the user resources"
+        read_only : true
+      } ];
 }
