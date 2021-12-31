@@ -12,7 +12,6 @@ import (
 
 	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/service"
 	pbrpcv3 "github.com/RafaySystems/rcloud-base/components/adminsrv/proto/rpc/v3"
-	rpcv3 "github.com/RafaySystems/rcloud-base/components/adminsrv/proto/rpc/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/auth/interceptors"
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
@@ -172,9 +171,9 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	defer ps.Close()
 	defer configPool.Close()
 
-	partnerServer := rpcv3.NewPartnerServer(ps)
-	organizationServer := rpcv3.NewOrganizationServer(os)
-	projectServer := rpcv3.NewProjectServer(pps)
+	partnerServer := pbrpcv3.NewPartnerServer(ps)
+	organizationServer := pbrpcv3.NewOrganizationServer(os)
+	projectServer := pbrpcv3.NewProjectServer(pps)
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", rpcPort))
 	if err != nil {
@@ -208,9 +207,9 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 		_log.Infow("context done")
 	}()
 
-	rpcv3.RegisterPartnerServer(s, partnerServer)
-	rpcv3.RegisterOrganizationServer(s, organizationServer)
-	rpcv3.RegisterProjectServer(s, projectServer)
+	pbrpcv3.RegisterPartnerServer(s, partnerServer)
+	pbrpcv3.RegisterOrganizationServer(s, organizationServer)
+	pbrpcv3.RegisterProjectServer(s, projectServer)
 
 	_log.Infow("starting rpc server", "port", rpcPort)
 	err = s.Serve(l)

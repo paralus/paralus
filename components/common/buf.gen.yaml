@@ -2,7 +2,7 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/RafaySystems/rcloud-base/common
+    default: github.com/RafaySystems/rcloud-base/components/common
     except:
       - buf.build/googleapis/googleapis
       - buf.build/grpc-ecosystem/grpc-gateway
