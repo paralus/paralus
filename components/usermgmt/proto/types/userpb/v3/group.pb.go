@@ -7,8 +7,8 @@
 package userv3
 
 import (
-	v3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/commonpb/v3"
-	v31 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/systempb/v3"
+	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
+	v31 "github.com/RafaySystems/rcloud-base/components/adminsrv/proto/types/systempb/v3"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"

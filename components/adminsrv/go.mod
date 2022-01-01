@@ -1,6 +1,6 @@
 module github.com/RafaySystems/rcloud-base/components/adminsrv
 
-go 1.17
+go 1.16
 
 require (
 	github.com/RafaySystems/rcloud-base/components/common v0.0.0-unpublished
