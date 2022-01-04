@@ -64,15 +64,13 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-// Add option to filter by more org and group
-message GetUsersRequest { string project = 1; }
-message GetUserRequest { string userid = 1; }
-message DeleteUserRequest { string userid = 1; }
+// TODO: Add option to filter users list
+message Empty {}
+message UserRequest { string userid = 1; }
 message PutUserRequest {
   string userid = 1;
   rafay.dev.types.user.v3.User user = 2;
 }
-message GetUsersResponse { repeated rafay.dev.types.user.v3.User user = 1; }
 message UserResponse {
   string status = 1;
   string message = 2;
@@ -94,13 +92,13 @@ service User {
     };
   };
 
-  rpc GetUsers(GetUsersRequest) returns (GetUsersResponse) {
+  rpc GetUsers(Empty) returns (rafay.dev.types.user.v3.UserList) {
     option (google.api.http) = {
       get : "/auth/v3/users"
     };
   };
 
-  rpc GetUser(GetUserRequest) returns (rafay.dev.types.user.v3.User) {
+  rpc GetUser(UserRequest) returns (rafay.dev.types.user.v3.User) {
     option (google.api.http) = {
       get : "/auth/v3/user/{userid}"
     };
@@ -113,7 +111,7 @@ service User {
     };
   };
 
-  rpc DeleteUser(DeleteUserRequest) returns (UserResponse) {
+  rpc DeleteUser(UserRequest) returns (UserResponse) {
     option (google.api.http) = {
       delete : "/auth/v3/user/{userid}"
     };

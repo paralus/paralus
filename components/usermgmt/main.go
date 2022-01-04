@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	kclient "github.com/ory/kratos-client-go"
 	"github.com/spf13/viper"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
@@ -25,12 +26,13 @@ import (
 )
 
 const (
-	rpcPortEnv    = "RPC_PORT"
-	apiPortEnv    = "API_PORT"
-	debugPortEnv  = "DEBUG_PORT"
-	kratosAddrEnv = "KRATOS_ADDR"
-	devEnv        = "DEV"
-	configAddrENV = "CONFIG_ADDR"
+	rpcPortEnv      = "RPC_PORT"
+	apiPortEnv      = "API_PORT"
+	debugPortEnv    = "DEBUG_PORT"
+	kratosSchemeEnv = "KRATOS_SCHEME"
+	kratosAddrEnv   = "KRATOS_ADDR"
+	devEnv          = "DEV"
+	configAddrENV   = "CONFIG_ADDR"
 )
 
 var (
@@ -38,26 +40,29 @@ var (
 	apiPort             int
 	debugPort           int
 	rpcRelayPeeringPort int
+	kratosScheme        string
 	kratosAddr          string
+	kc                  *kclient.APIClient
 	dev                 bool
-	// ps                  service.PartnerService
-	_log       = logv2.GetLogger()
-	authPool   authv3.AuthPool
-	configPool configrpc.ConfigPool
-	configAddr string
+	_log                = logv2.GetLogger()
+	authPool            authv3.AuthPool
+	configPool          configrpc.ConfigPool
+	configAddr          string
 )
 
 func setup() {
 	viper.SetDefault(rpcPortEnv, 10000)
 	viper.SetDefault(apiPortEnv, 11000)
 	viper.SetDefault(debugPortEnv, 12000)
-	viper.SetDefault(kratosAddr, "localhost:5443")
+	viper.SetDefault(kratosSchemeEnv, "http")
+	viper.SetDefault(kratosAddrEnv, "localhost:4433")
 	viper.SetDefault(devEnv, true)
 	viper.SetDefault(configAddrENV, "localhost:7000")
 
 	viper.BindEnv(rpcPortEnv)
 	viper.BindEnv(apiPortEnv)
 	viper.BindEnv(debugPortEnv)
+	viper.BindEnv(kratosSchemeEnv)
 	viper.BindEnv(kratosAddrEnv)
 	viper.BindEnv(devEnv)
 	viper.BindEnv(configAddrENV)
@@ -65,15 +70,17 @@ func setup() {
 	rpcPort = viper.GetInt(rpcPortEnv)
 	apiPort = viper.GetInt(apiPortEnv)
 	debugPort = viper.GetInt(debugPortEnv)
+	kratosScheme = viper.GetString(kratosSchemeEnv)
 	kratosAddr = viper.GetString(kratosAddrEnv)
 	dev = viper.GetBool(devEnv)
 	configAddr = viper.GetString(configAddrENV)
 
 	rpcRelayPeeringPort = rpcPort + 1
+	kratosConfig := kclient.NewConfiguration()
+	kratosConfig.Servers[0].URL = kratosScheme + "://" + kratosAddr
+	kc = kclient.NewAPIClient(kratosConfig)
 
-	_log.Infow("usrmgmt setup")
-
-	// ps = service.NewPartnerService(db)
+	_log.Infow("usrmgmt setup complete")
 }
 
 func run() {
@@ -131,8 +138,6 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	defer wg.Done()
 	// defer configPool.Close()
 
-	// userServer := rpcv3.NewUserServer(service.NewUserServer())
-
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", rpcPort))
 	if err != nil {
 		_log.Fatalw("unable to start rpc listener", "error", err)
@@ -165,7 +170,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 		_log.Infow("context done")
 	}()
 
-	rpcv3.RegisterUserServer(s, service.NewUserServer())
+	rpcv3.RegisterUserServer(s, service.NewUserServer(kc))
 
 	_log.Infow("starting rpc server", "port", rpcPort)
 	err = s.Serve(l)

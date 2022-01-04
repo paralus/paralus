@@ -1,0 +1,20 @@
+:host = http://localhost:11000
+:userid = 4c92ca6d-8ff4-4930-bbeb-c19d22ffe71d
+
+# Create user
+POST :host/auth/v3/users
+{"spec": {"username": "newguy@notaprovider.com", "firstName": "John", "lastName": "Doe"}}
+-> jq-set-var :userid .metadata.id
+
+# Get all users
+GET :host/auth/v3/users
+
+# Get single user
+GET :host/auth/v3/user/:userid
+
+# Update user info
+PUT :host/auth/v3/user/:userid
+{"spec": {"username": "changedemail@notaprovider.com", "firstName": "John", "lastName": "Doe"}}
+
+# Delete single user
+DELETE :host/auth/v3/user/:userid

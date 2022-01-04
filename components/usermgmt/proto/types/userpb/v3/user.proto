@@ -81,30 +81,35 @@ message UserSpec {
         title : "Password"
         description : "Password of the user"
       } ];
-  string totpRequired = 6
-      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        title : "TotpRequired"
-        description : "Flag to specify if TOTP is required"
-      } ];
-  string totpSecret = 7
-      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        title : "TotpSecret"
-        description : "Secret for TOTP"
-      } ];
-  repeated rafay.dev.types.user.v3.Role roles = 8
-      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        title : "Roles"
-        description : "Roles of the user"
-      } ];
-  repeated rafay.dev.types.user.v3.Group groups = 9
+  // string totpRequired = 6
+  //     [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+  //       title : "TotpRequired"
+  //       description : "Flag to specify if TOTP is required"
+  //     } ];
+  // string totpSecret = 7
+  //     [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+  //       title : "TotpSecret"
+  //       description : "Secret for TOTP"
+  //     } ];
+  // repeated rafay.dev.types.user.v3.Role roles = 8
+  //     [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+  //       title : "Roles"
+  //       description : "Roles of the user"
+  //     } ];
+  // repeated rafay.dev.types.user.v3.Group groups = 9
+  //     [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+  //       title : "Group"
+  //       description : "Groups of the user"
+  //     } ];
+  // repeated rafay.dev.types.system.v3.Project projects = 10
+  //     [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+  //       title : "Projects"
+  //       description : "Projects of the user"
+  //     } ];
+  repeated string groups = 9
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Group"
-        description : "Groups of the user"
-      } ];
-  repeated rafay.dev.types.system.v3.Project projects = 10
-      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        title : "Projects"
-        description : "Projects of the user"
+        description : "Groups the user belongs to"
       } ];
   bool emailVerified = 11
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {

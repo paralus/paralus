@@ -158,7 +158,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v3GetUsersResponse"
+              "$ref": "#/definitions/v3UserList"
             }
           },
           "403": {
@@ -179,14 +179,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "project",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
         "tags": [
           "User"
         ]
@@ -316,85 +308,23 @@
       "default": "StatusNotSet",
       "title": "$title: ConditionStatus\n$description: status of a condition for a resource"
     },
-    "v3GetUsersResponse": {
+    "v3ListMetadata": {
       "type": "object",
       "properties": {
-        "user": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v3User"
-          }
-        }
-      }
-    },
-    "v3Group": {
-      "type": "object",
-      "properties": {
-        "apiVersion": {
+        "count": {
           "type": "string",
-          "default": "usermgmt.k8smgmt.io/v3",
-          "description": "API Version of the group resource",
-          "title": "API Version"
+          "format": "int64"
         },
-        "kind": {
+        "offset": {
           "type": "string",
-          "default": "Pipeline",
-          "description": "Kind of the group resource",
-          "title": "Kind"
+          "format": "int64"
         },
-        "metadata": {
-          "$ref": "#/definitions/v3Metadata",
-          "description": "Metadata of the group resource",
-          "title": "Metadata"
-        },
-        "spec": {
-          "$ref": "#/definitions/v3GroupSpec",
-          "description": "Metadata of the group resource",
-          "title": "Metadata"
-        },
-        "status": {
-          "$ref": "#/definitions/commonv3Status",
-          "description": "Status of the resource",
-          "title": "Status",
-          "readOnly": true
+        "limt": {
+          "type": "string",
+          "format": "int64"
         }
       },
-      "description": "Group",
-      "title": "Group",
-      "required": [
-        "apiVersion",
-        "kind",
-        "metadata",
-        "spec"
-      ]
-    },
-    "v3GroupSpec": {
-      "type": "object",
-      "properties": {
-        "projectroles": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v3ProjectRole"
-          },
-          "description": "ProjectRole groups for permission",
-          "title": "ProjectRoles"
-        },
-        "users": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "List of users for group",
-          "title": "Users"
-        },
-        "type": {
-          "type": "string",
-          "description": "Type of group",
-          "title": "Type"
-        }
-      },
-      "description": "Group specification",
-      "title": "Group Specification"
+      "title": "$title: ListMetadata\n$description: metadata for a list of resources\n$required: enabled"
     },
     "v3Metadata": {
       "type": "object",
@@ -456,188 +386,6 @@
         "project"
       ]
     },
-    "v3Project": {
-      "type": "object",
-      "properties": {
-        "apiVersion": {
-          "type": "string",
-          "default": "system.k8smgmt.io/v3",
-          "description": "API Version of the project resource",
-          "title": "API Version"
-        },
-        "kind": {
-          "type": "string",
-          "default": "Pipeline",
-          "description": "Kind of the project resource",
-          "title": "Kind"
-        },
-        "metadata": {
-          "$ref": "#/definitions/v3Metadata",
-          "description": "Metadata of the project resource",
-          "title": "Metadata"
-        },
-        "spec": {
-          "$ref": "#/definitions/v3ProjectSpec",
-          "description": "Metadata of the project resource",
-          "title": "Metadata"
-        },
-        "status": {
-          "$ref": "#/definitions/commonv3Status",
-          "description": "Status of the resource",
-          "title": "Status",
-          "readOnly": true
-        }
-      },
-      "description": "Project",
-      "title": "Project",
-      "required": [
-        "apiVersion",
-        "kind",
-        "metadata",
-        "spec"
-      ]
-    },
-    "v3ProjectRole": {
-      "type": "object",
-      "properties": {
-        "project": {
-          "$ref": "#/definitions/v3Project",
-          "description": "Project",
-          "title": "Project"
-        },
-        "role": {
-          "$ref": "#/definitions/v3Role",
-          "description": "Role",
-          "title": "Role"
-        }
-      },
-      "description": "Project and role pairing for permission",
-      "title": "ProjectRole"
-    },
-    "v3ProjectSpec": {
-      "type": "object",
-      "properties": {
-        "default": {
-          "type": "boolean",
-          "description": "flag to indicate if this is the default project in the organization",
-          "title": "Default"
-        }
-      },
-      "description": "project specification",
-      "title": "Project Specification"
-    },
-    "v3Role": {
-      "type": "object",
-      "properties": {
-        "apiVersion": {
-          "type": "string",
-          "default": "usermgmt.k8smgmt.io/v3",
-          "description": "API Version of the Role resource",
-          "title": "API Version"
-        },
-        "kind": {
-          "type": "string",
-          "default": "Role",
-          "description": "Kind of the role resource",
-          "title": "Kind"
-        },
-        "metadata": {
-          "$ref": "#/definitions/v3Metadata",
-          "description": "Metadata of the role resource",
-          "title": "Metadata"
-        },
-        "spec": {
-          "$ref": "#/definitions/v3RoleSpec",
-          "description": "Spec of the role resource",
-          "title": "Spec"
-        },
-        "status": {
-          "$ref": "#/definitions/commonv3Status",
-          "description": "Status of the resource",
-          "title": "Status",
-          "readOnly": true
-        }
-      },
-      "description": "Role",
-      "title": "Role",
-      "required": [
-        "apiVersion",
-        "kind",
-        "metadata",
-        "spec"
-      ]
-    },
-    "v3RolePermission": {
-      "type": "object",
-      "properties": {
-        "apiVersion": {
-          "type": "string",
-          "default": "usermgmt.k8smgmt.io/v3",
-          "description": "API Version of the role permission resource",
-          "title": "API Version"
-        },
-        "kind": {
-          "type": "string",
-          "default": "RolePermission",
-          "description": "Kind of the role permission resource",
-          "title": "Kind"
-        },
-        "metadata": {
-          "$ref": "#/definitions/v3Metadata",
-          "description": "Metadata of the role permission resource",
-          "title": "Metadata"
-        },
-        "spec": {
-          "$ref": "#/definitions/v3RolePermissionSpec",
-          "description": "Metadata of the role permission resource",
-          "title": "Metadata"
-        },
-        "status": {
-          "$ref": "#/definitions/commonv3Status",
-          "description": "Status of the resource",
-          "title": "Status",
-          "readOnly": true
-        }
-      },
-      "description": "Role Permission",
-      "title": "RolePermission",
-      "required": [
-        "apiVersion",
-        "kind",
-        "metadata",
-        "spec"
-      ]
-    },
-    "v3RolePermissionSpec": {
-      "type": "object",
-      "properties": {
-        "permissions": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "List of permisions for role",
-          "title": "Permissions"
-        }
-      },
-      "description": "RolePermisson specification",
-      "title": "RolePermission Specification"
-    },
-    "v3RoleSpec": {
-      "type": "object",
-      "properties": {
-        "rolepermissions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v3RolePermission"
-          },
-          "description": "Permissions for the role",
-          "title": "RolePermissions"
-        }
-      },
-      "description": "Role specification",
-      "title": "Role Specification"
-    },
     "v3User": {
       "type": "object",
       "properties": {
@@ -679,6 +427,43 @@
         "spec"
       ]
     },
+    "v3UserList": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "usermgmt.k8smgmt.io/v3",
+          "description": "API Version of the user list resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "UserList",
+          "description": "Kind of the user list resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3ListMetadata",
+          "description": "Metadata of the user list resource",
+          "title": "Metadata",
+          "readOnly": true
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3User"
+          },
+          "description": "List of the user resources",
+          "title": "Items",
+          "readOnly": true
+        }
+      },
+      "description": "User list",
+      "title": "UserList",
+      "readOnly": true
+    },
     "v3UserResponse": {
       "type": "object",
       "properties": {
@@ -718,39 +503,13 @@
           "description": "Password of the user",
           "title": "Password"
         },
-        "totpRequired": {
-          "type": "string",
-          "description": "Flag to specify if TOTP is required",
-          "title": "TotpRequired"
-        },
-        "totpSecret": {
-          "type": "string",
-          "description": "Secret for TOTP",
-          "title": "TotpSecret"
-        },
-        "roles": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v3Role"
-          },
-          "description": "Roles of the user",
-          "title": "Roles"
-        },
         "groups": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v3Group"
+            "type": "string"
           },
-          "description": "Groups of the user",
+          "description": "Groups the user belongs to",
           "title": "Group"
-        },
-        "projects": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v3Project"
-          },
-          "description": "Projects of the user",
-          "title": "Projects"
         },
         "emailVerified": {
           "type": "boolean",

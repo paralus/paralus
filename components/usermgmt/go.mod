@@ -7,6 +7,7 @@ require (
 	github.com/RafaySystems/rcloud-base/components/common v0.0.0-unpublished
 	github.com/gogo/protobuf v1.3.2
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.2
+	github.com/ory/kratos-client-go v0.8.2-alpha.1
 	github.com/spf13/viper v1.10.1
 	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa
 	google.golang.org/grpc v1.43.0
