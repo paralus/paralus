@@ -1,0 +1,64 @@
+syntax = "proto3";
+package rafay.dev.types.user.v3;
+
+message Idp {
+  string id = 1;
+  string name = 2;
+  string idp_name = 3;
+  string domain = 4;
+  string acs_url = 5;
+  string sso_url = 6;
+  string idp_cert = 7;
+  string sp_cert = 8;
+  string metadata_url = 9;
+  string metadata_filename = 10;
+  bool is_sae_enabled = 11;
+  string group_attribute_name = 12;
+  string organization_id = 13;
+  string partner_id = 14;
+  string created_at = 15;
+  string modified_at = 16;
+}
+
+message NewIdp {
+  string domain = 1;
+  string group_attribute_name = 2;
+  string idp_name = 3;
+  bool is_sae_enabled = 4;
+  string name = 5;
+}
+
+message UpdateIdp {
+  string id = 1;
+  string acs_url = 2;
+  string domain = 3;
+  string group_attribute_name = 4;
+  string idp_name = 5;
+  bool is_sae_enabled = 6;
+  string metadata_url = 7;
+  string name = 8;
+}
+
+message IdpID {
+  string id = 1;
+}
+
+message SpConfig {
+  string nameid_format = 1;
+  string consumer_binding = 2;
+  string acs_url = 3;
+  string entity_id = 4;
+  string group_attribute_name = 5;
+  string sp_cert = 6;
+}
+
+message ListIdpsResponse {
+  int32 count = 1;
+  int32 next = 2;
+  int32 previous = 3;
+  repeated Idp result = 4;
+}
+
+message ListIdpsRequest {
+  int32 limit = 1;
+}

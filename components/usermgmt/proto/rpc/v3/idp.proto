@@ -1,0 +1,22 @@
+syntax = "proto3";
+package rafay.dev.rpc.v3;
+
+import "proto/types/userpb/v3/idp.proto";
+
+service Idp {
+  // endpoint POST /auth/v1/sso/idp
+  rpc CreateIdp(rafay.dev.types.user.v3.NewIdp) returns (rafay.dev.types.user.v3.Idp) {};
+
+  // endpoint PUT /auth/v1/sso/idp
+  rpc UpdateIdp(rafay.dev.types.user.v3.UpdateIdp) returns (rafay.dev.types.user.v3.Idp) {};
+
+  // endpoint /auth/v1/sso/idp/dk351mn/spconfig/
+  rpc GetSpConfigById(rafay.dev.types.user.v3.IdpID) returns (rafay.dev.types.user.v3.SpConfig) {};
+
+  // endpoint /auth/v1/sso/idp/?limit=1000
+  rpc ListIdps(rafay.dev.types.user.v3.ListIdpsRequest) returns (rafay.dev.types.user.v3.ListIdpsResponse) {};
+
+  // endpooint /auth/v1/sso/idp/5m16w2y/upload_metadata/
+  // file content as request payload and response is Idp
+}
+
