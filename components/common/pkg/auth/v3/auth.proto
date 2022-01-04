@@ -1,0 +1,140 @@
+syntax = "proto3";
+package rafay.dev.auth.v3;
+
+import "gogoproto/gogo.proto";
+
+enum AuthType {
+    option (gogoproto.goproto_enum_prefix) = false;
+    AuthTypeNotSet = 0;
+    SessionLogin = 1;
+    APIKey = 2;
+}
+
+enum ClientType {
+    option (gogoproto.goproto_enum_prefix) = false;
+    ClientTypeNotSet = 0;
+    BROWSER = 1;
+    CLI = 2;
+}
+
+
+message GetSessionRequest {
+    string session_id = 1;
+}
+
+enum SessionStatus {
+    // disable enum prefix
+    option (gogoproto.goproto_enum_prefix) = false;
+
+    SessionNotFound = 0;
+    SessionExists = 1;
+}
+
+message ResourceURLMethods {
+    repeated string methods = 1;
+}
+
+message NamespaceData {
+    string project_id = 1;
+    string namespace_id = 2;
+    string role = 3;
+}
+
+message ProjectRole {
+    string project_id = 1;
+    string role = 3;
+}
+
+message ProjectData {
+    bool all = 1;
+    repeated ProjectRole list = 2 [(gogoproto.nullable) = false];
+}
+
+message SessionData {
+    string account = 1;
+    string organization = 2;
+    string partner = 3;
+    string role = 4;
+    repeated string permissions = 5;
+    string partner_domain = 6;
+    string username = 7;
+    bool is_super_admin = 8;
+    bool is_partner_admin = 9;
+    bool is_sso_user = 10;
+    map<string, ResourceURLMethods> resource_urls = 11;
+    string ttl = 12;
+    repeated string groups = 13;
+    AuthType auth_type = 14;
+    string idp = 15;
+    map<string, bool> is_org_admin = 16;
+    ClientType client_type = 17;
+    map<string, bool> is_all_ns_access = 18;
+    repeated NamespaceData namespaces = 19 [(gogoproto.nullable) = false];
+    ProjectData project = 20;
+    map<string, bool> is_readonly_org_admin = 21;
+}
+
+message GetSessionResponse {
+    SessionStatus status = 1;
+    string reason = 2;
+    SessionData data = 3;
+}
+
+message GetAPIKeyRequest {
+    string api_key = 1;
+}
+
+enum APIKeyStatus {
+    // disable enum prefix
+    option (gogoproto.goproto_enum_prefix) = false;
+
+    APIKeyNotFound = 0;
+    APIKeyExists = 1;
+}
+
+message GetAPIKeyResponse {
+    APIKeyStatus status = 1;
+    string reason = 2;
+    string secret = 3;
+    SessionData data = 4;
+}
+
+
+message IsRequestAllowedRequest {
+    string url = 1;
+    string method = 2;
+    string rsid = 3;
+    string api_key = 4;
+}
+
+enum RequestStatus {
+    // disable enum prefix
+    option (gogoproto.goproto_enum_prefix) = false;
+
+    RequestAllowed = 0;
+    RequestNotAuthenticated = 1;
+    RequestMethodOrURLNotAllowed = 2;
+}
+
+message IsRequestAllowedResponse {
+    RequestStatus status = 1;
+    string reason = 2;
+    SessionData sessionData = 3;
+}
+
+message AuthErrorDetail {
+    string error_code = 1;
+    string detail = 2;
+    string info = 3;
+}
+
+message AuthError {
+    sint32 status_code = 1;
+    repeated AuthErrorDetail details = 2;
+}
+
+service Auth {
+    rpc IsRequestAllowed(IsRequestAllowedRequest) returns (IsRequestAllowedResponse);
+    rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
+    rpc GetAPIKey(GetAPIKeyRequest) returns (GetAPIKeyResponse);
+}

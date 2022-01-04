@@ -1,0 +1,183 @@
+syntax = "proto3";
+package rafay.dev.types.system.v3;
+
+import "proto/types/commonpb/v3/common.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+message Lockout {
+  bool enabled = 1
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Enabled"
+    description : "Is lockout settings enabled?"
+  } ];
+  int32 period_min = 2
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Period Minutes"
+    description : "Lockout period in Minutes"
+  } ];
+  int32 attempts = 3
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Attempts"
+    description : "Max number of attempts before lockout"
+  } ];
+}
+
+message OrganizationSettings {
+  Lockout lockout = 1
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Lockout"
+    description : "Lockout settings of the organization"
+  } ];
+  int32 idleLogoutMin = 2
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Idle Logout Minutes"
+    description : "Idle Logout time in minutes"
+  } ];
+}
+
+message OrganizationSpec {
+  string billingAddress = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Billing Address"
+        description : "Billing address of the organization"
+      } ];
+  bool active = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Active"
+        description : "Represents if this organization is active"
+      } ];
+  bool approved = 3
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Approved"
+    description : "Is this organization active"
+  } ];
+  string type = 4
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Type"
+    description : "Type of organization"
+  } ];
+  string addressLine1 = 5
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Address Line 1"
+    description : "Address of the organization"
+  } ];
+  string addressLine2 = 6
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Address Line 2"
+    description : "Address of the organization"
+  } ];
+  string city = 7
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "City"
+    description : "City"
+  } ];
+  string country = 8
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Country"
+    description : "Country of the organization"
+  } ];
+  string phone = 9
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Phone"
+    description : "Phone number of the organization"
+  } ];
+  string state = 10
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "State"
+    description : "State of the organization"
+  } ];
+  string zipcode = 11
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Zipcode"
+    description : "Zipcode"
+  } ];
+  bool isPrivate = 12
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Is Private"
+    description : "Is Private Organization"
+  } ];
+  bool isTotpEnabled = 13
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Is TOTP Enabled"
+    description : "Is TOTP enabled at organization level"
+  } ];
+  bool areClustersShared = 14
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Clusters Shared"
+    description : "Are clusters shared"
+  } ];
+  OrganizationSettings settings = 15
+  [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    title : "Settings"
+    description : "Various settings like lockout, auto-logout configuration"
+  } ];
+}
+
+message Organization {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Organization"
+      description : "Organization"
+      required : [ "apiVersion", "kind", "metadata", "spec" ]
+    }
+  };
+  string apiVersion = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "API Version",
+        description : "API Version of the resource"
+        default : "system.k8smgmt.io/v3"
+        read_only : true
+      } ];
+  string kind = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Kind",
+        description : "Kind of the resource"
+        default : "Organization"
+        read_only : true
+      } ];
+  rafay.dev.types.common.v3.Metadata metadata = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Metadata",
+        description : "Metadata of the resource"
+      } ];
+  OrganizationSpec spec = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Spec",
+        description : "Spec of the resource"
+      } ];
+  rafay.dev.types.common.v3.Status status = 5
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Status",
+        description : "Status of the resource"
+        read_only : true
+      } ];
+}
+
+message OrganizationList {
+  string apiVersion = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "API Version",
+        description : "API Version of the list resource"
+        default : "system.k8smgmt.io/v3"
+        read_only : true
+      } ];
+  string kind = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Kind",
+        description : "Kind of the list resource"
+        default : "OrganizationList"
+        read_only : true
+      } ];
+  rafay.dev.types.common.v3.ListMetadata metadata = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "ListMetadata",
+        description : "Metadata of the list resource"
+        read_only : true
+      } ];
+  repeated Organization items = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Items",
+        description : "List of the resources"
+        read_only : true
+      } ];
+}
