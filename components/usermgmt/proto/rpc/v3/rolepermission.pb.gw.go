@@ -13,6 +13,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
 	"google.golang.org/grpc"
@@ -32,7 +33,7 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 func request_Rolepermission_GetRolepermissions_0(ctx context.Context, marshaler runtime.Marshaler, client RolepermissionClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetRolepermissionsRequest
+	var protoReq GetRolePermissionsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.GetRolepermissions(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -41,7 +42,7 @@ func request_Rolepermission_GetRolepermissions_0(ctx context.Context, marshaler 
 }
 
 func local_request_Rolepermission_GetRolepermissions_0(ctx context.Context, marshaler runtime.Marshaler, server RolepermissionServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetRolepermissionsRequest
+	var protoReq GetRolePermissionsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.GetRolepermissions(ctx, &protoReq)
@@ -49,8 +50,12 @@ func local_request_Rolepermission_GetRolepermissions_0(ctx context.Context, mars
 
 }
 
+var (
+	filter_Rolepermission_GetRolepermission_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+)
+
 func request_Rolepermission_GetRolepermission_0(ctx context.Context, marshaler runtime.Marshaler, client RolepermissionClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetRolepermissionRequest
+	var protoReq userv3.RolePermission
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -60,14 +65,21 @@ func request_Rolepermission_GetRolepermission_0(ctx context.Context, marshaler r
 		_   = err
 	)
 
-	val, ok = pathParams["id"]
+	val, ok = pathParams["metadata.name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.name")
 	}
 
-	protoReq.Id, err = runtime.String(val)
+	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.name", val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.name", err)
+	}
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Rolepermission_GetRolepermission_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
 	msg, err := client.GetRolepermission(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -76,7 +88,7 @@ func request_Rolepermission_GetRolepermission_0(ctx context.Context, marshaler r
 }
 
 func local_request_Rolepermission_GetRolepermission_0(ctx context.Context, marshaler runtime.Marshaler, server RolepermissionServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetRolepermissionRequest
+	var protoReq userv3.RolePermission
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -86,14 +98,91 @@ func local_request_Rolepermission_GetRolepermission_0(ctx context.Context, marsh
 		_   = err
 	)
 
-	val, ok = pathParams["id"]
+	val, ok = pathParams["metadata.name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.name")
 	}
 
-	protoReq.Id, err = runtime.String(val)
+	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.name", val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.name", err)
+	}
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Rolepermission_GetRolepermission_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := server.GetRolepermission(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
+var (
+	filter_Rolepermission_GetRolepermission_1 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "id": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+)
+
+func request_Rolepermission_GetRolepermission_1(ctx context.Context, marshaler runtime.Marshaler, client RolepermissionClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq userv3.RolePermission
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["metadata.id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.id")
+	}
+
+	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.id", val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.id", err)
+	}
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Rolepermission_GetRolepermission_1); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := client.GetRolepermission(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_Rolepermission_GetRolepermission_1(ctx context.Context, marshaler runtime.Marshaler, server RolepermissionServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq userv3.RolePermission
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["metadata.id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.id")
+	}
+
+	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.id", val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.id", err)
+	}
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Rolepermission_GetRolepermission_1); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
 	msg, err := server.GetRolepermission(ctx, &protoReq)
@@ -136,7 +225,7 @@ func RegisterRolepermissionHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Rolepermission/GetRolepermission", runtime.WithHTTPPathPattern("/auth/v3/rolepermission/{id}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Rolepermission/GetRolepermission", runtime.WithHTTPPathPattern("/auth/v3/rolepermission/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -150,6 +239,29 @@ func RegisterRolepermissionHandlerServer(ctx context.Context, mux *runtime.Serve
 		}
 
 		forward_Rolepermission_GetRolepermission_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_Rolepermission_GetRolepermission_1, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Rolepermission/GetRolepermission", runtime.WithHTTPPathPattern("/auth/v3/rolepermission/{metadata.id}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Rolepermission_GetRolepermission_1(rctx, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_Rolepermission_GetRolepermission_1(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -218,7 +330,7 @@ func RegisterRolepermissionHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Rolepermission/GetRolepermission", runtime.WithHTTPPathPattern("/auth/v3/rolepermission/{id}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Rolepermission/GetRolepermission", runtime.WithHTTPPathPattern("/auth/v3/rolepermission/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -234,17 +346,41 @@ func RegisterRolepermissionHandlerClient(ctx context.Context, mux *runtime.Serve
 
 	})
 
+	mux.Handle("GET", pattern_Rolepermission_GetRolepermission_1, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Rolepermission/GetRolepermission", runtime.WithHTTPPathPattern("/auth/v3/rolepermission/{metadata.id}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_Rolepermission_GetRolepermission_1(rctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_Rolepermission_GetRolepermission_1(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
 var (
 	pattern_Rolepermission_GetRolepermissions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"auth", "v3", "rolepermissions"}, ""))
 
-	pattern_Rolepermission_GetRolepermission_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"auth", "v3", "rolepermission", "id"}, ""))
+	pattern_Rolepermission_GetRolepermission_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"auth", "v3", "rolepermission", "metadata.name"}, ""))
+
+	pattern_Rolepermission_GetRolepermission_1 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"auth", "v3", "rolepermission", "metadata.id"}, ""))
 )
 
 var (
 	forward_Rolepermission_GetRolepermissions_0 = runtime.ForwardResponseMessage
 
 	forward_Rolepermission_GetRolepermission_0 = runtime.ForwardResponseMessage
+
+	forward_Rolepermission_GetRolepermission_1 = runtime.ForwardResponseMessage
 )

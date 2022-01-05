@@ -65,35 +65,23 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-message GetRolepermissionsRequest {}
-message GetRolepermissionRequest {
-  string id = 1
-      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        title : "Id",
-        description : "Id of the rolepermission resource"
-      } ];
-}
-message GetRolepermissionsResponse {
-  repeated rafay.dev.types.user.v3.RolePermission rolepermissions = 1
-      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        title : "RolePermissions",
-        description : "List of the rolepermission resources"
-      } ];
-
-}
+message GetRolePermissionsRequest {}
 
 service Rolepermission {
-  rpc GetRolepermissions(GetRolepermissionsRequest)
-      returns (GetRolepermissionsResponse) {
+  rpc GetRolepermissions(GetRolePermissionsRequest)
+      returns (rafay.dev.types.user.v3.RolePermissionList) {
     option (google.api.http) = {
       get : "/auth/v3/rolepermissions"
     };
   };
 
-  rpc GetRolepermission(GetRolepermissionRequest)
+  rpc GetRolepermission(rafay.dev.types.user.v3.RolePermission)
       returns (rafay.dev.types.user.v3.RolePermission) {
     option (google.api.http) = {
-      get : "/auth/v3/rolepermission/{id}"
+      get : "/auth/v3/rolepermission/{metadata.name}"
+      additional_bindings {
+        get : "/auth/v3/rolepermission/{metadata.id}"
+      }
     };
   };
 }

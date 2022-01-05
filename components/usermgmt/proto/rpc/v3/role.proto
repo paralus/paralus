@@ -64,18 +64,9 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
+// TODO: Add filters
 message GetRolesRequest {}
-message GetRoleRequest { string id = 1; }
-message DeleteRoleRequest { string id = 1; }
-message PutRoleRequest {
-  string id = 1;
-  rafay.dev.types.user.v3.Role role = 2;
-}
-message GetRolesResponse { repeated rafay.dev.types.user.v3.Role role = 1; }
-message RoleResponse {
-  string status = 1;
-  string message = 2;
-}
+message DeleteRoleResponse {}
 
 service Role {
   rpc CreateRole(rafay.dev.types.user.v3.Role)
@@ -93,28 +84,47 @@ service Role {
     };
   };
 
-  rpc GetRoles(GetRolesRequest) returns (GetRolesResponse) {
+  rpc GetRoles(GetRolesRequest) returns (rafay.dev.types.user.v3.RoleList) {
     option (google.api.http) = {
       get : "/auth/v3/roles"
     };
   };
 
-  rpc GetRole(GetRoleRequest) returns (rafay.dev.types.user.v3.Role) {
+  rpc GetRole(rafay.dev.types.user.v3.Role) returns (rafay.dev.types.user.v3.Role) {
     option (google.api.http) = {
-      get : "/auth/v3/role/{id}"
+      get : "/auth/v3/role/{metadata.name}"
+      additional_bindings {
+        get : "/auth/v3/role/{metadata.id}"
+      }
     };
   };
 
-  rpc UpdateRole(PutRoleRequest) returns (RoleResponse) {
+  rpc UpdateRole(rafay.dev.types.user.v3.Role) returns (rafay.dev.types.user.v3.Role) {
     option (google.api.http) = {
-      put : "/auth/v3/role/{id}"
-      body : "role"
+      put : "/auth/v3/role/{metadata.name}"
+      body : "*"
+      additional_bindings {
+        put : "/auth/v3/role/{metadata.id}"
+        body : "*"
+      }
     };
   };
 
-  rpc DeleteRole(DeleteRoleRequest) returns (RoleResponse) {
+  rpc DeleteRole(rafay.dev.types.user.v3.Role) returns (DeleteRoleResponse) {
     option (google.api.http) = {
-      delete : "/auth/v3/role/{id}"
+      delete : "/auth/v3/role/{metadata.name}"
+      additional_bindings {
+        delete : "/auth/v3/role/{metadata.id}"
+      }
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses : {
+        key : "204"
+        value : {
+          description : "Returned when role is deleted successfully."
+        }
+      }
     };
   };
 }

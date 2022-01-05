@@ -18,5 +18,4 @@ require (
 replace (
 	github.com/RafaySystems/rcloud-base/components/adminsrv v0.0.0-unpublished => ../adminsrv/
 	github.com/RafaySystems/rcloud-base/components/common v0.0.0-unpublished => ../common/
-// github.com/RafaySystems/rcloud-base/components/usermgmt v0.0.0-unpublished => ../usermgmt
 )

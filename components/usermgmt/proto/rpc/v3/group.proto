@@ -74,17 +74,7 @@ message GetGroupsRequest {
         read_only : true
       } ];
 }
-message GetGroupRequest { string id = 1; }
-message DeleteGroupRequest { string id = 1; }
-message PutGroupRequest {
-  string id = 1;
-  rafay.dev.types.user.v3.Group group = 2;
-}
-message GetGroupsResponse { repeated rafay.dev.types.user.v3.Group group = 1; }
-message GroupResponse {
-  string status = 1;
-  string message = 2;
-}
+message DeleteGroupResponse {}
 
 service Group {
   rpc CreateGroup(rafay.dev.types.user.v3.Group)
@@ -102,28 +92,47 @@ service Group {
     };
   };
 
-  rpc GetGroups(GetGroupsRequest) returns (GetGroupsResponse) {
+  rpc GetGroups(GetGroupsRequest) returns (rafay.dev.types.user.v3.GroupList) {
     option (google.api.http) = {
       get : "/auth/v3/groups"
     };
   };
 
-  rpc GetGroup(GetGroupRequest) returns (rafay.dev.types.user.v3.Group) {
+  rpc GetGroup(rafay.dev.types.user.v3.Group) returns (rafay.dev.types.user.v3.Group) {
     option (google.api.http) = {
-      get : "/auth/v3/group/{id}"
+      get : "/auth/v3/group/{metadata.name}"
+      additional_bindings {
+        get : "/auth/v3/group/{metadata.id}"
+      }
     };
   };
 
-  rpc UpdateGroup(PutGroupRequest) returns (GroupResponse) {
+  rpc UpdateGroup(rafay.dev.types.user.v3.Group) returns (rafay.dev.types.user.v3.Group) {
     option (google.api.http) = {
-      put : "/auth/v3/group/{id}"
-      body : "group"
+      put : "/auth/v3/group/{metadata.name}"
+      body : "*"
+      additional_bindings {
+        put : "/auth/v3/group/{metadata.id}"
+        body : "*"
+      }
     };
   };
 
-  rpc DeleteGroup(DeleteGroupRequest) returns (GroupResponse) {
+  rpc DeleteGroup(rafay.dev.types.user.v3.Group) returns (DeleteGroupResponse) {
     option (google.api.http) = {
-      delete : "/auth/v3/group/{id}"
+      delete : "/auth/v3/group/{metadata.name}"
+      additional_bindings {
+        delete : "/auth/v3/group/{metadata.id}"
+      }
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses : {
+        key : "204"
+        value : {
+          description : "Returned when group is deleted successfully."
+        }
+      }
     };
   };
 }

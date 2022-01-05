@@ -65,16 +65,8 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 // TODO: Add option to filter users list
-message Empty {}
-message UserRequest { string userid = 1; }
-message PutUserRequest {
-  string userid = 1;
-  rafay.dev.types.user.v3.User user = 2;
-}
-message UserResponse {
-  string status = 1;
-  string message = 2;
-}
+message GetUsersRequest {}
+message DeleteUserResponse {}
 
 service User {
   rpc CreateUser(rafay.dev.types.user.v3.User)
@@ -92,28 +84,47 @@ service User {
     };
   };
 
-  rpc GetUsers(Empty) returns (rafay.dev.types.user.v3.UserList) {
+  rpc GetUsers(GetUsersRequest) returns (rafay.dev.types.user.v3.UserList) {
     option (google.api.http) = {
       get : "/auth/v3/users"
     };
   };
 
-  rpc GetUser(UserRequest) returns (rafay.dev.types.user.v3.User) {
+  rpc GetUser(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.User) {
     option (google.api.http) = {
-      get : "/auth/v3/user/{userid}"
+      get : "/auth/v3/user/{metadata.name}"
+      additional_bindings {
+        get : "/auth/v3/user/{metadata.id}"
+      }
     };
   };
 
-  rpc UpdateUser(PutUserRequest) returns (UserResponse) {
+  rpc UpdateUser(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.User) {
     option (google.api.http) = {
-      put : "/auth/v3/user/{userid}"
-      body : "user"
+      put : "/auth/v3/user/{metadata.name}"
+      body : "*"
+      additional_bindings {
+        put : "/auth/v3/user/{metadata.id}"
+        body : "*"
+      }
     };
   };
 
-  rpc DeleteUser(UserRequest) returns (UserResponse) {
+  rpc DeleteUser(rafay.dev.types.user.v3.User) returns (DeleteUserResponse) {
     option (google.api.http) = {
-      delete : "/auth/v3/user/{userid}"
+      delete : "/auth/v3/user/{metadata.name}"
+      additional_bindings {
+        delete : "/auth/v3/user/{metadata.id}"
+      }
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses : {
+        key : "204"
+        value : {
+          description : "Returned when user is deleted successfully."
+        }
+      }
     };
   };
 }
