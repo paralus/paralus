@@ -7,6 +7,9 @@ managed:
       - buf.build/googleapis/googleapis
       - buf.build/grpc-ecosystem/grpc-gateway
       - buf.build/gogo/protobuf
+    override:
+      buf.build/nparikh/rafay-common: github.com/RafaySystems/rcloud-base/components/common
+      buf.build/nparikh/adminsrv: github.com/RafaySystems/rcloud-base/components/adminsrv
 plugins:
   - name: go
     out: .
