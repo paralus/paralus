@@ -59,6 +59,7 @@ var (
 	dbPassword          string
 	db                  *bun.DB
 	gs                  service.GroupService
+	rs                  service.RoleService
 	dev                 bool
 	_log                = logv2.GetLogger()
 	authPool            authv3.AuthPool
@@ -118,6 +119,7 @@ func setup() {
 	))
 
 	gs = service.NewGroupService(db)
+	rs = service.NewRoleService(db)
 
 	_log.Infow("usermgmt setup complete")
 }
@@ -150,6 +152,7 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 		make([]runtime.ServeMuxOption, 0),
 		pbrpcv3.RegisterUserHandlerFromEndpoint,
 		pbrpcv3.RegisterGroupHandlerFromEndpoint,
+		pbrpcv3.RegisterRoleHandlerFromEndpoint,
 	)
 	if err != nil {
 		_log.Fatalw("unable to create gateway", "error", err)
@@ -178,8 +181,10 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	defer wg.Done()
 	// defer configPool.Close()
 	defer gs.Close()
+	defer rs.Close()
 
 	groupServer := server.NewGroupServer(gs)
+	roleServer := server.NewRoleServer(rs)
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", rpcPort))
 	if err != nil {
@@ -215,6 +220,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 
 	rpcv3.RegisterUserServer(s, service.NewUserServer(kc))
 	rpcv3.RegisterGroupServer(s, groupServer)
+	rpcv3.RegisterRoleServer(s, roleServer)
 
 	_log.Infow("starting rpc server", "port", rpcPort)
 	err = s.Serve(l)

@@ -118,6 +118,20 @@
             "format": "date-time"
           },
           {
+            "name": "spec.isGlobal",
+            "description": "IsGlobal. Specify if this is a global role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.scope",
+            "description": "Scope. Scope of the rol",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "status.conditionType",
             "description": "Condition Type. type of the status condition",
             "in": "query",
@@ -253,6 +267,20 @@
             "required": false,
             "type": "string",
             "format": "date-time"
+          },
+          {
+            "name": "spec.isGlobal",
+            "description": "IsGlobal. Specify if this is a global role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.scope",
+            "description": "Scope. Scope of the rol",
+            "in": "query",
+            "required": false,
+            "type": "string"
           },
           {
             "name": "status.conditionType",
@@ -451,6 +479,20 @@
             "format": "date-time"
           },
           {
+            "name": "spec.isGlobal",
+            "description": "IsGlobal. Specify if this is a global role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.scope",
+            "description": "Scope. Scope of the rol",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "status.conditionType",
             "description": "Condition Type. type of the status condition",
             "in": "query",
@@ -586,6 +628,20 @@
             "required": false,
             "type": "string",
             "format": "date-time"
+          },
+          {
+            "name": "spec.isGlobal",
+            "description": "IsGlobal. Specify if this is a global role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.scope",
+            "description": "Scope. Scope of the rol",
+            "in": "query",
+            "required": false,
+            "type": "string"
           },
           {
             "name": "status.conditionType",
@@ -783,6 +839,20 @@
             "required": false,
             "type": "string",
             "format": "date-time"
+          },
+          {
+            "name": "spec.isGlobal",
+            "description": "IsGlobal. Specify if this is a global role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.scope",
+            "description": "Scope. Scope of the rol",
+            "in": "query",
+            "required": false,
+            "type": "string"
           },
           {
             "name": "status.conditionType",
@@ -1189,6 +1259,16 @@
           },
           "description": "Permissions for the role",
           "title": "RolePermissions"
+        },
+        "isGlobal": {
+          "type": "boolean",
+          "description": "Specify if this is a global role",
+          "title": "IsGlobal"
+        },
+        "scope": {
+          "type": "string",
+          "description": "Scope of the rol",
+          "title": "Scope"
         }
       },
       "description": "Role specification",

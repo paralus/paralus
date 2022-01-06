@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/service"
-	userpbv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 	rpcv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/rpc/v3"
+	userpbv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 )
 
 type groupServer struct {
@@ -34,7 +34,6 @@ func (s *groupServer) GetGroups(ctx context.Context, p *userpbv3.Group) (*userpb
 }
 
 func (s *groupServer) GetGroup(ctx context.Context, p *userpbv3.Group) (*userpbv3.Group, error) {
-
 	group, err := s.GetByName(ctx, p.Metadata.Name)
 	if err != nil {
 		group, err = s.GetByID(ctx, p.Metadata.Id)

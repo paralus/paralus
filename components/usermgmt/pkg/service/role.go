@@ -15,77 +15,78 @@ import (
 )
 
 const (
-	apiVersion    = "system.k8smgmt.io/v3"
-	groupKind     = "Group"
-	groupListKind = "GroupList"
+	roleKind     = "Role"
+	roleListKind = "RoleList"
 )
 
-// GroupService is the interface for group operations
-type GroupService interface {
+// RoleService is the interface for role operations
+type RoleService interface {
 	Close() error
-	// create group
-	Create(ctx context.Context, group *userv3.Group) (*userv3.Group, error)
-	// get group by id
-	GetByID(ctx context.Context, id string) (*userv3.Group, error)
-	// get group by name
-	GetByName(ctx context.Context, name string) (*userv3.Group, error)
-	// create or update group
-	Update(ctx context.Context, group *userv3.Group) (*userv3.Group, error)
-	// delete group
-	Delete(ctx context.Context, group *userv3.Group) (*userv3.Group, error)
-	// list groups
-	List(ctx context.Context, group *userv3.Group) (*userv3.GroupList, error)
+	// create role
+	Create(ctx context.Context, role *userv3.Role) (*userv3.Role, error)
+	// get role by id
+	GetByID(ctx context.Context, id string) (*userv3.Role, error)
+	// get role by name
+	GetByName(ctx context.Context, name string) (*userv3.Role, error)
+	// create or update role
+	Update(ctx context.Context, role *userv3.Role) (*userv3.Role, error)
+	// delete role
+	Delete(ctx context.Context, role *userv3.Role) (*userv3.Role, error)
+	// list roles
+	List(ctx context.Context, role *userv3.Role) (*userv3.RoleList, error)
 }
 
-// groupService implements GroupService
-type groupService struct {
+// roleService implements RoleService
+type roleService struct {
 	dao pg.EntityDAO
 }
 
-// NewGroupService return new group service
-func NewGroupService(db *bun.DB) GroupService {
-	return &groupService{
+// NewRoleService return new role service
+func NewRoleService(db *bun.DB) RoleService {
+	return &roleService{
 		dao: pg.NewEntityDAO(db),
 	}
 }
 
-func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
+func (s *roleService) Create(ctx context.Context, role *userv3.Role) (*userv3.Role, error) {
 
-	partnerId, _ := uuid.Parse(group.GetMetadata().GetPartner())
-	organizationId, _ := uuid.Parse(group.GetMetadata().GetOrganization())
-	// TODO: find out the interaction if project key is present in the group metadata
-	// TODO: check if a group with the same 'name' already exists and fail if so
-    // TODO: we should be specifying names instead of ids for partner and org
+	partnerId, _ := uuid.Parse(role.GetMetadata().GetPartner())
+	organizationId, _ := uuid.Parse(role.GetMetadata().GetOrganization())
+	// TODO: find out the interaction if project key is present in the role metadata
+	// TODO: check if a role with the same 'name' already exists and fail if so
+	// TODO: we should be specifying names instead of ids for partner and org
 	// TODO: create vs apply difference like in kubectl??
 	//convert v3 spec to internal models
-	grp := models.Group{
-		Name:           group.GetMetadata().GetName(),
-		Description:    group.GetMetadata().GetDescription(),
+	grp := models.Role{
+		Name:           role.GetMetadata().GetName(),
+		Description:    role.GetMetadata().GetDescription(),
 		CreatedAt:      time.Now(),
 		ModifiedAt:     time.Now(),
 		Trash:          false,
 		OrganizationId: organizationId,
 		PartnerId:      partnerId,
-		Type:           group.GetSpec().GetType(),
+		IsGlobal:       role.GetSpec().GetIsGlobal(),
+		Scope:          role.GetSpec().GetScope(),
 	}
 	entity, err := s.dao.Create(ctx, &grp)
 	if err != nil {
-		group.Status = &v3.Status{
+		role.Status = &v3.Status{
 			ConditionType:   "Create",
 			ConditionStatus: v3.ConditionStatus_StatusFailed,
 			LastUpdated:     timestamppb.Now(),
 		}
-		return group, err
+		return role, err
 	}
 
 	//update v3 spec
-	if createdGroup, ok := entity.(*models.Group); ok {
-		group.Metadata.Id = createdGroup.ID.String()
-		group.Spec = &userv3.GroupSpec{
-			Type: createdGroup.Type,
+	if createdRole, ok := entity.(*models.Role); ok {
+		role.Metadata.Id = createdRole.ID.String()
+		role.Spec = &userv3.RoleSpec{
+			IsGlobal: createdRole.IsGlobal,
+			Scope:    createdRole.Scope,
 		}
-		if group.Status != nil {
-			group.Status = &v3.Status{
+		if role.Status != nil {
+			role.Status = &v3.Status{
 				ConditionType:   "Create",
 				ConditionStatus: v3.ConditionStatus_StatusOK,
 				LastUpdated:     timestamppb.Now(),
@@ -93,15 +94,15 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 		}
 	}
 
-	return group, nil
+	return role, nil
 
 }
 
-func (s *groupService) GetByID(ctx context.Context, id string) (*userv3.Group, error) {
+func (s *roleService) GetByID(ctx context.Context, id string) (*userv3.Role, error) {
 
-	group := &userv3.Group{
+	role := &userv3.Role{
 		ApiVersion: apiVersion,
-		Kind:       groupKind,
+		Kind:       roleKind,
 		Metadata: &v3.Metadata{
 			Id: id,
 		},
@@ -109,30 +110,30 @@ func (s *groupService) GetByID(ctx context.Context, id string) (*userv3.Group, e
 
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		group.Status = &v3.Status{
+		role.Status = &v3.Status{
 			ConditionType:   "Describe",
 			ConditionStatus: v3.ConditionStatus_StatusFailed,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
-		return group, err
+		return role, err
 	}
-	entity, err := s.dao.GetByID(ctx, uid, &models.Group{})
+	entity, err := s.dao.GetByID(ctx, uid, &models.Role{})
 	if err != nil {
-		group.Status = &v3.Status{
+		role.Status = &v3.Status{
 			ConditionType:   "Describe",
 			ConditionStatus: v3.ConditionStatus_StatusFailed,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
-		return group, err
+		return role, err
 	}
 
-	if grp, ok := entity.(*models.Group); ok {
+	if grp, ok := entity.(*models.Role); ok {
 		labels := make(map[string]string)
 		labels["organization"] = grp.OrganizationId.String()
 
-		group.Metadata = &v3.Metadata{
+		role.Metadata = &v3.Metadata{
 			Name:         grp.Name,
 			Description:  grp.Description,
 			Id:           grp.ID.String(),
@@ -141,48 +142,49 @@ func (s *groupService) GetByID(ctx context.Context, id string) (*userv3.Group, e
 			Labels:       labels,
 			ModifiedAt:   timestamppb.New(grp.ModifiedAt),
 		}
-		group.Spec = &userv3.GroupSpec{
-			Type: grp.Type,
+		role.Spec = &userv3.RoleSpec{
+			IsGlobal: grp.IsGlobal,
+			Scope:    grp.Scope,
 		}
-		group.Status = &v3.Status{
+		role.Status = &v3.Status{
 			LastUpdated:     timestamppb.Now(),
 			ConditionType:   "Describe",
 			ConditionStatus: v3.ConditionStatus_StatusOK,
 		}
 
-		return group, nil
+		return role, nil
 	}
-	return group, nil
+	return role, nil
 
 }
 
-func (s *groupService) GetByName(ctx context.Context, name string) (*userv3.Group, error) {
-	fmt.Println("name:", name);
+func (s *roleService) GetByName(ctx context.Context, name string) (*userv3.Role, error) {
+	fmt.Println("name:", name)
 
-	group := &userv3.Group{
+	role := &userv3.Role{
 		ApiVersion: apiVersion,
-		Kind:       groupKind,
+		Kind:       roleKind,
 		Metadata: &v3.Metadata{
 			Name: name,
 		},
 	}
 
-	entity, err := s.dao.GetByName(ctx, name, &models.Group{})
+	entity, err := s.dao.GetByName(ctx, name, &models.Role{})
 	if err != nil {
-		group.Status = &v3.Status{
+		role.Status = &v3.Status{
 			ConditionType:   "Describe",
 			ConditionStatus: v3.ConditionStatus_StatusFailed,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
-		return group, err
+		return role, err
 	}
 
-	if grp, ok := entity.(*models.Group); ok {
+	if grp, ok := entity.(*models.Role); ok {
 		labels := make(map[string]string)
 		labels["organization"] = grp.OrganizationId.String()
 
-		group.Metadata = &v3.Metadata{
+		role.Metadata = &v3.Metadata{
 			Name:         grp.Name,
 			Description:  grp.Description,
 			Id:           grp.ID.String(),
@@ -191,144 +193,147 @@ func (s *groupService) GetByName(ctx context.Context, name string) (*userv3.Grou
 			Labels:       labels,
 			ModifiedAt:   timestamppb.New(grp.ModifiedAt),
 		}
-		group.Spec = &userv3.GroupSpec{
-			Type: grp.Type,
+		role.Spec = &userv3.RoleSpec{
+			IsGlobal: grp.IsGlobal,
+			Scope:    grp.Scope,
 		}
-		group.Status = &v3.Status{
+		role.Status = &v3.Status{
 			LastUpdated:     timestamppb.Now(),
 			ConditionType:   "Describe",
 			ConditionStatus: v3.ConditionStatus_StatusOK,
 		}
 
-		return group, nil
+		return role, nil
 	}
-	return group, nil
+	return role, nil
 
 }
 
-func (s *groupService) Update(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
+func (s *roleService) Update(ctx context.Context, role *userv3.Role) (*userv3.Role, error) {
 	// TODO: inform when unchanged
 
-	id, _ := uuid.Parse(group.Metadata.Id)
-	entity, err := s.dao.GetByID(ctx, id, &models.Group{})
+	id, _ := uuid.Parse(role.Metadata.Id)
+	entity, err := s.dao.GetByID(ctx, id, &models.Role{})
 	if err != nil {
-		group.Status = &v3.Status{
+		role.Status = &v3.Status{
 			ConditionType:   "Update",
 			ConditionStatus: v3.ConditionStatus_StatusFailed,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
-		return group, err
+		return role, err
 	}
 
-	if grp, ok := entity.(*models.Group); ok {
-		//update group details
-		grp.Name = group.Metadata.Name
-		grp.Description = group.Metadata.Description
-		grp.Type = group.Spec.Type
+	if grp, ok := entity.(*models.Role); ok {
+		//update role details
+		grp.Name = role.Metadata.Name
+		grp.Description = role.Metadata.Description
+		grp.IsGlobal = role.Spec.IsGlobal
+		grp.Scope = role.Spec.Scope
 		grp.ModifiedAt = time.Now()
 
 		_, err = s.dao.Update(ctx, id, grp)
 		if err != nil {
-			group.Status = &v3.Status{
+			role.Status = &v3.Status{
 				ConditionType:   "Update",
 				ConditionStatus: v3.ConditionStatus_StatusFailed,
 				LastUpdated:     timestamppb.Now(),
 				Reason:          err.Error(),
 			}
-			return group, err
+			return role, err
 		}
 
 		//update spec and status
-		group.Spec = &userv3.GroupSpec{
-			Type: grp.Type,
+		role.Spec = &userv3.RoleSpec{
+			IsGlobal: grp.IsGlobal,
+			Scope:    grp.Scope,
 		}
-		group.Status = &v3.Status{
+		role.Status = &v3.Status{
 			ConditionType:   "Update",
 			ConditionStatus: v3.ConditionStatus_StatusOK,
 			LastUpdated:     timestamppb.Now(),
 		}
 	}
 
-	return group, nil
+	return role, nil
 }
 
-func (s *groupService) Delete(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
-	id, err := uuid.Parse(group.Metadata.Id)
+func (s *roleService) Delete(ctx context.Context, role *userv3.Role) (*userv3.Role, error) {
+	id, err := uuid.Parse(role.Metadata.Id)
 	if err != nil {
-		group.Status = &v3.Status{
+		role.Status = &v3.Status{
 			ConditionType:   "Delete",
 			ConditionStatus: v3.ConditionStatus_StatusFailed,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
-		return group, err
+		return role, err
 	}
-	entity, err := s.dao.GetByID(ctx, id, &models.Group{})
+	entity, err := s.dao.GetByID(ctx, id, &models.Role{})
 	if err != nil {
-		group.Status = &v3.Status{
+		role.Status = &v3.Status{
 			ConditionType:   "Delete",
 			ConditionStatus: v3.ConditionStatus_StatusFailed,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
-		return group, err
+		return role, err
 	}
-	if grp, ok := entity.(*models.Group); ok {
+	if grp, ok := entity.(*models.Role); ok {
 		err = s.dao.Delete(ctx, id, grp)
 		if err != nil {
-			group.Status = &v3.Status{
+			role.Status = &v3.Status{
 				ConditionType:   "Delete",
 				ConditionStatus: v3.ConditionStatus_StatusFailed,
 				LastUpdated:     timestamppb.Now(),
 				Reason:          err.Error(),
 			}
-			return group, err
+			return role, err
 		}
 		//update v3 spec
-		group.Metadata.Id = grp.ID.String()
-		group.Metadata.Name = grp.Name
-		group.Status = &v3.Status{
+		role.Metadata.Id = grp.ID.String()
+		role.Metadata.Name = grp.Name
+		role.Status = &v3.Status{
 			ConditionType:   "Delete",
 			ConditionStatus: v3.ConditionStatus_StatusOK,
 			LastUpdated:     timestamppb.Now(),
 		}
 	}
 
-	return group, nil
+	return role, nil
 }
 
-func (s *groupService) List(ctx context.Context, group *userv3.Group) (*userv3.GroupList, error) {
+func (s *roleService) List(ctx context.Context, role *userv3.Role) (*userv3.RoleList, error) {
 
-	var groups []*userv3.Group
-	groupList := &userv3.GroupList{
+	var roles []*userv3.Role
+	roleList := &userv3.RoleList{
 		ApiVersion: apiVersion,
-		Kind:       groupListKind,
+		Kind:       roleListKind,
 		Metadata: &v3.ListMetadata{
 			Count: 0,
 		},
 	}
-	if len(group.Metadata.Organization) > 0 {
-		orgId, err := uuid.Parse(group.Metadata.Organization)
+	if len(role.Metadata.Organization) > 0 {
+		orgId, err := uuid.Parse(role.Metadata.Organization)
 		if err != nil {
-			return groupList, err
+			return roleList, err
 		}
-		partId, err := uuid.Parse(group.Metadata.Partner)
+		partId, err := uuid.Parse(role.Metadata.Partner)
 		if err != nil {
-			return groupList, err
+			return roleList, err
 		}
-		var grps []models.Group
+		var grps []models.Role
 		entities, err := s.dao.List(ctx, uuid.NullUUID{UUID: partId, Valid: true}, uuid.NullUUID{UUID: orgId, Valid: true}, &grps)
 		if err != nil {
-			return groupList, err
+			return roleList, err
 		}
-		if grps, ok := entities.(*[]models.Group); ok {
+		if grps, ok := entities.(*[]models.Role); ok {
 			for _, grp := range *grps {
 				labels := make(map[string]string)
 				labels["organization"] = grp.OrganizationId.String()
 				labels["partner"] = grp.PartnerId.String()
 
-				group.Metadata = &v3.Metadata{
+				role.Metadata = &v3.Metadata{
 					Name:         grp.Name,
 					Description:  grp.Description,
 					Id:           grp.ID.String(),
@@ -337,25 +342,26 @@ func (s *groupService) List(ctx context.Context, group *userv3.Group) (*userv3.G
 					Labels:       labels,
 					ModifiedAt:   timestamppb.New(grp.ModifiedAt),
 				}
-				group.Spec = &userv3.GroupSpec{
-					Type: grp.Type,
+				role.Spec = &userv3.RoleSpec{
+					// IsGlobal: grp.IsGlobal,
+					Scope: grp.Scope,
 				}
-				groups = append(groups, group)
+				roles = append(roles, role)
 			}
 
 			//update the list metadata and items response
-			groupList.Metadata = &v3.ListMetadata{
-				Count: int64(len(groups)),
+			roleList.Metadata = &v3.ListMetadata{
+				Count: int64(len(roles)),
 			}
-			groupList.Items = groups
+			roleList.Items = roles
 		}
 
 	} else {
-		return groupList, fmt.Errorf("missing organization id in metadata")
+		return roleList, fmt.Errorf("missing organization id in metadata")
 	}
-	return groupList, nil
+	return roleList, nil
 }
 
-func (s *groupService) Close() error {
+func (s *roleService) Close() error {
 	return s.dao.Close()
 }

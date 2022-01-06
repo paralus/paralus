@@ -57,6 +57,16 @@ message RoleSpec {
         title : "RolePermissions"
         description : "Permissions for the role"
       } ];
+  bool isGlobal = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "IsGlobal"
+        description : "Specify if this is a global role"
+      } ];
+  string scope = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Scope"
+        description : "Scope of the rol"
+      } ];
 }
 
 message RoleList {

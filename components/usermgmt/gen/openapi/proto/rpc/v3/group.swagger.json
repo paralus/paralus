@@ -1420,6 +1420,16 @@
           },
           "description": "Permissions for the role",
           "title": "RolePermissions"
+        },
+        "isGlobal": {
+          "type": "boolean",
+          "description": "Specify if this is a global role",
+          "title": "IsGlobal"
+        },
+        "scope": {
+          "type": "string",
+          "description": "Scope of the rol",
+          "title": "Scope"
         }
       },
       "description": "Role specification",
