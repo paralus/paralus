@@ -24,7 +24,7 @@
     "application/yaml"
   ],
   "paths": {
-    "/auth/v3/role/{metadata.id}": {
+    "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/role/{metadata.id}": {
       "get": {
         "operationId": "Role_GetRole2",
         "responses": {
@@ -53,6 +53,20 @@
           }
         },
         "parameters": [
+          {
+            "name": "metadata.partner",
+            "description": "Partner to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "metadata.id",
             "in": "path",
@@ -91,13 +105,6 @@
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.partner",
             "description": "Project. Project of the resource",
             "in": "query",
             "required": false,
@@ -157,7 +164,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v3DeleteRoleResponse"
+              "$ref": "#/definitions/v3Role"
             }
           },
           "204": {
@@ -183,6 +190,20 @@
           }
         },
         "parameters": [
+          {
+            "name": "metadata.partner",
+            "description": "Partner to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "metadata.id",
             "in": "path",
@@ -221,13 +242,6 @@
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.partner",
             "description": "Project. Project of the resource",
             "in": "query",
             "required": false,
@@ -310,6 +324,20 @@
         },
         "parameters": [
           {
+            "name": "metadata.partner",
+            "description": "Partner to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "metadata.id",
             "in": "path",
             "required": true,
@@ -329,7 +357,7 @@
         ]
       }
     },
-    "/auth/v3/role/{metadata.name}": {
+    "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/role/{metadata.name}": {
       "get": {
         "operationId": "Role_GetRole",
         "responses": {
@@ -358,6 +386,20 @@
           }
         },
         "parameters": [
+          {
+            "name": "metadata.partner",
+            "description": "Partner to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "metadata.name",
             "description": "name of the resource",
@@ -390,13 +432,6 @@
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.partner",
             "description": "Project. Project of the resource",
             "in": "query",
             "required": false,
@@ -462,7 +497,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v3DeleteRoleResponse"
+              "$ref": "#/definitions/v3Role"
             }
           },
           "204": {
@@ -488,6 +523,20 @@
           }
         },
         "parameters": [
+          {
+            "name": "metadata.partner",
+            "description": "Partner to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "metadata.name",
             "description": "name of the resource",
@@ -520,13 +569,6 @@
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.partner",
             "description": "Project. Project of the resource",
             "in": "query",
             "required": false,
@@ -615,6 +657,20 @@
         },
         "parameters": [
           {
+            "name": "metadata.partner",
+            "description": "Partner to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "metadata.name",
             "description": "name of the resource",
             "in": "path",
@@ -635,7 +691,7 @@
         ]
       }
     },
-    "/auth/v3/roles": {
+    "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/roles": {
       "get": {
         "operationId": "Role_GetRoles",
         "responses": {
@@ -663,6 +719,108 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "metadata.partner",
+            "description": "Partner to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version. API Version of the Role resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "usermgmt.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind. Kind of the role resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "Role"
+          },
+          {
+            "name": "metadata.name",
+            "description": "Name. name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description. description of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project. Project of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.conditionType",
+            "description": "Condition Type. type of the status condition",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.conditionStatus",
+            "description": "Condition Status. status of the condition",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "StatusNotSet",
+              "StatusSubmitted",
+              "StatusOK",
+              "StatusFailed"
+            ],
+            "default": "StatusNotSet"
+          },
+          {
+            "name": "status.lastUpdated",
+            "description": "Last Updated. when the condition status is last updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.reason",
+            "description": "Reason. reason of the last condition status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "tags": [
           "Role"
         ]
@@ -699,6 +857,20 @@
           }
         },
         "parameters": [
+          {
+            "name": "metadata.partner",
+            "description": "Partner to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "body",
             "in": "body",
@@ -792,9 +964,6 @@
       "default": "StatusNotSet",
       "title": "$title: ConditionStatus\n$description: status of a condition for a resource"
     },
-    "v3DeleteRoleResponse": {
-      "type": "object"
-    },
     "v3ListMetadata": {
       "type": "object",
       "properties": {
@@ -851,10 +1020,15 @@
           "description": "Project of the resource",
           "title": "Project"
         },
+        "organization": {
+          "type": "string",
+          "description": "Organization to which the resource belongs",
+          "title": "Organization"
+        },
         "partner": {
           "type": "string",
-          "description": "Project of the resource",
-          "title": "Project"
+          "description": "Partner to which the resource belongs",
+          "title": "Partner"
         },
         "id": {
           "type": "string",

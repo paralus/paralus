@@ -65,22 +65,11 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-// Add filtering with org as well
-message GetGroupsRequest {
-  string project = 1
-      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        title : "Project",
-        description : "Project of user to filter by"
-        read_only : true
-      } ];
-}
-message DeleteGroupResponse {}
-
 service Group {
   rpc CreateGroup(rafay.dev.types.user.v3.Group)
       returns (rafay.dev.types.user.v3.Group) {
     option (google.api.http) = {
-      post : "/auth/v3/groups"
+      post : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/groups"
       body : "*"
     };
 
@@ -92,37 +81,37 @@ service Group {
     };
   };
 
-  rpc GetGroups(GetGroupsRequest) returns (rafay.dev.types.user.v3.GroupList) {
+  rpc GetGroups(rafay.dev.types.user.v3.Group) returns (rafay.dev.types.user.v3.GroupList) {
     option (google.api.http) = {
-      get : "/auth/v3/groups"
+      get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/groups"
     };
   };
 
   rpc GetGroup(rafay.dev.types.user.v3.Group) returns (rafay.dev.types.user.v3.Group) {
     option (google.api.http) = {
-      get : "/auth/v3/group/{metadata.name}"
+      get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/group/{metadata.name}"
       additional_bindings {
-        get : "/auth/v3/group/{metadata.id}"
+        get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/group/{metadata.id}"
       }
     };
   };
 
   rpc UpdateGroup(rafay.dev.types.user.v3.Group) returns (rafay.dev.types.user.v3.Group) {
     option (google.api.http) = {
-      put : "/auth/v3/group/{metadata.name}"
+      put : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/group/{metadata.name}"
       body : "*"
       additional_bindings {
-        put : "/auth/v3/group/{metadata.id}"
+        put : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/group/{metadata.id}"
         body : "*"
       }
     };
   };
 
-  rpc DeleteGroup(rafay.dev.types.user.v3.Group) returns (DeleteGroupResponse) {
+  rpc DeleteGroup(rafay.dev.types.user.v3.Group) returns (rafay.dev.types.user.v3.Group) {
     option (google.api.http) = {
-      delete : "/auth/v3/group/{metadata.name}"
+      delete : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/group/{metadata.name}"
       additional_bindings {
-        delete : "/auth/v3/group/{metadata.id}"
+        delete : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/group/{metadata.id}"
       }
     };
 

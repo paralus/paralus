@@ -64,15 +64,11 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-// TODO: Add filters
-message GetRolesRequest {}
-message DeleteRoleResponse {}
-
 service Role {
   rpc CreateRole(rafay.dev.types.user.v3.Role)
       returns (rafay.dev.types.user.v3.Role) {
     option (google.api.http) = {
-      post : "/auth/v3/roles"
+      post : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/roles"
       body : "*"
     };
 
@@ -84,37 +80,37 @@ service Role {
     };
   };
 
-  rpc GetRoles(GetRolesRequest) returns (rafay.dev.types.user.v3.RoleList) {
+  rpc GetRoles(rafay.dev.types.user.v3.Role) returns (rafay.dev.types.user.v3.RoleList) {
     option (google.api.http) = {
-      get : "/auth/v3/roles"
+      get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/roles"
     };
   };
 
   rpc GetRole(rafay.dev.types.user.v3.Role) returns (rafay.dev.types.user.v3.Role) {
     option (google.api.http) = {
-      get : "/auth/v3/role/{metadata.name}"
+      get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/role/{metadata.name}"
       additional_bindings {
-        get : "/auth/v3/role/{metadata.id}"
+        get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/role/{metadata.id}"
       }
     };
   };
 
   rpc UpdateRole(rafay.dev.types.user.v3.Role) returns (rafay.dev.types.user.v3.Role) {
     option (google.api.http) = {
-      put : "/auth/v3/role/{metadata.name}"
+      put : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/role/{metadata.name}"
       body : "*"
       additional_bindings {
-        put : "/auth/v3/role/{metadata.id}"
+        put : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/role/{metadata.id}"
         body : "*"
       }
     };
   };
 
-  rpc DeleteRole(rafay.dev.types.user.v3.Role) returns (DeleteRoleResponse) {
+  rpc DeleteRole(rafay.dev.types.user.v3.Role) returns (rafay.dev.types.user.v3.Role) {
     option (google.api.http) = {
-      delete : "/auth/v3/role/{metadata.name}"
+      delete : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/role/{metadata.name}"
       additional_bindings {
-        delete : "/auth/v3/role/{metadata.id}"
+        delete : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/role/{metadata.id}"
       }
     };
 

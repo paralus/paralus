@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"net"
 	"net/http"
@@ -11,6 +12,10 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	kclient "github.com/ory/kratos-client-go"
 	"github.com/spf13/viper"
+	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/pgdialect"
+	"github.com/uptrace/bun/driver/pgdriver"
+	"github.com/uptrace/bun/extra/bundebug"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/auth/interceptors"
@@ -18,6 +23,7 @@ import (
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
 	logv2 "github.com/RafaySystems/rcloud-base/components/common/pkg/log/v2"
 	configrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/config"
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/server"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/service"
 	pbrpcv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/rpc/v3"
 	rpcv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/rpc/v3"
@@ -31,6 +37,10 @@ const (
 	debugPortEnv    = "DEBUG_PORT"
 	kratosSchemeEnv = "KRATOS_SCHEME"
 	kratosAddrEnv   = "KRATOS_ADDR"
+	dbAddrEnv       = "DB_ADDR"
+	dbNameEnv       = "DB_NAME"
+	dbUserEnv       = "DB_USER"
+	dbPasswordEnv   = "DB_PASSWORD"
 	devEnv          = "DEV"
 	configAddrENV   = "CONFIG_ADDR"
 )
@@ -43,6 +53,12 @@ var (
 	kratosScheme        string
 	kratosAddr          string
 	kc                  *kclient.APIClient
+	dbAddr              string
+	dbName              string
+	dbUser              string
+	dbPassword          string
+	db                  *bun.DB
+	gs                  service.GroupService
 	dev                 bool
 	_log                = logv2.GetLogger()
 	authPool            authv3.AuthPool
@@ -56,6 +72,10 @@ func setup() {
 	viper.SetDefault(debugPortEnv, 12000)
 	viper.SetDefault(kratosSchemeEnv, "http")
 	viper.SetDefault(kratosAddrEnv, "localhost:4433")
+	viper.SetDefault(dbAddr, ":5432")
+	viper.SetDefault(dbNameEnv, "admindb")
+	viper.SetDefault(dbUserEnv, "admindbuser")
+	viper.SetDefault(dbPasswordEnv, "admindbpassword")
 	viper.SetDefault(devEnv, true)
 	viper.SetDefault(configAddrENV, "localhost:7000")
 
@@ -64,6 +84,10 @@ func setup() {
 	viper.BindEnv(debugPortEnv)
 	viper.BindEnv(kratosSchemeEnv)
 	viper.BindEnv(kratosAddrEnv)
+	viper.BindEnv(dbAddrEnv)
+	viper.BindEnv(dbNameEnv)
+	viper.BindEnv(dbPasswordEnv)
+	viper.BindEnv(dbPasswordEnv)
 	viper.BindEnv(devEnv)
 	viper.BindEnv(configAddrENV)
 
@@ -72,6 +96,10 @@ func setup() {
 	debugPort = viper.GetInt(debugPortEnv)
 	kratosScheme = viper.GetString(kratosSchemeEnv)
 	kratosAddr = viper.GetString(kratosAddrEnv)
+	dbAddr = viper.GetString(dbAddrEnv)
+	dbName = viper.GetString(dbNameEnv)
+	dbUser = viper.GetString(dbUserEnv)
+	dbPassword = viper.GetString(dbPasswordEnv)
 	dev = viper.GetBool(devEnv)
 	configAddr = viper.GetString(configAddrENV)
 
@@ -80,7 +108,18 @@ func setup() {
 	kratosConfig.Servers[0].URL = kratosScheme + "://" + kratosAddr
 	kc = kclient.NewAPIClient(kratosConfig)
 
-	_log.Infow("usrmgmt setup complete")
+	dsn := "postgres://admindbuser:admindbpassword@localhost:5432/admindb?sslmode=disable"
+	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	db := bun.NewDB(sqldb, pgdialect.New())
+
+	db.AddQueryHook(bundebug.NewQueryHook(
+		bundebug.WithVerbose(true),
+		bundebug.FromEnv("BUNDEBUG"),
+	))
+
+	gs = service.NewGroupService(db)
+
+	_log.Infow("usermgmt setup complete")
 }
 
 func run() {
@@ -110,6 +149,7 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 		fmt.Sprintf(":%d", rpcPort),
 		make([]runtime.ServeMuxOption, 0),
 		pbrpcv3.RegisterUserHandlerFromEndpoint,
+		pbrpcv3.RegisterGroupHandlerFromEndpoint,
 	)
 	if err != nil {
 		_log.Fatalw("unable to create gateway", "error", err)
@@ -137,6 +177,9 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	defer wg.Done()
 	// defer configPool.Close()
+	defer gs.Close()
+
+	groupServer := server.NewGroupServer(gs)
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", rpcPort))
 	if err != nil {
@@ -171,6 +214,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	}()
 
 	rpcv3.RegisterUserServer(s, service.NewUserServer(kc))
+	rpcv3.RegisterGroupServer(s, groupServer)
 
 	_log.Infow("starting rpc server", "port", rpcPort)
 	err = s.Serve(l)

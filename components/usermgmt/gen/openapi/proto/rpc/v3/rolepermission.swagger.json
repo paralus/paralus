@@ -97,8 +97,15 @@
             "type": "string"
           },
           {
+            "name": "metadata.organization",
+            "description": "Organization. Organization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "metadata.partner",
-            "description": "Project. Project of the resource",
+            "description": "Partner. Partner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -230,8 +237,15 @@
             "type": "string"
           },
           {
+            "name": "metadata.organization",
+            "description": "Organization. Organization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "metadata.partner",
-            "description": "Project. Project of the resource",
+            "description": "Partner. Partner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -330,6 +344,119 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "apiVersion",
+            "description": "API Version. API Version of the role permission resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "usermgmt.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind. Kind of the role permission resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "RolePermission"
+          },
+          {
+            "name": "metadata.name",
+            "description": "Name. name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description. description of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project. Project of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization. Organization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner. Partner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.permissions",
+            "description": "Permissions. List of permisions for role",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "status.conditionType",
+            "description": "Condition Type. type of the status condition",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.conditionStatus",
+            "description": "Condition Status. status of the condition",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "StatusNotSet",
+              "StatusSubmitted",
+              "StatusOK",
+              "StatusFailed"
+            ],
+            "default": "StatusNotSet"
+          },
+          {
+            "name": "status.lastUpdated",
+            "description": "Last Updated. when the condition status is last updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.reason",
+            "description": "Reason. reason of the last condition status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "tags": [
           "Rolepermission"
         ]
@@ -470,10 +597,15 @@
           "description": "Project of the resource",
           "title": "Project"
         },
+        "organization": {
+          "type": "string",
+          "description": "Organization to which the resource belongs",
+          "title": "Organization"
+        },
         "partner": {
           "type": "string",
-          "description": "Project of the resource",
-          "title": "Project"
+          "description": "Partner to which the resource belongs",
+          "title": "Partner"
         },
         "id": {
           "type": "string",

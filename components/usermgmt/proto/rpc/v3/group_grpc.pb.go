@@ -24,10 +24,10 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GroupClient interface {
 	CreateGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error)
-	GetGroups(ctx context.Context, in *GetGroupsRequest, opts ...grpc.CallOption) (*v3.GroupList, error)
+	GetGroups(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.GroupList, error)
 	GetGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error)
 	UpdateGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error)
-	DeleteGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*DeleteGroupResponse, error)
+	DeleteGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error)
 }
 
 type groupClient struct {
@@ -47,7 +47,7 @@ func (c *groupClient) CreateGroup(ctx context.Context, in *v3.Group, opts ...grp
 	return out, nil
 }
 
-func (c *groupClient) GetGroups(ctx context.Context, in *GetGroupsRequest, opts ...grpc.CallOption) (*v3.GroupList, error) {
+func (c *groupClient) GetGroups(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.GroupList, error) {
 	out := new(v3.GroupList)
 	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Group/GetGroups", in, out, opts...)
 	if err != nil {
@@ -74,8 +74,8 @@ func (c *groupClient) UpdateGroup(ctx context.Context, in *v3.Group, opts ...grp
 	return out, nil
 }
 
-func (c *groupClient) DeleteGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*DeleteGroupResponse, error) {
-	out := new(DeleteGroupResponse)
+func (c *groupClient) DeleteGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error) {
+	out := new(v3.Group)
 	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Group/DeleteGroup", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -88,10 +88,10 @@ func (c *groupClient) DeleteGroup(ctx context.Context, in *v3.Group, opts ...grp
 // for forward compatibility
 type GroupServer interface {
 	CreateGroup(context.Context, *v3.Group) (*v3.Group, error)
-	GetGroups(context.Context, *GetGroupsRequest) (*v3.GroupList, error)
+	GetGroups(context.Context, *v3.Group) (*v3.GroupList, error)
 	GetGroup(context.Context, *v3.Group) (*v3.Group, error)
 	UpdateGroup(context.Context, *v3.Group) (*v3.Group, error)
-	DeleteGroup(context.Context, *v3.Group) (*DeleteGroupResponse, error)
+	DeleteGroup(context.Context, *v3.Group) (*v3.Group, error)
 }
 
 // UnimplementedGroupServer should be embedded to have forward compatible implementations.
@@ -101,7 +101,7 @@ type UnimplementedGroupServer struct {
 func (UnimplementedGroupServer) CreateGroup(context.Context, *v3.Group) (*v3.Group, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateGroup not implemented")
 }
-func (UnimplementedGroupServer) GetGroups(context.Context, *GetGroupsRequest) (*v3.GroupList, error) {
+func (UnimplementedGroupServer) GetGroups(context.Context, *v3.Group) (*v3.GroupList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGroups not implemented")
 }
 func (UnimplementedGroupServer) GetGroup(context.Context, *v3.Group) (*v3.Group, error) {
@@ -110,7 +110,7 @@ func (UnimplementedGroupServer) GetGroup(context.Context, *v3.Group) (*v3.Group,
 func (UnimplementedGroupServer) UpdateGroup(context.Context, *v3.Group) (*v3.Group, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateGroup not implemented")
 }
-func (UnimplementedGroupServer) DeleteGroup(context.Context, *v3.Group) (*DeleteGroupResponse, error) {
+func (UnimplementedGroupServer) DeleteGroup(context.Context, *v3.Group) (*v3.Group, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteGroup not implemented")
 }
 
@@ -144,7 +144,7 @@ func _Group_CreateGroup_Handler(srv interface{}, ctx context.Context, dec func(i
 }
 
 func _Group_GetGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGroupsRequest)
+	in := new(v3.Group)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -156,7 +156,7 @@ func _Group_GetGroups_Handler(srv interface{}, ctx context.Context, dec func(int
 		FullMethod: "/rafay.dev.rpc.v3.Group/GetGroups",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GroupServer).GetGroups(ctx, req.(*GetGroupsRequest))
+		return srv.(GroupServer).GetGroups(ctx, req.(*v3.Group))
 	}
 	return interceptor(ctx, in, info, handler)
 }

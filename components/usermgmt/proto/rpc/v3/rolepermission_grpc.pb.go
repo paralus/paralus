@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RolepermissionClient interface {
-	GetRolepermissions(ctx context.Context, in *GetRolePermissionsRequest, opts ...grpc.CallOption) (*v3.RolePermissionList, error)
+	GetRolepermissions(ctx context.Context, in *v3.RolePermission, opts ...grpc.CallOption) (*v3.RolePermissionList, error)
 	GetRolepermission(ctx context.Context, in *v3.RolePermission, opts ...grpc.CallOption) (*v3.RolePermission, error)
 }
 
@@ -35,7 +35,7 @@ func NewRolepermissionClient(cc grpc.ClientConnInterface) RolepermissionClient {
 	return &rolepermissionClient{cc}
 }
 
-func (c *rolepermissionClient) GetRolepermissions(ctx context.Context, in *GetRolePermissionsRequest, opts ...grpc.CallOption) (*v3.RolePermissionList, error) {
+func (c *rolepermissionClient) GetRolepermissions(ctx context.Context, in *v3.RolePermission, opts ...grpc.CallOption) (*v3.RolePermissionList, error) {
 	out := new(v3.RolePermissionList)
 	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Rolepermission/GetRolepermissions", in, out, opts...)
 	if err != nil {
@@ -57,7 +57,7 @@ func (c *rolepermissionClient) GetRolepermission(ctx context.Context, in *v3.Rol
 // All implementations should embed UnimplementedRolepermissionServer
 // for forward compatibility
 type RolepermissionServer interface {
-	GetRolepermissions(context.Context, *GetRolePermissionsRequest) (*v3.RolePermissionList, error)
+	GetRolepermissions(context.Context, *v3.RolePermission) (*v3.RolePermissionList, error)
 	GetRolepermission(context.Context, *v3.RolePermission) (*v3.RolePermission, error)
 }
 
@@ -65,7 +65,7 @@ type RolepermissionServer interface {
 type UnimplementedRolepermissionServer struct {
 }
 
-func (UnimplementedRolepermissionServer) GetRolepermissions(context.Context, *GetRolePermissionsRequest) (*v3.RolePermissionList, error) {
+func (UnimplementedRolepermissionServer) GetRolepermissions(context.Context, *v3.RolePermission) (*v3.RolePermissionList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRolepermissions not implemented")
 }
 func (UnimplementedRolepermissionServer) GetRolepermission(context.Context, *v3.RolePermission) (*v3.RolePermission, error) {
@@ -84,7 +84,7 @@ func RegisterRolepermissionServer(s grpc.ServiceRegistrar, srv RolepermissionSer
 }
 
 func _Rolepermission_GetRolepermissions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRolePermissionsRequest)
+	in := new(v3.RolePermission)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -96,7 +96,7 @@ func _Rolepermission_GetRolepermissions_Handler(srv interface{}, ctx context.Con
 		FullMethod: "/rafay.dev.rpc.v3.Rolepermission/GetRolepermissions",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RolepermissionServer).GetRolepermissions(ctx, req.(*GetRolePermissionsRequest))
+		return srv.(RolepermissionServer).GetRolepermissions(ctx, req.(*v3.RolePermission))
 	}
 	return interceptor(ctx, in, info, handler)
 }

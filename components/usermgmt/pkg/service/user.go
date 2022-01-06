@@ -57,7 +57,7 @@ func (s *server) CreateUser(ctx context.Context, user *userv3.User) (*userv3.Use
 
 	return user, nil
 }
-func (s *server) GetUsers(ctx context.Context, _ *userrpcv3.GetUsersRequest) (*userv3.UserList, error) {
+func (s *server) GetUsers(ctx context.Context, _ *userv3.User) (*userv3.UserList, error) {
 	ir, _, err := s.kc.V0alpha2Api.AdminListIdentities(ctx).Execute()
 	if err != nil {
 		return nil, err

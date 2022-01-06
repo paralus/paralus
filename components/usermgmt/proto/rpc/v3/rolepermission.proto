@@ -65,10 +65,8 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-message GetRolePermissionsRequest {}
-
 service Rolepermission {
-  rpc GetRolepermissions(GetRolePermissionsRequest)
+  rpc GetRolepermissions(rafay.dev.types.user.v3.RolePermission)
       returns (rafay.dev.types.user.v3.RolePermissionList) {
     option (google.api.http) = {
       get : "/auth/v3/rolepermissions"

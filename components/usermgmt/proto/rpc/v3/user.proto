@@ -64,15 +64,13 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-// TODO: Add option to filter users list
-message GetUsersRequest {}
 message DeleteUserResponse {}
 
 service User {
   rpc CreateUser(rafay.dev.types.user.v3.User)
       returns (rafay.dev.types.user.v3.User) {
     option (google.api.http) = {
-      post : "/auth/v3/users"
+      post : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/users"
       body : "*"
     };
 
@@ -84,27 +82,27 @@ service User {
     };
   };
 
-  rpc GetUsers(GetUsersRequest) returns (rafay.dev.types.user.v3.UserList) {
+  rpc GetUsers(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.UserList) {
     option (google.api.http) = {
-      get : "/auth/v3/users"
+      get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/users"
     };
   };
 
   rpc GetUser(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.User) {
     option (google.api.http) = {
-      get : "/auth/v3/user/{metadata.name}"
+      get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/user/{metadata.name}"
       additional_bindings {
-        get : "/auth/v3/user/{metadata.id}"
+        get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/user/{metadata.id}"
       }
     };
   };
 
   rpc UpdateUser(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.User) {
     option (google.api.http) = {
-      put : "/auth/v3/user/{metadata.name}"
+      put : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/user/{metadata.name}"
       body : "*"
       additional_bindings {
-        put : "/auth/v3/user/{metadata.id}"
+        put : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/user/{metadata.id}"
         body : "*"
       }
     };
@@ -112,9 +110,9 @@ service User {
 
   rpc DeleteUser(rafay.dev.types.user.v3.User) returns (DeleteUserResponse) {
     option (google.api.http) = {
-      delete : "/auth/v3/user/{metadata.name}"
+      delete : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/user/{metadata.name}"
       additional_bindings {
-        delete : "/auth/v3/user/{metadata.id}"
+        delete : "/auth/partner/{metadata.partner}/organization/{metadata.organization}/v3/user/{metadata.id}"
       }
     };
 

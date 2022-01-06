@@ -24,10 +24,10 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RoleClient interface {
 	CreateRole(ctx context.Context, in *v3.Role, opts ...grpc.CallOption) (*v3.Role, error)
-	GetRoles(ctx context.Context, in *GetRolesRequest, opts ...grpc.CallOption) (*v3.RoleList, error)
+	GetRoles(ctx context.Context, in *v3.Role, opts ...grpc.CallOption) (*v3.RoleList, error)
 	GetRole(ctx context.Context, in *v3.Role, opts ...grpc.CallOption) (*v3.Role, error)
 	UpdateRole(ctx context.Context, in *v3.Role, opts ...grpc.CallOption) (*v3.Role, error)
-	DeleteRole(ctx context.Context, in *v3.Role, opts ...grpc.CallOption) (*DeleteRoleResponse, error)
+	DeleteRole(ctx context.Context, in *v3.Role, opts ...grpc.CallOption) (*v3.Role, error)
 }
 
 type roleClient struct {
@@ -47,7 +47,7 @@ func (c *roleClient) CreateRole(ctx context.Context, in *v3.Role, opts ...grpc.C
 	return out, nil
 }
 
-func (c *roleClient) GetRoles(ctx context.Context, in *GetRolesRequest, opts ...grpc.CallOption) (*v3.RoleList, error) {
+func (c *roleClient) GetRoles(ctx context.Context, in *v3.Role, opts ...grpc.CallOption) (*v3.RoleList, error) {
 	out := new(v3.RoleList)
 	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Role/GetRoles", in, out, opts...)
 	if err != nil {
@@ -74,8 +74,8 @@ func (c *roleClient) UpdateRole(ctx context.Context, in *v3.Role, opts ...grpc.C
 	return out, nil
 }
 
-func (c *roleClient) DeleteRole(ctx context.Context, in *v3.Role, opts ...grpc.CallOption) (*DeleteRoleResponse, error) {
-	out := new(DeleteRoleResponse)
+func (c *roleClient) DeleteRole(ctx context.Context, in *v3.Role, opts ...grpc.CallOption) (*v3.Role, error) {
+	out := new(v3.Role)
 	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Role/DeleteRole", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -88,10 +88,10 @@ func (c *roleClient) DeleteRole(ctx context.Context, in *v3.Role, opts ...grpc.C
 // for forward compatibility
 type RoleServer interface {
 	CreateRole(context.Context, *v3.Role) (*v3.Role, error)
-	GetRoles(context.Context, *GetRolesRequest) (*v3.RoleList, error)
+	GetRoles(context.Context, *v3.Role) (*v3.RoleList, error)
 	GetRole(context.Context, *v3.Role) (*v3.Role, error)
 	UpdateRole(context.Context, *v3.Role) (*v3.Role, error)
-	DeleteRole(context.Context, *v3.Role) (*DeleteRoleResponse, error)
+	DeleteRole(context.Context, *v3.Role) (*v3.Role, error)
 }
 
 // UnimplementedRoleServer should be embedded to have forward compatible implementations.
@@ -101,7 +101,7 @@ type UnimplementedRoleServer struct {
 func (UnimplementedRoleServer) CreateRole(context.Context, *v3.Role) (*v3.Role, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRole not implemented")
 }
-func (UnimplementedRoleServer) GetRoles(context.Context, *GetRolesRequest) (*v3.RoleList, error) {
+func (UnimplementedRoleServer) GetRoles(context.Context, *v3.Role) (*v3.RoleList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRoles not implemented")
 }
 func (UnimplementedRoleServer) GetRole(context.Context, *v3.Role) (*v3.Role, error) {
@@ -110,7 +110,7 @@ func (UnimplementedRoleServer) GetRole(context.Context, *v3.Role) (*v3.Role, err
 func (UnimplementedRoleServer) UpdateRole(context.Context, *v3.Role) (*v3.Role, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateRole not implemented")
 }
-func (UnimplementedRoleServer) DeleteRole(context.Context, *v3.Role) (*DeleteRoleResponse, error) {
+func (UnimplementedRoleServer) DeleteRole(context.Context, *v3.Role) (*v3.Role, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteRole not implemented")
 }
 
@@ -144,7 +144,7 @@ func _Role_CreateRole_Handler(srv interface{}, ctx context.Context, dec func(int
 }
 
 func _Role_GetRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRolesRequest)
+	in := new(v3.Role)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -156,7 +156,7 @@ func _Role_GetRoles_Handler(srv interface{}, ctx context.Context, dec func(inter
 		FullMethod: "/rafay.dev.rpc.v3.Role/GetRoles",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RoleServer).GetRoles(ctx, req.(*GetRolesRequest))
+		return srv.(RoleServer).GetRoles(ctx, req.(*v3.Role))
 	}
 	return interceptor(ctx, in, info, handler)
 }

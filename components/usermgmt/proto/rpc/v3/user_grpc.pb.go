@@ -24,7 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserClient interface {
 	CreateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
-	GetUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*v3.UserList, error)
+	GetUsers(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.UserList, error)
 	GetUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
 	UpdateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
 	DeleteUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*DeleteUserResponse, error)
@@ -47,7 +47,7 @@ func (c *userClient) CreateUser(ctx context.Context, in *v3.User, opts ...grpc.C
 	return out, nil
 }
 
-func (c *userClient) GetUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*v3.UserList, error) {
+func (c *userClient) GetUsers(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.UserList, error) {
 	out := new(v3.UserList)
 	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/GetUsers", in, out, opts...)
 	if err != nil {
@@ -88,7 +88,7 @@ func (c *userClient) DeleteUser(ctx context.Context, in *v3.User, opts ...grpc.C
 // for forward compatibility
 type UserServer interface {
 	CreateUser(context.Context, *v3.User) (*v3.User, error)
-	GetUsers(context.Context, *GetUsersRequest) (*v3.UserList, error)
+	GetUsers(context.Context, *v3.User) (*v3.UserList, error)
 	GetUser(context.Context, *v3.User) (*v3.User, error)
 	UpdateUser(context.Context, *v3.User) (*v3.User, error)
 	DeleteUser(context.Context, *v3.User) (*DeleteUserResponse, error)
@@ -101,7 +101,7 @@ type UnimplementedUserServer struct {
 func (UnimplementedUserServer) CreateUser(context.Context, *v3.User) (*v3.User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
-func (UnimplementedUserServer) GetUsers(context.Context, *GetUsersRequest) (*v3.UserList, error) {
+func (UnimplementedUserServer) GetUsers(context.Context, *v3.User) (*v3.UserList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUsers not implemented")
 }
 func (UnimplementedUserServer) GetUser(context.Context, *v3.User) (*v3.User, error) {
@@ -144,7 +144,7 @@ func _User_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(int
 }
 
 func _User_GetUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUsersRequest)
+	in := new(v3.User)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -156,7 +156,7 @@ func _User_GetUsers_Handler(srv interface{}, ctx context.Context, dec func(inter
 		FullMethod: "/rafay.dev.rpc.v3.User/GetUsers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).GetUsers(ctx, req.(*GetUsersRequest))
+		return srv.(UserServer).GetUsers(ctx, req.(*v3.User))
 	}
 	return interceptor(ctx, in, info, handler)
 }
