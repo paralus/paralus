@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/internal/models"
-	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/internal/persistence/provider/pg"
 	systemv3 "github.com/RafaySystems/rcloud-base/components/adminsrv/proto/types/systempb/v3"
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
