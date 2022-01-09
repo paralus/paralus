@@ -49,6 +49,98 @@ func NewGroupService(db *bun.DB) GroupService {
 	}
 }
 
+// Map roles to groups
+func (s *groupService) userGroupRoleRelation(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
+	groupId, _ := uuid.Parse(group.GetMetadata().GetId())
+	partnerId, _ := uuid.Parse(group.GetMetadata().GetPartner())
+	organizationId, _ := uuid.Parse(group.GetMetadata().GetOrganization())
+
+	// TODO: also parse out namesapce
+	projectNamespaceRoles := group.GetSpec().GetProjectnamespaceroles()
+
+	// TODO: add transactions
+	var pgnrs []models.ProjectGroupNamespaceRole
+	var pgrs []models.ProjectGroupRole
+	var grs []models.GroupRole
+	for _, pnr := range projectNamespaceRoles {
+		projectId, perr := uuid.Parse(pnr.GetProject())
+		namespaceId := pnr.GetNamespace()
+		roleId, err := uuid.Parse(pnr.GetRole())
+		if err != nil {
+			return group, err
+		}
+		switch {
+		case namespaceId != 0: // TODO: namespaceId can be zero?
+			pgnr := models.ProjectGroupNamespaceRole{
+				Name:           group.GetMetadata().GetName(),
+				Description:    group.GetMetadata().GetDescription(),
+				CreatedAt:      time.Now(),
+				ModifiedAt:     time.Now(),
+				Trash:          false,
+				RoleId:         roleId,
+				PartnerId:      partnerId,
+				OrganizationId: organizationId,
+				GroupId:        groupId,
+				ProjectId:      projectId,
+				NamesapceId:    namespaceId,
+				Active:         true,
+			}
+			pgnrs = append(pgnrs, pgnr)
+		case perr == nil: // TODO: maybe a better check?
+			pgr := models.ProjectGroupRole{
+				Name:           group.GetMetadata().GetName(),
+				Description:    group.GetMetadata().GetDescription(),
+				CreatedAt:      time.Now(),
+				ModifiedAt:     time.Now(),
+				Trash:          false,
+				Default:        true, // TODO: what is this for?
+				RoleId:         roleId,
+				PartnerId:      partnerId,
+				OrganizationId: organizationId,
+				GroupId:        groupId,
+				ProjectId:      projectId,
+				Active:         true,
+			}
+			pgrs = append(pgrs, pgr)
+		default:
+			gr := models.GroupRole{
+				Name:           group.GetMetadata().GetName(),
+				Description:    group.GetMetadata().GetDescription(),
+				CreatedAt:      time.Now(),
+				ModifiedAt:     time.Now(),
+				Trash:          false,
+				Default:        true, // TODO: what is this for?
+				RoleId:         roleId,
+				PartnerId:      partnerId,
+				OrganizationId: organizationId,
+				GroupId:        groupId,
+				Active:         true,
+			}
+			grs = append(grs, gr)
+		}
+	}
+	if len(pgnrs) > 0 {
+		_, err := s.dao.Create(ctx, &pgnrs)
+		if err != nil {
+			return group, err
+		}
+	}
+	if len(pgrs) > 0 {
+		_, err := s.dao.Create(ctx, &pgrs)
+		if err != nil {
+			return group, err
+		}
+	}
+	if len(grs) > 0 {
+		_, err := s.dao.Create(ctx, &grs)
+		if err != nil {
+			return group, err
+		}
+	}
+
+	return group, nil
+}
+
 // Update the users(account) mapped to each group
 func (s *groupService) updateGroupAccountRelation(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
 	// TODO: use a more efficient way to update the relations
@@ -88,7 +180,6 @@ func (s *groupService) updateGroupAccountRelation(ctx context.Context, group *us
 }
 
 func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
-
 	partnerId, _ := uuid.Parse(group.GetMetadata().GetPartner())
 	organizationId, _ := uuid.Parse(group.GetMetadata().GetOrganization())
 	// TODO: find out the interaction if project key is present in the group metadata
@@ -122,6 +213,7 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 		group.Spec = &userv3.GroupSpec{
 			Type:  createdGroup.Type,
 			Users: group.Spec.Users, // TODO: is this the right thing to do?
+			Projectnamespaceroles: group.Spec.Projectnamespaceroles, // TODO: is this the right thing to do?
 		}
 		if group.Status != nil {
 			group.Status = &v3.Status{
@@ -133,6 +225,16 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 	}
 
 	group, err = s.updateGroupAccountRelation(ctx, group)
+	if err != nil {
+		group.Status = &v3.Status{
+			ConditionType:   "Create",
+			ConditionStatus: v3.ConditionStatus_StatusFailed,
+			LastUpdated:     timestamppb.Now(),
+		}
+		return group, err
+	}
+
+	group, err = s.userGroupRoleRelation(ctx, group)
 	if err != nil {
 		group.Status = &v3.Status{
 			ConditionType:   "Create",
@@ -205,8 +307,6 @@ func (s *groupService) GetByID(ctx context.Context, id string) (*userv3.Group, e
 }
 
 func (s *groupService) GetByName(ctx context.Context, name string) (*userv3.Group, error) {
-	fmt.Println("name:", name)
-
 	group := &userv3.Group{
 		ApiVersion: apiVersion,
 		Kind:       groupKind,

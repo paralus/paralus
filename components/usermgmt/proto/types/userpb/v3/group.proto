@@ -45,19 +45,24 @@ message Group {
       } ];
 }
 
-message ProjectRole {
+message ProjectNamespaceRole {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema : {
-      title : "ProjectRole"
-      description : "Project and role pairing for permission"
+      title : "ProjectNamespaceRole"
+      description : "Project, role and namespace pairing for permission"
     }
   };
-  rafay.dev.types.system.v3.Project project = 1
+  string project = 1
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Project"
         description : "Project"
       } ];
-  rafay.dev.types.user.v3.Role role = 2
+  int64 namespace = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Namespace"
+        description : "Namespace"
+      } ];
+  string role = 3
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Role"
         description : "Role"
@@ -71,10 +76,10 @@ message GroupSpec {
       description : "Group specification"
     }
   };
-  repeated ProjectRole projectroles = 1
+  repeated ProjectNamespaceRole projectnamespaceroles = 1
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        title : "ProjectRoles"
-        description : "ProjectRole groups for permission"
+        title : "ProjectNamespaceRoles"
+        description : "Project, namespace, role associations for permission"
       } ];
   repeated string users = 2
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
