@@ -49,13 +49,51 @@ func NewGroupService(db *bun.DB) GroupService {
 	}
 }
 
+// Update the users(account) mapped to each group
+func (s *groupService) updateGroupAccountRelation(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
+	// TODO: use a more efficient way to update the relations
+	// TODO: diff and delete the old relations
+	groupId, _ := uuid.Parse(group.GetMetadata().GetId())
+
+	// TODO: add transactions
+	var grpaccs []models.GroupAccount
+	for _, account := range group.GetSpec().GetUsers() {
+		accountId, err := uuid.Parse(account)
+		if err != nil {
+			return nil, err
+		}
+		grp := models.GroupAccount{
+			Name:        group.GetMetadata().GetName(),
+			Description: group.GetMetadata().GetDescription(),
+			CreatedAt:   time.Now(),
+			ModifiedAt:  time.Now(),
+			Trash:       false,
+			AccountId:   accountId,
+			GroupId:     groupId,
+			Active:      true,
+		}
+		grpaccs = append(grpaccs, grp)
+	}
+	_, err := s.dao.Create(ctx, &grpaccs)
+	if err != nil {
+		group.Status = &v3.Status{
+			ConditionType:   "Create",
+			ConditionStatus: v3.ConditionStatus_StatusFailed,
+			LastUpdated:     timestamppb.Now(),
+		}
+		return group, err
+	}
+
+	return group, nil
+}
+
 func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
 
 	partnerId, _ := uuid.Parse(group.GetMetadata().GetPartner())
 	organizationId, _ := uuid.Parse(group.GetMetadata().GetOrganization())
 	// TODO: find out the interaction if project key is present in the group metadata
 	// TODO: check if a group with the same 'name' already exists and fail if so
-    // TODO: we should be specifying names instead of ids for partner and org
+	// TODO: we should be specifying names instead of ids for partner and org (at least in output)
 	// TODO: create vs apply difference like in kubectl??
 	//convert v3 spec to internal models
 	grp := models.Group{
@@ -82,7 +120,8 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 	if createdGroup, ok := entity.(*models.Group); ok {
 		group.Metadata.Id = createdGroup.ID.String()
 		group.Spec = &userv3.GroupSpec{
-			Type: createdGroup.Type,
+			Type:  createdGroup.Type,
+			Users: group.Spec.Users, // TODO: is this the right thing to do?
 		}
 		if group.Status != nil {
 			group.Status = &v3.Status{
@@ -93,8 +132,17 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 		}
 	}
 
-	return group, nil
+	group, err = s.updateGroupAccountRelation(ctx, group)
+	if err != nil {
+		group.Status = &v3.Status{
+			ConditionType:   "Create",
+			ConditionStatus: v3.ConditionStatus_StatusFailed,
+			LastUpdated:     timestamppb.Now(),
+		}
+		return group, err
+	}
 
+	return group, nil
 }
 
 func (s *groupService) GetByID(ctx context.Context, id string) (*userv3.Group, error) {
@@ -157,7 +205,7 @@ func (s *groupService) GetByID(ctx context.Context, id string) (*userv3.Group, e
 }
 
 func (s *groupService) GetByName(ctx context.Context, name string) (*userv3.Group, error) {
-	fmt.Println("name:", name);
+	fmt.Println("name:", name)
 
 	group := &userv3.Group{
 		ApiVersion: apiVersion,

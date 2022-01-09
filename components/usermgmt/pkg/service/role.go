@@ -57,7 +57,7 @@ func (s *roleService) Create(ctx context.Context, role *userv3.Role) (*userv3.Ro
 	// TODO: we should be specifying names instead of ids for partner and org
 	// TODO: create vs apply difference like in kubectl??
 	//convert v3 spec to internal models
-	grp := models.Role{
+	rle := models.Role{
 		Name:           role.GetMetadata().GetName(),
 		Description:    role.GetMetadata().GetDescription(),
 		CreatedAt:      time.Now(),
@@ -68,7 +68,7 @@ func (s *roleService) Create(ctx context.Context, role *userv3.Role) (*userv3.Ro
 		IsGlobal:       role.GetSpec().GetIsGlobal(),
 		Scope:          role.GetSpec().GetScope(),
 	}
-	entity, err := s.dao.Create(ctx, &grp)
+	entity, err := s.dao.Create(ctx, &rle)
 	if err != nil {
 		role.Status = &v3.Status{
 			ConditionType:   "Create",
@@ -129,22 +129,22 @@ func (s *roleService) GetByID(ctx context.Context, id string) (*userv3.Role, err
 		return role, err
 	}
 
-	if grp, ok := entity.(*models.Role); ok {
+	if rle, ok := entity.(*models.Role); ok {
 		labels := make(map[string]string)
-		labels["organization"] = grp.OrganizationId.String()
+		labels["organization"] = rle.OrganizationId.String()
 
 		role.Metadata = &v3.Metadata{
-			Name:         grp.Name,
-			Description:  grp.Description,
-			Id:           grp.ID.String(),
-			Organization: grp.OrganizationId.String(),
-			Partner:      grp.PartnerId.String(),
+			Name:         rle.Name,
+			Description:  rle.Description,
+			Id:           rle.ID.String(),
+			Organization: rle.OrganizationId.String(),
+			Partner:      rle.PartnerId.String(),
 			Labels:       labels,
-			ModifiedAt:   timestamppb.New(grp.ModifiedAt),
+			ModifiedAt:   timestamppb.New(rle.ModifiedAt),
 		}
 		role.Spec = &userv3.RoleSpec{
-			IsGlobal: grp.IsGlobal,
-			Scope:    grp.Scope,
+			IsGlobal: rle.IsGlobal,
+			Scope:    rle.Scope,
 		}
 		role.Status = &v3.Status{
 			LastUpdated:     timestamppb.Now(),
@@ -180,22 +180,22 @@ func (s *roleService) GetByName(ctx context.Context, name string) (*userv3.Role,
 		return role, err
 	}
 
-	if grp, ok := entity.(*models.Role); ok {
+	if rle, ok := entity.(*models.Role); ok {
 		labels := make(map[string]string)
-		labels["organization"] = grp.OrganizationId.String()
+		labels["organization"] = rle.OrganizationId.String()
 
 		role.Metadata = &v3.Metadata{
-			Name:         grp.Name,
-			Description:  grp.Description,
-			Id:           grp.ID.String(),
-			Organization: grp.OrganizationId.String(),
-			Partner:      grp.PartnerId.String(),
+			Name:         rle.Name,
+			Description:  rle.Description,
+			Id:           rle.ID.String(),
+			Organization: rle.OrganizationId.String(),
+			Partner:      rle.PartnerId.String(),
 			Labels:       labels,
-			ModifiedAt:   timestamppb.New(grp.ModifiedAt),
+			ModifiedAt:   timestamppb.New(rle.ModifiedAt),
 		}
 		role.Spec = &userv3.RoleSpec{
-			IsGlobal: grp.IsGlobal,
-			Scope:    grp.Scope,
+			IsGlobal: rle.IsGlobal,
+			Scope:    rle.Scope,
 		}
 		role.Status = &v3.Status{
 			LastUpdated:     timestamppb.Now(),
@@ -224,15 +224,15 @@ func (s *roleService) Update(ctx context.Context, role *userv3.Role) (*userv3.Ro
 		return role, err
 	}
 
-	if grp, ok := entity.(*models.Role); ok {
+	if rle, ok := entity.(*models.Role); ok {
 		//update role details
-		grp.Name = role.Metadata.Name
-		grp.Description = role.Metadata.Description
-		grp.IsGlobal = role.Spec.IsGlobal
-		grp.Scope = role.Spec.Scope
-		grp.ModifiedAt = time.Now()
+		rle.Name = role.Metadata.Name
+		rle.Description = role.Metadata.Description
+		rle.IsGlobal = role.Spec.IsGlobal
+		rle.Scope = role.Spec.Scope
+		rle.ModifiedAt = time.Now()
 
-		_, err = s.dao.Update(ctx, id, grp)
+		_, err = s.dao.Update(ctx, id, rle)
 		if err != nil {
 			role.Status = &v3.Status{
 				ConditionType:   "Update",
@@ -245,8 +245,8 @@ func (s *roleService) Update(ctx context.Context, role *userv3.Role) (*userv3.Ro
 
 		//update spec and status
 		role.Spec = &userv3.RoleSpec{
-			IsGlobal: grp.IsGlobal,
-			Scope:    grp.Scope,
+			IsGlobal: rle.IsGlobal,
+			Scope:    rle.Scope,
 		}
 		role.Status = &v3.Status{
 			ConditionType:   "Update",
@@ -279,8 +279,8 @@ func (s *roleService) Delete(ctx context.Context, role *userv3.Role) (*userv3.Ro
 		}
 		return role, err
 	}
-	if grp, ok := entity.(*models.Role); ok {
-		err = s.dao.Delete(ctx, id, grp)
+	if rle, ok := entity.(*models.Role); ok {
+		err = s.dao.Delete(ctx, id, rle)
 		if err != nil {
 			role.Status = &v3.Status{
 				ConditionType:   "Delete",
@@ -291,8 +291,8 @@ func (s *roleService) Delete(ctx context.Context, role *userv3.Role) (*userv3.Ro
 			return role, err
 		}
 		//update v3 spec
-		role.Metadata.Id = grp.ID.String()
-		role.Metadata.Name = grp.Name
+		role.Metadata.Id = rle.ID.String()
+		role.Metadata.Name = rle.Name
 		role.Status = &v3.Status{
 			ConditionType:   "Delete",
 			ConditionStatus: v3.ConditionStatus_StatusOK,
@@ -322,29 +322,29 @@ func (s *roleService) List(ctx context.Context, role *userv3.Role) (*userv3.Role
 		if err != nil {
 			return roleList, err
 		}
-		var grps []models.Role
-		entities, err := s.dao.List(ctx, uuid.NullUUID{UUID: partId, Valid: true}, uuid.NullUUID{UUID: orgId, Valid: true}, &grps)
+		var rles []models.Role
+		entities, err := s.dao.List(ctx, uuid.NullUUID{UUID: partId, Valid: true}, uuid.NullUUID{UUID: orgId, Valid: true}, &rles)
 		if err != nil {
 			return roleList, err
 		}
-		if grps, ok := entities.(*[]models.Role); ok {
-			for _, grp := range *grps {
+		if rles, ok := entities.(*[]models.Role); ok {
+			for _, rle := range *rles {
 				labels := make(map[string]string)
-				labels["organization"] = grp.OrganizationId.String()
-				labels["partner"] = grp.PartnerId.String()
+				labels["organization"] = rle.OrganizationId.String()
+				labels["partner"] = rle.PartnerId.String()
 
 				role.Metadata = &v3.Metadata{
-					Name:         grp.Name,
-					Description:  grp.Description,
-					Id:           grp.ID.String(),
-					Organization: grp.OrganizationId.String(),
-					Partner:      grp.PartnerId.String(),
+					Name:         rle.Name,
+					Description:  rle.Description,
+					Id:           rle.ID.String(),
+					Organization: rle.OrganizationId.String(),
+					Partner:      rle.PartnerId.String(),
 					Labels:       labels,
-					ModifiedAt:   timestamppb.New(grp.ModifiedAt),
+					ModifiedAt:   timestamppb.New(rle.ModifiedAt),
 				}
 				role.Spec = &userv3.RoleSpec{
-					// IsGlobal: grp.IsGlobal,
-					Scope: grp.Scope,
+					// IsGlobal: rle.IsGlobal,
+					Scope: rle.Scope,
 				}
 				roles = append(roles, role)
 			}
