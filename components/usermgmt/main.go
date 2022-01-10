@@ -58,6 +58,7 @@ var (
 	dbUser              string
 	dbPassword          string
 	db                  *bun.DB
+	us                  service.UserService
 	gs                  service.GroupService
 	rs                  service.RoleService
 	dev                 bool
@@ -118,6 +119,7 @@ func setup() {
 		bundebug.FromEnv("BUNDEBUG"),
 	))
 
+	us = service.NewUserService(kc)
 	gs = service.NewGroupService(db)
 	rs = service.NewRoleService(db)
 
@@ -183,6 +185,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	defer gs.Close()
 	defer rs.Close()
 
+	userServer := server.NewUserServer(us)
 	groupServer := server.NewGroupServer(gs)
 	roleServer := server.NewRoleServer(rs)
 
@@ -218,7 +221,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 		_log.Infow("context done")
 	}()
 
-	rpcv3.RegisterUserServer(s, service.NewUserServer(kc))
+	rpcv3.RegisterUserServer(s, userServer)
 	rpcv3.RegisterGroupServer(s, groupServer)
 	rpcv3.RegisterRoleServer(s, roleServer)
 
