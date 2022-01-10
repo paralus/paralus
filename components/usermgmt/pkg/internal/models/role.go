@@ -15,7 +15,7 @@ type Role struct {
 	Description    string    `bun:"description,notnull"`
 	CreatedAt      time.Time `bun:"created_at,notnull,default:current_timestamp"`
 	ModifiedAt     time.Time `bun:"modified_at,notnull,default:current_timestamp"`
-	Trash          bool      `bun:"trash,notnull"`
+	Trash          bool      `bun:"trash,notnull,default:false"`
 	OrganizationId uuid.UUID `bun:"organization_id,type:uuid"`
 	PartnerId      uuid.UUID `bun:"partner_id,type:uuid"`
 	IsGlobal       bool      `bun:"is_global,notnull"`
