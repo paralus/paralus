@@ -21,11 +21,11 @@ grant execute on function uuid_generate_v4() to admindbuser;
 
 *This will grant the necessary permission to the newly created user to run uuid_generate_v4()*
 
-### Run migrations
+### Run application migrations
 
 We use [`golang-migrate`](https://github.com/golang-migrate/migrate) to perform migrations.
 
-### Install [`golang-migrate`](https://github.com/golang-migrate/migrate)
+#### Install [`golang-migrate`](https://github.com/golang-migrate/migrate)
 
 ``` shell
 go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
@@ -35,7 +35,7 @@ go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@lat
 
 You can refer to the [guide](https://github.com/golang-migrate/migrate/tree/master/cmd/migrate) for full details.
 
-### Run migrations
+#### Run migrations
 
 Example for `admindb`:
 
@@ -45,4 +45,3 @@ migrate -path ./persistence/migrations/admindb -database "$POSTGRESQL_URL" up
 ```
 
 See [cli-usage](https://github.com/golang-migrate/migrate#cli-usage) for more info.
-

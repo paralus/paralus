@@ -6,6 +6,13 @@ All user/auth related requests go through here.
 
 ## Development
 
+### Run kratos migrations
+
+``` shell
+export DSN='postgres://admindbuser@localhost:5432/admindb?sslmode=disable'
+kratos -c kratos.yaml migrate sql -e --yes
+```
+
 ### Start kratos
 
 ``` shell
@@ -19,4 +26,3 @@ kratos serve -c kratos.yml
 cd components/usermgmt/_kratos
 go run main.go
 ```
-
