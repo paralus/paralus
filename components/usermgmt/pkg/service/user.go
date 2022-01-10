@@ -3,10 +3,16 @@ package service
 import (
 	"context"
 	"fmt"
+	"time"
 
+	"github.com/google/uuid"
 	kclient "github.com/ory/kratos-client-go"
+	bun "github.com/uptrace/bun"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/internal/models"
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/internal/persistence/provider/pg"
 	userrpcv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/rpc/v3"
 	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 )
@@ -34,11 +40,12 @@ type UserService interface {
 }
 
 type userService struct {
-	kc *kclient.APIClient
+	kc  *kclient.APIClient
+	dao pg.EntityDAO
 }
 
-func NewUserService(kc *kclient.APIClient) UserService {
-	return &userService{kc: kc}
+func NewUserService(kc *kclient.APIClient, db *bun.DB) UserService {
+	return &userService{kc: kc, dao: pg.NewEntityDAO(db)}
 }
 
 // Convert from kratos.Identity to GVK format
@@ -58,6 +65,98 @@ func identityToUser(id *kclient.Identity) *userv3.User {
 	}
 }
 
+// Map roles to accounts
+func (s *userService) updateUserRoleRelation(ctx context.Context, user *userv3.User) (*userv3.User, error) {
+	accountId, _ := uuid.Parse(user.GetMetadata().GetId())
+	partnerId, _ := uuid.Parse(user.GetMetadata().GetPartner())
+	organizationId, _ := uuid.Parse(user.GetMetadata().GetOrganization())
+
+	// TODO: also parse out namesapce
+	projectNamespaceRoles := user.GetSpec().GetProjectnamespaceroles()
+
+	// TODO: add transactions
+	var panrs []models.ProjectAccountNamespaceRole
+	var pars []models.ProjectAccountResourcerole
+	var ars []models.AccountResourcerole
+	for _, pnr := range projectNamespaceRoles {
+		projectId, perr := uuid.Parse(pnr.GetProject())
+		namespaceId := pnr.GetNamespace()
+		roleId, err := uuid.Parse(pnr.GetRole())
+		if err != nil {
+			return user, err
+		}
+		switch {
+		case namespaceId != 0: // TODO: namespaceId can be zero?
+			panr := models.ProjectAccountNamespaceRole{
+				Name:           user.GetMetadata().GetName(),
+				Description:    user.GetMetadata().GetDescription(),
+				CreatedAt:      time.Now(),
+				ModifiedAt:     time.Now(),
+				Trash:          false,
+				RoleId:         roleId,
+				PartnerId:      partnerId,
+				OrganizationId: organizationId,
+				AccountId:      accountId,
+				ProjectId:      projectId,
+				NamesapceId:    namespaceId,
+				Active:         true,
+			}
+			panrs = append(panrs, panr)
+		case perr == nil: // TODO: maybe a better check?
+			par := models.ProjectAccountResourcerole{
+				Name:           user.GetMetadata().GetName(),
+				Description:    user.GetMetadata().GetDescription(),
+				CreatedAt:      time.Now(),
+				ModifiedAt:     time.Now(),
+				Trash:          false,
+				Default:        true, // TODO: what is this for?
+				RoleId:         roleId,
+				PartnerId:      partnerId,
+				OrganizationId: organizationId,
+				AccountId:      accountId,
+				ProjectId:      projectId,
+				Active:         true,
+			}
+			pars = append(pars, par)
+		default:
+			ar := models.AccountResourcerole{
+				Name:           user.GetMetadata().GetName(),
+				Description:    user.GetMetadata().GetDescription(),
+				CreatedAt:      time.Now(),
+				ModifiedAt:     time.Now(),
+				Trash:          false,
+				Default:        true, // TODO: what is this for?
+				RoleId:         roleId,
+				PartnerId:      partnerId,
+				OrganizationId: organizationId,
+				AccountId:      accountId,
+				Active:         true,
+			}
+			ars = append(ars, ar)
+		}
+	}
+	if len(panrs) > 0 {
+		_, err := s.dao.Create(ctx, &panrs)
+		if err != nil {
+			return user, err
+		}
+	}
+	if len(pars) > 0 {
+		_, err := s.dao.Create(ctx, &pars)
+		if err != nil {
+			return user, err
+		}
+	}
+	if len(ars) > 0 {
+		_, err := s.dao.Create(ctx, &ars)
+		if err != nil {
+			return user, err
+		}
+	}
+
+	return user, nil
+}
+
 func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.User, error) {
 	// TODO: restrict endpoint to admin
 	cib := kclient.NewAdminCreateIdentityBody("default", map[string]interface{}{"email": user.Spec.Username, "first_name": user.Spec.FirstName, "last_name": user.Spec.LastName})
@@ -67,11 +166,23 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 		// TODO: forward exact error message from kratos (eg: json schema validation)
 		return nil, err
 	}
+	user.Metadata.Id = ir.Id
 	rlb := kclient.NewAdminCreateSelfServiceRecoveryLinkBody(ir.Id)
 	rl, _, err := s.kc.V0alpha2Api.AdminCreateSelfServiceRecoveryLink(ctx).AdminCreateSelfServiceRecoveryLinkBody(*rlb).Execute()
 	if err != nil {
 		return nil, err
 	}
+
+	user, err = s.updateUserRoleRelation(ctx, user)
+	if err != nil {
+		user.Status = &v3.Status{
+			ConditionType:   "Create",
+			ConditionStatus: v3.ConditionStatus_StatusFailed,
+			LastUpdated:     timestamppb.Now(),
+		}
+		return user, err
+	}
+
 	fmt.Println("Recovery link:", rl.RecoveryLink) // TODO: email the recovery link to the user
 	user.Metadata = &v3.Metadata{
 		Id: ir.Id,

@@ -79,7 +79,7 @@ message GroupSpec {
   repeated ProjectNamespaceRole projectnamespaceroles = 1
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "ProjectNamespaceRoles"
-        description : "Project, namespace, role associations for permission"
+        description : "Project, namespace, role associations for group"
       } ];
   repeated string users = 2
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {

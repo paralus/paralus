@@ -119,7 +119,7 @@ func setup() {
 		bundebug.FromEnv("BUNDEBUG"),
 	))
 
-	us = service.NewUserService(kc)
+	us = service.NewUserService(kc, db)
 	gs = service.NewGroupService(db)
 	rs = service.NewRoleService(db)
 

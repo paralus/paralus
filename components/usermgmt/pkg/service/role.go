@@ -48,11 +48,11 @@ func NewRoleService(db *bun.DB) RoleService {
 	}
 }
 
+// TODO: This right now just lets us create roles, we will have to make sure the mapping happens
 func (s *roleService) Create(ctx context.Context, role *userv3.Role) (*userv3.Role, error) {
 
 	partnerId, _ := uuid.Parse(role.GetMetadata().GetPartner())
 	organizationId, _ := uuid.Parse(role.GetMetadata().GetOrganization())
-	// TODO: find out the interaction if project key is present in the role metadata
 	// TODO: check if a role with the same 'name' already exists and fail if so
 	// TODO: we should be specifying names instead of ids for partner and org
 	// TODO: create vs apply difference like in kubectl??

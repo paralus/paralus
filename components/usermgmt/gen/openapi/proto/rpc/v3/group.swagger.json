@@ -1138,7 +1138,7 @@
           "items": {
             "$ref": "#/definitions/v3ProjectNamespaceRole"
           },
-          "description": "Project, namespace, role associations for permission",
+          "description": "Project, namespace, role associations for group",
           "title": "ProjectNamespaceRoles"
         },
         "users": {

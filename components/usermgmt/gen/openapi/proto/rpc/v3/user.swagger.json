@@ -1387,6 +1387,29 @@
         "project"
       ]
     },
+    "v3ProjectNamespaceRole": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "description": "Project",
+          "title": "Project"
+        },
+        "namespace": {
+          "type": "string",
+          "format": "int64",
+          "description": "Namespace",
+          "title": "Namespace"
+        },
+        "role": {
+          "type": "string",
+          "description": "Role",
+          "title": "Role"
+        }
+      },
+      "description": "Project, role and namespace pairing for permission",
+      "title": "ProjectNamespaceRole"
+    },
     "v3User": {
       "type": "object",
       "properties": {
@@ -1500,6 +1523,14 @@
           },
           "description": "Groups the user belongs to",
           "title": "Group"
+        },
+        "projectnamespaceroles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3ProjectNamespaceRole"
+          },
+          "description": "Project, namespace, role associations for user",
+          "title": "ProjectNamespaceRoles"
         },
         "emailVerified": {
           "type": "boolean",

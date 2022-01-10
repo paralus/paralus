@@ -106,24 +106,29 @@ message UserSpec {
   //       title : "Projects"
   //       description : "Projects of the user"
   //     } ];
-  repeated string groups = 9
+  repeated string groups = 6
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Group"
         description : "Groups the user belongs to"
       } ];
-  bool emailVerified = 11
+  repeated rafay.dev.types.user.v3.ProjectNamespaceRole projectnamespaceroles = 7
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "ProjectNamespaceRoles"
+        description : "Project, namespace, role associations for user"
+      } ];
+  bool emailVerified = 8
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "EmailVerified"
         description : "Flag to show if the email of the user was verified"
         read_only : true
       } ];
-  bool phoneVerified = 12
+  bool phoneVerified = 9
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "PhoneVerified"
         description : "Flag to show if phone number of the user was verified"
         read_only : true
       } ];
-  bool totpVerified = 13
+  bool totpVerified = 10
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "TotpVerified"
         description : "Flag to show if the TOTP of the user was verified"

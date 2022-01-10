@@ -50,7 +50,7 @@ func NewGroupService(db *bun.DB) GroupService {
 }
 
 // Map roles to groups
-func (s *groupService) userGroupRoleRelation(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
+func (s *groupService) updateGroupRoleRelation(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
 	groupId, _ := uuid.Parse(group.GetMetadata().GetId())
 	partnerId, _ := uuid.Parse(group.GetMetadata().GetPartner())
 	organizationId, _ := uuid.Parse(group.GetMetadata().GetOrganization())
@@ -234,7 +234,7 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 		return group, err
 	}
 
-	group, err = s.userGroupRoleRelation(ctx, group)
+	group, err = s.updateGroupRoleRelation(ctx, group)
 	if err != nil {
 		group.Status = &v3.Status{
 			ConditionType:   "Create",
