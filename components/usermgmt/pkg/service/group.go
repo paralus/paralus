@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/internal/models"
-	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
@@ -63,14 +63,16 @@ func (s *groupService) updateGroupRoleRelation(ctx context.Context, group *userv
 	var pgrs []models.ProjectGroupRole
 	var grs []models.GroupRole
 	for _, pnr := range projectNamespaceRoles {
-		projectId, perr := uuid.Parse(pnr.GetProject())
-		namespaceId := pnr.GetNamespace()
+		project := pnr.Project
+		namespace := pnr.Namespace
 		roleId, err := uuid.Parse(pnr.GetRole())
 		if err != nil {
 			return group, err
 		}
 		switch {
-		case namespaceId != 0: // TODO: namespaceId can be zero?
+		case namespace != nil:
+			namespaceId := pnr.GetNamespace()
+			projectId, _ := uuid.Parse(pnr.GetProject())
 			pgnr := models.ProjectGroupNamespaceRole{
 				Name:           group.GetMetadata().GetName(),
 				Description:    group.GetMetadata().GetDescription(),
@@ -86,7 +88,8 @@ func (s *groupService) updateGroupRoleRelation(ctx context.Context, group *userv
 				Active:         true,
 			}
 			pgnrs = append(pgnrs, pgnr)
-		case perr == nil: // TODO: maybe a better check?
+		case project != nil:
+			projectId, _ := uuid.Parse(pnr.GetProject())
 			pgr := models.ProjectGroupRole{
 				Name:           group.GetMetadata().GetName(),
 				Description:    group.GetMetadata().GetDescription(),
@@ -211,8 +214,8 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 	if createdGroup, ok := entity.(*models.Group); ok {
 		group.Metadata.Id = createdGroup.ID.String()
 		group.Spec = &userv3.GroupSpec{
-			Type:  createdGroup.Type,
-			Users: group.Spec.Users, // TODO: is this the right thing to do?
+			Type:                  createdGroup.Type,
+			Users:                 group.Spec.Users,                 // TODO: is this the right thing to do?
 			Projectnamespaceroles: group.Spec.Projectnamespaceroles, // TODO: is this the right thing to do?
 		}
 		if group.Status != nil {

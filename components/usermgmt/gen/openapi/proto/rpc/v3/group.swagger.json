@@ -87,7 +87,7 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "default": "Pipeline"
+            "default": "Group"
           },
           {
             "name": "metadata.name",
@@ -242,7 +242,7 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "default": "Pipeline"
+            "default": "Group"
           },
           {
             "name": "metadata.name",
@@ -457,7 +457,7 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "default": "Pipeline"
+            "default": "Group"
           },
           {
             "name": "metadata.description",
@@ -612,7 +612,7 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "default": "Pipeline"
+            "default": "Group"
           },
           {
             "name": "metadata.description",
@@ -820,7 +820,7 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "default": "Pipeline"
+            "default": "Group"
           },
           {
             "name": "metadata.name",
@@ -1065,7 +1065,7 @@
         },
         "kind": {
           "type": "string",
-          "default": "Pipeline",
+          "default": "Group",
           "description": "Kind of the group resource",
           "title": "Kind"
         },

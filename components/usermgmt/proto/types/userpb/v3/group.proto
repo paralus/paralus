@@ -25,7 +25,7 @@ message Group {
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Kind",
         description : "Kind of the group resource"
-        default : "Pipeline"
+        default : "Group"
       } ];
   rafay.dev.types.common.v3.Metadata metadata = 3
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
@@ -52,12 +52,12 @@ message ProjectNamespaceRole {
       description : "Project, role and namespace pairing for permission"
     }
   };
-  string project = 1
+  optional string project = 1
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Project"
         description : "Project"
       } ];
-  int64 namespace = 2
+  optional int64 namespace = 2
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Namespace"
         description : "Namespace"
