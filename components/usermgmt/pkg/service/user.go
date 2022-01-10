@@ -12,7 +12,7 @@ import (
 
 	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/internal/models"
-	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/internal/persistence/provider/pg"
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	userrpcv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/rpc/v3"
 	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 )

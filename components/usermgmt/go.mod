@@ -10,7 +10,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.2
 	github.com/ory/kratos-client-go v0.8.2-alpha.1
 	github.com/spf13/viper v1.10.1
-	github.com/uptrace/bun v1.0.20
+	github.com/uptrace/bun v1.0.21
 	github.com/uptrace/bun/dialect/pgdialect v1.0.20
 	github.com/uptrace/bun/driver/pgdriver v1.0.20
 	github.com/uptrace/bun/extra/bundebug v1.0.20
