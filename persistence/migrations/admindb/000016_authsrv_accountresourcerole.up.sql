@@ -31,7 +31,7 @@ CREATE INDEX authsrv_accountresourcerole_role_id_769ec143 ON authsrv_accountreso
 
 ALTER TABLE ONLY authsrv_accountresourcerole
     ADD CONSTRAINT authsrv_accountresou_account_id_229069ae_fk_authsrv_a FOREIGN KEY (account_id) 
-    REFERENCES authsrv_account(id) DEFERRABLE INITIALLY DEFERRED;
+    REFERENCES identities(id) DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE ONLY authsrv_accountresourcerole
     ADD CONSTRAINT authsrv_accountresou_organization_id_22bb772c_fk_authsrv_o FOREIGN KEY (organization_id) 

@@ -22,10 +22,9 @@ CREATE INDEX authsrv_groupaccount_name_d17de056 ON authsrv_groupaccount USING bt
 
 CREATE INDEX authsrv_groupaccount_name_d17de056_like ON authsrv_groupaccount USING btree (name varchar_pattern_ops);
 
--- TODO: find a better constraint now that we have a different accounts table
--- ALTER TABLE ONLY authsrv_groupaccount
---     ADD CONSTRAINT authsrv_groupaccount_account_id_041e4e98_fk_authsrv_account_id FOREIGN KEY (account_id) 
---     REFERENCES authsrv_account(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY authsrv_groupaccount
+    ADD CONSTRAINT authsrv_groupaccount_account_id_041e4e98_fk_authsrv_account_id FOREIGN KEY (account_id) 
+    REFERENCES identities(id) DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE ONLY authsrv_groupaccount
     ADD CONSTRAINT authsrv_groupaccount_group_id_c67750ef_fk_authsrv_group_id FOREIGN KEY (group_id) 
