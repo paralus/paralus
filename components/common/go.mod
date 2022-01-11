@@ -11,7 +11,7 @@ require (
 	github.com/processout/grpc-go-pool v1.2.1
 	github.com/segmentio/encoding v0.3.2
 	github.com/speps/go-hashids v2.0.0+incompatible
-	github.com/uptrace/bun v1.0.21
+	github.com/uptrace/bun v1.0.20
 	go.uber.org/zap v1.19.1
 	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa
 	google.golang.org/grpc v1.43.0

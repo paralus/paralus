@@ -8,7 +8,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.2
 	github.com/spf13/viper v1.10.1
-	github.com/uptrace/bun v1.0.21
+	github.com/uptrace/bun v1.0.20
 	github.com/uptrace/bun/dialect/pgdialect v1.0.20
 	github.com/uptrace/bun/driver/pgdriver v1.0.20
 	github.com/uptrace/bun/extra/bundebug v1.0.20
@@ -59,3 +59,5 @@ require (
 	mellium.im/sasl v0.2.1 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
+
+replace github.com/RafaySystems/rcloud-base/components/common v0.0.0-unpublished => ../common/
