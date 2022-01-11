@@ -70,8 +70,6 @@ func (s *userService) updateUserRoleRelation(ctx context.Context, user *userv3.U
 	accountId, _ := uuid.Parse(user.GetMetadata().GetId())
 	partnerId, _ := uuid.Parse(user.GetMetadata().GetPartner())
 	organizationId, _ := uuid.Parse(user.GetMetadata().GetOrganization())
-
-	// TODO: also parse out namesapce
 	projectNamespaceRoles := user.GetSpec().GetProjectnamespaceroles()
 
 	// TODO: add transactions
@@ -157,6 +155,47 @@ func (s *userService) updateUserRoleRelation(ctx context.Context, user *userv3.U
 	return user, nil
 }
 
+// Update the users(account) mapped to each group
+func (s *userService) updateGroupAccountRelation(ctx context.Context, user *userv3.User) (*userv3.User, error) {
+	// TODO: diff and delete the old relations
+	userId, _ := uuid.Parse(user.GetMetadata().GetId())
+	fmt.Println("userId:", userId);
+
+	// TODO: add transactions
+	var grpaccs []models.GroupAccount
+	for _, group := range user.GetSpec().GetGroups() {
+		groupId, err := uuid.Parse(group)
+		if err != nil {
+			return nil, err
+		}
+		grp := models.GroupAccount{
+			Name:        user.GetMetadata().GetName(), // TODO: what is name for relations?
+			Description: user.GetMetadata().GetDescription(), // TODO: now sure what this is either
+			CreatedAt:   time.Now(),
+			ModifiedAt:  time.Now(),
+			Trash:       false,
+			AccountId:   userId,
+			GroupId:     groupId,
+			Active:      true,
+		}
+		grpaccs = append(grpaccs, grp)
+	}
+	if len(grpaccs) == 0 {
+		return user, nil
+	}
+	_, err := s.dao.Create(ctx, &grpaccs)
+	if err != nil {
+		user.Status = &v3.Status{
+			ConditionType:   "Create",
+			ConditionStatus: v3.ConditionStatus_StatusFailed,
+			LastUpdated:     timestamppb.Now(),
+		}
+		return user, err
+	}
+
+	return user, nil
+}
+
 func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.User, error) {
 	// TODO: restrict endpoint to admin
 	cib := kclient.NewAdminCreateIdentityBody("default", map[string]interface{}{"email": user.Spec.Username, "first_name": user.Spec.FirstName, "last_name": user.Spec.LastName})
@@ -174,6 +213,16 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 	}
 
 	user, err = s.updateUserRoleRelation(ctx, user)
+	if err != nil {
+		user.Status = &v3.Status{
+			ConditionType:   "Create",
+			ConditionStatus: v3.ConditionStatus_StatusFailed,
+			LastUpdated:     timestamppb.Now(),
+		}
+		return user, err
+	}
+
+	user, err = s.updateGroupAccountRelation(ctx, user)
 	if err != nil {
 		user.Status = &v3.Status{
 			ConditionType:   "Create",
