@@ -20,7 +20,7 @@ func NewGroupServer(ps service.GroupService) rpcv3.GroupServer {
 func (s *groupServer) CreateGroup(ctx context.Context, p *userpbv3.Group) (*userpbv3.Group, error) {
 	group, err := s.Create(ctx, p)
 	if err != nil {
-		return nil, err
+		return group, err
 	}
 	return group, nil
 }
@@ -28,7 +28,7 @@ func (s *groupServer) CreateGroup(ctx context.Context, p *userpbv3.Group) (*user
 func (s *groupServer) GetGroups(ctx context.Context, p *userpbv3.Group) (*userpbv3.GroupList, error) {
 	groups, err := s.List(ctx, p)
 	if err != nil {
-		return nil, err
+		return groups, err
 	}
 	return groups, nil
 }
@@ -38,7 +38,7 @@ func (s *groupServer) GetGroup(ctx context.Context, p *userpbv3.Group) (*userpbv
 	if err != nil {
 		group, err = s.GetByID(ctx, p.Metadata.Id)
 		if err != nil {
-			return nil, err
+			return group, err
 		}
 	}
 
@@ -56,7 +56,7 @@ func (s *groupServer) DeleteGroup(ctx context.Context, p *userpbv3.Group) (*user
 func (s *groupServer) UpdateGroup(ctx context.Context, p *userpbv3.Group) (*userpbv3.Group, error) {
 	group, err := s.Update(ctx, p)
 	if err != nil {
-		return nil, err
+		return group, err
 	}
 	return group, nil
 }

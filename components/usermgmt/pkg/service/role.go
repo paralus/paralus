@@ -159,8 +159,6 @@ func (s *roleService) GetByID(ctx context.Context, id string) (*userv3.Role, err
 }
 
 func (s *roleService) GetByName(ctx context.Context, name string) (*userv3.Role, error) {
-	fmt.Println("name:", name)
-
 	role := &userv3.Role{
 		ApiVersion: apiVersion,
 		Kind:       roleKind,
