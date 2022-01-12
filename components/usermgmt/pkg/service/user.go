@@ -10,9 +10,9 @@ import (
 	bun "github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/internal/models"
-	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	userrpcv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/rpc/v3"
 	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 )
@@ -50,7 +50,7 @@ func NewUserService(kc *kclient.APIClient, db *bun.DB) UserService {
 
 // Convert from kratos.Identity to GVK format
 func identityToUser(id *kclient.Identity) *userv3.User {
-	traits := id.Traits.(map[string]interface{})
+	traits := id.GetTraits().(map[string]interface{})
 	return &userv3.User{
 		ApiVersion: "usermgmt.k8smgmt.io/v3",
 		Kind:       "User",
@@ -159,7 +159,6 @@ func (s *userService) updateUserRoleRelation(ctx context.Context, user *userv3.U
 func (s *userService) updateGroupAccountRelation(ctx context.Context, user *userv3.User) (*userv3.User, error) {
 	// TODO: diff and delete the old relations
 	userId, _ := uuid.Parse(user.GetMetadata().GetId())
-	fmt.Println("userId:", userId);
 
 	// TODO: add transactions
 	var grpaccs []models.GroupAccount
@@ -169,7 +168,7 @@ func (s *userService) updateGroupAccountRelation(ctx context.Context, user *user
 			return nil, err
 		}
 		grp := models.GroupAccount{
-			Name:        user.GetMetadata().GetName(), // TODO: what is name for relations?
+			Name:        user.GetMetadata().GetName(),        // TODO: what is name for relations?
 			Description: user.GetMetadata().GetDescription(), // TODO: now sure what this is either
 			CreatedAt:   time.Now(),
 			ModifiedAt:  time.Now(),

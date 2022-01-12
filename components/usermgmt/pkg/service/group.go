@@ -76,7 +76,7 @@ func (s *groupService) updateGroupRoleRelation(ctx context.Context, group *userv
 			pgnr := models.ProjectGroupNamespaceRole{
 				Name:           group.GetMetadata().GetName(),
 				Description:    group.GetMetadata().GetDescription(),
-				CreatedAt:      time.Now(),
+				CreatedAt:      time.Now(), // TODO: could drop this as it is default
 				ModifiedAt:     time.Now(),
 				Trash:          false,
 				RoleId:         roleId,
@@ -169,6 +169,9 @@ func (s *groupService) updateGroupAccountRelation(ctx context.Context, group *us
 		}
 		grpaccs = append(grpaccs, grp)
 	}
+	if len(grpaccs) == 0 {
+		return group, nil
+	}
 	_, err := s.dao.Create(ctx, &grpaccs)
 	if err != nil {
 		group.Status = &v3.Status{
@@ -218,7 +221,7 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 			Users:                 group.Spec.Users,                 // TODO: is this the right thing to do?
 			Projectnamespaceroles: group.Spec.Projectnamespaceroles, // TODO: is this the right thing to do?
 		}
-		if group.Status != nil {
+		if group.Status == nil {
 			group.Status = &v3.Status{
 				ConditionType:   "Create",
 				ConditionStatus: v3.ConditionStatus_StatusOK,

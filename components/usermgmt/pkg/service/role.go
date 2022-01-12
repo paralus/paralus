@@ -85,7 +85,7 @@ func (s *roleService) Create(ctx context.Context, role *userv3.Role) (*userv3.Ro
 			IsGlobal: createdRole.IsGlobal,
 			Scope:    createdRole.Scope,
 		}
-		if role.Status != nil {
+		if role.Status == nil {
 			role.Status = &v3.Status{
 				ConditionType:   "Create",
 				ConditionStatus: v3.ConditionStatus_StatusOK,
