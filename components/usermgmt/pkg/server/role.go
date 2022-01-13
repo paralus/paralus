@@ -18,45 +18,26 @@ func NewRoleServer(ps service.RoleService) rpcv3.RoleServer {
 }
 
 func (s *roleServer) CreateRole(ctx context.Context, p *userpbv3.Role) (*userpbv3.Role, error) {
-	role, err := s.Create(ctx, p)
-	if err != nil {
-		return role, err
-	}
-	return role, nil
+	return s.Create(ctx, p)
 }
 
 func (s *roleServer) GetRoles(ctx context.Context, p *userpbv3.Role) (*userpbv3.RoleList, error) {
-	roles, err := s.List(ctx, p)
-	if err != nil {
-		return roles, err
-	}
-	return roles, nil
+	return s.List(ctx, p)
 }
 
 func (s *roleServer) GetRole(ctx context.Context, p *userpbv3.Role) (*userpbv3.Role, error) {
 	role, err := s.GetByName(ctx, p.Metadata.Name)
 	if err != nil {
-		role, err = s.GetByID(ctx, p.Metadata.Id)
-		if err != nil {
-			return role, err
-		}
+		return s.GetByID(ctx, p.Metadata.Id)
 	}
-
 	return role, nil
 }
 
 func (s *roleServer) DeleteRole(ctx context.Context, p *userpbv3.Role) (*userpbv3.Role, error) {
 	_, err := s.Delete(ctx, p)
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
+	return nil, err
 }
 
 func (s *roleServer) UpdateRole(ctx context.Context, p *userpbv3.Role) (*userpbv3.Role, error) {
-	role, err := s.Update(ctx, p)
-	if err != nil {
-		return role, err
-	}
-	return role, nil
+	return s.Update(ctx, p)
 }

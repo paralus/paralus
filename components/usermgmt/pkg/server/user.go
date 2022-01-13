@@ -18,45 +18,26 @@ func NewUserServer(ps service.UserService) rpcv3.UserServer {
 }
 
 func (s *userServer) CreateUser(ctx context.Context, p *userpbv3.User) (*userpbv3.User, error) {
-	user, err := s.Create(ctx, p)
-	if err != nil {
-		return user, err
-	}
-	return user, nil
+	return s.Create(ctx, p)
 }
 
 func (s *userServer) GetUsers(ctx context.Context, p *userpbv3.User) (*userpbv3.UserList, error) {
-	users, err := s.List(ctx, p)
-	if err != nil {
-		return users, err
-	}
-	return users, nil
+	return s.List(ctx, p)
 }
 
 func (s *userServer) GetUser(ctx context.Context, p *userpbv3.User) (*userpbv3.User, error) {
 	// user, err := s.GetByName(ctx, p.Metadata.Name)
 	// if err != nil {
-	user, err := s.GetByID(ctx, p.Metadata.Id)
-	if err != nil {
-		return user, err
-	}
+	return s.GetByID(ctx, p.Metadata.Id)
 	// }
-
-	return user, nil
+	// return user, nil
 }
 
 func (s *userServer) DeleteUser(ctx context.Context, p *userpbv3.User) (*rpcv3.DeleteUserResponse, error) {
 	_, err := s.Delete(ctx, p)
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
+	return nil, err
 }
 
 func (s *userServer) UpdateUser(ctx context.Context, p *userpbv3.User) (*userpbv3.User, error) {
-	user, err := s.Update(ctx, p)
-	if err != nil {
-		return nil, err
-	}
-	return user, nil
+	return s.Update(ctx, p)
 }
