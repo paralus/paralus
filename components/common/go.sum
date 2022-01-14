@@ -172,8 +172,8 @@ github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5Cc
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc h1:9lRDQMhESg+zvGYmW5DyG0UqvY96Bu5QYsTLvCHdrgo=
 github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc/go.mod h1:bciPuU6GHm1iF1pBvUfxfsH0Wmnc2VbpgvbI9ZWuIRs=
-github.com/uptrace/bun v1.0.21 h1:5ek4bnrEmZo6wvY/RHt1dJNXzOPOnrfJeZMoZfZt9Io=
-github.com/uptrace/bun v1.0.21/go.mod h1:u+QsgCgjGFwshy3euGAN1CLEO9RMf42lga5jQ/ezYsc=
+github.com/uptrace/bun v1.0.20 h1:/T4p9C9tEN75U3cFMBr5njlP+rBfs4An8BmlQQPbcfE=
+github.com/uptrace/bun v1.0.20/go.mod h1:Uv7z0z+7dXnUS9P5hMF0hdiM/4M+xOUHQCrZpyDrpRc=
 github.com/vmihailenco/msgpack/v5 v5.3.5 h1:5gO0H1iULLWGhs2H5tbAHIZTV8/cYafcFOr9znI5mJU=
 github.com/vmihailenco/msgpack/v5 v5.3.5/go.mod h1:7xyJ9e+0+9SaZT0Wt1RGleJXzli6Q/V5KbhBonMG9jc=
 github.com/vmihailenco/tagparser/v2 v2.0.0 h1:y09buUbR+b5aycVFQs/g70pqKVZNBmxwAhO7/IwNM9g=

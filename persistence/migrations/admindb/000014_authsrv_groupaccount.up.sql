@@ -24,7 +24,7 @@ CREATE INDEX authsrv_groupaccount_name_d17de056_like ON authsrv_groupaccount USI
 
 ALTER TABLE ONLY authsrv_groupaccount
     ADD CONSTRAINT authsrv_groupaccount_account_id_041e4e98_fk_authsrv_account_id FOREIGN KEY (account_id) 
-    REFERENCES authsrv_account(id) DEFERRABLE INITIALLY DEFERRED;
+    REFERENCES identities(id) DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE ONLY authsrv_groupaccount
     ADD CONSTRAINT authsrv_groupaccount_group_id_c67750ef_fk_authsrv_group_id FOREIGN KEY (group_id) 

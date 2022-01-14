@@ -1,0 +1,129 @@
+syntax = "proto3";
+package rafay.dev.types.user.v3;
+
+import "proto/types/commonpb/v3/common.proto";
+import "proto/types/systempb/v3/project.proto";
+import "proto/types/userpb/v3/role.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+// import "google/api/field_behavior.proto";
+
+message Group {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Group"
+      description : "Group"
+      required : [ "apiVersion", "kind", "metadata", "spec" ]
+    }
+  };
+  string apiVersion = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "API Version",
+        description : "API Version of the group resource"
+        default : "usermgmt.k8smgmt.io/v3"
+      } ];
+  string kind = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Kind",
+        description : "Kind of the group resource"
+        default : "Group"
+      } ];
+  rafay.dev.types.common.v3.Metadata metadata = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Metadata",
+        description : "Metadata of the group resource"
+      } ];
+  GroupSpec spec = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Metadata",
+        description : "Metadata of the group resource"
+      } ];
+  rafay.dev.types.common.v3.Status status = 5
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Status",
+        description : "Status of the resource"
+        read_only : true
+      } ];
+}
+
+message ProjectNamespaceRole {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "ProjectNamespaceRole"
+      description : "Project, role and namespace pairing for permission"
+    }
+  };
+  optional string project = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Project"
+        description : "Project"
+      } ];
+  optional int64 namespace = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Namespace"
+        description : "Namespace"
+      } ];
+  string role = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Role"
+        description : "Role"
+      } ];
+}
+
+message GroupSpec {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Group Specification"
+      description : "Group specification"
+    }
+  };
+  repeated ProjectNamespaceRole projectnamespaceroles = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "ProjectNamespaceRoles"
+        description : "Project, namespace, role associations for group"
+      } ];
+  repeated string users = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Users"
+        description : "List of users for group"
+      } ];
+  string type = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Type"
+        description : "Type of group"
+      } ];
+}
+
+message GroupList {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "GroupList"
+      description : "Group list"
+      read_only : true
+    }
+  };
+
+  string apiVersion = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "API Version",
+        description : "API Version of the group list resource"
+        read_only : true
+      } ];
+  string kind = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Kind",
+        description : "Kind of the group list resource"
+        read_only : true
+      } ];
+  rafay.dev.types.common.v3.ListMetadata metadata = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Metadata",
+        description : "Metadata of the group list resource"
+        read_only : true
+      } ];
+  repeated Group items = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Items",
+        description : "List of the group resources"
+        read_only : true
+      } ];
+}

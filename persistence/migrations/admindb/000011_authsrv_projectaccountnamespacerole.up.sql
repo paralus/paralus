@@ -34,7 +34,7 @@ CREATE INDEX authsrv_projectaccountnamespacerole_role_id_8a5411cc ON authsrv_pro
 
 ALTER TABLE ONLY authsrv_projectaccountnamespacerole
     ADD CONSTRAINT authsrv_projectaccou_account_id_4fac0ac2_fk_authsrv_a FOREIGN KEY (account_id) 
-    REFERENCES authsrv_account(id) DEFERRABLE INITIALLY DEFERRED;
+    REFERENCES identities(id) DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE ONLY authsrv_projectaccountnamespacerole
     ADD CONSTRAINT authsrv_projectaccou_organization_id_96c921c9_fk_authsrv_o FOREIGN KEY (organization_id) 

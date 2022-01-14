@@ -1,12 +1,14 @@
-module github.com/RafaySystems/rcloud-base/components/adminsrv
+module github.com/RafaySystems/rcloud-base/components/usermgmt
 
 go 1.17
 
 require (
+	github.com/RafaySystems/rcloud-base/components/adminsrv v0.0.0-unpublished
 	github.com/RafaySystems/rcloud-base/components/common v0.0.0-unpublished
 	github.com/gogo/protobuf v1.3.2
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.2
+	github.com/ory/kratos-client-go v0.8.2-alpha.1
 	github.com/spf13/viper v1.10.1
 	github.com/uptrace/bun v1.0.20
 	github.com/uptrace/bun/dialect/pgdialect v1.0.20
@@ -27,12 +29,10 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/julienschmidt/httprouter v1.3.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.6 // indirect
-	github.com/kr/text v0.2.0 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
-	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/processout/grpc-go-pool v1.2.1 // indirect
 	github.com/segmentio/asm v1.1.0 // indirect
@@ -51,13 +51,17 @@ require (
 	go.uber.org/zap v1.19.1 // indirect
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3 // indirect
 	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
+	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	golang.org/x/text v0.3.7 // indirect
-	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
+	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/ini.v1 v1.66.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	mellium.im/sasl v0.2.1 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
-replace github.com/RafaySystems/rcloud-base/components/common v0.0.0-unpublished => ../common/
+replace (
+	github.com/RafaySystems/rcloud-base/components/adminsrv v0.0.0-unpublished => ../adminsrv/
+	github.com/RafaySystems/rcloud-base/components/common v0.0.0-unpublished => ../common/
+)
