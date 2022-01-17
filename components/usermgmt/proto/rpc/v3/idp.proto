@@ -4,6 +4,7 @@ package rafay.dev.rpc.v3;
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "proto/types/userpb/v3/idp.proto";
+import "google/protobuf/empty.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {
@@ -86,7 +87,20 @@ service Idp {
   };
 
   // DELETE /auth/v1/sso/idp/{id}/
-  // Delete IdP
+  rpc DeleteIdp(rafay.dev.types.user.v3.IdpID) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete : "/auth/v3/sso/idp/{id}"
+    };
+
+   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses : {
+        key : "204"
+        value : {
+          description : "Returned when idp is deleted successfully."
+        }
+      }
+    };
+  };
   
   // endpooint /auth/v1/sso/idp/{id}/upload_metadata/
   // file content as request payload and response is Idp

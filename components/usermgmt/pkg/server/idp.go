@@ -6,6 +6,7 @@ import (
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/service"
 	rpcv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/rpc/v3"
 	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type idpServer struct {
@@ -30,4 +31,8 @@ func (s *idpServer) GetSpConfigById(ctx context.Context, idpID *userv3.IdpID) (*
 
 func (s *idpServer) ListIdps(ctx context.Context, req *userv3.ListIdpsRequest) (*userv3.ListIdpsResponse, error) {
 	return s.IdpService.ListIdps(ctx, req)
+}
+
+func (s *idpServer) DeleteIdp(ctx context.Context, idpID *userv3.IdpID) (*emptypb.Empty, error) {
+	return s.IdpService.DeleteIdp(ctx, idpID)
 }

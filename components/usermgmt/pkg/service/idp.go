@@ -20,6 +20,7 @@ import (
 	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 const TimeLayout = "2006-01-02T15:04:05.999999Z"
@@ -29,6 +30,7 @@ type IdpService interface {
 	UpdateIdp(context.Context, *userv3.UpdateIdp) (*userv3.Idp, error)
 	GetSpConfigById(context.Context, *userv3.IdpID) (*userv3.SpConfig, error)
 	ListIdps(context.Context, *userv3.ListIdpsRequest) (*userv3.ListIdpsResponse, error)
+	DeleteIdp(context.Context, *userv3.IdpID) (*emptypb.Empty, error)
 }
 
 type idpService struct {
@@ -277,4 +279,18 @@ func (s *idpService) ListIdps(ctx context.Context, req *userv3.ListIdpsRequest) 
 		Result:   result,
 	}
 	return rv, nil
+}
+
+func (s *idpService) DeleteIdp(ctx context.Context, idpID *userv3.IdpID) (*emptypb.Empty, error) {
+	id, err := uuid.Parse(idpID.GetId())
+	if err != nil {
+		return &emptypb.Empty{}, err
+	}
+
+	entity := &models.Idp{}
+	err = s.dao.Delete(ctx, id, entity)
+	if err != nil {
+		return &emptypb.Empty{}, err
+	}
+	return &emptypb.Empty{}, nil
 }
