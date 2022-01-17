@@ -1,0 +1,390 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Identity Provider (IdP) Service",
+    "version": "2.0",
+    "contact": {
+      "name": "Rafay Dev"
+    }
+  },
+  "tags": [
+    {
+      "name": "Idp"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/auth/v3/sso/idp": {
+      "get": {
+        "operationId": "Idp_ListIdps",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3ListIdpsResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      },
+      "post": {
+        "operationId": "Idp_CreateIdp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Idp"
+            }
+          },
+          "201": {
+            "description": "Returned when idp is created successfully.",
+            "schema": {}
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3NewIdp"
+            }
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/auth/v3/sso/idp/{id}": {
+      "put": {
+        "operationId": "Idp_UpdateIdp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Idp"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "acsUrl": {
+                  "type": "string"
+                },
+                "domain": {
+                  "type": "string"
+                },
+                "groupAttributeName": {
+                  "type": "string"
+                },
+                "idpName": {
+                  "type": "string"
+                },
+                "isSaeEnabled": {
+                  "type": "boolean"
+                },
+                "metadataUrl": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/auth/v3/sso/idp/{id}/spconfig": {
+      "get": {
+        "operationId": "Idp_GetSpConfigById",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3SpConfig"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "v3Idp": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "idpName": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "acsUrl": {
+          "type": "string"
+        },
+        "ssoUrl": {
+          "type": "string"
+        },
+        "idpCert": {
+          "type": "string"
+        },
+        "spCert": {
+          "type": "string"
+        },
+        "metadataUrl": {
+          "type": "string"
+        },
+        "metadataFilename": {
+          "type": "string"
+        },
+        "isSaeEnabled": {
+          "type": "boolean"
+        },
+        "groupAttributeName": {
+          "type": "string"
+        },
+        "organizationId": {
+          "type": "string"
+        },
+        "partnerId": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "modifiedAt": {
+          "type": "string"
+        }
+      }
+    },
+    "v3ListIdpsResponse": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "next": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "previous": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3Idp"
+          }
+        }
+      }
+    },
+    "v3NewIdp": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string"
+        },
+        "groupAttributeName": {
+          "type": "string"
+        },
+        "idpName": {
+          "type": "string"
+        },
+        "isSaeEnabled": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "v3SpConfig": {
+      "type": "object",
+      "properties": {
+        "nameidFormat": {
+          "type": "string"
+        },
+        "consumerBinding": {
+          "type": "string"
+        },
+        "acsUrl": {
+          "type": "string"
+        },
+        "entityId": {
+          "type": "string"
+        },
+        "groupAttributeName": {
+          "type": "string"
+        },
+        "spCert": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "X-RAFAY-API-KEYID",
+      "in": "header"
+    },
+    "BasicAuth": {
+      "type": "basic"
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": [],
+      "BasicAuth": []
+    }
+  ]
+}
