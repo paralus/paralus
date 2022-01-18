@@ -129,6 +129,8 @@ func (s *idpService) CreateIdp(ctx context.Context, idp *userv3.NewIdp) (*userv3
 		AcsURL:             acsURL,
 		GroupAttributeName: idp.GetGroupAttributeName(),
 		SaeEnabled:         idp.GetIsSaeEnabled(),
+		CreatedAt:          time.Now(),
+		ModifiedAt:         time.Now(),
 	}
 	if entity.SaeEnabled {
 		spcert, spkey, err := generateSpCert(base.Host)
@@ -156,8 +158,8 @@ func (s *idpService) CreateIdp(ctx context.Context, idp *userv3.NewIdp) (*userv3
 		MetadataFilename:   entity.MetadataFilename,
 		IsSaeEnabled:       entity.SaeEnabled,
 		GroupAttributeName: entity.GroupAttributeName,
-		OrganizationId:     entity.OrganizationId,
-		PartnerId:          entity.PartnerId,
+		OrganizationId:     entity.OrganizationId.String(),
+		PartnerId:          entity.PartnerId.String(),
 		CreatedAt:          entity.CreatedAt.Format(TimeLayout),
 		ModifiedAt:         entity.ModifiedAt.Format(TimeLayout),
 	}
@@ -209,8 +211,8 @@ func (s *idpService) UpdateIdp(ctx context.Context, new *userv3.UpdateIdp) (*use
 		MetadataFilename:   entity.MetadataFilename,
 		IsSaeEnabled:       entity.SaeEnabled,
 		GroupAttributeName: entity.GroupAttributeName,
-		OrganizationId:     entity.OrganizationId,
-		PartnerId:          entity.PartnerId,
+		OrganizationId:     entity.OrganizationId.String(),
+		PartnerId:          entity.PartnerId.String(),
 		CreatedAt:          entity.CreatedAt.Format(TimeLayout),
 		ModifiedAt:         entity.ModifiedAt.Format(TimeLayout),
 	}
@@ -243,10 +245,10 @@ func (s *idpService) GetSpConfigById(ctx context.Context, idpID *userv3.IdpID) (
 }
 
 func (s *idpService) ListIdps(ctx context.Context, req *userv3.ListIdpsRequest) (*userv3.ListIdpsResponse, error) {
-	entities := []*models.Idp{}
+	var entities []models.Idp
 	var orgID uuid.NullUUID
 	var parID uuid.NullUUID
-	s.dao.List(ctx, parID, orgID, entities)
+	s.dao.List(ctx, parID, orgID, &entities)
 
 	// Get idps only till limit
 	var result []*userv3.Idp
@@ -264,8 +266,8 @@ func (s *idpService) ListIdps(ctx context.Context, req *userv3.ListIdpsRequest) 
 			MetadataFilename:   entity.MetadataFilename,
 			IsSaeEnabled:       entity.SaeEnabled,
 			GroupAttributeName: entity.GroupAttributeName,
-			OrganizationId:     entity.OrganizationId,
-			PartnerId:          entity.PartnerId,
+			OrganizationId:     entity.OrganizationId.String(),
+			PartnerId:          entity.PartnerId.String(),
 			CreatedAt:          entity.CreatedAt.Format(TimeLayout),
 			ModifiedAt:         entity.ModifiedAt.Format(TimeLayout),
 		}

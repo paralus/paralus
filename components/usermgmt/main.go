@@ -61,6 +61,7 @@ var (
 	us                  service.UserService
 	gs                  service.GroupService
 	rs                  service.RoleService
+	is                  service.IdpService
 	dev                 bool
 	_log                = logv2.GetLogger()
 	authPool            authv3.AuthPool
@@ -122,6 +123,7 @@ func setup() {
 	us = service.NewUserService(kc, db)
 	gs = service.NewGroupService(db)
 	rs = service.NewRoleService(db)
+	is = service.NewIdpService(db)
 
 	_log.Infow("usermgmt setup complete")
 }
@@ -155,6 +157,7 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 		pbrpcv3.RegisterUserHandlerFromEndpoint,
 		pbrpcv3.RegisterGroupHandlerFromEndpoint,
 		pbrpcv3.RegisterRoleHandlerFromEndpoint,
+		pbrpcv3.RegisterIdpHandlerFromEndpoint,
 	)
 	if err != nil {
 		_log.Fatalw("unable to create gateway", "error", err)
@@ -188,6 +191,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	userServer := server.NewUserServer(us)
 	groupServer := server.NewGroupServer(gs)
 	roleServer := server.NewRoleServer(rs)
+	idpServer := server.NewIdpServer(is)
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", rpcPort))
 	if err != nil {
@@ -224,6 +228,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	rpcv3.RegisterUserServer(s, userServer)
 	rpcv3.RegisterGroupServer(s, groupServer)
 	rpcv3.RegisterRoleServer(s, roleServer)
+	rpcv3.RegisterIdpServer(s, idpServer)
 
 	_log.Infow("starting rpc server", "port", rpcPort)
 	err = s.Serve(l)
