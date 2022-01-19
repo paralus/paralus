@@ -17,22 +17,22 @@ func NewIdpServer(is service.IdpService) rpcv3.IdpServer {
 	return &idpServer{is}
 }
 
-func (s *idpServer) CreateIdp(ctx context.Context, idp *userv3.NewIdp) (*userv3.Idp, error) {
+func (s *idpServer) CreateIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
 	return s.IdpService.CreateIdp(ctx, idp)
 }
 
-func (s *idpServer) UpdateIdp(ctx context.Context, idp *userv3.UpdateIdp) (*userv3.Idp, error) {
+func (s *idpServer) GetIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
+	return s.IdpService.GetIdp(ctx, idp)
+}
+
+func (s *idpServer) ListIdps(ctx context.Context, _ *emptypb.Empty) (*userv3.IdpList, error) {
+	return s.IdpService.ListIdps(ctx)
+}
+
+func (s *idpServer) UpdateIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
 	return s.IdpService.UpdateIdp(ctx, idp)
 }
 
-func (s *idpServer) GetSpConfigById(ctx context.Context, idpID *userv3.IdpID) (*userv3.SpConfig, error) {
-	return s.IdpService.GetSpConfigById(ctx, idpID)
-}
-
-func (s *idpServer) ListIdps(ctx context.Context, req *userv3.ListIdpsRequest) (*userv3.ListIdpsResponse, error) {
-	return s.IdpService.ListIdps(ctx, req)
-}
-
-func (s *idpServer) DeleteIdp(ctx context.Context, idpID *userv3.IdpID) (*emptypb.Empty, error) {
-	return s.IdpService.DeleteIdp(ctx, idpID)
+func (s *idpServer) DeleteIdp(ctx context.Context, idpID *userv3.Idp) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, s.IdpService.DeleteIdp(ctx, idpID)
 }

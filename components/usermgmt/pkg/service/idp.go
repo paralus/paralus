@@ -16,21 +16,19 @@ import (
 	"time"
 
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
+	commonv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/internal/models"
 	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-const TimeLayout = "2006-01-02T15:04:05.999999Z"
-
 type IdpService interface {
-	CreateIdp(context.Context, *userv3.NewIdp) (*userv3.Idp, error)
-	UpdateIdp(context.Context, *userv3.UpdateIdp) (*userv3.Idp, error)
-	GetSpConfigById(context.Context, *userv3.IdpID) (*userv3.SpConfig, error)
-	ListIdps(context.Context, *userv3.ListIdpsRequest) (*userv3.ListIdpsResponse, error)
-	DeleteIdp(context.Context, *userv3.IdpID) (*emptypb.Empty, error)
+	CreateIdp(context.Context, *userv3.Idp) (*userv3.Idp, error)
+	GetIdp(context.Context, *userv3.Idp) (*userv3.Idp, error)
+	ListIdps(context.Context) (*userv3.IdpList, error)
+	UpdateIdp(context.Context, *userv3.Idp) (*userv3.Idp, error)
+	DeleteIdp(context.Context, *userv3.Idp) error
 }
 
 type idpService struct {
@@ -103,9 +101,9 @@ func generateSpCert(host string) (string, string, error) {
 	return string(cPEMBytes), string(privPEMBytes), nil
 }
 
-func (s *idpService) CreateIdp(ctx context.Context, idp *userv3.NewIdp) (*userv3.Idp, error) {
-	name := idp.GetName()
-	domain := idp.GetDomain()
+func (s *idpService) CreateIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
+	name := idp.Metadata.GetName()
+	domain := idp.Spec.GetDomain()
 
 	e := &models.Idp{}
 	s.dao.GetByName(ctx, name, e)
@@ -124,13 +122,17 @@ func (s *idpService) CreateIdp(ctx context.Context, idp *userv3.NewIdp) (*userv3
 	acsURL := generateAcsURL(base.String())
 	entity := &models.Idp{
 		Name:               name,
-		IdpName:            idp.GetIdpName(),
+		Description:        idp.Metadata.GetDescription(),
+		CreatedAt:          time.Now(),
+		IdpName:            idp.Spec.GetIdpName(),
 		Domain:             domain,
 		AcsURL:             acsURL,
-		GroupAttributeName: idp.GetGroupAttributeName(),
-		SaeEnabled:         idp.GetIsSaeEnabled(),
-		CreatedAt:          time.Now(),
-		ModifiedAt:         time.Now(),
+		SsoURL:             idp.Spec.GetSsoUrl(),
+		IdpCert:            idp.Spec.GetIdpCert(),
+		MetadataURL:        idp.Spec.GetMetadataUrl(),
+		MetadataFilename:   idp.Spec.GetMetadataFilename(),
+		GroupAttributeName: idp.Spec.GetGroupAttributeName(),
+		SaeEnabled:         idp.Spec.GetSaeEnabled(),
 	}
 	if entity.SaeEnabled {
 		spcert, spkey, err := generateSpCert(base.Host)
@@ -146,41 +148,92 @@ func (s *idpService) CreateIdp(ctx context.Context, idp *userv3.NewIdp) (*userv3
 	}
 
 	rv := &userv3.Idp{
-		Id:                 entity.Id.String(),
-		Name:               entity.Name,
-		IdpName:            entity.IdpName,
-		Domain:             entity.Domain,
-		AcsUrl:             entity.AcsURL,
-		SsoUrl:             entity.SsoURL,
-		IdpCert:            entity.IdpCert,
-		SpCert:             entity.SpCert,
-		MetadataUrl:        entity.MetadataURL,
-		MetadataFilename:   entity.MetadataFilename,
-		IsSaeEnabled:       entity.SaeEnabled,
-		GroupAttributeName: entity.GroupAttributeName,
-		OrganizationId:     entity.OrganizationId.String(),
-		PartnerId:          entity.PartnerId.String(),
-		CreatedAt:          entity.CreatedAt.Format(TimeLayout),
-		ModifiedAt:         entity.ModifiedAt.Format(TimeLayout),
+		ApiVersion: "usermgmt.k8smgmt.io/v3",
+		Kind:       "Idp",
+		Metadata: &commonv3.Metadata{
+			Name:         entity.Name,
+			Organization: entity.OrganizationId.String(),
+			Partner:      entity.PartnerId.String(),
+			Id:           entity.Id.String(),
+		},
+		Spec: &userv3.IdpSpec{
+			IdpName:            entity.IdpName,
+			Domain:             entity.Domain,
+			AcsUrl:             entity.AcsURL,
+			SsoUrl:             entity.SsoURL,
+			IdpCert:            entity.IdpCert,
+			SpCert:             entity.SpCert,
+			MetadataUrl:        entity.MetadataURL,
+			MetadataFilename:   entity.MetadataFilename,
+			SaeEnabled:         entity.SaeEnabled,
+			GroupAttributeName: entity.GroupAttributeName,
+			NameIdFormat:       "Email Address",
+			ConsumerBinding:    "HTTP-POST",
+			SpEntityId:         entity.AcsURL,
+		},
 	}
 	return rv, nil
 }
 
-func (s *idpService) UpdateIdp(ctx context.Context, new *userv3.UpdateIdp) (*userv3.Idp, error) {
-	id, err := uuid.Parse(new.GetId())
+func (s *idpService) GetIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
+	id, err := uuid.Parse(idp.Metadata.GetId())
+	if err != nil {
+		return &userv3.Idp{}, err
+	}
+	entity := &models.Idp{}
+	_, err = s.dao.GetByID(ctx, id, entity)
+	if err != nil {
+		return &userv3.Idp{}, err
+	}
+	if entity.Id != id {
+		return &userv3.Idp{}, fmt.Errorf("IDP ID DOES NOT EXISTS")
+	}
+	rv := &userv3.Idp{
+		ApiVersion: "usermgmt.k8smgmt.io/v3",
+		Kind:       "Idp",
+		Metadata: &commonv3.Metadata{
+			Name:         entity.Name,
+			Organization: entity.OrganizationId.String(),
+			Partner:      entity.PartnerId.String(),
+			Id:           entity.Id.String(),
+		},
+		Spec: &userv3.IdpSpec{
+			IdpName:            entity.IdpName,
+			Domain:             entity.Domain,
+			AcsUrl:             entity.AcsURL,
+			SsoUrl:             entity.SsoURL,
+			IdpCert:            entity.IdpCert,
+			SpCert:             entity.SpCert,
+			MetadataUrl:        entity.MetadataURL,
+			MetadataFilename:   entity.MetadataFilename,
+			SaeEnabled:         entity.SaeEnabled,
+			GroupAttributeName: entity.GroupAttributeName,
+			NameIdFormat:       "Email Address",
+			ConsumerBinding:    "HTTP-POST",
+			SpEntityId:         entity.AcsURL,
+		},
+	}
+	return rv, nil
+}
+
+func (s *idpService) UpdateIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
+	id, err := uuid.Parse(idp.Metadata.GetId())
 	if err != nil {
 		return &userv3.Idp{}, err
 	}
 	entity := &models.Idp{
-		Id:                 id,
-		Name:               new.GetName(),
+		Name:               idp.Metadata.GetName(),
+		Description:        idp.Metadata.GetDescription(),
 		ModifiedAt:         time.Now(),
-		IdpName:            new.GetIdpName(),
-		Domain:             new.GetDomain(),
-		AcsURL:             new.GetAcsUrl(),
-		MetadataURL:        new.GetMetadataUrl(),
-		GroupAttributeName: new.GetGroupAttributeName(),
-		SaeEnabled:         new.GetIsSaeEnabled(),
+		IdpName:            idp.Spec.GetIdpName(),
+		Domain:             idp.Spec.GetDomain(),
+		AcsURL:             idp.Spec.GetAcsUrl(),
+		SsoURL:             idp.Spec.GetSsoUrl(),
+		IdpCert:            idp.Spec.GetIdpCert(),
+		MetadataURL:        idp.Spec.GetMetadataUrl(),
+		MetadataFilename:   idp.Spec.GetMetadataFilename(),
+		GroupAttributeName: idp.Spec.GetGroupAttributeName(),
+		SaeEnabled:         idp.Spec.GetSaeEnabled(),
 	}
 	if entity.SaeEnabled {
 		base, err := url.Parse(os.Getenv("APP_HOST_HTTP"))
@@ -199,52 +252,34 @@ func (s *idpService) UpdateIdp(ctx context.Context, new *userv3.UpdateIdp) (*use
 		return &userv3.Idp{}, err
 	}
 	rv := &userv3.Idp{
-		Id:                 entity.Id.String(),
-		Name:               entity.Name,
-		IdpName:            entity.IdpName,
-		Domain:             entity.Domain,
-		AcsUrl:             entity.AcsURL,
-		SsoUrl:             entity.SsoURL,
-		IdpCert:            entity.IdpCert,
-		SpCert:             entity.SpCert,
-		MetadataUrl:        entity.MetadataURL,
-		MetadataFilename:   entity.MetadataFilename,
-		IsSaeEnabled:       entity.SaeEnabled,
-		GroupAttributeName: entity.GroupAttributeName,
-		OrganizationId:     entity.OrganizationId.String(),
-		PartnerId:          entity.PartnerId.String(),
-		CreatedAt:          entity.CreatedAt.Format(TimeLayout),
-		ModifiedAt:         entity.ModifiedAt.Format(TimeLayout),
+		ApiVersion: "usermgmt.k8smgmt.io/v3",
+		Kind:       "Idp",
+		Metadata: &commonv3.Metadata{
+			Name:         entity.Name,
+			Organization: entity.OrganizationId.String(),
+			Partner:      entity.PartnerId.String(),
+			Id:           entity.Id.String(),
+		},
+		Spec: &userv3.IdpSpec{
+			IdpName:            entity.IdpName,
+			Domain:             entity.Domain,
+			AcsUrl:             entity.AcsURL,
+			SsoUrl:             entity.SsoURL,
+			IdpCert:            entity.IdpCert,
+			SpCert:             entity.SpCert,
+			MetadataUrl:        entity.MetadataURL,
+			MetadataFilename:   entity.MetadataFilename,
+			SaeEnabled:         entity.SaeEnabled,
+			GroupAttributeName: entity.GroupAttributeName,
+			NameIdFormat:       "Email Address",
+			ConsumerBinding:    "HTTP-POST",
+			SpEntityId:         entity.AcsURL,
+		},
 	}
 	return rv, nil
 }
 
-func (s *idpService) GetSpConfigById(ctx context.Context, idpID *userv3.IdpID) (*userv3.SpConfig, error) {
-	id, err := uuid.Parse(idpID.GetId())
-	if err != nil {
-		return &userv3.SpConfig{}, err
-	}
-
-	entity := &models.Idp{}
-	_, err = s.dao.GetByID(ctx, id, entity)
-	if err != nil {
-		return &userv3.SpConfig{}, err
-	}
-	if entity.Id != id {
-		return &userv3.SpConfig{}, fmt.Errorf("IDP ID DOES NOT EXISTS")
-	}
-	rv := &userv3.SpConfig{
-		NameidFormat:       "Email Address",
-		ConsumerBinding:    "HTTP-POST",
-		AcsUrl:             entity.AcsURL,
-		EntityId:           entity.AcsURL,
-		GroupAttributeName: entity.GroupAttributeName,
-		SpCert:             entity.SpCert,
-	}
-	return rv, nil
-}
-
-func (s *idpService) ListIdps(ctx context.Context, req *userv3.ListIdpsRequest) (*userv3.ListIdpsResponse, error) {
+func (s *idpService) ListIdps(ctx context.Context) (*userv3.IdpList, error) {
 	var entities []models.Idp
 	var orgID uuid.NullUUID
 	var parID uuid.NullUUID
@@ -254,45 +289,51 @@ func (s *idpService) ListIdps(ctx context.Context, req *userv3.ListIdpsRequest) 
 	var result []*userv3.Idp
 	for _, entity := range entities {
 		e := &userv3.Idp{
-			Id:                 entity.Id.String(),
-			Name:               entity.Name,
-			IdpName:            entity.IdpName,
-			Domain:             entity.Domain,
-			AcsUrl:             entity.AcsURL,
-			SsoUrl:             entity.SsoURL,
-			IdpCert:            entity.IdpCert,
-			SpCert:             entity.SpCert,
-			MetadataUrl:        entity.MetadataURL,
-			MetadataFilename:   entity.MetadataFilename,
-			IsSaeEnabled:       entity.SaeEnabled,
-			GroupAttributeName: entity.GroupAttributeName,
-			OrganizationId:     entity.OrganizationId.String(),
-			PartnerId:          entity.PartnerId.String(),
-			CreatedAt:          entity.CreatedAt.Format(TimeLayout),
-			ModifiedAt:         entity.ModifiedAt.Format(TimeLayout),
+			ApiVersion: "usermgmt.k8smgmt.io/v3",
+			Kind:       "Idp",
+			Metadata: &commonv3.Metadata{
+				Name:         entity.Name,
+				Organization: entity.OrganizationId.String(),
+				Partner:      entity.PartnerId.String(),
+				Id:           entity.Id.String(),
+			},
+			Spec: &userv3.IdpSpec{
+				IdpName:            entity.IdpName,
+				Domain:             entity.Domain,
+				AcsUrl:             entity.AcsURL,
+				SsoUrl:             entity.SsoURL,
+				IdpCert:            entity.IdpCert,
+				SpCert:             entity.SpCert,
+				MetadataUrl:        entity.MetadataURL,
+				MetadataFilename:   entity.MetadataFilename,
+				SaeEnabled:         entity.SaeEnabled,
+				GroupAttributeName: entity.GroupAttributeName,
+				NameIdFormat:       "Email Address",
+				ConsumerBinding:    "HTTP-POST",
+				SpEntityId:         entity.AcsURL,
+			},
 		}
 		result = append(result, e)
 	}
 
-	rv := &userv3.ListIdpsResponse{
-		Count:    int32(len(entities)),
-		Next:     0,
-		Previous: 0,
-		Result:   result,
+	rv := &userv3.IdpList{
+		ApiVersion: "usermgmt.k8smgmt.io/v3",
+		Kind:       "Idp",
+		Items:      result,
 	}
 	return rv, nil
 }
 
-func (s *idpService) DeleteIdp(ctx context.Context, idpID *userv3.IdpID) (*emptypb.Empty, error) {
-	id, err := uuid.Parse(idpID.GetId())
+func (s *idpService) DeleteIdp(ctx context.Context, idp *userv3.Idp) error {
+	id, err := uuid.Parse(idp.Metadata.GetId())
 	if err != nil {
-		return &emptypb.Empty{}, err
+		return err
 	}
 
 	entity := &models.Idp{}
 	err = s.dao.Delete(ctx, id, entity)
 	if err != nil {
-		return &emptypb.Empty{}, err
+		return err
 	}
-	return &emptypb.Empty{}, nil
+	return nil
 }
