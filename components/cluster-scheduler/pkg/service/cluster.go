@@ -338,7 +338,11 @@ func (s *clusterService) Select(ctx context.Context, cluster *infrav3.Cluster) (
 		Kind:       constants.ClusterKind,
 	}
 
-	c, err := s.cdao.GetCluster(ctx, &models.Cluster{ID: uuid.Must(uuid.Parse(cluster.Metadata.Id))})
+	id, err := uuid.Parse(cluster.Metadata.Id)
+	if err != nil {
+		id = uuid.Nil
+	}
+	c, err := s.cdao.GetCluster(ctx, &models.Cluster{ID: id, Name: cluster.Metadata.Name})
 	if err != nil {
 		clstr.Status = &commonv3.Status{
 			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
@@ -486,26 +490,7 @@ func (cs *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) 
 		return cluster, fmt.Errorf("invalid cluster data, name is missing")
 	}
 
-	if !clstrutil.HasValidCharacters(strings.ToLower(cluster.Metadata.Name)) {
-		errormsg = "cluster name contains invalid characters. valid characters are `[A-Z][a-z][0-9]-`"
-		cluster.Status = &commonv3.Status{
-			ConditionType:   "Update",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-			Reason:          errormsg,
-		}
-		return cluster, fmt.Errorf(errormsg)
-	}
-	if len(cluster.Metadata.Name) > 63 {
-		errormsg = "maximum characters allowed for cluster name is 63. please try another name"
-		cluster.Status = &commonv3.Status{
-			ConditionType:   "Update",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-			Reason:          errormsg,
-		}
-		return cluster, fmt.Errorf(errormsg)
-	}
-
-	edb, err := cs.dao.GetByID(ctx, uuid.MustParse(cluster.Metadata.Id), &models.Cluster{})
+	edb, err := cs.dao.GetByName(ctx, cluster.Metadata.Name, &models.Cluster{})
 	if err != nil {
 		cluster.Status = &commonv3.Status{
 			ConditionType:   "Update",
@@ -518,23 +503,6 @@ func (cs *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) 
 
 	oid := cdb.OrganizationId
 	pid := cdb.PartnerId
-
-	//check if user is trying to update cluster name
-	if cdb.Name != cluster.Metadata.Name {
-		clusterPresent, err := cs.dao.GetEntityByName(ctx, cluster.Metadata.Name, uuid.NullUUID{UUID: oid, Valid: true},
-			uuid.NullUUID{UUID: pid, Valid: true}, &models.Cluster{})
-		if err != nil || clusterPresent != nil {
-			errormsg = "cluster name is already taken. please try another name"
-			cluster.Status = &commonv3.Status{
-				ConditionType:   "Update",
-				ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-				Reason:          errormsg,
-			}
-			return cluster, fmt.Errorf(errormsg)
-		}
-		cdb.Name = cluster.Metadata.Name
-		cdb.DisplayName = cluster.Metadata.Name
-	}
 
 	if cluster.Spec.ClusterType == "" {
 		cluster.Status = &commonv3.Status{
@@ -735,9 +703,9 @@ func (cs *clusterService) List(ctx context.Context, opts ...query.Option) (*infr
 		if err != nil {
 			return nil, err
 		}
-		metro := entity.(models.Metro)
+		metro := entity.(*models.Metro)
 		//TODO: workload related stuff pending
-		cluster := prepareClusterResponse(&infrav3.Cluster{}, &clstr, metro, projects, nodes)
+		cluster := prepareClusterResponse(&infrav3.Cluster{}, &clstr, *metro, projects, nodes)
 		items = append(items, cluster)
 	}
 

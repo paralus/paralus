@@ -285,8 +285,7 @@ func (s *organizationService) GetByName(ctx context.Context, name string) (*syst
 
 func (s *organizationService) Update(ctx context.Context, organization *systemv3.Organization) (*systemv3.Organization, error) {
 
-	id, _ := uuid.Parse(organization.Metadata.Id)
-	entity, err := s.dao.GetByID(ctx, id, &models.Organization{})
+	entity, err := s.dao.GetByName(ctx, organization.Metadata.Name, &models.Organization{})
 	if err != nil {
 		organization.Status = &v3.Status{
 			ConditionType:   "Update",
@@ -330,7 +329,7 @@ func (s *organizationService) Update(ctx context.Context, organization *systemv3
 		org.IsTOTPEnabled = organization.GetSpec().GetIsTotpEnabled()
 		org.AreClustersShared = organization.GetSpec().GetAreClustersShared()
 
-		_, err = s.dao.Update(ctx, id, org)
+		_, err = s.dao.Update(ctx, org.ID, org)
 		if err != nil {
 			organization.Status = &v3.Status{
 				ConditionType:   "Update",
@@ -355,11 +354,8 @@ func (s *organizationService) Update(ctx context.Context, organization *systemv3
 }
 
 func (s *organizationService) Delete(ctx context.Context, organization *systemv3.Organization) (*systemv3.Organization, error) {
-	id, err := uuid.Parse(organization.Metadata.Id)
-	if err != nil {
-		return nil, err
-	}
-	entity, err := s.dao.GetByID(ctx, id, &models.Organization{})
+
+	entity, err := s.dao.GetByName(ctx, organization.Metadata.Name, &models.Organization{})
 	if err != nil {
 		organization.Status = &v3.Status{
 			ConditionType:   "Delete",
@@ -371,7 +367,7 @@ func (s *organizationService) Delete(ctx context.Context, organization *systemv3
 	}
 
 	if org, ok := entity.(*models.Organization); ok {
-		err = s.dao.Delete(ctx, id, org)
+		err = s.dao.Delete(ctx, org.ID, org)
 		if err != nil {
 			organization.Status = &v3.Status{
 				ConditionType:   "Delete",
@@ -406,12 +402,14 @@ func (s *organizationService) List(ctx context.Context, organization *systemv3.O
 		},
 	}
 	if len(organization.Metadata.Partner) > 0 {
-		id, err := uuid.Parse(organization.Metadata.Partner)
+		var partner models.Partner
+		_, err := s.dao.GetByName(ctx, organization.Metadata.Partner, &partner)
 		if err != nil {
 			return organinzationList, err
 		}
+
 		var orgs []models.Organization
-		entities, err := s.dao.List(ctx, uuid.NullUUID{UUID: id, Valid: true}, uuid.NullUUID{UUID: uuid.Nil}, &orgs)
+		entities, err := s.dao.List(ctx, uuid.NullUUID{UUID: partner.ID, Valid: true}, uuid.NullUUID{UUID: uuid.Nil}, &orgs)
 		if err != nil {
 			return organinzationList, err
 		}

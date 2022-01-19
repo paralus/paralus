@@ -106,9 +106,6 @@ service Cluster {
         returns (rafay.dev.types.infra.v3.Cluster) {
       option (google.api.http) = {
         get : "/infra/v3/project/{metadata.project}/cluster/{metadata.name}"
-        additional_bindings {
-          get : "/infra/v3/project/{metadata.project}/cluster/{metadata.id}"
-        }
       };
     };
 
@@ -117,10 +114,6 @@ service Cluster {
         option (google.api.http) = {
             put : "/infra/v3/project/{metadata.project}/cluster/{metadata.name}"
             body : "*"
-            additional_bindings {
-            put : "/infra/v3/project/{metadata.project}/cluster/{metadata.id}"
-            body : "*"
-            }
         };
     };
     
@@ -128,9 +121,6 @@ service Cluster {
         returns (DeleteClusterResponse) {
       option (google.api.http) = {
         delete : "/infra/v3/project/{metadata.project}/cluster/{metadata.name}"
-        additional_bindings {
-          delete : "/infra/v3/project/{metadata.project}/cluster/{metadata.id}"
-        }
       };
   
       option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {

@@ -31,6 +31,8 @@ type EntityDAO interface {
 	DeleteX(ctx context.Context, field string, value interface{}, entity interface{}) error
 	// get list of entities
 	List(ctx context.Context, partnerId uuid.NullUUID, organizationId uuid.NullUUID, entities interface{}) (interface{}, error)
+	// get list of entities
+	ListByProject(ctx context.Context, partnerId uuid.NullUUID, organizationId uuid.NullUUID, projectId uuid.NullUUID, entities interface{}) error
 	//returns db object
 	GetInstance() *bun.DB
 }
@@ -155,6 +157,21 @@ func (dao *entityDAO) List(ctx context.Context, partnerId uuid.NullUUID, organiz
 	}
 	err := sq.Scan(ctx)
 	return entities, err
+}
+
+func (dao *entityDAO) ListByProject(ctx context.Context, partnerId uuid.NullUUID, organizationId uuid.NullUUID, projectId uuid.NullUUID, entities interface{}) error {
+	sq := dao.db.NewSelect().Model(entities)
+	if partnerId.Valid {
+		sq = sq.Where("partner_id = ?", partnerId)
+	}
+	if organizationId.Valid {
+		sq = sq.Where("organization_id = ?", organizationId)
+	}
+	if projectId.Valid {
+		sq = sq.Where("project_id = ?", projectId)
+	}
+	err := sq.Scan(ctx)
+	return err
 }
 
 func (dao *entityDAO) GetInstance() *bun.DB {

@@ -3,16 +3,13 @@ package dao
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"strings"
 	"time"
 
 	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/pkg/internal/cluster/constants"
 	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/pkg/internal/models"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
-	"github.com/RafaySystems/rcloud-base/components/common/pkg/query"
 	commonv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
-	infrav3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/infrapb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
@@ -112,12 +109,20 @@ func (s *clusterDao) UpdateCluster(ctx context.Context, c *models.Cluster) error
 }
 
 func (s *clusterDao) GetCluster(ctx context.Context, cluster *models.Cluster) (*models.Cluster, error) {
-	entity, err := s.cdao.GetByID(ctx, cluster.ID, cluster)
-	if err != nil {
-		return nil, err
+
+	if cluster.ID != uuid.Nil {
+		_, err := s.cdao.GetByID(ctx, cluster.ID, cluster)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		_, err := s.cdao.GetByName(ctx, cluster.Name, cluster)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	return entity.(*models.Cluster), nil
+	return cluster, nil
 }
 
 func (s *clusterDao) DeleteCluster(ctx context.Context, c *models.Cluster) error {
@@ -126,37 +131,33 @@ func (s *clusterDao) DeleteCluster(ctx context.Context, c *models.Cluster) error
 
 func (s *clusterDao) ListClusters(ctx context.Context, qo commonv3.QueryOptions) (clusters []models.Cluster, err error) {
 
-	q := s.cdao.GetInstance().
-		NewSelect().
-		Model(&clusters)
+	var pid, oid, prid uuid.NullUUID
 
-	fmt.Printf("query before ", q)
-
-	q, err = query.Select(q, &qo)
+	id, err := uuid.Parse(qo.PartnerID)
 	if err != nil {
-		_log.Errorw("error building query ", q)
+		pid = uuid.NullUUID{UUID: uuid.Nil, Valid: false}
+	} else {
+		pid = uuid.NullUUID{UUID: id, Valid: true}
+	}
+
+	id, err = uuid.Parse(qo.OrganizationID)
+	if err != nil {
+		oid = uuid.NullUUID{UUID: uuid.Nil, Valid: false}
+	} else {
+		oid = uuid.NullUUID{UUID: id, Valid: true}
+	}
+
+	id, err = uuid.Parse(qo.ProjectID)
+	if err != nil {
+		prid = uuid.NullUUID{UUID: uuid.Nil, Valid: false}
+	} else {
+		prid = uuid.NullUUID{UUID: id, Valid: true}
+	}
+
+	err = s.cdao.ListByProject(ctx, pid, oid, prid, &clusters)
+	if err != nil {
 		return nil, err
 	}
-
-	if qo.BlueprintRef != "" {
-		q.Where("?TableAlias.blueprint_ref = ?", qo.BlueprintRef)
-	}
-
-	q = query.Paginate(q, &qo)
-
-	if qo.ProjectID != "" {
-		q.ColumnExpr("?TableAlias.*").
-			Join("JOIN cluster_project_cluster AS pc ON pc.cluster_id = ?TableAlias.id").
-			WhereGroup("grp", func(sq *bun.SelectQuery) *bun.SelectQuery {
-				q = q.Where("pc.project_id = ?", uuid.MustParse(qo.ProjectID)).
-					WhereOr("cluster.share_mode = ?", infrav3.ClusterShareMode_CUSTOM)
-				return q
-			})
-	}
-
-	fmt.Printf("query is ", q)
-
-	err = q.Scan(ctx, clusters)
 	return clusters, err
 }
 

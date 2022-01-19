@@ -37,10 +37,7 @@ func (s *organizationServer) GetOrganization(ctx context.Context, o *systempbv3.
 
 	organization, err := s.GetByName(ctx, o.Metadata.Name)
 	if err != nil {
-		organization, err = s.GetByID(ctx, o.Metadata.Id)
-		if err != nil {
-			return o, err
-		}
+		return nil, err
 	}
 
 	return organization, nil

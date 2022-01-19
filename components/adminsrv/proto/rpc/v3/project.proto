@@ -94,10 +94,6 @@ service Project {
       option (google.api.http) = {
         get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/"
               "{metadata.name}"
-        additional_bindings {
-          get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/"
-                "{metadata.id}"
-        }
       };
     };
   
@@ -107,11 +103,6 @@ service Project {
         put : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/"
               "{metadata.name}"
         body : "*"
-        additional_bindings {
-          put : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/"
-                "{metadata.id}"
-          body : "*"
-        }
       };
     };
   
@@ -120,10 +111,6 @@ service Project {
       option (google.api.http) = {
         delete : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/"
                  "{metadata.name}"
-        additional_bindings {
-          delete : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/"
-                   "{metadata.id}"
-        }
       };
   
       option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {

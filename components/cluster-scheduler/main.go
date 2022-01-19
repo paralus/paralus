@@ -104,7 +104,7 @@ func setup() {
 	viper.SetDefault(dbUserEnv, "clusterdbuser")
 	viper.SetDefault(dbPasswordEnv, "clusterdbpassword")
 	viper.SetDefault(devEnv, true)
-	viper.SetDefault(secretPathEnv, "/secret")
+	viper.SetDefault(secretPathEnv, "/secrets")
 	viper.SetDefault(configAddrENV, ":7000")
 	viper.SetDefault(allowReuseToken, "true")
 	viper.SetDefault(controlAddrEnv, "localhost:5002")
