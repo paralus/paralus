@@ -14,7 +14,9 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
   schemes : HTTPS
   consumes : "application/json"
+  consumes : "application/yaml"
   produces : "application/json"
+  produces : "application/yaml"
   security_definitions : {
     security : {
       key : "BasicAuth"
@@ -53,7 +55,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 
 
 service Idp {
-  rpc CreateIdp(rafay.dev.types.user.v3.NewIdp) returns (rafay.dev.types.user.v3.Idp) {
+  rpc CreateIdp(rafay.dev.types.user.v3.Idp) returns (rafay.dev.types.user.v3.Idp) {
     option (google.api.http) = {
       post : "/auth/v3/sso/idp"
       body : "*"
@@ -67,29 +69,28 @@ service Idp {
     };
   };
 
-  rpc UpdateIdp(rafay.dev.types.user.v3.UpdateIdp) returns (rafay.dev.types.user.v3.Idp) {
+  rpc GetIdp(rafay.dev.types.user.v3.Idp) returns (rafay.dev.types.user.v3.Idp) {
     option (google.api.http) = {
-      put : "/auth/v3/sso/idp/{id}"
-      body : "*"
+      get : "/auth/v3/sso/idp/{metadata.id}"
     };
   };
 
-  rpc GetSpConfigById(rafay.dev.types.user.v3.IdpID) returns (rafay.dev.types.user.v3.SpConfig) {
-    option (google.api.http) = {
-      get : "/auth/v3/sso/idp/{id}/spconfig"
-    };
-  };
-
-  rpc ListIdps(rafay.dev.types.user.v3.ListIdpsRequest) returns (rafay.dev.types.user.v3.ListIdpsResponse) {
+  rpc ListIdps(google.protobuf.Empty) returns (rafay.dev.types.user.v3.IdpList) {
     option (google.api.http) = {
       get : "/auth/v3/sso/idp"
     };
   };
 
-  // DELETE /auth/v1/sso/idp/{id}/
-  rpc DeleteIdp(rafay.dev.types.user.v3.IdpID) returns (google.protobuf.Empty) {
+  rpc UpdateIdp(rafay.dev.types.user.v3.Idp) returns (rafay.dev.types.user.v3.Idp) {
     option (google.api.http) = {
-      delete : "/auth/v3/sso/idp/{id}"
+      put : "/auth/v3/sso/idp/{metadata.id}"
+      body : "*"
+    };
+  };
+
+  rpc DeleteIdp(rafay.dev.types.user.v3.Idp) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete : "/auth/v3/sso/idp/{metadata.id}"
     };
 
    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -101,8 +102,8 @@ service Idp {
       }
     };
   };
-  
-  // endpooint /auth/v1/sso/idp/{id}/upload_metadata/
+
+  // TODO: endpooint /auth/v1/sso/idp/{id}/upload_metadata/
   // file content as request payload and response is Idp
 }
 

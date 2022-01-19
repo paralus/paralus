@@ -16,10 +16,12 @@
     "https"
   ],
   "consumes": [
-    "application/json"
+    "application/json",
+    "application/yaml"
   ],
   "produces": [
-    "application/json"
+    "application/json",
+    "application/yaml"
   ],
   "paths": {
     "/auth/v3/sso/idp": {
@@ -29,7 +31,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v3ListIdpsResponse"
+              "$ref": "#/definitions/v3IdpList"
             }
           },
           "403": {
@@ -50,15 +52,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
         "tags": [
           "Idp"
         ]
@@ -100,7 +93,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v3NewIdp"
+              "$ref": "#/definitions/v3Idp"
             }
           }
         ],
@@ -109,9 +102,219 @@
         ]
       }
     },
-    "/auth/v3/sso/idp/{id}": {
+    "/auth/v3/sso/idp/{metadata.id}": {
+      "get": {
+        "operationId": "Idp_GetIdp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Idp"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version. API Version of the idp resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "usermgmt.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind. Kind of the idp resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "Idp"
+          },
+          {
+            "name": "metadata.name",
+            "description": "Name. name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description. description of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project. Project of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization. Organization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner. Partner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.idpName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.domain",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.acsUrl",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.ssoUrl",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.idpCert",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.spCert",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metadataUrl",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metadataFilename",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.saeEnabled",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.groupAttributeName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.nameIdFormat",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.consumerBinding",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.spEntityId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.conditionType",
+            "description": "Condition Type. type of the status condition",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.conditionStatus",
+            "description": "Condition Status. status of the condition",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "StatusNotSet",
+              "StatusSubmitted",
+              "StatusOK",
+              "StatusFailed"
+            ],
+            "default": "StatusNotSet"
+          },
+          {
+            "name": "status.lastUpdated",
+            "description": "Last Updated. when the condition status is last updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.reason",
+            "description": "Reason. reason of the last condition status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      },
       "delete": {
-        "summary": "DELETE /auth/v1/sso/idp/{id}/",
         "operationId": "Idp_DeleteIdp",
         "responses": {
           "200": {
@@ -144,9 +347,181 @@
         },
         "parameters": [
           {
-            "name": "id",
+            "name": "metadata.id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version. API Version of the idp resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "usermgmt.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind. Kind of the idp resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "Idp"
+          },
+          {
+            "name": "metadata.name",
+            "description": "Name. name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description. description of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project. Project of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization. Organization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner. Partner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.idpName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.domain",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.acsUrl",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.ssoUrl",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.idpCert",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.spCert",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metadataUrl",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metadataFilename",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.saeEnabled",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.groupAttributeName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.nameIdFormat",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.consumerBinding",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.spEntityId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.conditionType",
+            "description": "Condition Type. type of the status condition",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.conditionStatus",
+            "description": "Condition Status. status of the condition",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "StatusNotSet",
+              "StatusSubmitted",
+              "StatusOK",
+              "StatusFailed"
+            ],
+            "default": "StatusNotSet"
+          },
+          {
+            "name": "status.lastUpdated",
+            "description": "Last Updated. when the condition status is last updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.reason",
+            "description": "Reason. reason of the last condition status",
+            "in": "query",
+            "required": false,
             "type": "string"
           }
         ],
@@ -183,7 +558,7 @@
         },
         "parameters": [
           {
-            "name": "id",
+            "name": "metadata.id",
             "in": "path",
             "required": true,
             "type": "string"
@@ -193,72 +568,8 @@
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "acsUrl": {
-                  "type": "string"
-                },
-                "domain": {
-                  "type": "string"
-                },
-                "groupAttributeName": {
-                  "type": "string"
-                },
-                "idpName": {
-                  "type": "string"
-                },
-                "isSaeEnabled": {
-                  "type": "boolean"
-                },
-                "metadataUrl": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/v3Idp"
             }
-          }
-        ],
-        "tags": [
-          "Idp"
-        ]
-      }
-    },
-    "/auth/v3/sso/idp/{id}/spconfig": {
-      "get": {
-        "operationId": "Idp_GetSpConfigById",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v3SpConfig"
-            }
-          },
-          "403": {
-            "description": "Returned when the user does not have permission to access the resource.",
-            "schema": {}
-          },
-          "404": {
-            "description": "Returned when the resource does not exist.",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/googlerpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
           }
         ],
         "tags": [
@@ -268,6 +579,45 @@
     }
   },
   "definitions": {
+    "commonv3Status": {
+      "type": "object",
+      "properties": {
+        "conditionType": {
+          "type": "string",
+          "description": "type of the status condition",
+          "title": "Condition Type",
+          "readOnly": true
+        },
+        "conditionStatus": {
+          "$ref": "#/definitions/v3ConditionStatus",
+          "enum": [
+            "StatusNotSet",
+            "StatusSubmitted",
+            "StatusOK",
+            "StatusFailed"
+          ],
+          "description": "status of the condition",
+          "title": "Condition Status",
+          "readOnly": true
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "when the condition status is last updated",
+          "title": "Last Updated",
+          "readOnly": true
+        },
+        "reason": {
+          "type": "string",
+          "description": "reason of the last condition status",
+          "title": "Reason",
+          "readOnly": true
+        }
+      },
+      "description": "status of a resource",
+      "title": "Status",
+      "readOnly": true
+    },
     "googlerpcStatus": {
       "type": "object",
       "properties": {
@@ -295,15 +645,98 @@
       },
       "additionalProperties": {}
     },
+    "v3ConditionStatus": {
+      "type": "string",
+      "enum": [
+        "StatusNotSet",
+        "StatusSubmitted",
+        "StatusOK",
+        "StatusFailed"
+      ],
+      "default": "StatusNotSet",
+      "title": "$title: ConditionStatus\n$description: status of a condition for a resource"
+    },
     "v3Idp": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
+        "apiVersion": {
+          "type": "string",
+          "default": "usermgmt.k8smgmt.io/v3",
+          "description": "API Version of the idp resource",
+          "title": "API Version"
         },
-        "name": {
-          "type": "string"
+        "kind": {
+          "type": "string",
+          "default": "Idp",
+          "description": "Kind of the idp resource",
+          "title": "Kind"
         },
+        "metadata": {
+          "$ref": "#/definitions/v3Metadata",
+          "description": "Metadata of the idp resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3IdpSpec",
+          "description": "Spec of the idp resource",
+          "title": "Spec"
+        },
+        "status": {
+          "$ref": "#/definitions/commonv3Status",
+          "description": "Status of the resource",
+          "title": "Status",
+          "readOnly": true
+        }
+      },
+      "description": "Idp",
+      "title": "Idp",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+      ]
+    },
+    "v3IdpList": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "usermgmt.k8smgmt.io/v3",
+          "description": "API Version of the idp list resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "IdpList",
+          "description": "Kind of the idp list resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3ListMetadata",
+          "description": "Metadata of the idp list resource",
+          "title": "Metadata",
+          "readOnly": true
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3Idp"
+          },
+          "description": "List of the idp resources",
+          "title": "Items",
+          "readOnly": true
+        }
+      },
+      "description": "idp list",
+      "title": "IdpList",
+      "readOnly": true
+    },
+    "v3IdpSpec": {
+      "type": "object",
+      "properties": {
         "idpName": {
           "type": "string"
         },
@@ -328,91 +761,105 @@
         "metadataFilename": {
           "type": "string"
         },
-        "isSaeEnabled": {
+        "saeEnabled": {
           "type": "boolean"
         },
         "groupAttributeName": {
           "type": "string"
         },
-        "organizationId": {
-          "type": "string"
-        },
-        "partnerId": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "string"
-        },
-        "modifiedAt": {
-          "type": "string"
-        }
-      }
-    },
-    "v3ListIdpsResponse": {
-      "type": "object",
-      "properties": {
-        "count": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "next": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "previous": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "result": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v3Idp"
-          }
-        }
-      }
-    },
-    "v3NewIdp": {
-      "type": "object",
-      "properties": {
-        "domain": {
-          "type": "string"
-        },
-        "groupAttributeName": {
-          "type": "string"
-        },
-        "idpName": {
-          "type": "string"
-        },
-        "isSaeEnabled": {
-          "type": "boolean"
-        },
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "v3SpConfig": {
-      "type": "object",
-      "properties": {
-        "nameidFormat": {
+        "nameIdFormat": {
           "type": "string"
         },
         "consumerBinding": {
           "type": "string"
         },
-        "acsUrl": {
-          "type": "string"
-        },
-        "entityId": {
-          "type": "string"
-        },
-        "groupAttributeName": {
-          "type": "string"
-        },
-        "spCert": {
+        "spEntityId": {
           "type": "string"
         }
       }
+    },
+    "v3ListMetadata": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "string",
+          "format": "int64"
+        },
+        "offset": {
+          "type": "string",
+          "format": "int64"
+        },
+        "limt": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "$title: ListMetadata\n$description: metadata for a list of resources\n$required: enabled"
+    },
+    "v3Metadata": {
+      "type": "object",
+      "example": {
+        "name": "some-name",
+        "project": "defaultproject"
+      },
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "name of the resource",
+          "title": "Name"
+        },
+        "description": {
+          "type": "string",
+          "description": "description of the resource",
+          "title": "Description"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "labels of the resource",
+          "title": "Lables"
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "annotations of the resource",
+          "title": "Annotations"
+        },
+        "project": {
+          "type": "string",
+          "description": "Project of the resource",
+          "title": "Project"
+        },
+        "organization": {
+          "type": "string",
+          "description": "Organization to which the resource belongs",
+          "title": "Organization"
+        },
+        "partner": {
+          "type": "string",
+          "description": "Partner to which the resource belongs",
+          "title": "Partner"
+        },
+        "id": {
+          "type": "string",
+          "readOnly": true
+        },
+        "modifiedAt": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        }
+      },
+      "description": "metadata of the resource",
+      "title": "Metadata",
+      "required": [
+        "name",
+        "project"
+      ]
     }
   },
   "securityDefinitions": {
