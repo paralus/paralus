@@ -1,0 +1,118 @@
+syntax = "proto3";
+package rafay.dev.types.common.v3;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+message Taint {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema : {
+          title : "Taint"
+          description : "Taint of the cluster"
+        }
+    };
+    // Required. The taint key to be applied to a node.
+    string key = 1;
+  
+    // The taint value corresponding to the taint key.
+    string value = 2;
+  
+    // Required. The effect of the taint on pods
+    // that do not tolerate the taint.
+    // Valid effects are NoSchedule, PreferNoSchedule and NoExecute.
+    string effect = 3;
+  
+    // TimeAdded represents the time at which the taint was added.
+    // It is only written for NoExecute taints.
+    Time timeAdded = 4;
+}
+
+message Time {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema : {
+          title : "Time"
+          description : "Time"
+        }
+    };
+    // Represents seconds of UTC time since Unix epoch
+    // 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+    // 9999-12-31T23:59:59Z inclusive.
+    int64 seconds = 1;
+  
+    // Non-negative fractions of a second at nanosecond resolution. Negative
+    // second values with fractions must still have non-negative nanos values
+    // that count forward in time. Must be from 0 to 999,999,999
+    // inclusive. This field may be limited in precision depending on context.
+    int32 nanos = 2;
+}
+
+message NodeCondition {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema : {
+          title : "NodeCondition"
+          description : "Node Condition"
+        }
+    };
+    // Type of node condition.
+    string type = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Type",
+            description : "Type of node condition"
+        } ];
+  
+    // Status of the condition, one of True, False, Unknown.
+    string status = 2;
+  
+    // Last time we got an update on a given condition.
+    Time lastHeartbeatTime = 3;
+  
+    // Last time the condition transit from one status to another.
+    Time lastTransitionTime = 4;
+  
+    // (brief) reason for the condition's last transition.
+    string reason = 5;
+  
+    // Human readable message indicating details about last transition.
+    string message = 6;
+}
+
+message NodeSystemInfo {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema : {
+          title : "NodeSystemInfo"
+          description : "Node System Info"
+        }
+    };
+    // MachineID reported by the node. For unique machine identification
+    // in the cluster this field is preferred. Learn more from man(5)
+    // machine-id: http://man7.org/linux/man-pages/man5/machine-id.5.html
+    string machineID = 1;
+  
+    // SystemUUID reported by the node. For unique machine identification
+    // MachineID is preferred. This field is specific to Red Hat hosts
+    // https://access.redhat.com/documentation/en-us/red_hat_subscription_management/1/html/rhsm/uuid
+    string systemUUID = 2;
+  
+    // Boot ID reported by the node.
+    string bootID = 3;
+  
+    // Kernel Version reported by the node from 'uname -r' (e.g. 3.16.0-0.bpo.4-amd64).
+    string kernelVersion = 4;
+  
+    // OS Image reported by the node from /etc/os-release (e.g. Debian GNU/Linux 7 (wheezy)).
+    string osImage = 5;
+  
+    // ContainerRuntime Version reported by the node through runtime remote API (e.g. docker://1.5.0).
+    string containerRuntimeVersion = 6;
+  
+    // Kubelet Version reported by the node.
+    string kubeletVersion = 7;
+  
+    // KubeProxy Version reported by the node.
+    string kubeProxyVersion = 8;
+  
+    // The Operating System reported by the node
+    string operatingSystem = 9;
+  
+    // The Architecture reported by the node
+    string architecture = 10;
+}

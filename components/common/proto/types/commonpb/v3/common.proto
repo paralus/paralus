@@ -130,7 +130,7 @@ message DriftSpec {
 message ListMetadata {
   sint64 count = 1;
   sint64 offset = 2;
-  sint64 limt = 3;
+  sint64 limit = 3;
 }
 
 message PlacementLabel {
@@ -223,6 +223,61 @@ message Status {
         description : "reason of the last condition status",
         read_only : true
       } ];
+}
+
+// QueryOptions is the options for performing queries on resources
+message QueryOptions {
+  // name is unique ID of a resource along with (partnerID, organizationID,
+  // projectID)
+  string name = 1;
+  // selector is used to filter the labels of a resource
+  string selector = 2;
+  string partnerID = 3;
+  string organizationID = 4;
+  string projectID = 5;
+  // displayName only used for update queries to set displayName (READONLY)
+  string displayName = 6;
+  // labels only used for update queries to set labels (READONLY)
+  map<string, string> labels = 7;
+  // annotations only used for update queries to set annotations (READONLY)
+  map<string, string> annotations = 8;
+  sint64 count = 9;
+  sint64 offset = 10;
+  sint64 limit = 11;
+  // ignoreScopeDefault ignores default values for partnerID, organizationID and
+  // projectID
+  bool ignoreScopeDefault = 12;
+  // globalScope sets partnerID,organizationID,projectID = 0
+  bool globalScope = 13;
+  string orderBy = 14;
+  string order = 15;
+  bool deleted = 16;
+  
+  bool extended = 17;
+  // urlScope is supposed to be passed in the URL as kind/HashID(value)
+  string urlScope = 18;
+  bool isSSOUser = 19;
+  string username = 20;
+  repeated string groups = 21;
+  string blueprintRef = 22;
+  string publishedVersion = 23;
+  string clusterID = 24;
+  string ID = 25;
+}
+
+// RafayConditionStatus is the status of the status condition
+enum RafayConditionStatus {
+  NotSet = 0;
+  Pending = 1;
+  InProgress = 2;
+  Success = 3;
+  Failed = 4;
+  Retry = 5;
+  Skipped = 6;
+  Stopped = 7;
+  Expired = 8;
+  Stopping = 9;
+  Submitted = 10;
 }
 
 // HttpBody represents arbitrary HTTP Body. It should only be used for

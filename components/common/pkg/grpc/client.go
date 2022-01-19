@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
+	"fmt"
 	"net"
 	"time"
 
@@ -86,4 +87,44 @@ func NewClientTransportCredentials(cert, key, caCert []byte, addr string) (crede
 	}
 
 	return credentials.NewTLS(tlsConfig), nil
+}
+
+func NewGrpcClientClientConn(ctx context.Context, serverHost string, serverPort int) (*grpc.ClientConn, error) {
+	cc, err := grpc.DialContext(
+		ctx,
+		fmt.Sprintf("%s:%d", serverHost, serverPort),
+		grpc.WithInsecure(),
+		grpc.WithBlock(),
+		grpc.WithKeepaliveParams(keepalive.ClientParameters{
+			Time:                time.Second * 30,
+			Timeout:             time.Second * 30,
+			PermitWithoutStream: true,
+		}),
+	)
+
+	return cc, err
+}
+
+// NewGrpcClientClientConn returns new grpc client connection given server host and server port
+func NewGrpcClientClientConnWithTimeout(ctx context.Context, serverHost string, serverPort int, timeoutInMins time.Duration) (*grpc.ClientConn, error) {
+	// resolve every 30 seconds
+	//resolver, _ := naming.NewDNSResolverWithFreq(time.Second * 30)
+	//serverBalancer := grpc.RoundRobin(resolver)
+	to := time.Duration(timeoutInMins)
+	cc, err := grpc.DialContext(
+		ctx,
+		fmt.Sprintf("%s:%d", serverHost, serverPort),
+		grpc.WithInsecure(),
+		//grpc.WithTransportCredentials(creds),
+		//grpc.WithBackoffConfig(grpc.DefaultBackoffConfig),
+		grpc.WithBlock(),
+		grpc.WithKeepaliveParams(keepalive.ClientParameters{
+			Time:                time.Second * 30,
+			Timeout:             time.Minute * to,
+			PermitWithoutStream: true,
+		}),
+		//grpc.WithBalancer(serverBalancer),
+	)
+
+	return cc, err
 }

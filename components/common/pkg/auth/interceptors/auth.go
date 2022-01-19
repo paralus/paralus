@@ -10,15 +10,15 @@ import (
 
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
-	"github.com/RafaySystems/rcloud-base/components/common/pkg/hashid"
-	logv2 "github.com/RafaySystems/rcloud-base/components/common/pkg/log/v2"
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/hasher"
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/log"
 	commonv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
 	"github.com/julienschmidt/httprouter"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
 
-var _log = logv2.GetLogger()
+var _log = log.GetLogger()
 
 var _dummyHandler = func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {}
 
@@ -164,17 +164,17 @@ func allowRequest(ctx context.Context, opts *options, req interface{}) error {
 
 					if _, ok := req.(commonv3.Metadata); ok {
 						_log.Debugw("adding request meta")
-						_, err := hashid.IDFromString(resp.SessionData.Account)
+						_, err := hasher.IDFromString(resp.SessionData.Account)
 						if err != nil {
 							_log.Infow("unable to convert account id", "accountID", resp.SessionData.Account, "error", err.Error())
 							return err
 						}
-						partnerID, err = hashid.IDFromString(resp.SessionData.Partner)
+						partnerID, err = hasher.IDFromString(resp.SessionData.Partner)
 						if err != nil {
 							_log.Infow("unable to convert partner id", "partnerID", resp.SessionData.Partner, "error", err.Error())
 							return err
 						}
-						organizationID, err = hashid.IDFromString(resp.SessionData.Organization)
+						organizationID, err = hasher.IDFromString(resp.SessionData.Organization)
 						if err != nil {
 							_log.Infow("unable to convert organization id", "organizationID", resp.SessionData.Organization, "error", err.Error())
 							return err
@@ -261,12 +261,12 @@ func addRequestMeta(ctx context.Context, pool authv3.AuthPool, req interface{}, 
 	}
 
 	if data != nil {
-		_, err := hashid.IDFromString(data.Partner)
+		_, err := hasher.IDFromString(data.Partner)
 		if err != nil {
 			_log.Infow("unable to convert partner id", "partnerID", data.Partner, "error", err.Error())
 			return err
 		}
-		_, err = hashid.IDFromString(data.Organization)
+		_, err = hasher.IDFromString(data.Organization)
 		if err != nil {
 			_log.Infow("unable to convert organization id", "organizationID", data.Organization, "error", err.Error())
 			return err

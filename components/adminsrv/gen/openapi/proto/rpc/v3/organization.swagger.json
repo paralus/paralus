@@ -1601,7 +1601,7 @@
           "type": "string",
           "format": "int64"
         },
-        "limt": {
+        "limit": {
           "type": "string",
           "format": "int64"
         }

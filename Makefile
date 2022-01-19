@@ -13,6 +13,7 @@ build-proto:
 gen-proto:
 	cd components/common; buf generate
 	cd components/adminsrv; buf generate
+	cd components/cluster-scheduler; buf generate
 
 .PHONY: check
 check:
