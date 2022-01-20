@@ -1,0 +1,103 @@
+syntax = "proto3";
+package rafay.dev.types.user.v3;
+
+import "proto/types/commonpb/v3/common.proto";
+import "google/protobuf/struct.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+message OIDCProvider {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "OIDCProvider"
+      description : "Open Id Connect Provider"
+      required : [ "apiVersion", "kind", "metadata", "spec" ]
+    }
+  };
+
+  string apiVersion = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "API Version",
+        description : "API Version of the OIDCProvider resource"
+        default : "usermgmt.k8smgmt.io/v3"
+      } ];
+  string kind = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Kind",
+        description : "Kind of the OIDCProvider resource"
+        default : "OIDCProvider"
+      } ];
+  rafay.dev.types.common.v3.Metadata metadata = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Metadata",
+        description : "Metadata of the OIDCProvider resource"
+      } ];
+  OIDCProviderSpec spec = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Spec",
+        description : "Spec of the OIDCProvider resource"
+      } ];
+
+  rafay.dev.types.common.v3.Status status = 5
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Status",
+        description : "Status of the resource"
+        read_only : true
+      } ];
+}
+
+message OIDCProviderSpec {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "OIDCProvider Specification"
+      description : "OIDCProvider specification"
+    }
+  };
+  string providerName = 1;  // enumeration?
+  string mapperUrl = 2;
+  string mapperFilename = 3;
+  string clientId = 4;
+  string clientSecret = 5;
+  repeated string scopes = 6;
+  string issuerUrl = 7;
+  string authUrl = 8;
+  string tokenUrl = 9;
+  google.protobuf.Struct requestedClaims = 10; // JSON object
+  bool predefined = 11;
+  string callbackUrl = 12;
+}
+
+message OIDCProviderList {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "OIDCProviderList"
+      description : "OIDC providers list"
+      read_only : true
+    }
+  };
+  string apiVersion = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "API Version",
+        description : "API Version of the OIDCProvider list resource"
+        default : "usermgmt.k8smgmt.io/v3"
+        read_only : true
+      } ];
+  string kind = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Kind",
+        description : "Kind of the OIDCProvider list resource"
+        default : "OIDCProviderList"
+        read_only : true
+      } ];
+  rafay.dev.types.common.v3.ListMetadata metadata = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Metadata",
+        description : "Metadata of the OIDCProvider list resource"
+        read_only : true
+      } ];
+  repeated OIDCProvider items = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Items",
+        description : "List of the OIDCProvider resources"
+        read_only : true
+      } ];
+}
