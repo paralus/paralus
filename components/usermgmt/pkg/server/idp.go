@@ -18,21 +18,21 @@ func NewIdpServer(is service.IdpService) rpcv3.IdpServer {
 }
 
 func (s *idpServer) CreateIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
-	return s.IdpService.CreateIdp(ctx, idp)
+	return s.IdpService.Create(ctx, idp)
 }
 
 func (s *idpServer) GetIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
-	return s.IdpService.GetIdp(ctx, idp)
+	return s.IdpService.GetByID(ctx, idp)
 }
 
 func (s *idpServer) ListIdps(ctx context.Context, _ *emptypb.Empty) (*userv3.IdpList, error) {
-	return s.IdpService.ListIdps(ctx)
+	return s.IdpService.List(ctx)
 }
 
 func (s *idpServer) UpdateIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
-	return s.IdpService.UpdateIdp(ctx, idp)
+	return s.IdpService.Update(ctx, idp)
 }
 
 func (s *idpServer) DeleteIdp(ctx context.Context, idpID *userv3.Idp) (*emptypb.Empty, error) {
-	return &emptypb.Empty{}, s.IdpService.DeleteIdp(ctx, idpID)
+	return &emptypb.Empty{}, s.IdpService.Delete(ctx, idpID)
 }

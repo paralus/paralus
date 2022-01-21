@@ -24,11 +24,11 @@ import (
 )
 
 type IdpService interface {
-	CreateIdp(context.Context, *userv3.Idp) (*userv3.Idp, error)
-	GetIdp(context.Context, *userv3.Idp) (*userv3.Idp, error)
-	ListIdps(context.Context) (*userv3.IdpList, error)
-	UpdateIdp(context.Context, *userv3.Idp) (*userv3.Idp, error)
-	DeleteIdp(context.Context, *userv3.Idp) error
+	Create(context.Context, *userv3.Idp) (*userv3.Idp, error)
+	GetByID(context.Context, *userv3.Idp) (*userv3.Idp, error)
+	List(context.Context) (*userv3.IdpList, error)
+	Update(context.Context, *userv3.Idp) (*userv3.Idp, error)
+	Delete(context.Context, *userv3.Idp) error
 }
 
 type idpService struct {
@@ -101,7 +101,7 @@ func generateSpCert(host string) (string, string, error) {
 	return string(cPEMBytes), string(privPEMBytes), nil
 }
 
-func (s *idpService) CreateIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
+func (s *idpService) Create(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
 	name := idp.Metadata.GetName()
 	domain := idp.Spec.GetDomain()
 
@@ -175,7 +175,7 @@ func (s *idpService) CreateIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Id
 	return rv, nil
 }
 
-func (s *idpService) GetIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
+func (s *idpService) GetByID(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
 	id, err := uuid.Parse(idp.Metadata.GetId())
 	if err != nil {
 		return &userv3.Idp{}, err
@@ -216,7 +216,7 @@ func (s *idpService) GetIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 	return rv, nil
 }
 
-func (s *idpService) UpdateIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
+func (s *idpService) Update(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
 	id, err := uuid.Parse(idp.Metadata.GetId())
 	if err != nil {
 		return &userv3.Idp{}, err
@@ -279,7 +279,7 @@ func (s *idpService) UpdateIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Id
 	return rv, nil
 }
 
-func (s *idpService) ListIdps(ctx context.Context) (*userv3.IdpList, error) {
+func (s *idpService) List(ctx context.Context) (*userv3.IdpList, error) {
 	var entities []models.Idp
 	var orgID uuid.NullUUID
 	var parID uuid.NullUUID
@@ -324,7 +324,7 @@ func (s *idpService) ListIdps(ctx context.Context) (*userv3.IdpList, error) {
 	return rv, nil
 }
 
-func (s *idpService) DeleteIdp(ctx context.Context, idp *userv3.Idp) error {
+func (s *idpService) Delete(ctx context.Context, idp *userv3.Idp) error {
 	id, err := uuid.Parse(idp.Metadata.GetId())
 	if err != nil {
 		return err
