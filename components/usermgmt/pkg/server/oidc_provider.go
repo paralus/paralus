@@ -30,5 +30,6 @@ func (s *oidcProvider) UpdateOIDCProvider(ctx context.Context, p *userv3.OIDCPro
 	return s.Update(ctx, p)
 }
 func (s *oidcProvider) DeleteOIDCProvider(ctx context.Context, p *userv3.OIDCProvider) (*emptypb.Empty, error) {
+	// TODO: if successful return 204 NO CONTENT
 	return &emptypb.Empty{}, s.Delete(ctx, p)
 }
