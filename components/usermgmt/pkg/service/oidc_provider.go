@@ -16,6 +16,20 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
+var baseUrl *url.URL
+
+func init() {
+	base, ok := os.LookupEnv("APP_HOST_HTTP")
+	if !ok || len(base) == 0 {
+		panic("APP_HOST_HTTP env not set")
+	}
+	var err error
+	baseUrl, err = url.Parse(base)
+	if err != nil {
+		panic("Failed to get application url")
+	}
+}
+
 type OIDCProviderService interface {
 	Create(context.Context, *userv3.OIDCProvider) (*userv3.OIDCProvider, error)
 	GetByID(context.Context, *userv3.OIDCProvider) (*userv3.OIDCProvider, error)
@@ -35,12 +49,8 @@ func NewOIDCProviderService(db *bun.DB) OIDCProviderService {
 }
 
 func generateCallbackUrl() (string, error) {
-	base, err := url.Parse(os.Getenv("APP_HOST_HTTP"))
-	if err != nil {
-		return "", err
-	}
 	uuid := uuid.New()
-	return fmt.Sprintf("%s/auth/v3/sso/callback/%s", base, uuid), nil
+	return fmt.Sprintf("%s/auth/v3/sso/callback/%s", baseUrl.String(), uuid), nil
 }
 
 func (s *oidcProvider) Create(ctx context.Context, provider *userv3.OIDCProvider) (*userv3.OIDCProvider, error) {
