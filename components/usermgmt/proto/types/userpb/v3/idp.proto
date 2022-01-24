@@ -1,0 +1,97 @@
+syntax = "proto3";
+package rafay.dev.types.user.v3;
+
+import "proto/types/commonpb/v3/common.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+message Idp {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Idp"
+      description : "Idp"
+      required : [ "apiVersion", "kind", "metadata", "spec" ]
+    }
+  };
+
+  string apiVersion = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "API Version",
+        description : "API Version of the idp resource"
+        default : "usermgmt.k8smgmt.io/v3"
+      } ];
+  string kind = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Kind",
+        description : "Kind of the idp resource"
+        default : "Idp"
+      } ];
+  rafay.dev.types.common.v3.Metadata metadata = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Metadata",
+        description : "Metadata of the idp resource"
+      } ];
+  IdpSpec spec = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Spec",
+        description : "Spec of the idp resource"
+      } ];
+
+  rafay.dev.types.common.v3.Status status = 5
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Status",
+        description : "Status of the resource"
+        read_only : true
+      } ];
+}
+
+message IdpSpec {
+  string idpName = 1;
+  string domain = 2;
+  string acsUrl = 3;
+  string ssoUrl = 4;
+  string idpCert = 5;
+  string spCert = 6;
+  string metadataUrl = 7;
+  string metadataFilename = 8;
+  bool saeEnabled = 9;
+  string groupAttributeName = 10;
+  string nameIdFormat = 11;
+  string consumerBinding = 12;
+  string spEntityId = 13;
+}
+
+message IdpList {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "IdpList"
+      description : "idp list"
+      read_only : true
+    }
+  };
+  string apiVersion = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "API Version",
+        description : "API Version of the idp list resource"
+        default : "usermgmt.k8smgmt.io/v3"
+        read_only : true
+      } ];
+  string kind = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Kind",
+        description : "Kind of the idp list resource"
+        default : "IdpList"
+        read_only : true
+      } ];
+  rafay.dev.types.common.v3.ListMetadata metadata = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Metadata",
+        description : "Metadata of the idp list resource"
+        read_only : true
+      } ];
+  repeated Idp items = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Items",
+        description : "List of the idp resources"
+        read_only : true
+      } ];
+}
