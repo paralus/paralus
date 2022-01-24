@@ -18,6 +18,8 @@ selfservice:
   methods:
     password:
       enabled: true
+    oidc:
+      enabled: true
 
   flows:
     error:
@@ -51,8 +53,10 @@ selfservice:
       after:
         password:
           hooks:
-            -
-              hook: session
+            - hook: session
+        oidc:
+          hooks:
+            - hook: session
 
 log:
   level: debug
