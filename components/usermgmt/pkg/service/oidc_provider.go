@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"fmt"
-	"net/url"
 	"os"
 	"time"
 
@@ -15,20 +14,6 @@ import (
 	bun "github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/structpb"
 )
-
-var baseUrl *url.URL
-
-func init() {
-	base, ok := os.LookupEnv("APP_HOST_HTTP")
-	if !ok || len(base) == 0 {
-		panic("APP_HOST_HTTP env not set")
-	}
-	var err error
-	baseUrl, err = url.Parse(base)
-	if err != nil {
-		panic("Failed to get application url")
-	}
-}
 
 type OIDCProviderService interface {
 	Create(context.Context, *userv3.OIDCProvider) (*userv3.OIDCProvider, error)
@@ -48,9 +33,9 @@ func NewOIDCProviderService(db *bun.DB) OIDCProviderService {
 	}
 }
 
-func generateCallbackUrl() (string, error) {
-	uuid := uuid.New()
-	return fmt.Sprintf("%s/auth/v3/sso/callback/%s", baseUrl.String(), uuid), nil
+func generateCallbackUrl(id string) string {
+	base := os.Getenv("KRATOS_PUBLIC_URL")
+	return fmt.Sprintf("%s/self-service/methods/oidc/callback/%s", base, id)
 }
 
 func (s *oidcProvider) Create(ctx context.Context, provider *userv3.OIDCProvider) (*userv3.OIDCProvider, error) {
@@ -65,10 +50,6 @@ func (s *oidcProvider) Create(ctx context.Context, provider *userv3.OIDCProvider
 		return &userv3.OIDCProvider{}, fmt.Errorf("DUPLICATE NAME")
 	}
 
-	callback, err := generateCallbackUrl()
-	if err != nil {
-		return &userv3.OIDCProvider{}, err
-	}
 	entity := &models.OIDCProvider{
 		Name:            name,
 		CreatedAt:       time.Time{},
@@ -84,9 +65,8 @@ func (s *oidcProvider) Create(ctx context.Context, provider *userv3.OIDCProvider
 		TokenURL:        provider.Spec.GetTokenUrl(),
 		RequestedClaims: provider.Spec.GetRequestedClaims().AsMap(),
 		Predefined:      provider.Spec.GetPredefined(),
-		CallbackURL:     callback,
 	}
-	_, err = s.dao.Create(ctx, entity)
+	_, err := s.dao.Create(ctx, entity)
 	if err != nil {
 		return &userv3.OIDCProvider{}, err
 	}
@@ -112,7 +92,7 @@ func (s *oidcProvider) Create(ctx context.Context, provider *userv3.OIDCProvider
 			TokenUrl:        entity.TokenURL,
 			RequestedClaims: rclaims,
 			Predefined:      entity.Predefined,
-			CallbackUrl:     entity.CallbackURL,
+			CallbackUrl:     generateCallbackUrl(entity.Id.String()),
 		},
 	}
 	return rv, nil
@@ -151,7 +131,7 @@ func (s *oidcProvider) GetByID(ctx context.Context, provider *userv3.OIDCProvide
 			TokenUrl:        entity.TokenURL,
 			RequestedClaims: rclaims,
 			Predefined:      entity.Predefined,
-			CallbackUrl:     entity.CallbackURL,
+			CallbackUrl:     generateCallbackUrl(entity.Id.String()),
 		},
 	}
 	return rv, nil
@@ -189,7 +169,7 @@ func (s *oidcProvider) List(ctx context.Context) (*userv3.OIDCProviderList, erro
 				TokenUrl:        entity.TokenURL,
 				RequestedClaims: rclaims,
 				Predefined:      entity.Predefined,
-				CallbackUrl:     entity.CallbackURL,
+				CallbackUrl:     generateCallbackUrl(entity.Id.String()),
 			},
 		}
 		result = append(result, e)
@@ -245,7 +225,6 @@ func (s *oidcProvider) Update(ctx context.Context, provider *userv3.OIDCProvider
 		TokenURL:        provider.Spec.GetTokenUrl(),
 		RequestedClaims: provider.Spec.GetRequestedClaims().AsMap(),
 		Predefined:      provider.Spec.GetPredefined(),
-		CallbackURL:     provider.Spec.GetCallbackUrl(),
 	}
 	_, err = s.dao.Update(ctx, id, entity)
 	if err != nil {
@@ -273,7 +252,7 @@ func (s *oidcProvider) Update(ctx context.Context, provider *userv3.OIDCProvider
 			TokenUrl:        entity.TokenURL,
 			RequestedClaims: rclaims,
 			Predefined:      entity.Predefined,
-			CallbackUrl:     entity.CallbackURL,
+			CallbackUrl:     generateCallbackUrl(entity.Id.String()),
 		},
 	}
 	return rv, nil

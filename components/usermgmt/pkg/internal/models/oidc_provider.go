@@ -29,6 +29,5 @@ type OIDCProvider struct {
 	TokenURL        string                 `bun:"token_url"`
 	RequestedClaims map[string]interface{} `bun:"type:jsonb"`
 	Predefined      bool                   `bun:"predefined,notnull"`
-	CallbackURL     string                 `bun:"callback_url,notnull"`
 	Trash           bool                   `bun:"trash,default:false"`
 }
