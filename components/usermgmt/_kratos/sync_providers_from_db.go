@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -40,26 +41,43 @@ type Config struct {
 
 var ProvidersDB []Provider
 
-func main() {
-	dsn := "postgres://admindbuser:admindbpassword@localhost:5432/admindb?sslmode=disable"
-	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
-	db := bun.NewDB(sqldb, pgdialect.New())
-	err := db.NewSelect().Model(&ProvidersDB).ModelTableExpr("authsrv_oidc_provider AS provider").Scan(context.Background())
+func sync(ctx context.Context, db *bun.DB) error {
+	err := db.NewSelect().Model(&ProvidersDB).ModelTableExpr("authsrv_oidc_provider AS provider").Scan(ctx)
 	if err != nil {
-		fmt.Printf("failed to fetch providers from DB: ", err)
-		os.Exit(1)
+		return fmt.Errorf("failed to fetch providers from DB: ", err)
 	}
 
 	var c Config
 	c.Selfservice.Methods.Oidc.Config.Providers = ProvidersDB
 	d, err := yaml.Marshal(&c)
 	if err != nil {
-		fmt.Printf("failed to marshal: ", err)
-		os.Exit(1)
+		return fmt.Errorf("failed to marshal: ", err)
 	}
 	err = os.WriteFile("oidc_providers.yml", d, 0644)
 	if err != nil {
-		fmt.Printf("failed to write data: ", err)
-		os.Exit(1)
+		return fmt.Errorf("failed to write data: ", err)
 	}
+	return nil
+}
+
+func main() {
+	ctx := context.Background()
+	dsn := "postgres://admindbuser:admindbpassword@localhost:5432/admindb?sslmode=disable"
+	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	db := bun.NewDB(sqldb, pgdialect.New())
+
+	ln := pgdriver.NewListener(db)
+	if err := ln.Listen(ctx, "provider:changed"); err != nil {
+		panic(err)
+	}
+
+	for _ = range ln.Channel() {
+		fmt.Printf("%s: Received notification", time.Now())
+		if err := sync(ctx, db); err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println("Synchronized successfully")
+		}
+	}
+
 }
