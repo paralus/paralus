@@ -203,8 +203,7 @@ func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.
 
 func (s *projectService) Update(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error) {
 
-	id, _ := uuid.Parse(project.Metadata.Id)
-	entity, err := s.dao.GetByID(ctx, id, &models.Project{})
+	entity, err := s.dao.GetByName(ctx, project.Metadata.Name, &models.Project{})
 	if err != nil {
 		project.Status = &v3.Status{
 			ConditionType:   "Update",
@@ -217,12 +216,11 @@ func (s *projectService) Update(ctx context.Context, project *systemv3.Project) 
 
 	if proj, ok := entity.(*models.Project); ok {
 		//update project details
-		proj.Name = project.Metadata.Name
 		proj.Description = project.Metadata.Description
 		proj.Default = project.Spec.Default
 		proj.ModifiedAt = time.Now()
 
-		_, err = s.dao.Update(ctx, id, proj)
+		_, err = s.dao.Update(ctx, proj.ID, proj)
 		if err != nil {
 			project.Status = &v3.Status{
 				ConditionType:   "Update",
@@ -248,17 +246,7 @@ func (s *projectService) Update(ctx context.Context, project *systemv3.Project) 
 }
 
 func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error) {
-	id, err := uuid.Parse(project.Metadata.Id)
-	if err != nil {
-		project.Status = &v3.Status{
-			ConditionType:   "Delete",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
-		return project, err
-	}
-	entity, err := s.dao.GetByID(ctx, id, &models.Project{})
+	entity, err := s.dao.GetByName(ctx, project.Metadata.Name, &models.Project{})
 	if err != nil {
 		project.Status = &v3.Status{
 			ConditionType:   "Delete",
@@ -269,7 +257,7 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 		return project, err
 	}
 	if proj, ok := entity.(*models.Project); ok {
-		err = s.dao.Delete(ctx, id, proj)
+		err = s.dao.Delete(ctx, proj.ID, proj)
 		if err != nil {
 			project.Status = &v3.Status{
 				ConditionType:   "Delete",
@@ -303,16 +291,18 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 		},
 	}
 	if len(project.Metadata.Organization) > 0 {
-		orgId, err := uuid.Parse(project.Metadata.Organization)
+		var org models.Organization
+		_, err := s.dao.GetByName(ctx, project.Metadata.Organization, &org)
 		if err != nil {
 			return projectList, err
 		}
-		partId, err := uuid.Parse(project.Metadata.Partner)
+		var part models.Partner
+		_, err = s.dao.GetByName(ctx, project.Metadata.Partner, &part)
 		if err != nil {
 			return projectList, err
 		}
 		var projs []models.Project
-		entities, err := s.dao.List(ctx, uuid.NullUUID{UUID: partId, Valid: true}, uuid.NullUUID{UUID: orgId, Valid: true}, &projs)
+		entities, err := s.dao.List(ctx, uuid.NullUUID{UUID: part.ID, Valid: true}, uuid.NullUUID{UUID: org.ID, Valid: true}, &projs)
 		if err != nil {
 			return projectList, err
 		}

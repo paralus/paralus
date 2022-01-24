@@ -10,12 +10,13 @@ import (
 	"sync"
 	"time"
 
+	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/server"
 	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/service"
 	pbrpcv3 "github.com/RafaySystems/rcloud-base/components/adminsrv/proto/rpc/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/auth/interceptors"
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
-	logv2 "github.com/RafaySystems/rcloud-base/components/common/pkg/log/v2"
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/log"
 	configrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/config"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/spf13/viper"
@@ -54,7 +55,7 @@ var (
 	ps                  service.PartnerService
 	os                  service.OrganizationService
 	pps                 service.ProjectService
-	_log                = logv2.GetLogger()
+	_log                = log.GetLogger()
 	authPool            authv3.AuthPool
 	configPool          configrpc.ConfigPool
 	configAddr          string
@@ -64,7 +65,7 @@ func setup() {
 	viper.SetDefault(rpcPortEnv, 10000)
 	viper.SetDefault(apiPortEnv, 11000)
 	viper.SetDefault(debugPortEnv, 12000)
-	viper.SetDefault(dbAddr, ":5432")
+	viper.SetDefault(dbAddr, "localhost:5432")
 	viper.SetDefault(dbNameEnv, "admindb")
 	viper.SetDefault(dbUserEnv, "admindbuser")
 	viper.SetDefault(dbPasswordEnv, "admindbpassword")
@@ -94,15 +95,16 @@ func setup() {
 
 	rpcRelayPeeringPort = rpcPort + 1
 
-	dsn := "postgres://admindbuser:admindbpassword@localhost:5432/admindb?sslmode=disable"
+	dsn := "postgres://" + dbUser + ":" + dbPassword + "@" + dbAddr + "/" + dbName + "?sslmode=disable"
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	db = bun.NewDB(sqldb, pgdialect.New())
 
-	db := bun.NewDB(sqldb, pgdialect.New())
-
-	db.AddQueryHook(bundebug.NewQueryHook(
-		bundebug.WithVerbose(true),
-		bundebug.FromEnv("BUNDEBUG"),
-	))
+	if dev {
+		db.AddQueryHook(bundebug.NewQueryHook(
+			bundebug.WithVerbose(true),
+			bundebug.FromEnv("BUNDEBUG"),
+		))
+	}
 
 	_log.Infow("printing db", "db", db)
 
@@ -118,7 +120,6 @@ func run() {
 	ctx := signals.SetupSignalHandler()
 
 	var wg sync.WaitGroup
-
 	wg.Add(4)
 
 	go runAPI(&wg, ctx)
@@ -171,9 +172,9 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	defer ps.Close()
 	defer configPool.Close()
 
-	partnerServer := pbrpcv3.NewPartnerServer(ps)
-	organizationServer := pbrpcv3.NewOrganizationServer(os)
-	projectServer := pbrpcv3.NewProjectServer(pps)
+	partnerServer := server.NewPartnerServer(ps)
+	organizationServer := server.NewOrganizationServer(os)
+	projectServer := server.NewProjectServer(pps)
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", rpcPort))
 	if err != nil {

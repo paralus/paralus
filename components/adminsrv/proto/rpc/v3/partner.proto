@@ -85,9 +85,6 @@ service Partner {
       returns (rafay.dev.types.system.v3.Partner) {
     option (google.api.http) = {
       get : "/auth/v3/partner/{metadata.name}"
-      additional_bindings {
-        get : "/auth/v3/partner/{metadata.id}"
-      }
     };
   };
 
@@ -96,10 +93,6 @@ service Partner {
     option (google.api.http) = {
       put : "/auth/v3/partner/{metadata.name}"
       body : "*"
-      additional_bindings {
-        put : "/auth/v3/partner/{metadata.id}"
-        body : "*"
-      }
     };
   };
 
@@ -107,9 +100,6 @@ service Partner {
       returns (rafay.dev.types.system.v3.Partner) {
     option (google.api.http) = {
       delete : "/auth/v3/partner/{metadata.name}"
-      additional_bindings {
-        delete : "/auth/v3/partner/{metadata.id}"
-      }
     };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {

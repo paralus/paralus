@@ -1,0 +1,12 @@
+version: v1
+name: buf.build/rafay/cluster-scheduler
+deps:
+  - buf.build/googleapis/googleapis
+  - buf.build/grpc-ecosystem/grpc-gateway
+  - buf.build/gogo/protobuf
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - DEFAULT
