@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"os"
 	"time"
 
@@ -38,6 +39,11 @@ func generateCallbackUrl(id string) string {
 	return fmt.Sprintf("%s/self-service/methods/oidc/callback/%s", base, id)
 }
 
+func validateURL(rawURL string) error {
+	_, err := url.ParseRequestURI(rawURL)
+	return err
+}
+
 func (s *oidcProvider) Create(ctx context.Context, provider *userv3.OIDCProvider) (*userv3.OIDCProvider, error) {
 	// validate name
 	name := provider.Metadata.GetName()
@@ -50,19 +56,37 @@ func (s *oidcProvider) Create(ctx context.Context, provider *userv3.OIDCProvider
 		return &userv3.OIDCProvider{}, fmt.Errorf("DUPLICATE NAME")
 	}
 
+	mapUrl := provider.Spec.GetMapperUrl()
+	issUrl := provider.Spec.GetIssuerUrl()
+	authUrl := provider.Spec.GetAuthUrl()
+	tknUrl := provider.Spec.GetTokenUrl()
+
+	if len(mapUrl) != 0 && validateURL(mapUrl) != nil {
+		return &userv3.OIDCProvider{}, fmt.Errorf("INVALID MAPPER URL")
+	}
+	if len(issUrl) != 0 && validateURL(issUrl) != nil {
+		return &userv3.OIDCProvider{}, fmt.Errorf("INVALID ISSUER URL")
+	}
+	if len(authUrl) != 0 && validateURL(authUrl) != nil {
+		return &userv3.OIDCProvider{}, fmt.Errorf("INVALID AUTH URL")
+	}
+	if len(tknUrl) != 0 && validateURL(tknUrl) != nil {
+		return &userv3.OIDCProvider{}, fmt.Errorf("INVALID TOKEN URL")
+	}
+
 	entity := &models.OIDCProvider{
 		Name:            name,
 		CreatedAt:       time.Time{},
 		ModifiedAt:      time.Time{},
 		ProviderName:    provider.Spec.GetProviderName(),
-		MapperURL:       provider.Spec.GetMapperUrl(),
+		MapperURL:       mapUrl,
 		MapperFilename:  provider.Spec.GetMapperFilename(),
 		ClientId:        provider.Spec.GetClientId(),
 		ClientSecret:    provider.Spec.GetClientSecret(),
 		Scopes:          provider.Spec.GetScopes(),
-		IssuerURL:       provider.Spec.GetIssuerUrl(),
-		AuthURL:         provider.Spec.GetAuthUrl(),
-		TokenURL:        provider.Spec.GetTokenUrl(),
+		IssuerURL:       issUrl,
+		AuthURL:         authUrl,
+		TokenURL:        tknUrl,
 		RequestedClaims: provider.Spec.GetRequestedClaims().AsMap(),
 		Predefined:      provider.Spec.GetPredefined(),
 	}
@@ -207,6 +231,25 @@ func (s *oidcProvider) Update(ctx context.Context, provider *userv3.OIDCProvider
 	if err != nil {
 		return &userv3.OIDCProvider{}, err
 	}
+
+	mapUrl := provider.Spec.GetMapperUrl()
+	issUrl := provider.Spec.GetIssuerUrl()
+	authUrl := provider.Spec.GetAuthUrl()
+	tknUrl := provider.Spec.GetTokenUrl()
+
+	if len(mapUrl) != 0 && validateURL(mapUrl) != nil {
+		return &userv3.OIDCProvider{}, fmt.Errorf("INVALID MAPPER URL")
+	}
+	if len(issUrl) != 0 && validateURL(issUrl) != nil {
+		return &userv3.OIDCProvider{}, fmt.Errorf("INVALID ISSUER URL")
+	}
+	if len(authUrl) != 0 && validateURL(authUrl) != nil {
+		return &userv3.OIDCProvider{}, fmt.Errorf("INVALID AUTH URL")
+	}
+	if len(tknUrl) != 0 && validateURL(tknUrl) != nil {
+		return &userv3.OIDCProvider{}, fmt.Errorf("INVALID TOKEN URL")
+	}
+
 	entity := &models.OIDCProvider{
 		Id:              id,
 		Name:            provider.Metadata.GetName(),
@@ -215,14 +258,14 @@ func (s *oidcProvider) Update(ctx context.Context, provider *userv3.OIDCProvider
 		PartnerId:       partId,
 		ModifiedAt:      time.Now(),
 		ProviderName:    provider.Spec.GetProviderName(),
-		MapperURL:       provider.Spec.GetMapperUrl(),
+		MapperURL:       mapUrl,
 		MapperFilename:  provider.Spec.GetMapperFilename(),
 		ClientId:        provider.Spec.GetClientId(),
 		ClientSecret:    provider.Spec.GetClientSecret(),
 		Scopes:          provider.Spec.GetScopes(),
-		IssuerURL:       provider.Spec.GetIssuerUrl(),
-		AuthURL:         provider.Spec.GetAuthUrl(),
-		TokenURL:        provider.Spec.GetTokenUrl(),
+		IssuerURL:       issUrl,
+		AuthURL:         authUrl,
+		TokenURL:        tknUrl,
 		RequestedClaims: provider.Spec.GetRequestedClaims().AsMap(),
 		Predefined:      provider.Spec.GetPredefined(),
 	}

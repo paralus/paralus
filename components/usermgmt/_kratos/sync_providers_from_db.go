@@ -17,14 +17,14 @@ import (
 type Provider struct {
 	Id              uuid.UUID              `bun:"id,type:uuid"`
 	Provider        string                 `bun:"provider_name,notnull"`
-	MapperURL       string                 `bun:"mapper_url"yaml:"mapper_url"`
-	ClientId        string                 `bun:"client_id,notnull"yaml:"client_id"`
-	ClientSecret    string                 `bun:"client_secret,notnull"yaml:"client_secret"`
+	MapperURL       string                 `bun:"mapper_url" yaml:"mapper_url"`
+	ClientId        string                 `bun:"client_id,notnull" yaml:"client_id"`
+	ClientSecret    string                 `bun:"client_secret,notnull" yaml:"client_secret"`
 	Scope           []string               `bun:"scopes,notnull"`
-	IssuerURL       string                 `bun:"issuer_url,notnull"yaml:"issuer_url"`
-	AuthURL         string                 `bun:"auth_url"yaml:"auth_url,omitempty"`
-	TokenURL        string                 `bun:"token_url"yaml:"token_url,omitempty"`
-	RequestedClaims map[string]interface{} `bun:"type:jsonb"yaml:"requested_claims,omitempty"`
+	IssuerURL       string                 `bun:"issuer_url,notnull" yaml:"issuer_url"`
+	AuthURL         string                 `bun:"auth_url" yaml:"auth_url,omitempty"`
+	TokenURL        string                 `bun:"token_url" yaml:"token_url,omitempty"`
+	RequestedClaims map[string]interface{} `bun:"type:jsonb" yaml:"requested_claims,omitempty"`
 }
 
 type Config struct {
@@ -44,18 +44,18 @@ var ProvidersDB []Provider
 func sync(ctx context.Context, db *bun.DB) error {
 	err := db.NewSelect().Model(&ProvidersDB).ModelTableExpr("authsrv_oidc_provider AS provider").Scan(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to fetch providers from DB: ", err)
+		return fmt.Errorf("failed to fetch providers from DB: %s", err)
 	}
 
 	var c Config
 	c.Selfservice.Methods.Oidc.Config.Providers = ProvidersDB
 	d, err := yaml.Marshal(&c)
 	if err != nil {
-		return fmt.Errorf("failed to marshal: ", err)
+		return fmt.Errorf("failed to marshal: %s", err)
 	}
 	err = os.WriteFile("oidc_providers.yml", d, 0644)
 	if err != nil {
-		return fmt.Errorf("failed to write data: ", err)
+		return fmt.Errorf("failed to write data: %s", err)
 	}
 	return nil
 }
@@ -71,8 +71,8 @@ func main() {
 		panic(err)
 	}
 
-	for _ = range ln.Channel() {
-		fmt.Printf("%s: Received notification", time.Now())
+	for range ln.Channel() {
+		fmt.Printf("%s: Received notification\n", time.Now())
 		if err := sync(ctx, db); err != nil {
 			fmt.Println(err)
 		} else {
