@@ -1,0 +1,34 @@
+selfservice:
+  methods:
+    oidc:
+      config:
+        providers:
+          # This is an example provider
+          - id: uuid
+            provider: generic
+            mapper_url: http://mydomain.com/github.schema.json
+            client_id: ...
+            client_secret: ...
+            scope:
+              - email
+            issuer_url: http://openid-connect-provider/
+            auth_url: http://openid-connect-provider/oauth2/auth
+            token_url: http://openid-connect-provider/oauth2/token
+            requested_claims:
+              userinfo:
+                given_name:
+                  essential: true
+                nickname: null
+                email:
+                  essential: true
+                email_verified:
+                  essential: true
+                picture: null
+                http://example/info/claims/groups: null
+              id_token:
+                auth_time:
+                  essential: true
+                acr:
+                  values: ['urn:mace:incommon:iap:silver']
+                sub:
+                  value: 248289761001
