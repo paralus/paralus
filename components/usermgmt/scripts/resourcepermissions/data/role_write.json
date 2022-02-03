@@ -1,0 +1,7 @@
+{
+  "name": "role.write",
+  "resource_urls": [],
+  "resource_action_urls": [],
+  "base_url": "/auth/v3/roles",
+  "authenticated": true
+}

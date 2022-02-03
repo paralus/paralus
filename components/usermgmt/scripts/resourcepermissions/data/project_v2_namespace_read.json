@@ -1,0 +1,20 @@
+{
+  "name": "project.v2.namespace.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:namespace_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/config/project/:project_id/namespace",
+  "authenticated": true
+}

@@ -1,0 +1,34 @@
+{
+  "name": "project.agent.write",
+  "base_url": "/v2/config/project/:project_id/agent",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:agent_name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:agent_name/activate",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:agent_name/deactivate",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "authenticated": true
+}

@@ -1,0 +1,20 @@
+{
+  "name": "project.systemsync.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:systemsync_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/pipeline/project/:project_id/systemsync",
+  "authenticated": true
+}

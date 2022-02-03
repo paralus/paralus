@@ -72,14 +72,4 @@ service Rolepermission {
       get : "/auth/v3/rolepermissions"
     };
   };
-
-  rpc GetRolepermission(rafay.dev.types.user.v3.RolePermission)
-      returns (rafay.dev.types.user.v3.RolePermission) {
-    option (google.api.http) = {
-      get : "/auth/v3/rolepermission/{metadata.name}"
-      additional_bindings {
-        get : "/auth/v3/rolepermission/{metadata.id}"
-      }
-    };
-  };
 }

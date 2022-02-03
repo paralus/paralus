@@ -1,0 +1,27 @@
+{
+  "name": "project.data.protection.policy.read",
+  "base_url": "/v2/config/project/:project_id/dataProtectionPolicy",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:data_protection_policy_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:data_protection_policy_name/status/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "authenticated": true
+}

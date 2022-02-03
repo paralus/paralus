@@ -1,0 +1,20 @@
+{
+  "name": "project.providers.org.admin.write",
+  "base_url": "/edge/v1/projects/:project_id/providers",
+  "resource_urls": [],
+  "resource_action_urls": [
+    {
+      "url": "/:provider_id/assignprojects/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:provider_id/unassignprojects/",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "authenticated": true
+}

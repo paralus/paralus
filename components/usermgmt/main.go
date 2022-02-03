@@ -21,8 +21,9 @@ import (
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/auth/interceptors"
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
-	logv2 "github.com/RafaySystems/rcloud-base/components/common/pkg/log/v2"
+	logv2 "github.com/RafaySystems/rcloud-base/components/common/pkg/log"
 	configrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/config"
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/providers"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/server"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/service"
 	pbrpcv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/rpc/v3"
@@ -61,6 +62,7 @@ var (
 	us                  service.UserService
 	gs                  service.GroupService
 	rs                  service.RoleService
+	rrs                 service.RolepermissionService
 	is                  service.IdpService
 	ps                  service.OIDCProviderService
 	dev                 bool
@@ -116,14 +118,17 @@ func setup() {
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db := bun.NewDB(sqldb, pgdialect.New())
 
-	db.AddQueryHook(bundebug.NewQueryHook(
-		bundebug.WithVerbose(true),
-		bundebug.FromEnv("BUNDEBUG"),
-	))
+	if dev {
+		db.AddQueryHook(bundebug.NewQueryHook(
+			bundebug.WithVerbose(true),
+			bundebug.FromEnv("BUNDEBUG"),
+		))
+	}
 
-	us = service.NewUserService(kc, db)
+	us = service.NewUserService(providers.NewKratosAuthProvider(kc), db)
 	gs = service.NewGroupService(db)
 	rs = service.NewRoleService(db)
+	rrs = service.NewRolepermissionService(db)
 	is = service.NewIdpService(db)
 	ps = service.NewOIDCProviderService(db)
 
@@ -159,6 +164,7 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 		pbrpcv3.RegisterUserHandlerFromEndpoint,
 		pbrpcv3.RegisterGroupHandlerFromEndpoint,
 		pbrpcv3.RegisterRoleHandlerFromEndpoint,
+		pbrpcv3.RegisterRolepermissionHandlerFromEndpoint,
 		pbrpcv3.RegisterIdpHandlerFromEndpoint,
 		pbrpcv3.RegisterOIDCProviderHandlerFromEndpoint,
 	)
@@ -190,10 +196,12 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	// defer configPool.Close()
 	defer gs.Close()
 	defer rs.Close()
+	defer rrs.Close()
 
 	userServer := server.NewUserServer(us)
 	groupServer := server.NewGroupServer(gs)
 	roleServer := server.NewRoleServer(rs)
+	rolepermissionServer := server.NewRolePermissionServer(rrs)
 	idpServer := server.NewIdpServer(is)
 	oidcProviderServer := server.NewOIDCServer(ps)
 
@@ -232,6 +240,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	rpcv3.RegisterUserServer(s, userServer)
 	rpcv3.RegisterGroupServer(s, groupServer)
 	rpcv3.RegisterRoleServer(s, roleServer)
+	rpcv3.RegisterRolepermissionServer(s, rolepermissionServer)
 	rpcv3.RegisterIdpServer(s, idpServer)
 	rpcv3.RegisterOIDCProviderServer(s, oidcProviderServer)
 

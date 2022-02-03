@@ -1,0 +1,20 @@
+{
+  "name": "hub.pipeline.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:pipeline_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/apis/gitops.k8smgmt.io/v3/projects/:project_name/pipelines",
+  "authenticated": true
+}

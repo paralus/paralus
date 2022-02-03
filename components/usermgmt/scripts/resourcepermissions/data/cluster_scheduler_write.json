@@ -1,0 +1,34 @@
+{
+  "name": "cluster.scheduler.write",
+  "base_url": "/v2/scheduler/cluster",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:cluster_name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:cluster_name/blueprint/publish",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:cluster_name/nodes/meta",
+      "methods": [
+        "PUT"
+      ]
+    }
+  ],
+  "authenticated": true
+}

@@ -26,16 +26,11 @@ func (s *roleServer) GetRoles(ctx context.Context, p *userpbv3.Role) (*userpbv3.
 }
 
 func (s *roleServer) GetRole(ctx context.Context, p *userpbv3.Role) (*userpbv3.Role, error) {
-	role, err := s.GetByName(ctx, p.Metadata.Name)
-	if err != nil {
-		return s.GetByID(ctx, p.Metadata.Id)
-	}
-	return role, nil
+	return s.GetByName(ctx, p)
 }
 
 func (s *roleServer) DeleteRole(ctx context.Context, p *userpbv3.Role) (*userpbv3.Role, error) {
-	_, err := s.Delete(ctx, p)
-	return nil, err
+	return s.Delete(ctx, p)
 }
 
 func (s *roleServer) UpdateRole(ctx context.Context, p *userpbv3.Role) (*userpbv3.Role, error) {

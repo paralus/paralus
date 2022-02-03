@@ -1,26 +1,16 @@
 CREATE TABLE IF NOT EXISTS authsrv_account (
-    password character varying(128) NOT NULL,
-    last_login timestamp with time zone,
     id uuid NOT NULL default uuid_generate_v4(),
+    last_login timestamp with time zone,
     name character varying(256) NOT NULL,
     description character varying(512) NOT NULL,
     created_at timestamp with time zone NOT NULL,
     modified_at timestamp with time zone NOT NULL,
     trash boolean NOT NULL,
-    username character varying(256) NOT NULL,
-    phone character varying(36) NOT NULL,
-    first_name character varying(64) NOT NULL,
-    last_name character varying(64) NOT NULL,
-    email_verified boolean NOT NULL,
-    phone_verified boolean NOT NULL,
-    email_verification_attempts integer NOT NULL,
-    require_change_password boolean NOT NULL,
-    deleted_username character varying(256),
-    totp_required boolean NOT NULL,
-    totp_secret character varying(64) NOT NULL,
-    totp_verified boolean NOT NULL,
+    username character varying(256) NOT NULL, -- should we have it here?
     organization_id uuid,
-    user_type character varying(256) default 'CONSOLE'
+    user_type character varying(256) default 'CONSOLE',
+    provider character varying(256) NOT NULL, -- local/oidc/saml (user_type??)
+    identity_id uuid NOT NULL  -- TODO: add foreign key constraint
 );
 
 ALTER TABLE authsrv_account OWNER TO admindbuser;

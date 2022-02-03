@@ -1,0 +1,27 @@
+{
+  "name": "hub.workloadtemplate.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workloadtemplate_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:workloadtemplate_name/artifacts",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/apis/apps.k8smgmt.io/v3/projects/:project_name/workloadtemplates",
+  "authenticated": true
+}

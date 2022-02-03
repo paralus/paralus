@@ -1,0 +1,14 @@
+{
+  "name": "registryimage.write",
+  "resource_urls": [],
+  "resource_action_urls": [
+    {
+      "url": "/image/tags/",
+      "methods": [
+        "DELETE"
+      ]
+    }
+  ],
+  "base_url": "/config/v1/registry",
+  "authenticated": true
+}

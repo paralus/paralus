@@ -1,0 +1,39 @@
+{
+  "name": "project.read",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:project_id/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:project_id/users/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:project_id/groups/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:project_id/trend/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/auth/v3/projects",
+  "authenticated": true
+}

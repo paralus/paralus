@@ -1,58 +1,64 @@
 :host = http://localhost:11000
-:partner = 439fd1c6-e947-4dad-a9e9-ca1f50898f85
-:org = 960bb196-76b2-430a-a72e-88d8362c07c3
-:group = my-group
-:role = my-role
-:groupid = 99f4ea22-089c-4016-a1f9-e8b156d34cf5
-:roleid = 3de58ba8-a42f-49bb-b8bd-052363123fdc
-:userid = 8f35abd7-0c8c-4770-a2c7-430f79bb5eb7
-:projectid = c61ec2fe-543c-4e10-a1b6-c53c43fb9ca4
+:partner = important-partner
+:org = hello
+:project = hello
+:group = group-name
+:role = role-name
+:user = user.name@provider.com
+:namespace = 7
 
 ## Users
 
 # Create user
-POST :host/auth/v3/partner/:partner/organization/:org/users
-{"spec": {"username": "updatduser@notaprovider.com", "firstName": "John", "lastName": "Doe"}}
-
-# Create user with roles
-POST :host/auth/v3/partner/:partner/organization/:org/users
+POST :host/auth/v3/users
 Content-Type: application/yaml
 
+metadata:
+  partner: :partner
+  organization: :org
+  name: :user
 spec:
-  username: tany@notarvider.com
+  firstName: John
+  lastName: Doe
+
+# Create user with roles
+POST :host/auth/v3/users
+Content-Type: application/yaml
+
+metadata:
+  partner: :partner
+  organization: :org
+  name: :user
+spec:
   firstName: John
   lastName: Doe
   projectnamespaceroles:
-    - role: :roleid
-      namespace: 7
-      project: :projectid
-    - role: :roleid
-      namespace: 9
-      project: :projectid
-
-# Create user with groups
-POST :host/auth/v3/partner/:partner/organization/:org/users
-Content-Type: application/yaml
-
-spec:
-  username: aegy@notaprovider.com
-  firstName: John
-  lastName: Doe
-  groups:
-    - :groupid
+    - role: NAMESPACE_ADMIN
+      namespace: :namespace
+      project: :project
 
 # Get all users
-GET :host/auth/v3/partner/:partner/organization/:org/users
+GET :host/auth/v3/users
+Content-Type: application/yaml
 
 # Get single user
-GET :host/auth/v3/partner/:partner/organization/:org/user/:userid
+GET :host/auth/v3/user/:user
+Content-Type: application/yaml
 
 # Update user info
-PUT :host/auth/v3/partner/:partner/organization/:org/user/:userid
-{"spec": {"username": "changedemail@notaprovider.com", "firstName": "John", "lastName": "Doe"}}
+PUT :host/auth/v3/user/:user
+Content-Type: application/yaml
+
+metadata:
+  partner: :partner
+  organization: :org
+  name: :user
+spec:
+  firstName: John
+  lastName: Cena
 
 # Delete single user
-DELETE :host/auth/v3/partner/:partner/organization/:org/user/:userid
+DELETE :host/auth/v3/user/:user
 
 
 ## Groups
@@ -62,57 +68,64 @@ POST :host/auth/v3/partner/:partner/organization/:org/groups
 Content-Type: application/yaml
 
 metadata:
-  name: :groupname
+  name: :group
   description: My first description
   partner: :partner
   organization: :org
 spec:
   type: simple
   users:
-    - 8f35abd7-0c8c-4770-a2c7-430f79bb5eb7
+    - :user
   projectnamespaceroles:
-    - role: :roleid
-      namespace: 7
-      project: :projectid
-
-# Create group no namespace
-POST :host/auth/v3/partner/:partner/organization/:org/groups
-Content-Type: application/yaml
-
-metadata:
-  name: :groupname
-  description: My first description
-  partner: :partner
-  organization: :org
-spec:
-  type: simple
-  users:
-    - 8f35abd7-0c8c-4770-a2c7-430f79bb5eb7
-  projectnamespaceroles:
-    - role: :roleid
-      project: :projectid
+    - role: NAMESPACE_ADMIN
+      namespace: :namespace
+      project: :project
 
 # Create group no namespace and project
 POST :host/auth/v3/partner/:partner/organization/:org/groups
 Content-Type: application/yaml
 
 metadata:
-  name: :groupname
+  name: :group
   description: My first description
   partner: :partner
   organization: :org
 spec:
   type: simple
   users:
-    - 8f35abd7-0c8c-4770-a2c7-430f79bb5eb7
+    - :user
   projectnamespaceroles:
-    - role: :roleid
+    - role: CLUSTER_ADMIN
+
+# Update group to no namespace
+PUT :host/auth/v3/partner/:partner/organization/:org/group/:group
+Content-Type: application/yaml
+
+metadata:
+  name: :group
+  description: My first description
+  partner: :partner
+  organization: :org
+spec:
+  type: simple
+  users:
+    - :user
+  projectnamespaceroles:
+    - role: NAMESPACE_ADMIN
+      project: :project
+
 
 # Get all groups
 GET :host/auth/v3/partner/:partner/organization/:org/groups
+Content-Type: application/yaml
 
 # Get a group
-GET :host/auth/v3/partner/:partner/organization/:org/group/:groupid
+GET :host/auth/v3/partner/:partner/organization/:org/group/:group
+Content-Type: application/yaml
+
+# Delete a group
+DELETE :host/auth/v3/partner/:partner/organization/:org/group/:group
+Content-Type: application/yaml
 
 
 ## Roles
@@ -128,10 +141,26 @@ metadata:
   partner: :partner
   organization: :org
 spec:
-  type: simple
+  isGlobal: true
+  scope: cluster
+  rolepermissions:
+    - account.read
 
 # Get all roles
 GET :host/auth/v3/partner/:partner/organization/:org/roles
+Content-Type: application/yaml
 
 # Get a role
 GET :host/auth/v3/partner/:partner/organization/:org/role/:role
+Content-Type: application/yaml
+
+# Delete a role
+DELETE :host/auth/v3/partner/:partner/organization/:org/role/:role
+Content-Type: application/yaml
+
+
+## Rolepermission
+
+# Get all rolepermissions
+GET :host/auth/v3/rolepermissions
+Content-Type: application/yaml

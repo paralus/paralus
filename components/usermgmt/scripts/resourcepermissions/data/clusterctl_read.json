@@ -1,0 +1,14 @@
+{
+  "name": "clusterctl.read",
+  "resource_urls": [],
+  "resource_action_urls": [
+    {
+      "url": "/taskset/:tasksetid/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/edge/v1/clusterctl",
+  "authenticated": true
+}

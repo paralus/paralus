@@ -1,0 +1,45 @@
+{
+  "name": "cluster.scheduler.read",
+  "base_url": "/v2/scheduler/cluster",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:cluster_name/download",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_name/namespace",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_name/task",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_name/node",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "authenticated": true
+}

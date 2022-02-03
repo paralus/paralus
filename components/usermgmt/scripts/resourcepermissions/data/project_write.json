@@ -1,0 +1,46 @@
+{
+  "name": "project.write",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:project_id/",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:project_id/addusers/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:project_id/addgroups/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:project_id/removeusers/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:project_id/removegroups/",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "base_url": "/auth/v3/projects",
+  "authenticated": true
+}

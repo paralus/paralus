@@ -90,9 +90,6 @@ service Group {
   rpc GetGroup(rafay.dev.types.user.v3.Group) returns (rafay.dev.types.user.v3.Group) {
     option (google.api.http) = {
       get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/group/{metadata.name}"
-      additional_bindings {
-        get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/group/{metadata.id}"
-      }
     };
   };
 
@@ -100,19 +97,12 @@ service Group {
     option (google.api.http) = {
       put : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/group/{metadata.name}"
       body : "*"
-      additional_bindings {
-        put : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/group/{metadata.id}"
-        body : "*"
-      }
     };
   };
 
   rpc DeleteGroup(rafay.dev.types.user.v3.Group) returns (rafay.dev.types.user.v3.Group) {
     option (google.api.http) = {
       delete : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/group/{metadata.name}"
-      additional_bindings {
-        delete : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/group/{metadata.id}"
-      }
     };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {

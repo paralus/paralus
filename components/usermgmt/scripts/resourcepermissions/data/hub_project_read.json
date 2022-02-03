@@ -1,0 +1,20 @@
+{
+  "name": "hub.project.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:project_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/apis/system.k8smgmt.io/v3/projects",
+  "authenticated": true
+}

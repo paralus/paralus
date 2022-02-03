@@ -1,0 +1,34 @@
+{
+  "name": "project.data.protection.write",
+  "base_url": "/v2/config/project/:project_id/dataprotection",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:data_protection_name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:data_protection_name/deploy",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:data_protection_name/undeploy",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "authenticated": true
+}

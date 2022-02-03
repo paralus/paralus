@@ -17,6 +17,11 @@
           "type": "string",
           "pattern": "^.*$"
         },
+        "description": {
+          "title": "Description",
+          "type": "string",
+          "pattern": "^.*$"
+        },
         "email": {
           "type": "string",
           "format": "email",
@@ -40,6 +45,7 @@
       "required": [
         "first_name",
         "last_name",
+        "description",
         "email"
       ],
       "additionalProperties": false

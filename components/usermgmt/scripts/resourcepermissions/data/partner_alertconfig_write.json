@@ -1,0 +1,15 @@
+{
+  "name": "partner.alertconfig.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/event/v1/partner/:partner_id/alertconfig",
+  "authenticated": true
+}

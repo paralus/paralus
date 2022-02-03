@@ -1,0 +1,51 @@
+{
+  "name": "project.v2.scheduler.placement.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:placement_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:placement_name/clusterworkloads",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:placement_name/clustertasks",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:placement_name/ingress",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:placement_name/lastdeployedrelease",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:placement_name/driftevents",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/v2/scheduler/project/:project_id/placement",
+  "authenticated": true
+}

@@ -1,0 +1,28 @@
+{
+  "name": "lockout.settings.write",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:organization_id/",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:organization_id/set_lockout_settings/",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "base_url": "/auth/v3/organizations",
+  "authenticated": true
+}

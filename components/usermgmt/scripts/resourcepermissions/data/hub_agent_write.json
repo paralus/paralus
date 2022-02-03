@@ -1,0 +1,20 @@
+{
+  "name": "hub.agent.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:agent_name",
+      "methods": [
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/apis/gitops.k8smgmt.io/v3/projects/:project_name/agents",
+  "authenticated": true
+}

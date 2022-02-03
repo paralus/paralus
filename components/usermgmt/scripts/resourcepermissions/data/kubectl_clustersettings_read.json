@@ -1,0 +1,14 @@
+{
+  "name": "kubectl.clustersettings.read",
+  "base_url": "/v2/sentry/kubectl",
+  "resource_urls": [],
+  "resource_action_urls": [
+    {
+      "url": "/cluster/:cluster_id/settings",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "authenticated": true
+}

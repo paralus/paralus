@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
-	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/internal/models"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/utils"
+	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/internal/models"
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/internal/role/dao"
 	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
@@ -23,40 +25,100 @@ const (
 type RoleService interface {
 	Close() error
 	// create role
-	Create(ctx context.Context, role *userv3.Role) (*userv3.Role, error)
+	Create(context.Context, *userv3.Role) (*userv3.Role, error)
 	// get role by id
-	GetByID(ctx context.Context, id string) (*userv3.Role, error)
+	GetByID(context.Context, *userv3.Role) (*userv3.Role, error)
 	// get role by name
-	GetByName(ctx context.Context, name string) (*userv3.Role, error)
+	GetByName(context.Context, *userv3.Role) (*userv3.Role, error)
 	// create or update role
-	Update(ctx context.Context, role *userv3.Role) (*userv3.Role, error)
+	Update(context.Context, *userv3.Role) (*userv3.Role, error)
 	// delete role
-	Delete(ctx context.Context, role *userv3.Role) (*userv3.Role, error)
+	Delete(context.Context, *userv3.Role) (*userv3.Role, error)
 	// list roles
-	List(ctx context.Context, role *userv3.Role) (*userv3.RoleList, error)
+	List(context.Context, *userv3.Role) (*userv3.RoleList, error)
 }
 
 // roleService implements RoleService
 type roleService struct {
-	dao pg.EntityDAO
+	dao  pg.EntityDAO
+	rdao dao.RoleDAO
+	l    utils.Lookup
 }
 
 // NewRoleService return new role service
 func NewRoleService(db *bun.DB) RoleService {
 	return &roleService{
 		dao: pg.NewEntityDAO(db),
+		rdao: dao.NewRoleDAO(db),
+		l:   utils.NewLookup(db),
 	}
 }
 
-// TODO: This right now just lets us create roles, we will have to make sure the mapping happens
-func (s *roleService) Create(ctx context.Context, role *userv3.Role) (*userv3.Role, error) {
+func (s *roleService) getPartnerOrganization(ctx context.Context, role *userv3.Role) (uuid.UUID, uuid.UUID, error) {
+	partner := role.GetMetadata().GetPartner()
+	org := role.GetMetadata().GetOrganization()
+	partnerId, err := s.l.GetPartnerId(ctx, partner)
+	if err != nil {
+		return uuid.Nil, uuid.Nil, err
+	}
+	organizationId, err := s.l.GetOrganizationId(ctx, org)
+	if err != nil {
+		return partnerId, uuid.Nil, err
+	}
+	return partnerId, organizationId, nil
 
-	partnerId, _ := uuid.Parse(role.GetMetadata().GetPartner())
-	organizationId, _ := uuid.Parse(role.GetMetadata().GetOrganization())
-	// TODO: check if a role with the same 'name' already exists and fail if so
-	// TODO: we should be specifying names instead of ids for partner and org
-	// TODO: create vs apply difference like in kubectl??
-	//convert v3 spec to internal models
+}
+
+func (s *roleService) deleteRolePermissionMapping(ctx context.Context, rleId uuid.UUID, role *userv3.Role) (*userv3.Role, error) {
+	err := s.dao.DeleteX(ctx, "resource_role_id", rleId, &models.ResourceRolePermission{})
+	if err != nil {
+		role.Status = statusFailed(err)
+		return role, err
+	}
+
+	return role, nil
+}
+
+func (s *roleService) createRolePermissionMapping(ctx context.Context, role *userv3.Role, ids parsedIds) (*userv3.Role, error) {
+	perms := role.GetSpec().GetRolepermissions()
+
+	var items []models.ResourceRolePermission
+	for _, p := range perms {
+		entity, err := s.dao.GetIdByName(ctx, p, &models.ResourcePermission{})
+		if err != nil {
+			role.Status = statusFailed(fmt.Errorf("unable to find role permission '%v'", p))
+			return role, fmt.Errorf("unable to find role permission '%v'", p)
+		}
+		if prm, ok := entity.(*models.ResourcePermission); ok {
+			items = append(items, models.ResourceRolePermission{
+				ResourceRoleId:       ids.Id,
+				ResourcePermissionId: prm.ID,
+			})
+		} else {
+			role.Status = statusFailed(fmt.Errorf("unable to find role permission '%v'", p))
+			return role, fmt.Errorf("unable to find role permission '%v'", p)
+		}
+	}
+	if len(items) > 0 {
+		_, err := s.dao.Create(ctx, &items)
+		if err != nil {
+			return role, err
+		}
+	}
+	return role, nil
+}
+
+func (s *roleService) Create(ctx context.Context, role *userv3.Role) (*userv3.Role, error) {
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, role)
+	if err != nil {
+		return nil, fmt.Errorf("unable to get partner and org id")
+	}
+	r, _ := s.dao.GetIdByNamePartnerOrg(ctx, role.GetMetadata().GetName(), uuid.NullUUID{UUID:  partnerId, Valid: true}, uuid.NullUUID{UUID:  organizationId, Valid: true}, &models.Role{})
+	if r != nil {
+		return nil, fmt.Errorf("role '%v' already exists", role.GetMetadata().GetName())
+	}
+
+	// convert v3 spec to internal models
 	rle := models.Role{
 		Name:           role.GetMetadata().GetName(),
 		Description:    role.GetMetadata().GetDescription(),
@@ -66,141 +128,77 @@ func (s *roleService) Create(ctx context.Context, role *userv3.Role) (*userv3.Ro
 		OrganizationId: organizationId,
 		PartnerId:      partnerId,
 		IsGlobal:       role.GetSpec().GetIsGlobal(),
-		Scope:          role.GetSpec().GetScope(),
+		Scope:          role.GetSpec().GetScope(), // TODO: validate scope is SYSTEM/ORG/PROJECT?
 	}
 	entity, err := s.dao.Create(ctx, &rle)
 	if err != nil {
-		role.Status = &v3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-		}
+		role.Status = statusFailed(err)
 		return role, err
 	}
 
 	//update v3 spec
 	if createdRole, ok := entity.(*models.Role); ok {
-		role.Metadata.Id = createdRole.ID.String()
-		role.Spec = &userv3.RoleSpec{
-			IsGlobal: createdRole.IsGlobal,
-			Scope:    createdRole.Scope,
+		role, err = s.createRolePermissionMapping(ctx, role, parsedIds{Id: createdRole.ID, Partner: partnerId, Organization: organizationId})
+		if err != nil {
+			role.Status = statusFailed(err)
+			return role, err
 		}
+
 		if role.Status == nil {
-			role.Status = &v3.Status{
-				ConditionType:   "Create",
-				ConditionStatus: v3.ConditionStatus_StatusOK,
-				LastUpdated:     timestamppb.Now(),
-			}
+			role.Status = statusOK()
 		}
+	} else {
+		role.Status = statusFailed(fmt.Errorf("unable to create role"))
 	}
 
 	return role, nil
 
 }
 
-func (s *roleService) GetByID(ctx context.Context, id string) (*userv3.Role, error) {
-
-	role := &userv3.Role{
-		ApiVersion: apiVersion,
-		Kind:       roleKind,
-		Metadata: &v3.Metadata{
-			Id: id,
-		},
-	}
-
+func (s *roleService) GetByID(ctx context.Context, role *userv3.Role) (*userv3.Role, error) {
+	id := role.GetMetadata().GetId()
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		role.Status = &v3.Status{
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
+		role.Status = statusFailed(err)
 		return role, err
 	}
 	entity, err := s.dao.GetByID(ctx, uid, &models.Role{})
 	if err != nil {
-		role.Status = &v3.Status{
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
+		role.Status = statusFailed(err)
 		return role, err
 	}
 
 	if rle, ok := entity.(*models.Role); ok {
-		labels := make(map[string]string)
-		labels["organization"] = rle.OrganizationId.String()
-
-		role.Metadata = &v3.Metadata{
-			Name:         rle.Name,
-			Description:  rle.Description,
-			Id:           rle.ID.String(),
-			Organization: rle.OrganizationId.String(),
-			Partner:      rle.PartnerId.String(),
-			Labels:       labels,
-			ModifiedAt:   timestamppb.New(rle.ModifiedAt),
+		role, err = s.toV3Role(ctx, role, rle)
+		if err != nil {
+			role.Status = statusFailed(err)
+			return role, err
 		}
-		role.Spec = &userv3.RoleSpec{
-			IsGlobal: rle.IsGlobal,
-			Scope:    rle.Scope,
-		}
-		role.Status = &v3.Status{
-			LastUpdated:     timestamppb.Now(),
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-		}
-
 		return role, nil
 	}
 	return role, nil
 
 }
 
-func (s *roleService) GetByName(ctx context.Context, name string) (*userv3.Role, error) {
-	role := &userv3.Role{
-		ApiVersion: apiVersion,
-		Kind:       roleKind,
-		Metadata: &v3.Metadata{
-			Name: name,
-		},
-	}
-
-	entity, err := s.dao.GetByName(ctx, name, &models.Role{})
+func (s *roleService) GetByName(ctx context.Context, role *userv3.Role) (*userv3.Role, error) {
+	name := role.GetMetadata().GetName()
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, role)
 	if err != nil {
-		role.Status = &v3.Status{
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
+		return nil, fmt.Errorf("unable to get partner and org id")
+	}
+	entity, err := s.dao.GetByNamePartnerOrg(ctx, name, uuid.NullUUID{UUID:partnerId, Valid:true}, uuid.NullUUID{UUID:organizationId, Valid:true}, &models.Role{})
+	if err != nil {
+		role.Status = statusFailed(err)
 		return role, err
 	}
 
 	if rle, ok := entity.(*models.Role); ok {
-		labels := make(map[string]string)
-		labels["organization"] = rle.OrganizationId.String()
-
-		role.Metadata = &v3.Metadata{
-			Name:         rle.Name,
-			Description:  rle.Description,
-			Id:           rle.ID.String(),
-			Organization: rle.OrganizationId.String(),
-			Partner:      rle.PartnerId.String(),
-			Labels:       labels,
-			ModifiedAt:   timestamppb.New(rle.ModifiedAt),
+		role, err = s.toV3Role(ctx, role, rle)
+		if err != nil {
+			role.Status = statusFailed(err)
+			return role, nil
 		}
-		role.Spec = &userv3.RoleSpec{
-			IsGlobal: rle.IsGlobal,
-			Scope:    rle.Scope,
-		}
-		role.Status = &v3.Status{
-			LastUpdated:     timestamppb.Now(),
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-		}
-
+		role.Status = statusOK()
 		return role, nil
 	}
 	return role, nil
@@ -208,17 +206,15 @@ func (s *roleService) GetByName(ctx context.Context, name string) (*userv3.Role,
 }
 
 func (s *roleService) Update(ctx context.Context, role *userv3.Role) (*userv3.Role, error) {
-	// TODO: inform when unchanged
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, role)
+	if err != nil {
+		return nil, fmt.Errorf("unable to get partner and org id")
+	}
 
 	id, _ := uuid.Parse(role.Metadata.Id)
 	entity, err := s.dao.GetByID(ctx, id, &models.Role{})
 	if err != nil {
-		role.Status = &v3.Status{
-			ConditionType:   "Update",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
+		role.Status = statusFailed(err)
 		return role, err
 	}
 
@@ -232,12 +228,18 @@ func (s *roleService) Update(ctx context.Context, role *userv3.Role) (*userv3.Ro
 
 		_, err = s.dao.Update(ctx, id, rle)
 		if err != nil {
-			role.Status = &v3.Status{
-				ConditionType:   "Update",
-				ConditionStatus: v3.ConditionStatus_StatusFailed,
-				LastUpdated:     timestamppb.Now(),
-				Reason:          err.Error(),
-			}
+			role.Status = statusFailed(err)
+			return role, err
+		}
+
+		role, err = s.deleteRolePermissionMapping(ctx, rle.ID, role)
+		if err != nil {
+			role.Status = statusFailed(err)
+			return role, err
+		}
+		role, err = s.createRolePermissionMapping(ctx, role, parsedIds{Id: id, Partner: partnerId, Organization: organizationId})
+		if err != nil {
+			role.Status = statusFailed(err)
 			return role, err
 		}
 
@@ -246,63 +248,77 @@ func (s *roleService) Update(ctx context.Context, role *userv3.Role) (*userv3.Ro
 			IsGlobal: rle.IsGlobal,
 			Scope:    rle.Scope,
 		}
-		role.Status = &v3.Status{
-			ConditionType:   "Update",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-			LastUpdated:     timestamppb.Now(),
-		}
+		role.Status = statusOK()
 	}
 
 	return role, nil
 }
 
 func (s *roleService) Delete(ctx context.Context, role *userv3.Role) (*userv3.Role, error) {
-	id, err := uuid.Parse(role.Metadata.Id)
+	name := role.GetMetadata().GetName()
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, role)
 	if err != nil {
-		role.Status = &v3.Status{
-			ConditionType:   "Delete",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
-		return role, err
+		return role, fmt.Errorf("unable to get partner and org id")
 	}
-	entity, err := s.dao.GetByID(ctx, id, &models.Role{})
+
+	entity, err := s.dao.GetByNamePartnerOrg(ctx, name, uuid.NullUUID{UUID:partnerId, Valid:true}, uuid.NullUUID{UUID:organizationId, Valid:true}, &models.Role{})
 	if err != nil {
-		role.Status = &v3.Status{
-			ConditionType:   "Delete",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
+		role.Status = statusFailed(err)
 		return role, err
 	}
 	if rle, ok := entity.(*models.Role); ok {
-		err = s.dao.Delete(ctx, id, rle)
+		role, err = s.deleteRolePermissionMapping(ctx, rle.ID, role)
 		if err != nil {
-			role.Status = &v3.Status{
-				ConditionType:   "Delete",
-				ConditionStatus: v3.ConditionStatus_StatusFailed,
-				LastUpdated:     timestamppb.Now(),
-				Reason:          err.Error(),
-			}
+			role.Status = statusFailed(err)
 			return role, err
 		}
-		//update v3 spec
-		role.Metadata.Id = rle.ID.String()
-		role.Metadata.Name = rle.Name
-		role.Status = &v3.Status{
-			ConditionType:   "Delete",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-			LastUpdated:     timestamppb.Now(),
+
+		err = s.dao.Delete(ctx, rle.ID, rle)
+		if err != nil {
+			role.Status = statusFailed(err)
+			return role, err
 		}
+
+		//update v3 spec
+		role.Metadata.Name = rle.Name
+		role.Status = statusOK()
 	}
 
 	return role, nil
 }
 
-func (s *roleService) List(ctx context.Context, role *userv3.Role) (*userv3.RoleList, error) {
+func (s *roleService) toV3Role(ctx context.Context, role *userv3.Role, rle *models.Role) (*userv3.Role, error) {
+	labels := make(map[string]string)
+	labels["organization"] = role.GetMetadata().GetOrganization()
+	labels["partner"] = role.GetMetadata().GetPartner()
 
+	role.Metadata = &v3.Metadata{
+		Name:         rle.Name,
+		Description:  rle.Description,
+		Organization: role.GetMetadata().GetOrganization(),
+		Partner:      role.GetMetadata().GetPartner(),
+		Labels:       labels,
+		ModifiedAt:   timestamppb.New(rle.ModifiedAt),
+	}
+	entities, err := s.rdao.GetRolePermissions(ctx, rle.ID)
+	if err != nil {
+		return role, err
+	}
+	permissions := []string{}
+	for _, p := range entities {
+		permissions = append(permissions, p.Name)
+	}
+
+	role.Spec = &userv3.RoleSpec{
+		IsGlobal:        rle.IsGlobal,
+		Scope:           rle.Scope,
+		Rolepermissions: permissions,
+	}
+	role.Status = statusOK()
+	return role, nil
+}
+
+func (s *roleService) List(ctx context.Context, role *userv3.Role) (*userv3.RoleList, error) {
 	var roles []*userv3.Role
 	roleList := &userv3.RoleList{
 		ApiVersion: apiVersion,
@@ -312,11 +328,11 @@ func (s *roleService) List(ctx context.Context, role *userv3.Role) (*userv3.Role
 		},
 	}
 	if len(role.Metadata.Organization) > 0 {
-		orgId, err := uuid.Parse(role.Metadata.Organization)
+		orgId, err := s.l.GetOrganizationId(ctx, role.Metadata.Organization)
 		if err != nil {
 			return roleList, err
 		}
-		partId, err := uuid.Parse(role.Metadata.Partner)
+		partId, err := s.l.GetPartnerId(ctx, role.Metadata.Partner)
 		if err != nil {
 			return roleList, err
 		}
@@ -327,24 +343,9 @@ func (s *roleService) List(ctx context.Context, role *userv3.Role) (*userv3.Role
 		}
 		if rles, ok := entities.(*[]models.Role); ok {
 			for _, rle := range *rles {
-				labels := make(map[string]string)
-				labels["organization"] = rle.OrganizationId.String()
-				labels["partner"] = rle.PartnerId.String()
-
-				role.Metadata = &v3.Metadata{
-					Name:         rle.Name,
-					Description:  rle.Description,
-					Id:           rle.ID.String(),
-					Organization: rle.OrganizationId.String(),
-					Partner:      rle.PartnerId.String(),
-					Labels:       labels,
-					ModifiedAt:   timestamppb.New(rle.ModifiedAt),
-				}
-				role.Spec = &userv3.RoleSpec{
-					// IsGlobal: rle.IsGlobal,
-					Scope: rle.Scope,
-				}
-				roles = append(roles, role)
+				entry := &userv3.Role{Metadata: role.GetMetadata()}
+				entry, err = s.toV3Role(ctx, entry, &rle)
+				roles = append(roles, entry)
 			}
 
 			//update the list metadata and items response

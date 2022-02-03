@@ -1,0 +1,14 @@
+{
+  "name": "ssouser.read",
+  "base_url": "/auth/v3/ssousers",
+  "resource_urls": [
+    {
+      "url": "/:account_id/groups/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "authenticated": true
+}

@@ -1,0 +1,33 @@
+{
+  "name": "sso.read",
+  "base_url": "/auth/v3/sso",
+  "resource_urls": [
+    {
+      "url": "/idp/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/idp/:idp_id/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/idp/:idp_id/spconfig/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/idp/:idp_id/download_metadata/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "authenticated": true
+}

@@ -1,0 +1,33 @@
+{
+  "name": "partner.read",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:partner_id/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:partner_id/getcertificates/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:partner_id/accountroles/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/auth/v3/partners",
+  "authenticated": true
+}

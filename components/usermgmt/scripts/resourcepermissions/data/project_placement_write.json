@@ -1,0 +1,21 @@
+{
+  "name": "project.placement.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:placement_name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/config/project/:project_id/placement",
+  "authenticated": true
+}

@@ -1,0 +1,51 @@
+{
+  "name": "project.pipeline.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:pipeline_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:pipeline_name/instance",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:pipeline_name/instance/:instance_id",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:pipeline_name/instance/:instance_id/triggerevent",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:pipeline_name/triggerevent",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:pipeline_name/activecount",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/v2/pipeline/project/:project_id/pipeline",
+  "authenticated": true
+}

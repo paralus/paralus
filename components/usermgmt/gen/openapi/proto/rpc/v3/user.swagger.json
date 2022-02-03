@@ -24,476 +24,7 @@
     "application/yaml"
   ],
   "paths": {
-    "/auth/partner/{metadata.partner}/organization/{metadata.organization}/v3/user/{metadata.id}": {
-      "delete": {
-        "operationId": "User_DeleteUser2",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v3DeleteUserResponse"
-            }
-          },
-          "204": {
-            "description": "Returned when user is deleted successfully.",
-            "schema": {}
-          },
-          "403": {
-            "description": "Returned when the user does not have permission to access the resource.",
-            "schema": {}
-          },
-          "404": {
-            "description": "Returned when the resource does not exist.",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/googlerpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "metadata.partner",
-            "description": "Partner to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "metadata.organization",
-            "description": "Organization to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "metadata.id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "apiVersion",
-            "description": "API Version. API Version of the user resource",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "usermgmt.k8smgmt.io/v3"
-          },
-          {
-            "name": "kind",
-            "description": "Kind. Kind of the user resource",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "User"
-          },
-          {
-            "name": "metadata.name",
-            "description": "Name. name of the resource",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.description",
-            "description": "Description. description of the resource",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.project",
-            "description": "Project. Project of the resource",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.modifiedAt",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "name": "spec.firstName",
-            "description": "FirstName. First name of the user",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.lastName",
-            "description": "LastName. Last name of the user",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.username",
-            "description": "Username. Username of the user",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.phone",
-            "description": "Phone. Phone number of the user",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.password",
-            "description": "Password. Password of the user",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.groups",
-            "description": "Group. Groups the user belongs to",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "spec.emailVerified",
-            "description": "EmailVerified. Flag to show if the email of the user was verified",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "spec.phoneVerified",
-            "description": "PhoneVerified. Flag to show if phone number of the user was verified",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "spec.totpVerified",
-            "description": "TotpVerified. Flag to show if the TOTP of the user was verified",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "StatusNotSet",
-              "StatusSubmitted",
-              "StatusOK",
-              "StatusFailed"
-            ],
-            "default": "StatusNotSet"
-          },
-          {
-            "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/user/{metadata.id}": {
-      "get": {
-        "operationId": "User_GetUser2",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v3User"
-            }
-          },
-          "403": {
-            "description": "Returned when the user does not have permission to access the resource.",
-            "schema": {}
-          },
-          "404": {
-            "description": "Returned when the resource does not exist.",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/googlerpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "metadata.partner",
-            "description": "Partner to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "metadata.organization",
-            "description": "Organization to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "metadata.id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "apiVersion",
-            "description": "API Version. API Version of the user resource",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "usermgmt.k8smgmt.io/v3"
-          },
-          {
-            "name": "kind",
-            "description": "Kind. Kind of the user resource",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "User"
-          },
-          {
-            "name": "metadata.name",
-            "description": "Name. name of the resource",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.description",
-            "description": "Description. description of the resource",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.project",
-            "description": "Project. Project of the resource",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.modifiedAt",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "name": "spec.firstName",
-            "description": "FirstName. First name of the user",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.lastName",
-            "description": "LastName. Last name of the user",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.username",
-            "description": "Username. Username of the user",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.phone",
-            "description": "Phone. Phone number of the user",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.password",
-            "description": "Password. Password of the user",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.groups",
-            "description": "Group. Groups the user belongs to",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "spec.emailVerified",
-            "description": "EmailVerified. Flag to show if the email of the user was verified",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "spec.phoneVerified",
-            "description": "PhoneVerified. Flag to show if phone number of the user was verified",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "spec.totpVerified",
-            "description": "TotpVerified. Flag to show if the TOTP of the user was verified",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "StatusNotSet",
-              "StatusSubmitted",
-              "StatusOK",
-              "StatusFailed"
-            ],
-            "default": "StatusNotSet"
-          },
-          {
-            "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      },
-      "put": {
-        "operationId": "User_UpdateUser2",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v3User"
-            }
-          },
-          "403": {
-            "description": "Returned when the user does not have permission to access the resource.",
-            "schema": {}
-          },
-          "404": {
-            "description": "Returned when the resource does not exist.",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/googlerpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "metadata.partner",
-            "description": "Partner to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "metadata.organization",
-            "description": "Organization to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "metadata.id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v3User"
-            }
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/user/{metadata.name}": {
+    "/auth/v3/user/{metadata.name}": {
       "get": {
         "operationId": "User_GetUser",
         "responses": {
@@ -522,20 +53,6 @@
           }
         },
         "parameters": [
-          {
-            "name": "metadata.partner",
-            "description": "Partner to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "metadata.organization",
-            "description": "Organization to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
           {
             "name": "metadata.name",
             "description": "name of the resource",
@@ -574,6 +91,20 @@
             "type": "string"
           },
           {
+            "name": "metadata.organization",
+            "description": "Organization. Organization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner. Partner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "metadata.id",
             "in": "query",
             "required": false,
@@ -596,13 +127,6 @@
           {
             "name": "spec.lastName",
             "description": "LastName. Last name of the user",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.username",
-            "description": "Username. Username of the user",
             "in": "query",
             "required": false,
             "type": "string"
@@ -642,13 +166,6 @@
           {
             "name": "spec.phoneVerified",
             "description": "PhoneVerified. Flag to show if phone number of the user was verified",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "spec.totpVerified",
-            "description": "TotpVerified. Flag to show if the TOTP of the user was verified",
             "in": "query",
             "required": false,
             "type": "boolean"
@@ -727,20 +244,6 @@
         },
         "parameters": [
           {
-            "name": "metadata.partner",
-            "description": "Partner to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "metadata.organization",
-            "description": "Organization to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
             "name": "metadata.name",
             "description": "name of the resource",
             "in": "path",
@@ -778,6 +281,20 @@
             "type": "string"
           },
           {
+            "name": "metadata.organization",
+            "description": "Organization. Organization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner. Partner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "metadata.id",
             "in": "query",
             "required": false,
@@ -800,13 +317,6 @@
           {
             "name": "spec.lastName",
             "description": "LastName. Last name of the user",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.username",
-            "description": "Username. Username of the user",
             "in": "query",
             "required": false,
             "type": "string"
@@ -846,13 +356,6 @@
           {
             "name": "spec.phoneVerified",
             "description": "PhoneVerified. Flag to show if phone number of the user was verified",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "spec.totpVerified",
-            "description": "TotpVerified. Flag to show if the TOTP of the user was verified",
             "in": "query",
             "required": false,
             "type": "boolean"
@@ -927,20 +430,6 @@
         },
         "parameters": [
           {
-            "name": "metadata.partner",
-            "description": "Partner to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "metadata.organization",
-            "description": "Organization to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
             "name": "metadata.name",
             "description": "name of the resource",
             "in": "path",
@@ -961,7 +450,7 @@
         ]
       }
     },
-    "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/users": {
+    "/auth/v3/users": {
       "get": {
         "operationId": "User_GetUsers",
         "responses": {
@@ -990,20 +479,6 @@
           }
         },
         "parameters": [
-          {
-            "name": "metadata.partner",
-            "description": "Partner to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "metadata.organization",
-            "description": "Organization to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
           {
             "name": "apiVersion",
             "description": "API Version. API Version of the user resource",
@@ -1042,6 +517,20 @@
             "type": "string"
           },
           {
+            "name": "metadata.organization",
+            "description": "Organization. Organization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner. Partner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "metadata.id",
             "in": "query",
             "required": false,
@@ -1064,13 +553,6 @@
           {
             "name": "spec.lastName",
             "description": "LastName. Last name of the user",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.username",
-            "description": "Username. Username of the user",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1110,13 +592,6 @@
           {
             "name": "spec.phoneVerified",
             "description": "PhoneVerified. Flag to show if phone number of the user was verified",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "spec.totpVerified",
-            "description": "TotpVerified. Flag to show if the TOTP of the user was verified",
             "in": "query",
             "required": false,
             "type": "boolean"
@@ -1194,20 +669,6 @@
           }
         },
         "parameters": [
-          {
-            "name": "metadata.partner",
-            "description": "Partner to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "metadata.organization",
-            "description": "Organization to which the resource belongs",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
           {
             "name": "body",
             "in": "body",
@@ -1315,7 +776,7 @@
           "type": "string",
           "format": "int64"
         },
-        "limt": {
+        "limit": {
           "type": "string",
           "format": "int64"
         }
@@ -1501,11 +962,6 @@
           "description": "Last name of the user",
           "title": "LastName"
         },
-        "username": {
-          "type": "string",
-          "description": "Username of the user",
-          "title": "Username"
-        },
         "phone": {
           "type": "string",
           "description": "Phone number of the user",
@@ -1522,7 +978,8 @@
             "type": "string"
           },
           "description": "Groups the user belongs to",
-          "title": "Group"
+          "title": "Group",
+          "readOnly": true
         },
         "projectnamespaceroles": {
           "type": "array",
@@ -1542,12 +999,6 @@
           "type": "boolean",
           "description": "Flag to show if phone number of the user was verified",
           "title": "PhoneVerified",
-          "readOnly": true
-        },
-        "totpVerified": {
-          "type": "boolean",
-          "description": "Flag to show if the TOTP of the user was verified",
-          "title": "TotpVerified",
           "readOnly": true
         }
       },

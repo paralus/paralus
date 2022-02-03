@@ -1,0 +1,28 @@
+{
+  "name": "project.repository.write",
+  "base_url": "/v2/config/project/:project_id/repository",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:repository_name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:repository_name/validate",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "authenticated": true
+}

@@ -1,0 +1,14 @@
+{
+  "name": "audit.read",
+  "resource_urls": [],
+  "resource_action_urls": [
+    {
+      "url": "/relay",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/event/v1/audit",
+  "authenticated": true
+}

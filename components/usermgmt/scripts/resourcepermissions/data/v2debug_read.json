@@ -1,0 +1,32 @@
+{
+  "name": "v2debug.read",
+  "resource_urls": [
+    {
+      "url": "/ui/*filepath",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/prompt/project/:project_id/cluster/:cluster_name",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/kubectlview/project/:project_id/cluster/:cluster_name",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/getlogs/project/:project_id/cluster/:cluster_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/debug",
+  "authenticated": true
+}

@@ -6,13 +6,15 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	kclient "github.com/ory/kratos-client-go"
 	bun "github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/utils"
 	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
-	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/internal/models"
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/internal/models"
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/internal/user/dao"
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/providers"
 	userrpcv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/rpc/v3"
 	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 )
@@ -24,52 +26,75 @@ const (
 
 // GroupService is the interface for group operations
 type UserService interface {
+	Close() error
 	// create user
-	Create(ctx context.Context, user *userv3.User) (*userv3.User, error)
+	Create(context.Context, *userv3.User) (*userv3.User, error)
 	// get user by id
-	GetByID(ctx context.Context, id string) (*userv3.User, error)
+	GetByID(context.Context, *userv3.User) (*userv3.User, error)
 	// // get user by name
-	// TODO: Implement GetByName
-	// GetByName(ctx context.Context, name string) (*userv3.User, error)
+	GetByName(context.Context, *userv3.User) (*userv3.User, error)
 	// create or update user
-	Update(ctx context.Context, user *userv3.User) (*userv3.User, error)
+	Update(context.Context, *userv3.User) (*userv3.User, error)
 	// delete user
-	Delete(ctx context.Context, user *userv3.User) (*userrpcv3.DeleteUserResponse, error)
+	Delete(context.Context, *userv3.User) (*userrpcv3.DeleteUserResponse, error)
 	// list users
-	List(ctx context.Context, user *userv3.User) (*userv3.UserList, error)
+	List(context.Context, *userv3.User) (*userv3.UserList, error)
 }
 
 type userService struct {
-	kc  *kclient.APIClient
-	dao pg.EntityDAO
+	ap   providers.AuthProvider
+	dao  pg.EntityDAO
+	udao dao.UserDAO
+	l    utils.Lookup
 }
 
-func NewUserService(kc *kclient.APIClient, db *bun.DB) UserService {
-	return &userService{kc: kc, dao: pg.NewEntityDAO(db)}
+type userTraits struct {
+	Email       string
+	FirstName   string
+	LastName    string
+	Description string
 }
 
-// Convert from kratos.Identity to GVK format
-func identityToUser(id *kclient.Identity) *userv3.User {
-	traits := id.GetTraits().(map[string]interface{})
-	return &userv3.User{
-		ApiVersion: "usermgmt.k8smgmt.io/v3",
-		Kind:       "User",
-		Metadata: &v3.Metadata{
-			Id: id.Id,
-		},
-		Spec: &userv3.UserSpec{
-			Username:  traits["email"].(string),
-			FirstName: traits["first_name"].(string),
-			LastName:  traits["last_name"].(string),
-		},
+// FIXME: find a better way to do this
+type parsedIds struct {
+	Id           uuid.UUID
+	Partner      uuid.UUID
+	Organization uuid.UUID
+}
+
+func NewUserService(ap providers.AuthProvider, db *bun.DB) UserService {
+	return &userService{ap: ap, dao: pg.NewEntityDAO(db), udao: dao.NewUserDAO(db), l: utils.NewLookup(db)}
+}
+
+func getUserTraits(traits map[string]interface{}) userTraits {
+	// FIXME: is there a better way to do this?
+	// All of these should ideally be available as we have the identities schema, but just in case
+	email, ok := traits["email"]
+	if !ok {
+		email = ""
+	}
+	fname, ok := traits["first_name"]
+	if !ok {
+		fname = ""
+	}
+	lname, ok := traits["last_name"]
+	if !ok {
+		lname = ""
+	}
+	desc, ok := traits["desc"]
+	if !ok {
+		desc = ""
+	}
+	return userTraits{
+		Email:       email.(string),
+		FirstName:   fname.(string),
+		LastName:    lname.(string),
+		Description: desc.(string),
 	}
 }
 
 // Map roles to accounts
-func (s *userService) updateUserRoleRelation(ctx context.Context, user *userv3.User) (*userv3.User, error) {
-	accountId, _ := uuid.Parse(user.GetMetadata().GetId())
-	partnerId, _ := uuid.Parse(user.GetMetadata().GetPartner())
-	organizationId, _ := uuid.Parse(user.GetMetadata().GetOrganization())
+func (s *userService) updateUserRoleRelation(ctx context.Context, user *userv3.User, ids parsedIds) (*userv3.User, error) {
 	projectNamespaceRoles := user.GetSpec().GetProjectnamespaceroles()
 
 	// TODO: add transactions
@@ -77,57 +102,72 @@ func (s *userService) updateUserRoleRelation(ctx context.Context, user *userv3.U
 	var pars []models.ProjectAccountResourcerole
 	var ars []models.AccountResourcerole
 	for _, pnr := range projectNamespaceRoles {
-		projectId, perr := uuid.Parse(pnr.GetProject())
-		namespaceId := pnr.GetNamespace()
-		roleId, err := uuid.Parse(pnr.GetRole())
+		role := pnr.GetRole()
+		entity, err := s.dao.GetIdByName(ctx, role, &models.Role{})
 		if err != nil {
+			user.Status = statusFailed(fmt.Errorf("unable to find role '%v'", role))
 			return user, err
 		}
+		var roleId uuid.UUID
+		if rle, ok := entity.(*models.Role); ok {
+			roleId = rle.ID
+		} else {
+			user.Status = statusFailed(fmt.Errorf("unable to find role '%v'", role))
+			return user, err
+		}
+
+		project := pnr.GetProject()
+		namespaceId := pnr.GetNamespace() // TODO: lookup id from name
+
 		switch {
-		case namespaceId != 0: // TODO: namespaceId can be zero?
+		case pnr.Namespace != nil:
+			projectId, err := s.l.GetProjectId(ctx, project)
+			if err != nil {
+				user.Status = statusFailed(fmt.Errorf("unable to find project '%v'", project))
+				return user, err
+			}
 			panr := models.ProjectAccountNamespaceRole{
-				Name:           user.GetMetadata().GetName(),
-				Description:    user.GetMetadata().GetDescription(),
 				CreatedAt:      time.Now(),
 				ModifiedAt:     time.Now(),
 				Trash:          false,
 				RoleId:         roleId,
-				PartnerId:      partnerId,
-				OrganizationId: organizationId,
-				AccountId:      accountId,
+				PartnerId:      ids.Partner,
+				OrganizationId: ids.Organization,
+				AccountId:      ids.Id,
 				ProjectId:      projectId,
 				NamesapceId:    namespaceId,
 				Active:         true,
 			}
 			panrs = append(panrs, panr)
-		case perr == nil: // TODO: maybe a better check?
+		case project != "":
+			projectId, err := s.l.GetProjectId(ctx, project)
+			if err != nil {
+				user.Status = statusFailed(fmt.Errorf("unable to find project '%v'", project))
+				return user, err
+			}
 			par := models.ProjectAccountResourcerole{
-				Name:           user.GetMetadata().GetName(),
-				Description:    user.GetMetadata().GetDescription(),
 				CreatedAt:      time.Now(),
 				ModifiedAt:     time.Now(),
 				Trash:          false,
-				Default:        true, // TODO: what is this for?
+				Default:        true,
 				RoleId:         roleId,
-				PartnerId:      partnerId,
-				OrganizationId: organizationId,
-				AccountId:      accountId,
+				PartnerId:      ids.Partner,
+				OrganizationId: ids.Organization,
+				AccountId:      ids.Id,
 				ProjectId:      projectId,
 				Active:         true,
 			}
 			pars = append(pars, par)
 		default:
 			ar := models.AccountResourcerole{
-				Name:           user.GetMetadata().GetName(),
-				Description:    user.GetMetadata().GetDescription(),
 				CreatedAt:      time.Now(),
 				ModifiedAt:     time.Now(),
 				Trash:          false,
-				Default:        true, // TODO: what is this for?
+				Default:        true,
 				RoleId:         roleId,
-				PartnerId:      partnerId,
-				OrganizationId: organizationId,
-				AccountId:      accountId,
+				PartnerId:      ids.Partner,
+				OrganizationId: ids.Organization,
+				AccountId:      ids.Id,
 				Active:         true,
 			}
 			ars = append(ars, ar)
@@ -155,133 +195,269 @@ func (s *userService) updateUserRoleRelation(ctx context.Context, user *userv3.U
 	return user, nil
 }
 
-// Update the users(account) mapped to each group
-func (s *userService) updateGroupAccountRelation(ctx context.Context, user *userv3.User) (*userv3.User, error) {
-	// TODO: diff and delete the old relations
-	userId, _ := uuid.Parse(user.GetMetadata().GetId())
-
-	// TODO: add transactions
-	var grpaccs []models.GroupAccount
-	for _, group := range user.GetSpec().GetGroups() {
-		groupId, err := uuid.Parse(group)
-		if err != nil {
-			return nil, err
-		}
-		grp := models.GroupAccount{
-			Name:        user.GetMetadata().GetName(),        // TODO: what is name for relations?
-			Description: user.GetMetadata().GetDescription(), // TODO: now sure what this is either
-			CreatedAt:   time.Now(),
-			ModifiedAt:  time.Now(),
-			Trash:       false,
-			AccountId:   userId,
-			GroupId:     groupId,
-			Active:      true,
-		}
-		grpaccs = append(grpaccs, grp)
-	}
-	if len(grpaccs) == 0 {
-		return user, nil
-	}
-	_, err := s.dao.Create(ctx, &grpaccs)
+// FIXME: make this generic
+func (s *userService) getPartnerOrganization(ctx context.Context, user *userv3.User) (uuid.UUID, uuid.UUID, error) {
+	partner := user.GetMetadata().GetPartner()
+	org := user.GetMetadata().GetOrganization()
+	partnerId, err := s.l.GetPartnerId(ctx, partner)
 	if err != nil {
-		user.Status = &v3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-		}
-		return user, err
+		return uuid.Nil, uuid.Nil, err
 	}
+	organizationId, err := s.l.GetOrganizationId(ctx, org)
+	if err != nil {
+		return partnerId, uuid.Nil, err
+	}
+	return partnerId, organizationId, nil
 
-	return user, nil
 }
 
 func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.User, error) {
 	// TODO: restrict endpoint to admin
-	cib := kclient.NewAdminCreateIdentityBody("default", map[string]interface{}{"email": user.Spec.Username, "first_name": user.Spec.FirstName, "last_name": user.Spec.LastName})
-	ir, hr, err := s.kc.V0alpha2Api.AdminCreateIdentity(ctx).AdminCreateIdentityBody(*cib).Execute()
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, user)
 	if err != nil {
-		fmt.Println(hr)
-		// TODO: forward exact error message from kratos (eg: json schema validation)
-		return nil, err
-	}
-	user.Metadata.Id = ir.Id
-	rlb := kclient.NewAdminCreateSelfServiceRecoveryLinkBody(ir.Id)
-	rl, _, err := s.kc.V0alpha2Api.AdminCreateSelfServiceRecoveryLink(ctx).AdminCreateSelfServiceRecoveryLinkBody(*rlb).Execute()
-	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unable to get partner and org id")
 	}
 
-	user, err = s.updateUserRoleRelation(ctx, user)
+	// Kratos checks if the user is already available
+	id, err := s.ap.Create(ctx, map[string]interface{}{
+		"email":       user.GetMetadata().GetName(), // can be just username for API access
+		"first_name":  user.GetSpec().GetFirstName(),
+		"last_name":   user.GetSpec().GetLastName(),
+		"description": user.GetMetadata().GetDescription(),
+	})
 	if err != nil {
-		user.Status = &v3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-		}
+		user.Status = statusFailed(err)
 		return user, err
 	}
 
-	user, err = s.updateGroupAccountRelation(ctx, user)
+	uid, _ := uuid.Parse(id)
+	user, err = s.updateUserRoleRelation(ctx, user, parsedIds{Id: uid, Partner: partnerId, Organization: organizationId})
 	if err != nil {
-		user.Status = &v3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-		}
+		user.Status = statusFailed(err)
 		return user, err
 	}
 
-	fmt.Println("Recovery link:", rl.RecoveryLink) // TODO: email the recovery link to the user
+	rl, err := s.ap.GetRecoveryLink(ctx, id)
+	fmt.Println("Recovery link:", rl) // TODO: email the recovery link to the user
+	if err != nil {
+		user.Status = statusFailed(err)
+		return user, err
+	}
+
+	user.Status = statusOK()
+	return user, nil
+}
+
+func (s *userService) identitiesModelToUser(ctx context.Context, user *userv3.User, usr *models.KratosIdentities) (*userv3.User, error) {
+	traits := getUserTraits(usr.Traits)
+	groups, err := s.udao.GetGroups(ctx, usr.ID)
+	if err != nil {
+		user.Status = statusFailed(err)
+		return user, err
+	}
+	groupNames := []string{}
+	for _, g := range groups {
+		groupNames = append(groupNames, g.Name)
+	}
+
+	labels := make(map[string]string)
+
+	roles, err := s.udao.GetRoles(ctx, usr.ID)
+	if err != nil {
+		user.Status = statusFailed(err)
+		return user, err
+	}
+
 	user.Metadata = &v3.Metadata{
-		Id: ir.Id,
+		Name:        traits.Email,
+		Description: traits.Description,
+		Labels:      labels,
+		ModifiedAt:  timestamppb.New(usr.UpdatedAt),
 	}
-	user.Status = &v3.Status{
-		ConditionType:   "StatusOK",
-		ConditionStatus: v3.ConditionStatus_StatusOK,
+	user.Spec = &userv3.UserSpec{
+		FirstName:             traits.FirstName,
+		LastName:              traits.LastName,
+		Groups:                groupNames,
+		Projectnamespaceroles: roles,
 	}
 
 	return user, nil
 }
-func (s *userService) List(ctx context.Context, _ *userv3.User) (*userv3.UserList, error) {
-	ir, _, err := s.kc.V0alpha2Api.AdminListIdentities(ctx).Execute()
+
+func (s *userService) GetByID(ctx context.Context, user *userv3.User) (*userv3.User, error) {
+	id := user.GetMetadata().GetId()
+	uid, err := uuid.Parse(id)
 	if err != nil {
-		return nil, err
+		user.Status = statusFailed(err)
+		return user, err
 	}
-	res := &userv3.UserList{}
-	for _, u := range ir {
-		res.Items = append(res.Items, identityToUser(&u))
-	}
-	return res, nil
-}
-func (s *userService) GetByID(ctx context.Context, id string) (*userv3.User, error) {
-	// TODO: should it be get by id or by email? Kratos can only fileter by id
-	ir, _, err := s.kc.V0alpha2Api.AdminGetIdentity(ctx, id).Execute()
+	entity, err := s.dao.GetByID(ctx, uid, &models.KratosIdentities{})
 	if err != nil {
-		return nil, err
+		user.Status = statusFailed(err)
+		return user, err
 	}
-	return identityToUser(ir), nil
+
+	if usr, ok := entity.(*models.KratosIdentities); ok {
+		user, err := s.identitiesModelToUser(ctx, user, usr)
+		if err != nil {
+			user.Status = statusFailed(err)
+			return user, err
+		}
+
+		user.Status = statusOK()
+		return user, nil
+	}
+	user.Status = statusFailed(fmt.Errorf("unabele to fetch user '%v'", id))
+	return user, nil
+
 }
+
+func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3.User, error) {
+	name := user.GetMetadata().GetName()
+	entity, err := s.dao.GetByTraits(ctx, name, &models.KratosIdentities{})
+	if err != nil {
+		user.Status = statusFailed(err)
+		return user, err
+	}
+
+	if usr, ok := entity.(*models.KratosIdentities); ok {
+		user, err := s.identitiesModelToUser(ctx, user, usr)
+		if err != nil {
+			user.Status = statusFailed(err)
+			return user, err
+		}
+
+		user.Status = statusOK()
+		return user, nil
+	}
+	fmt.Println("user:", user);
+	return user, nil
+}
+
 func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.User, error) {
-	uib := kclient.NewAdminUpdateIdentityBody("active", map[string]interface{}{"email": user.Spec.Username, "first_name": user.Spec.FirstName, "last_name": user.Spec.LastName})
-	_, hr, err := s.kc.V0alpha2Api.AdminUpdateIdentity(ctx, user.Metadata.Id).AdminUpdateIdentityBody(*uib).Execute()
+	name := user.GetMetadata().GetName()
+	entity, err := s.dao.GetIdByTraits(ctx, name, &models.KratosIdentities{})
 	if err != nil {
-		fmt.Println(hr)
-		// TODO: forward exact error message from kratos (eg: json schema validation)
-		return nil, err
-	}
-	user.Status = &v3.Status{
-		ConditionType:   "StatusOK",
-		ConditionStatus: v3.ConditionStatus_StatusOK,
+		user.Status = statusFailed(fmt.Errorf("no user found with name '%v'", name))
+		return user, err
 	}
 
+	if usr, ok := entity.(*models.KratosIdentities); ok {
+		partnerId, organizationId, err := s.getPartnerOrganization(ctx, user)
+		if err != nil {
+			return nil, fmt.Errorf("unable to get partner and org id")
+		}
+		err = s.ap.Update(ctx, usr.ID.String(), map[string]interface{}{
+			"email":       user.GetMetadata().GetName(),
+			"first_name":  user.GetSpec().GetFirstName(),
+			"last_name":   user.GetSpec().GetLastName(),
+			"description": user.GetMetadata().GetDescription(),
+		})
+		if err != nil {
+			user.Status = statusFailed(err)
+			return user, err
+		}
+
+		err = s.dao.DeleteX(ctx, "account_id", usr.ID, &models.AccountResourcerole{})
+		if err != nil {
+			user.Status = statusFailed(err)
+			return nil, err
+		}
+		err = s.dao.DeleteX(ctx, "account_id", usr.ID, &models.ProjectAccountResourcerole{})
+		if err != nil {
+			user.Status = statusFailed(err)
+			return nil, err
+		}
+		err = s.dao.DeleteX(ctx, "account_id", usr.ID, &models.ProjectAccountNamespaceRole{})
+		if err != nil {
+			user.Status = statusFailed(err)
+			return nil, err
+		}
+
+		user, err = s.updateUserRoleRelation(ctx, user, parsedIds{Id: usr.ID, Partner: partnerId, Organization: organizationId})
+		if err != nil {
+			user.Status = statusFailed(err)
+			return user, err
+		}
+	} else {
+		user.Status = statusFailed(fmt.Errorf("unable to update user '%v'", name))
+		return user, err
+	}
+
+	user.Status = statusOK()
 	return user, nil
 }
+
 func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3.DeleteUserResponse, error) {
-	// TODO: should it be get by id or by email? Kratos can only filter by id
-	_, err := s.kc.V0alpha2Api.AdminDeleteIdentity(ctx, user.Metadata.Id).Execute()
+	name := user.GetMetadata().GetName()
+	entity, err := s.dao.GetIdByTraits(ctx, name, &models.KratosIdentities{})
 	if err != nil {
-		return nil, err
+		return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("no user founnd with username '%v'", name)
 	}
 
-	return &userrpcv3.DeleteUserResponse{}, nil
+	if usr, ok := entity.(*models.KratosIdentities); ok {
+		err := s.ap.Delete(ctx, usr.ID.String())
+		if err != nil {
+			return &userrpcv3.DeleteUserResponse{}, err
+		}
+
+		err = s.dao.DeleteX(ctx, "account_id", usr.ID, &models.GroupAccount{})
+		if err != nil {
+			return &userrpcv3.DeleteUserResponse{}, err
+		}
+		err = s.dao.DeleteX(ctx, "account_id", usr.ID, &models.AccountResourcerole{})
+		if err != nil {
+			return &userrpcv3.DeleteUserResponse{}, err
+		}
+		err = s.dao.DeleteX(ctx, "account_id", usr.ID, &models.ProjectAccountResourcerole{})
+		if err != nil {
+			return &userrpcv3.DeleteUserResponse{}, err
+		}
+		err = s.dao.DeleteX(ctx, "account_id", usr.ID, &models.ProjectAccountNamespaceRole{})
+		if err != nil {
+			return &userrpcv3.DeleteUserResponse{}, err
+		}
+
+		return &userrpcv3.DeleteUserResponse{}, nil
+	}
+	return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("unable to find user '%v'", user.Metadata.Name)
+
+}
+
+func (s *userService) List(ctx context.Context, _ *userv3.User) (*userv3.UserList, error) {
+	var users []*userv3.User
+	userList := &userv3.UserList{
+		ApiVersion: apiVersion,
+		Kind:       userListKind,
+		Metadata: &v3.ListMetadata{
+			Count: 0,
+		},
+	}
+	var accs []models.KratosIdentities
+	entities, err := s.dao.ListAll(ctx, &accs)
+	if err != nil {
+		return userList, err
+	}
+	if usrs, ok := entities.(*[]models.KratosIdentities); ok {
+		for _, usr := range *usrs {
+			user := &userv3.User{}
+			user, err := s.identitiesModelToUser(ctx, user, &usr)
+			if err != nil {
+				return userList, err
+			}
+			users = append(users, user)
+		}
+
+		// update the list metadata and items response
+		userList.Metadata = &v3.ListMetadata{
+			Count: int64(len(users)),
+		}
+		userList.Items = users
+	}
+
+	return userList, nil
+}
+
+func (s *userService) Close() error {
+	return s.dao.Close()
 }

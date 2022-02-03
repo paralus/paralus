@@ -1,0 +1,14 @@
+{
+  "name": "project.myapprovalsummary.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/pipeline/project/:project_id/myapprovalsummary",
+  "authenticated": true
+}

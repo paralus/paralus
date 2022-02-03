@@ -1,0 +1,20 @@
+{
+  "name": "hub.repository.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:repository_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/apis/integrations.k8smgmt.io/v3/projects/:project_name/repositories",
+  "authenticated": true
+}

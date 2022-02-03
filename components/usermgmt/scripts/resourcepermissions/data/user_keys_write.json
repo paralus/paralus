@@ -1,0 +1,20 @@
+{
+  "name": "user.keys.write",
+  "resource_urls": [],
+  "resource_action_urls": [
+    {
+      "url": "/:account_id/regauthkey/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:account_id/apikey/",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "base_url": "/auth/v3/users",
+  "authenticated": true
+}

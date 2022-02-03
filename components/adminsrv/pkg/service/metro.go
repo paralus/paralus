@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/internal/models"
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/models"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	infrav3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/infrapb/v3"
 	"github.com/google/uuid"
@@ -73,7 +73,7 @@ func (s *metroService) GetByName(ctx context.Context, name string, oid uuid.Null
 
 	var metro infrav3.Metro
 
-	entity, err := s.dao.GetEntityByName(ctx, name, oid, pid, &models.Metro{})
+	entity, err := s.dao.GetByNamePartnerOrg(ctx, name, pid, oid, &models.Metro{})
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +124,7 @@ func (s *metroService) GetById(ctx context.Context, id uuid.UUID) (*infrav3.Metr
 
 func (s *metroService) Update(ctx context.Context, metro *infrav3.Metro, oid uuid.NullUUID, pid uuid.NullUUID) (*infrav3.Metro, error) {
 
-	entity, err := s.dao.GetEntityByName(ctx, metro.Name, oid, pid, &models.Project{})
+	entity, err := s.dao.GetByNamePartnerOrg(ctx, metro.Name, pid, oid, &models.Project{})
 	if err != nil {
 		return metro, err
 	}
@@ -149,7 +149,7 @@ func (s *metroService) Update(ctx context.Context, metro *infrav3.Metro, oid uui
 
 func (s *metroService) Delete(ctx context.Context, metro *infrav3.Metro, oid uuid.NullUUID, pid uuid.NullUUID) (*infrav3.Metro, error) {
 
-	entity, err := s.dao.GetEntityByName(ctx, metro.Name, oid, pid, &models.Metro{})
+	entity, err := s.dao.GetByNamePartnerOrg(ctx, metro.Name, pid, oid, &models.Metro{})
 	if err != nil {
 		return metro, err
 	}
@@ -193,7 +193,7 @@ func (s *metroService) List(ctx context.Context, oid uuid.NullUUID, pid uuid.Nul
 }
 
 func (s *metroService) GetIDByName(ctx context.Context, name string, oid uuid.NullUUID, pid uuid.NullUUID) (uuid.UUID, error) {
-	entity, err := s.dao.GetEntityByName(ctx, name, oid, pid, &models.Metro{})
+	entity, err := s.dao.GetByNamePartnerOrg(ctx, name, pid, oid, &models.Metro{})
 	if err != nil {
 		return uuid.Nil, err
 	}

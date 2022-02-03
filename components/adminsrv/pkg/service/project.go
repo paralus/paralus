@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/internal/models"
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/models"
 	systemv3 "github.com/RafaySystems/rcloud-base/components/adminsrv/proto/types/systempb/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"

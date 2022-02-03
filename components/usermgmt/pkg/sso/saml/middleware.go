@@ -10,7 +10,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/internal/models"
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/internal/models"
 	"github.com/crewjam/saml"
 	"github.com/crewjam/saml/samlsp"
 )

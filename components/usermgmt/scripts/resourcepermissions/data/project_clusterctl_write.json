@@ -1,0 +1,14 @@
+{
+  "name": "project.clusterctl.write",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/edge/v1/projects/:project_id/clusterctl",
+  "authenticated": true
+}

@@ -1,0 +1,14 @@
+{
+  "name": "project.auditLog.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/event/v1/project/:project_id/auditlog",
+  "authenticated": true
+}

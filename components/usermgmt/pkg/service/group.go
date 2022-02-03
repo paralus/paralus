@@ -6,8 +6,10 @@ import (
 	"time"
 
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/utils"
 	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
-	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/internal/models"
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/internal/group/dao"
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/internal/models"
 	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
@@ -24,99 +26,130 @@ const (
 type GroupService interface {
 	Close() error
 	// create group
-	Create(ctx context.Context, group *userv3.Group) (*userv3.Group, error)
+	Create(context.Context, *userv3.Group) (*userv3.Group, error)
 	// get group by id
-	GetByID(ctx context.Context, id string) (*userv3.Group, error)
+	GetByID(context.Context, *userv3.Group) (*userv3.Group, error)
 	// get group by name
-	GetByName(ctx context.Context, name string) (*userv3.Group, error)
+	GetByName(context.Context, *userv3.Group) (*userv3.Group, error)
 	// create or update group
-	Update(ctx context.Context, group *userv3.Group) (*userv3.Group, error)
+	Update(context.Context, *userv3.Group) (*userv3.Group, error)
 	// delete group
-	Delete(ctx context.Context, group *userv3.Group) (*userv3.Group, error)
+	Delete(context.Context, *userv3.Group) (*userv3.Group, error)
 	// list groups
-	List(ctx context.Context, group *userv3.Group) (*userv3.GroupList, error)
+	List(context.Context, *userv3.Group) (*userv3.GroupList, error)
 }
 
 // groupService implements GroupService
 type groupService struct {
-	dao pg.EntityDAO
+	dao  pg.EntityDAO
+	gdao dao.GroupDAO
+	l    utils.Lookup
 }
 
 // NewGroupService return new group service
 func NewGroupService(db *bun.DB) GroupService {
 	return &groupService{
-		dao: pg.NewEntityDAO(db),
+		dao:  pg.NewEntityDAO(db),
+		gdao: dao.NewGroupDAO(db),
+		l:    utils.NewLookup(db),
 	}
 }
 
-// Map roles to groups
-func (s *groupService) updateGroupRoleRelation(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
-	groupId, _ := uuid.Parse(group.GetMetadata().GetId())
-	partnerId, _ := uuid.Parse(group.GetMetadata().GetPartner())
-	organizationId, _ := uuid.Parse(group.GetMetadata().GetOrganization())
+func (s *groupService) deleteGroupRoleRelaitons(ctx context.Context, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, error) {
+	// delete previous entries
+	// TODO: maybe do a diff and selectively delete?
+	err := s.dao.DeleteX(ctx, "group_id", groupId, &models.GroupRole{})
+	if err != nil {
+		group.Status = statusFailed(err)
+		return group, err
+	}
+	err = s.dao.DeleteX(ctx, "group_id", groupId, &models.ProjectGroupRole{})
+	if err != nil {
+		group.Status = statusFailed(err)
+		return group, err
+	}
+	err = s.dao.DeleteX(ctx, "group_id", groupId, &models.ProjectGroupNamespaceRole{})
+	if err != nil {
+		group.Status = statusFailed(err)
+		return group, err
+	}
+	return group, nil
+}
 
-	// TODO: also parse out namesapce
+// Map roles to groups
+func (s *groupService) createGroupRoleRelations(ctx context.Context, group *userv3.Group, ids parsedIds) (*userv3.Group, error) {
+	// TODO: add transactions
 	projectNamespaceRoles := group.GetSpec().GetProjectnamespaceroles()
 
-	// TODO: add transactions
 	var pgnrs []models.ProjectGroupNamespaceRole
 	var pgrs []models.ProjectGroupRole
 	var grs []models.GroupRole
 	for _, pnr := range projectNamespaceRoles {
-		project := pnr.Project
-		namespace := pnr.Namespace
-		roleId, err := uuid.Parse(pnr.GetRole())
+		role := pnr.GetRole()
+		entity, err := s.dao.GetIdByName(ctx, role, &models.Role{})
 		if err != nil {
+			group.Status = statusFailed(fmt.Errorf("unable to find role '%v'", role))
 			return group, err
 		}
+		var roleId uuid.UUID
+		if rle, ok := entity.(*models.Role); ok {
+			roleId = rle.ID
+		} else {
+			group.Status = statusFailed(fmt.Errorf("unable to find role '%v'", role))
+			return group, err
+		}
+
+		project := pnr.GetProject()
+		namespaceId := pnr.GetNamespace() // TODO: lookup id from name
 		switch {
-		case namespace != nil:
-			namespaceId := pnr.GetNamespace()
-			projectId, _ := uuid.Parse(pnr.GetProject())
+		case namespaceId != 0:
+			projectId, err := s.l.GetProjectId(ctx, project)
+			if err != nil {
+				group.Status = statusFailed(fmt.Errorf("unable to find project '%v'", project))
+				return group, err
+			}
 			pgnr := models.ProjectGroupNamespaceRole{
-				Name:           group.GetMetadata().GetName(),
-				Description:    group.GetMetadata().GetDescription(),
 				CreatedAt:      time.Now(), // TODO: could drop this as it is default
 				ModifiedAt:     time.Now(),
 				Trash:          false,
 				RoleId:         roleId,
-				PartnerId:      partnerId,
-				OrganizationId: organizationId,
-				GroupId:        groupId,
+				PartnerId:      ids.Partner,
+				OrganizationId: ids.Organization,
+				GroupId:        ids.Id,
 				ProjectId:      projectId,
 				NamesapceId:    namespaceId,
 				Active:         true,
 			}
 			pgnrs = append(pgnrs, pgnr)
-		case project != nil:
-			projectId, _ := uuid.Parse(pnr.GetProject())
+		case project != "":
+			projectId, err := s.l.GetProjectId(ctx, project)
+			if err != nil {
+				group.Status = statusFailed(fmt.Errorf("unable to find project '%v'", project))
+				return group, err
+			}
 			pgr := models.ProjectGroupRole{
-				Name:           group.GetMetadata().GetName(),
-				Description:    group.GetMetadata().GetDescription(),
 				CreatedAt:      time.Now(),
 				ModifiedAt:     time.Now(),
 				Trash:          false,
 				Default:        true, // TODO: what is this for?
 				RoleId:         roleId,
-				PartnerId:      partnerId,
-				OrganizationId: organizationId,
-				GroupId:        groupId,
+				PartnerId:      ids.Partner,
+				OrganizationId: ids.Organization,
+				GroupId:        ids.Id,
 				ProjectId:      projectId,
 				Active:         true,
 			}
 			pgrs = append(pgrs, pgr)
 		default:
 			gr := models.GroupRole{
-				Name:           group.GetMetadata().GetName(),
-				Description:    group.GetMetadata().GetDescription(),
 				CreatedAt:      time.Now(),
 				ModifiedAt:     time.Now(),
 				Trash:          false,
 				Default:        true, // TODO: what is this for?
 				RoleId:         roleId,
-				PartnerId:      partnerId,
-				OrganizationId: organizationId,
-				GroupId:        groupId,
+				PartnerId:      ids.Partner,
+				OrganizationId: ids.Organization,
+				GroupId:        ids.Id,
 				Active:         true,
 			}
 			grs = append(grs, gr)
@@ -144,54 +177,72 @@ func (s *groupService) updateGroupRoleRelation(ctx context.Context, group *userv
 	return group, nil
 }
 
-// Update the users(account) mapped to each group
-func (s *groupService) updateGroupAccountRelation(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
-	// TODO: use a more efficient way to update the relations
-	// TODO: diff and delete the old relations
-	groupId, _ := uuid.Parse(group.GetMetadata().GetId())
+func (s *groupService) deleteGroupAccountRelations(ctx context.Context, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, error) {
+	err := s.dao.DeleteX(ctx, "group_id", groupId, &models.GroupAccount{})
+	if err != nil {
+		group.Status = statusFailed(err)
+		return group, err
+	}
+	return group, nil
+}
 
+// Update the users(account) mapped to each group
+func (s *groupService) createGroupAccountRelations(ctx context.Context, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, error) {
 	// TODO: add transactions
 	var grpaccs []models.GroupAccount
 	for _, account := range group.GetSpec().GetUsers() {
-		accountId, err := uuid.Parse(account)
+		// FIXME: do combined lookup
+		entity, err := s.dao.GetIdByTraits(ctx, account, &models.KratosIdentities{})
 		if err != nil {
-			return nil, err
+			return group, fmt.Errorf("unable to find user '%v'", account)
 		}
-		grp := models.GroupAccount{
-			Name:        group.GetMetadata().GetName(),
-			Description: group.GetMetadata().GetDescription(),
-			CreatedAt:   time.Now(),
-			ModifiedAt:  time.Now(),
-			Trash:       false,
-			AccountId:   accountId,
-			GroupId:     groupId,
-			Active:      true,
+		if acc, ok := entity.(*models.KratosIdentities); ok {
+			grp := models.GroupAccount{
+				CreatedAt:  time.Now(),
+				ModifiedAt: time.Now(),
+				Trash:      false,
+				AccountId:  acc.ID,
+				GroupId:    groupId,
+				Active:     true,
+			}
+			grpaccs = append(grpaccs, grp)
 		}
-		grpaccs = append(grpaccs, grp)
 	}
 	if len(grpaccs) == 0 {
 		return group, nil
 	}
 	_, err := s.dao.Create(ctx, &grpaccs)
 	if err != nil {
-		group.Status = &v3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-		}
+		group.Status = statusFailed(err)
 		return group, err
 	}
-
 	return group, nil
 }
 
+func (s *groupService) getPartnerOrganization(ctx context.Context, group *userv3.Group) (uuid.UUID, uuid.UUID, error) {
+	partner := group.GetMetadata().GetPartner()
+	org := group.GetMetadata().GetOrganization()
+	partnerId, err := s.l.GetPartnerId(ctx, partner)
+	if err != nil {
+		return uuid.Nil, uuid.Nil, err
+	}
+	organizationId, err := s.l.GetOrganizationId(ctx, org)
+	if err != nil {
+		return partnerId, uuid.Nil, err
+	}
+	return partnerId, organizationId, nil
+
+}
+
 func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
-	partnerId, _ := uuid.Parse(group.GetMetadata().GetPartner())
-	organizationId, _ := uuid.Parse(group.GetMetadata().GetOrganization())
-	// TODO: find out the interaction if project key is present in the group metadata
-	// TODO: check if a group with the same 'name' already exists and fail if so
-	// TODO: we should be specifying names instead of ids for partner and org (at least in output)
-	// TODO: create vs apply difference like in kubectl??
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, group)
+	if err != nil {
+		return nil, fmt.Errorf("unable to get partner and org id")
+	}
+	g, _ := s.dao.GetIdByNamePartnerOrg(ctx, group.GetMetadata().GetName(), uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Group{})
+	if g != nil {
+		return nil, fmt.Errorf("group '%v' already exists", group.GetMetadata().GetName())
+	}
 	//convert v3 spec to internal models
 	grp := models.Group{
 		Name:           group.GetMetadata().GetName(),
@@ -205,156 +256,102 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 	}
 	entity, err := s.dao.Create(ctx, &grp)
 	if err != nil {
-		group.Status = &v3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-		}
+		group.Status = statusFailed(err)
 		return group, err
 	}
 
 	//update v3 spec
-	if createdGroup, ok := entity.(*models.Group); ok {
-		group.Metadata.Id = createdGroup.ID.String()
-		group.Spec = &userv3.GroupSpec{
-			Type:                  createdGroup.Type,
-			Users:                 group.Spec.Users,                 // TODO: is this the right thing to do?
-			Projectnamespaceroles: group.Spec.Projectnamespaceroles, // TODO: is this the right thing to do?
+	if grp, ok := entity.(*models.Group); ok {
+		// TODO: optimize deletes
+		// we can get previous group using the id, find users/roles from that and delete those
+		group, err = s.createGroupAccountRelations(ctx, grp.ID, group)
+		if err != nil {
+			group.Status = statusFailed(err)
+			return group, err
 		}
-		if group.Status == nil {
-			group.Status = &v3.Status{
-				ConditionType:   "Create",
-				ConditionStatus: v3.ConditionStatus_StatusOK,
-				LastUpdated:     timestamppb.Now(),
-			}
-		}
-	}
 
-	group, err = s.updateGroupAccountRelation(ctx, group)
-	if err != nil {
-		group.Status = &v3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
+		group, err = s.createGroupRoleRelations(ctx, group, parsedIds{Id: grp.ID, Partner: partnerId, Organization: organizationId})
+		if err != nil {
+			group.Status = statusFailed(err)
+			return group, err
 		}
+		group.Status = statusOK()
+		return group, nil
+	}
+	group.Status = statusFailed(fmt.Errorf("unable to create group"))
+	return group, fmt.Errorf("unable to create group")
+}
+
+func (s *groupService) toV3Group(ctx context.Context, group *userv3.Group, grp *models.Group) (*userv3.Group, error) {
+	labels := make(map[string]string)
+	labels["organization"] = group.GetMetadata().GetOrganization()
+	labels["partner"] = group.GetMetadata().GetPartner()
+
+	group.Metadata = &v3.Metadata{
+		Name:         grp.Name,
+		Description:  grp.Description,
+		Organization: group.GetMetadata().GetOrganization(),
+		Partner:      group.GetMetadata().GetPartner(),
+		Labels:       labels,
+		ModifiedAt:   timestamppb.New(grp.ModifiedAt),
+	}
+	users, err := s.gdao.GetUsers(ctx, grp.ID)
+	if err != nil {
 		return group, err
 	}
-
-	group, err = s.updateGroupRoleRelation(ctx, group)
-	if err != nil {
-		group.Status = &v3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-		}
-		return group, err
+	userNames := []string{}
+	for _, u := range users {
+		userNames = append(userNames, u.Traits["email"].(string))
 	}
 
+	roles, err := s.gdao.GetRoles(ctx, grp.ID)
+	if err != nil {
+		group.Status = statusFailed(err)
+		return group, err
+	}
+	group.Spec = &userv3.GroupSpec{
+		Type:                  grp.Type,
+		Users:                 userNames,
+		Projectnamespaceroles: roles,
+	}
+	group.Status = statusOK()
 	return group, nil
 }
 
-func (s *groupService) GetByID(ctx context.Context, id string) (*userv3.Group, error) {
-
-	group := &userv3.Group{
-		ApiVersion: apiVersion,
-		Kind:       groupKind,
-		Metadata: &v3.Metadata{
-			Id: id,
-		},
-	}
-
+func (s *groupService) GetByID(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
+	id := group.GetMetadata().GetId()
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		group.Status = &v3.Status{
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
+		group.Status = statusFailed(err)
 		return group, err
 	}
 	entity, err := s.dao.GetByID(ctx, uid, &models.Group{})
 	if err != nil {
-		group.Status = &v3.Status{
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
+		group.Status = statusFailed(err)
 		return group, err
 	}
 
 	if grp, ok := entity.(*models.Group); ok {
-		labels := make(map[string]string)
-		labels["organization"] = grp.OrganizationId.String()
-
-		group.Metadata = &v3.Metadata{
-			Name:         grp.Name,
-			Description:  grp.Description,
-			Id:           grp.ID.String(),
-			Organization: grp.OrganizationId.String(),
-			Partner:      grp.PartnerId.String(),
-			Labels:       labels,
-			ModifiedAt:   timestamppb.New(grp.ModifiedAt),
-		}
-		group.Spec = &userv3.GroupSpec{
-			Type: grp.Type,
-		}
-		group.Status = &v3.Status{
-			LastUpdated:     timestamppb.Now(),
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-		}
-
-		return group, nil
+		return s.toV3Group(ctx, group, grp)
 	}
 	return group, nil
 
 }
 
-func (s *groupService) GetByName(ctx context.Context, name string) (*userv3.Group, error) {
-	group := &userv3.Group{
-		ApiVersion: apiVersion,
-		Kind:       groupKind,
-		Metadata: &v3.Metadata{
-			Name: name,
-		},
-	}
-
-	entity, err := s.dao.GetByName(ctx, name, &models.Group{})
+func (s *groupService) GetByName(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
+	name := group.GetMetadata().GetName()
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, group)
 	if err != nil {
-		group.Status = &v3.Status{
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
+		return nil, fmt.Errorf("unable to get partner and org id")
+	}
+	entity, err := s.dao.GetByNamePartnerOrg(ctx, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Group{})
+	if err != nil {
+		group.Status = statusFailed(err)
 		return group, err
 	}
 
 	if grp, ok := entity.(*models.Group); ok {
-		labels := make(map[string]string)
-		labels["organization"] = grp.OrganizationId.String()
-
-		group.Metadata = &v3.Metadata{
-			Name:         grp.Name,
-			Description:  grp.Description,
-			Id:           grp.ID.String(),
-			Organization: grp.OrganizationId.String(),
-			Partner:      grp.PartnerId.String(),
-			Labels:       labels,
-			ModifiedAt:   timestamppb.New(grp.ModifiedAt),
-		}
-		group.Spec = &userv3.GroupSpec{
-			Type: grp.Type,
-		}
-		group.Status = &v3.Status{
-			LastUpdated:     timestamppb.Now(),
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-		}
-
-		return group, nil
+		return s.toV3Group(ctx, group, grp)
 	}
 	return group, nil
 
@@ -362,98 +359,102 @@ func (s *groupService) GetByName(ctx context.Context, name string) (*userv3.Grou
 
 func (s *groupService) Update(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
 	// TODO: inform when unchanged
-
-	id, _ := uuid.Parse(group.Metadata.Id)
-	entity, err := s.dao.GetByID(ctx, id, &models.Group{})
+	name := group.GetMetadata().GetName()
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, group)
 	if err != nil {
-		group.Status = &v3.Status{
-			ConditionType:   "Update",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
+		return nil, fmt.Errorf("unable to get partner and org id")
+	}
+	entity, err := s.dao.GetByNamePartnerOrg(ctx, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Group{})
+	if err != nil {
+		group.Status = statusFailed(fmt.Errorf("no group found with name '%v'", name))
 		return group, err
 	}
 
 	if grp, ok := entity.(*models.Group); ok {
-		//update group details
+		// TODO: are we not letting them update org/partner?
 		grp.Name = group.Metadata.Name
 		grp.Description = group.Metadata.Description
 		grp.Type = group.Spec.Type
 		grp.ModifiedAt = time.Now()
 
-		_, err = s.dao.Update(ctx, id, grp)
+		// update account/role links
+		group, err = s.deleteGroupAccountRelations(ctx, grp.ID, group)
 		if err != nil {
-			group.Status = &v3.Status{
-				ConditionType:   "Update",
-				ConditionStatus: v3.ConditionStatus_StatusFailed,
-				LastUpdated:     timestamppb.Now(),
-				Reason:          err.Error(),
-			}
+			group.Status = statusFailed(err)
+			return group, err
+		}
+		group, err = s.createGroupAccountRelations(ctx, grp.ID, group)
+		if err != nil {
+			group.Status = statusFailed(err)
+			return group, err
+		}
+		group, err = s.deleteGroupRoleRelaitons(ctx, grp.ID, group)
+		if err != nil {
+			group.Status = statusFailed(err)
+			return group, err
+		}
+		group, err = s.createGroupRoleRelations(ctx, group, parsedIds{Id: grp.ID, Partner: partnerId, Organization: organizationId})
+		if err != nil {
+			group.Status = statusFailed(err)
 			return group, err
 		}
 
-		//update spec and status
+		_, err = s.dao.Update(ctx, grp.ID, grp)
+		if err != nil {
+			group.Status = statusFailed(err)
+			return group, err
+		}
+
+		// update spec and status
 		group.Spec = &userv3.GroupSpec{
-			Type: grp.Type,
+			Type:                  grp.Type,
+			Users:                 group.Spec.Users, // TODO: update from db resp or no update?
+			Projectnamespaceroles: group.Spec.Projectnamespaceroles,
 		}
-		group.Status = &v3.Status{
-			ConditionType:   "Update",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-			LastUpdated:     timestamppb.Now(),
-		}
+		group.Status = statusOK()
 	}
 
 	return group, nil
 }
 
 func (s *groupService) Delete(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
-	id, err := uuid.Parse(group.Metadata.Id)
+	name := group.GetMetadata().GetName()
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, group)
 	if err != nil {
-		group.Status = &v3.Status{
-			ConditionType:   "Delete",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
-		return group, err
+		group.Status = statusFailed(fmt.Errorf("unable to get partner and org id"))
+		return group, fmt.Errorf("unable to get partner and org id")
 	}
-	entity, err := s.dao.GetByID(ctx, id, &models.Group{})
+	entity, err := s.dao.GetByNamePartnerOrg(ctx, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Group{})
 	if err != nil {
-		group.Status = &v3.Status{
-			ConditionType:   "Delete",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
+		group.Status = statusFailed(err)
 		return group, err
 	}
 	if grp, ok := entity.(*models.Group); ok {
-		err = s.dao.Delete(ctx, id, grp)
+		group, err = s.deleteGroupRoleRelaitons(ctx, grp.ID, group)
 		if err != nil {
-			group.Status = &v3.Status{
-				ConditionType:   "Delete",
-				ConditionStatus: v3.ConditionStatus_StatusFailed,
-				LastUpdated:     timestamppb.Now(),
-				Reason:          err.Error(),
-			}
+			group.Status = statusFailed(err)
+			return group, err
+		}
+		group, err = s.deleteGroupAccountRelations(ctx, grp.ID, group)
+		if err != nil {
+			group.Status = statusFailed(err)
+			return group, err
+		}
+		err = s.dao.Delete(ctx, grp.ID, grp)
+		if err != nil {
+			group.Status = statusFailed(err)
 			return group, err
 		}
 		//update v3 spec
 		group.Metadata.Id = grp.ID.String()
 		group.Metadata.Name = grp.Name
-		group.Status = &v3.Status{
-			ConditionType:   "Delete",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-			LastUpdated:     timestamppb.Now(),
-		}
+		group.Status = statusOK()
 	}
 
 	return group, nil
 }
 
 func (s *groupService) List(ctx context.Context, group *userv3.Group) (*userv3.GroupList, error) {
-
 	var groups []*userv3.Group
 	groupList := &userv3.GroupList{
 		ApiVersion: apiVersion,
@@ -463,11 +464,11 @@ func (s *groupService) List(ctx context.Context, group *userv3.Group) (*userv3.G
 		},
 	}
 	if len(group.Metadata.Organization) > 0 {
-		orgId, err := uuid.Parse(group.Metadata.Organization)
+		orgId, err := s.l.GetOrganizationId(ctx, group.Metadata.Organization)
 		if err != nil {
 			return groupList, err
 		}
-		partId, err := uuid.Parse(group.Metadata.Partner)
+		partId, err := s.l.GetPartnerId(ctx, group.Metadata.Partner)
 		if err != nil {
 			return groupList, err
 		}
@@ -478,23 +479,12 @@ func (s *groupService) List(ctx context.Context, group *userv3.Group) (*userv3.G
 		}
 		if grps, ok := entities.(*[]models.Group); ok {
 			for _, grp := range *grps {
-				labels := make(map[string]string)
-				labels["organization"] = grp.OrganizationId.String()
-				labels["partner"] = grp.PartnerId.String()
-
-				group.Metadata = &v3.Metadata{
-					Name:         grp.Name,
-					Description:  grp.Description,
-					Id:           grp.ID.String(),
-					Organization: grp.OrganizationId.String(),
-					Partner:      grp.PartnerId.String(),
-					Labels:       labels,
-					ModifiedAt:   timestamppb.New(grp.ModifiedAt),
+				entry := &userv3.Group{Metadata: group.GetMetadata()}
+				entry, err = s.toV3Group(ctx, entry, &grp)
+				if err != nil {
+					return groupList, err
 				}
-				group.Spec = &userv3.GroupSpec{
-					Type: grp.Type,
-				}
-				groups = append(groups, group)
+				groups = append(groups, entry)
 			}
 
 			//update the list metadata and items response

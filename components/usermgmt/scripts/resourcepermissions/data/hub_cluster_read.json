@@ -1,0 +1,27 @@
+{
+  "name": "hub.cluster.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:cluster_name/status",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/apis/infra.k8smgmt.io/v3/projects/:project_name/clusters",
+  "authenticated": true
+}

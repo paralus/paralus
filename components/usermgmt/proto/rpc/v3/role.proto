@@ -89,9 +89,6 @@ service Role {
   rpc GetRole(rafay.dev.types.user.v3.Role) returns (rafay.dev.types.user.v3.Role) {
     option (google.api.http) = {
       get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/role/{metadata.name}"
-      additional_bindings {
-        get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/role/{metadata.id}"
-      }
     };
   };
 
@@ -99,19 +96,12 @@ service Role {
     option (google.api.http) = {
       put : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/role/{metadata.name}"
       body : "*"
-      additional_bindings {
-        put : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/role/{metadata.id}"
-        body : "*"
-      }
     };
   };
 
   rpc DeleteRole(rafay.dev.types.user.v3.Role) returns (rafay.dev.types.user.v3.Role) {
     option (google.api.http) = {
       delete : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/role/{metadata.name}"
-      additional_bindings {
-        delete : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/role/{metadata.id}"
-      }
     };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {

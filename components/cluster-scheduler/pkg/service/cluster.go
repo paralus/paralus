@@ -170,7 +170,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 		return cluster, fmt.Errorf(errormsg)
 	}
 
-	clusterPresent, err := es.dao.GetEntityByName(ctx, cluster.Metadata.Name, uuid.NullUUID{UUID: orgId, Valid: true},
+	clusterPresent, err := es.dao.GetByNamePartnerOrg(ctx, cluster.Metadata.Name, uuid.NullUUID{UUID: orgId, Valid: true},
 		uuid.NullUUID{UUID: partId, Valid: true}, &models.Cluster{})
 	if err != nil && err.Error() == "sql: no rows in result set" {
 		_log.Infof("Skipping as first time cluster create ")
@@ -186,7 +186,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 
 	metro := &models.Metro{}
 	if cluster.Spec.Metro != nil && cluster.Spec.Metro.Name != "" {
-		if mdb, err := es.dao.GetEntityByName(ctx, cluster.Spec.Metro.Name, uuid.NullUUID{UUID: orgId, Valid: true}, uuid.NullUUID{UUID: partId, Valid: true}, metro); err != nil {
+		if mdb, err := es.dao.GetByNamePartnerOrg(ctx, cluster.Spec.Metro.Name, uuid.NullUUID{UUID: orgId, Valid: true}, uuid.NullUUID{UUID: partId, Valid: true}, metro); err != nil {
 			errormsg = "Invalid cluster location, provide a valid metro name"
 			cluster.Status = &commonv3.Status{
 				ConditionType:   "Create",
@@ -552,7 +552,7 @@ func (cs *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) 
 	if cluster.Spec.Metro != nil && cdb.MetroId.String() != cluster.Spec.Metro.Id {
 		metro := &models.Metro{}
 		if cluster.Spec.Metro.Name != "" {
-			if mdb, err := cs.dao.GetEntityByName(ctx, cluster.Spec.Metro.Name, uuid.NullUUID{UUID: oid, Valid: true}, uuid.NullUUID{UUID: pid, Valid: true}, metro); err != nil {
+			if mdb, err := cs.dao.GetByNamePartnerOrg(ctx, cluster.Spec.Metro.Name, uuid.NullUUID{UUID: oid, Valid: true}, uuid.NullUUID{UUID: pid, Valid: true}, metro); err != nil {
 				errormsg = "Invalid cluster location, provide a valid metro name"
 				cluster.Status = &commonv3.Status{
 					ConditionType:   "Update",

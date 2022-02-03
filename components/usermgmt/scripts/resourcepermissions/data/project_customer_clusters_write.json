@@ -1,0 +1,238 @@
+{
+  "name": "project.customer.clusters.write",
+  "base_url": "/v1/infra/projects/:project_id/clusters",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:cluster_id/",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:cluster_id/labels/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/updatedns/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/createmonitors/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/disablemonitors/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/provision/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/upgrade/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/scaleout/:num/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/creds/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/syncnodegroups/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:cluster_id/scalenodegroup/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:cluster_id/updatespotnodegroup/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:cluster_id/addnodegroup/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:cluster_id/addnodegroup/:nodegroup_id/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/addnodegroup/:nodegroup_id/provision/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:cluster_id/updateclusterendpoints/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:cluster_id/deletenodegroup/:node_name/",
+      "methods": [
+        "DELETE"
+      ]
+    },
+    {
+      "url": "/:cluster_id/drainnodegroup/:node_name/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:cluster_id/uncordonnodegroup/:node_name/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:cluster_id/kubeupgrade/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:cluster_id/nodes/:node_id/approve/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/nodes/:node_id/reject/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/nodes/:node_id/delete/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/nodes/:node_id/provision/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/nodes/:node_id/reset/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/nodes/:node_id/update/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/provision-v2/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/updateingressips/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/setdedicatedmaster/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/updateprovisionos/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/updateprovisionk8s/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/updatestorageclass/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/updatecniprovider/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/updateclustercidr/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/updateupgradepreferences/",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "url": "/:cluster_id/nodes/:node_id/adddevice/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:cluster_id/nodes/:node_id/syncdevices/",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "authenticated": true
+}

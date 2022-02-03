@@ -1,0 +1,20 @@
+{
+  "name": "project.namespace.customer.read",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:namesapce_id/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v1/config/projects/:project_id/namespaces",
+  "authenticated": true
+}

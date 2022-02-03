@@ -1,0 +1,20 @@
+{
+  "name": "project.agent.read",
+  "base_url": "/v2/config/project/:project_id/agent",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:agent_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "authenticated": true
+}

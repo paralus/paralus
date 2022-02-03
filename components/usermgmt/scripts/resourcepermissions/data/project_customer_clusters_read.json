@@ -1,0 +1,99 @@
+{
+  "name": "project.customer.clusters.read",
+  "base_url": "/v1/infra/projects/:project_id/clusters",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_id/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:cluster_id/provision/log/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_id/provision/progress",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_id/key/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_id/kubectlconfig/:auth/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_id/cloudinfo/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_id/configfile/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_id/kubernetesversions/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_id/availableagentpoolversions/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_id/upgradestatus/:job_id",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_id/upgradestatus/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_id/activity/tasks/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_id/activity/log/:job_id",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:cluster_id/nodes/:node_id/addlog/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "authenticated": true
+}

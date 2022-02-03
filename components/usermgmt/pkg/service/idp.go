@@ -17,7 +17,7 @@ import (
 
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	commonv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
-	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/internal/models"
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/internal/models"
 	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"

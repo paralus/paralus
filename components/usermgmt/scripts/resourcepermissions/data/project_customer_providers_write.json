@@ -1,0 +1,28 @@
+{
+  "name": "project.customer.providers.write",
+  "base_url": "/v1/infra/projects/:project_id/providers",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:provider_id/",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:provider_id/validate",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "authenticated": true
+}

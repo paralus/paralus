@@ -1,0 +1,34 @@
+{
+  "name": "project.v2.namespace.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:namespace_name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:namespace_name/publish",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:namespace_name/unpublish",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "base_url": "/v2/config/project/:project_id/namespace",
+  "authenticated": true
+}

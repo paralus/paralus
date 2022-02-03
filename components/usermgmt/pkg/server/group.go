@@ -26,16 +26,11 @@ func (s *groupServer) GetGroups(ctx context.Context, p *userpbv3.Group) (*userpb
 }
 
 func (s *groupServer) GetGroup(ctx context.Context, p *userpbv3.Group) (*userpbv3.Group, error) {
-	group, err := s.GetByName(ctx, p.Metadata.Name)
-	if err != nil {
-		return s.GetByID(ctx, p.Metadata.Id)
-	}
-	return group, nil
+	return s.GetByName(ctx, p)
 }
 
 func (s *groupServer) DeleteGroup(ctx context.Context, p *userpbv3.Group) (*userpbv3.Group, error) {
-	_, err := s.Delete(ctx, p)
-	return nil, err
+	return s.Delete(ctx, p)
 }
 
 func (s *groupServer) UpdateGroup(ctx context.Context, p *userpbv3.Group) (*userpbv3.Group, error) {

@@ -52,9 +52,9 @@ message RoleSpec {
       description : "Role specification"
     }
   };
-  repeated rafay.dev.types.user.v3.RolePermission rolepermissions = 1
+  repeated string rolepermissions = 1
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        title : "RolePermissions"
+        title : "Role permissions"
         description : "Permissions for the role"
       } ];
   bool isGlobal = 2

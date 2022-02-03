@@ -1,0 +1,28 @@
+{
+  "name": "project.certificate.write",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:certificate_id/",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:certificate_id/self_signed/",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "base_url": "/config/v1/projects/:project_id/certificates",
+  "authenticated": true
+}

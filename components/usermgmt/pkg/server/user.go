@@ -26,16 +26,11 @@ func (s *userServer) GetUsers(ctx context.Context, p *userpbv3.User) (*userpbv3.
 }
 
 func (s *userServer) GetUser(ctx context.Context, p *userpbv3.User) (*userpbv3.User, error) {
-	// user, err := s.GetByName(ctx, p.Metadata.Name)
-	// if err != nil {
-	return s.GetByID(ctx, p.Metadata.Id)
-	// }
-	// return user, nil
+	return s.GetByName(ctx, p)
 }
 
 func (s *userServer) DeleteUser(ctx context.Context, p *userpbv3.User) (*rpcv3.DeleteUserResponse, error) {
-	_, err := s.Delete(ctx, p)
-	return nil, err
+	return s.Delete(ctx, p)
 }
 
 func (s *userServer) UpdateUser(ctx context.Context, p *userpbv3.User) (*userpbv3.User, error) {

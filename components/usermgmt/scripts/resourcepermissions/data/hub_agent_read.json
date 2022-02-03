@@ -1,0 +1,27 @@
+{
+  "name": "hub.agent.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:agent_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:agent_name/status",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/apis/gitops.k8smgmt.io/v3/projects/:project_name/agents",
+  "authenticated": true
+}

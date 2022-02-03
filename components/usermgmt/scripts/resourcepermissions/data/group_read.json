@@ -1,0 +1,39 @@
+{
+  "name": "group.read",
+  "base_url": "/auth/v3/groups",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:group_id/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:group_id/users/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:group_id/roles/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:group_id/projects/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "authenticated": true
+}

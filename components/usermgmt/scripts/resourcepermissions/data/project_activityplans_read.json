@@ -1,0 +1,33 @@
+{
+  "name": "project.activityplans.read",
+  "base_url": "/edge/v1/projects/:project_id/activityplans",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:plan_id/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:plan_id/clusters/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:plan_id/executions/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "authenticated": true
+}
