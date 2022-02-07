@@ -1,0 +1,51 @@
+syntax = "proto3";
+package rafay.dev.types.authz.v1;
+
+message EnforceRequest {
+  repeated string params = 1;
+}
+
+message Policy {
+  // Who needs the access
+  string sub = 1;
+  // Namespace scope, * for all ns
+  string ns = 2;
+  // Project scope, * for all projects
+  string proj = 3;
+  // Org scope
+  string org = 4;
+  // Resource for which the access is needed
+  string obj = 5;
+  // Action, read/write; * for both read+write
+  string act = 6;
+}
+
+message Policies {
+  repeated Policy policies = 1;
+}
+
+message UserGroup {
+  string user = 1;
+  string grp = 2;
+}
+
+message UserGroups {
+  repeated UserGroup user_groups = 1;
+}
+
+message RolePermissionMapping {
+  string role = 1;
+  repeated string permission = 2;
+}
+
+message RolePermissionMappingList {
+  repeated RolePermissionMapping role_permission_mapping_list = 1;
+}
+
+message FilteredRolePermissionMapping {
+  string role = 1;
+}
+
+message BoolReply {
+  bool res = 1;
+}

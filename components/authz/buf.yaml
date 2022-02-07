@@ -1,0 +1,10 @@
+version: v1
+name: buf.build/rafay/authz
+deps:
+  - buf.build/gogo/protobuf
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - DEFAULT

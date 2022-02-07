@@ -1,0 +1,67 @@
+syntax = "proto3";
+package rafay.dev.rpc.authz.v1;
+
+import "proto/types/authz.proto";
+import "gogoproto/gogo.proto";
+
+// Enable custom Marshal method.
+option (gogoproto.marshaler_all) = true;
+// Enable custom Unmarshal method.
+option (gogoproto.unmarshaler_all) = true;
+// Enable custom Size method (Required by Marshal and Unmarshal).
+option (gogoproto.sizer_all) = true;
+// Enable registration with golang/protobuf for the grpc-gateway.
+option (gogoproto.goproto_registration) = true;
+// Enable generation of XXX_MessageName methods for grpc-go/status.
+option (gogoproto.messagename_all) = true;
+
+service Authz {
+  rpc Enforce (rafay.dev.types.authz.v1.EnforceRequest)
+    returns (rafay.dev.types.authz.v1.BoolReply) {};
+
+  // List Policies accpets Policy whose fileds are used for filtering
+  // Filtering is done per field for the policy
+  // For Example:
+  // The Policy obj:
+  //    sub => ""
+  //    ns => ""
+  //    proj => project1
+  //    org => org1
+  //    obj => ""
+  //    act => ""
+  // Returns policies related to project1 and org1 (Empty string matches all)
+  rpc ListPolicies (rafay.dev.types.authz.v1.Policy)
+    returns (rafay.dev.types.authz.v1.Policies) {};
+
+  rpc CreatePolicies (rafay.dev.types.authz.v1.Policies)
+    returns (rafay.dev.types.authz.v1.BoolReply) {};
+
+  /* rpc CreateUserSubPolicies (rafay.dev.types.authz.v1.Policies) */
+  /*   returns (rafay.dev.types.authz.v1.BoolReply) {}; */
+
+  /* rpc CreateGroupSubPolicies (rafay.dev.types.authz.v1.Policies) */
+  /*   returns (rafay.dev.types.authz.v1.BoolReply) {}; */
+
+  rpc DeletePolicies (rafay.dev.types.authz.v1.Policies)
+    returns (rafay.dev.types.authz.v1.BoolReply) {};
+
+  rpc ListUserGroups (rafay.dev.types.authz.v1.UserGroup)
+    returns (rafay.dev.types.authz.v1.UserGroups) {};
+
+  rpc CreateUserGroups (rafay.dev.types.authz.v1.UserGroups)
+    returns (rafay.dev.types.authz.v1.BoolReply) {};
+
+  rpc DeleteUserGroups (rafay.dev.types.authz.v1.UserGroups)
+    returns (rafay.dev.types.authz.v1.BoolReply) {};
+
+  rpc ListRolePermissionMappings (rafay.dev.types.authz.v1.FilteredRolePermissionMapping)
+    returns (rafay.dev.types.authz.v1.RolePermissionMappingList) {}
+
+  rpc CreateRolePermissionMappings (rafay.dev.types.authz.v1.RolePermissionMappingList)
+    returns (rafay.dev.types.authz.v1.BoolReply) {};
+
+  rpc DeleteRolePermissionMappings (rafay.dev.types.authz.v1.FilteredRolePermissionMapping)
+    returns (rafay.dev.types.authz.v1.BoolReply) {};
+
+  // TODO: Check if HasPolicy etc, hl RBAC APIs, Update APIs are needed
+}
