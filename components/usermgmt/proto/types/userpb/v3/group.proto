@@ -19,7 +19,7 @@ message Group {
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "API Version",
         description : "API Version of the group resource"
-        default : "usermgmt.k8smgmt.io/v3"
+        default : "system.k8smgmt.io/v3"
       } ];
   string kind = 2
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
@@ -76,7 +76,7 @@ message GroupSpec {
       description : "Group specification"
     }
   };
-  repeated ProjectNamespaceRole projectnamespaceroles = 1
+  repeated ProjectNamespaceRole projectNamespaceRoles = 1
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "ProjectNamespaceRoles"
         description : "Project, namespace, role associations for group"

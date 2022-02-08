@@ -80,7 +80,7 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "default": "usermgmt.k8smgmt.io/v3"
+            "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
@@ -119,7 +119,7 @@
           },
           {
             "name": "spec.rolepermissions",
-            "description": "Role permissions. Permissions for the role",
+            "description": "Role Permissions. Permissions for the role",
             "in": "query",
             "required": false,
             "type": "array",
@@ -242,7 +242,7 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "default": "usermgmt.k8smgmt.io/v3"
+            "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
@@ -281,7 +281,7 @@
           },
           {
             "name": "spec.rolepermissions",
-            "description": "Role permissions. Permissions for the role",
+            "description": "Role Permissions. Permissions for the role",
             "in": "query",
             "required": false,
             "type": "array",
@@ -457,7 +457,7 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "default": "usermgmt.k8smgmt.io/v3"
+            "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
@@ -503,7 +503,7 @@
           },
           {
             "name": "spec.rolepermissions",
-            "description": "Role permissions. Permissions for the role",
+            "description": "Role Permissions. Permissions for the role",
             "in": "query",
             "required": false,
             "type": "array",
@@ -794,7 +794,7 @@
       "properties": {
         "apiVersion": {
           "type": "string",
-          "default": "usermgmt.k8smgmt.io/v3",
+          "default": "system.k8smgmt.io/v3",
           "description": "API Version of the Role resource",
           "title": "API Version"
         },
@@ -874,7 +874,7 @@
             "type": "string"
           },
           "description": "Permissions for the role",
-          "title": "Role permissions"
+          "title": "Role Permissions"
         },
         "isGlobal": {
           "type": "boolean",

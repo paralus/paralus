@@ -80,7 +80,7 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "default": "usermgmt.k8smgmt.io/v3"
+            "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
@@ -235,7 +235,7 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "default": "usermgmt.k8smgmt.io/v3"
+            "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
@@ -443,7 +443,7 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "default": "usermgmt.k8smgmt.io/v3"
+            "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
@@ -690,7 +690,7 @@
       "properties": {
         "apiVersion": {
           "type": "string",
-          "default": "usermgmt.k8smgmt.io/v3",
+          "default": "system.k8smgmt.io/v3",
           "description": "API Version of the group resource",
           "title": "API Version"
         },
@@ -764,7 +764,7 @@
     "v3GroupSpec": {
       "type": "object",
       "properties": {
-        "projectnamespaceroles": {
+        "projectNamespaceRoles": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/v3ProjectNamespaceRole"

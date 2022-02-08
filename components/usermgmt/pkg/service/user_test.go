@@ -121,7 +121,7 @@ func TestCreateUserWithRole(t *testing.T) {
 
 			user := &userv3.User{
 				Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
-				Spec:     &userv3.UserSpec{Projectnamespaceroles: tc.roles},
+				Spec:     &userv3.UserSpec{ProjectNamespaceRoles: tc.roles},
 			}
 			user, err := us.Create(context.Background(), user)
 			if tc.shouldfail {
@@ -184,7 +184,7 @@ func TestUpdateUser(t *testing.T) {
 
 	user := &userv3.User{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
-		Spec:     &userv3.UserSpec{Projectnamespaceroles: []*userv3.ProjectNamespaceRole{{Project: &prname, Namespace: &namespaceid, Role: rname}}},
+		Spec:     &userv3.UserSpec{ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: &prname, Namespace: &namespaceid, Role: rname}}},
 	}
 	user, err := us.Update(context.Background(), user)
 	if err != nil {
@@ -237,11 +237,11 @@ func TestUserGetByName(t *testing.T) {
 	if len(user.GetSpec().GetGroups()) != 2 {
 		t.Errorf("invalid number of groups returned for user, expected 2; got '%v'", len(user.GetSpec().GetGroups()))
 	}
-	if len(user.GetSpec().GetProjectnamespaceroles()) != 3 {
-		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(user.GetSpec().GetProjectnamespaceroles()))
+	if len(user.GetSpec().GetProjectNamespaceRoles()) != 3 {
+		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(user.GetSpec().GetProjectNamespaceRoles()))
 	}
-	if user.GetSpec().GetProjectnamespaceroles()[2].GetNamespace() != 9 {
-		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", user.GetSpec().GetProjectnamespaceroles()[2].Namespace)
+	if user.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 9 {
+		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", user.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 	}
 }
 
@@ -283,11 +283,11 @@ func TestUserGetById(t *testing.T) {
 	if len(user.GetSpec().GetGroups()) != 2 {
 		t.Errorf("invalid number of groups returned for user, expected 2; got '%v'", len(user.GetSpec().GetGroups()))
 	}
-	if len(user.GetSpec().GetProjectnamespaceroles()) != 3 {
-		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(user.GetSpec().GetProjectnamespaceroles()))
+	if len(user.GetSpec().GetProjectNamespaceRoles()) != 3 {
+		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(user.GetSpec().GetProjectNamespaceRoles()))
 	}
-	if user.GetSpec().GetProjectnamespaceroles()[2].GetNamespace() != 9 {
-		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", user.GetSpec().GetProjectnamespaceroles()[2].Namespace)
+	if user.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 9 {
+		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", user.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 	}
 }
 
@@ -349,11 +349,11 @@ func TestUserList(t *testing.T) {
 		t.Errorf("invalid number of groups returned for user, expected 2; got '%v'", len(userlist.Items[0].GetSpec().GetGroups()))
 	}
 
-	if len(userlist.Items[0].GetSpec().GetProjectnamespaceroles()) != 3 {
-		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(userlist.Items[0].GetSpec().GetProjectnamespaceroles()))
+	if len(userlist.Items[0].GetSpec().GetProjectNamespaceRoles()) != 3 {
+		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(userlist.Items[0].GetSpec().GetProjectNamespaceRoles()))
 	}
-	if userlist.Items[0].GetSpec().GetProjectnamespaceroles()[2].GetNamespace() != 9 {
-		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", userlist.Items[0].GetSpec().GetProjectnamespaceroles()[2].Namespace)
+	if userlist.Items[0].GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 9 {
+		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", userlist.Items[0].GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 	}
 }
 

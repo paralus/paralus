@@ -32,7 +32,7 @@ metadata:
 spec:
   firstName: John
   lastName: Doe
-  projectnamespaceroles:
+  projectNamespaceRoles:
     - role: NAMESPACE_ADMIN
       namespace: :namespace
       project: :project
@@ -76,7 +76,7 @@ spec:
   type: simple
   users:
     - :user
-  projectnamespaceroles:
+  projectNamespaceRoles:
     - role: NAMESPACE_ADMIN
       namespace: :namespace
       project: :project
@@ -94,7 +94,7 @@ spec:
   type: simple
   users:
     - :user
-  projectnamespaceroles:
+  projectNamespaceRoles:
     - role: CLUSTER_ADMIN
 
 # Update group to no namespace
@@ -110,7 +110,7 @@ spec:
   type: simple
   users:
     - :user
-  projectnamespaceroles:
+  projectNamespaceRoles:
     - role: NAMESPACE_ADMIN
       project: :project
 

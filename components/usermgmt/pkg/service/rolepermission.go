@@ -10,7 +10,6 @@ import (
 	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 const (
@@ -44,10 +43,8 @@ func NewRolepermissionService(db *bun.DB) RolepermissionService {
 func (s *rolepermissionService) toV3Rolepermission(rolepermission *userv3.RolePermission, rlp *models.ResourcePermission) *userv3.RolePermission {
 	// TODO: should we return resource_urls?
 	rolepermission.Metadata = &v3.Metadata{
-		Name:         rlp.Name,
-		Description:  rlp.Description,
-		Id:           rlp.ID.String(),
-		ModifiedAt:   timestamppb.New(rlp.ModifiedAt),
+		Name:        rlp.Name,
+		Description: rlp.Description,
 	}
 
 	return rolepermission

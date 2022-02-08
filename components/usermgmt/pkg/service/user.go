@@ -95,7 +95,7 @@ func getUserTraits(traits map[string]interface{}) userTraits {
 
 // Map roles to accounts
 func (s *userService) updateUserRoleRelation(ctx context.Context, user *userv3.User, ids parsedIds) (*userv3.User, error) {
-	projectNamespaceRoles := user.GetSpec().GetProjectnamespaceroles()
+	projectNamespaceRoles := user.GetSpec().GetProjectNamespaceRoles()
 
 	// TODO: add transactions
 	var panrs []models.ProjectAccountNamespaceRole
@@ -268,6 +268,8 @@ func (s *userService) identitiesModelToUser(ctx context.Context, user *userv3.Us
 		return user, err
 	}
 
+	user.ApiVersion = apiVersion
+	user.Kind = userKind
 	user.Metadata = &v3.Metadata{
 		Name:        traits.Email,
 		Description: traits.Description,
@@ -278,7 +280,7 @@ func (s *userService) identitiesModelToUser(ctx context.Context, user *userv3.Us
 		FirstName:             traits.FirstName,
 		LastName:              traits.LastName,
 		Groups:                groupNames,
-		Projectnamespaceroles: roles,
+		ProjectNamespaceRoles: roles,
 	}
 
 	return user, nil

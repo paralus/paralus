@@ -53,7 +53,7 @@ func TestRolePermissionList(t *testing.T) {
 	if rolelist.Metadata.Count != 2 {
 		t.Errorf("incorrect number of rolepermissions returned, expected 2; got %v", rolelist.Metadata.Count)
 	}
-	if rolelist.Items[0].Metadata.Id != ruuid1 || rolelist.Items[1].Metadata.Id != ruuid2 {
+	if rolelist.Items[0].Metadata.Name != "role-"+ruuid1 || rolelist.Items[1].Metadata.Name != "role-"+ruuid2 {
 		t.Errorf("incorrect role ids returned when listing")
 	}
 }

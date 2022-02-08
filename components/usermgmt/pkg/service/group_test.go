@@ -209,7 +209,7 @@ func TestCreateGroupNoUsersWithRoles(t *testing.T) {
 
 			group := &userv3.Group{
 				Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "group-" + guuid},
-				Spec:     &userv3.GroupSpec{Projectnamespaceroles: tc.roles},
+				Spec:     &userv3.GroupSpec{ProjectNamespaceRoles: tc.roles},
 			}
 			group, err := gs.Create(context.Background(), group)
 			if tc.shouldfail {
@@ -224,7 +224,7 @@ func TestCreateGroupNoUsersWithRoles(t *testing.T) {
 				t.Fatal("could not create group:", err)
 			}
 			performGroupBasicChecks(t, group, guuid)
-			for i, rr := range group.Spec.Projectnamespaceroles {
+			for i, rr := range group.Spec.ProjectNamespaceRoles {
 				if rr != tc.roles[i] {
 					t.Errorf("role '%v' not found in resource response", tc.roles[i])
 				}
@@ -290,7 +290,7 @@ func TestCreateGroupWithUsersWithRoles(t *testing.T) {
 
 			group := &userv3.Group{
 				Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "group-" + guuid},
-				Spec:     &userv3.GroupSpec{Projectnamespaceroles: tc.roles, Users: tc.users},
+				Spec:     &userv3.GroupSpec{ProjectNamespaceRoles: tc.roles, Users: tc.users},
 			}
 			group, err := gs.Create(context.Background(), group)
 			if tc.shouldfail {
@@ -310,7 +310,7 @@ func TestCreateGroupWithUsersWithRoles(t *testing.T) {
 					t.Errorf("user id '%v' not found in resource response", tc.users[i])
 				}
 			}
-			for i, rr := range group.Spec.Projectnamespaceroles {
+			for i, rr := range group.Spec.ProjectNamespaceRoles {
 				if rr != tc.roles[i] {
 					t.Errorf("role '%v' not found in resource response", tc.roles[i])
 				}
@@ -377,7 +377,7 @@ func TestUpdateGroupWithUsersWithRoles(t *testing.T) {
 
 			group := &userv3.Group{
 				Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "group-" + guuid},
-				Spec:     &userv3.GroupSpec{Projectnamespaceroles: tc.roles, Users: tc.users},
+				Spec:     &userv3.GroupSpec{ProjectNamespaceRoles: tc.roles, Users: tc.users},
 			}
 			group, err := gs.Update(context.Background(), group)
 			if err != nil {
@@ -390,7 +390,7 @@ func TestUpdateGroupWithUsersWithRoles(t *testing.T) {
 					t.Errorf("user id '%v' not found in resource response", tc.users[i])
 				}
 			}
-			for i, rr := range group.Spec.Projectnamespaceroles {
+			for i, rr := range group.Spec.ProjectNamespaceRoles {
 				if rr != tc.roles[i] {
 					t.Errorf("role '%v' not found in resource response", tc.roles[i])
 				}
@@ -502,11 +502,11 @@ func TestGroupGetByName(t *testing.T) {
 		t.Errorf("incorrect username in for group, expected johndoe@provider.com ; got '%v'", group.GetSpec().GetUsers()[0])
 	}
 
-	if len(group.GetSpec().GetProjectnamespaceroles()) != 3 {
-		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(group.GetSpec().GetProjectnamespaceroles()))
+	if len(group.GetSpec().GetProjectNamespaceRoles()) != 3 {
+		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(group.GetSpec().GetProjectNamespaceRoles()))
 	}
-	if group.GetSpec().GetProjectnamespaceroles()[2].GetNamespace() != 9 {
-		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", group.GetSpec().GetProjectnamespaceroles()[2].Namespace)
+	if group.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 9 {
+		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", group.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 	}
 }
 
@@ -548,11 +548,11 @@ func TestGroupGetById(t *testing.T) {
 		t.Errorf("incorrect username in for group, expected johndoe@provider.com ; got '%v'", group.GetSpec().GetUsers()[0])
 	}
 
-	if len(group.GetSpec().GetProjectnamespaceroles()) != 3 {
-		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(group.GetSpec().GetProjectnamespaceroles()))
+	if len(group.GetSpec().GetProjectNamespaceRoles()) != 3 {
+		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(group.GetSpec().GetProjectNamespaceRoles()))
 	}
-	if group.GetSpec().GetProjectnamespaceroles()[2].GetNamespace() != 9 {
-		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", group.GetSpec().GetProjectnamespaceroles()[2].Namespace)
+	if group.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 9 {
+		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", group.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 	}
 }
 

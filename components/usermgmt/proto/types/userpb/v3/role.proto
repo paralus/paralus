@@ -19,7 +19,7 @@ message Role {
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "API Version",
         description : "API Version of the Role resource"
-        default : "usermgmt.k8smgmt.io/v3"
+        default : "system.k8smgmt.io/v3"
       } ];
   string kind = 2
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
@@ -54,7 +54,7 @@ message RoleSpec {
   };
   repeated string rolepermissions = 1
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        title : "Role permissions"
+        title : "Role Permissions"
         description : "Permissions for the role"
       } ];
   bool isGlobal = 2

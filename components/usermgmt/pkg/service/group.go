@@ -79,7 +79,7 @@ func (s *groupService) deleteGroupRoleRelaitons(ctx context.Context, groupId uui
 // Map roles to groups
 func (s *groupService) createGroupRoleRelations(ctx context.Context, group *userv3.Group, ids parsedIds) (*userv3.Group, error) {
 	// TODO: add transactions
-	projectNamespaceRoles := group.GetSpec().GetProjectnamespaceroles()
+	projectNamespaceRoles := group.GetSpec().GetProjectNamespaceRoles()
 
 	var pgnrs []models.ProjectGroupNamespaceRole
 	var pgrs []models.ProjectGroupRole
@@ -287,6 +287,8 @@ func (s *groupService) toV3Group(ctx context.Context, group *userv3.Group, grp *
 	labels["organization"] = group.GetMetadata().GetOrganization()
 	labels["partner"] = group.GetMetadata().GetPartner()
 
+	group.ApiVersion = apiVersion
+	group.Kind = groupKind
 	group.Metadata = &v3.Metadata{
 		Name:         grp.Name,
 		Description:  grp.Description,
@@ -312,7 +314,7 @@ func (s *groupService) toV3Group(ctx context.Context, group *userv3.Group, grp *
 	group.Spec = &userv3.GroupSpec{
 		Type:                  grp.Type,
 		Users:                 userNames,
-		Projectnamespaceroles: roles,
+		ProjectNamespaceRoles: roles,
 	}
 	group.Status = statusOK()
 	return group, nil
@@ -409,7 +411,7 @@ func (s *groupService) Update(ctx context.Context, group *userv3.Group) (*userv3
 		group.Spec = &userv3.GroupSpec{
 			Type:                  grp.Type,
 			Users:                 group.Spec.Users, // TODO: update from db resp or no update?
-			Projectnamespaceroles: group.Spec.Projectnamespaceroles,
+			ProjectNamespaceRoles: group.Spec.ProjectNamespaceRoles,
 		}
 		group.Status = statusOK()
 	}

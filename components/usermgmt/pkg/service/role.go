@@ -48,9 +48,9 @@ type roleService struct {
 // NewRoleService return new role service
 func NewRoleService(db *bun.DB) RoleService {
 	return &roleService{
-		dao: pg.NewEntityDAO(db),
+		dao:  pg.NewEntityDAO(db),
 		rdao: dao.NewRoleDAO(db),
-		l:   utils.NewLookup(db),
+		l:    utils.NewLookup(db),
 	}
 }
 
@@ -113,7 +113,7 @@ func (s *roleService) Create(ctx context.Context, role *userv3.Role) (*userv3.Ro
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
-	r, _ := s.dao.GetIdByNamePartnerOrg(ctx, role.GetMetadata().GetName(), uuid.NullUUID{UUID:  partnerId, Valid: true}, uuid.NullUUID{UUID:  organizationId, Valid: true}, &models.Role{})
+	r, _ := s.dao.GetIdByNamePartnerOrg(ctx, role.GetMetadata().GetName(), uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Role{})
 	if r != nil {
 		return nil, fmt.Errorf("role '%v' already exists", role.GetMetadata().GetName())
 	}
@@ -186,7 +186,7 @@ func (s *roleService) GetByName(ctx context.Context, role *userv3.Role) (*userv3
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
-	entity, err := s.dao.GetByNamePartnerOrg(ctx, name, uuid.NullUUID{UUID:partnerId, Valid:true}, uuid.NullUUID{UUID:organizationId, Valid:true}, &models.Role{})
+	entity, err := s.dao.GetByNamePartnerOrg(ctx, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Role{})
 	if err != nil {
 		role.Status = statusFailed(err)
 		return role, err
@@ -261,7 +261,7 @@ func (s *roleService) Delete(ctx context.Context, role *userv3.Role) (*userv3.Ro
 		return role, fmt.Errorf("unable to get partner and org id")
 	}
 
-	entity, err := s.dao.GetByNamePartnerOrg(ctx, name, uuid.NullUUID{UUID:partnerId, Valid:true}, uuid.NullUUID{UUID:organizationId, Valid:true}, &models.Role{})
+	entity, err := s.dao.GetByNamePartnerOrg(ctx, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Role{})
 	if err != nil {
 		role.Status = statusFailed(err)
 		return role, err
@@ -292,6 +292,8 @@ func (s *roleService) toV3Role(ctx context.Context, role *userv3.Role, rle *mode
 	labels["organization"] = role.GetMetadata().GetOrganization()
 	labels["partner"] = role.GetMetadata().GetPartner()
 
+	role.ApiVersion = apiVersion
+	role.Kind = roleKind
 	role.Metadata = &v3.Metadata{
 		Name:         rle.Name,
 		Description:  rle.Description,
