@@ -11,13 +11,12 @@ import (
 	log "github.com/RafaySystems/rcloud-base/components/common/pkg/log/v2"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 const (
-	serverPortEnv = "SERVER_PORT"
+	serverPortEnv = "AUTHZ_SERVER_PORT"
 )
 
 var (
@@ -43,9 +42,6 @@ func setup() {
 }
 
 func start() {
-	// TODO: check auth context
-	// ac := authctx.NewAuthContext(db, rc, cryptoCoreHost, cryptoCorePost)
-
 	listener, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", serverPort))
 	if err != nil {
 		_log.Errorw("unable to listen on server address", "error", err)
@@ -54,7 +50,7 @@ func start() {
 
 	authServer := grpc.NewServer()
 	pb.RegisterAuthzServer(authServer, server.NewAuthzServer(as))
-	reflection.Register(authServer)
+	// reflection.Register(authServer)
 	_log.Info("starting auth service")
 	authServer.Serve(listener)
 }
@@ -63,19 +59,3 @@ func main() {
 	setup()
 	start()
 }
-
-// TODO: check authPool, interceptors implementation. Usage:
-// if !dev {
-// 	opts = append(opts, _grpc.UnaryInterceptor(
-// 		interceptors.NewAuthInterceptorWithOptions(
-// 			interceptors.WithLogRequest(),
-// 			interceptors.WithAuthPool(authPool),
-// 			interceptors.WithExclude("POST", "/v2/sentry/bootstrap/:templateToken/register"),
-// 		),
-// 	))
-// 	defer authPool.Close()
-// } else {
-// 	opts = append(opts, _grpc.UnaryInterceptor(
-// 		interceptors.NewAuthInterceptorWithOptions(interceptors.WithDummy())),
-// 	)
-// }

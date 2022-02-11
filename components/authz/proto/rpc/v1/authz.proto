@@ -42,7 +42,7 @@ service Authz {
   /* rpc CreateGroupSubPolicies (rafay.dev.types.authz.v1.Policies) */
   /*   returns (rafay.dev.types.authz.v1.BoolReply) {}; */
 
-  rpc DeletePolicies (rafay.dev.types.authz.v1.Policies)
+  rpc DeletePolicies (rafay.dev.types.authz.v1.Policy)
     returns (rafay.dev.types.authz.v1.BoolReply) {};
 
   rpc ListUserGroups (rafay.dev.types.authz.v1.UserGroup)
@@ -51,7 +51,7 @@ service Authz {
   rpc CreateUserGroups (rafay.dev.types.authz.v1.UserGroups)
     returns (rafay.dev.types.authz.v1.BoolReply) {};
 
-  rpc DeleteUserGroups (rafay.dev.types.authz.v1.UserGroups)
+  rpc DeleteUserGroups (rafay.dev.types.authz.v1.UserGroup)
     returns (rafay.dev.types.authz.v1.BoolReply) {};
 
   rpc ListRolePermissionMappings (rafay.dev.types.authz.v1.FilteredRolePermissionMapping)

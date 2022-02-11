@@ -24,19 +24,11 @@ func (s *authzServer) ListPolicies(ctx context.Context, p *authzpbv1.Policy) (*a
 	return s.as.ListPolicies(ctx, p)
 }
 
-// func (s *authzServer) ListGroupSubPolicies(ctx context.Context, p *authzpbv1.Policy) (*authzpbv1.Policies, error) {
-// 	return s.ListGroupSubPolicies(ctx, p)
-// }
-
 func (s *authzServer) CreatePolicies(ctx context.Context, p *authzpbv1.Policies) (*authzpbv1.BoolReply, error) {
 	return s.as.CreatePolicies(ctx, p)
 }
 
-// func (s *authzServer) CreateGroupSubPolicies(ctx context.Context, p *authzpbv1.Policies) (*authzpbv1.BoolReply, error) {
-// 	return &authzpbv1.BoolReply{}, nil
-// }
-
-func (s *authzServer) DeletePolicies(ctx context.Context, p *authzpbv1.Policies) (*authzpbv1.BoolReply, error) {
+func (s *authzServer) DeletePolicies(ctx context.Context, p *authzpbv1.Policy) (*authzpbv1.BoolReply, error) {
 	return s.as.DeletePolicies(ctx, p)
 }
 
@@ -48,7 +40,7 @@ func (s *authzServer) CreateUserGroups(ctx context.Context, p *authzpbv1.UserGro
 	return s.as.CreateUserGroups(ctx, p)
 }
 
-func (s *authzServer) DeleteUserGroups(ctx context.Context, p *authzpbv1.UserGroups) (*authzpbv1.BoolReply, error) {
+func (s *authzServer) DeleteUserGroups(ctx context.Context, p *authzpbv1.UserGroup) (*authzpbv1.BoolReply, error) {
 	return s.as.DeleteUserGroups(ctx, p)
 }
 

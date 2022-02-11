@@ -15,13 +15,11 @@ import (
 type AuthzService interface {
 	Enforce(context.Context, *authzpbv1.EnforceRequest) (*authzpbv1.BoolReply, error)
 	ListPolicies(context.Context, *authzpbv1.Policy) (*authzpbv1.Policies, error)
-	// ListGroupSubPolicies(context.Context, *authzpbv1.Policy) (*authzpbv1.Policies, error)
 	CreatePolicies(context.Context, *authzpbv1.Policies) (*authzpbv1.BoolReply, error)
-	// CreateGroupSubPolicies(context.Context, *authzpbv1.Policies) (*authzpbv1.BoolReply, error)
-	DeletePolicies(context.Context, *authzpbv1.Policies) (*authzpbv1.BoolReply, error)
+	DeletePolicies(context.Context, *authzpbv1.Policy) (*authzpbv1.BoolReply, error)
 	ListUserGroups(context.Context, *authzpbv1.UserGroup) (*authzpbv1.UserGroups, error)
 	CreateUserGroups(ctx context.Context, p *authzpbv1.UserGroups) (*authzpbv1.BoolReply, error)
-	DeleteUserGroups(ctx context.Context, p *authzpbv1.UserGroups) (*authzpbv1.BoolReply, error)
+	DeleteUserGroups(ctx context.Context, p *authzpbv1.UserGroup) (*authzpbv1.BoolReply, error)
 	ListRolePermissionMappings(ctx context.Context, p *authzpbv1.FilteredRolePermissionMapping) (*authzpbv1.RolePermissionMappingList, error)
 	CreateRolePermissionMappings(ctx context.Context, p *authzpbv1.RolePermissionMappingList) (*authzpbv1.BoolReply, error)
 	DeleteRolePermissionMappings(ctx context.Context, p *authzpbv1.FilteredRolePermissionMapping) (*authzpbv1.BoolReply, error)
@@ -39,39 +37,12 @@ func NewAuthzService(db *gorm.DB, en *casbin.CachedEnforcer) AuthzService {
 	}
 }
 
-// TODO: remove static string conversions
-// const (
-// 	subTypeUser  = iota
-// 	subTypeGroup = iota
-// )
-
-// const (
-// 	userPrefix  = "user:"
-// 	groupPrefix = "group:"
-// )
-
-// func (s *authzService) addPolicyFieldTags(subType int, p *authzpbv1.Policy) {
-// 	if subType == subTypeUser {
-// 		p.Sub = userPrefix + p.Sub
-// 	} else if subType == subTypeGroup {
-// 		p.Sub = groupPrefix + p.Sub
-// 	}
-// }
-
-// func (s *authzService) removePolicyFieldTags(subType int, p *authzpbv1.Policy) {
-// 	if subType == subTypeUser {
-// 		p.Sub = strings.Replace(p.Sub, userPrefix, "", 1)
-// 	} else if subType == subTypeGroup {
-// 		p.Sub = strings.Replace(p.Sub, groupPrefix, "", 1)
-// 	}
-// }
-
 const (
 	groupGtype = "g2"
 	roleGtype  = "g"
 )
 
-func (s *authzService) toPolicies( /*subType int,*/ policies [][]string) *authzpbv1.Policies {
+func (s *authzService) toPolicies(policies [][]string) *authzpbv1.Policies {
 	if len(policies) == 0 {
 		return &authzpbv1.Policies{}
 	}
@@ -87,15 +58,13 @@ func (s *authzService) toPolicies( /*subType int,*/ policies [][]string) *authzp
 			Obj:  policies[i][4],
 			Act:  policies[i][5],
 		}
-		// s.removePolicyFieldTags(subType, res.Policies[i])
 	}
 	return res
 }
 
-func (s *authzService) fromPolicies( /* subType int, */ policies *authzpbv1.Policies) ([][]string, error) {
+func (s *authzService) fromPolicies(policies *authzpbv1.Policies) ([][]string, error) {
 	res := [][]string{}
 	for i, p := range policies.GetPolicies() {
-		// s.addPolicyFieldTags()
 		rule := []string{p.GetSub(), p.GetNs(), p.GetProj(), p.GetOrg(), p.GetObj(), p.GetAct()}
 		for _, field := range rule {
 			if field == "" {
@@ -197,20 +166,14 @@ func (s *authzService) Enforce(ctx context.Context, req *authzpbv1.EnforceReques
 }
 
 func (s *authzService) ListPolicies(ctx context.Context, p *authzpbv1.Policy) (*authzpbv1.Policies, error) {
-	// s.addPolicyFieldTags(subTypeUser, p)
-	return s.toPolicies( /* subTypeUser, */ s.enforcer.GetFilteredPolicy(0, p.GetSub(), p.GetNs(), p.GetProj(), p.GetOrg(), p.GetObj(), p.GetAct())), nil
+	return s.toPolicies(s.enforcer.GetFilteredPolicy(0, p.GetSub(), p.GetNs(), p.GetProj(), p.GetOrg(), p.GetObj(), p.GetAct())), nil
 }
-
-// func (s *authzService) ListGroupSubPolicies(ctx context.Context, p *authzpbv1.Policy) (*authzpbv1.Policies, error) {
-// 	s.addPolicyFieldTags(subTypeGroup, p)
-// 	return s.toPolicies(subTypeGroup, s.enforcer.GetFilteredPolicy(0, p.GetSub(), p.GetNs(), p.GetProj(), p.GetOrg(), p.GetObj(), p.GetAct())), nil
-// }
 
 func (s *authzService) CreatePolicies(ctx context.Context, p *authzpbv1.Policies) (*authzpbv1.BoolReply, error) {
 	if len(p.GetPolicies()) == 0 {
 		return &authzpbv1.BoolReply{Res: false}, nil
 	}
-	policies, err := s.fromPolicies( /* subTypeUser, */ p)
+	policies, err := s.fromPolicies(p)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, err.Error())
 	}
@@ -223,21 +186,9 @@ func (s *authzService) CreatePolicies(ctx context.Context, p *authzpbv1.Policies
 	return &authzpbv1.BoolReply{Res: res}, nil
 }
 
-// func (s *authzService) CreateGroupSubPolicies(ctx context.Context, p *authzpbv1.Policies) (*authzpbv1.BoolReply, error) {
-// 	return &authzpbv1.BoolReply{}, nil
-// }
-
-func (s *authzService) DeletePolicies(ctx context.Context, p *authzpbv1.Policies) (*authzpbv1.BoolReply, error) {
-	if len(p.GetPolicies()) == 0 {
-		return &authzpbv1.BoolReply{Res: false}, nil
-	}
-	policies, err := s.fromPolicies( /* subTypeUser, */ p)
-	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, err.Error())
-	}
-
+func (s *authzService) DeletePolicies(ctx context.Context, p *authzpbv1.Policy) (*authzpbv1.BoolReply, error) {
 	// err could be from db, policy assertions, cache; dispatcher, watcher updates (not pertinent)
-	res, err := s.enforcer.RemovePolicies(policies)
+	res, err := s.enforcer.RemoveFilteredPolicy(0, p.GetSub(), p.GetNs(), p.GetProj(), p.GetOrg(), p.GetObj(), p.GetAct())
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
@@ -267,18 +218,9 @@ func (s *authzService) CreateUserGroups(ctx context.Context, p *authzpbv1.UserGr
 	return &authzpbv1.BoolReply{Res: res}, nil
 }
 
-func (s *authzService) DeleteUserGroups(ctx context.Context, p *authzpbv1.UserGroups) (*authzpbv1.BoolReply, error) {
-	if len(p.GetUserGroups()) == 0 {
-		return &authzpbv1.BoolReply{Res: false}, nil
-	}
-
-	ugs, err := s.fromUserGroups(p)
-	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, err.Error())
-	}
-
+func (s *authzService) DeleteUserGroups(ctx context.Context, p *authzpbv1.UserGroup) (*authzpbv1.BoolReply, error) {
 	// err could be from db, policy assertions, cache; dispatcher, watcher updates (not pertinent)
-	res, err := s.enforcer.RemoveNamedGroupingPolicies(groupGtype, ugs)
+	res, err := s.enforcer.RemoveFilteredNamedGroupingPolicy(groupGtype, 0, p.GetUser(), p.GetGrp())
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
