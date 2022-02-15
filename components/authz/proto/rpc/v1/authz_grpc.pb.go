@@ -33,10 +33,10 @@ type AuthzClient interface {
 	// Returns policies related to project1 and org1 (Empty string matches all)
 	ListPolicies(ctx context.Context, in *types.Policy, opts ...grpc.CallOption) (*types.Policies, error)
 	CreatePolicies(ctx context.Context, in *types.Policies, opts ...grpc.CallOption) (*types.BoolReply, error)
-	DeletePolicies(ctx context.Context, in *types.Policies, opts ...grpc.CallOption) (*types.BoolReply, error)
+	DeletePolicies(ctx context.Context, in *types.Policy, opts ...grpc.CallOption) (*types.BoolReply, error)
 	ListUserGroups(ctx context.Context, in *types.UserGroup, opts ...grpc.CallOption) (*types.UserGroups, error)
 	CreateUserGroups(ctx context.Context, in *types.UserGroups, opts ...grpc.CallOption) (*types.BoolReply, error)
-	DeleteUserGroups(ctx context.Context, in *types.UserGroups, opts ...grpc.CallOption) (*types.BoolReply, error)
+	DeleteUserGroups(ctx context.Context, in *types.UserGroup, opts ...grpc.CallOption) (*types.BoolReply, error)
 	ListRolePermissionMappings(ctx context.Context, in *types.FilteredRolePermissionMapping, opts ...grpc.CallOption) (*types.RolePermissionMappingList, error)
 	CreateRolePermissionMappings(ctx context.Context, in *types.RolePermissionMappingList, opts ...grpc.CallOption) (*types.BoolReply, error)
 	DeleteRolePermissionMappings(ctx context.Context, in *types.FilteredRolePermissionMapping, opts ...grpc.CallOption) (*types.BoolReply, error)
@@ -77,7 +77,7 @@ func (c *authzClient) CreatePolicies(ctx context.Context, in *types.Policies, op
 	return out, nil
 }
 
-func (c *authzClient) DeletePolicies(ctx context.Context, in *types.Policies, opts ...grpc.CallOption) (*types.BoolReply, error) {
+func (c *authzClient) DeletePolicies(ctx context.Context, in *types.Policy, opts ...grpc.CallOption) (*types.BoolReply, error) {
 	out := new(types.BoolReply)
 	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.authz.v1.Authz/DeletePolicies", in, out, opts...)
 	if err != nil {
@@ -104,7 +104,7 @@ func (c *authzClient) CreateUserGroups(ctx context.Context, in *types.UserGroups
 	return out, nil
 }
 
-func (c *authzClient) DeleteUserGroups(ctx context.Context, in *types.UserGroups, opts ...grpc.CallOption) (*types.BoolReply, error) {
+func (c *authzClient) DeleteUserGroups(ctx context.Context, in *types.UserGroup, opts ...grpc.CallOption) (*types.BoolReply, error) {
 	out := new(types.BoolReply)
 	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.authz.v1.Authz/DeleteUserGroups", in, out, opts...)
 	if err != nil {
@@ -158,10 +158,10 @@ type AuthzServer interface {
 	// Returns policies related to project1 and org1 (Empty string matches all)
 	ListPolicies(context.Context, *types.Policy) (*types.Policies, error)
 	CreatePolicies(context.Context, *types.Policies) (*types.BoolReply, error)
-	DeletePolicies(context.Context, *types.Policies) (*types.BoolReply, error)
+	DeletePolicies(context.Context, *types.Policy) (*types.BoolReply, error)
 	ListUserGroups(context.Context, *types.UserGroup) (*types.UserGroups, error)
 	CreateUserGroups(context.Context, *types.UserGroups) (*types.BoolReply, error)
-	DeleteUserGroups(context.Context, *types.UserGroups) (*types.BoolReply, error)
+	DeleteUserGroups(context.Context, *types.UserGroup) (*types.BoolReply, error)
 	ListRolePermissionMappings(context.Context, *types.FilteredRolePermissionMapping) (*types.RolePermissionMappingList, error)
 	CreateRolePermissionMappings(context.Context, *types.RolePermissionMappingList) (*types.BoolReply, error)
 	DeleteRolePermissionMappings(context.Context, *types.FilteredRolePermissionMapping) (*types.BoolReply, error)
@@ -180,7 +180,7 @@ func (UnimplementedAuthzServer) ListPolicies(context.Context, *types.Policy) (*t
 func (UnimplementedAuthzServer) CreatePolicies(context.Context, *types.Policies) (*types.BoolReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePolicies not implemented")
 }
-func (UnimplementedAuthzServer) DeletePolicies(context.Context, *types.Policies) (*types.BoolReply, error) {
+func (UnimplementedAuthzServer) DeletePolicies(context.Context, *types.Policy) (*types.BoolReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeletePolicies not implemented")
 }
 func (UnimplementedAuthzServer) ListUserGroups(context.Context, *types.UserGroup) (*types.UserGroups, error) {
@@ -189,7 +189,7 @@ func (UnimplementedAuthzServer) ListUserGroups(context.Context, *types.UserGroup
 func (UnimplementedAuthzServer) CreateUserGroups(context.Context, *types.UserGroups) (*types.BoolReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUserGroups not implemented")
 }
-func (UnimplementedAuthzServer) DeleteUserGroups(context.Context, *types.UserGroups) (*types.BoolReply, error) {
+func (UnimplementedAuthzServer) DeleteUserGroups(context.Context, *types.UserGroup) (*types.BoolReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserGroups not implemented")
 }
 func (UnimplementedAuthzServer) ListRolePermissionMappings(context.Context, *types.FilteredRolePermissionMapping) (*types.RolePermissionMappingList, error) {
@@ -268,7 +268,7 @@ func _Authz_CreatePolicies_Handler(srv interface{}, ctx context.Context, dec fun
 }
 
 func _Authz_DeletePolicies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(types.Policies)
+	in := new(types.Policy)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -280,7 +280,7 @@ func _Authz_DeletePolicies_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/rafay.dev.rpc.authz.v1.Authz/DeletePolicies",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthzServer).DeletePolicies(ctx, req.(*types.Policies))
+		return srv.(AuthzServer).DeletePolicies(ctx, req.(*types.Policy))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -322,7 +322,7 @@ func _Authz_CreateUserGroups_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _Authz_DeleteUserGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(types.UserGroups)
+	in := new(types.UserGroup)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -334,7 +334,7 @@ func _Authz_DeleteUserGroups_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/rafay.dev.rpc.authz.v1.Authz/DeleteUserGroups",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthzServer).DeleteUserGroups(ctx, req.(*types.UserGroups))
+		return srv.(AuthzServer).DeleteUserGroups(ctx, req.(*types.UserGroup))
 	}
 	return interceptor(ctx, in, info, handler)
 }
