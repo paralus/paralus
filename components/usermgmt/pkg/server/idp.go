@@ -22,7 +22,7 @@ func (s *idpServer) CreateIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Idp
 }
 
 func (s *idpServer) GetIdp(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
-	return s.IdpService.GetByID(ctx, idp)
+	return s.IdpService.GetByName(ctx, idp)
 }
 
 func (s *idpServer) ListIdps(ctx context.Context, _ *emptypb.Empty) (*userv3.IdpList, error) {

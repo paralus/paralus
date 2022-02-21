@@ -16,9 +16,10 @@ type Idp struct {
 	CreatedAt   time.Time `bun:"created_at,notnull,default:current_timestamp"`
 	ModifiedAt  time.Time `bun:"modified_at,notnull,default:current_timestamp"`
 
-	IdpName            string    `bun:"idp_name,notnull"`
-	Domain             string    `bun:"domain,notnull,unique"`
-	AcsURL             string    `bun:"acs_url,notnull,unique"`
+	IdpName string `bun:"idp_name,notnull"`
+	Domain  string `bun:"domain,notnull,unique"`
+	// Deprecated
+	// AcsURL             string    `bun:"acs_url,notnull,unique"`
 	OrganizationId     uuid.UUID `bun:"organization_id,type:uuid"`
 	PartnerId          uuid.UUID `bun:"partner_id,type:uuid"`
 	SsoURL             string    `bun:"sso_url"`

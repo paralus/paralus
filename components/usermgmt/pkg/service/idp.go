@@ -12,7 +12,6 @@ import (
 	"io/ioutil"
 	"math/big"
 	"net/url"
-	"os"
 	"time"
 
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
@@ -21,43 +20,34 @@ import (
 	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
-
-var baseUrl *url.URL
-
-func init() {
-	base, ok := os.LookupEnv("APP_HOST_HTTP")
-	if !ok || len(base) == 0 {
-		panic("APP_HOST_HTTP env not set")
-	}
-	var err error
-	baseUrl, err = url.Parse(base)
-	if err != nil {
-		panic("Failed to get application url")
-	}
-}
 
 type IdpService interface {
 	Create(context.Context, *userv3.Idp) (*userv3.Idp, error)
 	GetByID(context.Context, *userv3.Idp) (*userv3.Idp, error)
+	GetByName(context.Context, *userv3.Idp) (*userv3.Idp, error)
 	List(context.Context) (*userv3.IdpList, error)
 	Update(context.Context, *userv3.Idp) (*userv3.Idp, error)
 	Delete(context.Context, *userv3.Idp) error
 }
 
 type idpService struct {
-	dao pg.EntityDAO
+	dao     pg.EntityDAO
+	appHost string
 }
 
-func NewIdpService(db *bun.DB) IdpService {
+func NewIdpService(db *bun.DB, hostUrl string) IdpService {
 	return &idpService{
-		dao: pg.NewEntityDAO(db),
+		dao:     pg.NewEntityDAO(db),
+		appHost: hostUrl,
 	}
 }
 
-func generateAcsURL() (string, error) {
-	uuid := uuid.New()
-	return fmt.Sprintf("%s/%s/", baseUrl.String(), uuid.String()), nil
+func generateAcsURL(id string, hostUrl string) string {
+	b, _ := url.Parse(hostUrl)
+	return fmt.Sprintf("%s://%s/auth/v3/sso/acs/%s", b.Scheme, b.Host, id)
 }
 
 // generateSpCert generates self signed certificate. Returns cert and
@@ -135,17 +125,12 @@ func (s *idpService) Create(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 		return &userv3.Idp{}, fmt.Errorf("DUPLICATE DOMAIN")
 	}
 
-	acsURL, err := generateAcsURL()
-	if err != nil {
-		return &userv3.Idp{}, err
-	}
 	entity := &models.Idp{
 		Name:               name,
 		Description:        idp.Metadata.GetDescription(),
 		CreatedAt:          time.Now(),
 		IdpName:            idp.Spec.GetIdpName(),
 		Domain:             domain,
-		AcsURL:             acsURL,
 		SsoURL:             idp.Spec.GetSsoUrl(),
 		IdpCert:            idp.Spec.GetIdpCert(),
 		MetadataURL:        idp.Spec.GetMetadataUrl(),
@@ -154,20 +139,25 @@ func (s *idpService) Create(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 		SaeEnabled:         idp.Spec.GetSaeEnabled(),
 	}
 	if entity.SaeEnabled {
-		spcert, spkey, err := generateSpCert(baseUrl.Host)
+		baseURL, err := url.Parse(s.appHost)
+		if err != nil {
+			return &userv3.Idp{}, err
+		}
+		spcert, spkey, err := generateSpCert(baseURL.Host)
 		if err != nil {
 			return &userv3.Idp{}, err
 		}
 		entity.SpCert = spcert
 		entity.SpKey = spkey
 	}
-	_, err = s.dao.Create(ctx, entity)
+	_, err := s.dao.Create(ctx, entity)
 	if err != nil {
 		return &userv3.Idp{}, err
 	}
 
+	acsURL := generateAcsURL(entity.Id.String(), s.appHost)
 	rv := &userv3.Idp{
-		ApiVersion: "usermgmt.k8smgmt.io/v3",
+		ApiVersion: apiVersion,
 		Kind:       "Idp",
 		Metadata: &commonv3.Metadata{
 			Name:         entity.Name,
@@ -178,7 +168,7 @@ func (s *idpService) Create(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 		Spec: &userv3.IdpSpec{
 			IdpName:            entity.IdpName,
 			Domain:             entity.Domain,
-			AcsUrl:             entity.AcsURL,
+			AcsUrl:             acsURL,
 			SsoUrl:             entity.SsoURL,
 			IdpCert:            entity.IdpCert,
 			SpCert:             entity.SpCert,
@@ -188,7 +178,7 @@ func (s *idpService) Create(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 			GroupAttributeName: entity.GroupAttributeName,
 			NameIdFormat:       "Email Address",
 			ConsumerBinding:    "HTTP-POST",
-			SpEntityId:         entity.AcsURL,
+			SpEntityId:         acsURL,
 		},
 	}
 	return rv, nil
@@ -205,8 +195,10 @@ func (s *idpService) GetByID(ctx context.Context, idp *userv3.Idp) (*userv3.Idp,
 	if err != nil {
 		return &userv3.Idp{}, err
 	}
+
+	acsURL := generateAcsURL(entity.Id.String(), s.appHost)
 	rv := &userv3.Idp{
-		ApiVersion: "usermgmt.k8smgmt.io/v3",
+		ApiVersion: apiVersion,
 		Kind:       "Idp",
 		Metadata: &commonv3.Metadata{
 			Name:         entity.Name,
@@ -217,7 +209,7 @@ func (s *idpService) GetByID(ctx context.Context, idp *userv3.Idp) (*userv3.Idp,
 		Spec: &userv3.IdpSpec{
 			IdpName:            entity.IdpName,
 			Domain:             entity.Domain,
-			AcsUrl:             entity.AcsURL,
+			AcsUrl:             acsURL,
 			SsoUrl:             entity.SsoURL,
 			IdpCert:            entity.IdpCert,
 			SpCert:             entity.SpCert,
@@ -227,45 +219,93 @@ func (s *idpService) GetByID(ctx context.Context, idp *userv3.Idp) (*userv3.Idp,
 			GroupAttributeName: entity.GroupAttributeName,
 			NameIdFormat:       "Email Address",
 			ConsumerBinding:    "HTTP-POST",
-			SpEntityId:         entity.AcsURL,
+			SpEntityId:         acsURL,
+		},
+	}
+	return rv, nil
+}
+
+func (s *idpService) GetByName(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
+	name := idp.Metadata.GetName()
+	if len(name) == 0 {
+		// TODO: Write helper functions for the server and client error
+		return &userv3.Idp{}, status.Error(codes.InvalidArgument, "EMPTY NAME")
+	}
+	entity := &models.Idp{}
+	_, err := s.dao.GetByName(ctx, name, entity)
+	if err != nil {
+		return &userv3.Idp{}, err
+	}
+
+	acsURL := generateAcsURL(entity.Id.String(), s.appHost)
+	rv := &userv3.Idp{
+		ApiVersion: apiVersion,
+		Kind:       "Idp",
+		Metadata: &commonv3.Metadata{
+			Name:         entity.Name,
+			Organization: entity.OrganizationId.String(),
+			Partner:      entity.PartnerId.String(),
+			Id:           entity.Id.String(),
+		},
+		Spec: &userv3.IdpSpec{
+			IdpName:            entity.IdpName,
+			Domain:             entity.Domain,
+			AcsUrl:             acsURL,
+			SsoUrl:             entity.SsoURL,
+			IdpCert:            entity.IdpCert,
+			SpCert:             entity.SpCert,
+			MetadataUrl:        entity.MetadataURL,
+			MetadataFilename:   entity.MetadataFilename,
+			SaeEnabled:         entity.SaeEnabled,
+			GroupAttributeName: entity.GroupAttributeName,
+			NameIdFormat:       "Email Address",
+			ConsumerBinding:    "HTTP-POST",
+			SpEntityId:         acsURL,
 		},
 	}
 	return rv, nil
 }
 
 func (s *idpService) Update(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
-	var id, orgId, partId uuid.UUID
-	id, err := uuid.Parse(idp.Metadata.GetId())
-	// TODO: 400 Bad Request
-	if err != nil {
-		return &userv3.Idp{}, err
+	name := idp.Metadata.GetName()
+	domain := idp.Spec.GetDomain()
+	existingIdp := &models.Idp{}
+
+	if len(name) == 0 {
+		return &userv3.Idp{}, status.Error(codes.InvalidArgument, "EMPTY NAME")
 	}
-	if len(idp.Metadata.GetOrganization()) != 0 {
-		orgId, err = uuid.Parse(idp.Metadata.GetOrganization())
-		if err != nil {
-			return &userv3.Idp{}, err
-		}
-	}
-	if len(idp.Metadata.GetPartner()) != 0 {
-		partId, err = uuid.Parse(idp.Metadata.GetPartner())
-		if err != nil {
-			return &userv3.Idp{}, err
-		}
-	}
-	_, err = s.dao.GetByID(ctx, id, &models.Idp{})
-	// TODO: Return proper error for Id not exist
-	if err != nil {
-		return &userv3.Idp{}, err
+	if len(domain) == 0 {
+		return &userv3.Idp{}, status.Error(codes.InvalidArgument, "EMPTY DOMAIN")
 	}
 
+	_, err := s.dao.GetByName(ctx, name, existingIdp)
+	if err != nil {
+		// TODO: Handle both db and idp not exist errors
+		// separately.
+		return &userv3.Idp{}, status.Errorf(codes.InvalidArgument, "IDP %q NOT EXIST", name)
+	}
+
+	s.dao.GetX(ctx, "domain", domain, existingIdp)
+	if existingIdp.Domain == domain {
+		return &userv3.Idp{}, status.Error(codes.InvalidArgument, "DUPLICATE DOMAIN")
+	}
+
+	orgId, err := uuid.Parse(idp.Metadata.GetOrganization())
+	if err != nil {
+		return &userv3.Idp{}, status.Errorf(codes.InvalidArgument,
+			"ORG ID %q INCORRECT", idp.Metadata.GetOrganization())
+	}
+	partId, err := uuid.Parse(idp.Metadata.GetPartner())
+	if err != nil {
+		return &userv3.Idp{}, status.Errorf(codes.InvalidArgument,
+			"PARTNER ID %q INCORRECT", idp.Metadata.GetPartner())
+	}
 	entity := &models.Idp{
-		Id:                 id,
 		Name:               idp.Metadata.GetName(),
 		Description:        idp.Metadata.GetDescription(),
 		ModifiedAt:         time.Now(),
 		IdpName:            idp.Spec.GetIdpName(),
 		Domain:             idp.Spec.GetDomain(),
-		AcsURL:             idp.Spec.GetAcsUrl(),
 		OrganizationId:     orgId,
 		PartnerId:          partId,
 		SsoURL:             idp.Spec.GetSsoUrl(),
@@ -276,7 +316,11 @@ func (s *idpService) Update(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 		SaeEnabled:         idp.Spec.GetSaeEnabled(),
 	}
 	if entity.SaeEnabled {
-		spcert, spkey, err := generateSpCert(baseUrl.Host)
+		baseURL, err := url.Parse(s.appHost)
+		if err != nil {
+			return &userv3.Idp{}, err
+		}
+		spcert, spkey, err := generateSpCert(baseURL.Host)
 		if err != nil {
 			return &userv3.Idp{}, err
 		}
@@ -284,12 +328,14 @@ func (s *idpService) Update(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 		entity.SpKey = spkey
 	}
 
-	_, err = s.dao.Update(ctx, id, entity)
+	_, err = s.dao.Update(ctx, existingIdp.Id, entity)
 	if err != nil {
 		return &userv3.Idp{}, err
 	}
+
+	acsURL := generateAcsURL(entity.Id.String(), s.appHost)
 	rv := &userv3.Idp{
-		ApiVersion: "usermgmt.k8smgmt.io/v3",
+		ApiVersion: apiVersion,
 		Kind:       "Idp",
 		Metadata: &commonv3.Metadata{
 			Name:         entity.Name,
@@ -300,7 +346,7 @@ func (s *idpService) Update(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 		Spec: &userv3.IdpSpec{
 			IdpName:            entity.IdpName,
 			Domain:             entity.Domain,
-			AcsUrl:             entity.AcsURL,
+			AcsUrl:             acsURL,
 			SsoUrl:             entity.SsoURL,
 			IdpCert:            entity.IdpCert,
 			SpCert:             entity.SpCert,
@@ -310,7 +356,7 @@ func (s *idpService) Update(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 			GroupAttributeName: entity.GroupAttributeName,
 			NameIdFormat:       "Email Address",
 			ConsumerBinding:    "HTTP-POST",
-			SpEntityId:         entity.AcsURL,
+			SpEntityId:         acsURL,
 		},
 	}
 	return rv, nil
@@ -330,8 +376,9 @@ func (s *idpService) List(ctx context.Context) (*userv3.IdpList, error) {
 	// Get idps only till limit
 	var result []*userv3.Idp
 	for _, entity := range entities {
+		acsURL := generateAcsURL(entity.Id.String(), s.appHost)
 		e := &userv3.Idp{
-			ApiVersion: "usermgmt.k8smgmt.io/v3",
+			ApiVersion: apiVersion,
 			Kind:       "Idp",
 			Metadata: &commonv3.Metadata{
 				Name:         entity.Name,
@@ -342,7 +389,7 @@ func (s *idpService) List(ctx context.Context) (*userv3.IdpList, error) {
 			Spec: &userv3.IdpSpec{
 				IdpName:            entity.IdpName,
 				Domain:             entity.Domain,
-				AcsUrl:             entity.AcsURL,
+				AcsUrl:             acsURL,
 				SsoUrl:             entity.SsoURL,
 				IdpCert:            entity.IdpCert,
 				SpCert:             entity.SpCert,
@@ -352,14 +399,14 @@ func (s *idpService) List(ctx context.Context) (*userv3.IdpList, error) {
 				GroupAttributeName: entity.GroupAttributeName,
 				NameIdFormat:       "Email Address",
 				ConsumerBinding:    "HTTP-POST",
-				SpEntityId:         entity.AcsURL,
+				SpEntityId:         acsURL,
 			},
 		}
 		result = append(result, e)
 	}
 
 	rv := &userv3.IdpList{
-		ApiVersion: "usermgmt.k8smgmt.io/v3",
+		ApiVersion: apiVersion,
 		Kind:       "IdpList",
 		Items:      result,
 	}
@@ -367,17 +414,19 @@ func (s *idpService) List(ctx context.Context) (*userv3.IdpList, error) {
 }
 
 func (s *idpService) Delete(ctx context.Context, idp *userv3.Idp) error {
-	id, err := uuid.Parse(idp.Metadata.GetId())
-	if err != nil {
-		return err
-	}
 	entity := &models.Idp{}
-	_, err = s.dao.GetByID(ctx, id, entity)
-	if entity.Id != id {
-		return fmt.Errorf("ID DOES NOT EXISTS")
+	name := idp.Metadata.GetName()
+
+	if len(name) == 0 {
+		return status.Error(codes.InvalidArgument, "EMPTY NAME")
 	}
 
-	err = s.dao.Delete(ctx, id, &models.Idp{})
+	_, err := s.dao.GetByName(ctx, name, entity)
+	if err != nil {
+		return status.Errorf(codes.InvalidArgument, "IDP %q NOT EXISTS", name)
+	}
+
+	err = s.dao.Delete(ctx, entity.Id, &models.Idp{})
 	if err != nil {
 		return err
 	}

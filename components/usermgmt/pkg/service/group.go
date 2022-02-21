@@ -17,7 +17,6 @@ import (
 )
 
 const (
-	apiVersion    = "system.k8smgmt.io/v3"
 	groupKind     = "Group"
 	groupListKind = "GroupList"
 )

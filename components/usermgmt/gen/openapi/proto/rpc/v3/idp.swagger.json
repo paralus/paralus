@@ -102,7 +102,7 @@
         ]
       }
     },
-    "/auth/v3/sso/idp/{metadata.id}": {
+    "/auth/v3/sso/idp/{metadata.name}": {
       "get": {
         "operationId": "Idp_GetIdp",
         "responses": {
@@ -132,7 +132,8 @@
         },
         "parameters": [
           {
-            "name": "metadata.id",
+            "name": "metadata.name",
+            "description": "name of the resource",
             "in": "path",
             "required": true,
             "type": "string"
@@ -143,7 +144,7 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "default": "usermgmt.k8smgmt.io/v3"
+            "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
@@ -152,13 +153,6 @@
             "required": false,
             "type": "string",
             "default": "Idp"
-          },
-          {
-            "name": "metadata.name",
-            "description": "Name. name of the resource",
-            "in": "query",
-            "required": false,
-            "type": "string"
           },
           {
             "name": "metadata.description",
@@ -184,6 +178,12 @@
           {
             "name": "metadata.partner",
             "description": "Partner. Partner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
             "in": "query",
             "required": false,
             "type": "string"
@@ -347,7 +347,8 @@
         },
         "parameters": [
           {
-            "name": "metadata.id",
+            "name": "metadata.name",
+            "description": "name of the resource",
             "in": "path",
             "required": true,
             "type": "string"
@@ -358,7 +359,7 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "default": "usermgmt.k8smgmt.io/v3"
+            "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
@@ -367,13 +368,6 @@
             "required": false,
             "type": "string",
             "default": "Idp"
-          },
-          {
-            "name": "metadata.name",
-            "description": "Name. name of the resource",
-            "in": "query",
-            "required": false,
-            "type": "string"
           },
           {
             "name": "metadata.description",
@@ -399,6 +393,12 @@
           {
             "name": "metadata.partner",
             "description": "Partner. Partner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
             "in": "query",
             "required": false,
             "type": "string"
@@ -558,7 +558,8 @@
         },
         "parameters": [
           {
-            "name": "metadata.id",
+            "name": "metadata.name",
+            "description": "name of the resource",
             "in": "path",
             "required": true,
             "type": "string"
@@ -661,7 +662,7 @@
       "properties": {
         "apiVersion": {
           "type": "string",
-          "default": "usermgmt.k8smgmt.io/v3",
+          "default": "system.k8smgmt.io/v3",
           "description": "API Version of the idp resource",
           "title": "API Version"
         },
@@ -702,7 +703,7 @@
       "properties": {
         "apiVersion": {
           "type": "string",
-          "default": "usermgmt.k8smgmt.io/v3",
+          "default": "system.k8smgmt.io/v3",
           "description": "API Version of the idp list resource",
           "title": "API Version",
           "readOnly": true

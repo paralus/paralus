@@ -17,7 +17,7 @@ message Idp {
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "API Version",
         description : "API Version of the idp resource"
-        default : "usermgmt.k8smgmt.io/v3"
+        default : "system.k8smgmt.io/v3"
       } ];
   string kind = 2
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
@@ -72,7 +72,7 @@ message IdpList {
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "API Version",
         description : "API Version of the idp list resource"
-        default : "usermgmt.k8smgmt.io/v3"
+        default : "system.k8smgmt.io/v3"
         read_only : true
       } ];
   string kind = 2

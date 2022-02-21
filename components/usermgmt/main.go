@@ -44,6 +44,7 @@ const (
 	dbPasswordEnv   = "DB_PASSWORD"
 	devEnv          = "DEV"
 	configAddrENV   = "CONFIG_ADDR"
+	appHostHTTPEnv  = "APP_HOST_HTTP"
 )
 
 var (
@@ -70,6 +71,7 @@ var (
 	authPool            authv3.AuthPool
 	configPool          configrpc.ConfigPool
 	configAddr          string
+	appHostHTTP         string
 )
 
 func setup() {
@@ -84,6 +86,7 @@ func setup() {
 	viper.SetDefault(dbPasswordEnv, "admindbpassword")
 	viper.SetDefault(devEnv, true)
 	viper.SetDefault(configAddrENV, "localhost:7000")
+	viper.SetDefault(appHostHTTPEnv, "http://localhost:11000")
 
 	viper.BindEnv(rpcPortEnv)
 	viper.BindEnv(apiPortEnv)
@@ -96,6 +99,7 @@ func setup() {
 	viper.BindEnv(dbPasswordEnv)
 	viper.BindEnv(devEnv)
 	viper.BindEnv(configAddrENV)
+	viper.BindEnv(appHostHTTPEnv)
 
 	rpcPort = viper.GetInt(rpcPortEnv)
 	apiPort = viper.GetInt(apiPortEnv)
@@ -108,10 +112,12 @@ func setup() {
 	dbPassword = viper.GetString(dbPasswordEnv)
 	dev = viper.GetBool(devEnv)
 	configAddr = viper.GetString(configAddrENV)
+	appHostHTTP = viper.GetString(appHostHTTPEnv)
 
 	rpcRelayPeeringPort = rpcPort + 1
 	kratosConfig := kclient.NewConfiguration()
-	kratosConfig.Servers[0].URL = kratosScheme + "://" + kratosAddr
+	kratosUrl := kratosScheme + "://" + kratosAddr
+	kratosConfig.Servers[0].URL = kratosUrl
 	kc = kclient.NewAPIClient(kratosConfig)
 
 	dsn := "postgres://admindbuser:admindbpassword@localhost:5432/admindb?sslmode=disable"
@@ -129,8 +135,8 @@ func setup() {
 	gs = service.NewGroupService(db)
 	rs = service.NewRoleService(db)
 	rrs = service.NewRolepermissionService(db)
-	is = service.NewIdpService(db)
-	ps = service.NewOIDCProviderService(db)
+	is = service.NewIdpService(db, appHostHTTP)
+	ps = service.NewOIDCProviderService(db, kratosUrl)
 
 	_log.Infow("usermgmt setup complete")
 }

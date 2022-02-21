@@ -21,7 +21,7 @@ func (s *oidcProvider) CreateOIDCProvider(ctx context.Context, p *userv3.OIDCPro
 	return s.Create(ctx, p)
 }
 func (s *oidcProvider) GetOIDCProvider(ctx context.Context, p *userv3.OIDCProvider) (*userv3.OIDCProvider, error) {
-	return s.GetByID(ctx, p)
+	return s.GetByName(ctx, p)
 }
 func (s *oidcProvider) ListOIDCProvider(ctx context.Context, p *emptypb.Empty) (*userv3.OIDCProviderList, error) {
 	return s.List(ctx)

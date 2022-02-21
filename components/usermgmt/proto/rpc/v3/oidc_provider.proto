@@ -70,7 +70,7 @@ service OIDCProvider {
 
   rpc GetOIDCProvider(rafay.dev.types.user.v3.OIDCProvider) returns (rafay.dev.types.user.v3.OIDCProvider) {
     option (google.api.http) = {
-      get : "/auth/v3/sso/oidc/provider/{metadata.id}"
+      get : "/auth/v3/sso/oidc/provider/{metadata.name}" // TODO: Handle the case when there is / in name
     };
   };
 
@@ -82,14 +82,14 @@ service OIDCProvider {
 
   rpc UpdateOIDCProvider(rafay.dev.types.user.v3.OIDCProvider) returns (rafay.dev.types.user.v3.OIDCProvider) {
     option (google.api.http) = {
-      put : "/auth/v3/sso/oidc/provider/{metadata.id}"
+      put : "/auth/v3/sso/oidc/provider/{metadata.name}"
       body : "*"
     };
   };
 
   rpc DeleteOIDCProvider(rafay.dev.types.user.v3.OIDCProvider) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete : "/auth/v3/sso/oidc/provider/{metadata.id}"
+      delete : "/auth/v3/sso/oidc/provider/{metadata.name}"
     };
 
    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {

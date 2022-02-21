@@ -68,7 +68,7 @@ func local_request_OIDCProvider_CreateOIDCProvider_0(ctx context.Context, marsha
 }
 
 var (
-	filter_OIDCProvider_GetOIDCProvider_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "id": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_OIDCProvider_GetOIDCProvider_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
 func request_OIDCProvider_GetOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -82,14 +82,14 @@ func request_OIDCProvider_GetOIDCProvider_0(ctx context.Context, marshaler runti
 		_   = err
 	)
 
-	val, ok = pathParams["metadata.id"]
+	val, ok = pathParams["metadata.name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.name")
 	}
 
-	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.id", val)
+	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.name", val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.name", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -115,14 +115,14 @@ func local_request_OIDCProvider_GetOIDCProvider_0(ctx context.Context, marshaler
 		_   = err
 	)
 
-	val, ok = pathParams["metadata.id"]
+	val, ok = pathParams["metadata.name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.name")
 	}
 
-	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.id", val)
+	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.name", val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.name", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -174,14 +174,14 @@ func request_OIDCProvider_UpdateOIDCProvider_0(ctx context.Context, marshaler ru
 		_   = err
 	)
 
-	val, ok = pathParams["metadata.id"]
+	val, ok = pathParams["metadata.name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.name")
 	}
 
-	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.id", val)
+	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.name", val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.name", err)
 	}
 
 	msg, err := client.UpdateOIDCProvider(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -208,14 +208,14 @@ func local_request_OIDCProvider_UpdateOIDCProvider_0(ctx context.Context, marsha
 		_   = err
 	)
 
-	val, ok = pathParams["metadata.id"]
+	val, ok = pathParams["metadata.name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.name")
 	}
 
-	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.id", val)
+	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.name", val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.name", err)
 	}
 
 	msg, err := server.UpdateOIDCProvider(ctx, &protoReq)
@@ -224,7 +224,7 @@ func local_request_OIDCProvider_UpdateOIDCProvider_0(ctx context.Context, marsha
 }
 
 var (
-	filter_OIDCProvider_DeleteOIDCProvider_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "id": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_OIDCProvider_DeleteOIDCProvider_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
 func request_OIDCProvider_DeleteOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -238,14 +238,14 @@ func request_OIDCProvider_DeleteOIDCProvider_0(ctx context.Context, marshaler ru
 		_   = err
 	)
 
-	val, ok = pathParams["metadata.id"]
+	val, ok = pathParams["metadata.name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.name")
 	}
 
-	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.id", val)
+	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.name", val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.name", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -271,14 +271,14 @@ func local_request_OIDCProvider_DeleteOIDCProvider_0(ctx context.Context, marsha
 		_   = err
 	)
 
-	val, ok = pathParams["metadata.id"]
+	val, ok = pathParams["metadata.name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.name")
 	}
 
-	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.id", val)
+	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.name", val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.name", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -328,7 +328,7 @@ func RegisterOIDCProviderHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/GetOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.id}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/GetOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -374,7 +374,7 @@ func RegisterOIDCProviderHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.id}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -397,7 +397,7 @@ func RegisterOIDCProviderHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.id}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -479,7 +479,7 @@ func RegisterOIDCProviderHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/GetOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.id}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/GetOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -519,7 +519,7 @@ func RegisterOIDCProviderHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.id}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -539,7 +539,7 @@ func RegisterOIDCProviderHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.id}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -561,13 +561,13 @@ func RegisterOIDCProviderHandlerClient(ctx context.Context, mux *runtime.ServeMu
 var (
 	pattern_OIDCProvider_CreateOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"auth", "v3", "sso", "oidc", "provider"}, ""))
 
-	pattern_OIDCProvider_GetOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "sso", "oidc", "provider", "metadata.id"}, ""))
+	pattern_OIDCProvider_GetOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "sso", "oidc", "provider", "metadata.name"}, ""))
 
 	pattern_OIDCProvider_ListOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"auth", "v3", "sso", "oidc", "provider"}, ""))
 
-	pattern_OIDCProvider_UpdateOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "sso", "oidc", "provider", "metadata.id"}, ""))
+	pattern_OIDCProvider_UpdateOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "sso", "oidc", "provider", "metadata.name"}, ""))
 
-	pattern_OIDCProvider_DeleteOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "sso", "oidc", "provider", "metadata.id"}, ""))
+	pattern_OIDCProvider_DeleteOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "sso", "oidc", "provider", "metadata.name"}, ""))
 )
 
 var (

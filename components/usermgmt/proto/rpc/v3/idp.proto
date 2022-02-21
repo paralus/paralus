@@ -71,7 +71,7 @@ service Idp {
 
   rpc GetIdp(rafay.dev.types.user.v3.Idp) returns (rafay.dev.types.user.v3.Idp) {
     option (google.api.http) = {
-      get : "/auth/v3/sso/idp/{metadata.id}"
+      get : "/auth/v3/sso/idp/{metadata.name}"
     };
   };
 
@@ -83,14 +83,14 @@ service Idp {
 
   rpc UpdateIdp(rafay.dev.types.user.v3.Idp) returns (rafay.dev.types.user.v3.Idp) {
     option (google.api.http) = {
-      put : "/auth/v3/sso/idp/{metadata.id}"
+      put : "/auth/v3/sso/idp/{metadata.name}"
       body : "*"
     };
   };
 
   rpc DeleteIdp(rafay.dev.types.user.v3.Idp) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete : "/auth/v3/sso/idp/{metadata.id}"
+      delete : "/auth/v3/sso/idp/{metadata.name}"
     };
 
    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -103,7 +103,7 @@ service Idp {
     };
   };
 
-  // TODO: endpooint /auth/v1/sso/idp/{id}/upload_metadata/
+  // TODO: endpooint /auth/v1/sso/idp/{name}/upload_metadata/
   // file content as request payload and response is Idp
 }
 

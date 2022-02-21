@@ -2,41 +2,47 @@ package service
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 	"net/url"
-	"os"
 	"time"
 
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	commonv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
-	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/internal/models"
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/internal/models"
 	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
 type OIDCProviderService interface {
 	Create(context.Context, *userv3.OIDCProvider) (*userv3.OIDCProvider, error)
 	GetByID(context.Context, *userv3.OIDCProvider) (*userv3.OIDCProvider, error)
+	GetByName(context.Context, *userv3.OIDCProvider) (*userv3.OIDCProvider, error)
 	List(context.Context) (*userv3.OIDCProviderList, error)
 	Update(context.Context, *userv3.OIDCProvider) (*userv3.OIDCProvider, error)
 	Delete(context.Context, *userv3.OIDCProvider) error
 }
 
 type oidcProvider struct {
-	dao pg.EntityDAO
+	dao       pg.EntityDAO
+	kratosUrl string
 }
 
-func NewOIDCProviderService(db *bun.DB) OIDCProviderService {
+func NewOIDCProviderService(db *bun.DB, kratosUrl string) OIDCProviderService {
 	return &oidcProvider{
-		dao: pg.NewEntityDAO(db),
+		dao:       pg.NewEntityDAO(db),
+		kratosUrl: kratosUrl,
 	}
 }
 
-func generateCallbackUrl(id string) string {
-	base := os.Getenv("KRATOS_PUBLIC_URL")
-	return fmt.Sprintf("%s/self-service/methods/oidc/callback/%s", base, id)
+func generateCallbackUrl(id string, kUrl string) string {
+	b, _ := url.Parse(kUrl)
+	return fmt.Sprintf("%s://%s/self-service/methods/oidc/callback/%s", b.Scheme, b.Host, id)
 }
 
 func validateURL(rawURL string) error {
@@ -75,14 +81,15 @@ func (s *oidcProvider) Create(ctx context.Context, provider *userv3.OIDCProvider
 	}
 
 	entity := &models.OIDCProvider{
-		Name:            name,
-		CreatedAt:       time.Time{},
-		ModifiedAt:      time.Time{},
-		ProviderName:    provider.Spec.GetProviderName(),
-		MapperURL:       mapUrl,
-		MapperFilename:  provider.Spec.GetMapperFilename(),
-		ClientId:        provider.Spec.GetClientId(),
-		ClientSecret:    provider.Spec.GetClientSecret(),
+		Name:           name,
+		CreatedAt:      time.Time{},
+		ModifiedAt:     time.Time{},
+		ProviderName:   provider.Spec.GetProviderName(),
+		MapperURL:      mapUrl,
+		MapperFilename: provider.Spec.GetMapperFilename(),
+		ClientId:       provider.Spec.GetClientId(),
+		// ClientSecret is not returning to avoid leaking secret
+		// TODO: Use FieldMask on ClientSecret field
 		Scopes:          provider.Spec.GetScopes(),
 		IssuerURL:       issUrl,
 		AuthURL:         authUrl,
@@ -97,7 +104,7 @@ func (s *oidcProvider) Create(ctx context.Context, provider *userv3.OIDCProvider
 
 	rclaims, _ := structpb.NewStruct(entity.RequestedClaims)
 	rv := &userv3.OIDCProvider{
-		ApiVersion: "usermgmt.k8smgmt.io/v3",
+		ApiVersion: apiVersion,
 		Kind:       "OIDCProvider",
 		Metadata: &commonv3.Metadata{
 			Name:        entity.Name,
@@ -116,7 +123,7 @@ func (s *oidcProvider) Create(ctx context.Context, provider *userv3.OIDCProvider
 			TokenUrl:        entity.TokenURL,
 			RequestedClaims: rclaims,
 			Predefined:      entity.Predefined,
-			CallbackUrl:     generateCallbackUrl(entity.Id.String()),
+			CallbackUrl:     generateCallbackUrl(entity.Id.String(), s.kratosUrl),
 		},
 	}
 	return rv, nil
@@ -137,7 +144,7 @@ func (s *oidcProvider) GetByID(ctx context.Context, provider *userv3.OIDCProvide
 
 	rclaims, _ := structpb.NewStruct(entity.RequestedClaims)
 	rv := &userv3.OIDCProvider{
-		ApiVersion: "usermgmt.k8smgmt.io/v3",
+		ApiVersion: apiVersion,
 		Kind:       "OIDCProvider",
 		Metadata: &commonv3.Metadata{
 			Name:        entity.Name,
@@ -149,13 +156,61 @@ func (s *oidcProvider) GetByID(ctx context.Context, provider *userv3.OIDCProvide
 			MapperUrl:       entity.MapperURL,
 			MapperFilename:  entity.MapperFilename,
 			ClientId:        entity.ClientId,
+			ClientSecret:    entity.ClientSecret,
 			Scopes:          entity.Scopes,
 			IssuerUrl:       entity.IssuerURL,
 			AuthUrl:         entity.AuthURL,
 			TokenUrl:        entity.TokenURL,
 			RequestedClaims: rclaims,
 			Predefined:      entity.Predefined,
-			CallbackUrl:     generateCallbackUrl(entity.Id.String()),
+			CallbackUrl:     generateCallbackUrl(entity.Id.String(), s.kratosUrl),
+		},
+	}
+	return rv, nil
+}
+
+func (s *oidcProvider) GetByName(ctx context.Context, provider *userv3.OIDCProvider) (*userv3.OIDCProvider, error) {
+	name := provider.Metadata.GetName()
+	if len(name) == 0 {
+		return &userv3.OIDCProvider{}, status.Error(codes.InvalidArgument, "EMPTY NAME")
+	}
+
+	entity := &models.OIDCProvider{}
+	_, err := s.dao.GetByName(ctx, name, entity)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return &userv3.OIDCProvider{}, status.Errorf(codes.InvalidArgument, "OIDC PROVIDER %q NOT EXIST", name)
+		} else {
+			return &userv3.OIDCProvider{}, status.Errorf(codes.Internal, codes.Internal.String())
+		}
+
+	}
+
+	rclaims, _ := structpb.NewStruct(entity.RequestedClaims)
+	rv := &userv3.OIDCProvider{
+		ApiVersion: apiVersion,
+		Kind:       "OIDCProvider",
+		Metadata: &commonv3.Metadata{
+			Name:         entity.Name,
+			Description:  entity.Description,
+			Id:           entity.Id.String(),
+			Organization: entity.OrganizationId.String(),
+			Partner:      entity.PartnerId.String(),
+		},
+		Spec: &userv3.OIDCProviderSpec{
+			ProviderName:    entity.ProviderName,
+			MapperUrl:       entity.MapperURL,
+			MapperFilename:  entity.MapperFilename,
+			ClientId:        entity.ClientId,
+			ClientSecret:    entity.ClientSecret,
+			Scopes:          entity.Scopes,
+			IssuerUrl:       entity.IssuerURL,
+			AuthUrl:         entity.AuthURL,
+			TokenUrl:        entity.TokenURL,
+			RequestedClaims: rclaims,
+			Predefined:      entity.Predefined,
+			CallbackUrl:     generateCallbackUrl(entity.Id.String(), s.kratosUrl),
 		},
 	}
 	return rv, nil
@@ -175,7 +230,7 @@ func (s *oidcProvider) List(ctx context.Context) (*userv3.OIDCProviderList, erro
 	for _, entity := range entities {
 		rclaims, _ := structpb.NewStruct(entity.RequestedClaims)
 		e := &userv3.OIDCProvider{
-			ApiVersion: "usermgmt.k8smgmt.io/v3",
+			ApiVersion: apiVersion,
 			Kind:       "OIDCProvider",
 			Metadata: &commonv3.Metadata{
 				Name:        entity.Name,
@@ -193,7 +248,7 @@ func (s *oidcProvider) List(ctx context.Context) (*userv3.OIDCProviderList, erro
 				TokenUrl:        entity.TokenURL,
 				RequestedClaims: rclaims,
 				Predefined:      entity.Predefined,
-				CallbackUrl:     generateCallbackUrl(entity.Id.String()),
+				CallbackUrl:     generateCallbackUrl(entity.Id.String(), s.kratosUrl),
 			},
 		}
 		result = append(result, e)
@@ -208,28 +263,19 @@ func (s *oidcProvider) List(ctx context.Context) (*userv3.OIDCProviderList, erro
 }
 
 func (s *oidcProvider) Update(ctx context.Context, provider *userv3.OIDCProvider) (*userv3.OIDCProvider, error) {
-	var id, orgId, partId uuid.UUID
-	id, err := uuid.Parse(provider.Metadata.GetId())
-	// TODO: 400 Bad Request
+	name := provider.GetMetadata().GetName()
+	if len(name) == 0 {
+		return &userv3.OIDCProvider{}, status.Error(codes.InvalidArgument, "EMPTY NAME")
+	}
+
+	existingP := &models.OIDCProvider{}
+	_, err := s.dao.GetByName(ctx, name, existingP)
 	if err != nil {
-		return &userv3.OIDCProvider{}, err
-	}
-	if len(provider.Metadata.GetOrganization()) != 0 {
-		orgId, err = uuid.Parse(provider.Metadata.GetOrganization())
-		if err != nil {
-			return &userv3.OIDCProvider{}, err
+		if errors.Is(err, sql.ErrNoRows) {
+			return &userv3.OIDCProvider{}, status.Errorf(codes.InvalidArgument, "OIDC PROVIDER %q NOT EXIST", name)
+		} else {
+			return &userv3.OIDCProvider{}, status.Error(codes.Internal, codes.Internal.String())
 		}
-	}
-	if len(provider.Metadata.GetPartner()) != 0 {
-		partId, err = uuid.Parse(provider.Metadata.GetPartner())
-		if err != nil {
-			return &userv3.OIDCProvider{}, err
-		}
-	}
-	_, err = s.dao.GetByID(ctx, id, &models.OIDCProvider{})
-	// TODO: Return proper error for Id not exist
-	if err != nil {
-		return &userv3.OIDCProvider{}, err
 	}
 
 	mapUrl := provider.Spec.GetMapperUrl()
@@ -250,8 +296,18 @@ func (s *oidcProvider) Update(ctx context.Context, provider *userv3.OIDCProvider
 		return &userv3.OIDCProvider{}, fmt.Errorf("INVALID TOKEN URL")
 	}
 
+	orgId, err := uuid.Parse(provider.Metadata.GetOrganization())
+	if err != nil {
+		return &userv3.OIDCProvider{}, status.Errorf(codes.InvalidArgument,
+			"ORG ID %q INCORRECT", provider.Metadata.GetOrganization())
+	}
+	partId, err := uuid.Parse(provider.Metadata.GetPartner())
+	if err != nil {
+		return &userv3.OIDCProvider{}, status.Errorf(codes.InvalidArgument,
+			"PARTNER ID %q INCORRECT", provider.Metadata.GetPartner())
+	}
+
 	entity := &models.OIDCProvider{
-		Id:              id,
 		Name:            provider.Metadata.GetName(),
 		Description:     provider.Metadata.GetDescription(),
 		OrganizationId:  orgId,
@@ -269,14 +325,14 @@ func (s *oidcProvider) Update(ctx context.Context, provider *userv3.OIDCProvider
 		RequestedClaims: provider.Spec.GetRequestedClaims().AsMap(),
 		Predefined:      provider.Spec.GetPredefined(),
 	}
-	_, err = s.dao.Update(ctx, id, entity)
+	_, err = s.dao.Update(ctx, existingP.Id, entity)
 	if err != nil {
 		return &userv3.OIDCProvider{}, err
 	}
 
 	rclaims, _ := structpb.NewStruct(entity.RequestedClaims)
 	rv := &userv3.OIDCProvider{
-		ApiVersion: "usermgmt.k8smgmt.io/v3",
+		ApiVersion: apiVersion,
 		Kind:       "OIDCProvider",
 		Metadata: &commonv3.Metadata{
 			Name:        entity.Name,
@@ -295,24 +351,24 @@ func (s *oidcProvider) Update(ctx context.Context, provider *userv3.OIDCProvider
 			TokenUrl:        entity.TokenURL,
 			RequestedClaims: rclaims,
 			Predefined:      entity.Predefined,
-			CallbackUrl:     generateCallbackUrl(entity.Id.String()),
+			CallbackUrl:     generateCallbackUrl(entity.Id.String(), s.kratosUrl),
 		},
 	}
 	return rv, nil
 }
 
 func (s *oidcProvider) Delete(ctx context.Context, provider *userv3.OIDCProvider) error {
-	id, err := uuid.Parse(provider.Metadata.GetId())
-	if err != nil {
-		return err
-	}
 	entity := &models.OIDCProvider{}
-	_, err = s.dao.GetByID(ctx, id, entity)
-	if entity.Id != id {
-		return fmt.Errorf("ID DOES NOT EXISTS")
+	name := provider.GetMetadata().GetName()
+	if len(name) == 0 {
+		return status.Error(codes.InvalidArgument, "EMPTY NAME")
+	}
+	_, err := s.dao.GetByName(ctx, name, entity)
+	if err != nil {
+		return status.Errorf(codes.InvalidArgument, "OIDC PROVIDER %q NOT EXIST", name)
 	}
 
-	err = s.dao.Delete(ctx, id, &models.OIDCProvider{})
+	err = s.dao.Delete(ctx, entity.Id, &models.OIDCProvider{})
 	if err != nil {
 		return err
 	}
