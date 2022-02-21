@@ -69,13 +69,11 @@ func (s *rolepermissionService) GetByName(ctx context.Context, rolepermission *u
 	name := rolepermission.GetMetadata().GetName()
 	entity, err := s.dao.GetByName(ctx, name, &models.ResourcePermission{})
 	if err != nil {
-		rolepermission.Status = statusFailed(err)
 		return rolepermission, err
 	}
 
 	if rle, ok := entity.(*models.ResourcePermission); ok {
 		rolepermission = s.toV3Rolepermission(rolepermission, rle)
-		rolepermission.Status = statusOK()
 
 		return rolepermission, nil
 	}

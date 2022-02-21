@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"net"
 	"net/http"
 	"sync"
@@ -18,6 +19,7 @@ import (
 	"github.com/uptrace/bun/extra/bundebug"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
+	authzrpcv1 "github.com/RafaySystems/rcloud-base/components/authz/proto/rpc/v1"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/auth/interceptors"
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
@@ -35,6 +37,7 @@ import (
 const (
 	rpcPortEnv      = "RPC_PORT"
 	apiPortEnv      = "API_PORT"
+	authzPortEnv    = "AUTHZ_SERVER_PORT"
 	debugPortEnv    = "DEBUG_PORT"
 	kratosSchemeEnv = "KRATOS_SCHEME"
 	kratosAddrEnv   = "KRATOS_ADDR"
@@ -54,7 +57,9 @@ var (
 	rpcRelayPeeringPort int
 	kratosScheme        string
 	kratosAddr          string
+	authzPort           int
 	kc                  *kclient.APIClient
+	azc                 authzrpcv1.AuthzClient
 	dbAddr              string
 	dbName              string
 	dbUser              string
@@ -80,7 +85,8 @@ func setup() {
 	viper.SetDefault(debugPortEnv, 12000)
 	viper.SetDefault(kratosSchemeEnv, "http")
 	viper.SetDefault(kratosAddrEnv, "localhost:4433")
-	viper.SetDefault(dbAddr, ":5432")
+	viper.SetDefault(authzPortEnv, 50011)
+	viper.SetDefault(dbAddrEnv, "localhost:5432")
 	viper.SetDefault(dbNameEnv, "admindb")
 	viper.SetDefault(dbUserEnv, "admindbuser")
 	viper.SetDefault(dbPasswordEnv, "admindbpassword")
@@ -93,6 +99,7 @@ func setup() {
 	viper.BindEnv(debugPortEnv)
 	viper.BindEnv(kratosSchemeEnv)
 	viper.BindEnv(kratosAddrEnv)
+	viper.BindEnv(authzPortEnv)
 	viper.BindEnv(dbAddrEnv)
 	viper.BindEnv(dbNameEnv)
 	viper.BindEnv(dbPasswordEnv)
@@ -106,6 +113,7 @@ func setup() {
 	debugPort = viper.GetInt(debugPortEnv)
 	kratosScheme = viper.GetString(kratosSchemeEnv)
 	kratosAddr = viper.GetString(kratosAddrEnv)
+	authzPort = viper.GetInt(authzPortEnv)
 	dbAddr = viper.GetString(dbAddrEnv)
 	dbName = viper.GetString(dbNameEnv)
 	dbUser = viper.GetString(dbUserEnv)
@@ -120,7 +128,7 @@ func setup() {
 	kratosConfig.Servers[0].URL = kratosUrl
 	kc = kclient.NewAPIClient(kratosConfig)
 
-	dsn := "postgres://admindbuser:admindbpassword@localhost:5432/admindb?sslmode=disable"
+	dsn := "postgres://" + dbUser + ":" + dbPassword + "@" + dbAddr + "/" + dbName + "?sslmode=disable"
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db := bun.NewDB(sqldb, pgdialect.New())
 
@@ -131,9 +139,15 @@ func setup() {
 		))
 	}
 
-	us = service.NewUserService(providers.NewKratosAuthProvider(kc), db)
-	gs = service.NewGroupService(db)
-	rs = service.NewRoleService(db)
+	conn, err := grpc.Dial(":"+fmt.Sprint(authzPort), grpc.WithInsecure())
+	if err != nil {
+		log.Fatal("unable to connect to authz")
+	}
+	azc = authzrpcv1.NewAuthzClient(conn)
+
+	us = service.NewUserService(providers.NewKratosAuthProvider(kc), db, azc)
+	gs = service.NewGroupService(db, azc)
+	rs = service.NewRoleService(db, azc)
 	rrs = service.NewRolepermissionService(db)
 	is = service.NewIdpService(db, appHostHTTP)
 	ps = service.NewOIDCProviderService(db, kratosUrl)

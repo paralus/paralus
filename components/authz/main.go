@@ -8,7 +8,7 @@ import (
 	"github.com/RafaySystems/rcloud-base/components/authz/pkg/server"
 	"github.com/RafaySystems/rcloud-base/components/authz/pkg/service"
 	pb "github.com/RafaySystems/rcloud-base/components/authz/proto/rpc/v1"
-	log "github.com/RafaySystems/rcloud-base/components/common/pkg/log/v2"
+	log "github.com/RafaySystems/rcloud-base/components/common/pkg/log"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 	"gorm.io/driver/postgres"

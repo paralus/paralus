@@ -22,9 +22,6 @@ func performRolePermissionBasicChecks(t *testing.T, role *userv3.RolePermission,
 	if role.GetMetadata().GetId() != ruuid {
 		t.Error("invalid uuid returned")
 	}
-	if role.Status.ConditionStatus != v3.ConditionStatus_StatusOK {
-		t.Error("group status is not OK")
-	}
 }
 
 func TestRolePermissionList(t *testing.T) {

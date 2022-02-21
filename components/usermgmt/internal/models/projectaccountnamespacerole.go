@@ -21,6 +21,6 @@ type ProjectAccountNamespaceRole struct {
 	RoleId         uuid.UUID `bun:"role_id,type:uuid"`
 	AccountId      uuid.UUID `bun:"account_id,type:uuid"`
 	ProjectId      uuid.UUID `bun:"project_id,type:uuid"`
-	NamesapceId    int64     `bun:"namespace_id,type:uuid"`
+	NamespaceId    int64     `bun:"namespace_id,type:uuid"`
 	Active         bool      `bun:"active,notnull"`
 }

@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -11,21 +10,6 @@ import (
 	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 	"github.com/google/uuid"
 )
-
-type mockAuthProvider struct{}
-
-func (m *mockAuthProvider) Create(ctx context.Context, traits map[string]interface{}) (string, error) {
-	return strings.Split(traits["email"].(string), "user-")[1], nil
-}
-func (k *mockAuthProvider) Update(ctx context.Context, id string, traits map[string]interface{}) error {
-	return nil
-}
-func (k *mockAuthProvider) GetRecoveryLink(ctx context.Context, id string) (string, error) {
-	return "https://recoverme.testing/" + id, nil
-}
-func (k *mockAuthProvider) Delete(ctx context.Context, id string) error {
-	return nil
-}
 
 func performUserBasicChecks(t *testing.T, user *userv3.User, uuuid string) {
 	_, err := uuid.Parse(user.GetMetadata().GetOrganization())
@@ -36,8 +20,36 @@ func performUserBasicChecks(t *testing.T, user *userv3.User, uuuid string) {
 	if err == nil {
 		t.Error("partner in metadata should be name not id")
 	}
-	if user.Status.ConditionStatus != v3.ConditionStatus_StatusOK {
-		t.Error("user status is not OK")
+}
+
+func performUserBasicAuthzChecks(t *testing.T, mazc mockAuthzClient, uuuid string, roles []*userv3.ProjectNamespaceRole) {
+	if len(mazc.cp) > 0 {
+		for i, u := range mazc.cp[len(mazc.cp)-1].Policies {
+			if u.Sub != "u:user-"+uuuid {
+				t.Errorf("invalid sub in policy sent to authz; expected '%v', got '%v'", "u:user-"+uuuid, u.Sub)
+			}
+			if u.Obj != roles[i].Role {
+				t.Errorf("invalid obj in policy sent to authz; expected '%v', got '%v'", roles[i].Role, u.Obj)
+			}
+			if roles[i].Namespace != nil {
+				if u.Ns != fmt.Sprint(*roles[i].Namespace) {
+					t.Errorf("invalid ns in policy sent to authz; expected '%v', got '%v'", fmt.Sprint(roles[i].Namespace), u.Ns)
+				}
+			} else {
+				if u.Ns != "*" {
+					t.Errorf("invalid ns in policy sent to authz; expected '%v', got '%v'", "*", u.Ns)
+				}
+			}
+			if roles[i].Project != nil {
+				if u.Proj != *roles[i].Project {
+					t.Errorf("invalid proj in policy sent to authz; expected '%v', got '%v'", roles[i].Project, u.Proj)
+				}
+			} else {
+				if u.Proj != "*" {
+					t.Errorf("invalid proj in policy sent to authz; expected '%v', got '%v'", "*", u.Proj)
+				}
+			}
+		}
 	}
 }
 
@@ -46,7 +58,8 @@ func TestCreateUser(t *testing.T) {
 	defer db.Close()
 
 	ap := &mockAuthProvider{}
-	us := NewUserService(ap, db)
+	mazc := &mockAuthzClient{}
+	us := NewUserService(ap, db, mazc)
 	defer us.Close()
 
 	uuuid := uuid.New().String()
@@ -70,6 +83,9 @@ func TestCreateUser(t *testing.T) {
 	if user.GetMetadata().GetName() != "user-"+uuuid {
 		t.Errorf("expected name 'user-%v'; got '%v'", uuuid, user.GetMetadata().GetName())
 	}
+	performBasicAuthzChecks(t, *mazc, 0, 0, 0, 0, 0, 0)
+	performBasicAuthProviderChecks(t, *ap, 1, 0, 1, 0)
+	performUserBasicAuthzChecks(t, *mazc, uuuid, []*userv3.ProjectNamespaceRole{})
 }
 
 func TestCreateUserWithRole(t *testing.T) {
@@ -98,7 +114,8 @@ func TestCreateUserWithRole(t *testing.T) {
 			defer db.Close()
 
 			ap := &mockAuthProvider{}
-			us := NewUserService(ap, db)
+			mazc := &mockAuthzClient{}
+			us := NewUserService(ap, db, mazc)
 			defer us.Close()
 
 			uuuid := uuid.New().String()
@@ -140,6 +157,9 @@ func TestCreateUserWithRole(t *testing.T) {
 				t.Errorf("expected name 'user-%v'; got '%v'", uuuid, user.GetMetadata().GetName())
 			}
 
+			performBasicAuthzChecks(t, *mazc, 1, 0, 0, 0, 0, 0)
+			performBasicAuthProviderChecks(t, *ap, 1, 0, 1, 0)
+			performUserBasicAuthzChecks(t, *mazc, uuuid, tc.roles)
 		})
 	}
 }
@@ -149,7 +169,8 @@ func TestUpdateUser(t *testing.T) {
 	defer db.Close()
 
 	ap := &mockAuthProvider{}
-	us := NewUserService(ap, db)
+	mazc := &mockAuthzClient{}
+	us := NewUserService(ap, db, mazc)
 	defer us.Close()
 
 	uuuid := uuid.New().String()
@@ -194,6 +215,9 @@ func TestUpdateUser(t *testing.T) {
 	if user.GetMetadata().GetName() != "user-"+uuuid {
 		t.Errorf("expected name 'user-%v'; got '%v'", uuuid, user.GetMetadata().GetName())
 	}
+	performBasicAuthzChecks(t, *mazc, 1, 1, 0, 0, 0, 0)
+	performBasicAuthProviderChecks(t, *ap, 0, 1, 0, 0)
+	performUserBasicAuthzChecks(t, *mazc, uuuid, user.Spec.ProjectNamespaceRoles)
 }
 
 func TestUserGetByName(t *testing.T) {
@@ -201,7 +225,8 @@ func TestUserGetByName(t *testing.T) {
 	defer db.Close()
 
 	ap := &mockAuthProvider{}
-	us := NewUserService(ap, db)
+	mazc := &mockAuthzClient{}
+	us := NewUserService(ap, db, mazc)
 	defer us.Close()
 
 	uuuid := uuid.New().String()
@@ -243,6 +268,9 @@ func TestUserGetByName(t *testing.T) {
 	if user.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 9 {
 		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", user.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 	}
+	performBasicAuthzChecks(t, *mazc, 0, 0, 0, 0, 0, 0)
+	performBasicAuthProviderChecks(t, *ap, 0, 0, 0, 0)
+	performUserBasicAuthzChecks(t, *mazc, uuuid, user.Spec.ProjectNamespaceRoles)
 }
 
 func TestUserGetById(t *testing.T) {
@@ -250,7 +278,8 @@ func TestUserGetById(t *testing.T) {
 	defer db.Close()
 
 	ap := &mockAuthProvider{}
-	us := NewUserService(ap, db)
+	mazc := &mockAuthzClient{}
+	us := NewUserService(ap, db, mazc)
 	defer us.Close()
 
 	uuuid := uuid.New().String()
@@ -289,6 +318,10 @@ func TestUserGetById(t *testing.T) {
 	if user.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 9 {
 		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", user.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 	}
+
+	performBasicAuthzChecks(t, *mazc, 0, 0, 0, 0, 0, 0)
+	performBasicAuthProviderChecks(t, *ap, 0, 0, 0, 0)
+	performUserBasicAuthzChecks(t, *mazc, uuuid, user.Spec.ProjectNamespaceRoles)
 }
 
 func TestUserList(t *testing.T) {
@@ -296,7 +329,8 @@ func TestUserList(t *testing.T) {
 	defer db.Close()
 
 	ap := &mockAuthProvider{}
-	us := NewUserService(ap, db)
+	mazc := &mockAuthzClient{}
+	us := NewUserService(ap, db, mazc)
 	defer us.Close()
 
 	uuuid1 := uuid.New().String()
@@ -355,6 +389,10 @@ func TestUserList(t *testing.T) {
 	if userlist.Items[0].GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 9 {
 		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", userlist.Items[0].GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 	}
+
+	performBasicAuthzChecks(t, *mazc, 0, 0, 0, 0, 0, 0)
+	performBasicAuthProviderChecks(t, *ap, 0, 0, 0, 0)
+	performUserBasicAuthzChecks(t, *mazc, uuuid2, []*userv3.ProjectNamespaceRole{})
 }
 
 func TestUserDelete(t *testing.T) {
@@ -362,7 +400,8 @@ func TestUserDelete(t *testing.T) {
 	defer db.Close()
 
 	ap := &mockAuthProvider{}
-	us := NewUserService(ap, db)
+	mazc := &mockAuthzClient{}
+	us := NewUserService(ap, db, mazc)
 	defer us.Close()
 
 	uuuid := uuid.New().String()
@@ -371,13 +410,14 @@ func TestUserDelete(t *testing.T) {
 
 	mock.ExpectQuery(`SELECT "identities"."id" FROM "identities" WHERE .*traits ->> 'email' = 'user-` + uuuid + `'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).AddRow(uuuid, []byte(`{"email":"johndoe@provider.com"}`)))
-	mock.ExpectExec(`DELETE FROM "authsrv_groupaccount" AS "groupaccount" WHERE`).
-		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec(`DELETE FROM "authsrv_accountresourcerole" AS "accountresourcerole" WHERE`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec(`DELETE FROM "authsrv_projectaccountresourcerole" AS "projectaccountresourcerole" WHERE`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec(`DELETE FROM "authsrv_projectaccountnamespacerole" AS "projectaccountnamespacerole" WHERE`).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	// User delete is via kratos
+	mock.ExpectExec(`DELETE FROM "authsrv_groupaccount" AS "groupaccount" WHERE`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	user := &userv3.User{
@@ -387,4 +427,8 @@ func TestUserDelete(t *testing.T) {
 	if err != nil {
 		t.Fatal("could not delete user:", err)
 	}
+
+	performBasicAuthzChecks(t, *mazc, 0, 1, 0, 0, 0, 0)
+	performBasicAuthProviderChecks(t, *ap, 0, 0, 0, 1)
+	performUserBasicAuthzChecks(t, *mazc, uuuid, []*userv3.ProjectNamespaceRole{})
 }

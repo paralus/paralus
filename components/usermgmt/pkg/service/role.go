@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	authzrpcv1 "github.com/RafaySystems/rcloud-base/components/authz/proto/rpc/v1"
+	authzv1 "github.com/RafaySystems/rcloud-base/components/authz/proto/types"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/utils"
 	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
@@ -43,14 +45,16 @@ type roleService struct {
 	dao  pg.EntityDAO
 	rdao dao.RoleDAO
 	l    utils.Lookup
+	azc  authzrpcv1.AuthzClient
 }
 
 // NewRoleService return new role service
-func NewRoleService(db *bun.DB) RoleService {
+func NewRoleService(db *bun.DB, azc authzrpcv1.AuthzClient) RoleService {
 	return &roleService{
 		dao:  pg.NewEntityDAO(db),
 		rdao: dao.NewRoleDAO(db),
 		l:    utils.NewLookup(db),
+		azc:  azc,
 	}
 }
 
@@ -72,8 +76,16 @@ func (s *roleService) getPartnerOrganization(ctx context.Context, role *userv3.R
 func (s *roleService) deleteRolePermissionMapping(ctx context.Context, rleId uuid.UUID, role *userv3.Role) (*userv3.Role, error) {
 	err := s.dao.DeleteX(ctx, "resource_role_id", rleId, &models.ResourceRolePermission{})
 	if err != nil {
-		role.Status = statusFailed(err)
-		return role, err
+		return &userv3.Role{}, err
+	}
+
+	drpm := authzv1.FilteredRolePermissionMapping{Role: role.GetMetadata().GetName()}
+	success, err := s.azc.DeleteRolePermissionMappings(ctx, &drpm)
+	if err != nil {
+		return &userv3.Role{}, fmt.Errorf("unable to delete mapping from authz; %v", err)
+	}
+	if !success.Res {
+		fmt.Println("No roles deleted") // TODO: maybe it should not return false?
 	}
 
 	return role, nil
@@ -86,7 +98,6 @@ func (s *roleService) createRolePermissionMapping(ctx context.Context, role *use
 	for _, p := range perms {
 		entity, err := s.dao.GetIdByName(ctx, p, &models.ResourcePermission{})
 		if err != nil {
-			role.Status = statusFailed(fmt.Errorf("unable to find role permission '%v'", p))
 			return role, fmt.Errorf("unable to find role permission '%v'", p)
 		}
 		if prm, ok := entity.(*models.ResourcePermission); ok {
@@ -95,7 +106,6 @@ func (s *roleService) createRolePermissionMapping(ctx context.Context, role *use
 				ResourcePermissionId: prm.ID,
 			})
 		} else {
-			role.Status = statusFailed(fmt.Errorf("unable to find role permission '%v'", p))
 			return role, fmt.Errorf("unable to find role permission '%v'", p)
 		}
 	}
@@ -103,6 +113,17 @@ func (s *roleService) createRolePermissionMapping(ctx context.Context, role *use
 		_, err := s.dao.Create(ctx, &items)
 		if err != nil {
 			return role, err
+		}
+
+		crpm := authzv1.RolePermissionMappingList{
+			RolePermissionMappingList: []*authzv1.RolePermissionMapping{{
+				Role:       role.GetMetadata().GetName(),
+				Permission: role.Spec.Rolepermissions,
+			}},
+		}
+		success, err := s.azc.CreateRolePermissionMappings(ctx, &crpm)
+		if err != nil || !success.Res {
+			return role, fmt.Errorf("unable to create mapping in authz; %v", err)
 		}
 	}
 	return role, nil
@@ -132,23 +153,17 @@ func (s *roleService) Create(ctx context.Context, role *userv3.Role) (*userv3.Ro
 	}
 	entity, err := s.dao.Create(ctx, &rle)
 	if err != nil {
-		role.Status = statusFailed(err)
-		return role, err
+		return &userv3.Role{}, err
 	}
 
 	//update v3 spec
 	if createdRole, ok := entity.(*models.Role); ok {
 		role, err = s.createRolePermissionMapping(ctx, role, parsedIds{Id: createdRole.ID, Partner: partnerId, Organization: organizationId})
 		if err != nil {
-			role.Status = statusFailed(err)
-			return role, err
-		}
-
-		if role.Status == nil {
-			role.Status = statusOK()
+			return &userv3.Role{}, err
 		}
 	} else {
-		role.Status = statusFailed(fmt.Errorf("unable to create role"))
+		return &userv3.Role{}, fmt.Errorf("unable to create role '%v'", role.GetMetadata().GetName())
 	}
 
 	return role, nil
@@ -159,20 +174,17 @@ func (s *roleService) GetByID(ctx context.Context, role *userv3.Role) (*userv3.R
 	id := role.GetMetadata().GetId()
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		role.Status = statusFailed(err)
-		return role, err
+		return &userv3.Role{}, err
 	}
 	entity, err := s.dao.GetByID(ctx, uid, &models.Role{})
 	if err != nil {
-		role.Status = statusFailed(err)
-		return role, err
+		return &userv3.Role{}, err
 	}
 
 	if rle, ok := entity.(*models.Role); ok {
 		role, err = s.toV3Role(ctx, role, rle)
 		if err != nil {
-			role.Status = statusFailed(err)
-			return role, err
+			return &userv3.Role{}, err
 		}
 		return role, nil
 	}
@@ -188,18 +200,16 @@ func (s *roleService) GetByName(ctx context.Context, role *userv3.Role) (*userv3
 	}
 	entity, err := s.dao.GetByNamePartnerOrg(ctx, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Role{})
 	if err != nil {
-		role.Status = statusFailed(err)
-		return role, err
+		return &userv3.Role{}, err
 	}
 
 	if rle, ok := entity.(*models.Role); ok {
 		role, err = s.toV3Role(ctx, role, rle)
 		if err != nil {
-			role.Status = statusFailed(err)
-			return role, nil
+			return &userv3.Role{}, err
 		}
-		role.Status = statusOK()
-		return role, nil
+	} else {
+
 	}
 	return role, nil
 
@@ -211,11 +221,10 @@ func (s *roleService) Update(ctx context.Context, role *userv3.Role) (*userv3.Ro
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
 
-	id, _ := uuid.Parse(role.Metadata.Id)
-	entity, err := s.dao.GetByID(ctx, id, &models.Role{})
+	name := role.GetMetadata().GetName()
+	entity, err := s.dao.GetByNamePartnerOrg(ctx, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Role{})
 	if err != nil {
-		role.Status = statusFailed(err)
-		return role, err
+		return role, fmt.Errorf("unable to find role '%v'", name)
 	}
 
 	if rle, ok := entity.(*models.Role); ok {
@@ -226,29 +235,22 @@ func (s *roleService) Update(ctx context.Context, role *userv3.Role) (*userv3.Ro
 		rle.Scope = role.Spec.Scope
 		rle.ModifiedAt = time.Now()
 
-		_, err = s.dao.Update(ctx, id, rle)
-		if err != nil {
-			role.Status = statusFailed(err)
-			return role, err
-		}
+		_, err = s.dao.Update(ctx, rle.ID, rle)
+		if err != nil { return &userv3.Role{}, err }
 
 		role, err = s.deleteRolePermissionMapping(ctx, rle.ID, role)
-		if err != nil {
-			role.Status = statusFailed(err)
-			return role, err
-		}
-		role, err = s.createRolePermissionMapping(ctx, role, parsedIds{Id: id, Partner: partnerId, Organization: organizationId})
-		if err != nil {
-			role.Status = statusFailed(err)
-			return role, err
-		}
+		if err != nil { return &userv3.Role{}, err }
+
+		role, err = s.createRolePermissionMapping(ctx, role, parsedIds{Id: rle.ID, Partner: partnerId, Organization: organizationId})
+		if err != nil { return &userv3.Role{}, err }
 
 		//update spec and status
 		role.Spec = &userv3.RoleSpec{
 			IsGlobal: rle.IsGlobal,
 			Scope:    rle.Scope,
 		}
-		role.Status = statusOK()
+	} else {
+		return &userv3.Role{}, fmt.Errorf("unable to update role '%v'", role.GetMetadata().GetName())
 	}
 
 	return role, nil
@@ -258,30 +260,24 @@ func (s *roleService) Delete(ctx context.Context, role *userv3.Role) (*userv3.Ro
 	name := role.GetMetadata().GetName()
 	partnerId, organizationId, err := s.getPartnerOrganization(ctx, role)
 	if err != nil {
-		return role, fmt.Errorf("unable to get partner and org id")
+		return &userv3.Role{}, fmt.Errorf("unable to get partner and org id; %v", err)
 	}
 
 	entity, err := s.dao.GetByNamePartnerOrg(ctx, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Role{})
 	if err != nil {
-		role.Status = statusFailed(err)
-		return role, err
+		return &userv3.Role{}, err
 	}
+
 	if rle, ok := entity.(*models.Role); ok {
 		role, err = s.deleteRolePermissionMapping(ctx, rle.ID, role)
 		if err != nil {
-			role.Status = statusFailed(err)
-			return role, err
+			return &userv3.Role{}, err
 		}
 
 		err = s.dao.Delete(ctx, rle.ID, rle)
 		if err != nil {
-			role.Status = statusFailed(err)
-			return role, err
+			return &userv3.Role{}, err
 		}
-
-		//update v3 spec
-		role.Metadata.Name = rle.Name
-		role.Status = statusOK()
 	}
 
 	return role, nil
@@ -316,7 +312,6 @@ func (s *roleService) toV3Role(ctx context.Context, role *userv3.Role, rle *mode
 		Scope:           rle.Scope,
 		Rolepermissions: permissions,
 	}
-	role.Status = statusOK()
 	return role, nil
 }
 
@@ -347,6 +342,9 @@ func (s *roleService) List(ctx context.Context, role *userv3.Role) (*userv3.Role
 			for _, rle := range *rles {
 				entry := &userv3.Role{Metadata: role.GetMetadata()}
 				entry, err = s.toV3Role(ctx, entry, &rle)
+				if err != nil {
+					return roleList, err
+				}
 				roles = append(roles, entry)
 			}
 

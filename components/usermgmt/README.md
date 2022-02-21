@@ -8,7 +8,7 @@ All user/auth related requests go through here.
 
 ### Run kratos migrations
 
-``` shele
+``` shell
 export DSN='postgres://postgres@localhost:5432/admindb?sslmode=disable'
 kratos -c kratos.yaml migrate sql -e --yes
 ```

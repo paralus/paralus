@@ -56,6 +56,8 @@ metadata:
 spec:
   firstName: John
   lastName: Cena
+  projectNamespaceRoles:
+    - role: ADMIN
 
 # Delete single user
 DELETE :host/auth/v3/user/:user
@@ -111,8 +113,7 @@ spec:
   users:
     - :user
   projectNamespaceRoles:
-    - role: NAMESPACE_ADMIN
-      project: :project
+    - role: ADMIN
 
 
 # Get all groups
@@ -127,12 +128,39 @@ Content-Type: application/yaml
 DELETE :host/auth/v3/partner/:partner/organization/:org/group/:group
 Content-Type: application/yaml
 
-
 ## Roles
 
-# Create role
-
+# Create empty role
 POST :host/auth/v3/partner/:partner/organization/:org/roles
+Content-Type: application/yaml
+
+metadata:
+  name: :role
+  description: My first role
+  partner: :partner
+  organization: :org
+spec:
+  isGlobal: true
+  scope: cluster
+
+# Create role
+POST :host/auth/v3/partner/:partner/organization/:org/roles
+Content-Type: application/yaml
+
+metadata:
+  name: :role
+  description: My first role
+  partner: :partner
+  organization: :org
+spec:
+  isGlobal: true
+  scope: cluster
+  rolepermissions:
+    - account.read
+    - ops_star.all
+
+# Update role
+PUT :host/auth/v3/partner/:partner/organization/:org/role/:role
 Content-Type: application/yaml
 
 metadata:

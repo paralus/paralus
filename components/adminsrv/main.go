@@ -65,7 +65,7 @@ func setup() {
 	viper.SetDefault(rpcPortEnv, 10000)
 	viper.SetDefault(apiPortEnv, 11000)
 	viper.SetDefault(debugPortEnv, 12000)
-	viper.SetDefault(dbAddr, "localhost:5432")
+	viper.SetDefault(dbAddrEnv, "localhost:5432")
 	viper.SetDefault(dbNameEnv, "admindb")
 	viper.SetDefault(dbUserEnv, "admindbuser")
 	viper.SetDefault(dbPasswordEnv, "admindbpassword")

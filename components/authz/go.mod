@@ -3,7 +3,7 @@ module github.com/RafaySystems/rcloud-base/components/authz
 go 1.17
 
 require (
-	github.com/RafaySystems/rcloud-base/components/common v0.0.0-20220110062450-4091fe0a0c20
+	github.com/RafaySystems/rcloud-base/components/common v0.0.0-unpublished
 	google.golang.org/grpc v1.43.0
 )
 
@@ -48,7 +48,7 @@ require (
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.19.1 // indirect
 	golang.org/x/crypto v0.0.0-20220126234351-aa10faf2a1f8 // indirect
-	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
+	golang.org/x/net v0.0.0-20211209124913-491a49abca63 // indirect
 	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa // indirect

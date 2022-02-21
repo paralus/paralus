@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
-	github.com/RafaySystems/rcloud-base/components/adminsrv v0.0.0-unpublished
+	github.com/RafaySystems/rcloud-base/components/authz v0.0.0-unpublished
 	github.com/RafaySystems/rcloud-base/components/common v0.0.0-unpublished
 	github.com/crewjam/saml v0.4.6
 	github.com/gogo/protobuf v1.3.2
@@ -64,10 +64,10 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.19.1 // indirect
-	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3 // indirect
+	golang.org/x/crypto v0.0.0-20220126234351-aa10faf2a1f8 // indirect
 	golang.org/x/net v0.0.0-20211209124913-491a49abca63 // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
-	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
+	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
@@ -85,6 +85,6 @@ require (
 )
 
 replace (
-	github.com/RafaySystems/rcloud-base/components/adminsrv v0.0.0-unpublished => ../adminsrv/
+	github.com/RafaySystems/rcloud-base/components/authz v0.0.0-unpublished => ../authz/
 	github.com/RafaySystems/rcloud-base/components/common v0.0.0-unpublished => ../common/
 )

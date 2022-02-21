@@ -3,12 +3,15 @@ package service
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+	authzrpcv1 "github.com/RafaySystems/rcloud-base/components/authz/proto/rpc/v1"
+	authzv1 "github.com/RafaySystems/rcloud-base/components/authz/proto/types"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/utils"
 	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
@@ -46,6 +49,7 @@ type userService struct {
 	dao  pg.EntityDAO
 	udao dao.UserDAO
 	l    utils.Lookup
+	azc  authzrpcv1.AuthzClient
 }
 
 type userTraits struct {
@@ -62,8 +66,8 @@ type parsedIds struct {
 	Organization uuid.UUID
 }
 
-func NewUserService(ap providers.AuthProvider, db *bun.DB) UserService {
-	return &userService{ap: ap, dao: pg.NewEntityDAO(db), udao: dao.NewUserDAO(db), l: utils.NewLookup(db)}
+func NewUserService(ap providers.AuthProvider, db *bun.DB, azc authzrpcv1.AuthzClient) UserService {
+	return &userService{ap: ap, dao: pg.NewEntityDAO(db), udao: dao.NewUserDAO(db), l: utils.NewLookup(db), azc: azc}
 }
 
 func getUserTraits(traits map[string]interface{}) userTraits {
@@ -94,37 +98,36 @@ func getUserTraits(traits map[string]interface{}) userTraits {
 }
 
 // Map roles to accounts
-func (s *userService) updateUserRoleRelation(ctx context.Context, user *userv3.User, ids parsedIds) (*userv3.User, error) {
+func (s *userService) createUserRoleRelations(ctx context.Context, user *userv3.User, ids parsedIds) (*userv3.User, error) {
 	projectNamespaceRoles := user.GetSpec().GetProjectNamespaceRoles()
 
 	// TODO: add transactions
 	var panrs []models.ProjectAccountNamespaceRole
 	var pars []models.ProjectAccountResourcerole
 	var ars []models.AccountResourcerole
+	var ps []*authzv1.Policy
 	for _, pnr := range projectNamespaceRoles {
 		role := pnr.GetRole()
 		entity, err := s.dao.GetIdByName(ctx, role, &models.Role{})
 		if err != nil {
-			user.Status = statusFailed(fmt.Errorf("unable to find role '%v'", role))
-			return user, err
+			return user, fmt.Errorf("unable to find role '%v'", role)
 		}
 		var roleId uuid.UUID
 		if rle, ok := entity.(*models.Role); ok {
 			roleId = rle.ID
 		} else {
-			user.Status = statusFailed(fmt.Errorf("unable to find role '%v'", role))
-			return user, err
+			return user, fmt.Errorf("unable to find role '%v'", role)
 		}
 
 		project := pnr.GetProject()
+		org := user.GetMetadata().GetOrganization()
 		namespaceId := pnr.GetNamespace() // TODO: lookup id from name
 
 		switch {
 		case pnr.Namespace != nil:
 			projectId, err := s.l.GetProjectId(ctx, project)
 			if err != nil {
-				user.Status = statusFailed(fmt.Errorf("unable to find project '%v'", project))
-				return user, err
+				return user, fmt.Errorf("unable to find project '%v'", project)
 			}
 			panr := models.ProjectAccountNamespaceRole{
 				CreatedAt:      time.Now(),
@@ -135,15 +138,23 @@ func (s *userService) updateUserRoleRelation(ctx context.Context, user *userv3.U
 				OrganizationId: ids.Organization,
 				AccountId:      ids.Id,
 				ProjectId:      projectId,
-				NamesapceId:    namespaceId,
+				NamespaceId:    namespaceId,
 				Active:         true,
 			}
 			panrs = append(panrs, panr)
+
+			ps = append(ps, &authzv1.Policy{
+				Sub:  "u:" + user.GetMetadata().GetName(),
+				Ns:   strconv.FormatInt(namespaceId, 10),
+				Proj: project,
+				Org:  org,
+				Obj:  role,
+				Act:  "*",
+			})
 		case project != "":
 			projectId, err := s.l.GetProjectId(ctx, project)
 			if err != nil {
-				user.Status = statusFailed(fmt.Errorf("unable to find project '%v'", project))
-				return user, err
+				return user, fmt.Errorf("unable to find project '%v'", project)
 			}
 			par := models.ProjectAccountResourcerole{
 				CreatedAt:      time.Now(),
@@ -158,6 +169,15 @@ func (s *userService) updateUserRoleRelation(ctx context.Context, user *userv3.U
 				Active:         true,
 			}
 			pars = append(pars, par)
+
+			ps = append(ps, &authzv1.Policy{
+				Sub:  "u:" + user.GetMetadata().GetName(),
+				Ns:   "*",
+				Proj: project,
+				Org:  org,
+				Obj:  role,
+				Act:  "*",
+			})
 		default:
 			ar := models.AccountResourcerole{
 				CreatedAt:      time.Now(),
@@ -171,24 +191,40 @@ func (s *userService) updateUserRoleRelation(ctx context.Context, user *userv3.U
 				Active:         true,
 			}
 			ars = append(ars, ar)
+
+			ps = append(ps, &authzv1.Policy{
+				Sub:  "u:" + user.GetMetadata().GetName(),
+				Ns:   "*",
+				Proj: "*",
+				Org:  org,
+				Obj:  role,
+				Act:  "*",
+			})
 		}
 	}
 	if len(panrs) > 0 {
 		_, err := s.dao.Create(ctx, &panrs)
 		if err != nil {
-			return user, err
+			return &userv3.User{}, err
 		}
 	}
 	if len(pars) > 0 {
 		_, err := s.dao.Create(ctx, &pars)
 		if err != nil {
-			return user, err
+			return &userv3.User{}, err
 		}
 	}
 	if len(ars) > 0 {
 		_, err := s.dao.Create(ctx, &ars)
 		if err != nil {
-			return user, err
+			return &userv3.User{}, err
+		}
+	}
+
+	if len(ps) > 0 {
+		success, err := s.azc.CreatePolicies(ctx, &authzv1.Policies{Policies: ps})
+		if err != nil || !success.Res {
+			return &userv3.User{}, fmt.Errorf("unable to create mapping in authz; %v", err)
 		}
 	}
 
@@ -226,25 +262,21 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 		"description": user.GetMetadata().GetDescription(),
 	})
 	if err != nil {
-		user.Status = statusFailed(err)
-		return user, err
+		return &userv3.User{}, err
 	}
 
 	uid, _ := uuid.Parse(id)
-	user, err = s.updateUserRoleRelation(ctx, user, parsedIds{Id: uid, Partner: partnerId, Organization: organizationId})
+	user, err = s.createUserRoleRelations(ctx, user, parsedIds{Id: uid, Partner: partnerId, Organization: organizationId})
 	if err != nil {
-		user.Status = statusFailed(err)
-		return user, err
+		return &userv3.User{}, err
 	}
 
 	rl, err := s.ap.GetRecoveryLink(ctx, id)
 	fmt.Println("Recovery link:", rl) // TODO: email the recovery link to the user
 	if err != nil {
-		user.Status = statusFailed(err)
-		return user, err
+		return &userv3.User{}, err
 	}
 
-	user.Status = statusOK()
 	return user, nil
 }
 
@@ -252,8 +284,7 @@ func (s *userService) identitiesModelToUser(ctx context.Context, user *userv3.Us
 	traits := getUserTraits(usr.Traits)
 	groups, err := s.udao.GetGroups(ctx, usr.ID)
 	if err != nil {
-		user.Status = statusFailed(err)
-		return user, err
+		return &userv3.User{}, err
 	}
 	groupNames := []string{}
 	for _, g := range groups {
@@ -264,8 +295,7 @@ func (s *userService) identitiesModelToUser(ctx context.Context, user *userv3.Us
 
 	roles, err := s.udao.GetRoles(ctx, usr.ID)
 	if err != nil {
-		user.Status = statusFailed(err)
-		return user, err
+		return &userv3.User{}, err
 	}
 
 	user.ApiVersion = apiVersion
@@ -290,27 +320,22 @@ func (s *userService) GetByID(ctx context.Context, user *userv3.User) (*userv3.U
 	id := user.GetMetadata().GetId()
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		user.Status = statusFailed(err)
-		return user, err
+		return &userv3.User{}, err
 	}
 	entity, err := s.dao.GetByID(ctx, uid, &models.KratosIdentities{})
 	if err != nil {
-		user.Status = statusFailed(err)
-		return user, err
+		return &userv3.User{}, err
 	}
 
 	if usr, ok := entity.(*models.KratosIdentities); ok {
 		user, err := s.identitiesModelToUser(ctx, user, usr)
 		if err != nil {
-			user.Status = statusFailed(err)
-			return user, err
+			return &userv3.User{}, err
 		}
 
-		user.Status = statusOK()
 		return user, nil
 	}
-	user.Status = statusFailed(fmt.Errorf("unabele to fetch user '%v'", id))
-	return user, nil
+	return user, fmt.Errorf("unabele to fetch user '%v'", id)
 
 }
 
@@ -318,30 +343,48 @@ func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3
 	name := user.GetMetadata().GetName()
 	entity, err := s.dao.GetByTraits(ctx, name, &models.KratosIdentities{})
 	if err != nil {
-		user.Status = statusFailed(err)
-		return user, err
+		return &userv3.User{}, err
 	}
 
 	if usr, ok := entity.(*models.KratosIdentities); ok {
 		user, err := s.identitiesModelToUser(ctx, user, usr)
 		if err != nil {
-			user.Status = statusFailed(err)
-			return user, err
+			return &userv3.User{}, err
 		}
 
-		user.Status = statusOK()
 		return user, nil
 	}
-	fmt.Println("user:", user);
+	fmt.Println("user:", user)
 	return user, nil
+}
+
+func (s *userService) deleteUserRoleRelations(ctx context.Context, userId uuid.UUID, user *userv3.User) error {
+	err := s.dao.DeleteX(ctx, "account_id", userId, &models.AccountResourcerole{})
+	if err != nil {
+		return err
+	}
+	err = s.dao.DeleteX(ctx, "account_id", userId, &models.ProjectAccountResourcerole{})
+	if err != nil {
+		return err
+	}
+	err = s.dao.DeleteX(ctx, "account_id", userId, &models.ProjectAccountNamespaceRole{})
+	if err != nil {
+		return err
+	}
+
+	_, err = s.azc.DeletePolicies(ctx, &authzv1.Policy{Sub: "u:" + user.GetMetadata().GetName()})
+	if err != nil {
+		return fmt.Errorf("unable to delete user-role relations from authz; %v", err)
+	}
+
+	return nil
 }
 
 func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.User, error) {
 	name := user.GetMetadata().GetName()
 	entity, err := s.dao.GetIdByTraits(ctx, name, &models.KratosIdentities{})
 	if err != nil {
-		user.Status = statusFailed(fmt.Errorf("no user found with name '%v'", name))
-		return user, err
+		return &userv3.User{}, fmt.Errorf("no user found with name '%v'", name)
 	}
 
 	if usr, ok := entity.(*models.KratosIdentities); ok {
@@ -356,37 +399,22 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 			"description": user.GetMetadata().GetDescription(),
 		})
 		if err != nil {
-			user.Status = statusFailed(err)
-			return user, err
+			return &userv3.User{}, err
 		}
 
-		err = s.dao.DeleteX(ctx, "account_id", usr.ID, &models.AccountResourcerole{})
+		err = s.deleteUserRoleRelations(ctx, usr.ID, user)
 		if err != nil {
-			user.Status = statusFailed(err)
-			return nil, err
-		}
-		err = s.dao.DeleteX(ctx, "account_id", usr.ID, &models.ProjectAccountResourcerole{})
-		if err != nil {
-			user.Status = statusFailed(err)
-			return nil, err
-		}
-		err = s.dao.DeleteX(ctx, "account_id", usr.ID, &models.ProjectAccountNamespaceRole{})
-		if err != nil {
-			user.Status = statusFailed(err)
-			return nil, err
+			return &userv3.User{}, err
 		}
 
-		user, err = s.updateUserRoleRelation(ctx, user, parsedIds{Id: usr.ID, Partner: partnerId, Organization: organizationId})
+		user, err = s.createUserRoleRelations(ctx, user, parsedIds{Id: usr.ID, Partner: partnerId, Organization: organizationId})
 		if err != nil {
-			user.Status = statusFailed(err)
-			return user, err
+			return &userv3.User{}, err
 		}
 	} else {
-		user.Status = statusFailed(fmt.Errorf("unable to update user '%v'", name))
-		return user, err
+		return &userv3.User{}, fmt.Errorf("unable to update user '%v'", name)
 	}
 
-	user.Status = statusOK()
 	return user, nil
 }
 
@@ -398,6 +426,11 @@ func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3
 	}
 
 	if usr, ok := entity.(*models.KratosIdentities); ok {
+		err = s.deleteUserRoleRelations(ctx, usr.ID, user)
+		if err != nil {
+			return &userrpcv3.DeleteUserResponse{}, err
+		}
+
 		err := s.ap.Delete(ctx, usr.ID.String())
 		if err != nil {
 			return &userrpcv3.DeleteUserResponse{}, err
@@ -405,24 +438,12 @@ func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3
 
 		err = s.dao.DeleteX(ctx, "account_id", usr.ID, &models.GroupAccount{})
 		if err != nil {
-			return &userrpcv3.DeleteUserResponse{}, err
-		}
-		err = s.dao.DeleteX(ctx, "account_id", usr.ID, &models.AccountResourcerole{})
-		if err != nil {
-			return &userrpcv3.DeleteUserResponse{}, err
-		}
-		err = s.dao.DeleteX(ctx, "account_id", usr.ID, &models.ProjectAccountResourcerole{})
-		if err != nil {
-			return &userrpcv3.DeleteUserResponse{}, err
-		}
-		err = s.dao.DeleteX(ctx, "account_id", usr.ID, &models.ProjectAccountNamespaceRole{})
-		if err != nil {
-			return &userrpcv3.DeleteUserResponse{}, err
+			return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("unable to delete user; %v", err)
 		}
 
 		return &userrpcv3.DeleteUserResponse{}, nil
 	}
-	return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("unable to find user '%v'", user.Metadata.Name)
+	return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("unable to delete user '%v'", user.Metadata.Name)
 
 }
 

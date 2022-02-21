@@ -39,8 +39,46 @@ func performGroupBasicChecks(t *testing.T, group *userv3.Group, guuid string) {
 	if group.GetMetadata().GetName() != "group-"+guuid {
 		t.Error("invalid name returned")
 	}
-	if group.Status.ConditionStatus != v3.ConditionStatus_StatusOK {
-		t.Error("group status is not OK")
+}
+
+func performGroupBasicAuthzChecks(t *testing.T, mazc mockAuthzClient, guuid string, users []string, roles []*userv3.ProjectNamespaceRole) {
+	if len(mazc.cug) > 0 {
+		for i, u := range mazc.cug[len(mazc.cug)-1].UserGroups {
+			if u.User != "u:"+users[i] {
+				t.Errorf("invalid user sent to authz; expected 'u:%v', got '%v'", users[i], u.User)
+			}
+			if u.Grp != "g:group-"+guuid {
+				t.Errorf("invalid group sent to authz; expected 'g:group-%v', got '%v'", guuid, u.Grp)
+			}
+		}
+	}
+	if len(mazc.cp) > 0 {
+		for i, u := range mazc.cp[len(mazc.cp)-1].Policies {
+			if u.Sub != "g:group-"+guuid {
+				t.Errorf("invalid sub in policy sent to authz; expected '%v', got '%v'", "g:group-"+guuid, u.Sub)
+			}
+			if u.Obj != roles[i].Role {
+				t.Errorf("invalid obj in policy sent to authz; expected '%v', got '%v'", roles[i].Role, u.Obj)
+			}
+			if roles[i].Namespace != nil {
+				if u.Ns != fmt.Sprint(*roles[i].Namespace) {
+					t.Errorf("invalid ns in policy sent to authz; expected '%v', got '%v'", fmt.Sprint(roles[i].Namespace), u.Ns)
+				}
+			} else {
+				if u.Ns != "*" {
+					t.Errorf("invalid ns in policy sent to authz; expected '%v', got '%v'", "*", u.Ns)
+				}
+			}
+			if roles[i].Project != nil {
+				if u.Proj != *roles[i].Project {
+					t.Errorf("invalid proj in policy sent to authz; expected '%v', got '%v'", roles[i].Project, u.Proj)
+				}
+			} else {
+				if u.Proj != "*" {
+					t.Errorf("invalid proj in policy sent to authz; expected '%v', got '%v'", "*", u.Proj)
+				}
+			}
+		}
 	}
 }
 
@@ -48,20 +86,20 @@ func TestCreateGroupNoUsersNoRoles(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	gs := NewGroupService(db)
+	mazc := mockAuthzClient{}
+	gs := NewGroupService(db, &mazc)
 	defer gs.Close()
 
 	guuid := uuid.New().String()
 	puuid := uuid.New().String()
-	fmt.Println("puuid:", puuid)
 	ouuid := uuid.New().String()
-	fmt.Println("ouuid:", ouuid)
 
 	mock.ExpectQuery(`SELECT "partner"."id" FROM "authsrv_partner" AS "partner"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
-	mock.ExpectQuery(`SELECT "group"."id" FROM "authsrv_group" AS "group" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'group-` + guuid + `'.`).WithArgs()
+	mock.ExpectQuery(`SELECT "group"."id" FROM "authsrv_group" AS "group" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'group-` + guuid + `'.`).
+		WillReturnError(fmt.Errorf("no data available"))
 	mock.ExpectQuery(`INSERT INTO "authsrv_group"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(guuid))
 
@@ -74,13 +112,16 @@ func TestCreateGroupNoUsersNoRoles(t *testing.T) {
 		t.Fatal("could not create group:", err)
 	}
 	performGroupBasicChecks(t, group, guuid)
+	performBasicAuthzChecks(t, mazc, 0, 0, 0, 0, 0, 0)
+	performGroupBasicAuthzChecks(t, mazc, guuid, []string{}, []*userv3.ProjectNamespaceRole{})
 }
 
 func TestCreateGroupDuplicate(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	gs := NewGroupService(db)
+	mazc := mockAuthzClient{}
+	gs := NewGroupService(db, &mazc)
 	defer gs.Close()
 
 	guuid := uuid.New().String()
@@ -106,6 +147,8 @@ func TestCreateGroupDuplicate(t *testing.T) {
 	if err == nil {
 		t.Fatal("should not be able to recreate group with same name")
 	}
+	performBasicAuthzChecks(t, mazc, 0, 0, 0, 0, 0, 0)
+	performGroupBasicAuthzChecks(t, mazc, guuid, []string{}, []*userv3.ProjectNamespaceRole{})
 }
 
 func TestCreateGroupWithUsersNoRoles(t *testing.T) {
@@ -121,7 +164,8 @@ func TestCreateGroupWithUsersNoRoles(t *testing.T) {
 			db, mock := getDB(t)
 			defer db.Close()
 
-			gs := NewGroupService(db)
+			mazc := mockAuthzClient{}
+			gs := NewGroupService(db, &mazc)
 			defer gs.Close()
 
 			guuid := uuid.New().String()
@@ -133,7 +177,8 @@ func TestCreateGroupWithUsersNoRoles(t *testing.T) {
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 			mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
-			mock.ExpectQuery(`SELECT "group"."id" FROM "authsrv_group" AS "group" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'group-` + guuid + `'.`).WithArgs()
+			mock.ExpectQuery(`SELECT "group"."id" FROM "authsrv_group" AS "group" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'group-` + guuid + `'.`).
+				WillReturnError(fmt.Errorf("no data available"))
 			mock.ExpectQuery(`INSERT INTO "authsrv_group"`).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(guuid))
 			for _, u := range tc.users {
@@ -157,6 +202,8 @@ func TestCreateGroupWithUsersNoRoles(t *testing.T) {
 					t.Errorf("user id '%v' not found in resource response", tc.users[i])
 				}
 			}
+			performBasicAuthzChecks(t, mazc, 0, 0, 1, 0, 0, 0)
+			performGroupBasicAuthzChecks(t, mazc, guuid, tc.users, []*userv3.ProjectNamespaceRole{})
 		})
 	}
 }
@@ -182,7 +229,8 @@ func TestCreateGroupNoUsersWithRoles(t *testing.T) {
 			db, mock := getDB(t)
 			defer db.Close()
 
-			gs := NewGroupService(db)
+			mazc := mockAuthzClient{}
+			gs := NewGroupService(db, &mazc)
 			defer gs.Close()
 
 			guuid := uuid.New().String()
@@ -195,7 +243,8 @@ func TestCreateGroupNoUsersWithRoles(t *testing.T) {
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 			mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
-			mock.ExpectQuery(`SELECT "group"."id" FROM "authsrv_group" AS "group" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'group-` + guuid + `'.`).WithArgs()
+			mock.ExpectQuery(`SELECT "group"."id" FROM "authsrv_group" AS "group" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'group-` + guuid + `'.`).
+				WillReturnError(fmt.Errorf("no data available"))
 			mock.ExpectQuery(`INSERT INTO "authsrv_group"`).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(guuid))
 			mock.ExpectQuery(`SELECT "resourcerole"."id" FROM "authsrv_resourcerole" AS "resourcerole"`).
@@ -229,6 +278,8 @@ func TestCreateGroupNoUsersWithRoles(t *testing.T) {
 					t.Errorf("role '%v' not found in resource response", tc.roles[i])
 				}
 			}
+			performBasicAuthzChecks(t, mazc, 1, 0, 0, 0, 0, 0)
+			performGroupBasicAuthzChecks(t, mazc, guuid, []string{}, tc.roles)
 		})
 	}
 }
@@ -255,7 +306,8 @@ func TestCreateGroupWithUsersWithRoles(t *testing.T) {
 			db, mock := getDB(t)
 			defer db.Close()
 
-			gs := NewGroupService(db)
+			mazc := mockAuthzClient{}
+			gs := NewGroupService(db, &mazc)
 			defer gs.Close()
 
 			guuid := uuid.New().String()
@@ -315,6 +367,8 @@ func TestCreateGroupWithUsersWithRoles(t *testing.T) {
 					t.Errorf("role '%v' not found in resource response", tc.roles[i])
 				}
 			}
+			performBasicAuthzChecks(t, mazc, 1, 0, 1, 0, 0, 0)
+			performGroupBasicAuthzChecks(t, mazc, guuid, tc.users, tc.roles)
 		})
 	}
 }
@@ -333,7 +387,8 @@ func TestUpdateGroupWithUsersWithRoles(t *testing.T) {
 			db, mock := getDB(t)
 			defer db.Close()
 
-			gs := NewGroupService(db)
+			mazc := mockAuthzClient{}
+			gs := NewGroupService(db, &mazc)
 			defer gs.Close()
 
 			guuid := uuid.New().String()
@@ -395,6 +450,8 @@ func TestUpdateGroupWithUsersWithRoles(t *testing.T) {
 					t.Errorf("role '%v' not found in resource response", tc.roles[i])
 				}
 			}
+			performBasicAuthzChecks(t, mazc, 1, 1, 1, 1, 0, 0)
+			performGroupBasicAuthzChecks(t, mazc, guuid, tc.users, tc.roles)
 		})
 	}
 }
@@ -403,7 +460,8 @@ func TestGroupDelete(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	gs := NewGroupService(db)
+	mazc := mockAuthzClient{}
+	gs := NewGroupService(db, &mazc)
 	defer gs.Close()
 
 	guuid := uuid.New().String()
@@ -441,7 +499,8 @@ func TestGroupDeleteNonExist(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	gs := NewGroupService(db)
+	mazc := mockAuthzClient{}
+	gs := NewGroupService(db, &mazc)
 	defer gs.Close()
 
 	guuid := uuid.New().String()
@@ -464,7 +523,8 @@ func TestGroupGetByName(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	gs := NewGroupService(db)
+	mazc := mockAuthzClient{}
+	gs := NewGroupService(db, &mazc)
 	defer gs.Close()
 
 	guuid := uuid.New().String()
@@ -514,7 +574,8 @@ func TestGroupGetById(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	gs := NewGroupService(db)
+	mazc := mockAuthzClient{}
+	gs := NewGroupService(db, &mazc)
 	defer gs.Close()
 
 	guuid := uuid.New().String()
@@ -560,7 +621,8 @@ func TestGroupList(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	gs := NewGroupService(db)
+	mazc := mockAuthzClient{}
+	gs := NewGroupService(db, &mazc)
 	defer gs.Close()
 
 	guuid1 := uuid.New().String()
