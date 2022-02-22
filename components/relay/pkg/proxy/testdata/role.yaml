@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rafay-core-debug
+  namespace: default
+  labels:
+    creator: rafay-relay
+    expire: "yes"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: rafay-core-debug-role
+  namespace: default
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - "*"
+  verbs:
+  - "*"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+    name: rafay-core-debug-binding
+    namespace: default
+roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: Role
+    name: rafay-core-debug-role
+subjects:
+- kind: ServiceAccount
+  name: rafay-core-debug
