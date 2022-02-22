@@ -5,6 +5,12 @@ import "google/protobuf/timestamp.proto";
 import "google/api/field_behavior.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
+// RafayTypeMeta is the type meta for rafay resources
+message RafayTypeMeta {
+  string apiVersion = 1;
+  string kind = 2;
+}
+
 message Metadata {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema : {
@@ -22,38 +28,43 @@ message Metadata {
         title : "Name",
         description : "name of the resource"
       } ];
-  string description = 2
+  string displayName = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Display Name",
+        description : "display name of the resource"
+      } ];
+  string description = 3
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Description",
         description : "description of the resource"
       } ];
-  map<string, string> labels = 3
+  map<string, string> labels = 4
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Lables",
         description : "labels of the resource"
       } ];
-  map<string, string> annotations = 4
+  map<string, string> annotations = 5
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Annotations",
         description : "annotations of the resource"
       } ];
-  string project = 5
+  string project = 6
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Project",
         description : "Project of the resource"
       } ];
-  string organization = 6
+  string organization = 7
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Organization",
         description : "Organization to which the resource belongs"
       } ];
-  string partner = 7
+  string partner = 8
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Partner",
         description : "Partner to which the resource belongs"
       } ];
-  string id = 8 [ (google.api.field_behavior) = OUTPUT_ONLY ];
-  google.protobuf.Timestamp modifiedAt = 9
+  string id = 9 [ (google.api.field_behavior) = OUTPUT_ONLY ];
+  google.protobuf.Timestamp modifiedAt = 10
       [ (google.api.field_behavior) = OUTPUT_ONLY ];
 }
 
@@ -232,9 +243,9 @@ message QueryOptions {
   string name = 1;
   // selector is used to filter the labels of a resource
   string selector = 2;
-  string partnerID = 3;
-  string organizationID = 4;
-  string projectID = 5;
+  string partner = 3;
+  string organization = 4;
+  string project = 5;
   // displayName only used for update queries to set displayName (READONLY)
   string displayName = 6;
   // labels only used for update queries to set labels (READONLY)
@@ -263,6 +274,7 @@ message QueryOptions {
   string publishedVersion = 23;
   string clusterID = 24;
   string ID = 25;
+  string account = 26;
 }
 
 // RafayConditionStatus is the status of the status condition

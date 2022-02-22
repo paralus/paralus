@@ -3,20 +3,18 @@ package gateway_test
 import (
 	"bytes"
 	"testing"
-	"time"
 
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway/testdata"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func TestYamlMarshaller(t *testing.T) {
 	m := gateway.NewRafayYAML()
 
-	now := time.Now()
-
 	t1 := testdata.TestYAML{
 		Name:   "test",
-		Time:   &now,
+		Time:   timestamppb.Now(),
 		Labels: map[string]string{"l1": "l2"},
 	}
 

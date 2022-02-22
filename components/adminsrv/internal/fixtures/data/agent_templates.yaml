@@ -1,0 +1,142 @@
+items:
+  - metadata:
+      name: rafay-sentry-peering-server
+      displayName: "Rafay Sentry Peering Server"
+    spec:
+      infraRef: rafay-sentry-peering
+      autoRegister: true
+      autoApprove: true
+      ignoreMultipleRegister: true
+      templateType: "Server"
+      hosts: 
+        - host: "{{ .sentryPeeringHost }}"
+          type: "HostTypeExternal"
+        - host: "rafay-sentry:7001"
+          type: "HostTypeInternal"
+        - host: "rafay-sentry.rafay-system:7001 "
+          type: "HostTypeInternal"
+        - host: "rafay-sentry.rafay-system.svc.cluster.local:7001"
+          type: "HostTypeInternal"
+      inClusterTemplate: ""
+      outOfClusterTemplate: ""
+  - metadata:
+      name: rafay-sentry-peering-client
+    spec:
+      infraRef: rafay-sentry-peering
+      autoRegister: true
+      autoApprove: true
+      ignoreMultipleRegister: true
+      templateType: "Client"
+      inClusterTemplate: ""
+      outOfClusterTemplate: ""
+  - metadata:
+      name: rafay-core-relay-server
+      displayName: "Rafay Core Relay Server"
+      labels:
+        rafay.dev/connectorTemplate: "true"
+    spec:
+      infraRef: rafay-core-relay
+      autoRegister: true
+      autoApprove: true
+      ignoreMultipleRegister: true
+      templateType: "Server"
+      hosts:
+        - host: "{{ .coreRelayServerHost }}"
+          type: "HostTypeExternal"
+      inClusterTemplate: ""
+      outOfClusterTemplate: ""
+  - metadata:
+      name: rafay-core-relay-agent
+      labels:
+        rafay.dev/defaultRelay: "true"
+    spec:
+      infraRef: rafay-core-relay
+      autoRegister: false
+      autoApprove: true
+      ignoreMultipleRegister: true
+      templateType: "Client"
+      hosts: 
+        - host: "{{ .coreRelayServerHost }}"
+          type: "HostTypeExternal"
+      inClusterTemplate: ""
+      outOfClusterTemplate: ""
+  - metadata:
+      name: rafay-core-relay-user
+      displayName: "Rafay Core User Server"
+      labels:
+        rafay.dev/defaultUser: "true"
+        rafay.dev/userTemplate: "true"
+        rafay.dev/connectorAgentTemplate: "rafay-core-relay-agent"
+    spec:
+      infraRef: rafay-core-relay-user
+      autoRegister: true
+      autoApprove: true
+      ignoreMultipleRegister: true
+      templateType: "Mixed"
+      hosts: 
+        - host: "{{ .coreRelayUserHost }}"
+          type: "HostTypeExternal"
+      inClusterTemplate: ""
+      outOfClusterTemplate: ""
+  - metadata:
+      name: rafay-core-cd-relay-user
+      displayName: "Rafay Core CD Relay User"
+      labels:
+        rafay.dev/defaultCDUser: "true"
+    spec: 
+      infraRef: rafay-core-cd-relay-user
+      autoRegister: true
+      autoApprove: true
+      ignoreMultipleRegister: true
+      templateType: "Mixed"
+      hosts:
+        - host: "{{ .coreCDRelayUserHost }}"
+          type: "HostTypeExternal"
+        - host: "rafay-cd-agent:7000"
+          type: "HostTypeInternal"
+        - host: "rafay-cd-agent.rafay-system:7000 "
+          type: "HostTypeInternal"
+        - host: "rafay-cd-agent.rafay-system.svc.cluster.local:7000"
+          type: "HostTypeInternal"
+      inClusterTemplate: ""
+      outOfClusterTemplate: ""
+  - metadata:
+      name: rafay-core-cd-relay-server
+      displayName: "Rafay Core CD Relay Server"
+    spec: 
+      infraRef: rafay-core-cd-relay
+      autoRegister: true
+      autoApprove: true
+      ignoreMultipleRegister: true
+      templateType: "Server"
+      hosts:
+        - host: "{{ .coreCDRelayConnectorHost }}"
+          type: "HostTypeExternal"
+      inClusterTemplate: ""
+      outOfClusterTemplate: ""
+  - metadata:
+      name: rafay-core-cd-relay-agent
+      displayName: "Rafay Core CD Relay Agent"
+      labels:
+        rafay.dev/defaultCDRelay: "true"
+    spec: 
+      infraRef: rafay-core-cd-relay
+      autoRegister: false
+      autoApprove: true
+      ignoreMultipleRegister: true
+      templateType: "Client"
+      hosts:
+        - host: "{{ .coreCDRelayConnectorHost }}"
+          type: "HostTypeExternal"
+      inClusterTemplate: ""
+      outOfClusterTemplate: ""
+  - metadata:
+      name: rafay-sentry-cd-peering-client
+    spec:
+      infraRef: rafay-sentry-peering
+      autoRegister: true
+      autoApprove: true
+      ignoreMultipleRegister: true
+      templateType: "Client"
+      inClusterTemplate: ""
+      outOfClusterTemplate: ""

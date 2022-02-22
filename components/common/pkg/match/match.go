@@ -24,36 +24,36 @@ func New(opts ...query.Option) (Matcher, error) {
 	}
 
 	return &matcher{
-		partnerID:      options.PartnerID,
-		organizationID: options.OrganizationID,
-		projectID:      options.ProjectID,
-		selector:       selector,
-		name:           options.Name,
+		partner:      options.Partner,
+		organization: options.Organization,
+		project:      options.Project,
+		selector:     selector,
+		name:         options.Name,
 	}, nil
 
 }
 
 type matcher struct {
-	partnerID      string
-	organizationID string
-	projectID      string
-	selector       labels.Selector
-	name           string
+	partner      string
+	organization string
+	project      string
+	selector     labels.Selector
+	name         string
 }
 
 var _ Matcher = (*matcher)(nil)
 
 func (m *matcher) Match(meta commonv3.Metadata) bool {
 
-	if meta.GetPartner() != m.partnerID {
+	if meta.GetPartner() != m.partner {
 		return false
 	}
 
-	if meta.GetOrganization() != m.organizationID {
+	if meta.GetOrganization() != m.organization {
 		return false
 	}
 
-	if meta.GetProject() != m.projectID {
+	if meta.GetProject() != m.project {
 		return false
 	}
 

@@ -3,9 +3,9 @@ package rafay.dev.types.infra.v3;
 
 import "google/protobuf/timestamp.proto";
 import "proto/types/commonpb/v3/common.proto";
-import "proto/types/commonpb/v3/kube.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "gogoproto/gogo.proto";
+import "k8s.io/api/core/v1/generated.proto";
 
 message Cluster {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
@@ -248,7 +248,7 @@ message ClusterNode {
 
 message ClusterNodeSpec {
     bool unschedulable = 1;
-    repeated rafay.dev.types.common.v3.Taint taints = 2 [
+    repeated k8s.io.api.core.v1.Taint taints = 2 [
       (gogoproto.nullable) = false,
       (gogoproto.jsontag) = "taints,omitempty"
     ];
@@ -256,10 +256,10 @@ message ClusterNodeSpec {
 
 message ClusterNodeStatus {
     ClusterNodeState state = 1;
-    repeated rafay.dev.types.common.v3.NodeCondition conditions = 2 [
+    repeated k8s.io.api.core.v1.NodeCondition conditions = 2 [
       (gogoproto.nullable) = false
     ];
-    rafay.dev.types.common.v3.NodeSystemInfo nodeInfo = 3;
+    k8s.io.api.core.v1.NodeSystemInfo nodeInfo = 3;
     Resources capacity = 4;
     Resources allocatable = 5;
     Resources allocated = 6;
@@ -310,11 +310,11 @@ enum ClusterConditionType {
     // disable enum prefix
     option (gogoproto.goproto_enum_prefix) = false;
   
-    ClusterRegister = 0;
+    ClusterBlueprintSync = 0;
     ClusterApprove = 1;
     ClusterCheckIn = 2;
     ClusterNodeSync = 3;
-    ClusterBlueprintSync = 4;
+    ClusterRegister = 4;
     ClusterNamespaceSync = 5;
     ClusterReady = 6;
     ClusterAuxiliaryTaskSync = 7;
@@ -337,6 +337,46 @@ enum Health {
     EDGE_UNHEALTHY = 2;
     EDGE_DISCONNECTED = 3;
 }
+
+message Location {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+      json_schema : {
+        title : "Location"
+        description : "Location"
+        required : [ "apiVersion", "kind", "metadata", "spec" ]
+      }
+    };
+    string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+          title : "API Version",
+          description : "API Version of the resource"
+          default : "infra.k8smgmt.io/v3"
+          read_only : true
+        } ];
+    string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+          title : "Kind",
+          description : "Kind of the resource"
+          default : "Location"
+          read_only : true
+        } ];
+    rafay.dev.types.common.v3.Metadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+          title : "Metadata",
+          description : "Metadata of the resource"
+        } ];
+    Metro spec = 4
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+          title : "Spec",
+          description : "Spec of the resource"
+        } ];
+    rafay.dev.types.common.v3.Status status = 5
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+          title : "Status",
+          description : "Status of the resource"
+          read_only : true
+        } ];
+  }
 
 message Metro {
     string id = 1
@@ -398,6 +438,35 @@ message Metro {
             read_only : true
         } ];
 }
+
+message LocationList {
+    string apiVersion = 1
+          [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+              title : "API Version",
+              description : "API Version of the list resource"
+              default : "infra.k8smgmt.io/v3"
+              read_only : true
+          } ];
+    string kind = 2
+          [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+              title : "Kind",
+              description : "Kind of the list resource"
+              default : "LocationList"
+              read_only : true
+          } ];
+    rafay.dev.types.common.v3.ListMetadata metadata = 3
+          [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+              title : "ListMetadata",
+              description : "Metadata of the list resource"
+              read_only : true
+          } ];
+    repeated Metro items = 4
+          [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+              title : "Items",
+              description : "List of the resources"
+              read_only : true
+          } ];
+  }
   
 message ProvisionParams {
     string environmentProvider = 1
@@ -526,3 +595,9 @@ message ClusterToken {
           read_only : true
         } ];
 }
+
+message NameHash {
+    string name = 1;
+    string hash = 2;
+    bool deleting = 3;
+  }

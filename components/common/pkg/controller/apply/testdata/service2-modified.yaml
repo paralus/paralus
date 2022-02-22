@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: device-manager-service
+  namespace: default
+spec:
+  ports:
+  - name: grpc
+    port: 55050
+    nodePort: 0
+  selector:
+    app: device-manager-service
+  #type: ClusterIP
+

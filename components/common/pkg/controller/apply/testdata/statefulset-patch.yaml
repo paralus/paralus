@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    rafay.dev/overridedBy: global/global-override
+  name: rafay-connector
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rafay-connector
+  serviceName: "connector"
+  template:
+    metadata:
+      labels:
+        app: rafay-connector
+    spec:
+      containers:
+      - image: rafaysystems/rafay-connector:latest
+        imagePullPolicy: Always
+        name: connector
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/config
+          name: connector-config
+      priorityClassName: rafay-cluster-critical
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - configMap:
+          name: connector-config
+        name: connector-config
+status:
+  replicas: 0

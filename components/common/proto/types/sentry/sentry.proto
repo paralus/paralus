@@ -1,0 +1,272 @@
+syntax = "proto3";
+package rafay.dev.types.sentry;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "proto/types/commonpb/v3/common.proto";
+import "proto/types/config/placement.proto";
+
+enum BootstrapInfraType {
+  // disable enum prefix
+  option (gogoproto.goproto_enum_prefix) = false;
+  ClusterBootstrapInfra = 0;
+}
+
+enum BootstrapAgentType {
+  // disable enum prefix
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  RafayConnector = 0;
+  RelayAgent = 1;
+
+  PipelineAgent = 2;
+}
+
+enum BootstrapAgentMode {
+  // disable enum prefix
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  InCluster = 0;
+  OutOfCluster = 1;
+}
+
+enum BootstrapAgentState {
+  // disable enum prefix
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  NotSet = 0;
+  NotRegistered = 1;
+  NotApproved = 2;
+  Approved = 3;
+}
+
+message BootstrapInfraSpec {
+  string caCert = 1 [ (gogoproto.moretags) = "pg:\"ca_cert\"" ];
+  string caKey = 2 [ (gogoproto.moretags) = "pg:\"ca_key\"" ];
+  string caKeyPass = 3 [ (gogoproto.moretags) = "pg:\"ca_key_pass\"" ];
+}
+
+message BootstrapInfraStatus {}
+
+message BootstrapInfra {
+  string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the resource"
+            default : "infra.k8smgmt.io/v3"
+            read_only : true
+        } ];
+  string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the resource"
+            default : "BootstrapInfra"
+            read_only : true
+        } ];
+  rafay.dev.types.common.v3.Metadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Metadata",
+            description : "Metadata of the resource"
+        },
+        (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+  BootstrapInfraSpec spec = 4
+      [ (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+  BootstrapInfraStatus status = 5
+      [ (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+}
+
+message BootstrapInfraList {
+  string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the list resource"
+            default : "infra.k8smgmt.io/v3"
+            read_only : true
+        } ];
+  string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the list resource"
+            default : "BootstrapInfraList"
+            read_only : true
+        } ];
+  rafay.dev.types.common.v3.ListMetadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "ListMetadata",
+            description : "Metadata of the list resource"
+            read_only : true
+        } ];
+  repeated BootstrapInfra items = 4 [ (gogoproto.nullable) = false ];
+}
+
+enum BootstrapAgentTemplateType {
+  // disable enum prefix
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  TemplateTypeNotSet = 0;
+  Client = 1;
+  Server = 2;
+  Mixed = 3;
+}
+
+enum BootstrapTemplateHostType {
+  // disable enum prefix
+  option (gogoproto.goproto_enum_prefix) = false;
+  HostTypeNotSet = 0;
+  HostTypeInternal = 1;
+  HostTypeExternal = 2;
+}
+
+message BootstrapTemplateHost {
+  string host = 1;
+  BootstrapTemplateHostType type = 2;
+}
+
+message BootstrapAgentTemplateSpec {
+  string infraRef = 1 [ (gogoproto.moretags) = "bun:\"infra_ref\"" ];
+  bool autoRegister = 2 [
+    (gogoproto.moretags) = "bun:\"auto_register\"",
+    (gogoproto.jsontag) = "autoRegister"
+  ];
+  bool ignoreMultipleRegister = 3 [
+    (gogoproto.moretags) = "bun:\"ignore_multiple_register\"",
+    (gogoproto.jsontag) = "ignoreMultipleRegister"
+  ];
+  bool autoApprove = 4 [
+    (gogoproto.moretags) = "bun:\"auto_approve\"",
+    (gogoproto.jsontag) = "autoApprove"
+  ];
+  BootstrapAgentTemplateType templateType = 5 [
+    (gogoproto.moretags) = "bun:\"template_type,use_zero\"",
+    (gogoproto.jsontag) = "templateType"
+  ];
+  string token = 6 [ (gogoproto.moretags) = "bun:\"token\"" ];
+  repeated BootstrapTemplateHost hosts = 7 [ (gogoproto.moretags) = "bun:\"hosts,use_zero\"" ];
+  string inClusterTemplate = 8 [
+    (gogoproto.moretags) = "bun:\"incluster_template,use_zero\"",
+    (gogoproto.jsontag) = "inClusterTemplate"
+  ];
+  string outOfClusterTemplate = 9 [
+    (gogoproto.moretags) = "bun:\"outofcluster_template,use_zero\"",
+    (gogoproto.jsontag) = "outOfClusterTemplate"
+  ];
+}
+
+message BootstrapAgentTemplateStatus {}
+
+message BootstrapAgentTemplate {
+  string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the resource"
+            default : "infra.k8smgmt.io/v3"
+            read_only : true
+        } ];
+  string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the resource"
+            default : "BootstrapAgentTemplate"
+            read_only : true
+        } ];
+  rafay.dev.types.common.v3.Metadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Metadata",
+            description : "Metadata of the resource"
+        },
+        (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+  BootstrapAgentTemplateSpec spec = 4
+      [ (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+  BootstrapAgentTemplateStatus status = 5
+      [ (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+}
+
+message BootstrapAgentTemplateList {
+  string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the list resource"
+            default : "infra.k8smgmt.io/v3"
+            read_only : true
+        } ];
+  string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the list resource"
+            default : "BootstrapAgentTemplateList"
+            read_only : true
+        } ];
+  rafay.dev.types.common.v3.ListMetadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "ListMetadata",
+            description : "Metadata of the list resource"
+            read_only : true
+        } ];
+  repeated BootstrapAgentTemplate items = 4 [ (gogoproto.nullable) = false ];
+}
+
+message BootstrapAgentSpec {
+  string token = 1;
+  string templateRef = 2;
+  BootstrapAgentMode agentMode = 3;
+}
+
+message BootStrapAgentStatus {
+  BootstrapAgentState tokenState = 1;
+  string ipAddress = 2;
+  google.protobuf.Timestamp lastCheckedIn = 3;
+  string fingerprint = 4;
+}
+
+message BootstrapAgent {
+  string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the resource"
+            default : "infra.k8smgmt.io/v3"
+            read_only : true
+        } ];
+  string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the resource"
+            default : "BootstrapAgent"
+            read_only : true
+        } ];
+  rafay.dev.types.common.v3.Metadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Metadata",
+            description : "Metadata of the resource"
+        },
+        (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+  BootstrapAgentSpec spec = 4
+      [ (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+  BootStrapAgentStatus status = 5
+      [ (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+}
+
+// BootstrapAgentList is a list of bootstrap agents
+message BootstrapAgentList {
+  string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the list resource"
+            default : "infra.k8smgmt.io/v3"
+            read_only : true
+        } ];
+  string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the list resource"
+            default : "BootstrapAgentList"
+            read_only : true
+        } ];
+  rafay.dev.types.common.v3.ListMetadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "ListMetadata",
+            description : "Metadata of the list resource"
+            read_only : true
+        } ];
+  repeated BootstrapAgent items = 4 [ (gogoproto.nullable) = false ];
+}

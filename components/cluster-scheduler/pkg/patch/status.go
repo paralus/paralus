@@ -5,6 +5,7 @@ import (
 
 	sp "github.com/RafaySystems/rcloud-base/components/common/pkg/controller/strategicpatch"
 	infrav3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/infrapb/v3"
+	"github.com/RafaySystems/rcloud-base/components/common/proto/types/scheduler"
 )
 
 type clusterConditions struct {
@@ -63,6 +64,36 @@ func ClusterNodeStatus(existing, current *infrav3.ClusterNodeStatus) error {
 	}
 
 	fb, err := sp.StrategicMergePatch(eb, pb, (*infrav3.ClusterNodeStatus)(nil))
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(fb, existing)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// NamespaceStatus patches existing namespace status with current
+func NamespaceStatus(existing, current *scheduler.ClusterNamespaceStatus) error {
+	eb, err := json.Marshal(existing)
+	if err != nil {
+		return err
+	}
+
+	cb, err := json.Marshal(current)
+	if err != nil {
+		return err
+	}
+
+	pb, err := sp.CreateTwoWayMergePatch(eb, cb, (*scheduler.ClusterNamespaceStatus)(nil))
+	if err != nil {
+		return err
+	}
+
+	fb, err := sp.StrategicMergePatch(eb, pb, (*scheduler.ClusterNamespaceStatus)(nil))
 	if err != nil {
 		return err
 	}

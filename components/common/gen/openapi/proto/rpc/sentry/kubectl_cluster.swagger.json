@@ -1,0 +1,447 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Sentry KubectlClusterSettings Service",
+    "version": "2.0",
+    "contact": {
+      "name": "Rafay Dev"
+    }
+  },
+  "tags": [
+    {
+      "name": "KubectlClusterSettings"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json",
+    "application/yaml"
+  ],
+  "produces": [
+    "application/json",
+    "application/yaml"
+  ],
+  "paths": {
+    "/v2/sentry/kubectl/{opts.urlScope}/settings": {
+      "get": {
+        "operationId": "KubectlClusterSettings_GetKubectlClusterSettings",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/rpcGetKubectlClusterSettingsResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "opts.urlScope",
+            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value)",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "cluster/[^/]+"
+          },
+          {
+            "name": "opts.name",
+            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID).",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.selector",
+            "description": "selector is used to filter the labels of a resource.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.organization",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.project",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.displayName",
+            "description": "displayName only used for update queries to set displayName (READONLY).",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.count",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "opts.offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "opts.limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "opts.ignoreScopeDefault",
+            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "opts.globalScope",
+            "description": "globalScope sets partnerID,organizationID,projectID = 0.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "opts.orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.order",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.deleted",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "opts.extended",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "opts.isSSOUser",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "opts.username",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.groups",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "opts.blueprintRef",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.publishedVersion",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.clusterID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.account",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "KubectlClusterSettings"
+        ]
+      },
+      "put": {
+        "operationId": "KubectlClusterSettings_UpdateKubectlClusterSettings",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/rpcUpdateKubectlClusterSettingsResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "opts.urlScope",
+            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value)",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "cluster/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/rpcUpdateKubectlClusterSettingsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "KubectlClusterSettings"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcGetKubectlClusterSettingsResponse": {
+      "type": "object",
+      "properties": {
+        "disableWebKubectl": {
+          "type": "boolean"
+        },
+        "disableCLIKubectl": {
+          "type": "boolean"
+        }
+      }
+    },
+    "rpcUpdateKubectlClusterSettingsRequest": {
+      "type": "object",
+      "properties": {
+        "opts": {
+          "$ref": "#/definitions/v3QueryOptions"
+        },
+        "disableWebKubectl": {
+          "type": "boolean"
+        },
+        "disableCLIKubectl": {
+          "type": "boolean"
+        }
+      }
+    },
+    "rpcUpdateKubectlClusterSettingsResponse": {
+      "type": "object"
+    },
+    "v3QueryOptions": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)"
+        },
+        "selector": {
+          "type": "string",
+          "title": "selector is used to filter the labels of a resource"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "organization": {
+          "type": "string"
+        },
+        "project": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string",
+          "title": "displayName only used for update queries to set displayName (READONLY)"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "labels only used for update queries to set labels (READONLY)"
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "annotations only used for update queries to set annotations (READONLY)"
+        },
+        "count": {
+          "type": "string",
+          "format": "int64"
+        },
+        "offset": {
+          "type": "string",
+          "format": "int64"
+        },
+        "limit": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ignoreScopeDefault": {
+          "type": "boolean",
+          "title": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID"
+        },
+        "globalScope": {
+          "type": "boolean",
+          "title": "globalScope sets partnerID,organizationID,projectID = 0"
+        },
+        "orderBy": {
+          "type": "string"
+        },
+        "order": {
+          "type": "string"
+        },
+        "deleted": {
+          "type": "boolean"
+        },
+        "extended": {
+          "type": "boolean"
+        },
+        "urlScope": {
+          "type": "string",
+          "title": "urlScope is supposed to be passed in the URL as kind/HashID(value)"
+        },
+        "isSSOUser": {
+          "type": "boolean"
+        },
+        "username": {
+          "type": "string"
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "blueprintRef": {
+          "type": "string"
+        },
+        "publishedVersion": {
+          "type": "string"
+        },
+        "clusterID": {
+          "type": "string"
+        },
+        "ID": {
+          "type": "string"
+        },
+        "account": {
+          "type": "string"
+        }
+      },
+      "title": "QueryOptions is the options for performing queries on resources"
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "X-RAFAY-API-KEYID",
+      "in": "header"
+    },
+    "BasicAuth": {
+      "type": "basic"
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": [],
+      "BasicAuth": []
+    }
+  ]
+}

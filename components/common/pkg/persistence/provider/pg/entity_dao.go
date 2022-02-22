@@ -232,6 +232,7 @@ func (dao *entityDAO) List(ctx context.Context, partnerId uuid.NullUUID, organiz
 	if organizationId.Valid {
 		sq = sq.Where("organization_id = ?", organizationId)
 	}
+	sq.Where("trash = false")
 	err := sq.Scan(ctx)
 	return entities, err
 }
@@ -248,6 +249,7 @@ func (dao *entityDAO) ListByProject(ctx context.Context, partnerId uuid.NullUUID
 	if projectId.Valid {
 		sq = sq.Where("project_id = ?", projectId)
 	}
+	sq.Where("trash = false")
 	err := sq.Scan(ctx)
 	return err
 }

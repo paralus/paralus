@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rafay-connector
+  namespace: rafay-system
+spec:
+  selector:
+    matchLabels:
+      app: rafay-connector
+  serviceName: "connector"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rafay-connector
+    spec:
+      priorityClassName: rafay-cluster-critical
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: connector
+        image: rafaysystems/rafay-connector:latest
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: connector-config
+          mountPath: /etc/config
+      volumes:
+      - name: connector-config
+        configMap:
+          name: connector-config

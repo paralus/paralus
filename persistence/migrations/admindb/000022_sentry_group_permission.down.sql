@@ -1,0 +1,1 @@
+DROP VIEW IF EXISTS sentry_group_permission;

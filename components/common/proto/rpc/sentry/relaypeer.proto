@@ -1,0 +1,49 @@
+//protobuf for relay peering service
+syntax = "proto3";
+package rafay.dev.sentry.rpc;
+
+service RelayPeerService {
+  rpc RelayPeerHelloRPC(stream PeerHelloRequest) returns (stream PeerHelloResponse) {}
+  rpc RelayPeerProbeRPC(stream PeerProbeRequest) returns (stream PeerProbeResponse) {}
+  rpc RelayPeerSurveyRPC(stream PeerSurveyResponse) returns (stream PeerSurveyRequest) {}
+}
+
+message PeerHelloRequest {
+  string relayuuid = 1; // the uuid of the relay
+	string relayip  = 2;  // the ip address of the relay
+}
+
+message PeerHelloResponse {
+  string serviceuuid = 1; // the uuid of the service
+	string serviceip  = 2;  // the ip address of the relay
+}
+
+// Probe Request from relay to peering service
+message PeerProbeRequest {
+  string relayuuid = 1;
+  string clustersni = 2;
+}
+
+message relayClusterConnectionInfo {
+  string relayuuid = 1; // the uuid of the relay
+	string relayip  = 2;  // the ip address of the relay
+}
+
+// Probe Response from service to relay
+message PeerProbeResponse {
+  string clustersni = 1;
+	repeated relayClusterConnectionInfo items = 2;
+}
+
+// Survey request sent from the service to all relays
+message PeerSurveyRequest {
+  string clustersni = 1;
+}
+
+// Survey response from relay to service
+message PeerSurveyResponse {
+  string relayuuid = 1; // the uuid of the relay
+	string relayip  = 2;  // the ip address of the relay
+  string clustersni = 3;
+ 
+}

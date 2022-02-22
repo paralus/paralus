@@ -1,0 +1,42 @@
+syntax = "proto3";
+package rafay.dev.types.sentry;
+
+import "google/protobuf/timestamp.proto";
+
+message PermissionURL {
+	string url = 1;
+	repeated string methods = 2;
+}
+
+message AccountPermission {
+	string accountID = 1;
+	string projectID = 2;
+	string organizationID = 3;
+	string partnerID = 4;
+	string roleName = 5;
+	bool isGlobal = 6;
+	string scope = 7;
+	string permissionName = 8;
+	string baseURL = 9;
+	repeated PermissionURL urls = 10;
+}
+
+message SSOAccountGroupProjectRoleData {
+	string id = 1;
+	string userName = 2;
+	string roleName = 3;
+	string projectID = 4;
+	string projectName = 5;
+	string group = 6;
+	string accountOrganizationID = 7;
+	string organizationID = 8;
+	string partnerID = 9;
+	string scope = 10;
+	google.protobuf.Timestamp lastLogin = 11;
+	google.protobuf.Timestamp createdAt = 12;
+	string firstName = 13;
+	string lastName = 14;
+	string phone = 15;
+	string name = 16;
+	google.protobuf.Timestamp lastLogout = 17;
+}

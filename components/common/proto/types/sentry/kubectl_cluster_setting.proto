@@ -1,0 +1,35 @@
+syntax = "proto3";
+package rafay.dev.types.sentry;
+
+import "gogoproto/gogo.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+message KubectlClusterSettings {
+	string name = 1;
+	string organizationID = 2;
+	string partnerID = 3;
+  	bool disableWebKubectl = 4;
+	bool disableCLIKubectl = 5;
+
+	google.protobuf.Timestamp modifiedAt = 6 [
+		(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+		  read_only : true
+		},
+		(gogoproto.stdtime) = true
+	];
+
+	google.protobuf.Timestamp createdAt = 7 [
+		(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+		  read_only : true
+		},
+		(gogoproto.stdtime) = true
+	];
+
+	google.protobuf.Timestamp deletedAt = 8 [
+		(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+		  read_only : true
+		},
+		(gogoproto.stdtime) = true
+	];
+}

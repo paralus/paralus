@@ -91,6 +91,13 @@
             "default": "Role"
           },
           {
+            "name": "metadata.displayName",
+            "description": "Display Name. display name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "metadata.description",
             "description": "Description. description of the resource",
             "in": "query",
@@ -251,6 +258,13 @@
             "required": false,
             "type": "string",
             "default": "Role"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name. display name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
           },
           {
             "name": "metadata.description",
@@ -470,6 +484,13 @@
           {
             "name": "metadata.name",
             "description": "Name. name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name. display name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
@@ -735,6 +756,11 @@
           "type": "string",
           "description": "name of the resource",
           "title": "Name"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "display name of the resource",
+          "title": "Display Name"
         },
         "description": {
           "type": "string",

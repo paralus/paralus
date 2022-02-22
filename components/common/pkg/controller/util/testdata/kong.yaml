@@ -1,0 +1,12 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongIngress
+metadata:
+  name: results-onfido
+proxy:
+  protocol: http
+  path: /v3/onf
+route:
+  strip_path: false
+  protocols:
+  - https
+  - ""

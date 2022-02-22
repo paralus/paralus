@@ -1,0 +1,846 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Partner Service",
+    "version": "3.0",
+    "contact": {
+      "name": "Rafay Dev"
+    }
+  },
+  "tags": [
+    {
+      "name": "Partner"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json",
+    "application/yaml"
+  ],
+  "produces": [
+    "application/json",
+    "application/yaml"
+  ],
+  "paths": {
+    "/auth/v3/partner": {
+      "post": {
+        "operationId": "Partner_CreatePartner",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Partner"
+            }
+          },
+          "201": {
+            "description": "Returned when partner is created successfully.",
+            "schema": {}
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3Partner"
+            }
+          }
+        ],
+        "tags": [
+          "Partner"
+        ]
+      }
+    },
+    "/auth/v3/partner/{metadata.name}": {
+      "get": {
+        "operationId": "Partner_GetPartner",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Partner"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version. API Version of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "system.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind. Kind of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "Partner"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name. display name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description. description of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project. Project of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization. Organization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner. Partner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.host",
+            "description": "Host. Host of the partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.domain",
+            "description": "Domain. Domain of the partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.tosLink",
+            "description": "TOS. Terms of service url of the partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.logoLink",
+            "description": "Logo. Logo url of the partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.notificationEmail",
+            "description": "Notification Email. Notification email of the partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.helpdeskEmail",
+            "description": "Helpdesk Email. Helpdesk email of the partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.productName",
+            "description": "Product Name. Product Name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.supportTeamName",
+            "description": "Support Team Name. Support Team Name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.opsHost",
+            "description": "OPS Host. Operations host of the partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.favIconLink",
+            "description": "Fav Icon Link. Fav Icon Link",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.isTOTPEnabled",
+            "description": "TOTP Enabled. TOTP Enabled flag at the partner level",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "status.conditionType",
+            "description": "Condition Type. type of the status condition",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.conditionStatus",
+            "description": "Condition Status. status of the condition",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "StatusNotSet",
+              "StatusSubmitted",
+              "StatusOK",
+              "StatusFailed"
+            ],
+            "default": "StatusNotSet"
+          },
+          {
+            "name": "status.lastUpdated",
+            "description": "Last Updated. when the condition status is last updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.reason",
+            "description": "Reason. reason of the last condition status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Partner"
+        ]
+      },
+      "delete": {
+        "operationId": "Partner_DeletePartner",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Partner"
+            }
+          },
+          "204": {
+            "description": "Returned when partner is deleted successfully.",
+            "schema": {}
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version. API Version of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "system.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind. Kind of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "Partner"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name. display name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description. description of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project. Project of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization. Organization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner. Partner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.host",
+            "description": "Host. Host of the partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.domain",
+            "description": "Domain. Domain of the partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.tosLink",
+            "description": "TOS. Terms of service url of the partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.logoLink",
+            "description": "Logo. Logo url of the partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.notificationEmail",
+            "description": "Notification Email. Notification email of the partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.helpdeskEmail",
+            "description": "Helpdesk Email. Helpdesk email of the partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.productName",
+            "description": "Product Name. Product Name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.supportTeamName",
+            "description": "Support Team Name. Support Team Name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.opsHost",
+            "description": "OPS Host. Operations host of the partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.favIconLink",
+            "description": "Fav Icon Link. Fav Icon Link",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.isTOTPEnabled",
+            "description": "TOTP Enabled. TOTP Enabled flag at the partner level",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "status.conditionType",
+            "description": "Condition Type. type of the status condition",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.conditionStatus",
+            "description": "Condition Status. status of the condition",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "StatusNotSet",
+              "StatusSubmitted",
+              "StatusOK",
+              "StatusFailed"
+            ],
+            "default": "StatusNotSet"
+          },
+          {
+            "name": "status.lastUpdated",
+            "description": "Last Updated. when the condition status is last updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.reason",
+            "description": "Reason. reason of the last condition status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Partner"
+        ]
+      },
+      "put": {
+        "operationId": "Partner_UpdatePartner",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Partner"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3Partner"
+            }
+          }
+        ],
+        "tags": [
+          "Partner"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "commonv3Status": {
+      "type": "object",
+      "properties": {
+        "conditionType": {
+          "type": "string",
+          "description": "type of the status condition",
+          "title": "Condition Type",
+          "readOnly": true
+        },
+        "conditionStatus": {
+          "$ref": "#/definitions/v3ConditionStatus",
+          "enum": [
+            "StatusNotSet",
+            "StatusSubmitted",
+            "StatusOK",
+            "StatusFailed"
+          ],
+          "description": "status of the condition",
+          "title": "Condition Status",
+          "readOnly": true
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "when the condition status is last updated",
+          "title": "Last Updated",
+          "readOnly": true
+        },
+        "reason": {
+          "type": "string",
+          "description": "reason of the last condition status",
+          "title": "Reason",
+          "readOnly": true
+        }
+      },
+      "description": "status of a resource",
+      "title": "Status",
+      "readOnly": true
+    },
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "protobufNullValue": {
+      "type": "string",
+      "enum": [
+        "NULL_VALUE"
+      ],
+      "default": "NULL_VALUE",
+      "description": "`NullValue` is a singleton enumeration to represent the null value for the\n`Value` type union.\n\n The JSON representation for `NullValue` is JSON `null`.\n\n - NULL_VALUE: Null value."
+    },
+    "v3ConditionStatus": {
+      "type": "string",
+      "enum": [
+        "StatusNotSet",
+        "StatusSubmitted",
+        "StatusOK",
+        "StatusFailed"
+      ],
+      "default": "StatusNotSet",
+      "title": "$title: ConditionStatus\n$description: status of a condition for a resource"
+    },
+    "v3Metadata": {
+      "type": "object",
+      "example": {
+        "name": "some-name",
+        "project": "defaultproject"
+      },
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "name of the resource",
+          "title": "Name"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "display name of the resource",
+          "title": "Display Name"
+        },
+        "description": {
+          "type": "string",
+          "description": "description of the resource",
+          "title": "Description"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "labels of the resource",
+          "title": "Lables"
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "annotations of the resource",
+          "title": "Annotations"
+        },
+        "project": {
+          "type": "string",
+          "description": "Project of the resource",
+          "title": "Project"
+        },
+        "organization": {
+          "type": "string",
+          "description": "Organization to which the resource belongs",
+          "title": "Organization"
+        },
+        "partner": {
+          "type": "string",
+          "description": "Partner to which the resource belongs",
+          "title": "Partner"
+        },
+        "id": {
+          "type": "string",
+          "readOnly": true
+        },
+        "modifiedAt": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        }
+      },
+      "description": "metadata of the resource",
+      "title": "Metadata",
+      "required": [
+        "name",
+        "project"
+      ]
+    },
+    "v3Partner": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "system.k8smgmt.io/v3",
+          "description": "API Version of the resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "Partner",
+          "description": "Kind of the resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3Metadata",
+          "description": "Metadata of the resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3PartnerSpec",
+          "description": "Spec of the resource",
+          "title": "Spec"
+        },
+        "status": {
+          "$ref": "#/definitions/commonv3Status",
+          "description": "Status of the resource",
+          "title": "Status",
+          "readOnly": true
+        }
+      },
+      "description": "Partner",
+      "title": "Partner",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+      ]
+    },
+    "v3PartnerSpec": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string",
+          "description": "Host of the partner",
+          "title": "Host"
+        },
+        "domain": {
+          "type": "string",
+          "description": "Domain of the partner",
+          "title": "Domain"
+        },
+        "tosLink": {
+          "type": "string",
+          "description": "Terms of service url of the partner",
+          "title": "TOS"
+        },
+        "logoLink": {
+          "type": "string",
+          "description": "Logo url of the partner",
+          "title": "Logo"
+        },
+        "notificationEmail": {
+          "type": "string",
+          "description": "Notification email of the partner",
+          "title": "Notification Email"
+        },
+        "helpdeskEmail": {
+          "type": "string",
+          "description": "Helpdesk email of the partner",
+          "title": "Helpdesk Email"
+        },
+        "productName": {
+          "type": "string",
+          "description": "Product Name",
+          "title": "Product Name"
+        },
+        "supportTeamName": {
+          "type": "string",
+          "description": "Support Team Name",
+          "title": "Support Team Name"
+        },
+        "opsHost": {
+          "type": "string",
+          "description": "Operations host of the partner",
+          "title": "OPS Host"
+        },
+        "favIconLink": {
+          "type": "string",
+          "description": "Fav Icon Link",
+          "title": "Fav Icon Link"
+        },
+        "isTOTPEnabled": {
+          "type": "boolean",
+          "description": "TOTP Enabled flag at the partner level",
+          "title": "TOTP Enabled"
+        },
+        "settings": {
+          "type": "object",
+          "description": "Settings of the partner",
+          "title": "Settings"
+        }
+      },
+      "description": "Partner Specification",
+      "title": "Partner Specification"
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "X-RAFAY-API-KEYID",
+      "in": "header"
+    },
+    "BasicAuth": {
+      "type": "basic"
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": [],
+      "BasicAuth": []
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: log-aggregator
+  namespace: default
+spec:
+  ports:
+  - name: log-aggregator-tcp
+    nodePort: 0
+    port: 8888
+    protocol: TCP
+    targetPort: 8888
+  - name: log-aggregator-udp
+    nodePort: 0
+    port: 5140
+    protocol: UDP
+    targetPort: 5140
+  - name: log-aggregator-fwd
+    nodePort: 0
+    port: 24224
+    protocol: TCP
+    targetPort: 24224
+  - name: prometheus
+    nodePort: 0
+    port: 24231
+    protocol: TCP
+    targetPort: 24231
+  selector:
+    app: log-aggregator
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

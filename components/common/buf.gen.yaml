@@ -7,6 +7,7 @@ managed:
       - buf.build/googleapis/googleapis
       - buf.build/grpc-ecosystem/grpc-gateway
       - buf.build/gogo/protobuf
+      - buf.build/rafay/k8s
 plugins:
   - name: go
     out: .

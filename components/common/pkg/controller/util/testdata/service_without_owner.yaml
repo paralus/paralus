@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+  creationTimestamp: "2020-02-11T22:56:08Z"
+  labels:
+    app: wordpress-demo
+    chart: wordpress-7.5.4
+    heritage: Tiller
+    release: wordpress-demo
+    velero.io/backup-name: wordpress1
+    velero.io/restore-name: wordpress1
+  name: wordpress-demo
+  namespace: wordpress
+  resourceVersion: "11710676"
+  selfLink: /api/v1/namespaces/wordpress/services/wordpress-demo
+  uid: b0dfc0f8-4d21-11ea-b8ec-0ec508a9a2df
+spec:
+  clusterIP: 10.100.74.72
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: https
+  - name: metrics
+    port: 9117
+    protocol: TCP
+    targetPort: metrics
+  selector:
+    app: wordpress-demo
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

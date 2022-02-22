@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cluster-scope-read-cluster-role
+  labels:
+    rafay-relay: "true"
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch"]
+- nonResourceURLs: ["*"]
+  verbs: ["get"]

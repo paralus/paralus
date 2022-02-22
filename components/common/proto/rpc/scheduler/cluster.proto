@@ -1,0 +1,159 @@
+syntax = "proto3";
+package rafay.dev.scheduler.rpc;
+
+import "google/api/annotations.proto";
+import "gogoproto/gogo.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "proto/types/infrapb/v3/cluster.proto";
+import "proto/types/commonpb/v3/common.proto";
+
+// Enable custom Marshal method.
+option (gogoproto.marshaler_all) = true;
+// Enable custom Unmarshal method.
+option (gogoproto.unmarshaler_all) = true;
+// Enable custom Size method (Required by Marshal and Unmarshal).
+option (gogoproto.sizer_all) = true;
+// Enable registration with golang/protobuf for the grpc-gateway.
+option (gogoproto.goproto_registration) = true;
+// Enable generation of XXX_MessageName methods for grpc-go/status.
+option (gogoproto.messagename_all) = true;
+
+message RegisterClusterRequest {
+  string token = 1;
+  bytes signingRequest = 2;
+}
+
+message RegisterClusterResponse {
+  bytes certificate = 1;
+  bytes caCertificate = 2;
+}
+
+message DeleteClusterResponse {}
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info : {
+    title : "Cluster Service"
+    version : "3.0"
+    contact : {name : "Rafay Dev"}
+  }
+  schemes : HTTPS
+  consumes : "application/json"
+  consumes : "application/yaml"
+  produces : "application/json"
+  produces : "application/yaml"
+  security_definitions : {
+    security : {
+      key : "BasicAuth"
+      value : {type : TYPE_BASIC}
+    }
+    security : {
+      key : "ApiKeyAuth"
+      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-RAFAY-API-KEYID"}
+    }
+  }
+  security : {
+    security_requirement : {
+      key : "BasicAuth"
+      value : {}
+    }
+    security_requirement : {
+      key : "ApiKeyAuth"
+      value : {}
+    }
+  }
+  responses : {
+    key : "403"
+    value : {
+      description : "Returned when the user does not have permission to access "
+                    "the resource."
+    }
+  }
+  responses : {
+    key : "404"
+    value : {
+      description : "Returned when the resource does not exist."
+      schema : {json_schema : {type : STRING}}
+    }
+  }
+};
+
+service Cluster {
+    rpc CreateCluster(rafay.dev.types.infra.v3.Cluster)
+        returns (rafay.dev.types.infra.v3.Cluster) {
+      option (google.api.http) = {
+        post : "/infra/v3/project/{metadata.project}/cluster"
+        body : "*"
+      };
+  
+      option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+        responses : {
+          key : "201"
+          value : {
+            description : "Returned when edge is created successfully."
+          }
+        }
+      };
+    };
+  
+    rpc GetClusters(rafay.dev.types.common.v3.QueryOptions)
+        returns (rafay.dev.types.infra.v3.ClusterList) {
+      option (google.api.http) = {
+        get : "/infra/v3/project/{project}/cluster"
+      };
+    };
+  
+    rpc GetCluster(rafay.dev.types.infra.v3.Cluster)
+        returns (rafay.dev.types.infra.v3.Cluster) {
+      option (google.api.http) = {
+        get : "/infra/v3/project/{metadata.project}/cluster/{metadata.name}"
+      };
+    };
+
+    rpc UpdateCluster(rafay.dev.types.infra.v3.Cluster)
+        returns (rafay.dev.types.infra.v3.Cluster) {
+        option (google.api.http) = {
+            put : "/infra/v3/project/{metadata.project}/cluster/{metadata.name}"
+            body : "*"
+        };
+    };
+    
+    rpc DeleteCluster(rafay.dev.types.infra.v3.Cluster)
+        returns (DeleteClusterResponse) {
+      option (google.api.http) = {
+        delete : "/infra/v3/project/{metadata.project}/cluster/{metadata.name}"
+      };
+  
+      option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+        responses : {
+          key : "204"
+          value : {
+            description : "Returned when project is deleted successfully."
+          }
+        }
+      };
+    };
+
+    rpc RegisterCluster(RegisterClusterRequest)
+        returns (RegisterClusterResponse) {
+        option (google.api.http) = {
+        post : "/infra/v3/scheduler/cluster/register"
+        body : "*"
+        };
+    };
+
+    rpc DownloadCluster(rafay.dev.types.infra.v3.Cluster)
+        returns (rafay.dev.types.common.v3.HttpBody) {
+        option (google.api.http) = {
+        get : "/infra/v3/project/{metadata.project}/cluster/{metadata.name}/download"
+        };
+    };
+
+    rpc UpdateClusterStatus(rafay.dev.types.infra.v3.Cluster)
+      returns (rafay.dev.types.infra.v3.Cluster) {
+        option (google.api.http) = {
+          put : "/infra/v3/project/{metadata.project}/cluster/{metadata.name}/status"
+          body : "*"
+        };
+    };
+  
+  }

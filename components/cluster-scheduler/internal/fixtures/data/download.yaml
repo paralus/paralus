@@ -1,0 +1,539 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    control-plane: controller-manager
+  name: rafay-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: system-sa
+  namespace: rafay-system
+---
+{{- if and .Cluster.Metadata.Labels (eq (index .Cluster.Metadata.Labels "rafay.dev/kubernetesProvider") "OPENSHIFT") }}
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: rafay-privileged-scc
+  annotations:
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    include.release.openshift.io/single-node-developer: "true"
+    kubernetes.io/description: 'privileged allows access to all privileged and host
+      features and the ability to run as any user, any group, any fsGroup, and with
+      any SELinux context.  WARNING: this is the most relaxed SCC and should be used
+      only for cluster administration. Grant with caution.'
+    release.openshift.io/create-only: "true"
+  labels:
+    rep-workload: "rafay-privileged-scc"
+allowHostDirVolumePlugin: true
+allowHostIPC: true
+allowHostNetwork: true
+allowHostPID: true
+allowHostPorts: true
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: true
+allowedCapabilities:
+- '*'
+allowedUnsafeSysctls:
+- '*'
+defaultAddCapabilities: null
+fsGroup:
+  type: RunAsAny
+groups:
+- system:cluster-admins
+- system:nodes
+- system:masters
+priority: null
+readOnlyRootFilesystem: false
+requiredDropCapabilities: null
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+seccompProfiles:
+- '*'
+supplementalGroups:
+  type: RunAsAny
+users:
+- system:serviceaccount:rafay-system:default
+- system:serviceaccount:rafay-system:system-sa
+- system:serviceaccount:rafay-system:ingress-nginx
+- system:serviceaccount:rafay-system:ingress-nginx-admission
+- system:serviceaccount:rafay-system:gatekeeper-admin
+- system:serviceaccount:rafay-system:gatekeeper-update-namespace-label
+volumes:
+- '*'
+---
+{{- end }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: rafay:manager
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- nonResourceURLs:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - cluster.rafay.dev
+  resources:
+  - namespaces
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cluster.rafay.dev
+  resources:
+  - namespaces/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - cluster.rafay.dev
+  resources:
+  - tasklets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cluster.rafay.dev
+  resources:
+  - tasklets/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - cluster.rafay.dev
+  resources:
+  - tasks
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cluster.rafay.dev
+  resources:
+  - tasks/status
+  verbs:
+  - get
+  - patch
+  - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: rafay:rafay-system:manager-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: rafay:manager
+subjects:
+- kind: ServiceAccount
+  name: system-sa
+  namespace: rafay-system
+- kind: ServiceAccount
+  name: default
+  namespace: rafay-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: rafay:proxy-role
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: rafay:rafay-system:proxy-rolebinding
+  namespace: rafay-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: rafay:proxy-role
+subjects:
+- kind: ServiceAccount
+  name: system-sa
+  namespace: rafay-system
+- kind: ServiceAccount
+  name: default
+  namespace: rafay-system
+---
+apiVersion: scheduling.k8s.io/v1
+description: This priority class should be used for rafay service pods only.
+kind: PriorityClass
+metadata:
+  name: rafay-cluster-critical
+value: 1000000000
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: rafay:leader-election-role
+  namespace: rafay-system
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - configmaps/status
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: rafay:leader-election-rolebinding
+  namespace: rafay-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: rafay:leader-election-role
+subjects:
+- kind: ServiceAccount
+  name: system-sa
+  namespace: rafay-system
+- kind: ServiceAccount
+  name: default
+  namespace: rafay-system
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: namespaces.cluster.rafay.dev
+spec:
+  conversion:
+    strategy: None
+  group: cluster.rafay.dev
+  names:
+    kind: Namespace
+    listKind: NamespaceList
+    plural: namespaces
+    shortNames:
+    - rns
+    singular: namespace
+  scope: Namespaced
+  versions:
+  - name: v2
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            type: string
+          kind:
+            type: string
+          metadata:
+            type: object
+          spec:
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+          status:
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+        type: object
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: tasklets.cluster.rafay.dev
+spec:
+  conversion:
+    strategy: None
+  group: cluster.rafay.dev
+  names:
+    kind: Tasklet
+    listKind: TaskletList
+    plural: tasklets
+    shortNames:
+    - rtl
+    singular: tasklet
+  scope: Namespaced
+  versions:
+  - name: v2
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            type: string
+          kind:
+            type: string
+          metadata:
+            type: object
+          spec:
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+          status:
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+        type: object
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: tasks.cluster.rafay.dev
+spec:
+  conversion:
+    strategy: None
+  group: cluster.rafay.dev
+  names:
+    kind: Task
+    listKind: TaskList
+    plural: tasks
+    shortNames:
+    - rt
+    singular: task
+  scope: Namespaced
+  versions:
+  - name: v2
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            type: string
+          kind:
+            type: string
+          metadata:
+            type: object
+          spec:
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+          status:
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+        type: object
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: proxy-config
+  namespace: rafay-system
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    meta.helm.sh/release-name: v2-infra
+    meta.helm.sh/release-namespace: rafay-system
+data:
+  httpProxy: "{{if .Cluster.Spec.ProxyConfig}}{{ if .Cluster.Spec.ProxyConfig.Enabled }}{{- .Cluster.Spec.ProxyConfig.HttpProxy -}}{{end}}{{end}}"
+  httpsProxy: "{{if .Cluster.Spec.ProxyConfig}}{{ if .Cluster.Spec.ProxyConfig.Enabled }}{{- .Cluster.Spec.ProxyConfig.HttpsProxy -}}{{end}}{{end}}"
+  noProxy: "{{if .Cluster.Spec.ProxyConfig}}{{ if .Cluster.Spec.ProxyConfig.Enabled }}{{- .Cluster.Spec.ProxyConfig.NoProxy -}}{{end}}{{end}}"
+  proxyAuth: "{{if .Cluster.Spec.ProxyConfig}}{{ if .Cluster.Spec.ProxyConfig.Enabled }}{{- .Cluster.Spec.ProxyConfig.ProxyAuth -}}{{end}}{{end}}"
+  bootstrapCA: "{{if .Cluster.Spec.ProxyConfig}}{{ if .Cluster.Spec.ProxyConfig.Enabled }}{{- .Cluster.Spec.ProxyConfig.BootstrapCA -}}{{end}}{{end}}"
+  allowInsecureBootstrap: "{{if .Cluster.Spec.ProxyConfig}}{{ if .Cluster.Spec.ProxyConfig.Enabled }} {{- .Cluster.Spec.ProxyConfig.AllowInsecureBootstrap -}}{{end}}{{end}}"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: relay-agent-config
+  namespace: rafay-system
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    meta.helm.sh/release-name: v2-infra
+    meta.helm.sh/release-namespace: rafay-system
+data:
+  clusterID: {{if .Cluster.Metadata.Labels}}{{ index .Cluster.Metadata.Labels "rafay.dev/clusterID" }}{{end}}
+  relays: {{if .Cluster.Metadata.Annotations}}{{ index .Cluster.Metadata.Annotations "relays" }}{{end}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: relay-agent
+  namespace: rafay-system
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    meta.helm.sh/release-name: v2-infra
+    meta.helm.sh/release-namespace: rafay-system
+spec:
+  selector:
+    matchLabels:
+      app: relay-agent
+  replicas: 1
+  progressDeadlineSeconds: 1800
+  template:
+    metadata:
+      labels:
+        app: relay-agent
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/os
+                    operator: In
+                    values:
+                      - linux
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+      terminationGracePeriodSeconds: 10
+      priorityClassName: rafay-cluster-critical
+      serviceAccountName: system-sa
+      initContainers:
+      - name: set-limits
+        image: "registry.rafay-edge.net/rafay/busybox:1.33"
+        command: ["sh", "-c", "ulimit -n 65536"]
+        securityContext:
+          privileged: true
+      containers:
+      - name: relay-agent
+        image: "{{ .DownloadData.RelayAgentImage }}"
+        args: ["--mode=client", "--log-level=3"]
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: MAX_DIALS
+          valueFrom:
+            configMapKeyRef:
+              name: relay-agent-config
+              key: maxDials
+              optional: true
+        - name: DIALOUT_PROXY
+          valueFrom:
+            configMapKeyRef:
+              name: proxy-config
+              key: httpsProxy
+              optional: true
+        - name: DIALOUT_PROXY_AUTHENTICATION
+          valueFrom:
+            configMapKeyRef:
+              name: proxy-config
+              key: proxyAuth
+              optional: true
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              name: proxy-config
+              key: httpProxy
+              optional: true
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              name: proxy-config
+              key: httpsProxy
+              optional: true
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              name: proxy-config
+              key: noProxy
+              optional: true
+        - name: BOOTSTRAP_CA_CERT
+          valueFrom:
+            configMapKeyRef:
+              name: proxy-config
+              key: bootstrapCA
+              optional: true
+        - name: ALLOW_INSECURE_BOOTSTRAP
+          valueFrom:
+            configMapKeyRef:
+              name: proxy-config
+              key: allowInsecureBootstrap
+              optional: true
+        volumeMounts:
+          - name: relay-agent-config
+            mountPath: /etc/config
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi     
+      volumes:
+      - name: relay-agent-config
+        configMap:
+          name: relay-agent-config

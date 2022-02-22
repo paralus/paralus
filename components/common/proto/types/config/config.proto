@@ -1,0 +1,313 @@
+syntax = "proto3";
+package rafay.dev.types.config;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+import "k8s.io/api/extensions/v1beta1/generated.proto";
+import "proto/types/commonpb/v3/common.proto";
+import "proto/types/controller/cluster_controller.proto";
+
+// Enable custom Marshal method.
+option (gogoproto.marshaler_all) = true;
+// Enable custom Unmarshal method.
+option (gogoproto.unmarshaler_all) = true;
+// Enable custom Size method (Required by Marshal and Unmarshal).
+option (gogoproto.sizer_all) = true;
+// Enable registration with golang/protobuf for the grpc-gateway.
+option (gogoproto.goproto_registration) = true;
+// Enable generation of XXX_MessageName methods for grpc-go/status.
+option (gogoproto.messagename_all) = true;
+
+enum SnapshotRefType {
+  // disable enum prefix
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  SnapshotTaskSet = 0;
+  SnapshotWorkload = 1;
+}
+
+// SnapshotRef
+//
+// SnapshotRef refers to a published snapshot of a taskset/workload
+message SnapshotRef {
+  string name = 1 [ (gogoproto.jsontag) = "name" ];
+  string publishedGeneration = 2
+      [ (gogoproto.jsontag) = "publishedGeneration" ];
+  string selector = 3 [ (gogoproto.jsontag) = "selector" ];
+  sint64 revision = 4 [ (gogoproto.jsontag) = "revision" ];
+  string workloadID = 5;
+  SnapshotRefType refType = 6 [ (gogoproto.jsontag) = "refType" ];
+  string version = 7 [ (gogoproto.jsontag) = "version,omitempty" ];
+  bool isGlobal = 8 [ (gogoproto.jsontag) = "isGlobal,omitempty" ];
+  string componentType = 9 [ (gogoproto.jsontag) = "componentType,omitempty" ];
+  repeated string dependsOn = 10
+      [ (gogoproto.jsontag) = "dependsOn,omitempty" ];
+}
+
+message DiscoveryConfig {
+  string namespace = 1;
+  string resource = 2;
+  map<string, string> labels = 3;
+}
+
+message ResourceRequirements { ResourceQuantity limits = 1; }
+
+message ResourceQuantity {
+  string memory = 1;
+  string cpu = 2;
+}
+
+message ComponentConfig {
+  bool disable = 1;
+  // optional
+  DiscoveryConfig discoveryConfig = 2;
+}
+
+message PrometheusCustomization {
+  ComponentConfig prometheusAdapter = 1;
+  ComponentConfig metricsServer = 2;
+  ComponentConfig kubeStateMetrics = 3;
+  ComponentConfig nodeExporter = 4;
+  ComponentConfig helmExporter = 5;
+  ResourceRequirements resources = 6;
+}
+
+// TaskTemplate is the template for creating task
+message TaskTemplate {
+  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 1 [
+    (gogoproto.embed) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "metadata,omitempty"
+  ];
+
+  rafay.dev.types.controller.TaskSpec spec = 2
+      [ (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+}
+
+// TaskStatusTemplate is the template for sending status of the task
+message TaskStatusTemplate {
+  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 1 [
+    (gogoproto.embed) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "metadata,omitempty"
+  ];
+
+  rafay.dev.types.controller.TaskStatus status = 2
+      [ (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+}
+
+enum WorkloadType {
+  option (gogoproto.goproto_enum_prefix) = false;
+  NativeYaml = 0;
+  Helm = 1;
+  NativeHelm = 2;
+  Rafay = 3;
+  HelmInGitRepo = 4;
+  YamlInGitRepo = 5;
+  HelmInHelmRepo = 6;
+}
+
+message V2Workload {
+  WorkloadType workloadType = 1;
+  bool isSystemWorkload = 2;
+  string workloadName = 3;
+  bytes payload = 4;
+}
+
+message FileMeta {
+  string name = 1;
+  FileType fileType = 2;
+  sint64 fileSize = 3;
+}
+
+message PipelineMeta {
+  string pipelineID = 1;
+  sint64 instanceID = 2;
+  string stageName = 3;
+}
+
+message ClusterMeta {
+  string clusterID = 1 [
+    (gogoproto.jsontag) = "clusterID"
+  ];
+  string clusterName = 2 [ (gogoproto.jsontag) = "clusterName" ];
+  string reason = 3 [ (gogoproto.jsontag) = "reason" ];
+  bool deleted = 4;
+  repeated string ingressIPs = 5;
+}
+
+message RepoArtifactMeta {
+  GitOptions git = 1;
+  HelmOptions helm = 2;
+  int64 timeout = 3;
+}
+
+message GitOptions {
+  string revision = 1 [
+    (gogoproto.moretags) = "patchStrategy:\"replace\"",
+    (gogoproto.jsontag) = "revision"
+  ];
+  repeated RepoFile repoArtifactFiles = 2 [
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"relPath\"",
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "repoArtifactFiles"
+  ];
+}
+
+message HelmOptions {
+  string chartName = 1 [
+    (gogoproto.moretags) = "patchStrategy:\"replace\"",
+    (gogoproto.jsontag) = "chartName"
+  ];
+  string tag = 2 [
+    (gogoproto.moretags) = "patchStrategy:\"replace\"",
+    (gogoproto.jsontag) = "tag"
+  ];
+}
+
+enum ArtifactType {
+  // disable enum prefix
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  ArtifactTypeNotSet = 0;
+  RafayWizardWorkload = 1;
+  HelmChart = 2;
+  NativeYAML = 3;
+  GitRepoWithHelm = 4;
+  GitRepoWithNativeYAML = 5;
+  HelmRepo = 6;
+  RafayVMWizardWorkload = 7;
+}
+
+enum FileType {
+  // disable enum prefix
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  FileTypeNotSet = 0;
+  K8sYAMLFile = 1;
+  HelmChartFile = 2;
+  HelmValuesFile = 3;
+  JSONFile = 4;
+}
+
+message RepoFile {
+  string name = 1 [ (gogoproto.jsontag) = "name" ];
+  string relPath = 2 [ (gogoproto.jsontag) = "relPath" ];
+  FileType fileType = 3 [ (gogoproto.jsontag) = "fileType" ];
+}
+
+message File {
+  string name = 1
+      [ (gogoproto.moretags) = "pg:\"name\"", (gogoproto.jsontag) = "name" ];
+  bytes payload = 2 [ (gogoproto.moretags) = "pg:\"payload\"" ];
+  FileType fileType = 3 [
+    (gogoproto.moretags) = "pg:\"file_type,use_zero\"",
+    (gogoproto.jsontag) = "fileType"
+  ];
+  int64 ordinal = 4 [
+    (gogoproto.moretags) = "pg:\"ordinal,use_zero\"",
+    (gogoproto.jsontag) = "ordinal"
+  ];
+}
+
+message HelmExtra {
+  bool atomic = 1 [ (gogoproto.jsontag) = "atomic" ];
+  bool wait = 2 [ (gogoproto.jsontag) = "wait" ];
+  bool force = 3 [ (gogoproto.jsontag) = "force" ];
+  bool noHooks = 4 [ (gogoproto.jsontag) = "noHooks" ];
+  sint32 maxHistory = 5 [ (gogoproto.jsontag) = "maxHistory" ];
+  bool renderSubChartNotes = 6 [ (gogoproto.jsontag) = "renderSubChartNotes" ];
+  bool resetValues = 7 [ (gogoproto.jsontag) = "resetValues" ];
+  bool reuseValues = 8 [ (gogoproto.jsontag) = "reuseValues" ];
+  repeated string set = 9 [ (gogoproto.jsontag) = "set" ];
+  bool skipCRDs = 10 [ (gogoproto.jsontag) = "skipCRDs" ];
+  sint64 timeout = 11 [
+    (gogoproto.jsontag) = "timeout",
+    (gogoproto.casttype) = "time.Duration"
+  ];
+  bool cleanUpOnFail = 12 [ (gogoproto.jsontag) = "cleanUpOnFail" ];
+  string description = 13 [ (gogoproto.jsontag) = "description" ];
+  bool disableOpenAPIValidation = 14
+      [ (gogoproto.jsontag) = "disableOpenAPIValidation" ];
+  bool keepHistory = 15 [ (gogoproto.jsontag) = "keepHistory" ];
+}
+
+message YamlExtra {
+  bool force = 1 [ (gogoproto.jsontag) = "force" ];
+  bool disableOpenAPIValidation = 2
+      [ (gogoproto.jsontag) = "disableOpenAPIValidation" ];
+}
+
+message ArtifactExtra {
+  HelmExtra helm = 1 [ (gogoproto.moretags) = "patchStrategy:\"replace\"" ];
+  sint32 maxHistory = 2 [ (gogoproto.moretags) = "patchStrategy:\"replace\"" ];
+  RepoArtifactMeta repo = 3
+      [ (gogoproto.moretags) = "patchStrategy:\"replace\"" ];
+  PipelineMeta pipeline = 4
+      [ (gogoproto.moretags) = "patchStrategy:\"replace\"" ];
+  bool usePlacementName = 5
+      [ (gogoproto.moretags) = "patchStrategy:\"replace\"" ];
+  YamlExtra yaml = 6 [ (gogoproto.moretags) = "patchStrategy:\"replace\"" ];
+}
+
+enum HealthStatus {
+  // disable enum prefix
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  UNKNOWN = 0;
+  HEALTHY = 1;
+  UNHEALTHY = 2;
+  INACTIVE = 3;
+}
+
+message HealthCheck {
+  HealthStatus status = 1;
+  google.protobuf.Timestamp lastUpdated = 2
+      [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+  string comment = 3;
+}
+
+message Image {
+  string repository = 1
+      [ (gogoproto.nullable) = true, (gogoproto.jsontag) = "repository" ];
+  string tag = 2 [ (gogoproto.nullable) = true, (gogoproto.jsontag) = "tag" ];
+  string pullPolicy = 3
+      [ (gogoproto.nullable) = true, (gogoproto.jsontag) = "pullPolicy" ];
+  string digest = 4
+      [ (gogoproto.nullable) = true, (gogoproto.jsontag) = "digest" ];
+}
+
+message VolumeMount {
+  string name = 1 [ (gogoproto.nullable) = true ];
+  string mountPath = 2 [ (gogoproto.nullable) = true ];
+}
+
+message InitContainer {
+  string name = 1 [ (gogoproto.nullable) = true ];
+  string image = 2 [ (gogoproto.nullable) = true ];
+  string imagePullPolicy = 3 [ (gogoproto.nullable) = true ];
+  repeated VolumeMount volumeMounts = 4 [ (gogoproto.nullable) = true ];
+}
+
+message Restic {
+  string podVolumePath = 1 [ (gogoproto.nullable) = true ];
+  bool privileged = 2 [ (gogoproto.nullable) = true ];
+}
+
+enum ShareMode {
+  // disable enum prefix
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  ShareModeNotSet = 0;
+  ALL = 1;
+  CUSTOM = 2;
+}
+
+message ProjectTaskSet {
+  string taskSetID = 1;
+  string projectID = 2 [
+    (gogoproto.jsontag) = "project_id"
+  ];
+}

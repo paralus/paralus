@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"fmt"
+	"sort"
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/speps/go-hashids"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8sapijson "sigs.k8s.io/kustomize/pseudo/k8s/apimachinery/pkg/runtime/serializer/json"
 )
@@ -46,6 +48,24 @@ func HashFromInt64(id int64) (string, error) {
 		return "", err
 	}
 	return stringHash, nil
+}
+
+// HashFromHex returns new Hash for uuid string
+func HashFromHex(id string) (string, error) {
+	stringHash, err := hd.EncodeHex(id)
+	if err != nil {
+		return "", err
+	}
+	return stringHash, nil
+}
+
+// HashFromHex returns new Hash for uuid string
+func IDFromHash(hash string) (string, error) {
+	id, err := hd.DecodeHex(hash)
+	if err != nil {
+		return "", err
+	}
+	return id, nil
 }
 
 var json = k8sapijson.CaseSensitiveJsonIterator()
@@ -94,4 +114,35 @@ func Add(o metav1.Object) error {
 	o.SetAnnotations(annotations)
 
 	return nil
+}
+
+// Node Hash should take Labels into the hash calculation since it can be
+// set from either side: From core or from cluster
+func GetNodeHashFrom(labels map[string]string, taints []v1.Taint, unscheduleable bool) (string, error) {
+	//add sorted labels
+	labelsKeys := make([]string, 0)
+	for k, _ := range labels {
+		labelsKeys = append(labelsKeys, k)
+	}
+	sort.Strings(labelsKeys)
+	finalLabelsAsString := ""
+	for _, k := range labelsKeys {
+		finalLabelsAsString += fmt.Sprintf("%s:%s,", k, labels[k])
+	}
+	//add sorted taints
+	taintKeys := make([]string, 0)
+	taintMap := make(map[string]v1.Taint)
+	for _, taint := range taints {
+		taintKeys = append(taintKeys, taint.Key)
+		taintMap[taint.Key] = taint
+	}
+	sort.Strings(taintKeys)
+	finalTaintsAsString := ""
+	for _, k := range taintKeys {
+		finalTaintsAsString += fmt.Sprintf("%s:%s:%s,", k, taintMap[k].Value, taintMap[k].Effect)
+	}
+	finalHashString := fmt.Sprintf("labels:%s,taints:%s,unschedulable:%v", finalLabelsAsString, finalTaintsAsString, unscheduleable)
+	h := sha256.New()
+	h.Write([]byte(finalHashString))
+	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }

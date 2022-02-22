@@ -134,7 +134,6 @@ func (s *partnerService) GetByID(ctx context.Context, id string) (*systemv3.Part
 		partner.Metadata = &v3.Metadata{
 			Name:        part.Name,
 			Description: part.Description,
-			Id:          part.ID.String(),
 			ModifiedAt:  timestamppb.New(part.ModifiedAt),
 		}
 		partner.Spec = &systemv3.PartnerSpec{
@@ -204,7 +203,6 @@ func (s *partnerService) GetByName(ctx context.Context, name string) (*systemv3.
 		partner.Metadata = &v3.Metadata{
 			Name:        part.Name,
 			Description: part.Description,
-			Id:          part.ID.String(),
 			ModifiedAt:  timestamppb.New(part.ModifiedAt),
 		}
 		partner.Spec = &systemv3.PartnerSpec{
@@ -250,8 +248,7 @@ func (s *partnerService) GetByName(ctx context.Context, name string) (*systemv3.
 
 func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error) {
 
-	id, _ := uuid.Parse(partner.Metadata.Id)
-	entity, err := s.dao.GetByID(ctx, id, &models.Partner{})
+	entity, err := s.dao.GetByName(ctx, partner.Metadata.Name, &models.Partner{})
 	if err != nil {
 		partner.Status = &v3.Status{
 			ConditionStatus: v3.ConditionStatus_StatusFailed,
@@ -268,7 +265,6 @@ func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) 
 
 	if part, ok := entity.(*models.Partner); ok {
 		//update partner details
-		part.ID = id
 		part.Name = partner.GetMetadata().Name
 		part.Description = partner.GetMetadata().GetDescription()
 		part.Settings = sb
@@ -286,7 +282,7 @@ func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) 
 		part.ModifiedAt = time.Now()
 
 		//Update the partner details
-		_, err = s.dao.Update(ctx, id, part)
+		_, err = s.dao.Update(ctx, part.ID, part)
 		if err != nil {
 			partner.Status = &v3.Status{
 				ConditionStatus: v3.ConditionStatus_StatusFailed,
@@ -309,17 +305,7 @@ func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) 
 }
 
 func (s *partnerService) Delete(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error) {
-	id, err := uuid.Parse(partner.Metadata.Id)
-	if err != nil {
-		partner.Status = &v3.Status{
-			ConditionType:   "Delete",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			Reason:          err.Error(),
-			LastUpdated:     timestamppb.Now(),
-		}
-		return partner, err
-	}
-	entity, err := s.dao.GetByID(ctx, id, &models.Partner{})
+	entity, err := s.dao.GetByName(ctx, partner.Metadata.Name, &models.Partner{})
 	if err != nil {
 		partner.Status = &v3.Status{
 			ConditionType:   "Delete",
@@ -331,7 +317,8 @@ func (s *partnerService) Delete(ctx context.Context, partner *systemv3.Partner) 
 	}
 
 	if part, ok := entity.(*models.Partner); ok {
-		err = s.dao.Delete(ctx, id, part)
+		part.Trash = true
+		_, err := s.dao.Update(ctx, part.ID, part)
 		if err != nil {
 			partner.Status = &v3.Status{
 				ConditionType:   "Delete",
@@ -343,7 +330,6 @@ func (s *partnerService) Delete(ctx context.Context, partner *systemv3.Partner) 
 		}
 		//update status
 		if partner != nil {
-			partner.Metadata.Id = part.ID.String()
 			partner.Metadata.Name = part.Name
 			partner.Status = &v3.Status{
 				ConditionStatus: v3.ConditionStatus_StatusOK,

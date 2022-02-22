@@ -1,0 +1,127 @@
+syntax = "proto3";
+package rafay.dev.types.config;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "gogoproto/gogo.proto";
+import "proto/types/commonpb/v3/common.proto";
+
+enum DriftReconcillationAction {
+    // disable enum prefix
+    option (gogoproto.goproto_enum_prefix) = false;
+  
+    DriftReconcillationActionNotSet = 0;
+    DriftReconcillationActionNotify = 1;
+    DriftReconcillationActionDeny = 2;
+}
+
+enum PlacementType {
+    // disable enum prefix
+    option (gogoproto.goproto_enum_prefix) = false;
+  
+    ClusterSelector = 0;
+    ClusterLocations = 1;
+    ClusterLabels = 2;
+    ClusterSpecific = 3;
+}
+
+message PlacementLabel {
+    string key = 1;
+    string value = 2;
+}
+
+// PlacementTemplate is the template for creating placements
+message PlacementTemplate {
+  rafay.dev.types.common.v3.Metadata metadata = 3
+      [ (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+  PlacementSpec spec = 2
+      [ (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+}
+
+// PlacementSpec is the specification of placement
+message PlacementSpec {
+    // placementType is the type of placement
+    PlacementType placementType = 1 [
+      (gogoproto.jsontag) = "placementType",
+      (gogoproto.moretags) = "pg:\"placement_type,use_zero\""
+    ];
+    string clusterSelector = 2 [
+      (gogoproto.moretags) = "pg:\"cluster_selector,use_zero\"",
+      (gogoproto.jsontag) = "clusterSelector"
+    ];
+  
+    DriftReconcillationAction driftAction = 3 [
+      (gogoproto.moretags) = "pg:\"drift_action,use_zero\"",
+      (gogoproto.jsontag) = "driftAction"
+    ];
+    repeated PlacementLabel clusterLabels = 4 [
+      (gogoproto.moretags) = "pg:\"-\"",
+      (gogoproto.jsontag) = "clusterLabels"
+    ];
+    repeated string nodeGroupingKeys = 5 [
+      (gogoproto.moretags) = "pg:\"-\"",
+      (gogoproto.jsontag) = "nodeGroupingKeys"
+    ];
+}
+
+// Placement defines how clusters have to be selected for a taskset
+message Placement {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+      json_schema : {
+        title : "Placement"
+        description : "Placement"
+        required : [ "apiVersion", "kind", "metadata", "spec" ]
+      }
+    };
+    string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the resource"
+            default : "config.k8smgmt.io/v3"
+            read_only : true
+        } ];
+        string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the list resource"
+            default : "ClusterOverrideList"
+            read_only : true
+        } ];
+    rafay.dev.types.common.v3.Metadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Metadata",
+            description : "Metadata of the resource"
+        } ];
+    PlacementSpec spec = 4
+        [ (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+    rafay.dev.types.common.v3.Status status = 5
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+          title : "Status",
+          description : "Status of the resource"
+          read_only : true
+        } ];
+}
+
+// PlacementList is a list of placements
+message PlacementList {
+    string apiVersion = 1
+          [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+              title : "API Version",
+              description : "API Version of the list resource"
+              default : "config.k8smgmt.io/v3"
+              read_only : true
+          } ];
+    string kind = 2
+          [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+              title : "Kind",
+              description : "Kind of the list resource"
+              default : "PlacementList"
+              read_only : true
+          } ];
+    rafay.dev.types.common.v3.ListMetadata metadata = 3
+          [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+              title : "ListMetadata",
+              description : "Metadata of the list resource"
+              read_only : true
+          } ];
+    repeated Placement items = 4;
+}

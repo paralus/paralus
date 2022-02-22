@@ -1,0 +1,693 @@
+apiVersion: cluster.rafay.dev/v2
+kind: Tasklet
+metadata:
+  annotations:
+    rafay.dev/ownerRef: '{"apiVersion":"cluster.rafay.dev/v2","kind":"Task","name":"wordpress-demo","uid":"b0e6d87f-4d21-11ea-b8ec-0ec508a9a2df","controller":true,"blockOwnerDeletion":true}'
+  creationTimestamp: "2020-02-11T22:56:08Z"
+  generation: 1
+  name: wordpress-demo-1
+  namespace: wordpress
+  resourceVersion: "11710944"
+  selfLink: /apis/cluster.rafay.dev/v2/namespaces/wordpress/tasklets/wordpress-demo
+  uid: b0e210f3-4d21-11ea-b8ec-0ec508a9a2df
+spec:
+  init:
+  - name: step-secret-wordpress-demo
+    object:
+      apiVersion: v1
+      data:
+        wordpress-password: ZGVtbyEyMzQ=
+      kind: Secret
+      metadata:
+        labels:
+          app: wordpress-demo
+          chart: wordpress-7.5.4
+          heritage: Tiller
+          release: wordpress-demo
+        name: wordpress-demo
+        namespace: wordpress
+      type: Opaque
+  - name: step-configmap-wordpress-demo-mariadb
+    object:
+      apiVersion: v1
+      data:
+        my.cnf: |-
+          [mysqld]
+          skip-name-resolve
+          explicit_defaults_for_timestamp
+          basedir=/opt/bitnami/mariadb
+          plugin_dir=/opt/bitnami/mariadb/plugin
+          port=3306
+          socket=/opt/bitnami/mariadb/tmp/mysql.sock
+          tmpdir=/opt/bitnami/mariadb/tmp
+          max_allowed_packet=16M
+          bind-address=0.0.0.0
+          pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+          log-error=/opt/bitnami/mariadb/logs/mysqld.log
+          character-set-server=UTF8
+          collation-server=utf8_general_ci
+
+          [client]
+          port=3306
+          socket=/opt/bitnami/mariadb/tmp/mysql.sock
+          default-character-set=UTF8
+          plugin_dir=/opt/bitnami/mariadb/plugin
+
+          [manager]
+          port=3306
+          socket=/opt/bitnami/mariadb/tmp/mysql.sock
+          pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+      kind: ConfigMap
+      metadata:
+        labels:
+          app: mariadb
+          chart: mariadb-6.13.0
+          component: master
+          heritage: Tiller
+          release: wordpress-demo
+        name: wordpress-demo-mariadb
+        namespace: wordpress
+  - name: step-secret-wordpress-stage-tls
+    object:
+      apiVersion: v1
+      data:
+        tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUd1VENDQmFHZ0F3SUJBZ0lJSXdNMXY0RUFUUDh3RFFZSktvWklodmNOQVFFTEJRQXdnYlF4Q3pBSkJnTlYKQkFZVEFsVlRNUkF3RGdZRFZRUUlFd2RCY21sNmIyNWhNUk13RVFZRFZRUUhFd3BUWTI5MGRITmtZV3hsTVJvdwpHQVlEVlFRS0V4RkhiMFJoWkdSNUxtTnZiU3dnU1c1akxqRXRNQ3NHQTFVRUN4TWthSFIwY0RvdkwyTmxjblJ6CkxtZHZaR0ZrWkhrdVkyOXRMM0psY0c5emFYUnZjbmt2TVRNd01RWURWUVFERXlwSGJ5QkVZV1JrZVNCVFpXTjEKY21VZ1EyVnlkR2xtYVdOaGRHVWdRWFYwYUc5eWFYUjVJQzBnUnpJd0hoY05NVGt3T0RFNE1ESXpOREl3V2hjTgpNakV3T0RFNE1ESXpOREl3V2pBL01TRXdId1lEVlFRTEV4aEViMjFoYVc0Z1EyOXVkSEp2YkNCV1lXeHBaR0YwClpXUXhHakFZQmdOVkJBTU1FU291YzNSaFoyVXVjbUZtWVhrdVpHVjJNSUlCSWpBTkJna3Foa2lHOXcwQkFRRUYKQUFPQ0FROEFNSUlCQ2dLQ0FRRUF0L1FsU21HMnFRR2pORENrcHB6eFFOSXdpY1d1aWtycjF3T3FSSjN5c0tvQgp3TnB4NElOK3NMR3F5cVN5Vm9WcmFXYVIzdWJNMnd5dFhtVFBMdWNIL1pTTGhNNEJqYm9XRmk1VTJISm53emNMCkFLTGxSU2VYZDZzMVByaFdYVUM5MHRCaXc4cWxSQXRoUlg0M1RJK0pINXA3a1UzSWhhc1VSaXliZVlFeERKVEkKRWcxRFZjR2hWU3hkQk5pQzJ0UWlRWE5wS214andERERUT3hPZ3JuclJWeDFPN1NuU0dPV1pwNVZEbTdycUpUbQo4QjRiTk53TTg5UWdEanNnUTh5TENDOEZhZjVHc2hybDI0ZnZBeDhEQkptMlhBVFU0dlRDalI4U2g3RXhiTXc1CjAxYWZLdWtOazl6R0dLY25mSWdjTUtZcVFhTWlpdGVZYndhSjdjRTlOUUlEQVFBQm80SURRVENDQXowd0RBWUQKVlIwVEFRSC9CQUl3QURBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUlLd1lCQlFVSEF3SXdEZ1lEVlIwUApBUUgvQkFRREFnV2dNRGdHQTFVZEh3UXhNQzh3TGFBcm9DbUdKMmgwZEhBNkx5OWpjbXd1WjI5a1lXUmtlUzVqCmIyMHZaMlJwWnpKek1TMHhNekkyTG1OeWJEQmRCZ05WSFNBRVZqQlVNRWdHQzJDR1NBR0cvVzBCQnhjQk1Ea3cKTndZSUt3WUJCUVVIQWdFV0syaDBkSEE2THk5alpYSjBhV1pwWTJGMFpYTXVaMjlrWVdSa2VTNWpiMjB2Y21WdwpiM05wZEc5eWVTOHdDQVlHWjRFTUFRSUJNSFlHQ0NzR0FRVUZCd0VCQkdvd2FEQWtCZ2dyQmdFRkJRY3dBWVlZCmFIUjBjRG92TDI5amMzQXVaMjlrWVdSa2VTNWpiMjB2TUVBR0NDc0dBUVVGQnpBQ2hqUm9kSFJ3T2k4dlkyVnkKZEdsbWFXTmhkR1Z6TG1kdlpHRmtaSGt1WTI5dEwzSmxjRzl6YVhSdmNua3ZaMlJwWnpJdVkzSjBNQjhHQTFVZApJd1FZTUJhQUZFREN2U2VPekRTRE1LSXoxL3Rzcy9DMExJRE9NQzBHQTFVZEVRUW1NQ1NDRVNvdWMzUmhaMlV1CmNtRm1ZWGt1WkdWMmdnOXpkR0ZuWlM1eVlXWmhlUzVrWlhZd0hRWURWUjBPQkJZRUZDOWZmNTR1VmRQYVVEN2kKNUlySmI0c1l4dEF6TUlJQmZBWUtLd1lCQkFIV2VRSUVBZ1NDQVd3RWdnRm9BV1lBZGdDa3VRbVF0QmhZRkllNwpFNkxNWjNBS1BEV1lCUGtiMzdqamQ4ME95QTNjRUFBQUFXeWlrMTRtQUFBRUF3QkhNRVVDSUFzZWRoRWhnVk5HCitkZ3B4TklnMy9JQyt1cVZxTDNldE9WUWdOZXVSWGNMQWlFQXZUR1RJMEpTYnZrMy9LazVvMU1sMzVMMDVleWIKajNkN204ZjN2SVFxWDlJQWRRRHVTNzIzZGM1Z3V1RkNhUityNFo1bW93OStYN0J5MklNQXhIdUplcWo5eXdBQQpBV3lpazJNL0FBQUVBd0JHTUVRQ0lCY0hXRE5nWXJTaTRDS0U5dlVyc002T2ZZK3NlN0hPeFVxWWpVZG5TRk81CkFpQiszRkJFaDBFUWV0TGJvdHJJcWVRNVJrNHBpV2N3V3lvVlFnRkJCMHMweHdCMUFFU1VaUzZ3N3M2dnhFQUgKMktqK0tNRGE1b0srMk1zeHRUL1RNNWExdG9Hb0FBQUJiS0tUYUR3QUFBUURBRVl3UkFJZ1BYZFpvd3REZERhMQpvbkZ4cWJEL2tJUkQ2RlFKcVNrUHdKR0pLSkg1cXdNQ0lGUzcwandyZ0FRMldUemxsemo2SXRLdmRPRkgyaHFJCmhib3FCRVh1MzJQZU1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQ2MzVStncU5FRVduRUZQbnlYODJHK0gxTS8KK1JmVVc2VVFBclhQcHBVLzIvL3NWV2dDSTBIaWRzTWk1NUcvNUgxNExsL1ZqRnNhYmVEVHY1UUNaYitVUFg3SwpjcXRlYUMxa0x1UG9zLy8wZjFtQnhHdWJZTWJjUmYwSnlTK3R2VEpoSXNGdytWOC9Na0JFeVQ5WjJPMW5kV1I3CkNNa3pvRUV1bVZkem82elBPLzFVME8vUWp6L3RxbThXWWdteGc3ejBJM0hOaHpxOG5DNyttcVBoRDRIMDN2MHcKMFZYaExBNWpBbkZQUUNZN2NPTHNPNy9xOFB0THJUcll6WUU0QVdOL3RBNDdjV2hvYTMreDBqNndmQ2xtWUg5SAowa2U2ZTdqclI1Q2I5VUYwc3lIL2xVdXAwZlI2SmtNNDQwaS9EN1lqTHN5VEYraGI1YmlHendJQnVSTEsKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQotLS0tLUJFR0lOIENFUlRJRklDQVRFLS0tLS0KTUlJRTBEQ0NBN2lnQXdJQkFnSUJCekFOQmdrcWhraUc5dzBCQVFzRkFEQ0JnekVMTUFrR0ExVUVCaE1DVlZNeApFREFPQmdOVkJBZ1RCMEZ5YVhwdmJtRXhFekFSQmdOVkJBY1RDbE5qYjNSMGMyUmhiR1V4R2pBWUJnTlZCQW9UCkVVZHZSR0ZrWkhrdVkyOXRMQ0JKYm1NdU1URXdMd1lEVlFRREV5aEhieUJFWVdSa2VTQlNiMjkwSUVObGNuUnAKWm1sallYUmxJRUYxZEdodmNtbDBlU0F0SUVjeU1CNFhEVEV4TURVd016QTNNREF3TUZvWERUTXhNRFV3TXpBMwpNREF3TUZvd2diUXhDekFKQmdOVkJBWVRBbFZUTVJBd0RnWURWUVFJRXdkQmNtbDZiMjVoTVJNd0VRWURWUVFICkV3cFRZMjkwZEhOa1lXeGxNUm93R0FZRFZRUUtFeEZIYjBSaFpHUjVMbU52YlN3Z1NXNWpMakV0TUNzR0ExVUUKQ3hNa2FIUjBjRG92TDJObGNuUnpMbWR2WkdGa1pIa3VZMjl0TDNKbGNHOXphWFJ2Y25rdk1UTXdNUVlEVlFRRApFeXBIYnlCRVlXUmtlU0JUWldOMWNtVWdRMlZ5ZEdsbWFXTmhkR1VnUVhWMGFHOXlhWFI1SUMwZ1J6SXdnZ0VpCk1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRQzU0TXNRMUs5MnZkU1RZdXN3WkxpQkNHekQKQk5saUY0NHYvejVsejQvT1l1WThVaHphRmtWTFZhdDRhMk9EWXBET0QybHNtY2dhRkl0TXpFVXo2b2pjbnFPdgpLLzZBWVoxNVY4VFBMdlEvTUR4ZFIveWFGcnpETjVaQlVZNFJTMVQ0S0w3UWpMN3dNRGdlODdBbStHWkhZMjNlCmNTWkhqemhIVTlGR0hiVGozQURxUmF5OXZISFpxbThBMjl2Tk1EcDVUMTlNUi9nZDcxdkN4SjFnTzdHeVE1SFkKcEROTzZyUFdKMCt0SllxbHh2VFYwS2F1ZEFWa1Y0aTFSRlhVTFNvNlB2aTR2ZWt5Q2dLVVpNUVdPbER4U3E3bgplVE92RENBSGYramZCRG5DYVFKc1kxTDZkOEVieUhTSHlMbVRHRkJVTlV0cFRydzcwMGt1SDl6QjBsTDdBZ01CCkFBR2pnZ0VhTUlJQkZqQVBCZ05WSFJNQkFmOEVCVEFEQVFIL01BNEdBMVVkRHdFQi93UUVBd0lCQmpBZEJnTlYKSFE0RUZnUVVRTUs5SjQ3TU5JTXdvalBYKzJ5ejhMUXNnTTR3SHdZRFZSMGpCQmd3Rm9BVU9wcUZCeEJuS0xidgo5cjBGUVc0Z3daVGFEOTR3TkFZSUt3WUJCUVVIQVFFRUtEQW1NQ1FHQ0NzR0FRVUZCekFCaGhob2RIUndPaTh2CmIyTnpjQzVuYjJSaFpHUjVMbU52YlM4d05RWURWUjBmQkM0d0xEQXFvQ2lnSm9Za2FIUjBjRG92TDJOeWJDNW4KYjJSaFpHUjVMbU52YlM5blpISnZiM1F0WnpJdVkzSnNNRVlHQTFVZElBUS9NRDB3T3dZRVZSMGdBREF6TURFRwpDQ3NHQVFVRkJ3SUJGaVZvZEhSd2N6b3ZMMk5sY25SekxtZHZaR0ZrWkhrdVkyOXRMM0psY0c5emFYUnZjbmt2Ck1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQUlmbXlURU1nNHVKYXBrRXYvb1Y5UEJPOXNQcHlJQnNsUWo2WnoKOTFjeEc3Njg1Qy9iK0xyVFcrQzA1K1o1WWc0TW90ZHFZM014dGZXb1NLUTdDQzJpWFpEWHRId2xUeEZXTU1TMgpSSjE3TEozbFh1YnZER0dxditRcUcrNkVucmlEZmNGRHprU25FM0FOa1IvMHlCT3RnMkRaMkhLb2N5UWV0YXdpCkRzb1hpV0pZUkJ1cmlTVUJBQS9OeEJ0aTIxRzAwdzlSS3B2MHZIUDhkczQycE0zWjJDenFycHYxS3JLUTBVMTEKR0lvL2lrR1FJMzFiUy82a0ExaWJSckxEWUdDRCtIMVFRYzdDb1pERHUrOENMOUlWVk81RUZka0tycWVLTSsyeApMWFkySnR3RTY1LzNZUjhWM0lkdjdrYVdLSzJoSm4wS0NhY3VCS09OdlBpOEJEQUIKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQotLS0tLUJFR0lOIENFUlRJRklDQVRFLS0tLS0KTUlJRWZUQ0NBMldnQXdJQkFnSURHK2NWTUEwR0NTcUdTSWIzRFFFQkN3VUFNR014Q3pBSkJnTlZCQVlUQWxWVApNU0V3SHdZRFZRUUtFeGhVYUdVZ1IyOGdSR0ZrWkhrZ1IzSnZkWEFzSUVsdVl5NHhNVEF2QmdOVkJBc1RLRWR2CklFUmhaR1I1SUVOc1lYTnpJRElnUTJWeWRHbG1hV05oZEdsdmJpQkJkWFJvYjNKcGRIa3dIaGNOTVRRd01UQXgKTURjd01EQXdXaGNOTXpFd05UTXdNRGN3TURBd1dqQ0JnekVMTUFrR0ExVUVCaE1DVlZNeEVEQU9CZ05WQkFnVApCMEZ5YVhwdmJtRXhFekFSQmdOVkJBY1RDbE5qYjNSMGMyUmhiR1V4R2pBWUJnTlZCQW9URVVkdlJHRmtaSGt1ClkyOXRMQ0JKYm1NdU1URXdMd1lEVlFRREV5aEhieUJFWVdSa2VTQlNiMjkwSUVObGNuUnBabWxqWVhSbElFRjEKZEdodmNtbDBlU0F0SUVjeU1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBdjNGaQpDUEg2V1RUM0c4a1lvL2VBU1ZqcElvTVRwc1VnUXdFN2hQSG1oVW1mSityMmhCdE9vTFRiY0pqSE1nR3hCVDRIClR1NzArazh2V1RBaTU2c1pWbXZpZ0FmODh4WjFnRGxSZStYNU5iWjBUcW1OZ2hQa3RqK3BBNFA2b3I2S0ZXcC8KM2d2RHRoa1VCY3JxdzZnRWxEdEdmRElOOHdCbUlzaU5hVzAyakJFWXQ5T3lIR0MwT1BvQ2pNN1QzVVlIM2dvKwo2MTE4eUh6N3NDdFRwSkppYVZFbEJXRWFSSUdNTEtsRGxpUGZyRHFCbWc0cHhSeXA2VjBldHA2ZU1BbzV6dkdJCmdQdExYY3d5N0lWaVF5VTBBbFluQVpHME8zQXFQMjZ4Nkp5SUFYMmYxUG5iVTIxZ25iOHM1MWlydUY5Ry9NN0UKR3dNOENldEpNVnhwUnJQZ1J3SURBUUFCbzRJQkZ6Q0NBUk13RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFPQmdOVgpIUThCQWY4RUJBTUNBUVl3SFFZRFZSME9CQllFRkRxYWhRY1FaeWkyNy9hOUJVRnVJTUdVMmcvZU1COEdBMVVkCkl3UVlNQmFBRk5MRXNOS1IxRXdSY2JOaHl6MmgvdDJvYXRUak1EUUdDQ3NHQVFVRkJ3RUJCQ2d3SmpBa0JnZ3IKQmdFRkJRY3dBWVlZYUhSMGNEb3ZMMjlqYzNBdVoyOWtZV1JrZVM1amIyMHZNRElHQTFVZEh3UXJNQ2t3SjZBbApvQ09HSVdoMGRIQTZMeTlqY213dVoyOWtZV1JrZVM1amIyMHZaMlJ5YjI5MExtTnliREJHQmdOVkhTQUVQekE5Ck1Ec0dCRlVkSUFBd016QXhCZ2dyQmdFRkJRY0NBUllsYUhSMGNITTZMeTlqWlhKMGN5NW5iMlJoWkdSNUxtTnYKYlM5eVpYQnZjMmwwYjNKNUx6QU5CZ2txaGtpRzl3MEJBUXNGQUFPQ0FRRUFXUXRUdlpLR0VhY2tlKzFiTWM4ZApIMnh3eGJodXZrNjc5cjZYVU9Fd2Y3b29YR0tVd3VOK00vZjdRbmFGMjVVY2pDSllkUWtNaUdWbk9Rb1dDY1dnCk9KZWt4U09UUDdRWXBnRUdSSkhqcDJrbnRGb2xmenEzTXMzZGhQOHFPQ2t6cE4xbnNvWCtvWWdnSEZDSnlOd3EKOWtJRE4wem1pTi9WcnlUeXNjUGZ6TFhzNEpsZXQwbFVJRHlVR0F6SEhGSVlTYVJ0NGJOWUM4blk3Tm11SERLTwpLSEFONHY2bUY1NkVENzFYY0xOYTZSK2dobE83NzN6L2FRdmdTTU8za3d2SUNsVEVyRjBVWnpkc3lxVXZNUWczCnFtNXZqTHliNGxkZEpJR3ZsNWVjaEsxc3JEZE1adk5oa1JFZzVMNHduM3FrS1FtdzRUUmZaSGNZUUZIZmpEQ20Kcnc9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCi0tLS0tQkVHSU4gQ0VSVElGSUNBVEUtLS0tLQpNSUlFQURDQ0F1aWdBd0lCQWdJQkFEQU5CZ2txaGtpRzl3MEJBUVVGQURCak1Rc3dDUVlEVlFRR0V3SlZVekVoCk1COEdBMVVFQ2hNWVZHaGxJRWR2SUVSaFpHUjVJRWR5YjNWd0xDQkpibU11TVRFd0x3WURWUVFMRXloSGJ5QkUKWVdSa2VTQkRiR0Z6Y3lBeUlFTmxjblJwWm1sallYUnBiMjRnUVhWMGFHOXlhWFI1TUI0WERUQTBNRFl5T1RFMwpNRFl5TUZvWERUTTBNRFl5T1RFM01EWXlNRm93WXpFTE1Ba0dBMVVFQmhNQ1ZWTXhJVEFmQmdOVkJBb1RHRlJvClpTQkhieUJFWVdSa2VTQkhjbTkxY0N3Z1NXNWpMakV4TUM4R0ExVUVDeE1vUjI4Z1JHRmtaSGtnUTJ4aGMzTWcKTWlCRFpYSjBhV1pwWTJGMGFXOXVJRUYxZEdodmNtbDBlVENDQVNBd0RRWUpLb1pJaHZjTkFRRUJCUUFEZ2dFTgpBRENDQVFnQ2dnRUJBTjZkMStwWEdFbWhXK3ZYWDBpRzZyN2QvK1R2Wnh6MFpXaXpWM0dnWG5lNzdadEo2WENBClBWWVlZd2h2MnZMTTBEOS9BbFFpVkJEWXNvSFV3SFU5UzMvSGQ4TStlS3NhQTdVZ2F5OXFLN0hGaUg3RXV4NncKd2RoRkoyK3FOMWozaHliWDJDMzJxUmUzSDNJMlRxWVhQMldZa3RzcWJsMmkvb2pnQzk1LzVZMFY0ZXZMT3RYaQpFcUlUTGRpT3IxOFNQYUFJQlFpMlhLVmxPQVJGbVI2allHQjB4VUdsY21JYllzVWZiMThhUXI0Q1VXV29yaU1ZCmF2eDRBNmxOZjRERCtxdGEvS0ZBcE1vWkZ2Nnl5TzllY3czdWQ3MmE5bm1ZdkxFSFo2SVZEZDJnV01aRWV3bysKWWloZnVrRUhVMWpQRVg0NGRNWDQvN1Zwa0krRWRPcVhHNjhDQVFPamdjQXdnYjB3SFFZRFZSME9CQllFRk5MRQpzTktSMUV3UmNiTmh5ejJoL3Qyb2F0VGpNSUdOQmdOVkhTTUVnWVV3Z1lLQUZOTEVzTktSMUV3UmNiTmh5ejJoCi90Mm9hdFRqb1dla1pUQmpNUXN3Q1FZRFZRUUdFd0pWVXpFaE1COEdBMVVFQ2hNWVZHaGxJRWR2SUVSaFpHUjUKSUVkeWIzVndMQ0JKYm1NdU1URXdMd1lEVlFRTEV5aEhieUJFWVdSa2VTQkRiR0Z6Y3lBeUlFTmxjblJwWm1sagpZWFJwYjI0Z1FYVjBhRzl5YVhSNWdnRUFNQXdHQTFVZEV3UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUZCUUFECmdnRUJBREpMODdMS1BwSDhFc2FoQjR5T2Q2QXpCaFJja0I0WTl3aW1QUW9aK1llQUVXNXA1SllYTVA4MGtXTnkKT083TUhBR2pIWlFvcERIMmVzUlUxL2JsTVZnRG9zek9ZdHVVUlhPMXYwWEpKTFhWZ2dLdEkzbHBqYmkyVGM3UApUTW96SStnY2lLcWRpMEZ1RnNrZzVZbWV6VHZhY1BkK21TWWdGRlFscTI1emhlYWJJWjBLYklJT3FQakNEUG9RCkhteVc3NGNOeEE5aGk2M3VneXVWK0k2U2hISTU2eURxZysyRHpaZHVDTHpyVGlhMmN5dmswL1pNL2laeDRtRVIKZEVyL1Z4cUhEM1ZJTHM5UmFSZWdBaEpobGRYUlFMSVFUTzdFckJCRHBxV2VDdFdWWXBvTno0aUN4VElNNUN1ZgpSZVlObnlpY3Nia3FXbGV0TncrdkhYL2J2Wjg9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0=
+        tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2UUlCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktjd2dnU2pBZ0VBQW9JQkFRQzM5Q1ZLWWJhcEFhTTAKTUtTbW5QRkEwakNKeGE2S1N1dlhBNnBFbmZLd3FnSEEybkhnZzM2d3NhcktwTEpXaFd0cFpwSGU1c3piREsxZQpaTTh1NXdmOWxJdUV6Z0dOdWhZV0xsVFljbWZETndzQW91VkZKNWQzcXpVK3VGWmRRTDNTMEdMRHlxVkVDMkZGCmZqZE1qNGtmbW51UlRjaUZxeFJHTEp0NWdURU1sTWdTRFVOVndhRlZMRjBFMklMYTFDSkJjMmtxYkdQQU1NTk0KN0U2Q3VldEZYSFU3dEtkSVk1Wm1ubFVPYnV1b2xPYndIaHMwM0F6ejFDQU9PeUJEeklzSUx3VnAva2F5R3VYYgpoKzhESHdNRW1iWmNCTlRpOU1LTkh4S0hzVEZzekRuVFZwOHE2UTJUM01ZWXB5ZDhpQnd3cGlwQm95S0sxNWh2CkJvbnR3VDAxQWdNQkFBRUNnZ0VBZDZQU25RM3dQdnRScWgvNDltUWNoSXd3QldzTW1lVWdmamRrQmp5MEd6SjIKOFhjaG1XUHNnZjhMbGNDSVBMMkpub09YVytIQVdyZGtDb0NHUDNzRE4ybmxVL3FvQ0FWL1YrM0tRUHduZ0UvTQpXQjJaLytCQUl4UzNESlBYbDg4RHBwamhvM1dwQnhoZnExTHJwRisyVDFlcUJsY1FrOTh3MEhNeXExUGJFdEtXCjdxcWZyeHl1WGZFc05ha21tY1M3NmFaUjNjOUNKSUxtOFVDcDZuU29DUENvNkdRVE9CTkpJajZKcFFXWEN4eG0KazNwdkptRlVYUFNYLzVyT0JGNVdYRlJzSHNXNkR3ejZhNk0zc3NyQWNxSEpkd0xUb1JQS2Z3dkF3ajJkNzlWcgorZERjZkQ5ZXhuK1JUTW9MRVozak9ZcTlLeDE2aHN2a3RHcFhYTmcrQVFLQmdRRGVqMy9rSnJzZ1FlMGFncmtrCkJZNmlsZStyRTdaWS9kR0J3RGhOcHJhTjROaWN2MzJRUTdSRjArK3dwV3loZXdFV3hmQVhSZCtZSUY0UjZtK3MKZkJqdFNFWnBPWDY1S2tUcFNiNTlUNmU0Y1pmQ3hTVVdZLzhzeVUrWVVvT3JVSlQ1QldsRFU3Sllsd3Bud1cyMAplb0hxQVBISkx0enI0S1psTVhCM1hqcVUvd0tCZ1FEVGw2OGNoOWNNUVM4Ti83QWRGZmpnUVpweXVYMjY0WG9ZCkczVE5GOHNpTmoyV211TlNDMTliQTZVblJZM1lUTW0yZ2dGcE5zUmVLRnMyOUpnL1VRdDZ6WDFRN1ZEa3FUd3QKQzlmV3FYVVB4M1p4aEx2dXRuVlN4TlI1dlVKNHhLYnhKVE9STVA0S1NTSExEQnJ3aVJUZW9sd0d6YzgyY21yNwpIbHhZRjAvcHl3S0JnUUNSUmFXN0xMVFVWM1FHNi9FaFhDZEFaUkl0M3c0VmhJZnVZNlBjdThkSlVNelRkQUxuCjJlbWY4cmp2MnVyUGROUy9JckNXNEZzVWwzd1B3YkRuSzVHeHdJMkZQYXhEL1IxQ0VZcXZqUUR6V2VJdmxqT2gKSytCeVFXMGRCaTgvOGJkcjNHWmJOaFNoMHVWTjJHcGRkZUc2OXFiY0pTUzdLc1l5STFVLzlWZlR6UUtCZ0RUNAp1VzhrRnROTGtsTW4ydGc5UXZRcG1GZjJWaUt1QmhuNDdiSFdyaFVmalNXaUd4elVHZ2c0RG1XWmhSeE1oUWM2CjNzMlBWM1BYR0piV2Z6TUN3Q1A3UTg4NXlsR2tpSnNpWnVPbnd0V3pjdFNTalZZQ3ViYUI3a3VYOVFjMC9ESk0KeE84cFc4QUpkUHRYU1h0RVprUWlVM1drbXFhZjJHYUx3RVNSZVlFbkFvR0FPQmJHcWpiNSs2MlR3Y2RNV3lLcQpmT095VUFZc2JRTVo1UUs0YUM2eUxTQm5OS0ZvNTMvQkkzZFpFS1ZxbFhYY0RIQlRPaGdOR1RaVHdCdlpyY1N2CmphUDNBZ01NY1dpaGNGN2QraisyQTk3L0F4L2MzV1dpVnlFcytScVRoL01mK1hMem5aaHFPN3E0d1I0MHZIL1MKSzZmV0FTSTN6MTlpeVZ2VllPYkJsYXM9Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0=
+      kind: Secret
+      metadata:
+        labels:
+          app: wordpress-demo
+          chart: wordpress-7.5.4
+          heritage: Tiller
+          release: wordpress-demo
+        name: wordpress-stage-tls
+        namespace: wordpress
+      type: kubernetes.io/tls
+  - name: step-service-wordpress-demo
+    object:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        labels:
+          app: wordpress-demo
+          chart: wordpress-7.5.4
+          heritage: Tiller
+          release: wordpress-demo
+        name: wordpress-demo
+        namespace: wordpress
+      spec:
+        ports:
+        - name: http
+          port: 80
+          protocol: TCP
+          targetPort: http
+        - name: https
+          port: 443
+          protocol: TCP
+          targetPort: https
+        - name: metrics
+          port: 9117
+          protocol: TCP
+          targetPort: metrics
+        selector:
+          app: wordpress-demo
+        sessionAffinity: None
+        type: ClusterIP
+  - name: step-configmap-wordpress-demo-mariadb-tests
+    object:
+      apiVersion: v1
+      data:
+        run.sh: |-
+          @test "Testing MariaDB is accessible" {
+            mysql -h wordpress-demo-mariadb -uroot -p$MARIADB_ROOT_PASSWORD -e 'show databases;'
+          }
+      kind: ConfigMap
+      metadata:
+        name: wordpress-demo-mariadb-tests
+        namespace: wordpress
+  - name: step-service-wordpress-demo-mariadb
+    object:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        labels:
+          app: mariadb
+          chart: mariadb-6.13.0
+          component: master
+          heritage: Tiller
+          release: wordpress-demo
+        name: wordpress-demo-mariadb
+        namespace: wordpress
+      spec:
+        ports:
+        - name: mysql
+          port: 3306
+          protocol: TCP
+          targetPort: mysql
+        selector:
+          app: mariadb
+          component: master
+          release: wordpress-demo
+        sessionAffinity: None
+        type: ClusterIP
+  - name: step-persistentvolumeclaim-wordpress-demo
+    object:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        labels:
+          app: wordpress-demo
+          chart: wordpress-7.5.4
+          heritage: Tiller
+          release: wordpress-demo
+        name: wordpress-demo
+        namespace: wordpress
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+        volumeMode: Filesystem
+  - name: step-secret-wordpress-demo-mariadb
+    object:
+      apiVersion: v1
+      data:
+        mariadb-password: ZGVtbyEyMzQ=
+        mariadb-root-password: RFNiVHhpOXViUg==
+      kind: Secret
+      metadata:
+        labels:
+          app: mariadb
+          chart: mariadb-6.13.0
+          heritage: Tiller
+          release: wordpress-demo
+        name: wordpress-demo-mariadb
+        namespace: wordpress
+      type: Opaque
+  install:
+  - name: step-statefulset-wordpress-demo-mariadb
+    object:
+      apiVersion: apps/v1
+      kind: StatefulSet
+      metadata:
+        labels:
+          app: mariadb
+          chart: mariadb-6.13.0
+          component: master
+          heritage: Tiller
+          release: wordpress-demo
+        name: wordpress-demo-mariadb
+        namespace: wordpress
+      spec:
+        podManagementPolicy: OrderedReady
+        replicas: 1
+        revisionHistoryLimit: 10
+        selector:
+          matchLabels:
+            app: mariadb
+            component: master
+            release: wordpress-demo
+        serviceName: wordpress-demo-mariadb
+        template:
+          metadata:
+            creationTimestamp: null
+            labels:
+              app: mariadb
+              chart: mariadb-6.13.0
+              component: master
+              release: wordpress-demo
+              rep-organization: pkvwv2n
+              rep-partner: rx28oml
+              rep-project: 0lk5wke
+              rep-workload: wordpress-demo
+          spec:
+            affinity:
+              podAntiAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                - podAffinityTerm:
+                    labelSelector:
+                      matchLabels:
+                        app: mariadb
+                        release: wordpress-demo
+                    topologyKey: kubernetes.io/hostname
+                  weight: 1
+            containers:
+            - env:
+              - name: MARIADB_ROOT_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    key: mariadb-root-password
+                    name: wordpress-demo-mariadb
+              - name: MARIADB_USER
+                value: bn_wordpress
+              - name: MARIADB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    key: mariadb-password
+                    name: wordpress-demo-mariadb
+              - name: MARIADB_DATABASE
+                value: bitnami_wordpress
+              image: docker.io/bitnami/mariadb:10.3.18-debian-9-r36
+              imagePullPolicy: IfNotPresent
+              livenessProbe:
+                exec:
+                  command:
+                  - sh
+                  - -c
+                  - exec mysqladmin status -uroot -p$MARIADB_ROOT_PASSWORD
+                failureThreshold: 3
+                initialDelaySeconds: 120
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 1
+              name: mariadb
+              ports:
+              - containerPort: 3306
+                name: mysql
+                protocol: TCP
+              readinessProbe:
+                exec:
+                  command:
+                  - sh
+                  - -c
+                  - exec mysqladmin status -uroot -p$MARIADB_ROOT_PASSWORD
+                failureThreshold: 3
+                initialDelaySeconds: 30
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 1
+              resources: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              volumeMounts:
+              - mountPath: /bitnami/mariadb
+                name: data
+              - mountPath: /opt/bitnami/mariadb/conf/my.cnf
+                name: config
+                subPath: my.cnf
+            dnsPolicy: ClusterFirst
+            restartPolicy: Always
+            schedulerName: default-scheduler
+            securityContext:
+              fsGroup: 1001
+              runAsUser: 1001
+            serviceAccount: default
+            serviceAccountName: default
+            terminationGracePeriodSeconds: 30
+            volumes:
+            - configMap:
+                defaultMode: 420
+                name: wordpress-demo-mariadb
+              name: config
+        updateStrategy:
+          type: RollingUpdate
+        volumeClaimTemplates:
+        - metadata:
+            creationTimestamp: null
+            labels:
+              app: mariadb
+              component: master
+              heritage: Tiller
+              release: wordpress-demo
+            name: data
+          spec:
+            accessModes:
+            - ReadWriteOnce
+            resources:
+              requests:
+                storage: 8Gi
+            volumeMode: Filesystem
+          status:
+            phase: Pending
+  - name: step-deployment-wordpress-demo
+    object:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        labels:
+          app: wordpress-demo
+          chart: wordpress-7.5.4
+          heritage: Tiller
+          release: wordpress-demo
+        name: wordpress-demo
+        namespace: wordpress
+      spec:
+        progressDeadlineSeconds: 600
+        replicas: 1
+        revisionHistoryLimit: 10
+        selector:
+          matchLabels:
+            app: wordpress-demo
+            release: wordpress-demo
+        strategy:
+          rollingUpdate:
+            maxSurge: 25%
+            maxUnavailable: 25%
+          type: RollingUpdate
+        template:
+          metadata:
+            annotations:
+              prometheus.io/port: "9117"
+              prometheus.io/scrape: "true"
+            creationTimestamp: null
+            labels:
+              app: wordpress-demo
+              chart: wordpress-7.5.4
+              release: wordpress-demo
+              rep-organization: pkvwv2n
+              rep-partner: rx28oml
+              rep-project: 0lk5wke
+              rep-workload: wordpress-demo
+          spec:
+            containers:
+            - env:
+              - name: ALLOW_EMPTY_PASSWORD
+                value: "yes"
+              - name: MARIADB_HOST
+                value: wordpress-demo-mariadb
+              - name: MARIADB_PORT_NUMBER
+                value: "3306"
+              - name: WORDPRESS_DATABASE_NAME
+                value: bitnami_wordpress
+              - name: WORDPRESS_DATABASE_USER
+                value: bn_wordpress
+              - name: WORDPRESS_DATABASE_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    key: mariadb-password
+                    name: wordpress-demo-mariadb
+              - name: WORDPRESS_USERNAME
+                value: user
+              - name: WORDPRESS_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    key: wordpress-password
+                    name: wordpress-demo
+              - name: WORDPRESS_EMAIL
+                value: user@example.com
+              - name: WORDPRESS_FIRST_NAME
+                value: Rafay
+              - name: WORDPRESS_LAST_NAME
+                value: Demo
+              - name: WORDPRESS_HTACCESS_OVERRIDE_NONE
+                value: "yes"
+              - name: WORDPRESS_BLOG_NAME
+                value: User's Blog!
+              - name: WORDPRESS_SKIP_INSTALL
+                value: "no"
+              - name: WORDPRESS_TABLE_PREFIX
+                value: wp_
+              - name: WORDPRESS_SCHEME
+                value: http
+              image: docker.io/bitnami/wordpress:5.2.4-debian-9-r0
+              imagePullPolicy: IfNotPresent
+              livenessProbe:
+                failureThreshold: 6
+                httpGet:
+                  path: /wp-login.php
+                  port: http
+                  scheme: HTTP
+                initialDelaySeconds: 120
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 5
+              name: wordpress
+              ports:
+              - containerPort: 80
+                name: http
+                protocol: TCP
+              - containerPort: 443
+                name: https
+                protocol: TCP
+              readinessProbe:
+                failureThreshold: 6
+                httpGet:
+                  path: /wp-login.php
+                  port: http
+                  scheme: HTTP
+                initialDelaySeconds: 30
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 5
+              resources:
+                requests:
+                  cpu: 300m
+                  memory: 512Mi
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              volumeMounts:
+              - mountPath: /bitnami/wordpress
+                name: wordpress-data
+                subPath: wordpress
+            - command:
+              - /bin/apache_exporter
+              - -scrape_uri
+              - http://status.localhost:80/server-status/?auto
+              image: docker.io/bitnami/apache-exporter:0.7.0-debian-9-r86
+              imagePullPolicy: IfNotPresent
+              livenessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /metrics
+                  port: metrics
+                  scheme: HTTP
+                initialDelaySeconds: 15
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 5
+              name: metrics
+              ports:
+              - containerPort: 9117
+                name: metrics
+                protocol: TCP
+              readinessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /metrics
+                  port: metrics
+                  scheme: HTTP
+                initialDelaySeconds: 5
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 1
+              resources: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+            dnsPolicy: ClusterFirst
+            hostAliases:
+            - hostnames:
+              - status.localhost
+              ip: 127.0.0.1
+            restartPolicy: Always
+            schedulerName: default-scheduler
+            securityContext: {}
+            terminationGracePeriodSeconds: 30
+            volumes:
+            - name: wordpress-data
+              persistentVolumeClaim:
+                claimName: wordpress-demo
+  postInstall:
+  - name: step-ingress-wordpress-demo
+    object:
+      apiVersion: extensions/v1beta1
+      kind: Ingress
+      metadata:
+        annotations:
+          kubernetes.io/ingress.class: nginx
+        labels:
+          app: wordpress-demo
+          chart: wordpress-7.5.4
+          heritage: Tiller
+          release: wordpress-demo
+        name: wordpress-demo
+        namespace: wordpress
+      spec:
+        rules:
+        - host: wordpress.stage.rafay.dev
+          http:
+            paths:
+            - backend:
+                serviceName: wordpress-demo
+                servicePort: http
+              path: /
+        tls:
+        - hosts:
+          - wordpress.stage.rafay.dev
+          secretName: wordpress-stage-tls
+status:
+  conditions:
+  - lastUpdateTime: "2020-02-11T22:56:11Z"
+    reason: all steps complete
+    status: Complete
+    type: TaskletInit
+  - lastUpdateTime: "2020-02-11T22:57:11Z"
+    reason: all steps complete
+    status: Complete
+    type: TaskletInstall
+  - lastUpdateTime: "2020-02-11T22:57:12Z"
+    reason: all steps complete
+    status: Complete
+    type: TaskletPostInstall
+  - lastUpdateTime: "2020-02-11T22:57:12Z"
+    reason: all steps complete
+    status: Complete
+    type: TaskletReady
+  init:
+  - jobReason: not configured
+    jobState: StepJobComplete
+    name: step-secret-wordpress-demo
+    objectReason: object type *v1.Secret not handled
+    objectRef:
+      apiVersion: v1
+      kind: Secret
+      name: wordpress-demo
+      namespace: wordpress
+      resourceVersion: "11710670"
+      uid: b0bcd771-4d21-11ea-b8ec-0ec508a9a2df
+    objectState: StepObjectComplete
+    reason: complete
+    state: StepComplete
+  - jobReason: not configured
+    jobState: StepJobComplete
+    name: step-configmap-wordpress-demo-mariadb
+    objectReason: object type *v1.ConfigMap not handled
+    objectRef:
+      apiVersion: v1
+      kind: ConfigMap
+      name: wordpress-demo-mariadb
+      namespace: wordpress
+      resourceVersion: "11710673"
+      uid: b0c0235a-4d21-11ea-b8ec-0ec508a9a2df
+    objectState: StepObjectComplete
+    reason: complete
+    state: StepComplete
+  - jobReason: not configured
+    jobState: StepJobComplete
+    name: step-secret-wordpress-stage-tls
+    objectReason: object type *v1.Secret not handled
+    objectRef:
+      apiVersion: v1
+      kind: Secret
+      name: wordpress-stage-tls
+      namespace: wordpress
+      resourceVersion: "11710674"
+      uid: b0bde7c5-4d21-11ea-b8ec-0ec508a9a2df
+    objectState: StepObjectComplete
+    reason: complete
+    state: StepComplete
+  - jobReason: not configured
+    jobState: StepJobComplete
+    name: step-service-wordpress-demo
+    objectReason: object type *v1.Service not handled
+    objectRef:
+      apiVersion: v1
+      kind: Service
+      name: wordpress-demo
+      namespace: wordpress
+      resourceVersion: "11710676"
+      uid: b0dfc0f8-4d21-11ea-b8ec-0ec508a9a2df
+    objectState: StepObjectComplete
+    reason: complete
+    state: StepComplete
+  - jobReason: not configured
+    jobState: StepJobComplete
+    name: step-configmap-wordpress-demo-mariadb-tests
+    objectReason: object type *v1.ConfigMap not handled
+    objectRef:
+      apiVersion: v1
+      kind: ConfigMap
+      name: wordpress-demo-mariadb-tests
+      namespace: wordpress
+      resourceVersion: "11710679"
+      uid: b0bf4fd3-4d21-11ea-b8ec-0ec508a9a2df
+    objectState: StepObjectComplete
+    reason: complete
+    state: StepComplete
+  - jobReason: not configured
+    jobState: StepJobComplete
+    name: step-service-wordpress-demo-mariadb
+    objectReason: object type *v1.Service not handled
+    objectRef:
+      apiVersion: v1
+      kind: Service
+      name: wordpress-demo-mariadb
+      namespace: wordpress
+      resourceVersion: "11710680"
+      uid: b0dd754b-4d21-11ea-b8ec-0ec508a9a2df
+    objectState: StepObjectComplete
+    reason: complete
+    state: StepComplete
+  - jobReason: not configured
+    jobState: StepJobComplete
+    name: step-persistentvolumeclaim-wordpress-demo
+    objectReason: object type *v1.PersistentVolumeClaim not handled
+    objectRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: wordpress-demo
+      namespace: wordpress
+      resourceVersion: "11710681"
+      uid: b0b86039-4d21-11ea-b8ec-0ec508a9a2df
+    objectState: StepObjectComplete
+    reason: complete
+    state: StepComplete
+  - jobReason: not configured
+    jobState: StepJobComplete
+    name: step-secret-wordpress-demo-mariadb
+    objectReason: object type *v1.Secret not handled
+    objectRef:
+      apiVersion: v1
+      kind: Secret
+      name: wordpress-demo-mariadb
+      namespace: wordpress
+      resourceVersion: "11710683"
+      uid: b0bbf054-4d21-11ea-b8ec-0ec508a9a2df
+    objectState: StepObjectComplete
+    reason: complete
+    state: StepComplete
+  install:
+  - jobReason: not configured
+    jobState: StepJobComplete
+    name: step-statefulset-wordpress-demo-mariadb
+    objectReason: all required replicas ready
+    objectRef:
+      apiVersion: apps/v1
+      kind: StatefulSet
+      name: wordpress-demo-mariadb
+      namespace: wordpress
+      resourceVersion: "11710698"
+      uid: b0e0c886-4d21-11ea-b8ec-0ec508a9a2df
+    objectState: StepObjectComplete
+    reason: complete
+    state: StepComplete
+  - jobReason: not configured
+    jobState: StepJobComplete
+    name: step-deployment-wordpress-demo
+    objectReason: all required replicas ready
+    objectRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: wordpress-demo
+      namespace: wordpress
+      resourceVersion: "11710699"
+      uid: b0d08335-4d21-11ea-b8ec-0ec508a9a2df
+    objectState: StepObjectComplete
+    reason: complete
+    state: StepComplete
+  observedGeneration: 1
+  postInstall:
+  - jobReason: not configured
+    jobState: StepJobComplete
+    name: step-ingress-wordpress-demo
+    objectReason: object type *v1beta1.Ingress not handled
+    objectRef:
+      apiVersion: extensions/v1beta1
+      kind: Ingress
+      name: wordpress-demo
+      namespace: wordpress
+      resourceVersion: "11710937"
+      uid: b0d5513f-4d21-11ea-b8ec-0ec508a9a2df
+    objectState: StepObjectComplete
+    reason: complete
+    state: StepComplete

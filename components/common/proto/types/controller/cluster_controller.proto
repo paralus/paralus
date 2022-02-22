@@ -1,0 +1,376 @@
+syntax = "proto3";
+package rafay.dev.types.controller;
+
+import "gogoproto/gogo.proto";
+import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+import "k8s.io/apimachinery/pkg/runtime/generated.proto";
+
+import "k8s.io/api/core/v1/generated.proto";
+import "k8s.io/api/batch/v1beta1/generated.proto";
+
+// Enable custom Marshal method.
+option (gogoproto.marshaler_all) = true;
+// Enable custom Unmarshal method.
+option (gogoproto.unmarshaler_all) = true;
+// Enable custom Size method (Required by Marshal and Unmarshal).
+option (gogoproto.sizer_all) = true;
+// Enable registration with golang/protobuf for the grpc-gateway.
+option (gogoproto.goproto_registration) = true;
+// Enable generation of XXX_MessageName methods for grpc-go/status.
+option (gogoproto.messagename_all) = true;
+
+// +kubebuilder:object:generate=true
+// StepObject can represent any kubernetes object
+message StepObject {
+  k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta typeMeta = 1
+      [(gogoproto.embed) = true, (gogoproto.nullable) = false];
+  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 2 [
+    (gogoproto.embed) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "metadata,omitempty"
+  ];
+  string name = 3;
+  bytes raw = 4;
+}
+
+// +kubebuilder:object:generate=true
+// StepTemplate is the description of a step
+message StepTemplate {
+  string name = 1;
+  string onFailed = 2 [(gogoproto.casttype) = "StepOnFailed"];
+  StepObject object = 3;
+  k8s.io.api.batch.v1beta1.JobTemplateSpec jobTemplate = 4;
+}
+
+// +kubebuilder:object:generate=true
+// StepStatus is the status of the step
+message StepStatus {
+  string name = 1;
+  k8s.io.api.core.v1.ObjectReference objectRef = 2;
+  string objectState = 3 [
+    (gogoproto.jsontag) = "objectState",
+    (gogoproto.casttype) = "StepObjectState"
+  ];
+  string objectReason = 4;
+  string jobState = 5
+      [(gogoproto.jsontag) = "jobState", (gogoproto.casttype) = "StepJobState"];
+  string jobReason = 6;
+  k8s.io.api.core.v1.ObjectReference jobRef = 7;
+  string state = 8
+      [(gogoproto.jsontag) = "state", (gogoproto.casttype) = "StepState"];
+  string reason = 9;
+  string objectSpecHash = 10;
+  string jobSpecHash = 11;
+}
+
+// +kubebuilder:object:generate=true
+// TaskletSpec is the spec of the tasklet
+message TaskletSpec {
+  repeated StepTemplate init = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "init,omitempty",
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\""
+  ];
+  repeated StepTemplate install = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "install,omitempty",
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\""
+  ];
+  repeated StepTemplate postInstall = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "postInstall,omitempty",
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\""
+  ];
+  repeated StepTemplate preDelete = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "preDelete,omitempty",
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\""
+  ];
+}
+
+// +kubebuilder:object:generate=true
+// TaskletCondition is the condition of the tasklet
+message TaskletCondition {
+  string type = 1 [
+    (gogoproto.jsontag) = "type",
+    (gogoproto.casttype) = "TaskletConditionType"
+  ];
+  string status = 2 [(gogoproto.casttype) = "ConditionStatus"];
+  k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 3
+      [(gogoproto.nullable) = false];
+  string reason = 4;
+}
+
+// +kubebuilder:object:generate=true
+// TaskletStatus is the status of the tasklet
+message TaskletStatus {
+  sint64 observedGeneration = 1;
+  repeated TaskletCondition conditions = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "conditions,omitempty",
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"type\""
+  ];
+  repeated StepStatus init = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "init,omitempty",
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\""
+  ];
+  repeated StepStatus install = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "install,omitempty",
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\""
+  ];
+  repeated StepStatus postInstall = 5 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "postInstall,omitempty",
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\""
+  ];
+  repeated StepStatus preDelete = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "preDelete,omitempty",
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\""
+  ];
+}
+
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:shortName=rtl
+// Tasklet is the schema of tasklet
+message Tasklet {
+  k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta typeMeta = 1 [
+    (gogoproto.embed) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = ",inline"
+  ];
+  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 2 [
+    (gogoproto.embed) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "metadata,omitempty"
+  ];
+
+  TaskletSpec spec = 3 [(gogoproto.nullable) = false];
+  TaskletStatus status = 4 [(gogoproto.nullable) = false];
+}
+
+// +kubebuilder:object:root=true
+// TaskletList contains a list of tasklets
+message TaskletList {
+  k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta typeMeta = 1 [
+    (gogoproto.embed) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = ",inline"
+  ];
+
+  k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta listMeta = 2 [
+    (gogoproto.embed) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "metadata,omitempty"
+  ];
+
+  repeated Tasklet items = 3 [(gogoproto.nullable) = false];
+}
+
+// +kubebuilder:object:generate=true
+// TaskletTemplate is the template for creating a tasklet
+message TaskletTemplate {
+  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 1 [
+    (gogoproto.embed) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "metadata,omitempty"
+  ];
+
+  TaskletSpec spec = 2 [(gogoproto.nullable) = false];
+}
+
+// +kubebuilder:object:generate=true
+// TaskSpec is the spec of the task
+message TaskSpec {
+  repeated StepTemplate init = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "init,omitempty",
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\""
+  ];
+
+  TaskletTemplate tasklet = 2 [(gogoproto.nullable) = false];
+  repeated StepTemplate preDelete = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "preDelete,omitempty",
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\""
+  ];
+}
+
+// +kubebuilder:object:generate=true
+// TaskCondition is the condition of the tasklet
+message TaskCondition {
+  string type = 1 [
+    (gogoproto.jsontag) = "type",
+    (gogoproto.casttype) = "TaskConditionType"
+  ];
+  string status = 2 [(gogoproto.casttype) = "ConditionStatus"];
+  k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 3
+      [(gogoproto.nullable) = false];
+  string reason = 4;
+}
+
+// +kubebuilder:object:generate=true
+// TaskStatus is the status of the task
+message TaskStatus {
+  sint64 observedGeneration = 1;
+  repeated TaskCondition conditions = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "conditions,omitempty",
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"type\""
+  ];
+  repeated StepStatus init = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "init,omitempty",
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\""
+  ];
+  k8s.io.api.core.v1.ObjectReference taskletRef = 4;
+  repeated StepStatus preDelete = 5 [
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "preDelete,omitempty",
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\""
+  ];
+}
+
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:shortName=rt
+// Tasklet is the schema of task
+message Task {
+  k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta typeMeta = 1 [
+    (gogoproto.embed) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = ",inline"
+  ];
+  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 2 [
+    (gogoproto.embed) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "metadata,omitempty"
+  ];
+
+  TaskSpec spec = 3
+      [(gogoproto.nullable) = false, (gogoproto.jsontag) = "spec,omitempty"];
+  TaskStatus status = 4
+      [(gogoproto.nullable) = false, (gogoproto.jsontag) = "status,omitempty"];
+}
+
+// +kubebuilder:object:root=true
+// TaskList contains a list of tasks
+message TaskList {
+  k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta typeMeta = 1 [
+    (gogoproto.embed) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = ",inline"
+  ];
+
+  k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta listMeta = 2 [
+    (gogoproto.embed) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "metadata,omitempty"
+  ];
+
+  repeated Task items = 3 [(gogoproto.nullable) = false];
+}
+
+// +kubebuilder:object:generate=true
+// NamespaceSpec is the spec of the namespace
+message NamespaceSpec {
+  repeated StepTemplate init = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\"",
+    (gogoproto.jsontag) = "init,omitempty"
+  ];
+  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta namespaceMeta = 2
+      [(gogoproto.nullable) = false];
+  repeated StepTemplate postCreate = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\"",
+    (gogoproto.jsontag) = "postCreate,omitempty"
+  ];
+  repeated StepTemplate preDelete = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\"",
+    (gogoproto.jsontag) = "preDelete,omitempty"
+  ];
+}
+
+// +kubebuilder:object:generate=true
+message NamespaceCondition {
+  string type = 1 [
+    (gogoproto.jsontag) = "type",
+    (gogoproto.casttype) = "NamespaceConditionType"
+  ];
+  string status = 2 [(gogoproto.casttype) = "ConditionStatus"];
+  k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 3
+      [(gogoproto.nullable) = false];
+  string reason = 4;
+}
+
+// +kubebuilder:object:generate=true
+// NamespaceStatus is the status of namespace
+message NamespaceStatus {
+  sint64 observedGeneration = 1;
+  repeated NamespaceCondition conditions = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"type\"",
+    (gogoproto.jsontag) = "conditions,omitempty"
+  ];
+  repeated StepStatus init = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\"",
+    (gogoproto.jsontag) = "init,omitempty"
+  ];
+  k8s.io.api.core.v1.ObjectReference namespaceRef = 4;
+  repeated StepStatus postCreate = 5 [
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\"",
+    (gogoproto.jsontag) = "postCreate,omitempty"
+  ];
+  repeated StepStatus preDelete = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "patchStrategy:\"merge\" patchMergeKey:\"name\"",
+    (gogoproto.jsontag) = "preDelete,omitempty"
+  ];
+}
+
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:shortName=rns
+// Namespace is the schema of namespace
+message Namespace {
+  k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta typeMeta = 1 [
+      (gogoproto.embed) = true,
+      (gogoproto.nullable) = false,
+      (gogoproto.jsontag) = ",inline"
+    ];
+  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 2 [
+      (gogoproto.embed) = true,
+      (gogoproto.nullable) = false,
+      (gogoproto.jsontag) = "metadata,omitempty"
+    ];
+
+  NamespaceSpec spec = 3
+      [(gogoproto.nullable) = false, (gogoproto.jsontag) = "spec,omitempty"];
+  NamespaceStatus status = 4
+      [(gogoproto.nullable) = false, (gogoproto.jsontag) = "status,omitempty"];
+}
+
+// +kubebuilder:object:root=true
+// TaskletList contains a list of tasklets
+message NamespaceList {
+  k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta typeMeta = 1 [
+    (gogoproto.embed) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = ",inline"
+  ];
+
+  k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta listMeta = 2 [
+    (gogoproto.embed) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.jsontag) = "metadata,omitempty"
+  ];
+
+  repeated Namespace items = 3 [(gogoproto.nullable) = false];
+}

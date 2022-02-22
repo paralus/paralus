@@ -86,12 +86,14 @@ func FilterLabels(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.SelectQ
 			key := reqs[i].Key()
 			q = q.Where(
 				clause,
+				bun.Safe("?"),
 				key,
 			)
 		case selection.DoesNotExist:
 			key := reqs[i].Key()
 			q = q.Where(
 				clause,
+				bun.Safe("?"),
 				key,
 			)
 		default:

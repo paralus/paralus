@@ -1,0 +1,109 @@
+syntax = "proto3";
+package rafay.dev.sentry.rpc;
+
+import "google/api/annotations.proto";
+import "gogoproto/gogo.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "proto/types/commonpb/v3/common.proto";
+import "proto/types/sentry/sentry.proto";
+
+// Enable custom Marshal method.
+option (gogoproto.marshaler_all) = true;
+// Enable custom Unmarshal method.
+option (gogoproto.unmarshaler_all) = true;
+// Enable custom Size method (Required by Marshal and Unmarshal).
+option (gogoproto.sizer_all) = true;
+// Enable registration with golang/protobuf for the grpc-gateway.
+option (gogoproto.goproto_registration) = true;
+// Enable generation of XXX_MessageName methods for grpc-go/status.
+option (gogoproto.messagename_all) = true;
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info : {
+    title : "Sentry KubectlClusterSettings Service"
+    version : "2.0"
+    contact : {name : "Rafay Dev"}
+  }
+  schemes : HTTPS
+  consumes : "application/json"
+  consumes : "application/yaml"
+  produces : "application/json"
+  produces : "application/yaml"
+  security_definitions : {
+    security : {
+      key : "BasicAuth"
+      value : {type : TYPE_BASIC}
+    }
+    security : {
+      key : "ApiKeyAuth"
+      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-RAFAY-API-KEYID"}
+    }
+  }
+  security : {
+    security_requirement : {
+      key : "BasicAuth"
+      value : {}
+    }
+    security_requirement : {
+      key : "ApiKeyAuth"
+      value : {}
+    }
+  }
+  responses : {
+    key : "403"
+    value : {
+      description : "Returned when the user does not have permission to access "
+                    "the resource."
+    }
+  }
+  responses : {
+    key : "404"
+    value : {
+      description : "Returned when the resource does not exist."
+      schema : {json_schema : {type : STRING}}
+    }
+  }
+};
+
+
+message UpdateKubectlClusterSettingsRequest {
+	rafay.dev.types.common.v3.QueryOptions opts = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.embed) = true 
+  ];
+	bool disableWebKubectl = 2;
+  bool disableCLIKubectl = 3;
+}
+
+message UpdateKubectlClusterSettingsResponse {}
+
+message GetKubectlClusterSettingsRequest {
+	rafay.dev.types.common.v3.QueryOptions opts = 1
+	[ (gogoproto.nullable) = false, (gogoproto.embed) = true ];
+}
+
+message GetKubectlClusterSettingsResponse {
+  bool disableWebKubectl = 1 [
+		(gogoproto.jsontag) = "disableWebKubectl"
+	];
+
+  bool disableCLIKubectl = 2 [
+		(gogoproto.jsontag) = "disableCLIKubectl"
+	];
+}
+
+service KubectlClusterSettings {
+  rpc UpdateKubectlClusterSettings(UpdateKubectlClusterSettingsRequest) returns (UpdateKubectlClusterSettingsResponse) {
+    option (google.api.http) = {
+		put : "/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"
+		body : "*"
+    };
+  };
+
+  rpc GetKubectlClusterSettings(GetKubectlClusterSettingsRequest)
+      returns (GetKubectlClusterSettingsResponse) {
+    option (google.api.http) = {
+      get : "/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"
+    };
+  };
+};

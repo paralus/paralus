@@ -1,0 +1,94 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "proto/rpc/sentry/relaypeer.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "RelayPeerService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcPeerHelloResponse": {
+      "type": "object",
+      "properties": {
+        "serviceuuid": {
+          "type": "string"
+        },
+        "serviceip": {
+          "type": "string"
+        }
+      }
+    },
+    "rpcPeerProbeResponse": {
+      "type": "object",
+      "properties": {
+        "clustersni": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/rpcrelayClusterConnectionInfo"
+          }
+        }
+      },
+      "title": "Probe Response from service to relay"
+    },
+    "rpcPeerSurveyRequest": {
+      "type": "object",
+      "properties": {
+        "clustersni": {
+          "type": "string"
+        }
+      },
+      "title": "Survey request sent from the service to all relays"
+    },
+    "rpcrelayClusterConnectionInfo": {
+      "type": "object",
+      "properties": {
+        "relayuuid": {
+          "type": "string"
+        },
+        "relayip": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/components/common/pkg/models"
 	systemv3 "github.com/RafaySystems/rcloud-base/components/adminsrv/proto/types/systempb/v3"
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/models"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
 	"github.com/google/uuid"
@@ -51,7 +51,11 @@ func NewOrganizationService(db *bun.DB) OrganizationService {
 
 func (s *organizationService) Create(ctx context.Context, org *systemv3.Organization) (*systemv3.Organization, error) {
 
-	partnerId, _ := uuid.Parse(org.GetMetadata().GetPartner())
+	var partner models.Partner
+	_, err := s.dao.GetByName(ctx, org.Metadata.Name, &partner)
+	if err != nil {
+		return nil, err
+	}
 
 	//update default organization setting values
 	org.Spec.Settings = &systemv3.OrganizationSettings{
@@ -78,7 +82,7 @@ func (s *organizationService) Create(ctx context.Context, org *systemv3.Organiza
 		Trash:             false,
 		Settings:          json.RawMessage(sb),
 		BillingAddress:    org.GetSpec().GetBillingAddress(),
-		PartnerId:         partnerId,
+		PartnerId:         partner.ID,
 		Active:            org.GetSpec().GetActive(),
 		Approved:          org.GetSpec().GetApproved(),
 		Type:              org.GetSpec().GetType(),
@@ -151,41 +155,23 @@ func (s *organizationService) GetByID(ctx context.Context, id string) (*systemv3
 
 	if org, ok := entity.(*models.Organization); ok {
 
-		var settings systemv3.OrganizationSettings
-		err := json.Unmarshal(org.Settings, &settings)
+		var partner models.Partner
+		_, err := s.dao.GetByID(ctx, org.PartnerId, &partner)
 		if err != nil {
 			organization.Status = &v3.Status{
 				ConditionType:   "Describe",
-				LastUpdated:     timestamppb.Now(),
 				ConditionStatus: v3.ConditionStatus_StatusFailed,
+				Reason:          err.Error(),
+				LastUpdated:     timestamppb.Now(),
 			}
 			return organization, err
 		}
 
-		organization.Metadata = &v3.Metadata{
-			Name:        org.Name,
-			Description: org.Description,
-			Id:          org.ID.String(),
-			Partner:     org.PartnerId.String(),
-			ModifiedAt:  timestamppb.New(org.ModifiedAt),
+		organization, err = prepareOrganizationResponse(organization, org, partner.Name)
+		if err != nil {
+			return organization, err
 		}
-		organization.Spec = &systemv3.OrganizationSpec{
-			BillingAddress:    org.BillingAddress,
-			Active:            org.Active,
-			Approved:          org.Approved,
-			Type:              org.Type,
-			AddressLine1:      org.AddressLine1,
-			AddressLine2:      org.AddressLine2,
-			City:              org.City,
-			Country:           org.Country,
-			Phone:             org.Phone,
-			State:             org.State,
-			Zipcode:           org.Zipcode,
-			IsPrivate:         org.IsPrivate,
-			IsTotpEnabled:     org.IsTOTPEnabled,
-			AreClustersShared: org.AreClustersShared,
-			Settings:          &settings,
-		}
+
 		organization.Status = &v3.Status{
 			ConditionType:   "Describe",
 			LastUpdated:     timestamppb.Now(),
@@ -198,9 +184,6 @@ func (s *organizationService) GetByID(ctx context.Context, id string) (*systemv3
 		organization := &systemv3.Organization{
 			ApiVersion: apiVersion,
 			Kind:       organizationKind,
-			Metadata: &v3.Metadata{
-				Id: id,
-			},
 			Status: &v3.Status{
 				ConditionType:   "Describe",
 				ConditionStatus: v3.ConditionStatus_StatusNotSet,
@@ -239,40 +222,26 @@ func (s *organizationService) GetByName(ctx context.Context, name string) (*syst
 
 	if org, ok := entity.(*models.Organization); ok {
 
-		var settings systemv3.OrganizationSettings
-		err := json.Unmarshal(org.Settings, &settings)
+		var partner models.Partner
+		_, err := s.dao.GetByID(ctx, org.PartnerId, &partner)
 		if err != nil {
+			organization.Metadata = &v3.Metadata{
+				Name: name,
+			}
 			organization.Status = &v3.Status{
 				ConditionType:   "Describe",
 				ConditionStatus: v3.ConditionStatus_StatusFailed,
+				Reason:          err.Error(),
+				LastUpdated:     timestamppb.Now(),
 			}
 			return organization, err
 		}
 
-		organization.Metadata = &v3.Metadata{
-			Name:        org.Name,
-			Description: org.Description,
-			Id:          org.ID.String(),
-			Partner:     org.PartnerId.String(),
-			ModifiedAt:  timestamppb.New(org.ModifiedAt),
+		organization, err = prepareOrganizationResponse(organization, org, partner.Name)
+		if err != nil {
+			return organization, err
 		}
-		organization.Spec = &systemv3.OrganizationSpec{
-			BillingAddress:    org.BillingAddress,
-			Active:            org.Active,
-			Approved:          org.Approved,
-			Type:              org.Type,
-			AddressLine1:      org.AddressLine1,
-			AddressLine2:      org.AddressLine2,
-			City:              org.City,
-			Country:           org.Country,
-			Phone:             org.Phone,
-			State:             org.State,
-			Zipcode:           org.Zipcode,
-			IsPrivate:         org.IsPrivate,
-			IsTotpEnabled:     org.IsTOTPEnabled,
-			AreClustersShared: org.AreClustersShared,
-			Settings:          &settings,
-		}
+
 		organization.Status = &v3.Status{
 			ConditionType:   "Describe",
 			LastUpdated:     timestamppb.Now(),
@@ -367,7 +336,8 @@ func (s *organizationService) Delete(ctx context.Context, organization *systemv3
 	}
 
 	if org, ok := entity.(*models.Organization); ok {
-		err = s.dao.Delete(ctx, org.ID, org)
+		org.Trash = true
+		_, err := s.dao.Update(ctx, org.ID, org)
 		if err != nil {
 			organization.Status = &v3.Status{
 				ConditionType:   "Delete",
@@ -378,7 +348,6 @@ func (s *organizationService) Delete(ctx context.Context, organization *systemv3
 			return organization, err
 		}
 		//update v3 status
-		organization.Metadata.Id = org.ID.String()
 		organization.Metadata.Name = org.Name
 		organization.Metadata.ModifiedAt = timestamppb.New(org.ModifiedAt)
 		organization.Status = &v3.Status{
@@ -418,14 +387,12 @@ func (s *organizationService) List(ctx context.Context, organization *systemv3.O
 				var settings systemv3.OrganizationSettings
 				err := json.Unmarshal(org.Settings, &settings)
 				if err != nil {
-					fmt.Print(err)
 					return nil, err
 				}
 				organization.Metadata = &v3.Metadata{
 					Name:        org.Name,
 					Description: org.Description,
-					Id:          org.ID.String(),
-					Partner:     org.PartnerId.String(),
+					Partner:     partner.Name,
 					ModifiedAt:  timestamppb.New(org.ModifiedAt),
 				}
 				organization.Spec = &systemv3.OrganizationSpec{
@@ -456,9 +423,49 @@ func (s *organizationService) List(ctx context.Context, organization *systemv3.O
 		}
 
 	} else {
-		return organinzationList, fmt.Errorf("missing partner id in metadata")
+		return organinzationList, fmt.Errorf("missing partner in metadata")
 	}
 	return organinzationList, nil
+}
+
+func prepareOrganizationResponse(organization *systemv3.Organization, org *models.Organization, partnerName string) (*systemv3.Organization, error) {
+
+	var settings systemv3.OrganizationSettings
+	err := json.Unmarshal(org.Settings, &settings)
+	if err != nil {
+		organization.Status = &v3.Status{
+			ConditionType:   "Describe",
+			LastUpdated:     timestamppb.Now(),
+			ConditionStatus: v3.ConditionStatus_StatusFailed,
+		}
+		return organization, err
+	}
+
+	organization.Metadata = &v3.Metadata{
+		Name:        org.Name,
+		Description: org.Description,
+		Partner:     partnerName,
+		ModifiedAt:  timestamppb.New(org.ModifiedAt),
+	}
+	organization.Spec = &systemv3.OrganizationSpec{
+		BillingAddress:    org.BillingAddress,
+		Active:            org.Active,
+		Approved:          org.Approved,
+		Type:              org.Type,
+		AddressLine1:      org.AddressLine1,
+		AddressLine2:      org.AddressLine2,
+		City:              org.City,
+		Country:           org.Country,
+		Phone:             org.Phone,
+		State:             org.State,
+		Zipcode:           org.Zipcode,
+		IsPrivate:         org.IsPrivate,
+		IsTotpEnabled:     org.IsTOTPEnabled,
+		AreClustersShared: org.AreClustersShared,
+		Settings:          &settings,
+	}
+
+	return organization, nil
 }
 
 func (s *organizationService) Close() error {

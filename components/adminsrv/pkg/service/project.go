@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/components/common/pkg/models"
 	systemv3 "github.com/RafaySystems/rcloud-base/components/adminsrv/proto/types/systempb/v3"
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/models"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
 	"github.com/google/uuid"
@@ -51,8 +51,16 @@ func NewProjectService(db *bun.DB) ProjectService {
 
 func (s *projectService) Create(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error) {
 
-	partnerId, _ := uuid.Parse(project.GetMetadata().GetPartner())
-	organizationId, _ := uuid.Parse(project.GetMetadata().GetOrganization())
+	if project.Metadata.Organization == "" {
+		return nil, fmt.Errorf("missing organization in metadata")
+	}
+
+	var org models.Organization
+	_, err := s.dao.GetByName(ctx, project.Metadata.Organization, &org)
+	if err != nil {
+		return nil, err
+	}
+
 	//convert v3 spec to internal models
 	proj := models.Project{
 		Name:           project.GetMetadata().GetName(),
@@ -60,8 +68,8 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 		CreatedAt:      time.Now(),
 		ModifiedAt:     time.Now(),
 		Trash:          false,
-		OrganizationId: organizationId,
-		PartnerId:      partnerId,
+		OrganizationId: org.ID,
+		PartnerId:      org.PartnerId,
 		Default:        project.GetSpec().GetDefault(),
 	}
 	entity, err := s.dao.Create(ctx, &proj)
@@ -125,8 +133,6 @@ func (s *projectService) GetByID(ctx context.Context, id string) (*systemv3.Proj
 	}
 
 	if proj, ok := entity.(*models.Project); ok {
-		labels := make(map[string]string)
-		labels["organization"] = proj.OrganizationId.String()
 
 		project.Metadata = &v3.Metadata{
 			Name:         proj.Name,
@@ -134,7 +140,6 @@ func (s *projectService) GetByID(ctx context.Context, id string) (*systemv3.Proj
 			Id:           proj.ID.String(),
 			Organization: proj.OrganizationId.String(),
 			Partner:      proj.PartnerId.String(),
-			Labels:       labels,
 			ModifiedAt:   timestamppb.New(proj.ModifiedAt),
 		}
 		project.Spec = &systemv3.ProjectSpec{
@@ -174,16 +179,24 @@ func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.
 	}
 
 	if proj, ok := entity.(*models.Project); ok {
-		labels := make(map[string]string)
-		labels["organization"] = proj.OrganizationId.String()
+
+		var org models.Organization
+		_, err := s.dao.GetByID(ctx, proj.OrganizationId, &org)
+		if err != nil {
+			return nil, err
+		}
+
+		var partner models.Partner
+		_, err = s.dao.GetByID(ctx, proj.PartnerId, &partner)
+		if err != nil {
+			return nil, err
+		}
 
 		project.Metadata = &v3.Metadata{
 			Name:         proj.Name,
 			Description:  proj.Description,
-			Id:           proj.ID.String(),
-			Organization: proj.OrganizationId.String(),
-			Partner:      proj.PartnerId.String(),
-			Labels:       labels,
+			Organization: org.Name,
+			Partner:      partner.Name,
 			ModifiedAt:   timestamppb.New(proj.ModifiedAt),
 		}
 		project.Spec = &systemv3.ProjectSpec{
@@ -257,7 +270,8 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 		return project, err
 	}
 	if proj, ok := entity.(*models.Project); ok {
-		err = s.dao.Delete(ctx, proj.ID, proj)
+		proj.Trash = true
+		_, err := s.dao.Update(ctx, proj.ID, proj)
 		if err != nil {
 			project.Status = &v3.Status{
 				ConditionType:   "Delete",

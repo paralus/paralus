@@ -12,10 +12,12 @@ import (
 type ConfigClient interface {
 	Unhealthy()
 	Close() error
+	OverrideClient
 }
 
 type configClient struct {
 	*grpcpool.ClientConn
+	*overrideClient
 }
 
 var _ ConfigClient = (*configClient)(nil)
@@ -50,5 +52,6 @@ func (p *configPool) NewClient(ctx context.Context) (ConfigClient, error) {
 	}
 	return &configClient{
 		cc,
+		&overrideClient{cc: cc},
 	}, nil
 }

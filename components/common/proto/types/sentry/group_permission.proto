@@ -1,0 +1,20 @@
+syntax = "proto3";
+package rafay.dev.types.sentry;
+
+import "google/protobuf/timestamp.proto";
+import "proto/types/sentry/account_permission.proto";
+
+message GroupPermission {
+	string groupID = 1;
+	string projectID = 2;
+	string organizationID = 3;
+	string partnerID = 4;
+	string groupName = 5;
+	string roleName = 6;
+	bool isGlobal = 7;
+	string scope = 8;
+	string permissionName = 9;
+	string baseURL = 10;
+	repeated rafay.dev.types.sentry.PermissionURL urls = 11;
+	string projectName = 12;
+}

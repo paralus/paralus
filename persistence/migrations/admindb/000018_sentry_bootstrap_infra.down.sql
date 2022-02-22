@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS sentry_bootstrap_infra;

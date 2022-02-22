@@ -12,16 +12,21 @@ import (
 	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/pkg/bootstrapper"
 	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/pkg/credentials"
 	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/pkg/notify"
-	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/pkg/server"
+	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/pkg/reconcile"
 	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/pkg/service"
-	rpcv3 "github.com/RafaySystems/rcloud-base/components/cluster-scheduler/proto/rpc/v3"
+	adminrpc "github.com/RafaySystems/rcloud-base/components/cluster-scheduler/proto/rpc"
+	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/server"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/auth/interceptors"
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
 	grpcutil "github.com/RafaySystems/rcloud-base/components/common/pkg/grpc"
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/leaderelection"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/log"
 	configrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/config"
+	schedulerrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/scheduler"
+	sentryrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/sentry"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/rs/xid"
 	"github.com/spf13/viper"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -36,25 +41,22 @@ import (
 const (
 	rpcPortEnv             = "RPC_PORT"
 	apiPortEnv             = "API_PORT"
-	peerPortENV            = "PEER_PORT"
-	connectorPortENV       = "CONNECTOR_PORT"
 	configAddrENV          = "CONFIG_ADDR"
 	sentryAddrENV          = "SENTRY_ADDR"
 	dbAddrEnv              = "DB_ADDR"
 	dbNameEnv              = "DB_NAME"
 	dbUserEnv              = "DB_USER"
 	dbPasswordEnv          = "DB_PASSWORD"
+	adbNameEnv             = "ADMIN_DB_NAME"
+	adbUserEnv             = "ADMIN_DB_USER"
+	adbPasswordEnv         = "ADMIN_DB_PASSWORD"
 	devEnv                 = "DEV"
 	secretPathEnv          = "SECRET_PATH"
 	controlAddrEnv         = "CONTROL_ADDR"
 	apiAddrEnv             = "API_ADDR"
 	authAddrEnv            = "AUTH_ADDR"
-	connectorCert          = "connector.pem"
-	connectorKey           = "connector-key.pem"
 	caCert                 = "ca.pem"
 	caKey                  = "ca-key.pem"
-	controllerImageEnv     = "CONTROLLER_IMAGE"
-	connectorImageEnv      = "CONNECTOR_IMAGE"
 	relayAgentImageEnv     = "RELAY_AGENT_IMAGE"
 	sentryBootstrapAddrENV = "SENTRY_BOOTSTRAP_ADDR"
 	podNameEnv             = "POD_NAME"
@@ -66,8 +68,6 @@ const (
 var (
 	rpcPort            int
 	apiPort            int
-	peerPort           int
-	connectorPort      int
 	configAddr         string
 	controlAddr        string
 	sentryAddr         string
@@ -76,42 +76,45 @@ var (
 	dbName             string
 	dbUser             string
 	dbPassword         string
+	adbName            string
+	adbUser            string
+	adbPassword        string
 	dev                bool
 	secretPath         string
 	podName            string
 	_log               = log.GetLogger()
 	db                 *bun.DB
+	adb                *bun.DB
 	cs                 service.ClusterService
+	ms                 service.MetroService
 	signer             credentials.Signer
 	allowReuseToken    string // featureflag
-	controllerImage    string
-	connectorImage     string
 	relayAgentImage    string
 	downloadData       *bootstrapper.DownloadData
 	authAddr           string
 	schedulerNamespace string
 	authPool           authv3.AuthPool
 	configPool         configrpc.ConfigPool
+	sentryPool         sentryrpc.SentryPool
 )
 
 func setup() {
 	viper.SetDefault(apiPortEnv, 8000)
 	viper.SetDefault(rpcPortEnv, 5000)
-	viper.SetDefault(peerPortENV, 5001)
-	viper.SetDefault(connectorPortENV, 5002)
 	viper.SetDefault(dbAddrEnv, "localhost:5432")
 	viper.SetDefault(dbNameEnv, "clusterdb")
 	viper.SetDefault(dbUserEnv, "clusterdbuser")
 	viper.SetDefault(dbPasswordEnv, "clusterdbpassword")
+	viper.SetDefault(adbNameEnv, "admindb")
+	viper.SetDefault(adbUserEnv, "admindbuser")
+	viper.SetDefault(adbPasswordEnv, "admindbpassword")
 	viper.SetDefault(devEnv, true)
-	viper.SetDefault(secretPathEnv, "/secrets")
+	viper.SetDefault(secretPathEnv, "/home/infracloud/Documents/warehouse/rafay/test data/cluster-scheduler")
 	viper.SetDefault(configAddrENV, ":7000")
 	viper.SetDefault(allowReuseToken, "true")
 	viper.SetDefault(controlAddrEnv, "localhost:5002")
 	viper.SetDefault(apiAddrEnv, "localhost:8000")
-	viper.SetDefault(controllerImageEnv, "rafaysystems/cluster-controller:latest")
-	viper.SetDefault(connectorImageEnv, "rafaysystems/rafay-connector:latest")
-	viper.SetDefault(relayAgentImageEnv, "registry.dev.rafay-edge.net:5000/rafay/rafay-relay-agent:v1.6.x-122")
+	viper.SetDefault(relayAgentImageEnv, "rafaysystems/rafay-relay:latest")
 	viper.SetDefault(authAddrEnv, "authsrv.rcloud-admin.svc.cluster.local:50011")
 	viper.SetDefault(sentryAddrENV, "localhost:10000")
 	viper.SetDefault(sentryBootstrapAddrENV, "api.sentry.rafay.local:11000")
@@ -120,8 +123,6 @@ func setup() {
 
 	viper.BindEnv(rpcPortEnv)
 	viper.BindEnv(apiPortEnv)
-	viper.BindEnv(peerPortENV)
-	viper.BindEnv(connectorPortENV)
 	viper.BindEnv(dbAddrEnv)
 	viper.BindEnv(dbNameEnv)
 	viper.BindEnv(dbPasswordEnv)
@@ -132,9 +133,7 @@ func setup() {
 	viper.BindEnv(allowReuseToken)
 	viper.BindEnv(controlAddrEnv)
 	viper.BindEnv(apiAddrEnv)
-	viper.BindEnv(connectorImageEnv)
 	viper.BindEnv(relayAgentImageEnv)
-	viper.BindEnv(controllerImageEnv)
 	viper.BindEnv(authAddrEnv)
 	viper.BindEnv(sentryAddrENV)
 	viper.BindEnv(sentryBootstrapAddrENV)
@@ -143,20 +142,19 @@ func setup() {
 
 	rpcPort = viper.GetInt(rpcPortEnv)
 	apiPort = viper.GetInt(apiPortEnv)
-	peerPort = viper.GetInt(peerPortENV)
-	connectorPort = viper.GetInt(connectorPortENV)
 	dbAddr = viper.GetString(dbAddrEnv)
 	dbName = viper.GetString(dbNameEnv)
 	dbUser = viper.GetString(dbUserEnv)
 	dbPassword = viper.GetString(dbPasswordEnv)
+	adbName = viper.GetString(adbNameEnv)
+	adbUser = viper.GetString(adbUserEnv)
+	adbPassword = viper.GetString(adbPasswordEnv)
 	dev = viper.GetBool(devEnv)
 	secretPath = viper.GetString(secretPathEnv)
 	configAddr = viper.GetString(configAddrENV)
 	allowReuseToken = viper.GetString(allowReuseToken)
 	controlAddr = viper.GetString(controlAddrEnv)
 	apiAddr = viper.GetString(apiAddrEnv)
-	controllerImage = viper.GetString(controllerImageEnv)
-	connectorImage = viper.GetString(connectorImageEnv)
 	relayAgentImage = viper.GetString(relayAgentImageEnv)
 	authAddr = viper.GetString(authAddrEnv)
 	sentryAddr = viper.GetString(sentryAddrENV)
@@ -166,6 +164,11 @@ func setup() {
 	dsn := "postgres://" + dbUser + ":" + dbPassword + "@" + dbAddr + "/" + dbName + "?sslmode=disable"
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db = bun.NewDB(sqldb, pgdialect.New())
+
+	//TODO: this should be microservice call to admin service
+	dsn = "postgres://" + adbUser + ":" + adbPassword + "@" + dbAddr + "/" + adbName + "?sslmode=disable"
+	sqldb = sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	adb = bun.NewDB(sqldb, pgdialect.New())
 
 	if dev {
 		db.AddQueryHook(bundebug.NewQueryHook(
@@ -177,8 +180,6 @@ func setup() {
 	_log.Infow("setup finished",
 		"rpcPort", rpcPort,
 		"apiPort", apiPort,
-		"peerPort", peerPort,
-		"connectorPort", connectorPort,
 		"dbAddr", dbAddr,
 		"dbName", dbName,
 		"dbUser", dbUser,
@@ -204,17 +205,19 @@ func setup() {
 	downloadData = &bootstrapper.DownloadData{
 		ControlAddr:     controlAddr,
 		APIAddr:         apiAddr,
-		ControllerImage: controllerImage,
-		ConnectorImage:  connectorImage,
 		RelayAgentImage: relayAgentImage,
 	}
 
-	var err error
+	//TODO: add auth pool as required
+	configPool = configrpc.NewConfigPool(configAddr, 5*goruntime.NumCPU())
+	sentryPool = sentryrpc.NewSentryPool(sentryAddr, 5*goruntime.NumCPU())
 
-	cs = service.NewClusterService(db, downloadData)
+	cs = service.NewClusterService(db, adb, downloadData, sentryPool)
+	ms = service.NewMetroService(db, adb)
 
 	notify.Init(cs)
 
+	var err error
 	signer, err = credentials.NewSigner(secretPath)
 
 	if err != nil {
@@ -222,9 +225,6 @@ func setup() {
 	}
 
 	_log.Infow("queried number of cpus", "numCPUs", goruntime.NumCPU())
-
-	//TODO: add sentry, auth pool as required
-	configPool = configrpc.NewConfigPool(configAddr, 5*goruntime.NumCPU())
 
 }
 
@@ -246,7 +246,7 @@ func run() {
 	wg.Add(5)
 	go runAPI(&wg, ctx)
 	go runRPC(&wg, ctx)
-	go runPeer(&wg, ctx)
+	go runEventHandlers(&wg, ctx)
 
 	<-ctx.Done()
 	_log.Infow("shutting down, waiting for children to die")
@@ -264,7 +264,8 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 		ctx,
 		fmt.Sprintf(":%d", rpcPort),
 		make([]runtime.ServeMuxOption, 0),
-		rpcv3.RegisterClusterHandlerFromEndpoint,
+		schedulerrpc.RegisterClusterHandlerFromEndpoint,
+		adminrpc.RegisterLocationHandlerFromEndpoint,
 	)
 	if err != nil {
 		_log.Fatalw("unable to create gateway", "error", err)
@@ -290,17 +291,13 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 
 }
 
-func runPeer(wg *sync.WaitGroup, ctx context.Context) {
-	defer wg.Done()
-	<-ctx.Done()
-}
-
 func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	defer wg.Done()
 	defer cs.Close()
 	defer configPool.Close()
 
 	crpc := server.NewClusterServer(cs, signer, downloadData)
+	mserver := server.NewLocationServer(ms)
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", rpcPort))
 	if err != nil {
@@ -336,13 +333,43 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	}()
 
 	// register all the rpc servers
-	rpcv3.RegisterClusterServer(s, crpc)
+	schedulerrpc.RegisterClusterServer(s, crpc)
+	adminrpc.RegisterLocationServer(s, mserver)
 
 	_log.Infow("starting rpc server", "port", rpcPort)
 	err = s.Serve(l)
 	if err != nil {
 		_log.Fatalw("unable to start rpc server", "error", err)
 	}
+}
+
+func runEventHandlers(wg *sync.WaitGroup, ctx context.Context) {
+	defer wg.Done()
+
+	//TODO: need to add a bunch of other handlers with gitops
+	ceh := reconcile.NewClusterEventHandler(cs, sentryPool, configPool)
+	_log.Infow("starting cluster event handler")
+	go ceh.Handle(ctx.Done())
+
+	// listen to cluster events
+	cs.AddEventHandler(ceh.ClusterHook())
+
+	if !dev {
+		rl, err := leaderelection.NewConfigMapLock("cluster-scheduler", schedulerNamespace, xid.New().String())
+		if err != nil {
+			_log.Fatalw("unable to create configmap lock", "error", err)
+		}
+		go func() {
+			err := leaderelection.Run(rl, func(stop <-chan struct{}) {
+			}, ctx.Done())
+
+			if err != nil {
+				_log.Fatalw("unable to run leader election", "error", err)
+			}
+		}()
+	}
+
+	<-ctx.Done()
 }
 
 func main() {

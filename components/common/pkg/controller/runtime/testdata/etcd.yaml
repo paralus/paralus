@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: etcd0
+    etcd_node: etcd0
+  name: etcd0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: etcd0
+      etcd_node: etcd0
+  template:
+    metadata:
+      labels:
+        app: etcd0
+        etcd_node: etcd0
+    spec:
+      containers:
+      - command:
+        - /usr/local/bin/etcd
+        - --name
+        - etcd0
+        - --initial-advertise-peer-urls
+        - http://etcd0:2380
+        - --listen-peer-urls
+        - http://0.0.0.0:2380
+        - --listen-client-urls
+        - http://0.0.0.0:2379
+        - --advertise-client-urls
+        - http://etcd0:2379
+        - --initial-cluster
+        - etcd0=http://etcd0:2380
+        - --initial-cluster-state
+        - new
+        env:
+        - name: ETCDCTL_API
+          value: "3"
+        image: quay.io/coreos/etcd:v3.3
+        name: etcd0
+        ports:
+        - containerPort: 2379
+          name: client
+          protocol: TCP
+        - containerPort: 2380
+          name: server
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 100m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 256Mi
+        volumeMounts:
+        - mountPath: /etcd0.etcd
+          name: etcd-storage
+      hostname: etcd0
+      priorityClassName: rafay-cluster-critical
+      volumes:
+      - name: etcd-storage
+        persistentVolumeClaim:
+          claimName: etcd-pv-claim
