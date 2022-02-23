@@ -1,0 +1,78 @@
+syntax = "proto3";
+package rafay.dev.types.common.v3;
+
+message IsRequestAllowedRequest {
+    string url = 1;
+    string method = 2;
+    string xSessionToken = 3;
+    string cookie = 4;
+}
+
+enum RequestStatus {
+    Unknown = 0;
+    RequestNotAuthenticated = 1;
+    RequestMethodOrURLNotAllowed = 2;
+    RequestAllowed = 3;
+}
+
+// Remove unnecessary fields
+message ResourceURLMethods {
+    repeated string methods = 1;
+}
+
+enum AuthType {
+    AuthTypeNotSet = 0;
+    SessionLogin = 1;
+    APIKey = 2;
+}
+
+enum ClientType {
+    ClientTypeNotSet = 0;
+    BROWSER = 1;
+    CLI = 2;
+}
+
+message NamespaceData {
+    string project_id = 1;
+    string namespace_id = 2;
+    string role = 3;
+}
+
+message ProjectRole {
+    string project_id = 1;
+    string role = 3;
+}
+
+message ProjectData {
+    bool all = 1;
+    repeated ProjectRole list = 2;
+}
+
+message SessionData {
+    string account = 1;
+    string organization = 2;
+    string partner = 3;
+    string role = 4;
+    repeated string permissions = 5;
+    string partner_domain = 6;
+    string username = 7;
+    bool is_super_admin = 8;
+    bool is_partner_admin = 9;
+    bool is_sso_user = 10;
+    map<string, ResourceURLMethods> resource_urls = 11;
+    string ttl = 12;
+    repeated string groups = 13;
+    AuthType auth_type = 14;
+    string idp = 15;
+    map<string, bool> is_org_admin = 16;
+    ClientType client_type = 17;
+    map<string, bool> is_all_ns_access = 18;
+    repeated NamespaceData namespaces = 19;
+    ProjectData project = 20;
+}
+
+message IsRequestAllowedResponse {
+    RequestStatus status = 1;
+    string reason = 2;
+    SessionData sessionData = 3;
+}

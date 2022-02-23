@@ -9,16 +9,14 @@ import (
 
 // Rafay Gateway annotations
 const (
-	GatewayRequest     = "rafay-gateway-request"
-	GatewayURL         = "rafay-gateway-url"
-	GatewayRSID        = "rafay-gateway-rsid"
-	GatewayAPIKey      = "rafay-gateway-apikey"
-	GatewayMethod      = "rafay-gateway-method"
-	rafaySessionCookie = "rsid"
-	rafayAPIKeyHeader  = "X-RAFAY-API-KEYID"
-	UserAgent          = "rafay-gateway-user-agent"
-	Host               = "rafay-gateway-host"
-	RemoteAddr         = "rafay-gateway-remote-addr"
+	GatewayRequest       = "x-gateway-request"
+	GatewayURL           = "x-gateway-url"
+	GatewaySessionCookie = "ory_kratos_session"
+	GatewayAPIKey        = "X-Session-Token"
+	GatewayMethod        = "x-gateway-method"
+	UserAgent            = "x-gateway-user-agent"
+	Host                 = "x-gateway-host"
+	RemoteAddr           = "x-gateway-remote-addr"
 )
 
 // rafayGatewayAnnotator adds rafay gateway specific annotations
@@ -26,17 +24,17 @@ var rafayGatewayAnnotator = func(ctx context.Context, r *http.Request) metadata.
 	return metadata.New(map[string]string{
 		GatewayRequest: "true",
 		GatewayURL:     r.URL.EscapedPath(),
-		GatewayRSID: func() string {
-			sid, err := r.Cookie(rafaySessionCookie)
-			if err != nil {
-				return ""
-			}
-			return sid.Value
-		}(),
-		GatewayAPIKey: r.Header.Get(rafayAPIKeyHeader),
+		// GatewaySessionCookie: func() string {
+		// 	sid, err := r.Cookie(GatewaySessionCookie)
+		// 	if err != nil {
+		// 		return ""
+		// 	}
+		// 	return sid.Value
+		// }(),
+		GatewayAPIKey: r.Header.Get(GatewayAPIKey),
 		GatewayMethod: r.Method,
-		UserAgent:     r.UserAgent(),
-		Host:          r.Host,
-		RemoteAddr:    r.RemoteAddr,
+		// UserAgent:     r.UserAgent(),
+		// Host:          r.Host,
+		// RemoteAddr:    r.RemoteAddr,
 	})
 }

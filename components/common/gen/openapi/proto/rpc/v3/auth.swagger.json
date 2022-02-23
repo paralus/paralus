@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "pkg/auth/v3/auth.proto",
+    "title": "proto/rpc/v3/auth.proto",
     "version": "version not set"
   },
   "tags": [

@@ -26,8 +26,6 @@ func NewGateway(ctx context.Context, endpoint string, serveMuxOptions []runtime.
 		runtime.WithMarshalerOption(runtime.MIMEWildcard, httpBody),
 		runtime.WithMarshalerOption(jsonContentType, rafayJSON),
 		runtime.WithMarshalerOption(yamlContentType, rafayYAML),
-		//runtime.WithProtoErrorHandler(customErrorHandler),
-		//runtime.WithIncomingHeaderMatcher(customHeaderMatcher),
 		runtime.WithMetadata(rafayGatewayAnnotator),
 	)
 

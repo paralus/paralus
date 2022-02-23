@@ -20,9 +20,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
 	authzrpcv1 "github.com/RafaySystems/rcloud-base/components/authz/proto/rpc/v1"
-	"github.com/RafaySystems/rcloud-base/components/common/pkg/auth/interceptors"
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
+	grpc "github.com/RafaySystems/rcloud-base/components/common/pkg/grpc"
 	logv2 "github.com/RafaySystems/rcloud-base/components/common/pkg/log"
 	configrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/config"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/providers"
@@ -30,7 +30,6 @@ import (
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/service"
 	pbrpcv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/rpc/v3"
 	rpcv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/rpc/v3"
-	"google.golang.org/grpc"
 	_grpc "google.golang.org/grpc"
 )
 
@@ -123,6 +122,8 @@ func setup() {
 	appHostHTTP = viper.GetString(appHostHTTPEnv)
 
 	rpcRelayPeeringPort = rpcPort + 1
+
+	// Kratos client setup
 	kratosConfig := kclient.NewConfiguration()
 	kratosUrl := kratosScheme + "://" + kratosAddr
 	kratosConfig.Servers[0].URL = kratosUrl
@@ -139,7 +140,7 @@ func setup() {
 		))
 	}
 
-	conn, err := grpc.Dial(":"+fmt.Sprint(authzPort), grpc.WithInsecure())
+	conn, err := _grpc.Dial(":"+fmt.Sprint(authzPort), _grpc.WithInsecure())
 	if err != nil {
 		log.Fatal("unable to connect to authz")
 	}
@@ -151,7 +152,6 @@ func setup() {
 	rrs = service.NewRolepermissionService(db)
 	is = service.NewIdpService(db, appHostHTTP)
 	ps = service.NewOIDCProviderService(db, kratosUrl)
-
 	_log.Infow("usermgmt setup complete")
 }
 
@@ -175,6 +175,7 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 	defer wg.Done()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
+
 	mux := http.NewServeMux()
 
 	gwHandler, err := gateway.NewGateway(
@@ -191,7 +192,6 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 	if err != nil {
 		_log.Fatalw("unable to create gateway", "error", err)
 	}
-
 	mux.Handle("/", gwHandler)
 
 	s := http.Server{
@@ -204,7 +204,6 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 	}()
 
 	_log.Infow("starting gateway server", "port", apiPort)
-
 	err = s.ListenAndServe()
 	if err != nil {
 		_log.Fatalw("unable to start gateway", "error", err)
@@ -213,7 +212,6 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 
 func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	defer wg.Done()
-	// defer configPool.Close()
 	defer gs.Close()
 	defer rs.Close()
 	defer rrs.Close()
@@ -232,20 +230,13 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 
 	var opts []_grpc.ServerOption
 	if !dev {
+		ac := authv3.NewAuthContext()
+		o := authv3.Option{}
 		opts = append(opts, _grpc.UnaryInterceptor(
-			interceptors.NewAuthInterceptorWithOptions(
-				interceptors.WithLogRequest(),
-				interceptors.WithAuthPool(authPool),
-				interceptors.WithExclude("POST", "/v2/sentry/bootstrap/:templateToken/register"),
-			),
+			ac.NewAuthUnaryInterceptor(o),
 		))
-		defer authPool.Close()
-	} else {
-		opts = append(opts, _grpc.UnaryInterceptor(
-			interceptors.NewAuthInterceptorWithOptions(interceptors.WithDummy())),
-		)
 	}
-	s := grpc.NewServer(opts...)
+	s, err := grpc.NewServer(opts...)
 	if err != nil {
 		_log.Fatalw("unable to create grpc server", "error", err)
 	}

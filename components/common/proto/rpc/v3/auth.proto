@@ -1,0 +1,10 @@
+syntax = "proto3";
+package rafay.dev.rpc.v3;
+
+import "proto/types/commonpb/v3/auth.proto";
+
+service Auth {
+    rpc IsRequestAllowed(rafay.dev.types.common.v3.IsRequestAllowedRequest) returns (rafay.dev.types.common.v3.IsRequestAllowedResponse);
+    // rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
+    // rpc GetAPIKey(GetAPIKeyRequest) returns (GetAPIKeyResponse);
+}

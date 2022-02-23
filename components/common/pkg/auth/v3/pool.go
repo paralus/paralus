@@ -2,6 +2,7 @@ package authv3
 
 import (
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/pool"
+	rpcv3 "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/v3"
 
 	"context"
 
@@ -12,12 +13,12 @@ import (
 type AuthPoolClient interface {
 	Unhealthy()
 	Close() error
-	AuthClient
+	rpcv3.AuthClient
 }
 
 type authPoolClient struct {
 	*grpcpool.ClientConn
-	*authClient
+	rpcv3.AuthClient
 }
 
 var _ AuthPoolClient = (*authPoolClient)(nil)
@@ -47,7 +48,7 @@ func (p *authPool) NewClient(ctx context.Context) (AuthPoolClient, error) {
 	}
 	return &authPoolClient{
 		cc,
-		&authClient{cc.ClientConn},
+		rpcv3.NewAuthClient(cc.ClientConn),
 	}, nil
 }
 

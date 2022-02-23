@@ -16,7 +16,6 @@ import (
 	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/service"
 	adminrpc "github.com/RafaySystems/rcloud-base/components/adminsrv/proto/rpc"
 	"github.com/RafaySystems/rcloud-base/components/adminsrv/server"
-	"github.com/RafaySystems/rcloud-base/components/common/pkg/auth/interceptors"
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/grpc"
@@ -164,6 +163,7 @@ func setup() {
 
 	rpcRelayPeeringPort = rpcPort + 1
 
+	// DB setup
 	dsn := "postgres://" + dbUser + ":" + dbPassword + "@" + dbAddr + "/" + dbName + "?sslmode=disable"
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db = bun.NewDB(sqldb, pgdialect.New())
@@ -231,6 +231,7 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 	defer wg.Done()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
+
 	mux := http.NewServeMux()
 
 	gwHandler, err := gateway.NewGateway(
@@ -248,7 +249,6 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 	if err != nil {
 		_log.Fatalw("unable to create gateway", "error", err)
 	}
-
 	mux.Handle("/", gwHandler)
 
 	s := http.Server{
@@ -261,7 +261,6 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 	}()
 
 	_log.Infow("starting gateway server", "port", apiPort)
-
 	err = s.ListenAndServe()
 	if err != nil {
 		_log.Fatalw("unable to start gateway", "error", err)
@@ -343,18 +342,11 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 
 	var opts []_grpc.ServerOption
 	if !dev {
+		ac := authv3.NewAuthContext()
+		o := authv3.Option{}
 		opts = append(opts, _grpc.UnaryInterceptor(
-			interceptors.NewAuthInterceptorWithOptions(
-				interceptors.WithLogRequest(),
-				interceptors.WithAuthPool(authPool),
-				interceptors.WithExclude("POST", "/v2/sentry/bootstrap/:templateToken/register"),
-			),
+			ac.NewAuthUnaryInterceptor(o),
 		))
-		defer authPool.Close()
-	} else {
-		opts = append(opts, _grpc.UnaryInterceptor(
-			interceptors.NewAuthInterceptorWithOptions(interceptors.WithDummy())),
-		)
 	}
 	s, err := grpc.NewServer(opts...)
 	if err != nil {
