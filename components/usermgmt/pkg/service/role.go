@@ -209,7 +209,7 @@ func (s *roleService) GetByName(ctx context.Context, role *userv3.Role) (*userv3
 			return &userv3.Role{}, err
 		}
 	} else {
-
+		return nil, fmt.Errorf("unable to find role")
 	}
 	return role, nil
 

@@ -212,7 +212,7 @@ func (s *groupService) deleteGroupAccountRelations(ctx context.Context, groupId 
 		return &userv3.Group{}, fmt.Errorf("unable to delete user; %v", err)
 	}
 
-	_, err = s.azc.DeleteUserGroups(ctx, &authzv1.UserGroup{Grp: group.GetMetadata().GetName()})
+	_, err = s.azc.DeleteUserGroups(ctx, &authzv1.UserGroup{Grp: "g:"+group.GetMetadata().GetName()})
 	if err != nil {
 		return &userv3.Group{}, fmt.Errorf("unable to delete gorup-user relations from authz; %v", err)
 	}

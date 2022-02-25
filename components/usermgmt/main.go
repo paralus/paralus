@@ -28,7 +28,6 @@ import (
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/providers"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/server"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/service"
-	pbrpcv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/rpc/v3"
 	rpcv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/rpc/v3"
 	_grpc "google.golang.org/grpc"
 )
@@ -182,12 +181,12 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 		ctx,
 		fmt.Sprintf(":%d", rpcPort),
 		make([]runtime.ServeMuxOption, 0),
-		pbrpcv3.RegisterUserHandlerFromEndpoint,
-		pbrpcv3.RegisterGroupHandlerFromEndpoint,
-		pbrpcv3.RegisterRoleHandlerFromEndpoint,
-		pbrpcv3.RegisterRolepermissionHandlerFromEndpoint,
-		pbrpcv3.RegisterIdpHandlerFromEndpoint,
-		pbrpcv3.RegisterOIDCProviderHandlerFromEndpoint,
+		rpcv3.RegisterUserHandlerFromEndpoint,
+		rpcv3.RegisterGroupHandlerFromEndpoint,
+		rpcv3.RegisterRoleHandlerFromEndpoint,
+		rpcv3.RegisterRolepermissionHandlerFromEndpoint,
+		rpcv3.RegisterIdpHandlerFromEndpoint,
+		rpcv3.RegisterOIDCProviderHandlerFromEndpoint,
 	)
 	if err != nil {
 		_log.Fatalw("unable to create gateway", "error", err)

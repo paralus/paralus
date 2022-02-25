@@ -80,6 +80,17 @@ func performGroupBasicAuthzChecks(t *testing.T, mazc mockAuthzClient, guuid stri
 			}
 		}
 	}
+
+	if len(mazc.dug) > 0 {
+		if mazc.dug[len(mazc.dug)-1].Grp != "g:group-"+guuid {
+			t.Errorf("invalid group sent to authz; expected 'g:group-%v', got '%v'", guuid, mazc.dug[len(mazc.dug)-1].Grp)
+		}
+	}
+	if len(mazc.dp) > 0 {
+		if mazc.dp[len(mazc.dp)-1].Sub != "g:group-"+guuid {
+			t.Errorf("invalid sub in policy sent to authz; expected '%v', got '%v'", "g:group-"+guuid, mazc.dp[len(mazc.dp)-1].Sub)
+		}
+	}
 }
 
 func TestCreateGroupNoUsersNoRoles(t *testing.T) {
