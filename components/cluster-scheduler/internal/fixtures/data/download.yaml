@@ -417,7 +417,7 @@ metadata:
     meta.helm.sh/release-namespace: rafay-system
 data:
   clusterID: {{if .Cluster.Metadata.Labels}}{{ index .Cluster.Metadata.Labels "rafay.dev/clusterID" }}{{end}}
-  relays: {{if .Cluster.Metadata.Annotations}}{{ index .Cluster.Metadata.Annotations "relays" }}{{end}}
+  relays: '{{if .Cluster.Metadata.Annotations}}{{- index .Cluster.Metadata.Annotations "relays" -}}{{end}}'
 ---
 apiVersion: apps/v1
 kind: Deployment

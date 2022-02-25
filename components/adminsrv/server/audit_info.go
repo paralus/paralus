@@ -10,7 +10,6 @@ import (
 
 	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/sentry/kubeconfig"
 	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/service"
-	"github.com/RafaySystems/rcloud-base/components/common/pkg/hasher"
 )
 
 type auditInfoServer struct {
@@ -42,10 +41,7 @@ func (s *auditInfoServer) LookupUser(ctx context.Context, req *sentryrpc.LookupU
 		}, nil
 	}
 
-	accountID, err := hasher.IDFromHash(attrs.AccountID)
-	if err != nil {
-		return nil, err
-	}
+	accountID := attrs.AccountID
 
 	var userName string
 	account, err := s.aps.GetAccount(ctx, accountID)

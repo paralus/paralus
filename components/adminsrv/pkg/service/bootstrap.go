@@ -297,7 +297,9 @@ func (s *bootstrapService) GetBootstrapAgents(ctx context.Context, templateRef s
 	}
 
 	ret = new(sentry.BootstrapAgentList)
-	ret.Metadata.Count = int64(count)
+	ret.Metadata = &commonv3.ListMetadata{
+		Count: int64(count),
+	}
 	for _, ag := range agl {
 		ret.Items = append(ret.Items, prepareAgentResponse(&ag))
 	}

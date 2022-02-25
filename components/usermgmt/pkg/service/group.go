@@ -256,8 +256,8 @@ func (s *groupService) createGroupAccountRelations(ctx context.Context, groupId 
 
 	// TODO: revert our db inserts if this fails
 	// Just FYI, the succcess can be false if we delete the db directly but casbin has it available internally
-	success, err := s.azc.CreateUserGroups(ctx, &authzv1.UserGroups{UserGroups: ugs})
-	if err != nil || !success.Res {
+	_, err = s.azc.CreateUserGroups(ctx, &authzv1.UserGroups{UserGroups: ugs})
+	if err != nil {
 		return &userv3.Group{}, fmt.Errorf("unable to create mapping in authz; %v", err)
 	}
 

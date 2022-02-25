@@ -330,7 +330,7 @@ func Delete(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.UpdateQuery, 
 		return nil, err
 	}
 
-	uq := q.NewUpdate()
+	uq := q.DB().NewUpdate()
 	if opts.Deleted {
 		uq = uq.Set(nameQ, fmt.Sprintf("%s-%s", opts.Name, random.NewRandomString(10)))
 	}

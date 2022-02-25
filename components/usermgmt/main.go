@@ -78,9 +78,9 @@ var (
 )
 
 func setup() {
-	viper.SetDefault(rpcPortEnv, 10000)
-	viper.SetDefault(apiPortEnv, 11000)
-	viper.SetDefault(debugPortEnv, 12000)
+	viper.SetDefault(rpcPortEnv, 14000)
+	viper.SetDefault(apiPortEnv, 15000)
+	viper.SetDefault(debugPortEnv, 16000)
 	viper.SetDefault(kratosSchemeEnv, "http")
 	viper.SetDefault(kratosAddrEnv, "localhost:4433")
 	viper.SetDefault(authzPortEnv, 50011)

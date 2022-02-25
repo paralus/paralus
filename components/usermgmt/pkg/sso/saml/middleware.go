@@ -5,6 +5,7 @@ import (
 	"crypto/rsa"
 	"crypto/tls"
 	"crypto/x509"
+	"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -36,7 +37,7 @@ func newSAMLMiddlewareFromIDP(idp models.Idp) (*SAMLMiddleware, error) {
 		}
 	}
 
-	acsURL, err := url.Parse(idp.AcsURL)
+	acsURL, err := url.Parse(fmt.Sprintf("%s://%s/auth/v3/sso/acs/%s", rootURL.Scheme, rootURL.Host, idp.Id))
 	if err != nil {
 		return nil, err
 	}

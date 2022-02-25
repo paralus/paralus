@@ -1,15 +1,22 @@
 # rcloud-base
-rcloud-base
+This repository contains all the rcloud-system components that are the backbone for ztka and gitops.
+
+## Prerequisites 
+1) Postgres database
+2) [`Ory Kratos`](https://www.ory.sh/kratos) - API for user management
+3) We use [`Casbin`](https://casbin.org) - An authorization library that supports access control models like ACL, RBAC, ABAC
 
 ## Setting up the database
+You can use the [`bitnami charts for postgresql`](https://github.com/bitnami/charts/tree/master/bitnami/postgresql/#installing-the-chart)
 
 ### Create the initial db/user
 
-Example for `admindb`:
+Scripts for `admindb`:
 
 ``` sql
 create database admindb;
-create user admindbuser;
+CREATE ROLE admindbuser WITH LOGIN PASSWORD '<your_password>';
+GRANT ALL PRIVILEGES ON DATABASE admindb to admindbuser;
 ```
 
 Now in the newly created db:
@@ -18,6 +25,22 @@ Now in the newly created db:
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 grant execute on function uuid_generate_v4() to admindbuser;
 ```
+
+Scripts for `clusterdb`:
+
+``` sql
+create database clusterdb;
+CREATE ROLE clusterdbuser WITH LOGIN PASSWORD '<your_password>';
+GRANT ALL PRIVILEGES ON DATABASE clusterdb to clusterdbuser;
+```
+
+Now in the newly created db:
+
+``` sql
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+grant execute on function uuid_generate_v4() to clusterdbuser;
+```
+
 
 *This will grant the necessary permission to the newly created user to run uuid_generate_v4()*
 

@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS authsrv_resourcepermission (
     modified_at timestamp with time zone NOT NULL,
     trash boolean NOT NULL,
     resource_urls jsonb NOT NULL,
-    resource_action_urls jsonb NOT NULL,
+    resource_action_urls jsonb NOT NULL
 );
 
 ALTER TABLE authsrv_resourcepermission OWNER TO admindbuser;

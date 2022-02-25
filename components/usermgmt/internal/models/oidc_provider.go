@@ -27,7 +27,7 @@ type OIDCProvider struct {
 	IssuerURL       string                 `bun:"issuer_url,notnull"`
 	AuthURL         string                 `bun:"auth_url"`
 	TokenURL        string                 `bun:"token_url"`
-	RequestedClaims map[string]interface{} `bun:"type:jsonb"`
+	RequestedClaims map[string]interface{} `bun:"requested_claims,type:jsonb"`
 	Predefined      bool                   `bun:"predefined,notnull"`
 	Trash           bool                   `bun:"trash,default:false"`
 }

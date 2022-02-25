@@ -16,7 +16,6 @@ import (
 	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/pkg/service"
 	adminrpc "github.com/RafaySystems/rcloud-base/components/cluster-scheduler/proto/rpc"
 	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/server"
-	"github.com/RafaySystems/rcloud-base/components/common/pkg/auth/interceptors"
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
 	grpcutil "github.com/RafaySystems/rcloud-base/components/common/pkg/grpc"
@@ -307,20 +306,18 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	var opts []grpc.ServerOption
 	if !dev {
 		_log.Infow("adding auth interceptor")
+		ac := authv3.NewAuthContext()
+		o := authv3.Option{ExcludeRPCMethods: []string{"/rafay.dev.scheduler.rpc.Cluster/RegisterCluster"}}
 		opts = append(opts, grpc.UnaryInterceptor(
-			interceptors.NewAuthInterceptorWithOptions(
-				interceptors.WithAuthPool(authPool),
-				interceptors.WithExclude("POST", "/infra/v3/scheduler/cluster/register"),
-			),
-		))
-		defer authPool.Close()
-	} else {
-		opts = append(opts, grpc.UnaryInterceptor(
-			interceptors.NewAuthInterceptorWithOptions(interceptors.WithDummy()),
+			ac.NewAuthUnaryInterceptor(o),
 		))
 	}
+	s := grpc.NewServer(opts...)
+	if err != nil {
+		_log.Fatalw("unable to create grpc server", "error", err)
+	}
 
-	s, err := grpcutil.NewServer(opts...)
+	s, err = grpcutil.NewServer(opts...)
 	if err != nil {
 		_log.Fatalw("unable to create grpc server", "error", err)
 	}

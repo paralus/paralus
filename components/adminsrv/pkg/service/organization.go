@@ -52,7 +52,7 @@ func NewOrganizationService(db *bun.DB) OrganizationService {
 func (s *organizationService) Create(ctx context.Context, org *systemv3.Organization) (*systemv3.Organization, error) {
 
 	var partner models.Partner
-	_, err := s.dao.GetByName(ctx, org.Metadata.Name, &partner)
+	_, err := s.dao.GetByName(ctx, org.Metadata.Partner, &partner)
 	if err != nil {
 		return nil, err
 	}

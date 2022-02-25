@@ -11,7 +11,6 @@ import (
 	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/sentry/kubeconfig"
 	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/service"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/controller/runtime"
-	"github.com/RafaySystems/rcloud-base/components/common/pkg/hasher"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/log"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/query"
 	configrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/config"
@@ -309,10 +308,7 @@ func getProjectsFromLabels(labels map[string]string) ([]string, error) {
 		if len(s) != 2 {
 			continue
 		}
-		projectID, err := hasher.IDFromHash(s[1])
-		if err != nil {
-			return nil, err
-		}
+		projectID := s[1]
 		projects = append(projects, projectID)
 	}
 	return projects, nil
@@ -349,17 +345,17 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 
 	// get attributes from user CN
 	cnAttr := kubeconfig.GetCNAttributes(req.UserCN)
-	accountID, err := hasher.IDFromHash(cnAttr.AccountID)
+	accountID := cnAttr.AccountID
 	if err != nil {
 		_log.Errorw("error getting accountID from user CN", "userCN", req.UserCN)
 		return nil, err
 	}
-	orgID, err := hasher.IDFromHash(cnAttr.OrganizationID)
+	orgID := cnAttr.OrganizationID
 	if err != nil {
 		_log.Errorw("error getting orgID from user CN", "userCN", req.UserCN)
 		return nil, err
 	}
-	partnerID, err := hasher.IDFromHash(cnAttr.PartnerID)
+	partnerID := cnAttr.PartnerID
 	if err != nil {
 		_log.Errorw("error getting partnerID from user CN", "userCN", req.UserCN)
 		return nil, err
