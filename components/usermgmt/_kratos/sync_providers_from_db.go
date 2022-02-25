@@ -53,7 +53,7 @@ func sync(ctx context.Context, db *bun.DB) error {
 	if err != nil {
 		return fmt.Errorf("failed to marshal: %s", err)
 	}
-	err = os.WriteFile("oidc_providers.yml", d, 0644)
+	err = os.WriteFile("kratos_oidc.yml", d, 0644)
 	if err != nil {
 		return fmt.Errorf("failed to write data: %s", err)
 	}
