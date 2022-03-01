@@ -268,7 +268,6 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 		},
 	}
 	clstrutil.SetClusterCondition(cluster, clstrutil.NewClusterBootstrapAgent(commonv3.RafayConditionStatus_Pending, "created"))
-	fmt.Print("conditions while create :: ", clstrutil.DefaultClusterConditions)
 	cnds, _ := json.Marshal(clstrutil.DefaultClusterConditions)
 	edb.Conditions = json.RawMessage(cnds)
 
@@ -762,11 +761,14 @@ func (cs *clusterService) List(ctx context.Context, opts ...query.Option) (*infr
 		if err != nil {
 			return nil, err
 		}
-		entity, err := cs.dao.GetByID(ctx, clstr.MetroId, &models.Metro{})
-		if err != nil {
-			return nil, err
+		metro := &models.Metro{}
+		if clstr.MetroId != uuid.Nil {
+			entity, err := cs.dao.GetByID(ctx, clstr.MetroId, &models.Metro{})
+			if err != nil {
+				return nil, err
+			}
+			metro = entity.(*models.Metro)
 		}
-		metro := entity.(*models.Metro)
 		//TODO: workload related stuff pending
 		cluster := cs.prepareClusterResponse(ctx, &infrav3.Cluster{}, &clstr, metro, projects, false)
 		items = append(items, cluster)

@@ -1,0 +1,106 @@
+syntax = "proto3";
+package rafay.dev.rpc.v3;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "proto/types/userpb/v3/user.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info : {
+    title : "User management Service"
+    version : "2.0"
+    contact : {name : "Rafay Dev"}
+  }
+  schemes : HTTPS
+  consumes : "application/json"
+  consumes : "application/yaml"
+  produces : "application/json"
+  produces : "application/yaml"
+  security_definitions : {
+    security : {
+      key : "BasicAuth"
+      value : {type : TYPE_BASIC}
+    }
+    security : {
+      key : "ApiKeyAuth"
+      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-RAFAY-API-KEYID"}
+    }
+  }
+  security : {
+    security_requirement : {
+      key : "BasicAuth"
+      value : {}
+    }
+    security_requirement : {
+      key : "ApiKeyAuth"
+      value : {}
+    }
+  }
+  responses : {
+    key : "403"
+    value : {
+      description : "Returned when the user does not have permission to access "
+                    "the resource."
+    }
+  }
+  responses : {
+    key : "404"
+    value : {
+      description : "Returned when the resource does not exist."
+      schema : {json_schema : {type : STRING}}
+    }
+  }
+};
+
+message DeleteUserResponse {}
+
+service User {
+  rpc CreateUser(rafay.dev.types.user.v3.User)
+      returns (rafay.dev.types.user.v3.User) {
+    option (google.api.http) = {
+      post : "/auth/v3/users"
+      body : "*"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses : {
+        key : "201"
+        value : {description : "Returned when user is created successfully."}
+      }
+    };
+  };
+
+  rpc GetUsers(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.UserList) {
+    option (google.api.http) = {
+      get : "/auth/v3/users"
+    };
+  };
+
+  rpc GetUser(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.User) {
+    option (google.api.http) = {
+      get : "/auth/v3/user/{metadata.name}"
+    };
+  };
+
+  rpc UpdateUser(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.User) {
+    option (google.api.http) = {
+      put : "/auth/v3/user/{metadata.name}"
+      body : "*"
+    };
+  };
+
+  rpc DeleteUser(rafay.dev.types.user.v3.User) returns (DeleteUserResponse) {
+    option (google.api.http) = {
+      delete : "/auth/v3/user/{metadata.name}"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses : {
+        key : "204"
+        value : {
+          description : "Returned when user is deleted successfully."
+        }
+      }
+    };
+  };
+}

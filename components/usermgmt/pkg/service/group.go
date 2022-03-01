@@ -11,9 +11,9 @@ import (
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/utils"
 	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
+	userv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/userpb/v3"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/internal/group/dao"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/internal/models"
-	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -212,7 +212,7 @@ func (s *groupService) deleteGroupAccountRelations(ctx context.Context, groupId 
 		return &userv3.Group{}, fmt.Errorf("unable to delete user; %v", err)
 	}
 
-	_, err = s.azc.DeleteUserGroups(ctx, &authzv1.UserGroup{Grp: "g:"+group.GetMetadata().GetName()})
+	_, err = s.azc.DeleteUserGroups(ctx, &authzv1.UserGroup{Grp: "g:" + group.GetMetadata().GetName()})
 	if err != nil {
 		return &userv3.Group{}, fmt.Errorf("unable to delete gorup-user relations from authz; %v", err)
 	}

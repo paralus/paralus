@@ -12,9 +12,7 @@ build-proto:
 .PHONY: gen-proto
 gen-proto:
 	cd components/common; buf generate
-	cd components/adminsrv; buf generate
-	cd components/usermgmt; buf generate
-	cd components/cluster-scheduler; buf generate
+	cd components/authz; buf generate
 
 .PHONY: test
 test:

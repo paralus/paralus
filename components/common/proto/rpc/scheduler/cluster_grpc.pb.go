@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: proto/rpc/scheduler/cluster.proto
 
-package scheduler
+package rpcv3
 
 import (
 	context "context"
@@ -44,7 +44,7 @@ func NewClusterClient(cc grpc.ClientConnInterface) ClusterClient {
 
 func (c *clusterClient) CreateCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error) {
 	out := new(v3.Cluster)
-	err := c.cc.Invoke(ctx, "/rafay.dev.scheduler.rpc.Cluster/CreateCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Cluster/CreateCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func (c *clusterClient) CreateCluster(ctx context.Context, in *v3.Cluster, opts 
 
 func (c *clusterClient) GetClusters(ctx context.Context, in *v31.QueryOptions, opts ...grpc.CallOption) (*v3.ClusterList, error) {
 	out := new(v3.ClusterList)
-	err := c.cc.Invoke(ctx, "/rafay.dev.scheduler.rpc.Cluster/GetClusters", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Cluster/GetClusters", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func (c *clusterClient) GetClusters(ctx context.Context, in *v31.QueryOptions, o
 
 func (c *clusterClient) GetCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error) {
 	out := new(v3.Cluster)
-	err := c.cc.Invoke(ctx, "/rafay.dev.scheduler.rpc.Cluster/GetCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Cluster/GetCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +71,7 @@ func (c *clusterClient) GetCluster(ctx context.Context, in *v3.Cluster, opts ...
 
 func (c *clusterClient) UpdateCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error) {
 	out := new(v3.Cluster)
-	err := c.cc.Invoke(ctx, "/rafay.dev.scheduler.rpc.Cluster/UpdateCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Cluster/UpdateCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func (c *clusterClient) UpdateCluster(ctx context.Context, in *v3.Cluster, opts 
 
 func (c *clusterClient) DeleteCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*DeleteClusterResponse, error) {
 	out := new(DeleteClusterResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.scheduler.rpc.Cluster/DeleteCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Cluster/DeleteCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ func (c *clusterClient) DeleteCluster(ctx context.Context, in *v3.Cluster, opts 
 
 func (c *clusterClient) RegisterCluster(ctx context.Context, in *RegisterClusterRequest, opts ...grpc.CallOption) (*RegisterClusterResponse, error) {
 	out := new(RegisterClusterResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.scheduler.rpc.Cluster/RegisterCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Cluster/RegisterCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ func (c *clusterClient) RegisterCluster(ctx context.Context, in *RegisterCluster
 
 func (c *clusterClient) DownloadCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v31.HttpBody, error) {
 	out := new(v31.HttpBody)
-	err := c.cc.Invoke(ctx, "/rafay.dev.scheduler.rpc.Cluster/DownloadCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Cluster/DownloadCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +107,7 @@ func (c *clusterClient) DownloadCluster(ctx context.Context, in *v3.Cluster, opt
 
 func (c *clusterClient) UpdateClusterStatus(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error) {
 	out := new(v3.Cluster)
-	err := c.cc.Invoke(ctx, "/rafay.dev.scheduler.rpc.Cluster/UpdateClusterStatus", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Cluster/UpdateClusterStatus", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -178,7 +178,7 @@ func _Cluster_CreateCluster_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.scheduler.rpc.Cluster/CreateCluster",
+		FullMethod: "/rafay.dev.rpc.v3.Cluster/CreateCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClusterServer).CreateCluster(ctx, req.(*v3.Cluster))
@@ -196,7 +196,7 @@ func _Cluster_GetClusters_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.scheduler.rpc.Cluster/GetClusters",
+		FullMethod: "/rafay.dev.rpc.v3.Cluster/GetClusters",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClusterServer).GetClusters(ctx, req.(*v31.QueryOptions))
@@ -214,7 +214,7 @@ func _Cluster_GetCluster_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.scheduler.rpc.Cluster/GetCluster",
+		FullMethod: "/rafay.dev.rpc.v3.Cluster/GetCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClusterServer).GetCluster(ctx, req.(*v3.Cluster))
@@ -232,7 +232,7 @@ func _Cluster_UpdateCluster_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.scheduler.rpc.Cluster/UpdateCluster",
+		FullMethod: "/rafay.dev.rpc.v3.Cluster/UpdateCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClusterServer).UpdateCluster(ctx, req.(*v3.Cluster))
@@ -250,7 +250,7 @@ func _Cluster_DeleteCluster_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.scheduler.rpc.Cluster/DeleteCluster",
+		FullMethod: "/rafay.dev.rpc.v3.Cluster/DeleteCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClusterServer).DeleteCluster(ctx, req.(*v3.Cluster))
@@ -268,7 +268,7 @@ func _Cluster_RegisterCluster_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.scheduler.rpc.Cluster/RegisterCluster",
+		FullMethod: "/rafay.dev.rpc.v3.Cluster/RegisterCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClusterServer).RegisterCluster(ctx, req.(*RegisterClusterRequest))
@@ -286,7 +286,7 @@ func _Cluster_DownloadCluster_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.scheduler.rpc.Cluster/DownloadCluster",
+		FullMethod: "/rafay.dev.rpc.v3.Cluster/DownloadCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClusterServer).DownloadCluster(ctx, req.(*v3.Cluster))
@@ -304,7 +304,7 @@ func _Cluster_UpdateClusterStatus_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.scheduler.rpc.Cluster/UpdateClusterStatus",
+		FullMethod: "/rafay.dev.rpc.v3.Cluster/UpdateClusterStatus",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClusterServer).UpdateClusterStatus(ctx, req.(*v3.Cluster))
@@ -316,7 +316,7 @@ func _Cluster_UpdateClusterStatus_Handler(srv interface{}, ctx context.Context, 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Cluster_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.scheduler.rpc.Cluster",
+	ServiceName: "rafay.dev.rpc.v3.Cluster",
 	HandlerType: (*ClusterServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

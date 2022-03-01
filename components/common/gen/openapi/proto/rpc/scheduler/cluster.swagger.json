@@ -515,7 +515,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/rpcDeleteClusterResponse"
+              "$ref": "#/definitions/v3DeleteClusterResponse"
             }
           },
           "204": {
@@ -1687,7 +1687,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/rpcRegisterClusterResponse"
+              "$ref": "#/definitions/v3RegisterClusterResponse"
             }
           },
           "403": {
@@ -1714,7 +1714,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/rpcRegisterClusterRequest"
+              "$ref": "#/definitions/v3RegisterClusterRequest"
             }
           }
         ],
@@ -1790,34 +1790,6 @@
         }
       },
       "additionalProperties": {}
-    },
-    "rpcDeleteClusterResponse": {
-      "type": "object"
-    },
-    "rpcRegisterClusterRequest": {
-      "type": "object",
-      "properties": {
-        "token": {
-          "type": "string"
-        },
-        "signingRequest": {
-          "type": "string",
-          "format": "byte"
-        }
-      }
-    },
-    "rpcRegisterClusterResponse": {
-      "type": "object",
-      "properties": {
-        "certificate": {
-          "type": "string",
-          "format": "byte"
-        },
-        "caCertificate": {
-          "type": "string",
-          "format": "byte"
-        }
-      }
     },
     "v1NodeCondition": {
       "type": "object",
@@ -2310,6 +2282,9 @@
       "default": "StatusNotSet",
       "title": "$title: ConditionStatus\n$description: status of a condition for a resource"
     },
+    "v3DeleteClusterResponse": {
+      "type": "object"
+    },
     "v3Health": {
       "type": "string",
       "enum": [
@@ -2593,6 +2568,31 @@
       ],
       "default": "NotSet",
       "title": "RafayConditionStatus is the status of the status condition"
+    },
+    "v3RegisterClusterRequest": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "signingRequest": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "v3RegisterClusterResponse": {
+      "type": "object",
+      "properties": {
+        "certificate": {
+          "type": "string",
+          "format": "byte"
+        },
+        "caCertificate": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
     },
     "v3Resources": {
       "type": "object",

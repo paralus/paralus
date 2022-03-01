@@ -1,0 +1,115 @@
+:host = http://localhost:11000
+:partner = finman
+:org = finmanorg
+:project = myproject
+:description = this is my first project
+:opts.urlScope_user = user/b2e4162c-60df-4fd7-b8fd-8fd3e4d6e533
+:opts.urlScope_org = organization/0d95d65f-3ce9-4340-ac05-77f71084d0a6
+:orgid = 0d95d65f-3ce9-4340-ac05-77f71084d0a6
+:accountid = b2e4162c-60df-4fd7-b8fd-8fd3e4d6e533
+opts.urlScope_cluster = cluster/eff85770-1a9e-42bc-824b-d0ff5a0f792c
+
+## Project
+
+# Create Project
+POST :host/auth/v3/partner/:partner/organization/:organization/project
+Content-Type: application/yaml
+
+metadata:
+  partner: :partner
+  organization: :org
+  name: :project
+spec:
+  default: true
+
+# Get all projects
+GET :host/auth/v3/partner/:partner/organization/:organization/projects
+Content-Type: application/yaml
+
+# Get single project
+GET :host/auth/v3/partner/:partner/organization/:organization/project/:project
+Content-Type: application/yaml
+
+# Update project info
+PUT :host/auth/v3/partner/:partner/organization/:organization/project/:project
+Content-Type: application/yaml
+
+metadata:
+  partner: :partner
+  organization: :org
+  name: :project
+  description: :description
+spec:
+  default: true
+
+# Delete single project
+DELETE :host/auth/v3/partner/:partner/organization/:organization/project/:project
+
+
+## Kubeconfig setting
+
+# Publish kubeconfig setting
+PUT :host/v2/sentry/kubeconfig/:opts.urlScope_user/setting
+Content-Type: application/yaml
+
+opts:
+  organization: :orgid
+  account: :accountid
+validitySeconds: 5000
+enableSessionCheck: true
+enablePrivateRelay: true
+enforceOrgAdminSecretAccess: true
+disableWebKubectl: false
+disableCLIKubectl: false
+
+# Get kubeconfig setting
+GET :host/v2/sentry/kubeconfig/:opts.urlScope_user/setting
+
+# Publish kubeconfig setting
+PUT :host/v2/sentry/kubeconfig/:opts.urlScope_org/setting
+Content-Type: application/yaml
+
+opts:
+  organization: :orgid
+validitySeconds: 5000
+enableSessionCheck: true
+enablePrivateRelay: true
+enforceOrgAdminSecretAccess: true
+disableWebKubectl: false
+disableCLIKubectl: false
+
+# Get kubeconfig setting
+GET :host/v2/sentry/kubeconfig/:opts.urlScope_org/setting
+
+# Get kubeconfig for cluster system session
+GET :host/v2/sentry/kubeconfig/clustersystemsession?systemUser=true&opts.Organization=cc02bd83-89d8-4c76-a7dc-06854f93e21d
+
+# Get kubeconfig for cluster web session
+GET :host/v2/sentry/kubeconfig/clusterwebsession?opts.account=b2e4162c-60df-4fd7-b8fd-8fd3e4d6e533&opts.organization=0d95d65f-3ce9-4340-ac05-77f71084d0a6&opts.username=nirav.parikh@finman.tech
+
+# Get kubeconfig for user
+GET :host/v2/sentry/kubeconfig/user?opts.selector=&opts.account=c6974c2e-ef14-41bd-a5d5-4297cfe1dd4a&opts.organization=928b87f5-a4e8-4c97-8c91-0d431d7e1b82&opts.partner=a02cdb9f-a84f-49a1-b483-e7722d519cb8
+
+# Revoke kubeconfig for user
+POST :host/v2/sentry/kubeconfig/revoke
+Content-Type: application/yaml
+
+opts:
+  organization: cc02bd83-89d8-4c76-a7dc-06854f93e21d
+  account: c6974c2e-ef14-41bd-a5d5-4297cfe1dd4a
+  partner: a02cdb9f-a84f-49a1-b483-e7722d519cb8
+
+# Kubeconfig get cluster settings
+GET :host/v2/sentry/kubectl/:opts.urlScope_cluster/settings?opts.organization=cc02bd83-89d8-4c76-a7dc-06854f93e21d
+
+# Publish kubectl settings
+PUT :host/v2/sentry/kubectl/:opts.urlScope_cluster/settings
+Content-Type: application/yaml
+
+opts:
+  organization: cc02bd83-89d8-4c76-a7dc-06854f93e21d
+disableWebKubectl: true
+disableCLIKubectl: true
+
+# Get User Authorization
+GET :host/v2/sentry/authorization/user?userCN=a=b2e4162c-60df-4fd7-b8fd-8fd3e4d6e533/o=0d95d65f-3ce9-4340-ac05-77f71084d0a6/p=dec2483b-41b6-482f-b885-8d0edc39f76e/u=nirav.parikh@finman.tech&clusterID=28f0862f-a3e0-462d-9dae-88b9bb7f283c&certIssueSeconds=36000

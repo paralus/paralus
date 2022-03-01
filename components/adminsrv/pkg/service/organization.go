@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	systemv3 "github.com/RafaySystems/rcloud-base/components/adminsrv/proto/types/systempb/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/models"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
+	systemv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/systempb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -431,14 +431,16 @@ func (s *organizationService) List(ctx context.Context, organization *systemv3.O
 func prepareOrganizationResponse(organization *systemv3.Organization, org *models.Organization, partnerName string) (*systemv3.Organization, error) {
 
 	var settings systemv3.OrganizationSettings
-	err := json.Unmarshal(org.Settings, &settings)
-	if err != nil {
-		organization.Status = &v3.Status{
-			ConditionType:   "Describe",
-			LastUpdated:     timestamppb.Now(),
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
+	if org.Settings != nil {
+		err := json.Unmarshal(org.Settings, &settings)
+		if err != nil {
+			organization.Status = &v3.Status{
+				ConditionType:   "Describe",
+				LastUpdated:     timestamppb.Now(),
+				ConditionStatus: v3.ConditionStatus_StatusFailed,
+			}
+			return organization, err
 		}
-		return organization, err
 	}
 
 	organization.Metadata = &v3.Metadata{

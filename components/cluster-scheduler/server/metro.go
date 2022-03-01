@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/pkg/service"
-	adminrpc "github.com/RafaySystems/rcloud-base/components/cluster-scheduler/proto/rpc"
+	systemrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/system"
 	infrav3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/infrapb/v3"
 	"github.com/google/uuid"
 )
@@ -14,7 +14,7 @@ type locationServer struct {
 }
 
 // NewLocationServer returns new location server implementation
-func NewLocationServer(ms service.MetroService) adminrpc.LocationServer {
+func NewLocationServer(ms service.MetroService) systemrpc.LocationServer {
 	return &locationServer{ms}
 }
 

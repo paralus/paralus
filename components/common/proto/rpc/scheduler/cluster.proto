@@ -1,22 +1,10 @@
 syntax = "proto3";
-package rafay.dev.scheduler.rpc;
+package rafay.dev.rpc.v3;
 
 import "google/api/annotations.proto";
-import "gogoproto/gogo.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "proto/types/infrapb/v3/cluster.proto";
 import "proto/types/commonpb/v3/common.proto";
-
-// Enable custom Marshal method.
-option (gogoproto.marshaler_all) = true;
-// Enable custom Unmarshal method.
-option (gogoproto.unmarshaler_all) = true;
-// Enable custom Size method (Required by Marshal and Unmarshal).
-option (gogoproto.sizer_all) = true;
-// Enable registration with golang/protobuf for the grpc-gateway.
-option (gogoproto.goproto_registration) = true;
-// Enable generation of XXX_MessageName methods for grpc-go/status.
-option (gogoproto.messagename_all) = true;
 
 message RegisterClusterRequest {
   string token = 1;

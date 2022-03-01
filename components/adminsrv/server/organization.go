@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/service"
-	adminrpc "github.com/RafaySystems/rcloud-base/components/adminsrv/proto/rpc"
-	systempbv3 "github.com/RafaySystems/rcloud-base/components/adminsrv/proto/types/systempb/v3"
+	systemrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/system"
+	systempbv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/systempb/v3"
 )
 
 type organizationServer struct {
@@ -13,7 +13,7 @@ type organizationServer struct {
 }
 
 // NewOrganizationServer returns new organization server implementation
-func NewOrganizationServer(ps service.OrganizationService) adminrpc.OrganizationServer {
+func NewOrganizationServer(ps service.OrganizationService) systemrpc.OrganizationServer {
 	return &organizationServer{ps}
 }
 

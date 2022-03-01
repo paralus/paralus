@@ -3,8 +3,8 @@ package dao
 import (
 	"context"
 
+	userv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/userpb/v3"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/internal/models"
-	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )

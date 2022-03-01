@@ -16,8 +16,8 @@ import (
 
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	commonv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
+	systemv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/systempb/v3"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/internal/models"
-	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"google.golang.org/grpc/codes"
@@ -25,12 +25,12 @@ import (
 )
 
 type IdpService interface {
-	Create(context.Context, *userv3.Idp) (*userv3.Idp, error)
-	GetByID(context.Context, *userv3.Idp) (*userv3.Idp, error)
-	GetByName(context.Context, *userv3.Idp) (*userv3.Idp, error)
-	List(context.Context) (*userv3.IdpList, error)
-	Update(context.Context, *userv3.Idp) (*userv3.Idp, error)
-	Delete(context.Context, *userv3.Idp) error
+	Create(context.Context, *systemv3.Idp) (*systemv3.Idp, error)
+	GetByID(context.Context, *systemv3.Idp) (*systemv3.Idp, error)
+	GetByName(context.Context, *systemv3.Idp) (*systemv3.Idp, error)
+	List(context.Context) (*systemv3.IdpList, error)
+	Update(context.Context, *systemv3.Idp) (*systemv3.Idp, error)
+	Delete(context.Context, *systemv3.Idp) error
 }
 
 type idpService struct {
@@ -104,25 +104,25 @@ func generateSpCert(host string) (string, string, error) {
 	return string(cPEMBytes), string(privPEMBytes), nil
 }
 
-func (s *idpService) Create(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
+func (s *idpService) Create(ctx context.Context, idp *systemv3.Idp) (*systemv3.Idp, error) {
 	name := idp.Metadata.GetName()
 	domain := idp.Spec.GetDomain()
 
 	// validate name and domain
 	if len(name) == 0 {
-		return &userv3.Idp{}, fmt.Errorf("EMPTY NAME")
+		return &systemv3.Idp{}, fmt.Errorf("EMPTY NAME")
 	}
 	if len(domain) == 0 {
-		return &userv3.Idp{}, fmt.Errorf("EMPTY DOMAIN")
+		return &systemv3.Idp{}, fmt.Errorf("EMPTY DOMAIN")
 	}
 	e := &models.Idp{}
 	s.dao.GetByName(ctx, name, e)
 	if e.Name == name {
-		return &userv3.Idp{}, fmt.Errorf("DUPLICATE NAME")
+		return &systemv3.Idp{}, fmt.Errorf("DUPLICATE NAME")
 	}
 	s.dao.GetX(ctx, "domain", domain, e)
 	if e.Domain == domain {
-		return &userv3.Idp{}, fmt.Errorf("DUPLICATE DOMAIN")
+		return &systemv3.Idp{}, fmt.Errorf("DUPLICATE DOMAIN")
 	}
 
 	entity := &models.Idp{
@@ -141,22 +141,22 @@ func (s *idpService) Create(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 	if entity.SaeEnabled {
 		baseURL, err := url.Parse(s.appHost)
 		if err != nil {
-			return &userv3.Idp{}, err
+			return &systemv3.Idp{}, err
 		}
 		spcert, spkey, err := generateSpCert(baseURL.Host)
 		if err != nil {
-			return &userv3.Idp{}, err
+			return &systemv3.Idp{}, err
 		}
 		entity.SpCert = spcert
 		entity.SpKey = spkey
 	}
 	_, err := s.dao.Create(ctx, entity)
 	if err != nil {
-		return &userv3.Idp{}, err
+		return &systemv3.Idp{}, err
 	}
 
 	acsURL := generateAcsURL(entity.Id.String(), s.appHost)
-	rv := &userv3.Idp{
+	rv := &systemv3.Idp{
 		ApiVersion: apiVersion,
 		Kind:       "Idp",
 		Metadata: &commonv3.Metadata{
@@ -165,7 +165,7 @@ func (s *idpService) Create(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 			Partner:      entity.PartnerId.String(),
 			Id:           entity.Id.String(),
 		},
-		Spec: &userv3.IdpSpec{
+		Spec: &systemv3.IdpSpec{
 			IdpName:            entity.IdpName,
 			Domain:             entity.Domain,
 			AcsUrl:             acsURL,
@@ -184,20 +184,20 @@ func (s *idpService) Create(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 	return rv, nil
 }
 
-func (s *idpService) GetByID(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
+func (s *idpService) GetByID(ctx context.Context, idp *systemv3.Idp) (*systemv3.Idp, error) {
 	id, err := uuid.Parse(idp.Metadata.GetId())
 	if err != nil {
-		return &userv3.Idp{}, err
+		return &systemv3.Idp{}, err
 	}
 	entity := &models.Idp{}
 	// TODO: Check for existance of id before GetByID
 	_, err = s.dao.GetByID(ctx, id, entity)
 	if err != nil {
-		return &userv3.Idp{}, err
+		return &systemv3.Idp{}, err
 	}
 
 	acsURL := generateAcsURL(entity.Id.String(), s.appHost)
-	rv := &userv3.Idp{
+	rv := &systemv3.Idp{
 		ApiVersion: apiVersion,
 		Kind:       "Idp",
 		Metadata: &commonv3.Metadata{
@@ -206,7 +206,7 @@ func (s *idpService) GetByID(ctx context.Context, idp *userv3.Idp) (*userv3.Idp,
 			Partner:      entity.PartnerId.String(),
 			Id:           entity.Id.String(),
 		},
-		Spec: &userv3.IdpSpec{
+		Spec: &systemv3.IdpSpec{
 			IdpName:            entity.IdpName,
 			Domain:             entity.Domain,
 			AcsUrl:             acsURL,
@@ -225,20 +225,20 @@ func (s *idpService) GetByID(ctx context.Context, idp *userv3.Idp) (*userv3.Idp,
 	return rv, nil
 }
 
-func (s *idpService) GetByName(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
+func (s *idpService) GetByName(ctx context.Context, idp *systemv3.Idp) (*systemv3.Idp, error) {
 	name := idp.Metadata.GetName()
 	if len(name) == 0 {
 		// TODO: Write helper functions for the server and client error
-		return &userv3.Idp{}, status.Error(codes.InvalidArgument, "EMPTY NAME")
+		return &systemv3.Idp{}, status.Error(codes.InvalidArgument, "EMPTY NAME")
 	}
 	entity := &models.Idp{}
 	_, err := s.dao.GetByName(ctx, name, entity)
 	if err != nil {
-		return &userv3.Idp{}, err
+		return &systemv3.Idp{}, err
 	}
 
 	acsURL := generateAcsURL(entity.Id.String(), s.appHost)
-	rv := &userv3.Idp{
+	rv := &systemv3.Idp{
 		ApiVersion: apiVersion,
 		Kind:       "Idp",
 		Metadata: &commonv3.Metadata{
@@ -247,7 +247,7 @@ func (s *idpService) GetByName(ctx context.Context, idp *userv3.Idp) (*userv3.Id
 			Partner:      entity.PartnerId.String(),
 			Id:           entity.Id.String(),
 		},
-		Spec: &userv3.IdpSpec{
+		Spec: &systemv3.IdpSpec{
 			IdpName:            entity.IdpName,
 			Domain:             entity.Domain,
 			AcsUrl:             acsURL,
@@ -266,38 +266,38 @@ func (s *idpService) GetByName(ctx context.Context, idp *userv3.Idp) (*userv3.Id
 	return rv, nil
 }
 
-func (s *idpService) Update(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, error) {
+func (s *idpService) Update(ctx context.Context, idp *systemv3.Idp) (*systemv3.Idp, error) {
 	name := idp.Metadata.GetName()
 	domain := idp.Spec.GetDomain()
 	existingIdp := &models.Idp{}
 
 	if len(name) == 0 {
-		return &userv3.Idp{}, status.Error(codes.InvalidArgument, "EMPTY NAME")
+		return &systemv3.Idp{}, status.Error(codes.InvalidArgument, "EMPTY NAME")
 	}
 	if len(domain) == 0 {
-		return &userv3.Idp{}, status.Error(codes.InvalidArgument, "EMPTY DOMAIN")
+		return &systemv3.Idp{}, status.Error(codes.InvalidArgument, "EMPTY DOMAIN")
 	}
 
 	_, err := s.dao.GetByName(ctx, name, existingIdp)
 	if err != nil {
 		// TODO: Handle both db and idp not exist errors
 		// separately.
-		return &userv3.Idp{}, status.Errorf(codes.InvalidArgument, "IDP %q NOT EXIST", name)
+		return &systemv3.Idp{}, status.Errorf(codes.InvalidArgument, "IDP %q NOT EXIST", name)
 	}
 
 	s.dao.GetX(ctx, "domain", domain, existingIdp)
 	if existingIdp.Domain == domain {
-		return &userv3.Idp{}, status.Error(codes.InvalidArgument, "DUPLICATE DOMAIN")
+		return &systemv3.Idp{}, status.Error(codes.InvalidArgument, "DUPLICATE DOMAIN")
 	}
 
 	orgId, err := uuid.Parse(idp.Metadata.GetOrganization())
 	if err != nil {
-		return &userv3.Idp{}, status.Errorf(codes.InvalidArgument,
+		return &systemv3.Idp{}, status.Errorf(codes.InvalidArgument,
 			"ORG ID %q INCORRECT", idp.Metadata.GetOrganization())
 	}
 	partId, err := uuid.Parse(idp.Metadata.GetPartner())
 	if err != nil {
-		return &userv3.Idp{}, status.Errorf(codes.InvalidArgument,
+		return &systemv3.Idp{}, status.Errorf(codes.InvalidArgument,
 			"PARTNER ID %q INCORRECT", idp.Metadata.GetPartner())
 	}
 	entity := &models.Idp{
@@ -318,11 +318,11 @@ func (s *idpService) Update(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 	if entity.SaeEnabled {
 		baseURL, err := url.Parse(s.appHost)
 		if err != nil {
-			return &userv3.Idp{}, err
+			return &systemv3.Idp{}, err
 		}
 		spcert, spkey, err := generateSpCert(baseURL.Host)
 		if err != nil {
-			return &userv3.Idp{}, err
+			return &systemv3.Idp{}, err
 		}
 		entity.SpCert = spcert
 		entity.SpKey = spkey
@@ -330,11 +330,11 @@ func (s *idpService) Update(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 
 	_, err = s.dao.Update(ctx, existingIdp.Id, entity)
 	if err != nil {
-		return &userv3.Idp{}, err
+		return &systemv3.Idp{}, err
 	}
 
 	acsURL := generateAcsURL(entity.Id.String(), s.appHost)
-	rv := &userv3.Idp{
+	rv := &systemv3.Idp{
 		ApiVersion: apiVersion,
 		Kind:       "Idp",
 		Metadata: &commonv3.Metadata{
@@ -343,7 +343,7 @@ func (s *idpService) Update(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 			Partner:      entity.PartnerId.String(),
 			Id:           entity.Id.String(),
 		},
-		Spec: &userv3.IdpSpec{
+		Spec: &systemv3.IdpSpec{
 			IdpName:            entity.IdpName,
 			Domain:             entity.Domain,
 			AcsUrl:             acsURL,
@@ -362,7 +362,7 @@ func (s *idpService) Update(ctx context.Context, idp *userv3.Idp) (*userv3.Idp, 
 	return rv, nil
 }
 
-func (s *idpService) List(ctx context.Context) (*userv3.IdpList, error) {
+func (s *idpService) List(ctx context.Context) (*systemv3.IdpList, error) {
 	var (
 		entities []models.Idp
 		orgID    uuid.NullUUID
@@ -370,14 +370,14 @@ func (s *idpService) List(ctx context.Context) (*userv3.IdpList, error) {
 	)
 	_, err := s.dao.List(ctx, parID, orgID, &entities)
 	if err != nil {
-		return &userv3.IdpList{}, err
+		return &systemv3.IdpList{}, err
 	}
 
 	// Get idps only till limit
-	var result []*userv3.Idp
+	var result []*systemv3.Idp
 	for _, entity := range entities {
 		acsURL := generateAcsURL(entity.Id.String(), s.appHost)
-		e := &userv3.Idp{
+		e := &systemv3.Idp{
 			ApiVersion: apiVersion,
 			Kind:       "Idp",
 			Metadata: &commonv3.Metadata{
@@ -386,7 +386,7 @@ func (s *idpService) List(ctx context.Context) (*userv3.IdpList, error) {
 				Partner:      entity.PartnerId.String(),
 				Id:           entity.Id.String(),
 			},
-			Spec: &userv3.IdpSpec{
+			Spec: &systemv3.IdpSpec{
 				IdpName:            entity.IdpName,
 				Domain:             entity.Domain,
 				AcsUrl:             acsURL,
@@ -405,7 +405,7 @@ func (s *idpService) List(ctx context.Context) (*userv3.IdpList, error) {
 		result = append(result, e)
 	}
 
-	rv := &userv3.IdpList{
+	rv := &systemv3.IdpList{
 		ApiVersion: apiVersion,
 		Kind:       "IdpList",
 		Items:      result,
@@ -413,7 +413,7 @@ func (s *idpService) List(ctx context.Context) (*userv3.IdpList, error) {
 	return rv, nil
 }
 
-func (s *idpService) Delete(ctx context.Context, idp *userv3.Idp) error {
+func (s *idpService) Delete(ctx context.Context, idp *systemv3.Idp) error {
 	entity := &models.Idp{}
 	name := idp.Metadata.GetName()
 

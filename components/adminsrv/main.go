@@ -14,7 +14,6 @@ import (
 	"github.com/RafaySystems/rcloud-base/components/adminsrv/internal/fixtures"
 	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/sentry/util"
 	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/service"
-	adminrpc "github.com/RafaySystems/rcloud-base/components/adminsrv/proto/rpc"
 	"github.com/RafaySystems/rcloud-base/components/adminsrv/server"
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
@@ -23,6 +22,7 @@ import (
 	configrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/config"
 	schedulerrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/scheduler"
 	sentryrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/sentry"
+	systemrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/system"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/spf13/viper"
 	"github.com/uptrace/bun"
@@ -238,9 +238,9 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 		ctx,
 		fmt.Sprintf(":%d", rpcPort),
 		make([]runtime.ServeMuxOption, 0),
-		adminrpc.RegisterPartnerHandlerFromEndpoint,
-		adminrpc.RegisterOrganizationHandlerFromEndpoint,
-		adminrpc.RegisterProjectHandlerFromEndpoint,
+		systemrpc.RegisterPartnerHandlerFromEndpoint,
+		systemrpc.RegisterOrganizationHandlerFromEndpoint,
+		systemrpc.RegisterProjectHandlerFromEndpoint,
 		sentryrpc.RegisterBootstrapHandlerFromEndpoint,
 		sentryrpc.RegisterKubeConfigHandlerFromEndpoint,
 		sentryrpc.RegisterKubectlClusterSettingsHandlerFromEndpoint,
@@ -360,9 +360,9 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 		_log.Infow("context done")
 	}()
 
-	adminrpc.RegisterPartnerServer(s, partnerServer)
-	adminrpc.RegisterOrganizationServer(s, organizationServer)
-	adminrpc.RegisterProjectServer(s, projectServer)
+	systemrpc.RegisterPartnerServer(s, partnerServer)
+	systemrpc.RegisterOrganizationServer(s, organizationServer)
+	systemrpc.RegisterProjectServer(s, projectServer)
 	sentryrpc.RegisterBootstrapServer(s, bootstrapServer)
 	sentryrpc.RegisterKubeConfigServer(s, kubeConfigServer)
 	sentryrpc.RegisterClusterAuthorizationServer(s, clusterAuthzServer)

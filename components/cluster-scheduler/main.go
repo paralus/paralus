@@ -14,7 +14,6 @@ import (
 	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/pkg/notify"
 	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/pkg/reconcile"
 	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/pkg/service"
-	adminrpc "github.com/RafaySystems/rcloud-base/components/cluster-scheduler/proto/rpc"
 	"github.com/RafaySystems/rcloud-base/components/cluster-scheduler/server"
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
@@ -24,6 +23,7 @@ import (
 	configrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/config"
 	schedulerrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/scheduler"
 	sentryrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/sentry"
+	systemrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/system"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/rs/xid"
 	"github.com/spf13/viper"
@@ -113,7 +113,7 @@ func setup() {
 	viper.SetDefault(allowReuseToken, "true")
 	viper.SetDefault(controlAddrEnv, "localhost:5002")
 	viper.SetDefault(apiAddrEnv, "localhost:8000")
-	viper.SetDefault(relayAgentImageEnv, "rafaysystems/rafay-relay:latest")
+	viper.SetDefault(relayAgentImageEnv, "rafaysystems/relay:latest")
 	viper.SetDefault(authAddrEnv, "authsrv.rcloud-admin.svc.cluster.local:50011")
 	viper.SetDefault(sentryAddrENV, "localhost:10000")
 	viper.SetDefault(sentryBootstrapAddrENV, "api.sentry.rafay.local:11000")
@@ -264,7 +264,7 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 		fmt.Sprintf(":%d", rpcPort),
 		make([]runtime.ServeMuxOption, 0),
 		schedulerrpc.RegisterClusterHandlerFromEndpoint,
-		adminrpc.RegisterLocationHandlerFromEndpoint,
+		systemrpc.RegisterLocationHandlerFromEndpoint,
 	)
 	if err != nil {
 		_log.Fatalw("unable to create gateway", "error", err)
@@ -331,7 +331,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 
 	// register all the rpc servers
 	schedulerrpc.RegisterClusterServer(s, crpc)
-	adminrpc.RegisterLocationServer(s, mserver)
+	systemrpc.RegisterLocationServer(s, mserver)
 
 	_log.Infow("starting rpc server", "port", rpcPort)
 	err = s.Serve(l)

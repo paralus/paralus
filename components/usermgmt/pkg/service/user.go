@@ -14,12 +14,12 @@ import (
 	authzv1 "github.com/RafaySystems/rcloud-base/components/authz/proto/types"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/persistence/provider/pg"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/utils"
+	userrpcv3 "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/user"
 	v3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
+	userv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/userpb/v3"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/internal/models"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/internal/user/dao"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/providers"
-	userrpcv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/rpc/v3"
-	userv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/types/userpb/v3"
 )
 
 const (

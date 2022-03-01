@@ -14,7 +14,7 @@ import (
 	"net/http"
 
 	"github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
-	sentry_0 "github.com/RafaySystems/rcloud-base/components/common/proto/types/sentry"
+	"github.com/RafaySystems/rcloud-base/components/common/proto/types/sentry"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
 	"google.golang.org/grpc"
@@ -34,7 +34,7 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 func request_Bootstrap_PatchBootstrapInfra_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapInfra
+	var protoReq sentry.BootstrapInfra
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -68,7 +68,7 @@ func request_Bootstrap_PatchBootstrapInfra_0(ctx context.Context, marshaler runt
 }
 
 func local_request_Bootstrap_PatchBootstrapInfra_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapInfra
+	var protoReq sentry.BootstrapInfra
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -106,7 +106,7 @@ var (
 )
 
 func request_Bootstrap_GetBootstrapInfra_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapInfra
+	var protoReq sentry.BootstrapInfra
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -139,7 +139,7 @@ func request_Bootstrap_GetBootstrapInfra_0(ctx context.Context, marshaler runtim
 }
 
 func local_request_Bootstrap_GetBootstrapInfra_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapInfra
+	var protoReq sentry.BootstrapInfra
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -172,7 +172,7 @@ func local_request_Bootstrap_GetBootstrapInfra_0(ctx context.Context, marshaler 
 }
 
 func request_Bootstrap_PatchBootstrapAgentTemplate_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapAgentTemplate
+	var protoReq sentry.BootstrapAgentTemplate
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -206,7 +206,7 @@ func request_Bootstrap_PatchBootstrapAgentTemplate_0(ctx context.Context, marsha
 }
 
 func local_request_Bootstrap_PatchBootstrapAgentTemplate_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapAgentTemplate
+	var protoReq sentry.BootstrapAgentTemplate
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -244,7 +244,7 @@ var (
 )
 
 func request_Bootstrap_GetBootstrapAgentTemplate_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapAgentTemplate
+	var protoReq sentry.BootstrapAgentTemplate
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -277,7 +277,7 @@ func request_Bootstrap_GetBootstrapAgentTemplate_0(ctx context.Context, marshale
 }
 
 func local_request_Bootstrap_GetBootstrapAgentTemplate_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapAgentTemplate
+	var protoReq sentry.BootstrapAgentTemplate
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -418,7 +418,7 @@ var (
 )
 
 func request_Bootstrap_GetBootstrapAgentConfig_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapAgent
+	var protoReq sentry.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -461,7 +461,7 @@ func request_Bootstrap_GetBootstrapAgentConfig_0(ctx context.Context, marshaler 
 }
 
 func local_request_Bootstrap_GetBootstrapAgentConfig_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapAgent
+	var protoReq sentry.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -504,7 +504,7 @@ func local_request_Bootstrap_GetBootstrapAgentConfig_0(ctx context.Context, mars
 }
 
 func request_Bootstrap_CreateBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapAgent
+	var protoReq sentry.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -538,7 +538,7 @@ func request_Bootstrap_CreateBootstrapAgent_0(ctx context.Context, marshaler run
 }
 
 func local_request_Bootstrap_CreateBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapAgent
+	var protoReq sentry.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -576,7 +576,7 @@ var (
 )
 
 func request_Bootstrap_GetBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapAgent
+	var protoReq sentry.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -619,7 +619,7 @@ func request_Bootstrap_GetBootstrapAgent_0(ctx context.Context, marshaler runtim
 }
 
 func local_request_Bootstrap_GetBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapAgent
+	var protoReq sentry.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -736,7 +736,7 @@ var (
 )
 
 func request_Bootstrap_DeleteBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapAgent
+	var protoReq sentry.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -779,7 +779,7 @@ func request_Bootstrap_DeleteBootstrapAgent_0(ctx context.Context, marshaler run
 }
 
 func local_request_Bootstrap_DeleteBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapAgent
+	var protoReq sentry.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -822,7 +822,7 @@ func local_request_Bootstrap_DeleteBootstrapAgent_0(ctx context.Context, marshal
 }
 
 func request_Bootstrap_UpdateBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapAgent
+	var protoReq sentry.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -866,7 +866,7 @@ func request_Bootstrap_UpdateBootstrapAgent_0(ctx context.Context, marshaler run
 }
 
 func local_request_Bootstrap_UpdateBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq sentry_0.BootstrapAgent
+	var protoReq sentry.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)

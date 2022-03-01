@@ -1,4 +1,4 @@
-package scheduler
+package rpcv3
 
 import (
 	"context"

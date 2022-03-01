@@ -1,0 +1,109 @@
+syntax = "proto3";
+package rafay.dev.rpc.v3;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "proto/types/systempb/v3/idp.proto";
+import "google/protobuf/empty.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info : {
+    title : "Identity Provider (IdP) Service"
+    version : "3.0"
+    contact : {name : "Rafay Dev"}
+  }
+  schemes : HTTPS
+  consumes : "application/json"
+  consumes : "application/yaml"
+  produces : "application/json"
+  produces : "application/yaml"
+  security_definitions : {
+    security : {
+      key : "BasicAuth"
+      value : {type : TYPE_BASIC}
+    }
+    security : {
+      key : "ApiKeyAuth"
+      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-RAFAY-API-KEYID"}
+    }
+  }
+  security : {
+    security_requirement : {
+      key : "BasicAuth"
+      value : {}
+    }
+    security_requirement : {
+      key : "ApiKeyAuth"
+      value : {}
+    }
+  }
+  responses : {
+    key : "403"
+    value : {
+      description : "Returned when the user does not have permission to access "
+                    "the resource."
+    }
+  }
+  responses : {
+    key : "404"
+    value : {
+      description : "Returned when the resource does not exist."
+      schema : {json_schema : {type : STRING}}
+    }
+  }
+};
+
+
+service Idp {
+  rpc CreateIdp(rafay.dev.types.system.v3.Idp) returns (rafay.dev.types.system.v3.Idp) {
+    option (google.api.http) = {
+      post : "/auth/v3/sso/idp"
+      body : "*"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses : {
+        key : "201"
+        value : {description : "Returned when idp is created successfully."}
+      }
+    };
+  };
+
+  rpc GetIdp(rafay.dev.types.system.v3.Idp) returns (rafay.dev.types.system.v3.Idp) {
+    option (google.api.http) = {
+      get : "/auth/v3/sso/idp/{metadata.name}"
+    };
+  };
+
+  rpc ListIdps(google.protobuf.Empty) returns (rafay.dev.types.system.v3.IdpList) {
+    option (google.api.http) = {
+      get : "/auth/v3/sso/idp"
+    };
+  };
+
+  rpc UpdateIdp(rafay.dev.types.system.v3.Idp) returns (rafay.dev.types.system.v3.Idp) {
+    option (google.api.http) = {
+      put : "/auth/v3/sso/idp/{metadata.name}"
+      body : "*"
+    };
+  };
+
+  rpc DeleteIdp(rafay.dev.types.system.v3.Idp) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete : "/auth/v3/sso/idp/{metadata.name}"
+    };
+
+   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses : {
+        key : "204"
+        value : {
+          description : "Returned when idp is deleted successfully."
+        }
+      }
+    };
+  };
+
+  // TODO: endpooint /auth/v1/sso/idp/{name}/upload_metadata/
+  // file content as request payload and response is Idp
+}
+

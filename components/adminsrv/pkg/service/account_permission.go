@@ -136,48 +136,6 @@ func (a *accountPermissionService) GetSSOUsersGroupProjectRole(ctx context.Conte
 	return ssoUsers, nil
 }
 
-/*
-func (a *accountPermissionService) IsAccountActive(ctx context.Context, accountID, orgID int64) (bool, error) {
-	active := false
-	err := a.db.RunInTransaction(ctx, func(tx *pg.Tx) error {
-		g, err := getDefaultUserGroup(tx, orgID)
-		if err != nil {
-			return err
-		}
-		ga, err := getDefaultUserGroupAccount(tx, accountID, int64(g.Id))
-		if err != nil {
-			return err
-		}
-		active = ga.Active
-		return nil
-	})
-	if err != nil {
-		return active, err
-	}
-	return active, nil
-}
-
-func getDefaultUserGroup(db orm.DB, orgID int64) (*group, error) {
-	var g group
-	err := db.Model(&g).
-		Where("organization_id = ?", orgID).
-		Where("type = ?", defaultUsersGroup).
-		Where("trash = ?", false).
-		Select()
-	return &g, err
-}
-
-func getDefaultUserGroupAccount(db orm.DB, accountID, groupID int64) (*groupAccount, error) {
-	var ga groupAccount
-	err := db.Model(&ga).
-		Where("account_id = ?", accountID).
-		Where("group_id = ?", groupID).
-		Where("trash = ?", false).
-		Select()
-	return &ga, err
-}
-*/
-
 func (a *accountPermissionService) GetAcccountsWithApprovalPermission(ctx context.Context, orgID, partnerID string) ([]string, error) {
 	usernames, err := a.pdao.GetAcccountsWithApprovalPermission(ctx, uuid.MustParse(orgID), uuid.MustParse(partnerID))
 	if err != nil {

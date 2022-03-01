@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/RafaySystems/rcloud-base/components/adminsrv/pkg/service"
-	adminrpc "github.com/RafaySystems/rcloud-base/components/adminsrv/proto/rpc"
-	systempbv3 "github.com/RafaySystems/rcloud-base/components/adminsrv/proto/types/systempb/v3"
+	systemrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/system"
+	systempbv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/systempb/v3"
 )
 
 type projectServer struct {
@@ -13,7 +13,7 @@ type projectServer struct {
 }
 
 // NewProjectServer returns new project server implementation
-func NewProjectServer(ps service.ProjectService) adminrpc.ProjectServer {
+func NewProjectServer(ps service.ProjectService) systemrpc.ProjectServer {
 	return &projectServer{ps}
 }
 

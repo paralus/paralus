@@ -3,6 +3,7 @@ module github.com/RafaySystems/rcloud-base/components/cluster-scheduler
 go 1.17
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/RafaySystems/rcloud-base/components/common v0.0.0-unpublished
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.3

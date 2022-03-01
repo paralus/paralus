@@ -25,10 +25,12 @@ import (
 	grpc "github.com/RafaySystems/rcloud-base/components/common/pkg/grpc"
 	logv2 "github.com/RafaySystems/rcloud-base/components/common/pkg/log"
 	configrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/config"
+	rolerpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/role"
+	systemrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/system"
+	userrpc "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/user"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/providers"
-	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/server"
 	"github.com/RafaySystems/rcloud-base/components/usermgmt/pkg/service"
-	rpcv3 "github.com/RafaySystems/rcloud-base/components/usermgmt/proto/rpc/v3"
+	"github.com/RafaySystems/rcloud-base/components/usermgmt/server"
 	_grpc "google.golang.org/grpc"
 )
 
@@ -181,12 +183,12 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 		ctx,
 		fmt.Sprintf(":%d", rpcPort),
 		make([]runtime.ServeMuxOption, 0),
-		rpcv3.RegisterUserHandlerFromEndpoint,
-		rpcv3.RegisterGroupHandlerFromEndpoint,
-		rpcv3.RegisterRoleHandlerFromEndpoint,
-		rpcv3.RegisterRolepermissionHandlerFromEndpoint,
-		rpcv3.RegisterIdpHandlerFromEndpoint,
-		rpcv3.RegisterOIDCProviderHandlerFromEndpoint,
+		userrpc.RegisterUserHandlerFromEndpoint,
+		userrpc.RegisterGroupHandlerFromEndpoint,
+		rolerpc.RegisterRoleHandlerFromEndpoint,
+		rolerpc.RegisterRolepermissionHandlerFromEndpoint,
+		systemrpc.RegisterIdpHandlerFromEndpoint,
+		systemrpc.RegisterOIDCProviderHandlerFromEndpoint,
 	)
 	if err != nil {
 		_log.Fatalw("unable to create gateway", "error", err)
@@ -247,12 +249,12 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 		_log.Infow("context done")
 	}()
 
-	rpcv3.RegisterUserServer(s, userServer)
-	rpcv3.RegisterGroupServer(s, groupServer)
-	rpcv3.RegisterRoleServer(s, roleServer)
-	rpcv3.RegisterRolepermissionServer(s, rolepermissionServer)
-	rpcv3.RegisterIdpServer(s, idpServer)
-	rpcv3.RegisterOIDCProviderServer(s, oidcProviderServer)
+	userrpc.RegisterUserServer(s, userServer)
+	userrpc.RegisterGroupServer(s, groupServer)
+	rolerpc.RegisterRoleServer(s, roleServer)
+	rolerpc.RegisterRolepermissionServer(s, rolepermissionServer)
+	systemrpc.RegisterIdpServer(s, idpServer)
+	systemrpc.RegisterOIDCProviderServer(s, oidcProviderServer)
 
 	_log.Infow("starting rpc server", "port", rpcPort)
 	err = s.Serve(l)
