@@ -1,0 +1,226 @@
+syntax = "proto3";
+package rafay.dev.types.sentry;
+
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "proto/types/commonpb/v3/common.proto";
+
+enum BootstrapInfraType {
+  ClusterBootstrapInfra = 0;
+}
+
+enum BootstrapAgentType {
+  RafayConnector = 0;
+  RelayAgent = 1;
+  PipelineAgent = 2;
+}
+
+enum BootstrapAgentMode {
+  InCluster = 0;
+  OutOfCluster = 1;
+}
+
+enum BootstrapAgentState {
+  NotSet = 0;
+  NotRegistered = 1;
+  NotApproved = 2;
+  Approved = 3;
+}
+
+message BootstrapInfraSpec {
+  string caCert = 1;
+  string caKey = 2;
+  string caKeyPass = 3;
+}
+
+message BootstrapInfraStatus {}
+
+message BootstrapInfra {
+  string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the resource"
+            default : "infra.k8smgmt.io/v3"
+            read_only : true
+        } ];
+  string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the resource"
+            default : "BootstrapInfra"
+            read_only : true
+        } ];
+  rafay.dev.types.common.v3.Metadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Metadata",
+            description : "Metadata of the resource"
+        }];
+  BootstrapInfraSpec spec = 4;
+  BootstrapInfraStatus status = 5;
+}
+
+message BootstrapInfraList {
+  string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the list resource"
+            default : "infra.k8smgmt.io/v3"
+            read_only : true
+        } ];
+  string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the list resource"
+            default : "BootstrapInfraList"
+            read_only : true
+        } ];
+  rafay.dev.types.common.v3.ListMetadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "ListMetadata",
+            description : "Metadata of the list resource"
+            read_only : true
+        } ];
+  repeated BootstrapInfra items = 4;
+}
+
+enum BootstrapAgentTemplateType {
+  TemplateTypeNotSet = 0;
+  Client = 1;
+  Server = 2;
+  Mixed = 3;
+}
+
+enum BootstrapTemplateHostType {
+  HostTypeNotSet = 0;
+  HostTypeInternal = 1;
+  HostTypeExternal = 2;
+}
+
+message BootstrapTemplateHost {
+  string host = 1;
+  BootstrapTemplateHostType type = 2;
+}
+
+message BootstrapAgentTemplateSpec {
+  string infraRef = 1;
+  bool autoRegister = 2;
+  bool ignoreMultipleRegister = 3;
+  bool autoApprove = 4;
+  BootstrapAgentTemplateType templateType = 5;
+  string token = 6;
+  repeated BootstrapTemplateHost hosts = 7;
+  string inClusterTemplate = 8;
+  string outOfClusterTemplate = 9;
+}
+
+message BootstrapAgentTemplateStatus {}
+
+message BootstrapAgentTemplate {
+  string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the resource"
+            default : "infra.k8smgmt.io/v3"
+            read_only : true
+        } ];
+  string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the resource"
+            default : "BootstrapAgentTemplate"
+            read_only : true
+        } ];
+  rafay.dev.types.common.v3.Metadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Metadata",
+            description : "Metadata of the resource"
+        }];
+  BootstrapAgentTemplateSpec spec = 4;
+  BootstrapAgentTemplateStatus status = 5;
+}
+
+message BootstrapAgentTemplateList {
+  string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the list resource"
+            default : "infra.k8smgmt.io/v3"
+            read_only : true
+        } ];
+  string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the list resource"
+            default : "BootstrapAgentTemplateList"
+            read_only : true
+        } ];
+  rafay.dev.types.common.v3.ListMetadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "ListMetadata",
+            description : "Metadata of the list resource"
+            read_only : true
+        } ];
+  repeated BootstrapAgentTemplate items = 4;
+}
+
+message BootstrapAgentSpec {
+  string token = 1;
+  string templateRef = 2;
+  BootstrapAgentMode agentMode = 3;
+}
+
+message BootStrapAgentStatus {
+  BootstrapAgentState tokenState = 1;
+  string ipAddress = 2;
+  google.protobuf.Timestamp lastCheckedIn = 3;
+  string fingerprint = 4;
+}
+
+message BootstrapAgent {
+  string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the resource"
+            default : "infra.k8smgmt.io/v3"
+            read_only : true
+        } ];
+  string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the resource"
+            default : "BootstrapAgent"
+            read_only : true
+        } ];
+  rafay.dev.types.common.v3.Metadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Metadata",
+            description : "Metadata of the resource"
+        }];
+  BootstrapAgentSpec spec = 4;
+  BootStrapAgentStatus status = 5;
+}
+
+// BootstrapAgentList is a list of bootstrap agents
+message BootstrapAgentList {
+  string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the list resource"
+            default : "infra.k8smgmt.io/v3"
+            read_only : true
+        } ];
+  string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the list resource"
+            default : "BootstrapAgentList"
+            read_only : true
+        } ];
+  rafay.dev.types.common.v3.ListMetadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "ListMetadata",
+            description : "Metadata of the list resource"
+            read_only : true
+        } ];
+  repeated BootstrapAgent items = 4;
+}

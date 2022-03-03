@@ -1,0 +1,201 @@
+syntax = "proto3";
+package rafay.dev.types.controller;
+
+import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+import "k8s.io/apimachinery/pkg/runtime/generated.proto";
+
+import "k8s.io/api/core/v1/generated.proto";
+import "k8s.io/api/batch/v1beta1/generated.proto";
+
+// +kubebuilder:object:generate=true
+// StepObject can represent any kubernetes object
+message StepObject {
+  k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta typeMeta = 1;
+  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 2;
+  string name = 3;
+  bytes raw = 4;
+}
+
+// +kubebuilder:object:generate=true
+// StepTemplate is the description of a step
+message StepTemplate {
+  string name = 1;
+  string onFailed = 2;
+  StepObject object = 3;
+  k8s.io.api.batch.v1beta1.JobTemplateSpec jobTemplate = 4;
+}
+
+// +kubebuilder:object:generate=true
+// StepStatus is the status of the step
+message StepStatus {
+  string name = 1;
+  k8s.io.api.core.v1.ObjectReference objectRef = 2;
+  string objectState = 3;
+  string objectReason = 4;
+  string jobState = 5;
+  string jobReason = 6;
+  k8s.io.api.core.v1.ObjectReference jobRef = 7;
+  string state = 8;
+  string reason = 9;
+  string objectSpecHash = 10;
+  string jobSpecHash = 11;
+}
+
+// +kubebuilder:object:generate=true
+// TaskletSpec is the spec of the tasklet
+message TaskletSpec {
+  repeated StepTemplate init = 1;
+  repeated StepTemplate install = 2;
+  repeated StepTemplate postInstall = 3;
+  repeated StepTemplate preDelete = 4;
+}
+
+// +kubebuilder:object:generate=true
+// TaskletCondition is the condition of the tasklet
+message TaskletCondition {
+  string type = 1;
+  string status = 2;
+  k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 3;
+  string reason = 4;
+}
+
+// +kubebuilder:object:generate=true
+// TaskletStatus is the status of the tasklet
+message TaskletStatus {
+  sint64 observedGeneration = 1;
+  repeated TaskletCondition conditions = 2;
+  repeated StepStatus init = 3;
+  repeated StepStatus install = 4;
+  repeated StepStatus postInstall = 5;
+  repeated StepStatus preDelete = 6;
+}
+
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:shortName=rtl
+// Tasklet is the schema of tasklet
+message Tasklet {
+  k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta typeMeta = 1;
+  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 2;
+
+  TaskletSpec spec = 3;
+  TaskletStatus status = 4;
+}
+
+// +kubebuilder:object:root=true
+// TaskletList contains a list of tasklets
+message TaskletList {
+  k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta typeMeta = 1;
+
+  k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta listMeta = 2;
+
+  repeated Tasklet items = 3;
+}
+
+// +kubebuilder:object:generate=true
+// TaskletTemplate is the template for creating a tasklet
+message TaskletTemplate {
+  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 1;
+
+  TaskletSpec spec = 2;
+}
+
+// +kubebuilder:object:generate=true
+// TaskSpec is the spec of the task
+message TaskSpec {
+  repeated StepTemplate init = 1;
+
+  TaskletTemplate tasklet = 2;
+  repeated StepTemplate preDelete = 3;
+}
+
+// +kubebuilder:object:generate=true
+// TaskCondition is the condition of the tasklet
+message TaskCondition {
+  string type = 1;
+  string status = 2;
+  k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 3;
+  string reason = 4;
+}
+
+// +kubebuilder:object:generate=true
+// TaskStatus is the status of the task
+message TaskStatus {
+  sint64 observedGeneration = 1;
+  repeated TaskCondition conditions = 2;
+  repeated StepStatus init = 3;
+  k8s.io.api.core.v1.ObjectReference taskletRef = 4;
+  repeated StepStatus preDelete = 5;
+}
+
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:shortName=rt
+// Tasklet is the schema of task
+message Task {
+  k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta typeMeta = 1;
+  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 2;
+
+  TaskSpec spec = 3;
+  TaskStatus status = 4;
+}
+
+// +kubebuilder:object:root=true
+// TaskList contains a list of tasks
+message TaskList {
+  k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta typeMeta = 1;
+
+  k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta listMeta = 2;
+
+  repeated Task items = 3;
+}
+
+// +kubebuilder:object:generate=true
+// NamespaceSpec is the spec of the namespace
+message NamespaceSpec {
+  repeated StepTemplate init = 1;
+  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta namespaceMeta = 2;
+  repeated StepTemplate postCreate = 3;
+  repeated StepTemplate preDelete = 4;
+}
+
+// +kubebuilder:object:generate=true
+message NamespaceCondition {
+  string type = 1;
+  string status = 2;
+  k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 3;
+  string reason = 4;
+}
+
+// +kubebuilder:object:generate=true
+// NamespaceStatus is the status of namespace
+message NamespaceStatus {
+  sint64 observedGeneration = 1;
+  repeated NamespaceCondition conditions = 2;
+  repeated StepStatus init = 3;
+  k8s.io.api.core.v1.ObjectReference namespaceRef = 4;
+  repeated StepStatus postCreate = 5;
+  repeated StepStatus preDelete = 6;
+}
+
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:shortName=rns
+// Namespace is the schema of namespace
+message Namespace {
+  k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta typeMeta = 1;
+  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 2;
+
+  NamespaceSpec spec = 3;
+  NamespaceStatus status = 4;
+}
+
+// +kubebuilder:object:root=true
+// TaskletList contains a list of tasklets
+message NamespaceList {
+  k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta typeMeta = 1;
+
+  k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta listMeta = 2;
+
+  repeated Namespace items = 3;
+}

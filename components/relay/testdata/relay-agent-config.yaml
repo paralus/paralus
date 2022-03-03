@@ -1,8 +1,0 @@
-apiVersion: v1
-data:
-  clusterID: q72dg2g
-  relays: '[{"token":"bqjjlq6g10l2b7fm3v50","addr":"api.sentry.rafay.local:11000","endpoint":"*.core-connector.relay.rafay.local:10002","name":"rafay-core-relay-agent","templateToken":"bqjjln6g10l2lvudmup0"}]'
-kind: ConfigMap
-metadata:
-  name: relay-agent-config
-  namespace: rafay-system

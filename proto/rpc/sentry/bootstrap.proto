@@ -1,0 +1,187 @@
+syntax = "proto3";
+package rafay.dev.sentry.rpc;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "proto/types/commonpb/v3/common.proto";
+import "proto/types/sentry/sentry.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info : {
+    title : "Sentry Bootstrap Service"
+    version : "2.0"
+    contact : {name : "Rafay Dev"}
+  }
+  schemes : HTTPS
+  consumes : "application/json"
+  consumes : "application/yaml"
+  produces : "application/json"
+  produces : "application/yaml"
+  security_definitions : {
+    security : {
+      key : "BasicAuth"
+      value : {type : TYPE_BASIC}
+    }
+    security : {
+      key : "ApiKeyAuth"
+      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-RAFAY-API-KEYID"}
+    }
+  }
+  security : {
+    security_requirement : {
+      key : "BasicAuth"
+      value : {}
+    }
+    security_requirement : {
+      key : "ApiKeyAuth"
+      value : {}
+    }
+  }
+  responses : {
+    key : "403"
+    value : {
+      description : "Returned when the user does not have permission to access "
+                    "the resource."
+    }
+  }
+  responses : {
+    key : "404"
+    value : {description : "Returned when the resource does not exist."}
+  }
+  responses : {
+    key : "500"
+    value : {description : "Returned for internal server error"}
+  }
+};
+
+message RegisterAgentRequest {
+  string templateToken = 1;
+  string templateName = 2;
+  string token = 3;
+  bytes csr = 4;
+  string ipAddress = 5;
+  string name = 6;
+}
+
+message RegisterAgentResponse {
+  bytes certificate = 1;
+  bytes caCertificate = 2;
+}
+
+message GetBootstrapAgentsRequest {
+  rafay.dev.types.common.v3.QueryOptions opts = 1;
+  string templateScope = 2;
+}
+
+message DeleteBootstrapAgentResponse {}
+message DeleteRelayNetworkResponse {}
+message GetRelayNetworksRequest {
+  rafay.dev.types.common.v3.QueryOptions opts = 1;
+}
+
+message RelayAgentDownloadRequest {
+  rafay.dev.types.common.v3.Metadata metadata = 1
+    [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Metadata",
+        description : "Metadata of the resource"
+    }];
+  string clusterScope = 2;
+}
+
+service Bootstrap {
+  rpc PatchBootstrapInfra(rafay.dev.types.sentry.BootstrapInfra)
+      returns (rafay.dev.types.sentry.BootstrapInfra) {
+    option (google.api.http) = {
+      put : "/v2/sentry/bootstrap/infra/{metadata.name}"
+      body : "*"
+    };
+  }
+
+  rpc GetBootstrapInfra(rafay.dev.types.sentry.BootstrapInfra)
+      returns (rafay.dev.types.sentry.BootstrapInfra) {
+    option (google.api.http) = {
+      get : "/v2/sentry/bootstrap/infra/{metadata.name}"
+    };
+  }
+
+  rpc PatchBootstrapAgentTemplate(
+      rafay.dev.types.sentry.BootstrapAgentTemplate)
+      returns (rafay.dev.types.sentry.BootstrapAgentTemplate) {
+    option (google.api.http) = {
+      put : "/v2/sentry/bootstrap/template/{metadata.name}"
+      body : "*"
+    };
+  }
+
+  rpc GetBootstrapAgentTemplate(
+      rafay.dev.types.sentry.BootstrapAgentTemplate)
+      returns (rafay.dev.types.sentry.BootstrapAgentTemplate) {
+    option (google.api.http) = {
+      get : "/v2/sentry/bootstrap/template/{metadata.name}"
+    };
+  }
+
+  rpc GetBootstrapAgentTemplates(rafay.dev.types.common.v3.QueryOptions)
+      returns (rafay.dev.types.sentry.BootstrapAgentTemplateList) {
+    option (google.api.http) = {
+      get : "/v2/sentry/bootstrap/template"
+    };
+  }
+
+  rpc RegisterBootstrapAgent(RegisterAgentRequest)
+      returns (RegisterAgentResponse) {
+    option (google.api.http) = {
+      post : "/v2/sentry/bootstrap/{templateToken=template/*}/register"
+      body : "*"
+    };
+  }
+
+  rpc GetBootstrapAgentConfig(rafay.dev.types.sentry.BootstrapAgent)
+      returns (rafay.dev.types.common.v3.HttpBody) {
+    option (google.api.http) = {
+      get : "/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/"
+            "{metadata.name}/config"
+    };
+  }
+
+  rpc CreateBootstrapAgent(rafay.dev.types.sentry.BootstrapAgent)
+      returns (rafay.dev.types.sentry.BootstrapAgent) {
+    option (google.api.http) = {
+      post : "/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent"
+      body : "*"
+    };
+  }
+
+  rpc GetBootstrapAgent(rafay.dev.types.sentry.BootstrapAgent)
+      returns (rafay.dev.types.sentry.BootstrapAgent) {
+    option (google.api.http) = {
+      get : "/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/"
+            "{metadata.name}"
+    };
+  }
+
+  rpc GetBootstrapAgents(GetBootstrapAgentsRequest)
+      returns (rafay.dev.types.sentry.BootstrapAgentList) {
+    option (google.api.http) = {
+      get : "/v2/sentry/bootstrap/{templateScope=template/*}/agent"
+    };
+  }
+
+  rpc DeleteBootstrapAgent(rafay.dev.types.sentry.BootstrapAgent)
+      returns (DeleteBootstrapAgentResponse) {
+    option (google.api.http) = {
+      delete : "/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/"
+               "{metadata.name}"
+    };
+  }
+
+  rpc UpdateBootstrapAgent(rafay.dev.types.sentry.BootstrapAgent)
+      returns (rafay.dev.types.sentry.BootstrapAgent) {
+    option (google.api.http) = {
+      put : "/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/"
+            "{metadata.name}"
+      body : "*"
+    };
+  }
+
+}

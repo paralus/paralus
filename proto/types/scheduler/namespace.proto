@@ -1,0 +1,90 @@
+syntax = "proto3";
+package rafay.dev.types.scheduler;
+
+import "google/protobuf/timestamp.proto";
+import "proto/types/commonpb/v3/common.proto";
+import "proto/types/controller/cluster_controller.proto";
+import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+
+message ClusterNamespaceSpec {
+  ClusterNamespaceType type = 1;
+  NamespaceTemplate namespace = 2;
+  string clusterID = 3;
+}
+
+enum ClusterNamespaceConditionType {
+  ClusterNamespaceAssigned = 0;
+  ClusterNamespaceConverged = 1;
+  ClusterNamespaceReady = 2;
+  ClusterNamespaceDelete = 3;
+}
+
+message ClusterNamespaceCondition {
+  ClusterNamespaceConditionType type = 1;
+  rafay.dev.types.common.v3.RafayConditionStatus status = 2;
+  google.protobuf.Timestamp lastUpdated = 3;
+  string reason = 4;
+}
+
+message ClusterNamespaceStatus {
+  repeated ClusterNamespaceCondition conditions = 1;
+  rafay.dev.types.controller.NamespaceStatus status = 2;
+}
+
+enum ClusterNamespaceType {
+  ClusterNamespaceSystem = 0;
+  ClusterNamespaceCustom = 1;
+}
+
+message ClusterNamespace {
+  string apiVersion = 1;
+  string kind = 2;
+  rafay.dev.types.common.v3.Metadata metadata = 3;
+  ClusterNamespaceSpec spec = 4;
+  ClusterNamespaceStatus status = 5;
+}
+
+message ClusterNamespaceList {
+  string apiVersion = 1;
+  string kind = 2;
+  rafay.dev.types.common.v3.ListMetadata metadata = 3;
+  repeated ClusterNamespace items = 4;
+}
+
+// NamespaceTemplate is the template for creating namespace
+message NamespaceTemplate {
+  k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 1;
+  rafay.dev.types.controller.NamespaceSpec spec = 2;
+
+  ResourceQuota resourceQuota = 3;
+  LimitRange limitRange = 4;
+  string type = 5;
+  string namespaceFromFile = 6;
+  string repoRef = 7;
+  string namespaceFromRepo = 8;
+}
+
+message LimitRange {
+  LimitRangeItem podLimits = 1;
+  LimitRangeItem containerLimits = 2;
+}
+
+message ResourceQuota {
+  float cpuRequests = 1;
+  float memoryRequests = 2;
+  float cpuLimits = 3;
+  float memoryLimits = 4;
+}
+
+message LimitRangeItem {
+  float maxCpu = 1;
+  float maxMemory = 2;
+  float minCpu = 3;
+  float minMemory = 4;
+  float defaultCpu = 5;
+  float defaultMemory = 6;
+  float defaultRequestCpu = 7;
+  float defaultRequestMemory = 8;
+  float maxLimitRequestRatioCpu = 9;
+  float maxLimitRequestRatioMemory = 10;
+}

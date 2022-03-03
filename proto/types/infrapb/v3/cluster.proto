@@ -1,0 +1,582 @@
+syntax = "proto3";
+package rafay.dev.types.infra.v3;
+
+import "google/protobuf/timestamp.proto";
+import "proto/types/commonpb/v3/common.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "k8s.io/api/core/v1/generated.proto";
+
+message Cluster {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema : {
+          title : "Cluster"
+          description : "Cluster"
+          required : [ "apiVersion", "kind", "metadata", "spec" ]
+        }
+      };
+  string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the resource"
+            default : "infra.k8smgmt.io/v3"
+            read_only : true
+        } ];
+  string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the resource"
+            default : "Cluster"
+            read_only : true
+        } ];
+  rafay.dev.types.common.v3.Metadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Metadata",
+            description : "Metadata of the resource"
+        } ];
+  ClusterSpec spec = 4
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Spec",
+            description : "Spec of the resource"
+        } ];
+  rafay.dev.types.common.v3.Status status = 5
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+          title : "Status",
+          description : "Status of the resource"
+          read_only : true
+        } ];
+}
+
+message ClusterList {
+  string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the list resource"
+            default : "infra.k8smgmt.io/v3"
+            read_only : true
+        } ];
+  string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the list resource"
+            default : "ClusterList"
+            read_only : true
+        } ];
+  rafay.dev.types.common.v3.ListMetadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "ListMetadata",
+            description : "Metadata of the list resource"
+            read_only : true
+        } ];
+  repeated Cluster items = 4
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Items",
+            description : "List of the resources"
+            read_only : true
+        } ];
+}
+
+message ClusterSpec {
+    string clusterType = 1
+         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+             title : "Cluster Type"
+             description : "Type of the cluster being created"
+             default: "Imported"
+         } ];
+     Metro metro = 2
+         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+             title : "Location"
+             description : "Location of the cluster"
+         } ];
+    string overrideSelector = 3
+         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+             title : "Override Selector"
+             description : "Override selector of the cluster"
+         } ];
+    ProvisionParams params = 4
+         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+             title : "Provision Params"
+             description : "Cluster provisioning params"
+         } ];
+    ClusterShareMode shareMode = 5
+         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+             title : "Override Selector"
+             description : "Override selector of the cluster"
+         } ];
+    ProxyConfig proxyConfig = 6
+         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+             title : "ProxyConfig"
+             description : "Override selector of the cluster"
+         } ];
+    ClusterData clusterData = 7 
+         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+             title : "Cluster Information"
+             description : "Override selector of the cluster"
+             read_only : true
+         } ];  
+ }
+
+ message ClusterData {
+    string provider = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Provider"
+            description : "Provider"
+            read_only : true
+        } ];
+    string passphrase = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Passphrase"
+            description : "passphrase of the cluster"
+            read_only : true
+        } ];
+    string cname = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "CNAME"
+            description : "cname of the cluster"
+            read_only : true
+        } ];
+    string arecord = 4
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "DNS A Record"
+            description : "Entry for DNS A Record"
+            read_only : true
+        } ];
+    string display_name = 5
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Display Name"
+            description : "Display Name"
+            read_only : true
+        } ];
+    Health health = 6
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Health"
+            description : "Health"
+            read_only : true
+        } ];
+    string manufacturer = 7
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Manufacturer"
+            description : "Manufacturer"
+            read_only : true
+        } ];
+    string cluster_blueprint = 8
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "ClusterBlueprint"
+            description : "Cluster Blueprint"
+            read_only : true
+        } ];
+    repeated ClusterNode nodes = 9 
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Cluster Information"
+            description : "Override selector of the cluster"
+        } ];
+    repeated ProjectCluster projects = 10
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Cluster Information"
+            description : "Override selector of the cluster"
+        } ];
+    ClusterStatus cluster_status = 11
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "ClusterStatus"
+            description : "Cluster Status"
+            read_only : true
+        } ];
+}
+
+message ClusterStatus {
+    repeated ClusterCondition conditions = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Cluster Information"
+            description : "Override selector of the cluster"
+        } ];
+    string token = 2 
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Cluster Information"
+            description : "Override selector of the cluster"
+        } ];
+    string publishedBlueprint = 3 
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Cluster Information"
+            description : "Override selector of the cluster"
+        } ];
+    sint64 systemTaskCount = 4 
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Cluster Information"
+            description : "Override selector of the cluster"
+        } ];
+    sint64 customTaskCount = 5 
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Cluster Information"
+            description : "Override selector of the cluster"
+        } ];
+    sint64 auxiliaryTaskCount = 6 
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Cluster Information"
+            description : "Override selector of the cluster"
+        } ];
+}
+
+message Resources {
+    sint64 cpuCount = 1;
+    sint64 ephemeralStorageKB = 2;
+    sint64 memoryKB = 3;
+    sint64 podsCount = 4;
+    sint64 gpuCount = 5;
+  }
+  
+message ProjectCluster {
+    string projectID = 1 
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Project ID"
+            description : "Project ID associated with the cluster"
+        } ];
+    string clusterID = 2 
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Cluster ID"
+            description : "Cluster ID associated with the project"
+        } ];
+}
+
+message ClusterNode {
+    rafay.dev.types.common.v3.Metadata metadata = 1;
+    ClusterNodeSpec spec = 2;
+    ClusterNodeStatus status = 3;
+}
+
+message ClusterNodeSpec {
+    bool unschedulable = 1;
+    repeated k8s.io.api.core.v1.Taint taints = 2;
+}
+
+message ClusterNodeStatus {
+    ClusterNodeState state = 1;
+    repeated k8s.io.api.core.v1.NodeCondition conditions = 2;
+    k8s.io.api.core.v1.NodeSystemInfo nodeInfo = 3;
+    Resources capacity = 4;
+    Resources allocatable = 5;
+    Resources allocated = 6;
+    repeated ClusterNodeIP ips = 7;
+}
+
+message ClusterNodeIP {
+    string privateIP = 1;
+    string publicIP = 2;
+}
+
+enum ClusterNodeState {
+    ClusterNodeCreated = 0;
+    ClusterNodeNotReady = 1;
+    ClusterNodeReady = 2;
+}
+  
+message ClusterCondition {
+    ClusterConditionType type = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Cluster Information"
+            description : "Override selector of the cluster"
+        } ];
+    rafay.dev.types.common.v3.RafayConditionStatus status = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Cluster Condition Status"
+            description : "Current status of the cluster"
+        } ];
+    google.protobuf.Timestamp lastUpdated = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Cluster condition last updated"
+            description : "Cluster condition last updated"
+        } ];
+    string reason = 4
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Reason of cluster condition"
+            description : "Reason of cluster condition"
+        } ];
+}
+
+enum ClusterConditionType {
+    ClusterBlueprintSync = 0;
+    ClusterApprove = 1;
+    ClusterCheckIn = 2;
+    ClusterNodeSync = 3;
+    ClusterRegister = 4;
+    ClusterNamespaceSync = 5;
+    ClusterReady = 6;
+    ClusterAuxiliaryTaskSync = 7;
+    ClusterBootstrapAgent = 8;
+    ClusterDelete = 9;
+}
+
+enum ClusterShareMode {
+    ClusterShareModeNotSet = 0;
+    ALL = 1;
+    CUSTOM = 2;
+}
+
+enum Health {
+    EDGE_IGNORE = 0;
+    EDGE_HEALTHY = 1;
+    EDGE_UNHEALTHY = 2;
+    EDGE_DISCONNECTED = 3;
+}
+
+message Location {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+      json_schema : {
+        title : "Location"
+        description : "Location"
+        required : [ "apiVersion", "kind", "metadata", "spec" ]
+      }
+    };
+    string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+          title : "API Version",
+          description : "API Version of the resource"
+          default : "infra.k8smgmt.io/v3"
+          read_only : true
+        } ];
+    string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+          title : "Kind",
+          description : "Kind of the resource"
+          default : "Location"
+          read_only : true
+        } ];
+    rafay.dev.types.common.v3.Metadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+          title : "Metadata",
+          description : "Metadata of the resource"
+        } ];
+    Metro spec = 4
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+          title : "Spec",
+          description : "Spec of the resource"
+        } ];
+    rafay.dev.types.common.v3.Status status = 5
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+          title : "Status",
+          description : "Status of the resource"
+          read_only : true
+        } ];
+  }
+
+message Metro {
+    string id = 1
+    [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "ID of Location"
+        description : "ID Location of the cluster"
+    } ];
+    string name = 2
+    [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Location"
+        description : "Location of the cluster"
+    } ];
+    string city = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "City"
+            description : "City of the location"
+            read_only : true
+        } ];
+    string state = 4
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "State"
+            description : "State of the location"
+            read_only : true
+        } ];
+    string country = 5
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Country"
+            description : "country of the location"
+            read_only : true
+        } ];
+    string locale = 6
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Locale"
+            description : "locale of the location"
+            read_only : true
+        } ];
+    string latitude = 7
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Latitude"
+            description : "Latitude of the location"
+            read_only : true
+        } ];
+    string longitude = 8
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Longitude"
+            description : "Longitude of the location"
+            read_only : true
+        } ];
+    string countryCode = 9
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "CountryCode"
+            description : "CountryCode of the location"
+            read_only : true
+        } ];
+    string stateCode = 10
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "StateCode"
+            description : "StateCode of the location"
+            read_only : true
+        } ];
+}
+
+message LocationList {
+    string apiVersion = 1
+          [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+              title : "API Version",
+              description : "API Version of the list resource"
+              default : "infra.k8smgmt.io/v3"
+              read_only : true
+          } ];
+    string kind = 2
+          [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+              title : "Kind",
+              description : "Kind of the list resource"
+              default : "LocationList"
+              read_only : true
+          } ];
+    rafay.dev.types.common.v3.ListMetadata metadata = 3
+          [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+              title : "ListMetadata",
+              description : "Metadata of the list resource"
+              read_only : true
+          } ];
+    repeated Metro items = 4
+          [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+              title : "Items",
+              description : "List of the resources"
+              read_only : true
+          } ];
+  }
+  
+message ProvisionParams {
+    string environmentProvider = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "EnvironmentProvider"
+            description : "environment provider of the cluster"
+        } ];
+    string kubernetesProvider = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "KubernetesProvider"
+            description : "kubernetes provider"
+        } ];
+    string provisionEnvironment = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "ProvisionEnvironment"
+            description : "provision environment"
+        } ];
+    string provisionPackageType = 4
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "ProvisionPackageType"
+            description : "provision package type"
+        } ];
+    string provisionType = 5
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "ProvisionType"
+            description : "provision type"
+        } ];
+    string state = 6
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "State"
+            description : "state"
+        } ];
+}
+  
+message ProxyConfig {
+    string httpProxy = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "HttpProxy"
+            description : "http proxy"
+        } ];
+    string httpsProxy = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "HttpsProxy"
+            description : "https proxy"
+        } ];
+    string noProxy = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "noproxy"
+            description : "noproxy"
+        } ];
+    string proxyAuth = 4
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "ProxyAuth"
+            description : "proxy auth"
+        } ];
+    bool allowInsecureBootstrap = 5
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "AllowInsecureBootstrap"
+            description : "Allow insecure bootstrap"
+        } ];
+    bool enabled = 6
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Enabled"
+            description : "enabled"
+        } ];
+    string bootstrapCA = 7
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "BootstrapCA"
+            description : "Certificate Authority of bootstrap server"
+        } ];
+}
+
+enum ClusterTokenType {
+  ClusterBootstrapToken = 0;
+}
+
+enum ClusterTokenState {
+  TokenNotUsed = 0;
+  TokenUsed = 1;
+}
+
+message ClusterTokenSpec {
+  ClusterTokenType tokenType = 1;
+}
+
+message ClusterTokenStatus {
+  ClusterTokenState state = 1;
+}
+
+message ClusterToken {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+        json_schema : {
+          title : "ClusterToken"
+          description : "ClusterToken"
+          required : [ "apiVersion", "kind", "metadata", "spec" ]
+        }
+      };
+  string apiVersion = 1
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "API Version",
+            description : "API Version of the resource"
+            default : "infra.k8smgmt.io/v3"
+            read_only : true
+        } ];
+  string kind = 2
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Kind",
+            description : "Kind of the resource"
+            default : "Cluster"
+            read_only : true
+        } ];
+  rafay.dev.types.common.v3.Metadata metadata = 3
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Metadata",
+            description : "Metadata of the resource"
+        } ];
+  ClusterTokenSpec spec = 4
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+            title : "Spec",
+            description : "Spec of the resource"
+        } ];
+  ClusterTokenStatus status = 5
+        [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+          title : "Status",
+          description : "Status of the resource"
+          read_only : true
+        } ];
+}
+
+message NameHash {
+    string name = 1;
+    string hash = 2;
+    bool deleting = 3;
+  }

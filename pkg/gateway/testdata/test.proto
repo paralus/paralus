@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package testdata;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+message TestYAML {
+  string name = 1;
+  google.protobuf.Timestamp time = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      read_only : true
+    }
+  ];
+  map<string, string> labels = 3;
+}
+
+message TestMetadata {
+  string name = 1;
+}
+
+message TestObjectSpec {}
+
+message TestObjectStatus {}
+
+message TestObject {
+  TestMetadata metadata = 1;
+  TestObjectSpec spec = 2;
+  TestObjectStatus status = 3;
+}
+
+service Test {
+  rpc Get(TestObject) returns (TestObject) {
+    option (google.api.http) = {
+      get : "/v3/test/{metadata.name}/test/{metadata.name}"
+    };
+  }
+}
