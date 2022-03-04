@@ -34,8 +34,8 @@ type authzService struct {
 
 func NewAuthzService(db *bun.DB, en *casbin.CachedEnforcer) AuthzService {
 	return &authzService{
-		dao:          pg.NewEntityDAO(db),
-		enforcer:     en,
+		dao:      pg.NewEntityDAO(db),
+		enforcer: en,
 		mappingCache: make(map[string][]rpmUrlAction),
 	}
 }
