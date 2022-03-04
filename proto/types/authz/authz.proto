@@ -16,8 +16,6 @@ message Policy {
   string org = 4;
   // Resource for which the access is needed
   string obj = 5;
-  // Action, read/write; * for both read+write
-  string act = 6;
 }
 
 message Policies {

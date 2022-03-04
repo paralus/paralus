@@ -4,11 +4,13 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/RafaySystems/rcloud-base/internal/models"
+	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	authzpbv1 "github.com/RafaySystems/rcloud-base/proto/types/authz"
 	"github.com/casbin/casbin/v2"
+	"github.com/uptrace/bun"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"gorm.io/gorm"
 )
 
 type AuthzService interface {
@@ -25,13 +27,14 @@ type AuthzService interface {
 }
 
 type authzService struct {
-	db       *gorm.DB
-	enforcer *casbin.CachedEnforcer
+	dao          pg.EntityDAO
+	enforcer     *casbin.CachedEnforcer
+	mappingCache map[string][]rpmUrlAction
 }
 
-func NewAuthzService(db *gorm.DB, en *casbin.CachedEnforcer) AuthzService {
+func NewAuthzService(db *bun.DB, en *casbin.CachedEnforcer) AuthzService {
 	return &authzService{
-		db:       db,
+		dao:      pg.NewEntityDAO(db),
 		enforcer: en,
 	}
 }
@@ -40,6 +43,52 @@ const (
 	groupGtype = "g2"
 	roleGtype  = "g"
 )
+
+type rpmUrlAction struct {
+	url     string
+	methods []string
+}
+
+func (s *authzService) cacheResourceRolePermissions(ctx context.Context) error {
+	var items []models.ResourcePermission
+	entities, err := s.dao.ListAll(ctx, &items)
+	if err != nil {
+		return err
+	}
+	if rpms, ok := entities.(*[]models.ResourcePermission); ok {
+		for _, rpm := range *rpms {
+			if perm, ok := s.mappingCache[rpm.Name]; ok {
+				urls := []rpmUrlAction{}
+				for _, rurl := range rpm.ResourceUrls {
+					tmp := rpmUrlAction{
+						url: rpm.BaseUrl,
+					}
+					if url, ok := rurl["url"].(string); ok {
+						tmp.url = tmp.url + url
+					}
+					if methods, ok := rurl["methods"].([]string); ok {
+						tmp.methods = methods
+					}
+					urls = append(urls, tmp)
+				}
+				for _, raurl := range rpm.ResourceActionUrls {
+					tmp := rpmUrlAction{
+						url: rpm.BaseUrl,
+					}
+					if url, ok := raurl["url"].(string); ok {
+						tmp.url = tmp.url + url
+					}
+					if methods, ok := raurl["methods"].([]string); ok {
+						tmp.methods = methods
+					}
+					urls = append(urls, tmp)
+				}
+				s.mappingCache[rpm.Name] = append(perm, urls...)
+			}
+		}
+	}
+	return nil
+}
 
 func (s *authzService) toPolicies(policies [][]string) *authzpbv1.Policies {
 	if len(policies) == 0 {
@@ -55,7 +104,6 @@ func (s *authzService) toPolicies(policies [][]string) *authzpbv1.Policies {
 			Proj: policies[i][2],
 			Org:  policies[i][3],
 			Obj:  policies[i][4],
-			Act:  policies[i][5],
 		}
 	}
 	return res
@@ -64,7 +112,7 @@ func (s *authzService) toPolicies(policies [][]string) *authzpbv1.Policies {
 func (s *authzService) fromPolicies(policies *authzpbv1.Policies) ([][]string, error) {
 	res := [][]string{}
 	for i, p := range policies.GetPolicies() {
-		rule := []string{p.GetSub(), p.GetNs(), p.GetProj(), p.GetOrg(), p.GetObj(), p.GetAct()}
+		rule := []string{p.GetSub(), p.GetNs(), p.GetProj(), p.GetOrg(), p.GetObj()}
 		for _, field := range rule {
 			if field == "" {
 				return res, fmt.Errorf(fmt.Sprintf("index %d: policy elements do not meet definition", i))
@@ -132,17 +180,27 @@ func (s *authzService) toRolePermissionMappingList(r [][]string) *authzpbv1.Role
 	return res
 }
 
-func (s *authzService) fromRolePermissionMappingList(r *authzpbv1.RolePermissionMappingList) ([][]string, error) {
+func (s *authzService) fromRolePermissionMappingList(ctx context.Context, r *authzpbv1.RolePermissionMappingList) ([][]string, error) {
+	if len(s.mappingCache) == 0 {
+		s.cacheResourceRolePermissions(ctx)
+	}
+
 	res := [][]string{}
 	for i, mapping := range r.GetRolePermissionMappingList() {
 		for _, permission := range mapping.GetPermission() {
-			rule := []string{permission, mapping.Role}
-			for _, field := range rule {
-				if field == "" {
-					return res, fmt.Errorf(fmt.Sprintf("index %d: mapping elements do not meet definition", i))
+			rules := [][]string{}
+			for _, rpm := range s.mappingCache[permission] {
+				for _, method := range rpm.methods {
+					rule := []string{rpm.url, mapping.GetRole(), method}
+					for _, field := range rule {
+						if field == "" {
+							return res, fmt.Errorf(fmt.Sprintf("index %d: mapping elements do not meet definition", i))
+						}
+					}
+					rules = append(rules, rule)
 				}
 			}
-			res = append(res, rule)
+			res = append(res, rules...)
 		}
 	}
 	return res, nil
@@ -165,7 +223,7 @@ func (s *authzService) Enforce(ctx context.Context, req *authzpbv1.EnforceReques
 }
 
 func (s *authzService) ListPolicies(ctx context.Context, p *authzpbv1.Policy) (*authzpbv1.Policies, error) {
-	return s.toPolicies(s.enforcer.GetFilteredPolicy(0, p.GetSub(), p.GetNs(), p.GetProj(), p.GetOrg(), p.GetObj(), p.GetAct())), nil
+	return s.toPolicies(s.enforcer.GetFilteredPolicy(0, p.GetSub(), p.GetNs(), p.GetProj(), p.GetOrg(), p.GetObj())), nil
 }
 
 func (s *authzService) CreatePolicies(ctx context.Context, p *authzpbv1.Policies) (*authzpbv1.BoolReply, error) {
@@ -187,7 +245,7 @@ func (s *authzService) CreatePolicies(ctx context.Context, p *authzpbv1.Policies
 
 func (s *authzService) DeletePolicies(ctx context.Context, p *authzpbv1.Policy) (*authzpbv1.BoolReply, error) {
 	// err could be from db, policy assertions, cache; dispatcher, watcher updates (not pertinent)
-	res, err := s.enforcer.RemoveFilteredPolicy(0, p.GetSub(), p.GetNs(), p.GetProj(), p.GetOrg(), p.GetObj(), p.GetAct())
+	res, err := s.enforcer.RemoveFilteredPolicy(0, p.GetSub(), p.GetNs(), p.GetProj(), p.GetOrg(), p.GetObj())
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
@@ -234,12 +292,11 @@ func (s *authzService) ListRolePermissionMappings(ctx context.Context, p *authzp
 }
 
 func (s *authzService) CreateRolePermissionMappings(ctx context.Context, p *authzpbv1.RolePermissionMappingList) (*authzpbv1.BoolReply, error) {
-	// TODO: Change permissions to a list of urls (one to many)
 	if len(p.GetRolePermissionMappingList()) == 0 {
 		return &authzpbv1.BoolReply{Res: false}, nil
 	}
 
-	rpms, err := s.fromRolePermissionMappingList(p)
+	rpms, err := s.fromRolePermissionMappingList(ctx, p)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
@@ -253,7 +310,6 @@ func (s *authzService) CreateRolePermissionMappings(ctx context.Context, p *auth
 }
 
 func (s *authzService) DeleteRolePermissionMappings(ctx context.Context, p *authzpbv1.FilteredRolePermissionMapping) (*authzpbv1.BoolReply, error) {
-	// TODO: Change permissions to a list of urls (one to many)
 	res, err := s.enforcer.RemoveFilteredNamedGroupingPolicy(roleGtype, 1, p.GetRole())
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())

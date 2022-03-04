@@ -130,7 +130,6 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, group *user
 				Proj: project,
 				Org:  org,
 				Obj:  role,
-				Act:  "*",
 			})
 		case project != "":
 			projectId, err := s.l.GetProjectId(ctx, project)
@@ -154,7 +153,6 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, group *user
 				Proj: project,
 				Org:  org,
 				Obj:  role,
-				Act:  "*",
 			})
 		default:
 			gr := models.GroupRole{
@@ -172,7 +170,6 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, group *user
 				Proj: "*",
 				Org:  org,
 				Obj:  role,
-				Act:  "*",
 			})
 		}
 	}
