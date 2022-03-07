@@ -23,7 +23,7 @@ type OIDCProvider struct {
 	MapperFilename  string                 `bun:"mapper_filename"`
 	ClientId        string                 `bun:"client_id,notnull"`
 	ClientSecret    string                 `bun:"client_secret,notnull"`
-	Scopes          []string               `bun:"scopes,notnull"`
+	Scopes          []string               `bun:"scopes,array,notnull"`
 	IssuerURL       string                 `bun:"issuer_url,notnull"`
 	AuthURL         string                 `bun:"auth_url"`
 	TokenURL        string                 `bun:"token_url"`

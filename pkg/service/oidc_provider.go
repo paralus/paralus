@@ -10,6 +10,7 @@ import (
 
 	"github.com/RafaySystems/rcloud-base/internal/models"
 	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
+	"github.com/RafaySystems/rcloud-base/internal/utils"
 	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	systemv3 "github.com/RafaySystems/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
@@ -31,12 +32,14 @@ type OIDCProviderService interface {
 type oidcProvider struct {
 	dao       pg.EntityDAO
 	kratosUrl string
+	l         utils.Lookup
 }
 
 func NewOIDCProviderService(db *bun.DB, kratosUrl string) OIDCProviderService {
 	return &oidcProvider{
 		dao:       pg.NewEntityDAO(db),
 		kratosUrl: kratosUrl,
+		l:         utils.NewLookup(db),
 	}
 }
 
@@ -50,16 +53,43 @@ func validateURL(rawURL string) error {
 	return err
 }
 
+func (s *oidcProvider) getPartnerOrganization(ctx context.Context, provider *systemv3.OIDCProvider) (uuid.UUID, uuid.UUID, error) {
+	partner := provider.GetMetadata().GetPartner()
+	org := provider.GetMetadata().GetOrganization()
+	partnerId, err := s.l.GetPartnerId(ctx, partner)
+	if err != nil {
+		return uuid.Nil, uuid.Nil, err
+	}
+	organizationId, err := s.l.GetOrganizationId(ctx, org)
+	if err != nil {
+		return partnerId, uuid.Nil, err
+	}
+	return partnerId, organizationId, nil
+}
+
 func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvider) (*systemv3.OIDCProvider, error) {
-	// validate name
 	name := provider.Metadata.GetName()
 	if len(name) == 0 {
 		return &systemv3.OIDCProvider{}, fmt.Errorf("EMPTY NAME")
 	}
-	e := &models.OIDCProvider{}
-	s.dao.GetByName(ctx, name, e)
-	if e.Name == name {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("DUPLICATE NAME")
+	scopes := provider.GetSpec().GetScopes()
+	if scopes == nil || len(scopes) == 0 {
+		return &systemv3.OIDCProvider{}, fmt.Errorf("EMPTY SCOPES")
+	}
+
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, provider)
+	if err != nil {
+		return nil, fmt.Errorf("unable to get partner and org id")
+	}
+	p, _ := s.dao.GetIdByNamePartnerOrg(
+		ctx,
+		provider.GetMetadata().GetName(),
+		uuid.NullUUID{UUID: partnerId, Valid: true},
+		uuid.NullUUID{UUID: organizationId, Valid: true},
+		&models.OIDCProvider{},
+	)
+	if p != nil {
+		return nil, fmt.Errorf("OIDC provider %q already exists", provider.GetMetadata().GetName())
 	}
 
 	mapUrl := provider.Spec.GetMapperUrl()
@@ -81,15 +111,17 @@ func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvid
 	}
 
 	entity := &models.OIDCProvider{
-		Name:           name,
-		CreatedAt:      time.Time{},
-		ModifiedAt:     time.Time{},
-		ProviderName:   provider.Spec.GetProviderName(),
-		MapperURL:      mapUrl,
-		MapperFilename: provider.Spec.GetMapperFilename(),
-		ClientId:       provider.Spec.GetClientId(),
-		// ClientSecret is not returning to avoid leaking secret
-		// TODO: Use FieldMask on ClientSecret field
+		Name:            name,
+		Description:     provider.GetMetadata().GetDescription(),
+		CreatedAt:       time.Time{},
+		ModifiedAt:      time.Time{},
+		PartnerId:       partnerId,
+		OrganizationId:  organizationId,
+		ProviderName:    provider.Spec.GetProviderName(),
+		MapperURL:       mapUrl,
+		MapperFilename:  provider.Spec.GetMapperFilename(),
+		ClientId:        provider.Spec.GetClientId(),
+		ClientSecret:    provider.Spec.GetClientSecret(),
 		Scopes:          provider.Spec.GetScopes(),
 		IssuerURL:       issUrl,
 		AuthURL:         authUrl,
@@ -97,7 +129,7 @@ func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvid
 		RequestedClaims: provider.Spec.GetRequestedClaims().AsMap(),
 		Predefined:      provider.Spec.GetPredefined(),
 	}
-	_, err := s.dao.Create(ctx, entity)
+	_, err = s.dao.Create(ctx, entity)
 	if err != nil {
 		return &systemv3.OIDCProvider{}, err
 	}
@@ -116,7 +148,6 @@ func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvid
 			MapperUrl:       entity.MapperURL,
 			MapperFilename:  entity.MapperFilename,
 			ClientId:        entity.ClientId,
-			ClientSecret:    entity.ClientSecret,
 			Scopes:          entity.Scopes,
 			IssuerUrl:       entity.IssuerURL,
 			AuthUrl:         entity.AuthURL,
@@ -156,7 +187,6 @@ func (s *oidcProvider) GetByID(ctx context.Context, provider *systemv3.OIDCProvi
 			MapperUrl:       entity.MapperURL,
 			MapperFilename:  entity.MapperFilename,
 			ClientId:        entity.ClientId,
-			ClientSecret:    entity.ClientSecret,
 			Scopes:          entity.Scopes,
 			IssuerUrl:       entity.IssuerURL,
 			AuthUrl:         entity.AuthURL,
@@ -203,7 +233,6 @@ func (s *oidcProvider) GetByName(ctx context.Context, provider *systemv3.OIDCPro
 			MapperUrl:       entity.MapperURL,
 			MapperFilename:  entity.MapperFilename,
 			ClientId:        entity.ClientId,
-			ClientSecret:    entity.ClientSecret,
 			Scopes:          entity.Scopes,
 			IssuerUrl:       entity.IssuerURL,
 			AuthUrl:         entity.AuthURL,
@@ -267,9 +296,18 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 	if len(name) == 0 {
 		return &systemv3.OIDCProvider{}, status.Error(codes.InvalidArgument, "EMPTY NAME")
 	}
+	scopes := provider.GetSpec().GetScopes()
+	if scopes == nil || len(scopes) == 0 {
+		return &systemv3.OIDCProvider{}, fmt.Errorf("EMPTY SCOPES")
+	}
+
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, provider)
+	if err != nil {
+		return nil, fmt.Errorf("unable to get partner and org id")
+	}
 
 	existingP := &models.OIDCProvider{}
-	_, err := s.dao.GetByName(ctx, name, existingP)
+	_, err = s.dao.GetByName(ctx, name, existingP)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return &systemv3.OIDCProvider{}, status.Errorf(codes.InvalidArgument, "OIDC PROVIDER %q NOT EXIST", name)
@@ -296,22 +334,11 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID TOKEN URL")
 	}
 
-	orgId, err := uuid.Parse(provider.Metadata.GetOrganization())
-	if err != nil {
-		return &systemv3.OIDCProvider{}, status.Errorf(codes.InvalidArgument,
-			"ORG ID %q INCORRECT", provider.Metadata.GetOrganization())
-	}
-	partId, err := uuid.Parse(provider.Metadata.GetPartner())
-	if err != nil {
-		return &systemv3.OIDCProvider{}, status.Errorf(codes.InvalidArgument,
-			"PARTNER ID %q INCORRECT", provider.Metadata.GetPartner())
-	}
-
 	entity := &models.OIDCProvider{
 		Name:            provider.Metadata.GetName(),
 		Description:     provider.Metadata.GetDescription(),
-		OrganizationId:  orgId,
-		PartnerId:       partId,
+		OrganizationId:  organizationId,
+		PartnerId:       partnerId,
 		ModifiedAt:      time.Now(),
 		ProviderName:    provider.Spec.GetProviderName(),
 		MapperURL:       mapUrl,
@@ -337,21 +364,20 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 		Metadata: &commonv3.Metadata{
 			Name:        entity.Name,
 			Description: entity.Description,
-			Id:          entity.Id.String(),
+			Id:          provider.GetMetadata().GetId(),
 		},
 		Spec: &systemv3.OIDCProviderSpec{
 			ProviderName:    entity.ProviderName,
 			MapperUrl:       entity.MapperURL,
 			MapperFilename:  entity.MapperFilename,
 			ClientId:        entity.ClientId,
-			ClientSecret:    entity.ClientSecret,
 			Scopes:          entity.Scopes,
 			IssuerUrl:       entity.IssuerURL,
 			AuthUrl:         entity.AuthURL,
 			TokenUrl:        entity.TokenURL,
 			RequestedClaims: rclaims,
 			Predefined:      entity.Predefined,
-			CallbackUrl:     generateCallbackUrl(entity.Id.String(), s.kratosUrl),
+			CallbackUrl:     generateCallbackUrl(provider.GetMetadata().GetId(), s.kratosUrl),
 		},
 	}
 	return rv, nil

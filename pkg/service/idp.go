@@ -16,6 +16,7 @@ import (
 
 	"github.com/RafaySystems/rcloud-base/internal/models"
 	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
+	"github.com/RafaySystems/rcloud-base/internal/utils"
 	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	systemv3 "github.com/RafaySystems/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
@@ -36,18 +37,20 @@ type IdpService interface {
 type idpService struct {
 	dao     pg.EntityDAO
 	appHost string
+	l       utils.Lookup
 }
 
 func NewIdpService(db *bun.DB, hostUrl string) IdpService {
 	return &idpService{
 		dao:     pg.NewEntityDAO(db),
 		appHost: hostUrl,
+		l:       utils.NewLookup(db),
 	}
 }
 
 func generateAcsURL(id string, hostUrl string) string {
 	b, _ := url.Parse(hostUrl)
-	return fmt.Sprintf("%s://%s/auth/v3/sso/acs/%s", b.Scheme, b.Host, id)
+	return fmt.Sprintf("%s/auth/v3/sso/acs/%s", b.String(), id)
 }
 
 // generateSpCert generates self signed certificate. Returns cert and
@@ -104,6 +107,20 @@ func generateSpCert(host string) (string, string, error) {
 	return string(cPEMBytes), string(privPEMBytes), nil
 }
 
+func (s *idpService) getPartnerOrganization(ctx context.Context, provider *systemv3.Idp) (uuid.UUID, uuid.UUID, error) {
+	partner := provider.GetMetadata().GetPartner()
+	org := provider.GetMetadata().GetOrganization()
+	partnerId, err := s.l.GetPartnerId(ctx, partner)
+	if err != nil {
+		return uuid.Nil, uuid.Nil, err
+	}
+	organizationId, err := s.l.GetOrganizationId(ctx, org)
+	if err != nil {
+		return partnerId, uuid.Nil, err
+	}
+	return partnerId, organizationId, nil
+}
+
 func (s *idpService) Create(ctx context.Context, idp *systemv3.Idp) (*systemv3.Idp, error) {
 	name := idp.Metadata.GetName()
 	domain := idp.Spec.GetDomain()
@@ -115,11 +132,23 @@ func (s *idpService) Create(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 	if len(domain) == 0 {
 		return &systemv3.Idp{}, fmt.Errorf("EMPTY DOMAIN")
 	}
-	e := &models.Idp{}
-	s.dao.GetByName(ctx, name, e)
-	if e.Name == name {
-		return &systemv3.Idp{}, fmt.Errorf("DUPLICATE NAME")
+
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, idp)
+	if err != nil {
+		return nil, fmt.Errorf("unable to get partner and org id")
 	}
+	i, _ := s.dao.GetIdByNamePartnerOrg(
+		ctx,
+		idp.GetMetadata().GetName(),
+		uuid.NullUUID{UUID: partnerId, Valid: true},
+		uuid.NullUUID{UUID: organizationId, Valid: true},
+		&models.Idp{},
+	)
+	if i != nil {
+		return nil, fmt.Errorf("Idp %q already exists", idp.GetMetadata().GetName())
+	}
+
+	e := &models.Idp{}
 	s.dao.GetX(ctx, "domain", domain, e)
 	if e.Domain == domain {
 		return &systemv3.Idp{}, fmt.Errorf("DUPLICATE DOMAIN")
@@ -129,6 +158,8 @@ func (s *idpService) Create(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 		Name:               name,
 		Description:        idp.Metadata.GetDescription(),
 		CreatedAt:          time.Now(),
+		PartnerId:          partnerId,
+		OrganizationId:     organizationId,
 		IdpName:            idp.Spec.GetIdpName(),
 		Domain:             domain,
 		SsoURL:             idp.Spec.GetSsoUrl(),
@@ -150,7 +181,7 @@ func (s *idpService) Create(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 		entity.SpCert = spcert
 		entity.SpKey = spkey
 	}
-	_, err := s.dao.Create(ctx, entity)
+	_, err = s.dao.Create(ctx, entity)
 	if err != nil {
 		return &systemv3.Idp{}, err
 	}
@@ -160,10 +191,8 @@ func (s *idpService) Create(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 		ApiVersion: apiVersion,
 		Kind:       "Idp",
 		Metadata: &commonv3.Metadata{
-			Name:         entity.Name,
-			Organization: entity.OrganizationId.String(),
-			Partner:      entity.PartnerId.String(),
-			Id:           entity.Id.String(),
+			Name: entity.Name,
+			Id:   entity.Id.String(),
 		},
 		Spec: &systemv3.IdpSpec{
 			IdpName:            entity.IdpName,
@@ -333,15 +362,13 @@ func (s *idpService) Update(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 		return &systemv3.Idp{}, err
 	}
 
-	acsURL := generateAcsURL(entity.Id.String(), s.appHost)
+	acsURL := generateAcsURL(idp.GetMetadata().GetId(), s.appHost)
 	rv := &systemv3.Idp{
 		ApiVersion: apiVersion,
 		Kind:       "Idp",
 		Metadata: &commonv3.Metadata{
-			Name:         entity.Name,
-			Organization: entity.OrganizationId.String(),
-			Partner:      entity.PartnerId.String(),
-			Id:           entity.Id.String(),
+			Name: entity.Name,
+			Id:   idp.GetMetadata().GetId(),
 		},
 		Spec: &systemv3.IdpSpec{
 			IdpName:            entity.IdpName,
