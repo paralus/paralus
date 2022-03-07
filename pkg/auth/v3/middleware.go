@@ -2,6 +2,7 @@ package authv3
 
 import (
 	"net/http"
+	"regexp"
 
 	commonpbv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	"github.com/urfave/negroni"
@@ -20,6 +21,18 @@ func NewAuthMiddleware(opt Option) negroni.Handler {
 }
 
 func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	for _, ex := range am.opt.ExcludeURLs {
+		match, err := regexp.MatchString(ex, r.URL.Path)
+		if err != nil {
+			_log.Errorf("failed to match URL expression", err)
+			http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		if match {
+			next(rw, r)
+			return
+		}
+	}
 	req := &commonpbv3.IsRequestAllowedRequest{
 		Url:           r.URL.String(),
 		Method:        r.Method,
@@ -36,8 +49,9 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 	s := res.GetStatus()
 	switch s {
 	case commonpbv3.RequestStatus_RequestAllowed:
-		ctx := newSessionContext(r.Context(), res.SessionData)
+		ctx := NewSessionContext(r.Context(), res.SessionData)
 		next(rw, r.WithContext(ctx))
+		return
 	case commonpbv3.RequestStatus_RequestMethodOrURLNotAllowed:
 		http.Error(rw, res.GetReason(), http.StatusForbidden)
 		return

@@ -7,11 +7,7 @@ import (
 	kclient "github.com/ory/kratos-client-go"
 )
 
-var _log *logv2.Logger
-
-func init() {
-	_log = logv2.GetLogger()
-}
+var _log = logv2.GetLogger()
 
 type Option struct {
 	// ExcludeRPCMethods is a list of full RPC method string in
@@ -19,6 +15,10 @@ type Option struct {
 	// /rafay.dev.rpc.v3.Idp/ListIdps). These RPC methods are to
 	// be excluded from the auth interceptor.
 	ExcludeRPCMethods []string
+
+	// ExcludeURLs is a list of URL regular expressions that are
+	// excluded from the auth middleware.
+	ExcludeURLs []string
 }
 
 type authContext struct {

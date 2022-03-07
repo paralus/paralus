@@ -58,7 +58,7 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 		s := res.GetStatus()
 		switch s {
 		case commonpbv3.RequestStatus_RequestAllowed:
-			ctx := newSessionContext(ctx, res.SessionData)
+			ctx := NewSessionContext(ctx, res.SessionData)
 			return handler(ctx, req)
 		case commonpbv3.RequestStatus_RequestMethodOrURLNotAllowed:
 			return nil, status.Error(codes.PermissionDenied, res.GetReason())

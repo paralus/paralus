@@ -10,7 +10,7 @@ type contextKey struct{}
 
 var sessionDataKey contextKey
 
-func newSessionContext(ctx context.Context, s *commonv3.SessionData) context.Context {
+func NewSessionContext(ctx context.Context, s *commonv3.SessionData) context.Context {
 	return context.WithValue(ctx, sessionDataKey, s)
 }
 
