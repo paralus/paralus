@@ -24,6 +24,7 @@ import (
 	"github.com/RafaySystems/rcloud-base/pkg/reconcile"
 	"github.com/RafaySystems/rcloud-base/pkg/sentry/peering"
 	"github.com/RafaySystems/rcloud-base/pkg/service"
+	auditrpc "github.com/RafaySystems/rcloud-base/proto/rpc/audit"
 	rolerpc "github.com/RafaySystems/rcloud-base/proto/rpc/role"
 	schedulerrpc "github.com/RafaySystems/rcloud-base/proto/rpc/scheduler"
 	sentryrpc "github.com/RafaySystems/rcloud-base/proto/rpc/sentry"
@@ -64,6 +65,14 @@ const (
 	sentryBootstrapEnv        = "SENTRY_BOOTSTRAP_ADDR"
 	relayImageEnv             = "RELAY_IMAGE"
 	controlAddrEnv            = "CONTROL_ADDR"
+
+	// audit
+	esEndPointEnv              = "ES_END_POINT"
+	esIndexPrefixEnv           = "ES_INDEX_PREFIX"
+	relayAuditESIndexPrefixEnv = "RELAY_AUDITS_ES_INDEX_PREFIX"
+	relayCommandESIndexPrefix  = "RELAY_COMMANDS_ES_INDEX_PREFIX"
+	RpcPort                    = "AUDIT_RPC_PORT"
+	ApiPort                    = "AUDIT_API_PORT"
 
 	// cd relay
 	coreCDRelayUserHostEnv      = "CORE_CD_RELAY_USER_HOST"
@@ -108,6 +117,9 @@ var (
 	rrs                    service.RolepermissionService
 	is                     service.IdpService
 	oidcs                  service.OIDCProviderService
+	aus                    *service.AuditLogService
+	ras                    *service.RelayAuditService
+	rcs                    *service.AuditLogService
 	_log                   = log.GetLogger()
 	schedulerPool          schedulerrpc.SchedulerPool
 	schedulerAddr          string
@@ -117,6 +129,12 @@ var (
 	coreRelayUserHost      string
 	downloadData           *common.DownloadData
 	controlAddr            string
+
+	// audit
+	elasticSearchUrl           string
+	esIndexPrefix              string
+	relayAuditsESIndexPrefix   string
+	relayCommandsESIndexPrefix string
 
 	// cd relay
 	coreCDRelayUserHost      string
@@ -154,6 +172,10 @@ func setup() {
 	viper.SetDefault(relayImageEnv, "registry.rafay-edge.net/rafay/rafay-relay-agent:r1.10.0-24")
 	viper.SetDefault(controlAddrEnv, "localhost:5002")
 	viper.SetDefault(schedulerNamespaceEnv, "rafay-system")
+	viper.SetDefault(esEndPointEnv, "localhost:9200")
+	viper.SetDefault(esIndexPrefixEnv, "auditlog-system")
+	viper.SetDefault(relayAuditESIndexPrefixEnv, "auditlog-relay")
+	viper.SetDefault(relayCommandESIndexPrefix, "auditlog-commands")
 
 	viper.BindEnv(rpcPortEnv)
 	viper.BindEnv(apiPortEnv)
@@ -177,6 +199,10 @@ func setup() {
 	viper.BindEnv(relayImageEnv)
 	viper.BindEnv(controlAddrEnv)
 	viper.BindEnv(schedulerNamespaceEnv)
+	viper.BindEnv(esEndPointEnv)
+	viper.BindEnv(esIndexPrefixEnv)
+	viper.BindEnv(relayAuditESIndexPrefixEnv)
+	viper.BindEnv(relayCommandESIndexPrefix)
 
 	rpcPort = viper.GetInt(rpcPortEnv)
 	apiPort = viper.GetInt(apiPortEnv)
@@ -197,6 +223,10 @@ func setup() {
 	coreCDRelayUserHost = viper.GetString(coreCDRelayUserHostEnv)
 	controlAddr = viper.GetString(controlAddrEnv)
 	schedulerNamespace = viper.GetString(schedulerNamespaceEnv)
+	elasticSearchUrl = viper.GetString(esEndPointEnv)
+	esIndexPrefix = viper.GetString(esIndexPrefixEnv)
+	relayAuditsESIndexPrefix = viper.GetString(relayAuditESIndexPrefixEnv)
+	relayCommandsESIndexPrefix = viper.GetString(relayCommandESIndexPrefix)
 
 	rpcRelayPeeringPort = rpcPort + 1
 
@@ -257,6 +287,20 @@ func setup() {
 	aps = service.NewAccountPermissionService(db)
 	gps = service.NewGroupPermissionService(db)
 
+	// audit services
+	aus, err = service.NewAuditLogService(elasticSearchUrl, esIndexPrefix+"-*", "AuditLog API: ")
+	if err != nil {
+		_log.Fatalw("unable to create auditLog service", "error", err)
+	}
+	ras, err = service.NewRelayAuditService(elasticSearchUrl, relayAuditsESIndexPrefix+"-*", "RelayAudit API: ")
+	if err != nil {
+		_log.Fatalw("unable to create relayAudit service", "error", err)
+	}
+	rcs, err = service.NewAuditLogService(elasticSearchUrl, relayCommandsESIndexPrefix+"-*", "RelayCommand API: ")
+	if err != nil {
+		_log.Fatalw("unable to create auditLog service", "error", err)
+	}
+
 	// cluster bootstrap
 	downloadData = &common.DownloadData{
 		ControlAddr:     controlAddr,
@@ -301,7 +345,7 @@ func run() {
 	hs := health.NewServer()
 	hs.SetServingStatus("", grpc_health_v1.HealthCheckResponse_SERVING)
 	grpc_health_v1.RegisterHealthServer(healthServer, hs)
-	_log.Infow("registerd grpc health server")
+	_log.Infow("registered grpc health server")
 
 	var wg sync.WaitGroup
 	wg.Add(5)
@@ -344,6 +388,8 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 		rolerpc.RegisterRolepermissionHandlerFromEndpoint,
 		systemrpc.RegisterIdpHandlerFromEndpoint,
 		systemrpc.RegisterOIDCProviderHandlerFromEndpoint,
+		auditrpc.RegisterAuditLogHandlerFromEndpoint,
+		auditrpc.RegisterRelayAuditHandlerFromEndpoint,
 	)
 	if err != nil {
 		_log.Fatalw("unable to create gateway", "error", err)
@@ -397,7 +443,7 @@ func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
 		defer s.GracefulStop()
 
 		<-ctx.Done()
-		_log.Infow("peer service stoped due to context done")
+		_log.Infow("peer service stopped due to context done")
 	}()
 
 	sentryrpc.RegisterRelayPeerServiceServer(s, relayPeerService)
@@ -446,6 +492,16 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	idpServer := server.NewIdpServer(is)
 	oidcProviderServer := server.NewOIDCServer(oidcs)
 
+	// audit
+	auditLogServer, err := server.NewAuditLogServer(aus)
+	if err != nil {
+		_log.Fatalw("unable to create auditLog server", "error", err)
+	}
+	relayAuditServer, err := server.NewRelayAuditServer(ras, rcs)
+	if err != nil {
+		_log.Fatalw("unable to create relayAudit server", "error", err)
+	}
+
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", rpcPort))
 	if err != nil {
 		_log.Fatalw("unable to start rpc listener", "error", err)
@@ -488,6 +544,8 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	rolerpc.RegisterRolepermissionServer(s, rolepermissionServer)
 	systemrpc.RegisterIdpServer(s, idpServer)
 	systemrpc.RegisterOIDCProviderServer(s, oidcProviderServer)
+	auditrpc.RegisterAuditLogServer(s, auditLogServer)
+	auditrpc.RegisterRelayAuditServer(s, relayAuditServer)
 
 	_log.Infow("starting rpc server", "port", rpcPort)
 	err = s.Serve(l)

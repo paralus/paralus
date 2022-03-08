@@ -1,15 +1,15 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "OIdC Provider Service",
-    "version": "3.0",
+    "title": "Relay Audit Service",
+    "version": "2.0",
     "contact": {
       "name": "Rafay Dev"
     }
   },
   "tags": [
     {
-      "name": "OIDCProvider"
+      "name": "RelayAudit"
     }
   ],
   "schemes": [
@@ -24,50 +24,15 @@
     "application/yaml"
   ],
   "paths": {
-    "/auth/v3/sso/oidc/provider": {
+    "/event/v1/audit/relay": {
       "get": {
-        "operationId": "OIDCProvider_ListOIDCProvider",
+        "operationId": "RelayAudit_getRelayAuditByProjects",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v3OIDCProviderList"
+              "$ref": "#/definitions/v1relayAuditSearchResponse"
             }
-          },
-          "403": {
-            "description": "Returned when the user does not have permission to access the resource.",
-            "schema": {}
-          },
-          "404": {
-            "description": "Returned when the resource does not exist.",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/googlerpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "OIDCProvider"
-        ]
-      },
-      "post": {
-        "operationId": "OIDCProvider_CreateOIDCProvider",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v3OIDCProvider"
-            }
-          },
-          "201": {
-            "description": "Returned when oidc provider is created successfully.",
-            "schema": {}
           },
           "403": {
             "description": "Returned when the user does not have permission to access the resource.",
@@ -89,27 +54,172 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v3OIDCProvider"
-            }
+            "name": "metadata.name",
+            "description": "Name. name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name. display name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description. description of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project. Project of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization. Organization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner. Partner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.urlScope",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "filter.type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.user",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.client",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.timefrom",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.portal",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.namespace",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.kind",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.method",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.projectIds",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "filter.queryString",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.dashboardData",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "filter.clusterNames",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "auditType",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
-          "OIDCProvider"
+          "RelayAudit"
         ]
       }
     },
-    "/auth/v3/sso/oidc/provider/{metadata.name}": {
+    "/event/v1/relayaudit": {
       "get": {
-        "operationId": "OIDCProvider_GetOIDCProvider",
+        "operationId": "RelayAudit_getRelayAPIAuditByProjects",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v3OIDCProvider"
+              "$ref": "#/definitions/v1relayAuditSearchResponse"
             }
           },
           "403": {
@@ -133,26 +243,10 @@
         "parameters": [
           {
             "name": "metadata.name",
-            "description": "name of the resource",
-            "in": "path",
-            "required": true,
+            "description": "Name. name of the resource",
+            "in": "query",
+            "required": false,
             "type": "string"
-          },
-          {
-            "name": "apiVersion",
-            "description": "API Version. API Version of the OIDCProvider resource",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "system.k8smgmt.io/v3"
-          },
-          {
-            "name": "kind",
-            "description": "Kind. Kind of the OIDCProvider resource",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "OIDCProvider"
           },
           {
             "name": "metadata.displayName",
@@ -209,37 +303,61 @@
             "format": "date-time"
           },
           {
-            "name": "spec.providerName",
+            "name": "filter.type",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "spec.mapperUrl",
+            "name": "filter.user",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "spec.mapperFilename",
+            "name": "filter.client",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "spec.clientId",
+            "name": "filter.timefrom",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "spec.clientSecret",
+            "name": "filter.portal",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "spec.scopes",
+            "name": "filter.cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.namespace",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.kind",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.method",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.projectIds",
             "in": "query",
             "required": false,
             "type": "array",
@@ -249,88 +367,48 @@
             "collectionFormat": "multi"
           },
           {
-            "name": "spec.issuerUrl",
+            "name": "filter.queryString",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "spec.authUrl",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.tokenUrl",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.predefined",
+            "name": "filter.dashboardData",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
-            "name": "spec.callbackUrl",
+            "name": "filter.clusterNames",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
           },
           {
-            "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "StatusNotSet",
-              "StatusSubmitted",
-              "StatusOK",
-              "StatusFailed"
-            ],
-            "default": "StatusNotSet"
-          },
-          {
-            "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "name": "auditType",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "OIDCProvider"
+          "RelayAudit"
         ]
-      },
-      "delete": {
-        "operationId": "OIDCProvider_DeleteOIDCProvider",
+      }
+    },
+    "/event/v1/{metadata.urlScope}/audit/relay": {
+      "get": {
+        "operationId": "RelayAudit_getRelayAudit",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "properties": {}
+              "$ref": "#/definitions/v1relayAuditSearchResponse"
             }
-          },
-          "204": {
-            "description": "Returned when oidc provider is deleted successfully.",
-            "schema": {}
           },
           "403": {
             "description": "Returned when the user does not have permission to access the resource.",
@@ -352,27 +430,18 @@
         },
         "parameters": [
           {
-            "name": "metadata.name",
-            "description": "name of the resource",
+            "name": "metadata.urlScope",
             "in": "path",
             "required": true,
+            "type": "string",
+            "pattern": "project/[^/]+"
+          },
+          {
+            "name": "metadata.name",
+            "description": "Name. name of the resource",
+            "in": "query",
+            "required": false,
             "type": "string"
-          },
-          {
-            "name": "apiVersion",
-            "description": "API Version. API Version of the OIDCProvider resource",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "system.k8smgmt.io/v3"
-          },
-          {
-            "name": "kind",
-            "description": "Kind. Kind of the OIDCProvider resource",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "default": "OIDCProvider"
           },
           {
             "name": "metadata.displayName",
@@ -416,12 +485,6 @@
             "type": "string"
           },
           {
-            "name": "metadata.urlScope",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
             "name": "metadata.modifiedAt",
             "in": "query",
             "required": false,
@@ -429,37 +492,61 @@
             "format": "date-time"
           },
           {
-            "name": "spec.providerName",
+            "name": "filter.type",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "spec.mapperUrl",
+            "name": "filter.user",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "spec.mapperFilename",
+            "name": "filter.client",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "spec.clientId",
+            "name": "filter.timefrom",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "spec.clientSecret",
+            "name": "filter.portal",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "spec.scopes",
+            "name": "filter.cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.namespace",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.kind",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.method",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.projectIds",
             "in": "query",
             "required": false,
             "type": "array",
@@ -469,83 +556,47 @@
             "collectionFormat": "multi"
           },
           {
-            "name": "spec.issuerUrl",
+            "name": "filter.queryString",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "spec.authUrl",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.tokenUrl",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "spec.predefined",
+            "name": "filter.dashboardData",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
-            "name": "spec.callbackUrl",
+            "name": "filter.clusterNames",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
           },
           {
-            "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "StatusNotSet",
-              "StatusSubmitted",
-              "StatusOK",
-              "StatusFailed"
-            ],
-            "default": "StatusNotSet"
-          },
-          {
-            "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "name": "auditType",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "OIDCProvider"
+          "RelayAudit"
         ]
-      },
-      "put": {
-        "operationId": "OIDCProvider_UpdateOIDCProvider",
+      }
+    },
+    "/event/v1/{metadata.urlScope}/relayaudit": {
+      "get": {
+        "operationId": "RelayAudit_getRelayAPIAudit",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v3OIDCProvider"
+              "$ref": "#/definitions/v1relayAuditSearchResponse"
             }
           },
           "403": {
@@ -568,67 +619,167 @@
         },
         "parameters": [
           {
-            "name": "metadata.name",
-            "description": "name of the resource",
+            "name": "metadata.urlScope",
             "in": "path",
             "required": true,
+            "type": "string",
+            "pattern": "project/[^/]+"
+          },
+          {
+            "name": "metadata.name",
+            "description": "Name. name of the resource",
+            "in": "query",
+            "required": false,
             "type": "string"
           },
           {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v3OIDCProvider"
-            }
+            "name": "metadata.displayName",
+            "description": "Display Name. display name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description. description of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project. Project of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization. Organization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner. Partner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "filter.type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.user",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.client",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.timefrom",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.portal",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.namespace",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.kind",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.method",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.projectIds",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "filter.queryString",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.dashboardData",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "filter.clusterNames",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "auditType",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
-          "OIDCProvider"
+          "RelayAudit"
         ]
       }
     }
   },
   "definitions": {
-    "commonv3Status": {
-      "type": "object",
-      "properties": {
-        "conditionType": {
-          "type": "string",
-          "description": "type of the status condition",
-          "title": "Condition Type",
-          "readOnly": true
-        },
-        "conditionStatus": {
-          "$ref": "#/definitions/v3ConditionStatus",
-          "enum": [
-            "StatusNotSet",
-            "StatusSubmitted",
-            "StatusOK",
-            "StatusFailed"
-          ],
-          "description": "status of the condition",
-          "title": "Condition Status",
-          "readOnly": true
-        },
-        "lastUpdated": {
-          "type": "string",
-          "format": "date-time",
-          "description": "when the condition status is last updated",
-          "title": "Last Updated",
-          "readOnly": true
-        },
-        "reason": {
-          "type": "string",
-          "description": "reason of the last condition status",
-          "title": "Reason",
-          "readOnly": true
-        }
-      },
-      "description": "status of a resource",
-      "title": "Status",
-      "readOnly": true
-    },
     "googlerpcStatus": {
       "type": "object",
       "properties": {
@@ -664,34 +815,66 @@
       "default": "NULL_VALUE",
       "description": "`NullValue` is a singleton enumeration to represent the null value for the\n`Value` type union.\n\n The JSON representation for `NullValue` is JSON `null`.\n\n - NULL_VALUE: Null value."
     },
-    "v3ConditionStatus": {
-      "type": "string",
-      "enum": [
-        "StatusNotSet",
-        "StatusSubmitted",
-        "StatusOK",
-        "StatusFailed"
-      ],
-      "default": "StatusNotSet",
-      "title": "$title: ConditionStatus\n$description: status of a condition for a resource"
-    },
-    "v3ListMetadata": {
+    "v1relayAuditQueryFilter": {
       "type": "object",
       "properties": {
-        "count": {
-          "type": "string",
-          "format": "int64"
+        "type": {
+          "type": "string"
         },
-        "offset": {
-          "type": "string",
-          "format": "int64"
+        "user": {
+          "type": "string"
         },
-        "limit": {
-          "type": "string",
-          "format": "int64"
+        "client": {
+          "type": "string"
+        },
+        "timefrom": {
+          "type": "string"
+        },
+        "portal": {
+          "type": "string"
+        },
+        "cluster": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "projectIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "queryString": {
+          "type": "string"
+        },
+        "dashboardData": {
+          "type": "boolean"
+        },
+        "clusterNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
-      },
-      "title": "$title: ListMetadata\n$description: metadata for a list of resources\n$required: enabled"
+      }
+    },
+    "v1relayAuditSearchResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "object"
+        },
+        "auditType": {
+          "type": "string"
+        }
+      }
     },
     "v3Metadata": {
       "type": "object",
@@ -766,130 +949,6 @@
         "name",
         "project"
       ]
-    },
-    "v3OIDCProvider": {
-      "type": "object",
-      "properties": {
-        "apiVersion": {
-          "type": "string",
-          "default": "system.k8smgmt.io/v3",
-          "description": "API Version of the OIDCProvider resource",
-          "title": "API Version"
-        },
-        "kind": {
-          "type": "string",
-          "default": "OIDCProvider",
-          "description": "Kind of the OIDCProvider resource",
-          "title": "Kind"
-        },
-        "metadata": {
-          "$ref": "#/definitions/v3Metadata",
-          "description": "Metadata of the OIDCProvider resource",
-          "title": "Metadata"
-        },
-        "spec": {
-          "$ref": "#/definitions/v3OIDCProviderSpec",
-          "description": "Spec of the OIDCProvider resource",
-          "title": "Spec"
-        },
-        "status": {
-          "$ref": "#/definitions/commonv3Status",
-          "description": "Status of the resource",
-          "title": "Status",
-          "readOnly": true
-        }
-      },
-      "description": "Open Id Connect Provider",
-      "title": "OIDCProvider",
-      "required": [
-        "apiVersion",
-        "kind",
-        "metadata",
-        "spec"
-      ]
-    },
-    "v3OIDCProviderList": {
-      "type": "object",
-      "properties": {
-        "apiVersion": {
-          "type": "string",
-          "default": "system.k8smgmt.io/v3",
-          "description": "API Version of the OIDCProvider list resource",
-          "title": "API Version",
-          "readOnly": true
-        },
-        "kind": {
-          "type": "string",
-          "default": "OIDCProviderList",
-          "description": "Kind of the OIDCProvider list resource",
-          "title": "Kind",
-          "readOnly": true
-        },
-        "metadata": {
-          "$ref": "#/definitions/v3ListMetadata",
-          "description": "Metadata of the OIDCProvider list resource",
-          "title": "Metadata",
-          "readOnly": true
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v3OIDCProvider"
-          },
-          "description": "List of the OIDCProvider resources",
-          "title": "Items",
-          "readOnly": true
-        }
-      },
-      "description": "OIDC providers list",
-      "title": "OIDCProviderList",
-      "readOnly": true
-    },
-    "v3OIDCProviderSpec": {
-      "type": "object",
-      "properties": {
-        "providerName": {
-          "type": "string"
-        },
-        "mapperUrl": {
-          "type": "string"
-        },
-        "mapperFilename": {
-          "type": "string"
-        },
-        "clientId": {
-          "type": "string"
-        },
-        "clientSecret": {
-          "type": "string"
-        },
-        "scopes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "issuerUrl": {
-          "type": "string"
-        },
-        "authUrl": {
-          "type": "string"
-        },
-        "tokenUrl": {
-          "type": "string"
-        },
-        "requestedClaims": {
-          "type": "object"
-        },
-        "predefined": {
-          "type": "boolean"
-        },
-        "callbackUrl": {
-          "type": "string"
-        }
-      },
-      "description": "OIDCProvider specification",
-      "title": "OIDCProvider Specification"
     }
   },
   "securityDefinitions": {

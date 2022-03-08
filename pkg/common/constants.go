@@ -36,3 +36,13 @@ const (
 const (
 	MaxDials = 2
 )
+
+// audit
+const (
+	EventDocType           = "event"
+	AlertDocType           = "alert"
+	RelayAuditDocType      = "relay_audit" // relay API audits
+	RelayCommandsDocType   = "relay_commands"
+	RelayAPIAuditType      = "RelayAPI"
+	RelayCommandsAuditType = "RelayCommands"
+)

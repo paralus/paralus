@@ -40,7 +40,7 @@ message Metadata {
       } ];
   map<string, string> labels = 4
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        title : "Lables",
+        title : "Labels",
         description : "labels of the resource"
       } ];
   map<string, string> annotations = 5
@@ -64,6 +64,7 @@ message Metadata {
         description : "Partner to which the resource belongs"
       } ];
   string id = 9 [ (google.api.field_behavior) = OUTPUT_ONLY ];
+  string urlScope = 11 [ (google.api.field_behavior) = OUTPUT_ONLY ];
   google.protobuf.Timestamp modifiedAt = 10
       [ (google.api.field_behavior) = OUTPUT_ONLY ];
 }
@@ -220,7 +221,7 @@ message Status {
         title : "Condition Status",
         description : "status of the condition",
         read_only : true
-        enum: ["StatusNotSet", "StatusSubmitted", "StatusOK", "StatusFailed"]
+        enum : [ "StatusNotSet", "StatusSubmitted", "StatusOK", "StatusFailed" ]
       } ];
   google.protobuf.Timestamp lastUpdated = 3
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
@@ -263,7 +264,7 @@ message QueryOptions {
   string orderBy = 14;
   string order = 15;
   bool deleted = 16;
-  
+
   bool extended = 17;
   // urlScope is supposed to be passed in the URL as kind/HashID(value)
   string urlScope = 18;

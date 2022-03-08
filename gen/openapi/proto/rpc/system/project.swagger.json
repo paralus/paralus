@@ -179,6 +179,12 @@
             "type": "string"
           },
           {
+            "name": "metadata.urlScope",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "metadata.modifiedAt",
             "in": "query",
             "required": false,
@@ -325,6 +331,12 @@
           },
           {
             "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.urlScope",
             "in": "query",
             "required": false,
             "type": "string"
@@ -541,6 +553,12 @@
             "type": "string"
           },
           {
+            "name": "metadata.urlScope",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "metadata.modifiedAt",
             "in": "query",
             "required": false,
@@ -721,7 +739,7 @@
             "type": "string"
           },
           "description": "labels of the resource",
-          "title": "Lables"
+          "title": "Labels"
         },
         "annotations": {
           "type": "object",
@@ -747,6 +765,10 @@
           "title": "Partner"
         },
         "id": {
+          "type": "string",
+          "readOnly": true
+        },
+        "urlScope": {
           "type": "string",
           "readOnly": true
         },

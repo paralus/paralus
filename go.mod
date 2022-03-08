@@ -83,6 +83,7 @@ require (
 )
 
 require (
+	github.com/elastic/go-elasticsearch v0.0.0
 	github.com/go-openapi/errors v0.20.2
 	github.com/go-openapi/runtime v0.23.1
 	github.com/go-openapi/strfmt v0.21.2

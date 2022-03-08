@@ -1,7 +1,7 @@
 :host = http://localhost:11000
-:partner = finman
-:org = finmanorg
-:project = myproject
+:partner = important-partner
+:org = hello
+:project = hello
 :description = this is my first project
 :opts.urlScope_user = user/b2e4162c-60df-4fd7-b8fd-8fd3e4d6e533
 :opts.urlScope_org = organization/0d95d65f-3ce9-4340-ac05-77f71084d0a6
@@ -410,3 +410,8 @@ Content-Type: application/yaml
 # Get all rolepermissions
 GET :host/auth/v3/rolepermissions
 Content-Type: application/yaml
+
+## Audit
+
+# Audit by project
+GET :host/event/v1/auditlog?filter.timefrom=now-1h
