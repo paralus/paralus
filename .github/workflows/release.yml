@@ -2,7 +2,6 @@ name: Create, publish container image
 
 on:
   push:
-    branches: [ main ]
     tags: [ 'v*.*.*' ]
 
 env:
@@ -29,20 +28,11 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: Get short SHA
-        run: echo ::set-output name=sha_short::${GITHUB_SHA::8}
-        id: vars
-
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=schedule
-            type=ref,suffix=-${{steps.vars.outputs.sha_short}},event=branch
-            type=ref,event=tag
-            type=ref,event=pr
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
