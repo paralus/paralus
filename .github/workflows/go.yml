@@ -22,8 +22,8 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
 
-      # - name: Format
-      #   run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
+      - name: Format
+        run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
 
       - name: Test all
         run: go test -v ./...
