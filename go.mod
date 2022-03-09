@@ -11,12 +11,6 @@ require (
 	github.com/casbin/gorm-adapter/v3 v3.4.6
 	github.com/crewjam/saml v0.4.6
 	github.com/dgraph-io/ristretto v0.1.0
-	github.com/evanphx/json-patch v4.12.0+incompatible
-	gorm.io/driver/postgres v1.2.2
-	k8s.io/apiextensions-apiserver v0.23.4
-	k8s.io/kube-openapi v0.0.0-20211115234752-e816edb12b65
-	github.com/spf13/viper v1.10.1
-	github.com/urfave/negroni v1.0.0
 	github.com/elastic/go-elasticsearch v0.0.0
 	github.com/evanphx/json-patch v4.12.0+incompatible
 	github.com/go-openapi/errors v0.20.2
