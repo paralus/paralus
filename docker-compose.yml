@@ -1,0 +1,76 @@
+version: '3.7'
+
+services:
+  postgresd:
+    image: postgres:13.4
+    restart: always
+    container_name: rcloud_postgres_13
+    ports:
+      - "$DB_PORT:$DB_PORT"
+    volumes:
+      - rcloud_db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: $DB_USER
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_PASSWORD: $DB_PASSWORD
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.0.0
+    restart: always
+    container_name: rcloud_elasticsearch_8
+    ports:
+      - '${ES_PORT:-9200}:9200'
+    volumes:
+      - rcloud_es_data:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false  # disable auth for local dev
+
+  kratos-migrate:
+    image: oryd/kratos:v0.8.0-alpha.3-sqlite
+    environment:
+      - DSN=postgres://$DB_USER:$DB_PASSWORD@postgresd:$DB_PORT/$DB_NAME?sslmode=disable&max_conns=20&max_idle_conns=4
+    volumes:
+      - type: bind
+        source: ./_kratos
+        target: /etc/config/kratos
+    command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
+    restart: on-failure
+
+  migrate-admindb:
+    depends_on:
+      - kratos-migrate
+    image: migrate/migrate:v4.15.1
+    restart: on-failure
+    command: -path=/migrations/admindb -database postgres://$DB_USER:$DB_PASSWORD@postgresd:$DB_PORT/$DB_NAME?sslmode=disable up
+    volumes:
+      - type: bind
+        source: ./persistence/migrations/admindb
+        target: /migrations/admindb
+
+  kratos:
+    depends_on:
+      - kratos-migrate
+    image: oryd/kratos:v0.8.0-alpha.3-sqlite
+    ports:
+      - '4433:4433' # public
+      - '4434:4434' # admin
+    restart: unless-stopped
+    environment:
+      - DSN=postgres://$DB_USER:$DB_PASSWORD@postgresd:$DB_PORT/$DB_NAME?sslmode=disable&max_conns=20&max_idle_conns=4
+      - LOG_LEVEL=trace
+    command: serve -c /etc/config/kratos/kratos.yml --dev --watch-courier
+    volumes:
+      - type: bind
+        source: ./_kratos
+        target: /etc/config/kratos
+
+  mailslurper:
+    image: oryd/mailslurper:latest-smtps
+    ports:
+      - '4436:4436'
+      - '4437:4437'
+
+volumes:
+  rcloud_db_data:
+  rcloud_es_data:

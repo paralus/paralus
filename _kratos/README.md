@@ -4,26 +4,9 @@ This directory holds Ory Kratos configurations and scripts required for rcloud-b
 
 ## Get Session token for development
 
-1. Start Ory Kratos:
+Follow [Development setup](../README.md#development-setup) to start the Kratos server.
 
-```
-docker-compose -f quickstart.yml -f quickstart-selinux.yml -f quickstart-standalone.yml up --build --force-recreate
-```
-
-Make sure you see below messages in the log:
-```
-.. level=info msg=Starting the public httpd on: 0.0.0.0:4433 ...
-.. level=info msg=Starting the admin httpd on: 0.0.0.0:4434 ...
-```
-
-2. Get dependencies
-
-```
-go get
-```
-
-3. Create a temporary user and get session token
-
+Create a temporary user and get session token:
 ```
 go run development/session_main.go
 {
@@ -34,9 +17,10 @@ go run development/session_main.go
 }
 ```
 
-4. Use token to authenticate
+How to use token for authentication?
 
-Start a server with `DEV=false` and add token to `X-Session-Token` header while making request to access resources:
+Start rcloud-base server with `DEV=false` and add token to
+`X-Session-Token` header while making request to access resources, for example:
 
 ```
 curl -H 'X-Session-Token: 5xKgL33Oom9rmS4v9jkuAERn7yJHTLhY' http://localhost:11000/auth/v3/sso/idp

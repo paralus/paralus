@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	goruntime "runtime"
+	"strings"
 	"sync"
 	"time"
 
@@ -172,7 +173,7 @@ func setup() {
 	viper.SetDefault(relayImageEnv, "registry.rafay-edge.net/rafay/rafay-relay-agent:r1.10.0-24")
 	viper.SetDefault(controlAddrEnv, "localhost:5002")
 	viper.SetDefault(schedulerNamespaceEnv, "rafay-system")
-	viper.SetDefault(esEndPointEnv, "localhost:9200")
+	viper.SetDefault(esEndPointEnv, "http://127.0.0.1:9200")
 	viper.SetDefault(esIndexPrefixEnv, "auditlog-system")
 	viper.SetDefault(relayAuditESIndexPrefixEnv, "auditlog-relay")
 	viper.SetDefault(relayCommandESIndexPrefix, "auditlog-commands")
@@ -290,15 +291,31 @@ func setup() {
 	// audit services
 	aus, err = service.NewAuditLogService(elasticSearchUrl, esIndexPrefix+"-*", "AuditLog API: ")
 	if err != nil {
-		_log.Fatalw("unable to create auditLog service", "error", err)
+		if dev && strings.Contains(err.Error(), "connect: connection refused") {
+			// This is primarily from ES not being available. ES being
+			// pretty heavy, you might not always wanna have it
+			// running in the background. This way, you can continue
+			// working on rcloud-base with ES eating up all the cpu.
+			_log.Warn("unable to create auditLog service: ", err)
+		} else {
+			_log.Fatalw("unable to create auditLog service", "error", err)
+		}
 	}
 	ras, err = service.NewRelayAuditService(elasticSearchUrl, relayAuditsESIndexPrefix+"-*", "RelayAudit API: ")
 	if err != nil {
-		_log.Fatalw("unable to create relayAudit service", "error", err)
+		if dev && strings.Contains(err.Error(), "connect: connection refused") {
+			_log.Warn("unable to create relayAudit service: ", err)
+		} else {
+			_log.Fatalw("unable to create relayAudit service", "error", err)
+		}
 	}
 	rcs, err = service.NewAuditLogService(elasticSearchUrl, relayCommandsESIndexPrefix+"-*", "RelayCommand API: ")
 	if err != nil {
-		_log.Fatalw("unable to create auditLog service", "error", err)
+		if dev && strings.Contains(err.Error(), "connect: connection refused") {
+			_log.Warn("unable to create auditLog service:", err)
+		} else {
+			_log.Fatalw("unable to create auditLog service", "error", err)
+		}
 	}
 
 	// cluster bootstrap
