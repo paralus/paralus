@@ -78,7 +78,14 @@ func (a *accountPermissionService) GetAccountProjectsByPermission(ctx context.Co
 }
 
 func (a *accountPermissionService) GetAccountPermissionsByProjectIDPermissions(ctx context.Context, accountID, orgID, partnerID string, projects, permissions []string) ([]sentry.AccountPermission, error) {
-	aps, err := a.pdao.GetAccountPermissionsByProjectIDPermissions(ctx, uuid.MustParse(accountID), uuid.MustParse(orgID), uuid.MustParse(partnerID), projects, permissions)
+	projids := make([]uuid.UUID, len(projects))
+	for _, proj := range projects {
+		id, err := uuid.Parse(proj)
+		if err == nil {
+			projids = append(projids, id)
+		}
+	}
+	aps, err := a.pdao.GetAccountPermissionsByProjectIDPermissions(ctx, uuid.MustParse(accountID), uuid.MustParse(orgID), uuid.MustParse(partnerID), projids, permissions)
 	if err != nil {
 		return nil, err
 	}
@@ -196,7 +203,7 @@ func prepareAccountPermissionResponse(aps models.AccountPermission) sentry.Accou
 	}
 	return sentry.AccountPermission{
 		AccountID:      aps.AccountId.String(),
-		ProjectID:      aps.ProjecttId,
+		ProjectID:      aps.ProjecttId.String(),
 		OrganizationID: aps.OrganizationId.String(),
 		PartnerID:      aps.PartnerId.String(),
 		RoleName:       aps.RoleName,

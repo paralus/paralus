@@ -445,6 +445,7 @@ func prepareOrganizationResponse(organization *systemv3.Organization, org *model
 
 	organization.Metadata = &v3.Metadata{
 		Name:        org.Name,
+		Id:          org.ID.String(),
 		Description: org.Description,
 		Partner:     partnerName,
 		ModifiedAt:  timestamppb.New(org.ModifiedAt),

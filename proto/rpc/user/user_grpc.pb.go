@@ -8,6 +8,7 @@ package rpcv3
 
 import (
 	context "context"
+	v31 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	v3 "github.com/RafaySystems/rcloud-base/proto/types/userpb/v3"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -28,6 +29,9 @@ type UserClient interface {
 	GetUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
 	UpdateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
 	DeleteUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*DeleteUserResponse, error)
+	DownloadCliConfig(ctx context.Context, in *CliConfigRequest, opts ...grpc.CallOption) (*v31.HttpBody, error)
+	UserListApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*ApiKeyResponseList, error)
+	UserDeleteApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
 }
 
 type userClient struct {
@@ -83,6 +87,33 @@ func (c *userClient) DeleteUser(ctx context.Context, in *v3.User, opts ...grpc.C
 	return out, nil
 }
 
+func (c *userClient) DownloadCliConfig(ctx context.Context, in *CliConfigRequest, opts ...grpc.CallOption) (*v31.HttpBody, error) {
+	out := new(v31.HttpBody)
+	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/DownloadCliConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UserListApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*ApiKeyResponseList, error) {
+	out := new(ApiKeyResponseList)
+	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/UserListApiKeys", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UserDeleteApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error) {
+	out := new(DeleteUserResponse)
+	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/UserDeleteApiKeys", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations should embed UnimplementedUserServer
 // for forward compatibility
@@ -92,6 +123,9 @@ type UserServer interface {
 	GetUser(context.Context, *v3.User) (*v3.User, error)
 	UpdateUser(context.Context, *v3.User) (*v3.User, error)
 	DeleteUser(context.Context, *v3.User) (*DeleteUserResponse, error)
+	DownloadCliConfig(context.Context, *CliConfigRequest) (*v31.HttpBody, error)
+	UserListApiKeys(context.Context, *ApiKeyRequest) (*ApiKeyResponseList, error)
+	UserDeleteApiKeys(context.Context, *ApiKeyRequest) (*DeleteUserResponse, error)
 }
 
 // UnimplementedUserServer should be embedded to have forward compatible implementations.
@@ -112,6 +146,15 @@ func (UnimplementedUserServer) UpdateUser(context.Context, *v3.User) (*v3.User, 
 }
 func (UnimplementedUserServer) DeleteUser(context.Context, *v3.User) (*DeleteUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
+}
+func (UnimplementedUserServer) DownloadCliConfig(context.Context, *CliConfigRequest) (*v31.HttpBody, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DownloadCliConfig not implemented")
+}
+func (UnimplementedUserServer) UserListApiKeys(context.Context, *ApiKeyRequest) (*ApiKeyResponseList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserListApiKeys not implemented")
+}
+func (UnimplementedUserServer) UserDeleteApiKeys(context.Context, *ApiKeyRequest) (*DeleteUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserDeleteApiKeys not implemented")
 }
 
 // UnsafeUserServer may be embedded to opt out of forward compatibility for this service.
@@ -215,6 +258,60 @@ func _User_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_DownloadCliConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CliConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DownloadCliConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rafay.dev.rpc.v3.User/DownloadCliConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DownloadCliConfig(ctx, req.(*CliConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UserListApiKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ApiKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UserListApiKeys(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rafay.dev.rpc.v3.User/UserListApiKeys",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UserListApiKeys(ctx, req.(*ApiKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UserDeleteApiKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ApiKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UserDeleteApiKeys(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rafay.dev.rpc.v3.User/UserDeleteApiKeys",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UserDeleteApiKeys(ctx, req.(*ApiKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -241,6 +338,18 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteUser",
 			Handler:    _User_DeleteUser_Handler,
+		},
+		{
+			MethodName: "DownloadCliConfig",
+			Handler:    _User_DownloadCliConfig_Handler,
+		},
+		{
+			MethodName: "UserListApiKeys",
+			Handler:    _User_UserListApiKeys_Handler,
+		},
+		{
+			MethodName: "UserDeleteApiKeys",
+			Handler:    _User_UserDeleteApiKeys_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

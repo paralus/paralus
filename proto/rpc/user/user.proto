@@ -1,9 +1,11 @@
 syntax = "proto3";
 package rafay.dev.rpc.v3;
 
+import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "proto/types/userpb/v3/user.proto";
+import "proto/types/commonpb/v3/common.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {
@@ -52,7 +54,25 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
+message ApiKeyRequest {
+  string username = 1;
+  string id = 2;
+}
+
+message ApiKeyResponse {
+  google.protobuf.Timestamp modifiedAt = 1;
+  google.protobuf.Timestamp createdAt = 2;
+  string id = 3;
+  string key = 4;
+  string name = 5;
+}
+
+message ApiKeyResponseList {
+  repeated ApiKeyResponse items = 1;
+}
+
 message DeleteUserResponse {}
+message CliConfigRequest {}
 
 service User {
   rpc CreateUser(rafay.dev.types.user.v3.User)
@@ -102,5 +122,26 @@ service User {
         }
       }
     };
+  };
+
+  rpc DownloadCliConfig(CliConfigRequest)
+      returns (rafay.dev.types.common.v3.HttpBody) {
+      option (google.api.http) = {
+      get : "/auth/v3/cli/config"
+      };
+  };
+
+  rpc UserListApiKeys(ApiKeyRequest)
+      returns (ApiKeyResponseList) {
+      option (google.api.http) = {
+      get : "/auth/v3/user/{username}/apikeys"
+      };
+  };
+
+  rpc UserDeleteApiKeys(ApiKeyRequest)
+      returns (DeleteUserResponse) {
+      option (google.api.http) = {
+      delete : "/auth/v3/user/{username}/apikeys/{id}"
+      };
   };
 }

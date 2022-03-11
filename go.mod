@@ -11,13 +11,8 @@ require (
 	github.com/casbin/gorm-adapter/v3 v3.4.6
 	github.com/crewjam/saml v0.4.6
 	github.com/dgraph-io/ristretto v0.1.0
-	github.com/evanphx/json-patch v4.12.0+incompatible
-	gorm.io/driver/postgres v1.2.2
-	k8s.io/apiextensions-apiserver v0.23.4
-	k8s.io/kube-openapi v0.0.0-20211115234752-e816edb12b65
-	github.com/spf13/viper v1.10.1
-	github.com/urfave/negroni v1.0.0
 	github.com/elastic/go-elasticsearch v0.0.0
+	github.com/evanphx/json-patch v4.12.0+incompatible
 	github.com/go-openapi/errors v0.20.2
 	github.com/go-openapi/runtime v0.23.1
 	github.com/go-openapi/strfmt v0.21.2
@@ -33,6 +28,7 @@ require (
 	github.com/segmentio/encoding v0.3.4
 	github.com/shurcooL/httpfs v0.0.0-20190707220628-8d4bc4ba7749
 	github.com/shurcooL/vfsgen v0.0.0-20200824052919-0d455de96546
+	github.com/spacemonkeygo/httpsig v0.0.0-20181218213338-2605ae379e47
 	github.com/speps/go-hashids v2.0.0+incompatible
 	github.com/spf13/viper v1.10.1
 	github.com/uptrace/bun v1.0.20

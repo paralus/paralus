@@ -197,6 +197,7 @@ func (s *partnerService) GetByName(ctx context.Context, name string) (*systemv3.
 
 		partner.Metadata = &v3.Metadata{
 			Name:        part.Name,
+			Id:          part.ID.String(),
 			Description: part.Description,
 			ModifiedAt:  timestamppb.New(part.ModifiedAt),
 		}

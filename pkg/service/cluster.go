@@ -1000,6 +1000,7 @@ func (s *clusterService) CreateBootstrapAgentForCluster(ctx context.Context, clu
 			agent = &sentry.BootstrapAgent{
 				Metadata: &commonv3.Metadata{
 					Name:        cluster.Metadata.Id,
+					DisplayName: cluster.Metadata.Name,
 					Description: cluster.Metadata.Name,
 					Labels: map[string]string{
 						"rafay.dev/clusterName": cluster.Metadata.Name,

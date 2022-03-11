@@ -4,7 +4,9 @@ import (
 	"os"
 
 	logv2 "github.com/RafaySystems/rcloud-base/pkg/log"
+	"github.com/RafaySystems/rcloud-base/pkg/service"
 	kclient "github.com/ory/kratos-client-go"
+	"github.com/uptrace/bun"
 )
 
 var _log = logv2.GetLogger()
@@ -23,10 +25,11 @@ type Option struct {
 
 type authContext struct {
 	kc *kclient.APIClient
+	ks service.ApiKeyService
 }
 
 // NewAuthContext setup authentication and authorization dependencies.
-func NewAuthContext() authContext {
+func NewAuthContext(db *bun.DB) authContext {
 	var (
 		kc           *kclient.APIClient
 		kratosScheme string
@@ -47,5 +50,5 @@ func NewAuthContext() authContext {
 	kratosConfig.Servers[0].URL = kratosScheme + "://" + kratosAddr
 	kc = kclient.NewAPIClient(kratosConfig)
 
-	return authContext{kc: kc}
+	return authContext{kc: kc, ks: service.NewApiKeyService(db)}
 }

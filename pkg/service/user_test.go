@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/RafaySystems/rcloud-base/pkg/common"
 	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	userv3 "github.com/RafaySystems/rcloud-base/proto/types/userpb/v3"
 	"github.com/google/uuid"
@@ -59,7 +60,7 @@ func TestCreateUser(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc)
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
 	defer us.Close()
 
 	uuuid := uuid.New().String()
@@ -113,7 +114,7 @@ func TestCreateUserWithRole(t *testing.T) {
 
 			ap := &mockAuthProvider{}
 			mazc := mockAuthzClient{}
-			us := NewUserService(ap, db, &mazc)
+			us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
 			defer us.Close()
 
 			uuuid := uuid.New().String()
@@ -166,7 +167,7 @@ func TestUpdateUser(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc)
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
 	defer us.Close()
 
 	uuuid := uuid.New().String()
@@ -220,7 +221,7 @@ func TestUserGetByName(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc)
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
 	defer us.Close()
 
 	uuuid := uuid.New().String()
@@ -271,7 +272,7 @@ func TestUserGetById(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc)
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
 	defer us.Close()
 
 	uuuid := uuid.New().String()
@@ -320,7 +321,7 @@ func TestUserList(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc)
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
 	defer us.Close()
 
 	uuuid1 := uuid.New().String()
@@ -389,7 +390,7 @@ func TestUserDelete(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc)
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
 	defer us.Close()
 
 	uuuid := uuid.New().String()

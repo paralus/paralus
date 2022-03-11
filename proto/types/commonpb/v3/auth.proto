@@ -5,7 +5,8 @@ message IsRequestAllowedRequest {
     string url = 1;
     string method = 2;
     string xSessionToken = 3;
-    string cookie = 4;
+    string xApiKey = 4;
+    string cookie = 5;
 }
 
 enum RequestStatus {

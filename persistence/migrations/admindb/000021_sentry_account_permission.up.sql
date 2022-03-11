@@ -13,7 +13,7 @@ SELECT
 FROM (
     SELECT
         ga.account_id,
-        null project_id,
+        uuid_nil() project_id,
         gr.role_id,
         gr.organization_id,
         gr.partner_id
@@ -26,7 +26,7 @@ FROM (
     UNION
     SELECT
         account_id,
-        null project_id,
+        uuid_nil() project_id,
         role_id,
         organization_id,
         partner_id
@@ -37,7 +37,7 @@ FROM (
     UNION
     SELECT
         ga.account_id,
-        pgr.project_id::text,
+        pgr.project_id,
         pgr.role_id,
         pgr.organization_id,
         pgr.partner_id
@@ -50,7 +50,7 @@ FROM (
     UNION
     SELECT
         account_id,
-        project_id::text,
+        project_id,
         role_id,
         organization_id,
         partner_id
@@ -61,7 +61,7 @@ FROM (
     UNION
     SELECT
         account_id,
-        project_id::text,
+        project_id,
         role_id,
         organization_id,
         partner_id
@@ -72,7 +72,7 @@ FROM (
     UNION    
     SELECT
         ga.account_id,
-        pgnr.project_id::text,
+        pgnr.project_id,
         pgnr.role_id,
         pgnr.organization_id,
         pgnr.partner_id

@@ -18,7 +18,7 @@ type PermissionDao interface {
 	GetAccountPermissions(ctx context.Context, accountID, orgID, partnerID uuid.UUID) ([]models.AccountPermission, error)
 	IsPartnerSuperAdmin(ctx context.Context, accountID, partnerID uuid.UUID) (isPartnerAdmin, isSuperAdmin bool, err error)
 	GetAccountProjectsByPermission(ctx context.Context, accountID, orgID, partnerID uuid.UUID, permission string) ([]models.AccountPermission, error)
-	GetAccountPermissionsByProjectIDPermissions(ctx context.Context, accountID, orgID, partnerID uuid.UUID, projects []string, permissions []string) ([]models.AccountPermission, error)
+	GetAccountPermissionsByProjectIDPermissions(ctx context.Context, accountID, orgID, partnerID uuid.UUID, projects []uuid.UUID, permissions []string) ([]models.AccountPermission, error)
 	GetSSOUsersGroupProjectRole(ctx context.Context, orgID uuid.UUID) ([]models.SSOAccountGroupProjectRole, error)
 	GetAcccountsWithApprovalPermission(ctx context.Context, orgID, partnerID uuid.UUID) ([]string, error)
 	GetSSOAcccountsWithApprovalPermission(ctx context.Context, orgID, partnerID uuid.UUID) ([]string, error)
@@ -27,6 +27,7 @@ type PermissionDao interface {
 	GetAccountGroups(ctx context.Context, accountID uuid.UUID) ([]models.GroupAccount, error)
 	GetDefaultUserGroup(ctx context.Context, orgID uuid.UUID) (*models.Group, error)
 	GetDefaultUserGroupAccount(ctx context.Context, accountID, groupID uuid.UUID) (*models.GroupAccount, error)
+	GetDefaultAccountProject(ctx context.Context, accountID uuid.UUID) (models.AccountPermission, error)
 }
 
 // permissionDao implements PermissionDao
@@ -145,7 +146,19 @@ func (a *permissionDao) GetAccountProjectsByPermission(ctx context.Context, acco
 	return aps, err
 }
 
-func (a *permissionDao) GetAccountPermissionsByProjectIDPermissions(ctx context.Context, accountID, orgID, partnerID uuid.UUID, projects []string, permissions []string) ([]models.AccountPermission, error) {
+func (a *permissionDao) GetDefaultAccountProject(ctx context.Context, accountID uuid.UUID) (models.AccountPermission, error) {
+	var aps models.AccountPermission
+
+	err := a.dao.GetInstance().NewSelect().Model(&aps).
+		ColumnExpr("sap.*").
+		Join("JOIN authsrv_project as proj").JoinOn("proj.id = sap.project_id").JoinOn("proj.default = ?", true).
+		Where("account_id = ?", accountID).Limit(1).
+		Scan(ctx)
+
+	return aps, err
+}
+
+func (a *permissionDao) GetAccountPermissionsByProjectIDPermissions(ctx context.Context, accountID, orgID, partnerID uuid.UUID, projects []uuid.UUID, permissions []string) ([]models.AccountPermission, error) {
 	var aps []models.AccountPermission
 
 	err := a.dao.GetInstance().NewSelect().Model(&aps).

@@ -5,6 +5,7 @@ import (
 	"regexp"
 
 	commonpbv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
+	"github.com/uptrace/bun"
 	"github.com/urfave/negroni"
 )
 
@@ -13,9 +14,9 @@ type authMiddleware struct {
 	opt Option
 }
 
-func NewAuthMiddleware(opt Option) negroni.Handler {
+func NewAuthMiddleware(opt Option, db *bun.DB) negroni.Handler {
 	return &authMiddleware{
-		ac:  NewAuthContext(),
+		ac:  NewAuthContext(db),
 		opt: opt,
 	}
 }
@@ -37,9 +38,10 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 		Url:           r.URL.String(),
 		Method:        r.Method,
 		XSessionToken: r.Header.Get("X-Session-Token"),
+		XApiKey:       r.Header.Get("X-RAFAY-API-KEYID"),
 		Cookie:        r.Header.Get("Cookie"),
 	}
-	res, err := am.ac.IsRequestAllowed(r.Context(), req)
+	res, err := am.ac.IsRequestAllowed(r.Context(), r, req)
 	if err != nil {
 		_log.Errorf("Failed to authenticate a request: %s", err)
 		http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)

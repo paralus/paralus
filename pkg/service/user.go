@@ -15,6 +15,7 @@ import (
 	providers "github.com/RafaySystems/rcloud-base/internal/persistence/provider/kratos"
 	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	"github.com/RafaySystems/rcloud-base/internal/utils"
+	"github.com/RafaySystems/rcloud-base/pkg/common"
 	userrpcv3 "github.com/RafaySystems/rcloud-base/proto/rpc/user"
 	authzv1 "github.com/RafaySystems/rcloud-base/proto/types/authz"
 	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
@@ -41,6 +42,8 @@ type UserService interface {
 	Delete(context.Context, *userv3.User) (*userrpcv3.DeleteUserResponse, error)
 	// list users
 	List(context.Context, *userv3.User) (*userv3.UserList, error)
+	// retrieve the cli config for the logged in user
+	RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiKeyRequest) (*common.CliConfigDownloadData, error)
 }
 
 type userService struct {
@@ -49,6 +52,9 @@ type userService struct {
 	udao dao.UserDAO
 	l    utils.Lookup
 	azc  AuthzService
+	pdao dao.PermissionDao
+	ks   ApiKeyService
+	cc   common.CliConfigDownloadData
 }
 
 type userTraits struct {
@@ -65,8 +71,9 @@ type parsedIds struct {
 	Organization uuid.UUID
 }
 
-func NewUserService(ap providers.AuthProvider, db *bun.DB, azc AuthzService) UserService {
-	return &userService{ap: ap, dao: pg.NewEntityDAO(db), udao: dao.NewUserDAO(db), l: utils.NewLookup(db), azc: azc}
+func NewUserService(ap providers.AuthProvider, db *bun.DB, azc AuthzService, kss ApiKeyService, cfg common.CliConfigDownloadData) UserService {
+	edao := pg.NewEntityDAO(db)
+	return &userService{ap: ap, dao: edao, udao: dao.NewUserDAO(db), l: utils.NewLookup(db), azc: azc, pdao: dao.NewPermissionDao(edao), ks: kss, cc: cfg}
 }
 
 func getUserTraits(traits map[string]interface{}) userTraits {
@@ -478,6 +485,59 @@ func (s *userService) List(ctx context.Context, _ *userv3.User) (*userv3.UserLis
 	}
 
 	return userList, nil
+}
+
+func (s *userService) RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiKeyRequest) (*common.CliConfigDownloadData, error) {
+	// get the default project associated to this account
+	ap, err := s.pdao.GetDefaultAccountProject(ctx, uuid.MustParse(req.Id))
+	if err != nil {
+		return nil, err
+	}
+	// fetch the metadata information required to populate cli config
+	var proj models.Project
+	_, err = s.dao.GetByID(ctx, ap.ProjecttId, &proj)
+	if err != nil {
+		return nil, err
+	}
+
+	var org models.Organization
+	_, err = s.dao.GetByID(ctx, ap.OrganizationId, &org)
+	if err != nil {
+		return nil, err
+	}
+
+	var part models.Partner
+	_, err = s.dao.GetByID(ctx, ap.PartnerId, &part)
+	if err != nil {
+		return nil, err
+	}
+
+	// get the api key if exists, if not create a new one
+	apikey, err := s.ks.Get(ctx, &userrpcv3.ApiKeyRequest{Username: req.Username})
+	if err != nil {
+		return nil, err
+	}
+
+	if apikey == nil {
+		apikey, err = s.ks.Create(ctx, &userrpcv3.ApiKeyRequest{Username: req.Username, Id: req.Id})
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	cliConfig := &common.CliConfigDownloadData{
+		Profile:      s.cc.Profile,
+		RestEndpoint: s.cc.RestEndpoint,
+		OpsEndpoint:  s.cc.OpsEndpoint,
+		ApiKey:       apikey.Key,
+		ApiSecret:    apikey.Secret,
+		Project:      proj.Name,
+		Organization: org.Name,
+		Partner:      part.Name,
+	}
+
+	return cliConfig, nil
+
 }
 
 func (s *userService) Close() error {

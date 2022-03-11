@@ -113,6 +113,7 @@ var (
 	cs                     service.ClusterService
 	ms                     service.MetroService
 	us                     service.UserService
+	ks                     service.ApiKeyService
 	gs                     service.GroupService
 	rs                     service.RoleService
 	rrs                    service.RolepermissionService
@@ -273,7 +274,17 @@ func setup() {
 	as = service.NewAuthzService(gormDb, enforcer)
 
 	// users and role management services
-	us = service.NewUserService(providers.NewKratosAuthProvider(kc), db, as)
+	cc := common.CliConfigDownloadData{
+		RestEndpoint: apiAddr,
+		OpsEndpoint:  apiAddr,
+	}
+	if dev {
+		cc.Profile = "staging"
+	} else {
+		cc.Profile = "production"
+	}
+	ks = service.NewApiKeyService(db)
+	us = service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, ks, cc)
 	gs = service.NewGroupService(db, as)
 	rs = service.NewRoleService(db, as)
 	rrs = service.NewRolepermissionService(db)
@@ -495,14 +506,14 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	projectServer := server.NewProjectServer(pps)
 
 	bootstrapServer := server.NewBootstrapServer(bs, kekFunc, cs)
-	kubeConfigServer := server.NewKubeConfigServer(bs, aps, gps, kss, krs, kekFunc)
+	kubeConfigServer := server.NewKubeConfigServer(bs, aps, gps, kss, krs, kekFunc, ks, os, ps)
 	/*auditInfoServer := rpcv2.NewAuditInfoServer(bs, aps)*/
 	clusterAuthzServer := server.NewClusterAuthzServer(bs, aps, gps, krs, kcs, kss)
 	kubectlClusterSettingsServer := server.NewKubectlClusterSettingsServer(bs, kcs)
 	crpc := server.NewClusterServer(cs, downloadData)
 	mserver := server.NewLocationServer(ms)
 
-	userServer := server.NewUserServer(us)
+	userServer := server.NewUserServer(us, ks)
 	groupServer := server.NewGroupServer(gs)
 	roleServer := server.NewRoleServer(rs)
 	rolepermissionServer := server.NewRolePermissionServer(rrs)
@@ -527,7 +538,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	var opts []_grpc.ServerOption
 	if !dev {
 		_log.Infow("adding auth interceptor")
-		ac := authv3.NewAuthContext()
+		ac := authv3.NewAuthContext(db)
 		o := authv3.Option{}
 		opts = append(opts, _grpc.UnaryInterceptor(
 			ac.NewAuthUnaryInterceptor(o),

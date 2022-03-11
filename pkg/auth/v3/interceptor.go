@@ -49,7 +49,7 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 			XSessionToken: token,
 			Cookie:        cookie,
 		}
-		res, err := ac.IsRequestAllowed(ctx, acReq)
+		res, err := ac.IsRequestAllowed(ctx, nil, acReq)
 		if err != nil {
 			_log.Errorf("Failed to authenticate a request: %s", err)
 			return nil, status.Error(codes.Internal, codes.Internal.String())

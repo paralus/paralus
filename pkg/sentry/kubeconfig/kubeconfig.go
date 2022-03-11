@@ -12,8 +12,10 @@ import (
 	"github.com/RafaySystems/rcloud-base/pkg/log"
 	"github.com/RafaySystems/rcloud-base/pkg/query"
 	sentryrpc "github.com/RafaySystems/rcloud-base/proto/rpc/sentry"
+	rpcv3 "github.com/RafaySystems/rcloud-base/proto/rpc/user"
 	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	sentry "github.com/RafaySystems/rcloud-base/proto/types/sentry"
+	"github.com/google/uuid"
 
 	clientcmdapiv1 "k8s.io/client-go/tools/clientcmd/api/v1"
 	"sigs.k8s.io/yaml"
@@ -109,7 +111,7 @@ func getProjectsForAccount(ctx context.Context, accountID, orgID, partnerID stri
 }
 
 // GetConfigForUser returns YAML encoding of kubeconfig
-func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, req *sentryrpc.GetForUserRequest, pf cryptoutil.PasswordFunc, kss service.KubeconfigSettingService) ([]byte, error) {
+func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, req *sentryrpc.GetForUserRequest, pf cryptoutil.PasswordFunc, kss service.KubeconfigSettingService, ksvc service.ApiKeyService, os service.OrganizationService, ps service.PartnerService) ([]byte, error) {
 	opts := req.Opts
 	if opts.Selector != "" {
 		opts.Selector = fmt.Sprintf("%s,!rafay.dev/cdRelayAgent", opts.Selector)
@@ -141,7 +143,7 @@ func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps serv
 	groups := opts.Groups
 	enforceSession := false
 
-	if sessionUserName == "" {
+	if sessionUserName == "" && opts.Account != "" {
 		accountData, err := aps.GetAccount(ctx, opts.Account)
 		if err != nil {
 			_log.Errorw("error getting account data", "error", err.Error())
@@ -149,6 +151,50 @@ func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps serv
 		}
 		sessionUserName = accountData.Username
 		username = accountData.Username
+	} else if sessionUserName == "" && opts.ID != "" {
+		apiKey, err := ksvc.GetByKey(ctx, &rpcv3.ApiKeyRequest{Id: opts.ID})
+		if err != nil {
+			_log.Errorw("error getting account data", "error", err.Error())
+			return nil, err
+		}
+		sessionUserName = apiKey.Name
+		username = apiKey.Name
+		opts.Account = apiKey.AccountID.String()
+	} else if sessionUserName == "" && opts.Account == "" {
+		_log.Errorw("error getting account data", "error", err.Error())
+		return nil, fmt.Errorf("account information not present in request")
+	}
+
+	//validate if organization id or name is given, should support both
+	if opts.Organization == "" {
+		_log.Errorw("error getting organization data", "error", err.Error())
+		return nil, fmt.Errorf("organization information is missing in request")
+	}
+	oid, err := uuid.Parse(opts.Organization)
+	if err != nil {
+		//looks like name is provided, fetch org id
+		org, err := os.GetByName(ctx, opts.Organization)
+		if err != nil {
+			_log.Errorw("error getting organization data", "error", err.Error())
+			return nil, fmt.Errorf("failed to retrieve organziation %s", err.Error())
+		}
+		oid = uuid.MustParse(org.Metadata.Id)
+		opts.Organization = oid.String()
+		opts.Partner = org.Metadata.Partner
+	}
+
+	if opts.Partner == "" {
+		_log.Errorw("error getting partner data", "error", err.Error())
+		return nil, fmt.Errorf("partner information is missing in request")
+	}
+	_, err = uuid.Parse(opts.Partner)
+	if err != nil {
+		part, err := ps.GetByName(ctx, opts.Partner)
+		if err != nil {
+			_log.Errorw("error getting partner data", "error", err.Error())
+			return nil, fmt.Errorf("failed to retrieve partner %s", err.Error())
+		}
+		opts.Partner = part.Metadata.Id
 	}
 
 	// get user level settings if exist

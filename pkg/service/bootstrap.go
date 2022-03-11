@@ -191,6 +191,7 @@ func prepareAgentResponse(agent *models.BootstrapAgent) *sentry.BootstrapAgent {
 		Kind: "BootstrapAgent",
 		Metadata: &commonv3.Metadata{
 			Name:        agent.Name,
+			DisplayName: agent.DisplayName,
 			Description: agent.DisplayName,
 			ModifiedAt:  timestamppb.New(agent.ModifiedAt),
 			Labels:      lbls,
