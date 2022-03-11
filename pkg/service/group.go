@@ -223,7 +223,7 @@ func (s *groupService) createGroupAccountRelations(ctx context.Context, groupId 
 	// TODO: add transactions
 	var grpaccs []models.GroupAccount
 	var ugs []*authzv1.UserGroup
-	for _, account := range group.GetSpec().GetUsers() {
+	for _, account := range unique(group.GetSpec().GetUsers()) {
 		// FIXME: do combined lookup
 		entity, err := s.dao.GetIdByTraits(ctx, account, &models.KratosIdentities{})
 		if err != nil {
