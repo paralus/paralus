@@ -40,7 +40,7 @@ func addResourcePermissions(dao pg.EntityDAO, basePath string) error {
 		}
 	}
 
-	fmt.Println("Adding", len(items), "resouces permissions")
+	fmt.Println("Adding", len(items), "resource permissions")
 	_, err = dao.Create(context.Background(), &items)
 	return err
 }
