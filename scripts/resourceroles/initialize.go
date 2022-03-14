@@ -91,7 +91,7 @@ func main() {
 			fmt.Println(scope, name, len(perms))
 			_, err := rs.Create(context.Background(), &rolev3.Role{
 				Metadata: &commonv3.Metadata{Name: name, Partner: partner, Organization: org, Description: "..."},
-				Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "cluster", Rolepermissions: perms}, // TODO: look into scope
+				Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: scope, Rolepermissions: perms},
 			})
 			if err != nil {
 				log.Fatal(err)
