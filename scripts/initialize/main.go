@@ -10,7 +10,9 @@ import (
 	"os"
 	"path"
 
+	"github.com/RafaySystems/rcloud-base/internal/models"
 	providers "github.com/RafaySystems/rcloud-base/internal/persistence/provider/kratos"
+	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	"github.com/RafaySystems/rcloud-base/pkg/enforcer"
 	"github.com/RafaySystems/rcloud-base/pkg/service"
 	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
@@ -44,10 +46,39 @@ const (
 	kratosAddrEnv   = "KRATOS_ADDR"
 )
 
+func addResourcePermissions(dao pg.EntityDAO, basePath string) error {
+	var items []models.ResourcePermission
+
+	files, err := ioutil.ReadDir(basePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, file := range files {
+		if !file.IsDir() { // probably not, but just in case
+			content, err := ioutil.ReadFile(path.Join(basePath, file.Name()))
+			if err != nil {
+				log.Fatal(err)
+			}
+			// It has ResourceRefId, but that does not seem to be used in the old implementation
+			// Also, why do we need two items?
+			var data models.ResourcePermission
+			err = json.Unmarshal(content, &data)
+			if err != nil {
+				log.Fatal(err)
+			}
+			items = append(items, data)
+		}
+	}
+
+	fmt.Println("Adding", len(items), "resource permissions")
+	_, err = dao.Create(context.Background(), &items)
+	return err
+}
+
 func main() {
 	if len(os.Args) != 4 {
-		// this step happens after org creation and so we will have org and partner id
-		log.Fatal("Usage: ", os.Args[0], " <organizatin_id> ", " <partner_id>", "<org_admin_email>")
+		// this step happens after org creation and so we will have org and partner
+		log.Fatal("Usage: ", os.Args[0], " <partner> ", " <organizatin>", "<org_admin_email>")
 	}
 
 	viper.SetDefault(dbAddrEnv, "localhost:5432")
@@ -71,11 +102,11 @@ func main() {
 	kratosScheme := viper.GetString(kratosSchemeEnv)
 	kratosAddr := viper.GetString(kratosAddrEnv)
 
-	org := os.Args[1]
-	partner := os.Args[2]
+	partner := os.Args[1]
+	org := os.Args[2]
 	orgAdminEmail := os.Args[3]
 
-	content, err := ioutil.ReadFile(path.Join("scripts", "resourceroles", "data.json"))
+	content, err := ioutil.ReadFile(path.Join("scripts", "initialize", "roles.json"))
 	if err != nil {
 		log.Fatal("unable to read file: ", err)
 	}
@@ -89,6 +120,7 @@ func main() {
 	dsn := "postgres://" + dbUser + ":" + dbPassword + "@" + dbAddr + "/" + dbName + "?sslmode=disable"
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db := bun.NewDB(sqldb, pgdialect.New())
+	dao := pg.NewEntityDAO(db)
 
 	kratosConfig := kclient.NewConfiguration()
 	kratosUrl := kratosScheme + "://" + kratosAddr
@@ -111,6 +143,17 @@ func main() {
 	rs := service.NewRoleService(db, as)
 	us := service.NewUserService(providers.NewKratosAuthProvider(kc), db, as)
 
+	err = dao.DeleteAll(context.Background(), &models.ResourcePermission{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = addResourcePermissions(dao, path.Join("scripts", "initialize", "permissions"))
+	if err != nil {
+		fmt.Println("Run from base directory")
+		log.Fatal(err)
+	}
+
+	// Create partner
 	_, err = ps.Create(context.Background(), &systemv3.Partner{
 		Metadata: &commonv3.Metadata{Name: partner, Description: "..."},
 		Spec:     &systemv3.PartnerSpec{Host: ""},
