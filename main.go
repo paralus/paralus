@@ -49,88 +49,66 @@ import (
 )
 
 const (
-	rpcPortEnv                = "RPC_PORT"
-	apiPortEnv                = "API_PORT"
-	debugPortEnv              = "DEBUG_PORT"
-	dbAddrEnv                 = "DB_ADDR"
-	dbNameEnv                 = "DB_NAME"
-	dbUserEnv                 = "DB_USER"
-	dbPasswordEnv             = "DB_PASSWORD"
-	devEnv                    = "DEV"
-	apiAddrEnv                = "API_ADDR"
+	// application
+	rpcPortEnv   = "RPC_PORT"
+	apiPortEnv   = "API_PORT"
+	debugPortEnv = "DEBUG_PORT"
+	apiAddrEnv   = "API_ADDR"
+	devEnv       = "DEV"
+
+	// db
+	dbAddrEnv     = "DB_ADDR"
+	dbNameEnv     = "DB_NAME"
+	dbUserEnv     = "DB_USER"
+	dbPasswordEnv = "DB_PASSWORD"
+
+	// relay
 	sentryPeeringHostEnv      = "SENTRY_PEERING_HOST"
 	coreRelayConnectorHostEnv = "CORE_RELAY_CONNECTOR_HOST"
 	coreRelayUserHostEnv      = "CORE_RELAY_USER_HOST"
 	bootstrapKEKEnv           = "BOOTSTRAP_KEK"
-	authAddrEnv               = "AUTH_ADDR"
-	sentryBootstrapEnv        = "SENTRY_BOOTSTRAP_ADDR"
 	relayImageEnv             = "RELAY_IMAGE"
-	controlAddrEnv            = "CONTROL_ADDR"
 
 	// audit
 	esEndPointEnv              = "ES_END_POINT"
 	esIndexPrefixEnv           = "ES_INDEX_PREFIX"
 	relayAuditESIndexPrefixEnv = "RELAY_AUDITS_ES_INDEX_PREFIX"
 	relayCommandESIndexPrefix  = "RELAY_COMMANDS_ES_INDEX_PREFIX"
-	RpcPort                    = "AUDIT_RPC_PORT"
-	ApiPort                    = "AUDIT_API_PORT"
 
 	// cd relay
 	coreCDRelayUserHostEnv      = "CORE_CD_RELAY_USER_HOST"
 	coreCDRelayConnectorHostEnv = "CORE_CD_RELAY_CONNECTOR_HOST"
 	schedulerNamespaceEnv       = "SCHEDULER_NAMESPACE"
 
+	// kratos
 	kratosSchemeEnv = "KRATOS_SCHEME"
 	kratosAddrEnv   = "KRATOS_ADDR"
 )
 
 var (
-	rpcPort                int
-	apiPort                int
-	debugPort              int
-	rpcRelayPeeringPort    int
-	dbAddr                 string
-	dbName                 string
-	dbUser                 string
-	dbPassword             string
-	apiAddr                string
-	dev                    bool
-	db                     *bun.DB
-	gormDb                 *gorm.DB
-	kratosScheme           string
-	kratosAddr             string
-	kc                     *kclient.APIClient
-	ps                     service.PartnerService
-	os                     service.OrganizationService
-	pps                    service.ProjectService
-	bs                     service.BootstrapService
-	aps                    service.AccountPermissionService
-	gps                    service.GroupPermissionService
-	krs                    service.KubeconfigRevocationService
-	kss                    service.KubeconfigSettingService
-	kcs                    service.KubectlClusterSettingsService
-	as                     service.AuthzService
-	cs                     service.ClusterService
-	ms                     service.MetroService
-	us                     service.UserService
-	ks                     service.ApiKeyService
-	gs                     service.GroupService
-	rs                     service.RoleService
-	rrs                    service.RolepermissionService
-	is                     service.IdpService
-	oidcs                  service.OIDCProviderService
-	aus                    *service.AuditLogService
-	ras                    *service.RelayAuditService
-	rcs                    *service.AuditLogService
-	_log                   = log.GetLogger()
-	schedulerPool          schedulerrpc.SchedulerPool
-	schedulerAddr          string
-	bootstrapKEK           string
+	// application
+	rpcPort             int
+	apiPort             int
+	debugPort           int
+	apiAddr             string
+	dev                 bool
+	rpcRelayPeeringPort int
+	_log                = log.GetLogger()
+
+	// db
+	dbAddr     string
+	dbName     string
+	dbUser     string
+	dbPassword string
+	db         *bun.DB
+	gormDb     *gorm.DB
+
+	// relay
 	sentryPeeringHost      string
 	coreRelayConnectorHost string
 	coreRelayUserHost      string
-	downloadData           *common.DownloadData
-	controlAddr            string
+	bootstrapKEK           string
+	relayImage             string
 
 	// audit
 	elasticSearchUrl           string
@@ -143,6 +121,39 @@ var (
 	coreCDRelayConnectorHost string
 	schedulerNamespace       string
 
+	// kratos
+	kratosScheme string
+	kratosAddr   string
+	kc           *kclient.APIClient
+
+	// services
+	ps    service.PartnerService
+	os    service.OrganizationService
+	pps   service.ProjectService
+	bs    service.BootstrapService
+	aps   service.AccountPermissionService
+	gps   service.GroupPermissionService
+	krs   service.KubeconfigRevocationService
+	kss   service.KubeconfigSettingService
+	kcs   service.KubectlClusterSettingsService
+	as    service.AuthzService
+	cs    service.ClusterService
+	ms    service.MetroService
+	us    service.UserService
+	ks    service.ApiKeyService
+	gs    service.GroupService
+	rs    service.RoleService
+	rrs   service.RolepermissionService
+	is    service.IdpService
+	oidcs service.OIDCProviderService
+	aus   *service.AuditLogService
+	ras   *service.RelayAuditService
+	rcs   *service.AuditLogService
+
+	schedulerPool schedulerrpc.SchedulerPool
+	schedulerAddr string
+	downloadData  *common.DownloadData
+
 	kekFunc = func() ([]byte, error) {
 		if len(bootstrapKEK) == 0 {
 			return nil, errors.New("empty KEK")
@@ -152,55 +163,64 @@ var (
 )
 
 func setup() {
+	// application
 	viper.SetDefault(rpcPortEnv, 10000)
 	viper.SetDefault(apiPortEnv, 11000)
 	viper.SetDefault(debugPortEnv, 12000)
+	viper.SetDefault(apiAddrEnv, "localhost:11000")
+	viper.SetDefault(devEnv, true)
+
+	// db
 	viper.SetDefault(dbAddrEnv, "localhost:5432")
 	viper.SetDefault(dbNameEnv, "admindb")
 	viper.SetDefault(dbUserEnv, "admindbuser")
 	viper.SetDefault(dbPasswordEnv, "admindbpassword")
-	viper.SetDefault(devEnv, true)
-	viper.SetDefault(apiAddrEnv, "localhost:11000")
-	viper.SetDefault(kratosSchemeEnv, "http")
-	viper.SetDefault(kratosAddrEnv, "localhost:4433")
+
+	// relay
 	viper.SetDefault(sentryPeeringHostEnv, "peering.sentry.rafay.local:10001")
 	viper.SetDefault(coreRelayConnectorHostEnv, "*.core-connector.relay.rafay.local:10002")
 	viper.SetDefault(coreRelayUserHostEnv, "*.user.relay.rafay.local:10002")
 	viper.SetDefault(bootstrapKEKEnv, "rafay")
-	viper.SetDefault(authAddrEnv, "authsrv.rcloud-admin.svc.cluster.local:50011")
-	viper.SetDefault(coreCDRelayUserHostEnv, "*.user.cdrelay.rafay.local:10012")
-	viper.SetDefault(coreCDRelayConnectorHostEnv, "*.core-connector.cdrelay.rafay.local:10012")
-	viper.SetDefault(sentryBootstrapEnv, "console.rafay.dev:443")
 	viper.SetDefault(relayImageEnv, "registry.rafay-edge.net/rafay/rafay-relay-agent:r1.10.0-24")
-	viper.SetDefault(controlAddrEnv, "localhost:5002")
-	viper.SetDefault(schedulerNamespaceEnv, "rafay-system")
+
+	// audit
 	viper.SetDefault(esEndPointEnv, "http://127.0.0.1:9200")
 	viper.SetDefault(esIndexPrefixEnv, "auditlog-system")
 	viper.SetDefault(relayAuditESIndexPrefixEnv, "auditlog-relay")
 	viper.SetDefault(relayCommandESIndexPrefix, "auditlog-commands")
 
+	// cd relay
+	viper.SetDefault(coreCDRelayUserHostEnv, "*.user.cdrelay.rafay.local:10012")
+	viper.SetDefault(coreCDRelayConnectorHostEnv, "*.core-connector.cdrelay.rafay.local:10012")
+	viper.SetDefault(schedulerNamespaceEnv, "rafay-system")
+
+	// kratos
+	viper.SetDefault(kratosSchemeEnv, "http")
+	viper.SetDefault(kratosAddrEnv, "localhost:4433")
+
 	viper.BindEnv(rpcPortEnv)
 	viper.BindEnv(apiPortEnv)
 	viper.BindEnv(debugPortEnv)
+	viper.BindEnv(apiAddrEnv)
+	viper.BindEnv(devEnv)
+
 	viper.BindEnv(dbAddrEnv)
 	viper.BindEnv(dbNameEnv)
 	viper.BindEnv(dbUserEnv)
 	viper.BindEnv(dbPasswordEnv)
-	viper.BindEnv(devEnv)
-	viper.BindEnv(apiAddrEnv)
+
 	viper.BindEnv(kratosSchemeEnv)
 	viper.BindEnv(kratosAddrEnv)
-	viper.BindEnv(bootstrapKEKEnv)
-	viper.BindEnv(authAddrEnv)
+
 	viper.BindEnv(sentryPeeringHostEnv)
 	viper.BindEnv(coreRelayConnectorHostEnv)
 	viper.BindEnv(coreRelayUserHostEnv)
+	viper.BindEnv(bootstrapKEKEnv)
 	viper.BindEnv(coreCDRelayConnectorHostEnv)
 	viper.BindEnv(coreCDRelayUserHostEnv)
-	viper.BindEnv(sentryBootstrapEnv)
 	viper.BindEnv(relayImageEnv)
-	viper.BindEnv(controlAddrEnv)
 	viper.BindEnv(schedulerNamespaceEnv)
+
 	viper.BindEnv(esEndPointEnv)
 	viper.BindEnv(esIndexPrefixEnv)
 	viper.BindEnv(relayAuditESIndexPrefixEnv)
@@ -209,22 +229,26 @@ func setup() {
 	rpcPort = viper.GetInt(rpcPortEnv)
 	apiPort = viper.GetInt(apiPortEnv)
 	debugPort = viper.GetInt(debugPortEnv)
+	apiAddr = viper.GetString(apiAddrEnv)
+	dev = viper.GetBool(devEnv)
+
 	dbAddr = viper.GetString(dbAddrEnv)
 	dbName = viper.GetString(dbNameEnv)
 	dbUser = viper.GetString(dbUserEnv)
 	dbPassword = viper.GetString(dbPasswordEnv)
-	apiAddr = viper.GetString(apiAddrEnv)
-	dev = viper.GetBool(devEnv)
+
 	kratosScheme = viper.GetString(kratosSchemeEnv)
 	kratosAddr = viper.GetString(kratosAddrEnv)
+
 	bootstrapKEK = viper.GetString(bootstrapKEKEnv)
 	sentryPeeringHost = viper.GetString(sentryPeeringHostEnv)
 	coreRelayConnectorHost = viper.GetString(coreRelayConnectorHostEnv)
 	coreRelayUserHost = viper.GetString(coreRelayUserHostEnv)
 	coreCDRelayConnectorHost = viper.GetString(coreCDRelayConnectorHostEnv)
 	coreCDRelayUserHost = viper.GetString(coreCDRelayUserHostEnv)
-	controlAddr = viper.GetString(controlAddrEnv)
+	relayImage = viper.GetString(relayImageEnv)
 	schedulerNamespace = viper.GetString(schedulerNamespaceEnv)
+
 	elasticSearchUrl = viper.GetString(esEndPointEnv)
 	esIndexPrefix = viper.GetString(esIndexPrefixEnv)
 	relayAuditsESIndexPrefix = viper.GetString(relayAuditESIndexPrefixEnv)
@@ -239,7 +263,7 @@ func setup() {
 	kc = kclient.NewAPIClient(kratosConfig)
 
 	// db setup
-	dsn := "postgres://" + dbUser + ":" + dbPassword + "@" + dbAddr + "/" + dbName + "?sslmode=disable"
+	dsn := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", dbUser, dbPassword, dbAddr, dbName)
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db = bun.NewDB(sqldb, pgdialect.New())
 
@@ -331,9 +355,8 @@ func setup() {
 
 	// cluster bootstrap
 	downloadData = &common.DownloadData{
-		ControlAddr:     controlAddr,
 		APIAddr:         apiAddr,
-		RelayAgentImage: relayImageEnv,
+		RelayAgentImage: relayImage,
 	}
 
 	cs = service.NewClusterService(db, downloadData, bs)
