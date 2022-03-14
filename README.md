@@ -1,19 +1,68 @@
-# rcloud-base
+# `rcloud-base`
+
 This repository contains all the rcloud-system components that are the backbone for ztka and gitops.
 
-## Prerequisites 
-1) Postgres database
-2) [`Ory Kratos`](https://www.ory.sh/kratos) - API for user management
-3) We use [`Casbin`](https://casbin.org) - An authorization library that supports access control models like ACL, RBAC, ABAC
+## Prerequisites
 
-## Setting up the database
-You can use the [`bitnami charts for postgresql`](https://github.com/bitnami/charts/tree/master/bitnami/postgresql/#installing-the-chart)
+- [Postgres](https://github.com/postgres/postgres): Primary database
+- [Ory Kratos](https://www.ory.sh/kratos): API for user management
+- [Elasticsearch](https://www.elastic.co/elasticsearch/): Storage for audit logs
 
-### Create the initial db/user
+> You can use the
+> [bitnami/charts](https://github.com/bitnami/charts/tree/master/bitnami/postgresql/#installing-the-chart)
+> for postgres and
+> [elastic/helm-charts](https://github.com/elastic/helm-charts) for
+> elasticsearch.
+
+## Development setup
+
+### Using `docker-compose`
+
+Run following Docker Compose command to setup all requirements like
+Postgres db, Kratos etc. for the rcloud-base.
+
+_This will start up postgres and elasticsearch as well as kratos and
+run the kratos migrations. It will also run all the necessary
+migrations. It also starts up a mail slurper for you to use Kratos._
+
+```bash
+docker-compose up -d
+```
+
+Start rcloud-base:
+
+```bash
+go run github.com/RafaySystems/rcloud-base
+```
+
+### Manual
+
+#### Start databases
+
+##### Postgres
+
+```bash
+docker run --network host \
+    --env POSTGRES_HOST_AUTH_METHOD=trust \
+    -v pgdata:/var/lib/postgresql/data \
+    -it postgres
+```
+
+##### Elasticsearch
+
+```bash
+docker run --network host \
+    -v elastic-data:/usr/share/elasticsearch/data \
+    -e "discovery.type=single-node" \
+    -e "xpack.security.enabled=false" \
+    -it docker.elastic.co/elasticsearch/elasticsearch:8.0.0
+```
+
+#### Create the initial db/user
 
 Scripts for `admindb`:
 
-``` sql
+```sql
 create database admindb;
 CREATE ROLE admindbuser WITH LOGIN PASSWORD '<your_password>';
 GRANT ALL PRIVILEGES ON DATABASE admindb to admindbuser;
@@ -21,14 +70,14 @@ GRANT ALL PRIVILEGES ON DATABASE admindb to admindbuser;
 
 Now in the newly created db:
 
-``` sql
+```sql
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 grant execute on function uuid_generate_v4() to admindbuser;
 ```
 
 Scripts for `clusterdb`:
 
-``` sql
+```sql
 create database clusterdb;
 CREATE ROLE clusterdbuser WITH LOGIN PASSWORD '<your_password>';
 GRANT ALL PRIVILEGES ON DATABASE clusterdb to clusterdbuser;
@@ -36,53 +85,34 @@ GRANT ALL PRIVILEGES ON DATABASE clusterdb to clusterdbuser;
 
 Now in the newly created db:
 
-``` sql
+```sql
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 grant execute on function uuid_generate_v4() to clusterdbuser;
 ```
 
+_This will grant the necessary permission to the newly created user to run uuid_generate_v4()_
 
-*This will grant the necessary permission to the newly created user to run uuid_generate_v4()*
-
-### Run application migrations
+#### Run application migrations
 
 We use [`golang-migrate`](https://github.com/golang-migrate/migrate) to perform migrations.
 
-#### Install [`golang-migrate`](https://github.com/golang-migrate/migrate)
+##### Install [`golang-migrate`](https://github.com/golang-migrate/migrate)
 
-``` shell
+```shell
 go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 ```
 
-*`-tags 'postgres'` is important as otherwise it compiles without postgres support*
+_`-tags 'postgres'` is important as otherwise it compiles without postgres support_
 
 You can refer to the [guide](https://github.com/golang-migrate/migrate/tree/master/cmd/migrate) for full details.
 
-#### Run migrations
+##### Run migrations
 
 Example for `admindb`:
 
-``` shell
+```shell
 export POSTGRESQL_URL='postgres://<user>:<pass>@<host>:<port>/admindb?sslmode=disable'
 migrate -path ./persistence/migrations/admindb -database "$POSTGRESQL_URL" up
 ```
 
 See [cli-usage](https://github.com/golang-migrate/migrate#cli-usage) for more info.
-
-## Development setup
-
-Run following Docker Compose command to setup all requirements like
-Postgres db, Kratos etc. for the rcloud-base:
-```
-docker-compose up -d
-```
-
-Install Go dependencies:
-```
-go get
-```
-
-Start rcloud-base:
-```
-go run github.com/RafaySystems/rcloud-base
-```
