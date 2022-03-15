@@ -5,7 +5,6 @@ import (
 
 	"github.com/RafaySystems/rcloud-base/internal/models"
 	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
-	"github.com/RafaySystems/rcloud-base/internal/utils"
 	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	rolev3 "github.com/RafaySystems/rcloud-base/proto/types/rolepb/v3"
 	"github.com/google/uuid"
@@ -19,7 +18,6 @@ const (
 
 // RolepermissionService is the interface for rolepermission operations
 type RolepermissionService interface {
-	Close() error
 	// get rolepermission by name
 	GetByName(context.Context, *rolev3.RolePermission) (*rolev3.RolePermission, error)
 	// list rolepermissions
@@ -28,16 +26,12 @@ type RolepermissionService interface {
 
 // rolepermissionService implements RolepermissionService
 type rolepermissionService struct {
-	dao pg.EntityDAO
-	l   utils.Lookup
+	db *bun.DB
 }
 
 // NewRolepermissionService return new rolepermission service
 func NewRolepermissionService(db *bun.DB) RolepermissionService {
-	return &rolepermissionService{
-		dao: pg.NewEntityDAO(db),
-		l:   utils.NewLookup(db),
-	}
+	return &rolepermissionService{db: db}
 }
 
 func (s *rolepermissionService) toV3Rolepermission(rolepermission *rolev3.RolePermission, rlp *models.ResourcePermission) *rolev3.RolePermission {
@@ -53,11 +47,11 @@ func (s *rolepermissionService) toV3Rolepermission(rolepermission *rolev3.RolePe
 func (s *rolepermissionService) getPartnerOrganization(ctx context.Context, rolepermission *rolev3.RolePermission) (uuid.UUID, uuid.UUID, error) {
 	partner := rolepermission.GetMetadata().GetPartner()
 	org := rolepermission.GetMetadata().GetOrganization()
-	partnerId, err := s.l.GetPartnerId(ctx, partner)
+	partnerId, err := pg.GetPartnerId(ctx, s.db, partner)
 	if err != nil {
 		return uuid.Nil, uuid.Nil, err
 	}
-	organizationId, err := s.l.GetOrganizationId(ctx, org)
+	organizationId, err := pg.GetOrganizationId(ctx, s.db, org)
 	if err != nil {
 		return partnerId, uuid.Nil, err
 	}
@@ -67,7 +61,7 @@ func (s *rolepermissionService) getPartnerOrganization(ctx context.Context, role
 
 func (s *rolepermissionService) GetByName(ctx context.Context, rolepermission *rolev3.RolePermission) (*rolev3.RolePermission, error) {
 	name := rolepermission.GetMetadata().GetName()
-	entity, err := s.dao.GetByName(ctx, name, &models.ResourcePermission{})
+	entity, err := pg.GetByName(ctx, s.db, name, &models.ResourcePermission{})
 	if err != nil {
 		return rolepermission, err
 	}
@@ -91,7 +85,7 @@ func (s *rolepermissionService) List(ctx context.Context, rolepermission *rolev3
 		},
 	}
 	var rles []models.ResourcePermission
-	entities, err := s.dao.List(ctx, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, &rles)
+	entities, err := pg.List(ctx, s.db, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, &rles)
 	if err != nil {
 		return rolepermissionList, err
 	}
@@ -110,8 +104,4 @@ func (s *rolepermissionService) List(ctx context.Context, rolepermission *rolev3
 	}
 
 	return rolepermissionList, nil
-}
-
-func (s *rolepermissionService) Close() error {
-	return s.dao.Close()
 }

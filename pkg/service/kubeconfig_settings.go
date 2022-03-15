@@ -8,7 +8,6 @@ import (
 	"github.com/RafaySystems/rcloud-base/internal/constants"
 	"github.com/RafaySystems/rcloud-base/internal/dao"
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	"github.com/RafaySystems/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -17,28 +16,18 @@ import (
 
 // KubeconfigSettingService is the interface for kube config setting operations
 type KubeconfigSettingService interface {
-	Close() error
 	Get(ctx context.Context, orgID string, accountID string, isSSO bool) (*sentry.KubeconfigSetting, error)
 	Patch(ctx context.Context, ks *sentry.KubeconfigSetting) error
 }
 
 // kubeconfigSettingService implements KubeconfigSettingService
 type kubeconfigSettingService struct {
-	dao  pg.EntityDAO
-	kdao dao.KubeconfigDao
+	db *bun.DB
 }
 
 // NewKubeconfigSettingService return new kubeconfig setting service
 func NewKubeconfigSettingService(db *bun.DB) KubeconfigSettingService {
-	edao := pg.NewEntityDAO(db)
-	return &kubeconfigSettingService{
-		dao:  edao,
-		kdao: dao.NewKubeconfigDao(edao),
-	}
-}
-
-func (krs *kubeconfigSettingService) Close() error {
-	return krs.dao.Close()
+	return &kubeconfigSettingService{db}
 }
 
 func (kss *kubeconfigSettingService) Get(ctx context.Context, orgID string, accountID string, isSSO bool) (*sentry.KubeconfigSetting, error) {
@@ -51,7 +40,7 @@ func (kss *kubeconfigSettingService) Get(ctx context.Context, orgID string, acco
 		_log.Info("account identifier is empty")
 	}
 
-	kr, err := kss.kdao.GetKubeconfigSetting(ctx, oid, aid, isSSO)
+	kr, err := dao.GetKubeconfigSetting(ctx, kss.db, oid, aid, isSSO)
 	if err == sql.ErrNoRows {
 		return nil, constants.ErrNotFound
 	} else if err != nil {
@@ -65,15 +54,15 @@ func (kss *kubeconfigSettingService) Patch(ctx context.Context, ks *sentry.Kubec
 	if err != nil {
 		accId = uuid.Nil
 	}
-	err = kss.dao.GetInstance().RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
-		_, err := kss.kdao.GetKubeconfigSetting(ctx, uuid.MustParse(ks.OrganizationID), accId, ks.IsSSOUser)
+	err = kss.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
+		_, err := dao.GetKubeconfigSetting(ctx, kss.db, uuid.MustParse(ks.OrganizationID), accId, ks.IsSSOUser)
 		db := convertToKubeCfgSettingModel(ks)
 		if err != nil && err == sql.ErrNoRows {
 			db.CreatedAt = time.Now()
-			return kss.kdao.CreateKubeconfigSetting(ctx, convertToKubeCfgSettingModel(ks))
+			return dao.CreateKubeconfigSetting(ctx, kss.db, convertToKubeCfgSettingModel(ks))
 		}
 		db.ModifiedAt = time.Now()
-		return kss.kdao.UpdateKubeconfigSetting(ctx, convertToKubeCfgSettingModel(ks))
+		return dao.UpdateKubeconfigSetting(ctx, kss.db, convertToKubeCfgSettingModel(ks))
 	})
 	return err
 }

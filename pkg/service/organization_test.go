@@ -22,7 +22,6 @@ func TestCreateOrganization(t *testing.T) {
 	defer db.Close()
 
 	ps := NewOrganizationService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 	ouuid := uuid.New().String()
@@ -49,7 +48,6 @@ func TestCreateOrganizationDuplicate(t *testing.T) {
 	defer db.Close()
 
 	gs := NewOrganizationService(db)
-	defer gs.Close()
 
 	ouuid := uuid.New().String()
 
@@ -72,7 +70,6 @@ func TestOrganizationDelete(t *testing.T) {
 	defer db.Close()
 
 	ps := NewOrganizationService(db)
-	defer ps.Close()
 
 	ouuid := uuid.New().String()
 
@@ -96,7 +93,6 @@ func TestOrganizationDeleteNonExist(t *testing.T) {
 	defer db.Close()
 
 	ps := NewOrganizationService(db)
-	defer ps.Close()
 
 	ouuid := uuid.New().String()
 
@@ -117,7 +113,6 @@ func TestOrganizationGetByName(t *testing.T) {
 	defer db.Close()
 
 	ps := NewOrganizationService(db)
-	defer ps.Close()
 
 	partuuid := uuid.New().String()
 	ouuid := uuid.New().String()
@@ -143,7 +138,6 @@ func TestOrganizationGetById(t *testing.T) {
 	defer db.Close()
 
 	ps := NewOrganizationService(db)
-	defer ps.Close()
 
 	partuuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -169,7 +163,6 @@ func TestOrganizationUpdate(t *testing.T) {
 	defer db.Close()
 
 	ps := NewOrganizationService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 

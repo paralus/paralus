@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"strconv"
 
+	"github.com/RafaySystems/rcloud-base/internal/cluster/dao"
 	"github.com/RafaySystems/rcloud-base/internal/models"
 	"github.com/RafaySystems/rcloud-base/pkg/converter"
 	"github.com/RafaySystems/rcloud-base/pkg/patch"
@@ -17,7 +18,7 @@ import (
 
 func (s *clusterService) GetNamespacesForConditions(ctx context.Context, conditions []scheduler.ClusterNamespaceCondition, clusterID string) (*scheduler.ClusterNamespaceList, error) {
 
-	cns, count, err := s.cndao.GetNamespacesForConditions(ctx, uuid.MustParse(clusterID), conditions)
+	cns, count, err := dao.GetNamespacesForConditions(ctx, s.db, uuid.MustParse(clusterID), conditions)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +66,7 @@ func (s *clusterService) GetNamespacesForConditions(ctx context.Context, conditi
 
 func (s *clusterService) GetNamespaces(ctx context.Context, clusterID string) (*scheduler.ClusterNamespaceList, error) {
 
-	cns, err := s.cndao.GetNamespaces(ctx, uuid.MustParse(clusterID))
+	cns, err := dao.GetNamespaces(ctx, s.db, uuid.MustParse(clusterID))
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +114,7 @@ func (s *clusterService) GetNamespaces(ctx context.Context, clusterID string) (*
 
 func (s *clusterService) GetNamespace(ctx context.Context, namespace string, clusterID string) (*scheduler.ClusterNamespace, error) {
 
-	cn, err := s.cndao.GetNamespace(ctx, uuid.MustParse(clusterID), namespace)
+	cn, err := dao.GetNamespace(ctx, s.db, uuid.MustParse(clusterID), namespace)
 	if err != nil {
 		return nil, err
 	}
@@ -173,7 +174,7 @@ func (s *clusterService) UpdateNamespaceStatus(ctx context.Context, current *sch
 		Status:     converter.ConvertToJsonRawMessage(existing.Status),
 	}
 
-	err = s.cndao.UpdateNamespaceStatus(ctx, &cn)
+	err = dao.UpdateNamespaceStatus(ctx, s.db, &cn)
 	if err != nil {
 		return err
 	}
@@ -192,6 +193,6 @@ func (s *clusterService) UpdateNamespaceStatus(ctx context.Context, current *sch
 }
 
 func (s *clusterService) GetNamespaceHashes(ctx context.Context, clusterID string) ([]infrav3.NameHash, error) {
-	nameHashes, err := s.cndao.GetNamespaceHashes(ctx, uuid.MustParse(clusterID))
+	nameHashes, err := dao.GetNamespaceHashes(ctx, s.db, uuid.MustParse(clusterID))
 	return nameHashes, err
 }

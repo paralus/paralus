@@ -13,7 +13,6 @@ func TestGetGroupPermissions(t *testing.T) {
 	defer db.Close()
 
 	ps := NewGroupPermissionService(db)
-	defer ps.Close()
 
 	groupNames := []string{"mygroup", "admin"}
 	gid := uuid.New()
@@ -34,7 +33,6 @@ func TestGetGroupProjectsByPermission(t *testing.T) {
 	defer db.Close()
 
 	ps := NewGroupPermissionService(db)
-	defer ps.Close()
 
 	groupNames := []string{"mygroup", "admin"}
 	gid := uuid.New()
@@ -55,7 +53,6 @@ func TestGetGroupPermissionsByProjectIDPermissions(t *testing.T) {
 	defer db.Close()
 
 	ps := NewGroupPermissionService(db)
-	defer ps.Close()
 
 	groupNames := []string{"mygroup", "admin"}
 	projectNames := []string{"myproject"}

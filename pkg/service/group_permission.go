@@ -6,7 +6,6 @@ import (
 
 	"github.com/RafaySystems/rcloud-base/internal/dao"
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	"github.com/RafaySystems/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -14,7 +13,6 @@ import (
 
 // GroupPermissionService is the interface for group permission operations
 type GroupPermissionService interface {
-	Close() error
 	GetGroupPermissions(ctx context.Context, groupNames []string, orgID, partnerID string) ([]sentry.GroupPermission, error)
 	GetGroupProjectsByPermission(ctx context.Context, groupNames []string, orgID, partnerID string, permission string) ([]sentry.GroupPermission, error)
 	GetGroupPermissionsByProjectIDPermissions(ctx context.Context, groupNames []string, orgID, partnerID string, projects []string, permissions []string) ([]sentry.GroupPermission, error)
@@ -23,25 +21,16 @@ type GroupPermissionService interface {
 
 // groupPermissionService implements GroupPermissionService
 type groupPermissionService struct {
-	dao  pg.EntityDAO
-	pdao dao.PermissionDao
+	db *bun.DB
 }
 
 // NewKubeconfigRevocation return new kubeconfig revocation service
 func NewGroupPermissionService(db *bun.DB) GroupPermissionService {
-	edao := pg.NewEntityDAO(db)
-	return &groupPermissionService{
-		dao:  edao,
-		pdao: dao.NewPermissionDao(edao),
-	}
-}
-
-func (s *groupPermissionService) Close() error {
-	return s.dao.Close()
+	return &groupPermissionService{db}
 }
 
 func (s *groupPermissionService) GetGroupPermissions(ctx context.Context, groupNames []string, orgID, partnerID string) ([]sentry.GroupPermission, error) {
-	gps, err := s.pdao.GetGroupPermissions(ctx, groupNames, uuid.MustParse(orgID), uuid.MustParse(partnerID))
+	gps, err := dao.GetGroupPermissions(ctx, s.db, groupNames, uuid.MustParse(orgID), uuid.MustParse(partnerID))
 	if err != nil {
 		return nil, err
 	}
@@ -53,8 +42,8 @@ func (s *groupPermissionService) GetGroupPermissions(ctx context.Context, groupN
 	return groupPermissions, nil
 }
 
-func (a *groupPermissionService) GetGroupProjectsByPermission(ctx context.Context, groupNames []string, orgID, partnerID string, permission string) ([]sentry.GroupPermission, error) {
-	aps, err := a.pdao.GetGroupProjectsByPermission(ctx, groupNames, uuid.MustParse(orgID), uuid.MustParse(partnerID), permission)
+func (s *groupPermissionService) GetGroupProjectsByPermission(ctx context.Context, groupNames []string, orgID, partnerID string, permission string) ([]sentry.GroupPermission, error) {
+	aps, err := dao.GetGroupProjectsByPermission(ctx, s.db, groupNames, uuid.MustParse(orgID), uuid.MustParse(partnerID), permission)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +56,7 @@ func (a *groupPermissionService) GetGroupProjectsByPermission(ctx context.Contex
 }
 
 func (s *groupPermissionService) GetGroupPermissionsByProjectIDPermissions(ctx context.Context, groupNames []string, orgID, partnerID string, projects []string, permissions []string) ([]sentry.GroupPermission, error) {
-	gps, err := s.pdao.GetGroupPermissionsByProjectIDPermissions(ctx, groupNames, uuid.MustParse(orgID), uuid.MustParse(partnerID), projects, permissions)
+	gps, err := dao.GetGroupPermissionsByProjectIDPermissions(ctx, s.db, groupNames, uuid.MustParse(orgID), uuid.MustParse(partnerID), projects, permissions)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +69,7 @@ func (s *groupPermissionService) GetGroupPermissionsByProjectIDPermissions(ctx c
 }
 
 func (s *groupPermissionService) GetProjectByGroup(ctx context.Context, groupNames []string, orgID, partnerID string) ([]sentry.GroupPermission, error) {
-	gps, err := s.pdao.GetProjectByGroup(ctx, groupNames, uuid.MustParse(orgID), uuid.MustParse(partnerID))
+	gps, err := dao.GetProjectByGroup(ctx, s.db, groupNames, uuid.MustParse(orgID), uuid.MustParse(partnerID))
 	if err != nil {
 		return nil, err
 	}

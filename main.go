@@ -512,11 +512,8 @@ func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
 
 func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	defer wg.Done()
-	defer ps.Close()
 	defer schedulerPool.Close()
-	defer gs.Close()
-	defer rs.Close()
-	defer rrs.Close()
+	defer db.Close()
 
 	partnerServer := server.NewPartnerServer(ps)
 	organizationServer := server.NewOrganizationServer(os)

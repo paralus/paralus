@@ -115,7 +115,7 @@ func (s *bootstrapServer) DeleteBootstrapAgent(ctx context.Context, in *sentry.B
 		return
 	}
 
-	err = s.bs.DeleteBoostrapAgent(ctx, templateRef, query.WithMeta(in.Metadata))
+	err = s.bs.DeleteBootstrapAgent(ctx, templateRef, query.WithMeta(in.Metadata))
 	if err == sql.ErrNoRows {
 		err = status.Error(codes.NotFound, err.Error())
 	}

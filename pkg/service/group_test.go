@@ -83,7 +83,6 @@ func TestCreateGroupNoUsersNoRoles(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	gs := NewGroupService(db, &mazc)
-	defer gs.Close()
 
 	guuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -117,7 +116,6 @@ func TestCreateGroupDuplicate(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	gs := NewGroupService(db, &mazc)
-	defer gs.Close()
 
 	guuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -161,7 +159,6 @@ func TestCreateGroupWithUsersNoRoles(t *testing.T) {
 
 			mazc := mockAuthzClient{}
 			gs := NewGroupService(db, &mazc)
-			defer gs.Close()
 
 			guuid := uuid.New().String()
 			puuid := uuid.New().String()
@@ -226,7 +223,6 @@ func TestCreateGroupNoUsersWithRoles(t *testing.T) {
 
 			mazc := mockAuthzClient{}
 			gs := NewGroupService(db, &mazc)
-			defer gs.Close()
 
 			guuid := uuid.New().String()
 			puuid := uuid.New().String()
@@ -303,7 +299,6 @@ func TestCreateGroupWithUsersWithRoles(t *testing.T) {
 
 			mazc := mockAuthzClient{}
 			gs := NewGroupService(db, &mazc)
-			defer gs.Close()
 
 			guuid := uuid.New().String()
 			puuid := uuid.New().String()
@@ -384,7 +379,6 @@ func TestUpdateGroupWithUsersWithRoles(t *testing.T) {
 
 			mazc := mockAuthzClient{}
 			gs := NewGroupService(db, &mazc)
-			defer gs.Close()
 
 			guuid := uuid.New().String()
 			puuid := uuid.New().String()
@@ -457,7 +451,6 @@ func TestGroupDelete(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	gs := NewGroupService(db, &mazc)
-	defer gs.Close()
 
 	guuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -496,7 +489,6 @@ func TestGroupDeleteNonExist(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	gs := NewGroupService(db, &mazc)
-	defer gs.Close()
 
 	guuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -520,7 +512,6 @@ func TestGroupGetByName(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	gs := NewGroupService(db, &mazc)
-	defer gs.Close()
 
 	guuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -571,7 +562,6 @@ func TestGroupGetById(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	gs := NewGroupService(db, &mazc)
-	defer gs.Close()
 
 	guuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -618,7 +608,6 @@ func TestGroupList(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	gs := NewGroupService(db, &mazc)
-	defer gs.Close()
 
 	guuid1 := uuid.New().String()
 	guuid2 := uuid.New().String()

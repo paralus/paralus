@@ -15,7 +15,6 @@ import (
 
 // MetroService is the interface for metro operations
 type MetroService interface {
-	Close() error
 	// create metro
 	Create(ctx context.Context, metro *infrav3.Location) (*infrav3.Location, error)
 	// get metro by id
@@ -34,20 +33,18 @@ type MetroService interface {
 
 // metroService implements MetroService
 type metroService struct {
-	dao pg.EntityDAO
+	db *bun.DB
 }
 
 // NewProjectService return new project service
 func NewMetroService(db *bun.DB) MetroService {
-	return &metroService{
-		dao: pg.NewEntityDAO(db),
-	}
+	return &metroService{db}
 }
 
 func (s *metroService) Create(ctx context.Context, metro *infrav3.Location) (*infrav3.Location, error) {
 
 	var part models.Partner
-	_, err := s.dao.GetByName(ctx, metro.Metadata.Partner, &part)
+	_, err := pg.GetByName(ctx, s.db, metro.Metadata.Partner, &part)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +65,7 @@ func (s *metroService) Create(ctx context.Context, metro *infrav3.Location) (*in
 		OrganizationId: uuid.Nil,
 		PartnerId:      part.ID,
 	}
-	_, err = s.dao.Create(ctx, &metrodb)
+	_, err = pg.Create(ctx, s.db, &metrodb)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +78,7 @@ func (s *metroService) GetByName(ctx context.Context, name string) (*infrav3.Loc
 
 	var metro infrav3.Location
 
-	entity, err := s.dao.GetByName(ctx, name, &models.Metro{})
+	entity, err := pg.GetByName(ctx, s.db, name, &models.Metro{})
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +109,7 @@ func (s *metroService) GetByName(ctx context.Context, name string) (*infrav3.Loc
 func (s *metroService) GetById(ctx context.Context, id uuid.UUID) (*infrav3.Location, error) {
 	var location infrav3.Location
 
-	entity, err := s.dao.GetByID(ctx, id, &models.Metro{})
+	entity, err := pg.GetByID(ctx, s.db, id, &models.Metro{})
 	if err != nil {
 		return nil, err
 	}
@@ -144,7 +141,7 @@ func (s *metroService) GetById(ctx context.Context, id uuid.UUID) (*infrav3.Loca
 
 func (s *metroService) Update(ctx context.Context, metro *infrav3.Location) (*infrav3.Location, error) {
 
-	entity, err := s.dao.GetByName(ctx, metro.Metadata.Name, &models.Metro{})
+	entity, err := pg.GetByName(ctx, s.db, metro.Metadata.Name, &models.Metro{})
 	if err != nil {
 		return metro, err
 	}
@@ -160,7 +157,7 @@ func (s *metroService) Update(ctx context.Context, metro *infrav3.Location) (*in
 		metrodb.Longitude = metro.Spec.Longitude
 		metrodb.ModifiedAt = time.Now()
 
-		_, err = s.dao.Update(ctx, metrodb.ID, metrodb)
+		_, err = pg.Update(ctx, s.db, metrodb.ID, metrodb)
 		if err != nil {
 			return metro, err
 		}
@@ -171,12 +168,12 @@ func (s *metroService) Update(ctx context.Context, metro *infrav3.Location) (*in
 
 func (s *metroService) Delete(ctx context.Context, metro *infrav3.Location) (*infrav3.Location, error) {
 
-	entity, err := s.dao.GetByName(ctx, metro.Metadata.Name, &models.Metro{})
+	entity, err := pg.GetByName(ctx, s.db, metro.Metadata.Name, &models.Metro{})
 	if err != nil {
 		return metro, err
 	}
 	if metrodb, ok := entity.(*models.Metro); ok {
-		err = s.dao.Delete(ctx, metrodb.ID, metrodb)
+		err = pg.Delete(ctx, s.db, metrodb.ID, metrodb)
 		if err != nil {
 			return metro, err
 		}
@@ -191,12 +188,12 @@ func (s *metroService) List(ctx context.Context, partner string) (*infrav3.Locat
 	var metrodbs []models.Metro
 
 	var part models.Partner
-	_, err := s.dao.GetByName(ctx, partner, &part)
+	_, err := pg.GetByName(ctx, s.db, partner, &part)
 	if err != nil {
 		return nil, err
 	}
 
-	entities, err := s.dao.List(ctx, uuid.NullUUID{UUID: part.ID, Valid: true}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, &metrodbs)
+	entities, err := pg.List(ctx, s.db, uuid.NullUUID{UUID: part.ID, Valid: true}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, &metrodbs)
 	if err != nil {
 		return nil, err
 	}
@@ -229,7 +226,7 @@ func (s *metroService) List(ctx context.Context, partner string) (*infrav3.Locat
 }
 
 func (s *metroService) GetIDByName(ctx context.Context, name string) (uuid.UUID, error) {
-	entity, err := s.dao.GetByName(ctx, name, &models.Metro{})
+	entity, err := pg.GetByName(ctx, s.db, name, &models.Metro{})
 	if err != nil {
 		return uuid.Nil, err
 	}
@@ -238,8 +235,4 @@ func (s *metroService) GetIDByName(ctx context.Context, name string) (uuid.UUID,
 		return metrodb.ID, nil
 	}
 	return uuid.Nil, nil
-}
-
-func (s *metroService) Close() error {
-	return s.dao.Close()
 }

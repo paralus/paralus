@@ -14,7 +14,6 @@ import (
 	"github.com/RafaySystems/rcloud-base/internal/models"
 	providers "github.com/RafaySystems/rcloud-base/internal/persistence/provider/kratos"
 	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
-	"github.com/RafaySystems/rcloud-base/internal/utils"
 	"github.com/RafaySystems/rcloud-base/pkg/common"
 	userrpcv3 "github.com/RafaySystems/rcloud-base/proto/rpc/user"
 	authzv1 "github.com/RafaySystems/rcloud-base/proto/types/authz"
@@ -29,7 +28,6 @@ const (
 
 // GroupService is the interface for group operations
 type UserService interface {
-	Close() error
 	// create user
 	Create(context.Context, *userv3.User) (*userv3.User, error)
 	// get user by id
@@ -47,14 +45,11 @@ type UserService interface {
 }
 
 type userService struct {
-	ap   providers.AuthProvider
-	dao  pg.EntityDAO
-	udao dao.UserDAO
-	l    utils.Lookup
-	azc  AuthzService
-	pdao dao.PermissionDao
-	ks   ApiKeyService
-	cc   common.CliConfigDownloadData
+	ap  providers.AuthProvider
+	db  *bun.DB
+	azc AuthzService
+	ks  ApiKeyService
+	cc  common.CliConfigDownloadData
 }
 
 type userTraits struct {
@@ -72,8 +67,7 @@ type parsedIds struct {
 }
 
 func NewUserService(ap providers.AuthProvider, db *bun.DB, azc AuthzService, kss ApiKeyService, cfg common.CliConfigDownloadData) UserService {
-	edao := pg.NewEntityDAO(db)
-	return &userService{ap: ap, dao: edao, udao: dao.NewUserDAO(db), l: utils.NewLookup(db), azc: azc, pdao: dao.NewPermissionDao(edao), ks: kss, cc: cfg}
+	return &userService{ap: ap, db: db, azc: azc, ks: kss, cc: cfg}
 }
 
 func getUserTraits(traits map[string]interface{}) userTraits {
@@ -114,7 +108,7 @@ func (s *userService) createUserRoleRelations(ctx context.Context, user *userv3.
 	var ps []*authzv1.Policy
 	for _, pnr := range projectNamespaceRoles {
 		role := pnr.GetRole()
-		entity, err := s.dao.GetIdByName(ctx, role, &models.Role{})
+		entity, err := pg.GetIdByName(ctx, s.db, role, &models.Role{})
 		if err != nil {
 			return user, fmt.Errorf("unable to find role '%v'", role)
 		}
@@ -131,7 +125,7 @@ func (s *userService) createUserRoleRelations(ctx context.Context, user *userv3.
 
 		switch {
 		case pnr.Namespace != nil:
-			projectId, err := s.l.GetProjectId(ctx, project)
+			projectId, err := pg.GetProjectId(ctx, s.db, project)
 			if err != nil {
 				return user, fmt.Errorf("unable to find project '%v'", project)
 			}
@@ -158,7 +152,7 @@ func (s *userService) createUserRoleRelations(ctx context.Context, user *userv3.
 				Act:  "*",
 			})
 		case project != "":
-			projectId, err := s.l.GetProjectId(ctx, project)
+			projectId, err := pg.GetProjectId(ctx, s.db, project)
 			if err != nil {
 				return user, fmt.Errorf("unable to find project '%v'", project)
 			}
@@ -209,19 +203,19 @@ func (s *userService) createUserRoleRelations(ctx context.Context, user *userv3.
 		}
 	}
 	if len(panrs) > 0 {
-		_, err := s.dao.Create(ctx, &panrs)
+		_, err := pg.Create(ctx, s.db, &panrs)
 		if err != nil {
 			return &userv3.User{}, err
 		}
 	}
 	if len(pars) > 0 {
-		_, err := s.dao.Create(ctx, &pars)
+		_, err := pg.Create(ctx, s.db, &pars)
 		if err != nil {
 			return &userv3.User{}, err
 		}
 	}
 	if len(ars) > 0 {
-		_, err := s.dao.Create(ctx, &ars)
+		_, err := pg.Create(ctx, s.db, &ars)
 		if err != nil {
 			return &userv3.User{}, err
 		}
@@ -241,11 +235,11 @@ func (s *userService) createUserRoleRelations(ctx context.Context, user *userv3.
 func (s *userService) getPartnerOrganization(ctx context.Context, user *userv3.User) (uuid.UUID, uuid.UUID, error) {
 	partner := user.GetMetadata().GetPartner()
 	org := user.GetMetadata().GetOrganization()
-	partnerId, err := s.l.GetPartnerId(ctx, partner)
+	partnerId, err := pg.GetPartnerId(ctx, s.db, partner)
 	if err != nil {
 		return uuid.Nil, uuid.Nil, err
 	}
-	organizationId, err := s.l.GetOrganizationId(ctx, org)
+	organizationId, err := pg.GetOrganizationId(ctx, s.db, org)
 	if err != nil {
 		return partnerId, uuid.Nil, err
 	}
@@ -288,7 +282,7 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 
 func (s *userService) identitiesModelToUser(ctx context.Context, user *userv3.User, usr *models.KratosIdentities) (*userv3.User, error) {
 	traits := getUserTraits(usr.Traits)
-	groups, err := s.udao.GetGroups(ctx, usr.ID)
+	groups, err := dao.GetGroups(ctx, s.db, usr.ID)
 	if err != nil {
 		return &userv3.User{}, err
 	}
@@ -299,7 +293,7 @@ func (s *userService) identitiesModelToUser(ctx context.Context, user *userv3.Us
 
 	labels := make(map[string]string)
 
-	roles, err := s.udao.GetRoles(ctx, usr.ID)
+	roles, err := dao.GetUserRoles(ctx, s.db, usr.ID)
 	if err != nil {
 		return &userv3.User{}, err
 	}
@@ -328,7 +322,7 @@ func (s *userService) GetByID(ctx context.Context, user *userv3.User) (*userv3.U
 	if err != nil {
 		return &userv3.User{}, err
 	}
-	entity, err := s.dao.GetByID(ctx, uid, &models.KratosIdentities{})
+	entity, err := pg.GetByID(ctx, s.db, uid, &models.KratosIdentities{})
 	if err != nil {
 		return &userv3.User{}, err
 	}
@@ -347,7 +341,7 @@ func (s *userService) GetByID(ctx context.Context, user *userv3.User) (*userv3.U
 
 func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3.User, error) {
 	name := user.GetMetadata().GetName()
-	entity, err := s.dao.GetByTraits(ctx, name, &models.KratosIdentities{})
+	entity, err := pg.GetByTraits(ctx, s.db, name, &models.KratosIdentities{})
 	if err != nil {
 		return &userv3.User{}, err
 	}
@@ -365,15 +359,15 @@ func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3
 }
 
 func (s *userService) deleteUserRoleRelations(ctx context.Context, userId uuid.UUID, user *userv3.User) error {
-	err := s.dao.DeleteX(ctx, "account_id", userId, &models.AccountResourcerole{})
+	err := pg.DeleteX(ctx, s.db, "account_id", userId, &models.AccountResourcerole{})
 	if err != nil {
 		return err
 	}
-	err = s.dao.DeleteX(ctx, "account_id", userId, &models.ProjectAccountResourcerole{})
+	err = pg.DeleteX(ctx, s.db, "account_id", userId, &models.ProjectAccountResourcerole{})
 	if err != nil {
 		return err
 	}
-	err = s.dao.DeleteX(ctx, "account_id", userId, &models.ProjectAccountNamespaceRole{})
+	err = pg.DeleteX(ctx, s.db, "account_id", userId, &models.ProjectAccountNamespaceRole{})
 	if err != nil {
 		return err
 	}
@@ -388,7 +382,7 @@ func (s *userService) deleteUserRoleRelations(ctx context.Context, userId uuid.U
 
 func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.User, error) {
 	name := user.GetMetadata().GetName()
-	entity, err := s.dao.GetIdByTraits(ctx, name, &models.KratosIdentities{})
+	entity, err := pg.GetIdByTraits(ctx, s.db, name, &models.KratosIdentities{})
 	if err != nil {
 		return &userv3.User{}, fmt.Errorf("no user found with name '%v'", name)
 	}
@@ -426,7 +420,7 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 
 func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3.DeleteUserResponse, error) {
 	name := user.GetMetadata().GetName()
-	entity, err := s.dao.GetIdByTraits(ctx, name, &models.KratosIdentities{})
+	entity, err := pg.GetIdByTraits(ctx, s.db, name, &models.KratosIdentities{})
 	if err != nil {
 		return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("no user founnd with username '%v'", name)
 	}
@@ -442,7 +436,7 @@ func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3
 			return &userrpcv3.DeleteUserResponse{}, err
 		}
 
-		err = s.dao.DeleteX(ctx, "account_id", usr.ID, &models.GroupAccount{})
+		err = pg.DeleteX(ctx, s.db, "account_id", usr.ID, &models.GroupAccount{})
 		if err != nil {
 			return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("unable to delete user; %v", err)
 		}
@@ -463,7 +457,7 @@ func (s *userService) List(ctx context.Context, _ *userv3.User) (*userv3.UserLis
 		},
 	}
 	var accs []models.KratosIdentities
-	entities, err := s.dao.ListAll(ctx, &accs)
+	entities, err := pg.ListAll(ctx, s.db, &accs)
 	if err != nil {
 		return userList, err
 	}
@@ -489,25 +483,25 @@ func (s *userService) List(ctx context.Context, _ *userv3.User) (*userv3.UserLis
 
 func (s *userService) RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiKeyRequest) (*common.CliConfigDownloadData, error) {
 	// get the default project associated to this account
-	ap, err := s.pdao.GetDefaultAccountProject(ctx, uuid.MustParse(req.Id))
+	ap, err := dao.GetDefaultAccountProject(ctx, s.db, uuid.MustParse(req.Id))
 	if err != nil {
 		return nil, err
 	}
 	// fetch the metadata information required to populate cli config
 	var proj models.Project
-	_, err = s.dao.GetByID(ctx, ap.ProjecttId, &proj)
+	_, err = pg.GetByID(ctx, s.db, ap.ProjecttId, &proj)
 	if err != nil {
 		return nil, err
 	}
 
 	var org models.Organization
-	_, err = s.dao.GetByID(ctx, ap.OrganizationId, &org)
+	_, err = pg.GetByID(ctx, s.db, ap.OrganizationId, &org)
 	if err != nil {
 		return nil, err
 	}
 
 	var part models.Partner
-	_, err = s.dao.GetByID(ctx, ap.PartnerId, &part)
+	_, err = pg.GetByID(ctx, s.db, ap.PartnerId, &part)
 	if err != nil {
 		return nil, err
 	}
@@ -538,8 +532,4 @@ func (s *userService) RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiK
 
 	return cliConfig, nil
 
-}
-
-func (s *userService) Close() error {
-	return s.dao.Close()
 }

@@ -22,7 +22,6 @@ func TestCreateProject(t *testing.T) {
 	defer db.Close()
 
 	ps := NewProjectService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 	ouuid := uuid.New().String()
@@ -49,7 +48,6 @@ func TestCreateProjectDuplicate(t *testing.T) {
 	defer db.Close()
 
 	gs := NewProjectService(db)
-	defer gs.Close()
 
 	puuid := uuid.New().String()
 
@@ -72,7 +70,6 @@ func TestProjectDelete(t *testing.T) {
 	defer db.Close()
 
 	ps := NewProjectService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 
@@ -96,7 +93,6 @@ func TestProjectDeleteNonExist(t *testing.T) {
 	defer db.Close()
 
 	ps := NewProjectService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 
@@ -117,7 +113,6 @@ func TestProjectGetByName(t *testing.T) {
 	defer db.Close()
 
 	ps := NewProjectService(db)
-	defer ps.Close()
 
 	partuuid := uuid.New().String()
 	ouuid := uuid.New().String()
@@ -146,7 +141,6 @@ func TestProjectGetById(t *testing.T) {
 	defer db.Close()
 
 	ps := NewProjectService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 
@@ -168,7 +162,6 @@ func TestProjectUpdate(t *testing.T) {
 	defer db.Close()
 
 	ps := NewProjectService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 

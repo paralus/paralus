@@ -13,7 +13,6 @@ func TestGetAccountPermissions(t *testing.T) {
 	defer db.Close()
 
 	ps := NewAccountPermissionService(db)
-	defer ps.Close()
 
 	aid := uuid.New().String()
 	oid := uuid.New().String()
@@ -33,7 +32,6 @@ func TestIsPartnerSuperAdmin(t *testing.T) {
 	defer db.Close()
 
 	ps := NewAccountPermissionService(db)
-	defer ps.Close()
 
 	aid := uuid.New().String()
 	pid := uuid.New().String()
@@ -52,7 +50,6 @@ func TestGetAccountProjectsByPermission(t *testing.T) {
 	defer db.Close()
 
 	ps := NewAccountPermissionService(db)
-	defer ps.Close()
 
 	aid := uuid.New().String()
 	oid := uuid.New().String()
@@ -72,7 +69,6 @@ func TestGetAccountPermissionsByProjectIDPermissions(t *testing.T) {
 	defer db.Close()
 
 	ps := NewAccountPermissionService(db)
-	defer ps.Close()
 
 	projects := []string{"myproject"}
 	permissions := []string{"read"}
@@ -94,7 +90,6 @@ func TestIsOrgAdmin(t *testing.T) {
 	defer db.Close()
 
 	ps := NewAccountPermissionService(db)
-	defer ps.Close()
 
 	aid := uuid.New().String()
 	pid := uuid.New().String()
@@ -113,7 +108,6 @@ func TestIsAccountActive(t *testing.T) {
 	defer db.Close()
 
 	ps := NewAccountPermissionService(db)
-	defer ps.Close()
 
 	aid := uuid.New().String()
 	oid := uuid.New().String()
@@ -135,7 +129,6 @@ func TestGetAccount(t *testing.T) {
 	defer db.Close()
 
 	ps := NewAccountPermissionService(db)
-	defer ps.Close()
 
 	aid := uuid.New().String()
 
@@ -153,7 +146,6 @@ func TestGetAccountGroups(t *testing.T) {
 	defer db.Close()
 
 	ps := NewAccountPermissionService(db)
-	defer ps.Close()
 
 	aid := uuid.New().String()
 

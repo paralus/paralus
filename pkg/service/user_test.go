@@ -61,7 +61,6 @@ func TestCreateUser(t *testing.T) {
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
 	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
-	defer us.Close()
 
 	uuuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -115,7 +114,6 @@ func TestCreateUserWithRole(t *testing.T) {
 			ap := &mockAuthProvider{}
 			mazc := mockAuthzClient{}
 			us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
-			defer us.Close()
 
 			uuuid := uuid.New().String()
 			puuid := uuid.New().String()
@@ -168,7 +166,6 @@ func TestUpdateUser(t *testing.T) {
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
 	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
-	defer us.Close()
 
 	uuuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -222,7 +219,6 @@ func TestUserGetByName(t *testing.T) {
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
 	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
-	defer us.Close()
 
 	uuuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -273,7 +269,6 @@ func TestUserGetById(t *testing.T) {
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
 	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
-	defer us.Close()
 
 	uuuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -322,7 +317,6 @@ func TestUserList(t *testing.T) {
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
 	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
-	defer us.Close()
 
 	uuuid1 := uuid.New().String()
 	uuuid2 := uuid.New().String()
@@ -391,7 +385,6 @@ func TestUserDelete(t *testing.T) {
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
 	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
-	defer us.Close()
 
 	uuuid := uuid.New().String()
 	puuid := uuid.New().String()

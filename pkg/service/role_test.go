@@ -53,7 +53,6 @@ func TestCreateRole(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	rs := NewRoleService(db, &mazc)
-	defer rs.Close()
 
 	ruuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -86,7 +85,6 @@ func TestCreateRoleWithPermissions(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	rs := NewRoleService(db, &mazc)
-	defer rs.Close()
 
 	ruuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -123,7 +121,6 @@ func TestCreateRoleDuplicate(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	rs := NewRoleService(db, &mazc)
-	defer rs.Close()
 
 	ruuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -155,7 +152,6 @@ func TestUpdateRole(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	rs := NewRoleService(db, &mazc)
-	defer rs.Close()
 
 	ruuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -195,7 +191,6 @@ func TestRoleDelete(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	rs := NewRoleService(db, &mazc)
-	defer rs.Close()
 
 	ruuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -227,7 +222,6 @@ func TestRoleDeleteNonExist(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	rs := NewRoleService(db, &mazc)
-	defer rs.Close()
 
 	ruuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -252,7 +246,6 @@ func TestRoleGetByName(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	rs := NewRoleService(db, &mazc)
-	defer rs.Close()
 
 	ruuid := uuid.New().String()
 	rruuid := uuid.New().String()
@@ -284,7 +277,6 @@ func TestRoleGetById(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	rs := NewRoleService(db, &mazc)
-	defer rs.Close()
 
 	ruuid := uuid.New().String()
 	rruuid := uuid.New().String()
@@ -312,7 +304,6 @@ func TestRoleList(t *testing.T) {
 
 	mazc := mockAuthzClient{}
 	rs := NewRoleService(db, &mazc)
-	defer rs.Close()
 
 	ruuid1 := uuid.New().String()
 	ruuid2 := uuid.New().String()

@@ -4,47 +4,13 @@ import (
 	"context"
 
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
-// PermissionDao is the interface for permission operations
-type PermissionDao interface {
-	GetGroupPermissions(ctx context.Context, groupNames []string, orgID, partnerID uuid.UUID) ([]models.GroupPermission, error)
-	GetGroupProjectsByPermission(ctx context.Context, groupNames []string, orgID, partnerID uuid.UUID, permission string) ([]models.GroupPermission, error)
-	GetGroupPermissionsByProjectIDPermissions(ctx context.Context, groupNames []string, orgID, partnerID uuid.UUID, projects []string, permissions []string) ([]models.GroupPermission, error)
-	GetProjectByGroup(ctx context.Context, groupNames []string, orgID, partnerID uuid.UUID) ([]models.GroupPermission, error)
-	GetAccountPermissions(ctx context.Context, accountID, orgID, partnerID uuid.UUID) ([]models.AccountPermission, error)
-	IsPartnerSuperAdmin(ctx context.Context, accountID, partnerID uuid.UUID) (isPartnerAdmin, isSuperAdmin bool, err error)
-	GetAccountProjectsByPermission(ctx context.Context, accountID, orgID, partnerID uuid.UUID, permission string) ([]models.AccountPermission, error)
-	GetAccountPermissionsByProjectIDPermissions(ctx context.Context, accountID, orgID, partnerID uuid.UUID, projects []uuid.UUID, permissions []string) ([]models.AccountPermission, error)
-	GetSSOUsersGroupProjectRole(ctx context.Context, orgID uuid.UUID) ([]models.SSOAccountGroupProjectRole, error)
-	GetAcccountsWithApprovalPermission(ctx context.Context, orgID, partnerID uuid.UUID) ([]string, error)
-	GetSSOAcccountsWithApprovalPermission(ctx context.Context, orgID, partnerID uuid.UUID) ([]string, error)
-	IsOrgAdmin(ctx context.Context, accountID, partnerID uuid.UUID) (isOrgAdmin bool, err error)
-	GetAccountBasics(ctx context.Context, accountID uuid.UUID) (*models.Account, error)
-	GetAccountGroups(ctx context.Context, accountID uuid.UUID) ([]models.GroupAccount, error)
-	GetDefaultUserGroup(ctx context.Context, orgID uuid.UUID) (*models.Group, error)
-	GetDefaultUserGroupAccount(ctx context.Context, accountID, groupID uuid.UUID) (*models.GroupAccount, error)
-	GetDefaultAccountProject(ctx context.Context, accountID uuid.UUID) (models.AccountPermission, error)
-}
-
-// permissionDao implements PermissionDao
-type permissionDao struct {
-	dao pg.EntityDAO
-}
-
-// PermissionDao return new permission dao
-func NewPermissionDao(edao pg.EntityDAO) PermissionDao {
-	return &permissionDao{
-		dao: edao,
-	}
-}
-
-func (s *permissionDao) GetGroupPermissions(ctx context.Context, groupNames []string, orgID, partnerID uuid.UUID) ([]models.GroupPermission, error) {
+func GetGroupPermissions(ctx context.Context, db bun.IDB, groupNames []string, orgID, partnerID uuid.UUID) ([]models.GroupPermission, error) {
 	var gps []models.GroupPermission
-	err := s.dao.GetInstance().NewSelect().Model(&gps).
+	err := db.NewSelect().Model(&gps).
 		Where("organization_id = ?", orgID).
 		Where("partner_id = ?", partnerID).
 		Where("group_name IN (?)", bun.In(groupNames)).
@@ -52,10 +18,10 @@ func (s *permissionDao) GetGroupPermissions(ctx context.Context, groupNames []st
 	return gps, err
 }
 
-func (s *permissionDao) GetGroupProjectsByPermission(ctx context.Context, groupNames []string, orgID, partnerID uuid.UUID, permission string) ([]models.GroupPermission, error) {
+func GetGroupProjectsByPermission(ctx context.Context, db bun.IDB, groupNames []string, orgID, partnerID uuid.UUID, permission string) ([]models.GroupPermission, error) {
 	var gps []models.GroupPermission
 
-	err := s.dao.GetInstance().NewSelect().Model(&gps).
+	err := db.NewSelect().Model(&gps).
 		Where("organization_id = ?", orgID).
 		Where("partner_id = ?", partnerID).
 		Where("group_name IN (?)", bun.In(groupNames)).
@@ -65,10 +31,10 @@ func (s *permissionDao) GetGroupProjectsByPermission(ctx context.Context, groupN
 	return gps, err
 }
 
-func (s *permissionDao) GetGroupPermissionsByProjectIDPermissions(ctx context.Context, groupNames []string, orgID, partnerID uuid.UUID, projects []string, permissions []string) ([]models.GroupPermission, error) {
+func GetGroupPermissionsByProjectIDPermissions(ctx context.Context, db bun.IDB, groupNames []string, orgID, partnerID uuid.UUID, projects []string, permissions []string) ([]models.GroupPermission, error) {
 	var gps []models.GroupPermission
 
-	err := s.dao.GetInstance().NewSelect().Model(&gps).
+	err := db.NewSelect().Model(&gps).
 		Where("organization_id = ?", orgID).
 		Where("partner_id = ?", partnerID).
 		Where("group_name IN (?)", bun.In(groupNames)).
@@ -79,10 +45,10 @@ func (s *permissionDao) GetGroupPermissionsByProjectIDPermissions(ctx context.Co
 	return gps, err
 }
 
-func (s *permissionDao) GetProjectByGroup(ctx context.Context, groupNames []string, orgID, partnerID uuid.UUID) ([]models.GroupPermission, error) {
+func GetProjectByGroup(ctx context.Context, db bun.IDB, groupNames []string, orgID, partnerID uuid.UUID) ([]models.GroupPermission, error) {
 	var gps []models.GroupPermission
 
-	err := s.dao.GetInstance().NewSelect().Model(&gps).
+	err := db.NewSelect().Model(&gps).
 		Where("organization_id = ?", orgID).
 		Where("partner_id = ?", partnerID).
 		Where("group_name IN (?)", bun.In(groupNames)).
@@ -92,10 +58,10 @@ func (s *permissionDao) GetProjectByGroup(ctx context.Context, groupNames []stri
 	return gps, err
 }
 
-func (a *permissionDao) GetAccountPermissions(ctx context.Context, accountID, orgID, partnerID uuid.UUID) ([]models.AccountPermission, error) {
+func GetAccountPermissions(ctx context.Context, db bun.IDB, accountID, orgID, partnerID uuid.UUID) ([]models.AccountPermission, error) {
 	var aps []models.AccountPermission
 
-	err := a.dao.GetInstance().NewSelect().Model(&aps).
+	err := db.NewSelect().Model(&aps).
 		Where("account_id = ?", accountID).
 		Where("organization_id = ?", orgID).
 		Where("partner_id = ?", partnerID).
@@ -104,13 +70,13 @@ func (a *permissionDao) GetAccountPermissions(ctx context.Context, accountID, or
 	return aps, err
 }
 
-func (a *permissionDao) IsPartnerSuperAdmin(ctx context.Context, accountID, partnerID uuid.UUID) (isPartnerAdmin, isSuperAdmin bool, err error) {
+func IsPartnerSuperAdmin(ctx context.Context, db bun.IDB, accountID, partnerID uuid.UUID) (isPartnerAdmin, isSuperAdmin bool, err error) {
 	var aps []models.AccountPermission
 
 	isSuperAdmin = false
 	isPartnerAdmin = false
 
-	err = a.dao.GetInstance().NewSelect().Model(&aps).
+	err = db.NewSelect().Model(&aps).
 		Where("account_id = ?", accountID).
 		Where("partner_id = ?", partnerID).
 		WhereGroup(" AND ", func(sq *bun.SelectQuery) *bun.SelectQuery {
@@ -133,10 +99,10 @@ func (a *permissionDao) IsPartnerSuperAdmin(ctx context.Context, accountID, part
 	return isPartnerAdmin, isSuperAdmin, nil
 }
 
-func (a *permissionDao) GetAccountProjectsByPermission(ctx context.Context, accountID, orgID, partnerID uuid.UUID, permission string) ([]models.AccountPermission, error) {
+func GetAccountProjectsByPermission(ctx context.Context, db bun.IDB, accountID, orgID, partnerID uuid.UUID, permission string) ([]models.AccountPermission, error) {
 	var aps []models.AccountPermission
 
-	err := a.dao.GetInstance().NewSelect().Model(&aps).
+	err := db.NewSelect().Model(&aps).
 		Where("account_id = ?", accountID).
 		Where("organization_id = ?", orgID).
 		Where("partner_id = ?", partnerID).
@@ -146,10 +112,10 @@ func (a *permissionDao) GetAccountProjectsByPermission(ctx context.Context, acco
 	return aps, err
 }
 
-func (a *permissionDao) GetDefaultAccountProject(ctx context.Context, accountID uuid.UUID) (models.AccountPermission, error) {
+func GetDefaultAccountProject(ctx context.Context, db bun.IDB, accountID uuid.UUID) (models.AccountPermission, error) {
 	var aps models.AccountPermission
 
-	err := a.dao.GetInstance().NewSelect().Model(&aps).
+	err := db.NewSelect().Model(&aps).
 		ColumnExpr("sap.*").
 		Join("JOIN authsrv_project as proj").JoinOn("proj.id = sap.project_id").JoinOn("proj.default = ?", true).
 		Where("account_id = ?", accountID).Limit(1).
@@ -158,10 +124,10 @@ func (a *permissionDao) GetDefaultAccountProject(ctx context.Context, accountID 
 	return aps, err
 }
 
-func (a *permissionDao) GetAccountPermissionsByProjectIDPermissions(ctx context.Context, accountID, orgID, partnerID uuid.UUID, projects []uuid.UUID, permissions []string) ([]models.AccountPermission, error) {
+func GetAccountPermissionsByProjectIDPermissions(ctx context.Context, db bun.IDB, accountID, orgID, partnerID uuid.UUID, projects []uuid.UUID, permissions []string) ([]models.AccountPermission, error) {
 	var aps []models.AccountPermission
 
-	err := a.dao.GetInstance().NewSelect().Model(&aps).
+	err := db.NewSelect().Model(&aps).
 		Where("account_id = ?", accountID).
 		Where("organization_id = ?", orgID).
 		Where("partner_id = ?", partnerID).
@@ -172,17 +138,17 @@ func (a *permissionDao) GetAccountPermissionsByProjectIDPermissions(ctx context.
 	return aps, err
 }
 
-func (a *permissionDao) GetSSOUsersGroupProjectRole(ctx context.Context, orgID uuid.UUID) ([]models.SSOAccountGroupProjectRole, error) {
+func GetSSOUsersGroupProjectRole(ctx context.Context, db bun.IDB, orgID uuid.UUID) ([]models.SSOAccountGroupProjectRole, error) {
 	var ssos []models.SSOAccountGroupProjectRole
 
-	err := a.dao.GetInstance().NewSelect().Model(&ssos).
+	err := db.NewSelect().Model(&ssos).
 		Where("organization_id = ?", orgID).
 		Scan(ctx)
 
 	return ssos, err
 }
 
-func (a *permissionDao) GetAcccountsWithApprovalPermission(ctx context.Context, orgID, partnerID uuid.UUID) ([]string, error) {
+func GetAcccountsWithApprovalPermission(ctx context.Context, db bun.IDB, orgID, partnerID uuid.UUID) ([]string, error) {
 	// TODO: remove this from here once Account is structured in types.proto
 	type accountPermission struct {
 		bun.BaseModel `bun:"table:sentry_account_permission,alias:sap"`
@@ -190,7 +156,7 @@ func (a *permissionDao) GetAcccountsWithApprovalPermission(ctx context.Context, 
 		*models.AccountPermission
 	}
 	var aps []accountPermission
-	err := a.dao.GetInstance().NewSelect().Model(&aps).
+	err := db.NewSelect().Model(&aps).
 		ColumnExpr("ki.traits -> 'email'").
 		DistinctOn("ki.traits -> 'email'").
 		Join("INNER JOIN identities as ki ON ?TableAlias.account_id = ki.id").
@@ -213,9 +179,9 @@ func (a *permissionDao) GetAcccountsWithApprovalPermission(ctx context.Context, 
 	return usernames, nil
 }
 
-func (a *permissionDao) GetSSOAcccountsWithApprovalPermission(ctx context.Context, orgID, partnerID uuid.UUID) ([]string, error) {
+func GetSSOAcccountsWithApprovalPermission(ctx context.Context, db bun.IDB, orgID, partnerID uuid.UUID) ([]string, error) {
 	var ssoaps []models.SSOAccountGroupProjectRole
-	err := a.dao.GetInstance().NewSelect().Model(&ssoaps).
+	err := db.NewSelect().Model(&ssoaps).
 		Where("?TableAlias.organization_id = ?", orgID).
 		Where("?TableAlias.partner_id = ?", partnerID).
 		WhereGroup("grp", func(sq *bun.SelectQuery) *bun.SelectQuery {
@@ -237,12 +203,12 @@ func (a *permissionDao) GetSSOAcccountsWithApprovalPermission(ctx context.Contex
 	return usernames, nil
 }
 
-func (a *permissionDao) IsOrgAdmin(ctx context.Context, accountID, partnerID uuid.UUID) (isOrgAdmin bool, err error) {
+func IsOrgAdmin(ctx context.Context, db bun.IDB, accountID, partnerID uuid.UUID) (isOrgAdmin bool, err error) {
 	var aps []models.AccountPermission
 
 	isOrgAdmin = false
 
-	err = a.dao.GetInstance().NewSelect().Model(&aps).
+	err = db.NewSelect().Model(&aps).
 		Where("account_id = ?", accountID).
 		Where("partner_id = ?", partnerID).
 		Where("role_name = ?", "ADMIN").
@@ -262,10 +228,10 @@ func (a *permissionDao) IsOrgAdmin(ctx context.Context, accountID, partnerID uui
 	return isOrgAdmin, nil
 }
 
-func (a *permissionDao) GetAccountBasics(ctx context.Context, accountID uuid.UUID) (*models.Account, error) {
+func GetAccountBasics(ctx context.Context, db bun.IDB, accountID uuid.UUID) (*models.Account, error) {
 	var acc models.Account
 
-	err := a.dao.GetInstance().NewSelect().Model(&acc).
+	err := db.NewSelect().Model(&acc).
 		Column("identities.id", "traits", "state").
 		ColumnExpr("max(ks.authenticated_at) as lastlogin").
 		ColumnExpr("identities.traits -> 'email' as username").
@@ -280,10 +246,10 @@ func (a *permissionDao) GetAccountBasics(ctx context.Context, accountID uuid.UUI
 	return &acc, nil
 }
 
-func (a *permissionDao) GetAccountGroups(ctx context.Context, accountID uuid.UUID) ([]models.GroupAccount, error) {
+func GetAccountGroups(ctx context.Context, db bun.IDB, accountID uuid.UUID) ([]models.GroupAccount, error) {
 	var ga []models.GroupAccount
 
-	err := a.dao.GetInstance().NewSelect().Model(&ga).
+	err := db.NewSelect().Model(&ga).
 		Where("account_id = ?", accountID).
 		Where("trash = ?", false).
 		Where("active = ?", true).
@@ -294,9 +260,9 @@ func (a *permissionDao) GetAccountGroups(ctx context.Context, accountID uuid.UUI
 	return ga, nil
 }
 
-func (a *permissionDao) GetDefaultUserGroup(ctx context.Context, orgID uuid.UUID) (*models.Group, error) {
+func GetDefaultUserGroup(ctx context.Context, db bun.IDB, orgID uuid.UUID) (*models.Group, error) {
 	var g models.Group
-	err := a.dao.GetInstance().NewSelect().Model(&g).
+	err := db.NewSelect().Model(&g).
 		Where("organization_id = ?", orgID).
 		Where("type = ?", "DEFAULT_USERS").
 		Where("trash = ?", false).
@@ -304,9 +270,9 @@ func (a *permissionDao) GetDefaultUserGroup(ctx context.Context, orgID uuid.UUID
 	return &g, err
 }
 
-func (a *permissionDao) GetDefaultUserGroupAccount(ctx context.Context, accountID, groupID uuid.UUID) (*models.GroupAccount, error) {
+func GetDefaultUserGroupAccount(ctx context.Context, db bun.IDB, accountID, groupID uuid.UUID) (*models.GroupAccount, error) {
 	var ga models.GroupAccount
-	err := a.dao.GetInstance().NewSelect().Model(&ga).
+	err := db.NewSelect().Model(&ga).
 		Where("account_id = ?", accountID).
 		Where("group_id = ?", groupID).
 		Where("trash = ?", false).

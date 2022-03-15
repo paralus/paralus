@@ -10,7 +10,6 @@ import (
 
 	"github.com/RafaySystems/rcloud-base/internal/models"
 	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
-	"github.com/RafaySystems/rcloud-base/internal/utils"
 	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	systemv3 "github.com/RafaySystems/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
@@ -30,17 +29,12 @@ type OIDCProviderService interface {
 }
 
 type oidcProvider struct {
-	dao       pg.EntityDAO
+	db        *bun.DB
 	kratosUrl string
-	l         utils.Lookup
 }
 
 func NewOIDCProviderService(db *bun.DB, kratosUrl string) OIDCProviderService {
-	return &oidcProvider{
-		dao:       pg.NewEntityDAO(db),
-		kratosUrl: kratosUrl,
-		l:         utils.NewLookup(db),
-	}
+	return &oidcProvider{db: db, kratosUrl: kratosUrl}
 }
 
 func generateCallbackUrl(id string, kUrl string) string {
@@ -56,11 +50,11 @@ func validateURL(rawURL string) error {
 func (s *oidcProvider) getPartnerOrganization(ctx context.Context, provider *systemv3.OIDCProvider) (uuid.UUID, uuid.UUID, error) {
 	partner := provider.GetMetadata().GetPartner()
 	org := provider.GetMetadata().GetOrganization()
-	partnerId, err := s.l.GetPartnerId(ctx, partner)
+	partnerId, err := pg.GetPartnerId(ctx, s.db, partner)
 	if err != nil {
 		return uuid.Nil, uuid.Nil, err
 	}
-	organizationId, err := s.l.GetOrganizationId(ctx, org)
+	organizationId, err := pg.GetOrganizationId(ctx, s.db, org)
 	if err != nil {
 		return partnerId, uuid.Nil, err
 	}
@@ -81,8 +75,9 @@ func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvid
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
-	p, _ := s.dao.GetIdByNamePartnerOrg(
+	p, _ := pg.GetIdByNamePartnerOrg(
 		ctx,
+		s.db,
 		provider.GetMetadata().GetName(),
 		uuid.NullUUID{UUID: partnerId, Valid: true},
 		uuid.NullUUID{UUID: organizationId, Valid: true},
@@ -129,7 +124,7 @@ func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvid
 		RequestedClaims: provider.Spec.GetRequestedClaims().AsMap(),
 		Predefined:      provider.Spec.GetPredefined(),
 	}
-	_, err = s.dao.Create(ctx, entity)
+	_, err = pg.Create(ctx, s.db, entity)
 	if err != nil {
 		return &systemv3.OIDCProvider{}, err
 	}
@@ -167,7 +162,7 @@ func (s *oidcProvider) GetByID(ctx context.Context, provider *systemv3.OIDCProvi
 	}
 
 	entity := &models.OIDCProvider{}
-	_, err = s.dao.GetByID(ctx, id, entity)
+	_, err = pg.GetByID(ctx, s.db, id, entity)
 	// TODO: Return proper error for Id not exist
 	if err != nil {
 		return &systemv3.OIDCProvider{}, err
@@ -206,7 +201,7 @@ func (s *oidcProvider) GetByName(ctx context.Context, provider *systemv3.OIDCPro
 	}
 
 	entity := &models.OIDCProvider{}
-	_, err := s.dao.GetByName(ctx, name, entity)
+	_, err := pg.GetByName(ctx, s.db, name, entity)
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -251,7 +246,7 @@ func (s *oidcProvider) List(ctx context.Context) (*systemv3.OIDCProviderList, er
 		orgID    uuid.NullUUID
 		parID    uuid.NullUUID
 	)
-	_, err := s.dao.List(ctx, parID, orgID, &entities)
+	_, err := pg.List(ctx, s.db, parID, orgID, &entities)
 	if err != nil {
 		return &systemv3.OIDCProviderList{}, nil
 	}
@@ -307,7 +302,7 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 	}
 
 	existingP := &models.OIDCProvider{}
-	_, err = s.dao.GetByName(ctx, name, existingP)
+	_, err = pg.GetByName(ctx, s.db, name, existingP)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return &systemv3.OIDCProvider{}, status.Errorf(codes.InvalidArgument, "OIDC PROVIDER %q NOT EXIST", name)
@@ -352,7 +347,7 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 		RequestedClaims: provider.Spec.GetRequestedClaims().AsMap(),
 		Predefined:      provider.Spec.GetPredefined(),
 	}
-	_, err = s.dao.Update(ctx, existingP.Id, entity)
+	_, err = pg.Update(ctx, s.db, existingP.Id, entity)
 	if err != nil {
 		return &systemv3.OIDCProvider{}, err
 	}
@@ -389,12 +384,12 @@ func (s *oidcProvider) Delete(ctx context.Context, provider *systemv3.OIDCProvid
 	if len(name) == 0 {
 		return status.Error(codes.InvalidArgument, "EMPTY NAME")
 	}
-	_, err := s.dao.GetByName(ctx, name, entity)
+	_, err := pg.GetByName(ctx, s.db, name, entity)
 	if err != nil {
 		return status.Errorf(codes.InvalidArgument, "OIDC PROVIDER %q NOT EXIST", name)
 	}
 
-	err = s.dao.Delete(ctx, entity.Id, &models.OIDCProvider{})
+	err = pg.Delete(ctx, s.db, entity.Id, &models.OIDCProvider{})
 	if err != nil {
 		return err
 	}

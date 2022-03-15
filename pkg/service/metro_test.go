@@ -22,7 +22,6 @@ func TestCreateMetro(t *testing.T) {
 	defer db.Close()
 
 	ps := NewMetroService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 	muuid := uuid.New().String()
@@ -49,7 +48,6 @@ func TestCreateMetroDuplicate(t *testing.T) {
 	defer db.Close()
 
 	gs := NewMetroService(db)
-	defer gs.Close()
 
 	muuid := uuid.New().String()
 
@@ -72,7 +70,6 @@ func TestMetroDelete(t *testing.T) {
 	defer db.Close()
 
 	ps := NewMetroService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 
@@ -97,7 +94,6 @@ func TestMetroDeleteNonExist(t *testing.T) {
 	defer db.Close()
 
 	ps := NewMetroService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 
@@ -119,7 +115,6 @@ func TestMetroGetByName(t *testing.T) {
 	defer db.Close()
 
 	ps := NewMetroService(db)
-	defer ps.Close()
 
 	muuid := uuid.New().String()
 
@@ -142,7 +137,6 @@ func TestMetroUpdate(t *testing.T) {
 	defer db.Close()
 
 	ps := NewMetroService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 

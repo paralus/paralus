@@ -8,7 +8,6 @@ import (
 	"github.com/RafaySystems/rcloud-base/internal/constants"
 	"github.com/RafaySystems/rcloud-base/internal/dao"
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	"github.com/RafaySystems/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -17,32 +16,22 @@ import (
 
 // KubectlClusterSettingsService is the interface for kubectl cluster setting operations
 type KubectlClusterSettingsService interface {
-	Close() error
 	Get(ctx context.Context, orgID string, clusterID string) (*sentry.KubectlClusterSettings, error)
 	Patch(ctx context.Context, kc *sentry.KubectlClusterSettings) error
 }
 
 // kubectlClusterSettingsService implements KubectlClusterSettingsService
 type kubectlClusterSettingsService struct {
-	dao  pg.EntityDAO
-	kdao dao.KubeconfigDao
+	db *bun.DB
 }
 
 // NewKubectlClusterSettingsService return new kubectl cluster setting service
 func NewkubectlClusterSettingsService(db *bun.DB) KubectlClusterSettingsService {
-	edao := pg.NewEntityDAO(db)
-	return &kubectlClusterSettingsService{
-		dao:  edao,
-		kdao: dao.NewKubeconfigDao(edao),
-	}
-}
-
-func (kcs *kubectlClusterSettingsService) Close() error {
-	return kcs.dao.Close()
+	return &kubectlClusterSettingsService{db}
 }
 
 func (kcs *kubectlClusterSettingsService) Get(ctx context.Context, orgID string, clusterID string) (*sentry.KubectlClusterSettings, error) {
-	kc, err := kcs.kdao.GetkubectlClusterSettings(ctx, uuid.MustParse(orgID), clusterID)
+	kc, err := dao.GetkubectlClusterSettings(ctx, kcs.db, uuid.MustParse(orgID), clusterID)
 	if err == sql.ErrNoRows {
 		return nil, constants.ErrNotFound
 	} else if err != nil {
@@ -52,19 +41,19 @@ func (kcs *kubectlClusterSettingsService) Get(ctx context.Context, orgID string,
 }
 
 func (kcs *kubectlClusterSettingsService) Patch(ctx context.Context, kc *sentry.KubectlClusterSettings) error {
-	err := kcs.dao.GetInstance().RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
-		_, err := kcs.kdao.GetkubectlClusterSettings(ctx, uuid.MustParse(kc.OrganizationID), kc.Name)
+	err := kcs.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
+		_, err := dao.GetkubectlClusterSettings(ctx, kcs.db, uuid.MustParse(kc.OrganizationID), kc.Name)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				kcsdb := convertToKubeCtlSettingModel(kc)
 				kcsdb.CreatedAt = time.Now()
-				kcs.kdao.CreatekubectlClusterSettings(ctx, kcsdb)
+				dao.CreatekubectlClusterSettings(ctx, kcs.db, kcsdb)
 			}
 			return err
 		}
 		kcsdb := convertToKubeCtlSettingModel(kc)
 		kcsdb.ModifiedAt = time.Now()
-		return kcs.kdao.UpdatekubectlClusterSettings(ctx, kcsdb)
+		return dao.UpdatekubectlClusterSettings(ctx, kcs.db, kcsdb)
 	})
 	return err
 }

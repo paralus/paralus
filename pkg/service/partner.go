@@ -16,7 +16,6 @@ import (
 
 // PartnerService is the interface for partner operations
 type PartnerService interface {
-	Close() error
 	// create partner
 	Create(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error)
 	// get partner by id
@@ -31,14 +30,12 @@ type PartnerService interface {
 
 // partnerService implements PartnerService
 type partnerService struct {
-	dao pg.EntityDAO
+	db *bun.DB
 }
 
 // NewPartnerService return new partner service
 func NewPartnerService(db *bun.DB) PartnerService {
-	return &partnerService{
-		dao: pg.NewEntityDAO(db),
-	}
+	return &partnerService{db}
 }
 
 func (s *partnerService) Create(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error) {
@@ -68,7 +65,7 @@ func (s *partnerService) Create(ctx context.Context, partner *systemv3.Partner) 
 		CreatedAt:                 time.Now(),
 		ModifiedAt:                time.Now(),
 	}
-	entity, err := s.dao.Create(ctx, &part)
+	entity, err := pg.Create(ctx, s.db, &part)
 	if err != nil {
 		partner.Status = &v3.Status{
 			ConditionStatus: v3.ConditionStatus_StatusFailed,
@@ -113,7 +110,7 @@ func (s *partnerService) GetByID(ctx context.Context, id string) (*systemv3.Part
 		}
 		return partner, err
 	}
-	entity, err := s.dao.GetByID(ctx, uid, &models.Partner{})
+	entity, err := pg.GetByID(ctx, s.db, uid, &models.Partner{})
 	if err != nil {
 		partner.Status = &v3.Status{
 			ConditionType:   "Describe",
@@ -182,7 +179,7 @@ func (s *partnerService) GetByName(ctx context.Context, name string) (*systemv3.
 		},
 	}
 
-	entity, err := s.dao.GetByName(ctx, name, &models.Partner{})
+	entity, err := pg.GetByName(ctx, s.db, name, &models.Partner{})
 	if err != nil {
 		partner.Status = &v3.Status{
 			ConditionType:   "Describe",
@@ -244,7 +241,7 @@ func (s *partnerService) GetByName(ctx context.Context, name string) (*systemv3.
 
 func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error) {
 
-	entity, err := s.dao.GetByName(ctx, partner.Metadata.Name, &models.Partner{})
+	entity, err := pg.GetByName(ctx, s.db, partner.Metadata.Name, &models.Partner{})
 	if err != nil {
 		partner.Status = &v3.Status{
 			ConditionStatus: v3.ConditionStatus_StatusFailed,
@@ -278,7 +275,7 @@ func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) 
 		part.ModifiedAt = time.Now()
 
 		//Update the partner details
-		_, err = s.dao.Update(ctx, part.ID, part)
+		_, err = pg.Update(ctx, s.db, part.ID, part)
 		if err != nil {
 			partner.Status = &v3.Status{
 				ConditionStatus: v3.ConditionStatus_StatusFailed,
@@ -301,7 +298,7 @@ func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) 
 }
 
 func (s *partnerService) Delete(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error) {
-	entity, err := s.dao.GetByName(ctx, partner.Metadata.Name, &models.Partner{})
+	entity, err := pg.GetByName(ctx, s.db, partner.Metadata.Name, &models.Partner{})
 	if err != nil {
 		partner.Status = &v3.Status{
 			ConditionType:   "Delete",
@@ -314,7 +311,7 @@ func (s *partnerService) Delete(ctx context.Context, partner *systemv3.Partner) 
 
 	if part, ok := entity.(*models.Partner); ok {
 		part.Trash = true
-		_, err := s.dao.Update(ctx, part.ID, part)
+		_, err := pg.Update(ctx, s.db, part.ID, part)
 		if err != nil {
 			partner.Status = &v3.Status{
 				ConditionType:   "Delete",
@@ -337,8 +334,4 @@ func (s *partnerService) Delete(ctx context.Context, partner *systemv3.Partner) 
 
 	return partner, nil
 
-}
-
-func (s *partnerService) Close() error {
-	return s.dao.Close()
 }

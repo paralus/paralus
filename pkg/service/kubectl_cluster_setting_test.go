@@ -13,7 +13,6 @@ func TestGetKubectlSetting(t *testing.T) {
 	defer db.Close()
 
 	ps := NewkubectlClusterSettingsService(db)
-	defer ps.Close()
 
 	ouuid := uuid.New().String()
 	cuuid := uuid.New().String()
