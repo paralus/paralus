@@ -39,7 +39,7 @@ type EntityDAO interface {
 	// delete entity
 	Delete(context.Context, uuid.UUID, interface{}) error
 	// delete all items in table (for script)
-	DeleteAll(context.Context, interface{}) error
+	HardDeleteAll(context.Context, interface{}) error
 	// get list of entities
 	List(context.Context, uuid.NullUUID, uuid.NullUUID, interface{}) (interface{}, error)
 	// get list of entities
@@ -135,7 +135,8 @@ func (dao *entityDAO) GetByNamePartnerOrg(ctx context.Context, name string, pid 
 	if pid.Valid {
 		sq = sq.Where("partner_id = ?", pid)
 	}
-	sq = sq.Where("name = ?", name)
+	sq = sq.Where("name = ?", name).
+		Where("trash = ?", false)
 
 	err := sq.Scan(ctx)
 	if err != nil {
@@ -145,10 +146,10 @@ func (dao *entityDAO) GetByNamePartnerOrg(ctx context.Context, name string, pid 
 	return entity, nil
 }
 
-
 func (dao *entityDAO) GetIdByName(ctx context.Context, name string, entity interface{}) (interface{}, error) {
 	err := dao.db.NewSelect().Column("id").Model(entity).
 		Where("name = ?", name).
+		Where("trash = ?", false).
 		Scan(ctx)
 	if err != nil {
 		return nil, err
@@ -165,7 +166,8 @@ func (dao *entityDAO) GetIdByNamePartnerOrg(ctx context.Context, name string, pi
 	if pid.Valid {
 		sq = sq.Where("partner_id = ?", pid)
 	}
-	sq = sq.Where("name = ?", name)
+	sq = sq.Where("name = ?", name).
+		Where("trash = ?", false)
 
 	err := sq.Scan(ctx)
 	if err != nil {
@@ -178,6 +180,7 @@ func (dao *entityDAO) GetIdByNamePartnerOrg(ctx context.Context, name string, pi
 func (dao *entityDAO) GetNameById(ctx context.Context, id uuid.UUID, entity interface{}) (interface{}, error) {
 	err := dao.db.NewSelect().Column("name").Model(entity).
 		Where("id = ?", id).
+		Where("trash = ?", false).
 		Scan(ctx)
 	if err != nil {
 		return nil, err
@@ -201,22 +204,27 @@ func (dao *entityDAO) UpdateX(ctx context.Context, field string, value interface
 }
 
 func (dao *entityDAO) Delete(ctx context.Context, id uuid.UUID, entity interface{}) error {
-	_, err := dao.db.NewDelete().
+	_, err := dao.db.NewUpdate().
 		Model(entity).
+		Column("trash").
 		Where("id  = ?", id).
+		Set("trash = ?", true).
 		Exec(ctx)
 	return err
 }
-
 
 func (dao *entityDAO) DeleteX(ctx context.Context, field string, value interface{}, entity interface{}) error {
-	_, err := dao.db.NewDelete().Model(entity).
+	_, err := dao.db.NewUpdate().
+		Model(entity).
+		Column("trash").
 		Where("? = ?", bun.Ident(field), value).
+		Set("trash = ?", true).
 		Exec(ctx)
 	return err
 }
 
-func (dao *entityDAO) DeleteAll(ctx context.Context, entity interface{}) error {
+// HardDeleteAll deletes all records in a table (primarily for use in scripts)
+func (dao *entityDAO) HardDeleteAll(ctx context.Context, entity interface{}) error {
 	_, err := dao.db.NewDelete().
 		Model(entity).
 		Where("1  = 1"). // TODO: see how to remove this
@@ -236,7 +244,6 @@ func (dao *entityDAO) List(ctx context.Context, partnerId uuid.NullUUID, organiz
 	err := sq.Scan(ctx)
 	return entities, err
 }
-
 
 func (dao *entityDAO) ListByProject(ctx context.Context, partnerId uuid.NullUUID, organizationId uuid.NullUUID, projectId uuid.NullUUID, entities interface{}) error {
 	sq := dao.db.NewSelect().Model(entities)
@@ -260,7 +267,7 @@ func (dao *entityDAO) ListAll(ctx context.Context, entities interface{}) (interf
 }
 
 func (dao *entityDAO) GetByTraits(ctx context.Context, name string, entity interface{}) (interface{}, error) {
-	// TODO: better name and possibily pass in trait name
+	// TODO: better name and possibly pass in trait name
 	err := dao.db.NewSelect().Model(entity).
 		Where("traits ->> 'email' = ?", name).
 		Scan(ctx)
@@ -272,7 +279,7 @@ func (dao *entityDAO) GetByTraits(ctx context.Context, name string, entity inter
 }
 
 func (dao *entityDAO) GetIdByTraits(ctx context.Context, name string, entity interface{}) (interface{}, error) {
-	// TODO: better name and possibily pass in trait name
+	// TODO: better name and possibly pass in trait name
 	err := dao.db.NewSelect().Column("id").Model(entity).
 		Where("traits ->> 'email' = ?", name).
 		Scan(ctx)
