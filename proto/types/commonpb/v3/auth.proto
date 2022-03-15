@@ -7,6 +7,9 @@ message IsRequestAllowedRequest {
     string xSessionToken = 3;
     string xApiKey = 4;
     string cookie = 5;
+    string org = 6;
+    string project = 7;
+    string namespace = 8;
 }
 
 enum RequestStatus {
