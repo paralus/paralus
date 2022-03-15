@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -13,6 +14,7 @@ import (
 	"github.com/RafaySystems/rcloud-base/internal/models"
 	providers "github.com/RafaySystems/rcloud-base/internal/persistence/provider/kratos"
 	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
+	"github.com/RafaySystems/rcloud-base/pkg/common"
 	"github.com/RafaySystems/rcloud-base/pkg/enforcer"
 	"github.com/RafaySystems/rcloud-base/pkg/service"
 	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
@@ -36,6 +38,10 @@ import (
 //
 // We make use of service instead of just insserting to db as that way
 // all the dependent items will be taken care of automatically.
+
+// Inorder to reset everything, we can do
+// truncate table authsrv_partner cascade;
+// truncate table casbin_rule;
 
 const (
 	dbAddrEnv       = "DB_ADDR"
@@ -76,9 +82,23 @@ func addResourcePermissions(dao pg.EntityDAO, basePath string) error {
 }
 
 func main() {
-	if len(os.Args) != 4 {
-		// this step happens after org creation and so we will have org and partner
-		log.Fatal("Usage: ", os.Args[0], " <partner> ", " <organizatin>", "<org_admin_email>")
+	partner := flag.String("partner", "", "Name of partner")
+	partnerDesc := flag.String("partner-desc", "", "Description of partner")
+	partnerHost := flag.String("partner-host", "", "Host of partner")
+
+	org := flag.String("org", "", "Name of org")
+	orgDesc := flag.String("org-desc", "", "Description of org")
+
+	oae := flag.String("admin-email", "", "Email of org admin")
+	oafn := flag.String("admin-first-name", "", "First name of org admin")
+	oaln := flag.String("admin-last-name", "", "Last name of org admin")
+
+	flag.Parse()
+
+	if *partner == "" || *org == "" || *oae == "" || *oafn == "" || *oaln == "" || *partnerHost == "" {
+		fmt.Println("Usage: initialize")
+		flag.PrintDefaults()
+		os.Exit(1)
 	}
 
 	viper.SetDefault(dbAddrEnv, "localhost:5432")
@@ -101,10 +121,6 @@ func main() {
 	dbPassword := viper.GetString(dbPasswordEnv)
 	kratosScheme := viper.GetString(kratosSchemeEnv)
 	kratosAddr := viper.GetString(kratosAddrEnv)
-
-	partner := os.Args[1]
-	org := os.Args[2]
-	orgAdminEmail := os.Args[3]
 
 	content, err := ioutil.ReadFile(path.Join("scripts", "initialize", "roles.json"))
 	if err != nil {
@@ -141,7 +157,7 @@ func main() {
 	ps := service.NewPartnerService(db)
 	os := service.NewOrganizationService(db)
 	rs := service.NewRoleService(db, as)
-	us := service.NewUserService(providers.NewKratosAuthProvider(kc), db, as)
+	us := service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, nil, common.CliConfigDownloadData{})
 
 	err = dao.DeleteAll(context.Background(), &models.ResourcePermission{})
 	if err != nil {
@@ -155,14 +171,14 @@ func main() {
 
 	// Create partner
 	_, err = ps.Create(context.Background(), &systemv3.Partner{
-		Metadata: &commonv3.Metadata{Name: partner, Description: "..."},
-		Spec:     &systemv3.PartnerSpec{Host: ""},
+		Metadata: &commonv3.Metadata{Name: *partner, Description: *partnerDesc},
+		Spec:     &systemv3.PartnerSpec{Host: *partnerHost},
 	})
 	if err != nil {
 		log.Fatal("unable to create partner", err)
 	}
 	_, err = os.Create(context.Background(), &systemv3.Organization{
-		Metadata: &commonv3.Metadata{Name: org, Partner: partner, Description: "..."},
+		Metadata: &commonv3.Metadata{Name: *org, Partner: *partner, Description: *orgDesc},
 		Spec:     &systemv3.OrganizationSpec{Active: true},
 	})
 	if err != nil {
@@ -174,7 +190,7 @@ func main() {
 			perms := data[scope][name]
 			fmt.Println(scope, name, len(perms))
 			_, err := rs.Create(context.Background(), &rolev3.Role{
-				Metadata: &commonv3.Metadata{Name: name, Partner: partner, Organization: org, Description: "..."},
+				Metadata: &commonv3.Metadata{Name: name, Partner: *partner, Organization: *org, Description: "..."},
 				Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: scope, Rolepermissions: perms},
 			})
 			if err != nil {
@@ -183,11 +199,10 @@ func main() {
 		}
 	}
 
-	// TODO: should we directly interact with kratos and create a user with a password?
+	// should we directly interact with kratos and create a user with a password?
 	_, err = us.Create(context.Background(), &userv3.User{
-		Metadata: &commonv3.Metadata{Name: orgAdminEmail, Partner: partner, Organization: org, Description: "..."},
-		// TODO: get proper name via cli arg
-		Spec: &userv3.UserSpec{FirstName: "Org", LastName: "Admin", ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Role: "ADMIN"}}},
+		Metadata: &commonv3.Metadata{Name: *oae, Partner: *partner, Organization: *org, Description: "..."},
+		Spec: &userv3.UserSpec{FirstName: *oafn, LastName: *oaln, ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Role: "ADMIN"}}},
 	})
 
 	if err != nil {
