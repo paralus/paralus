@@ -29,7 +29,7 @@ func (dao *roleDAO) Close() error {
 }
 
 func (dao *roleDAO) GetRolePermissions(ctx context.Context, id uuid.UUID) ([]models.ResourcePermission, error) {
-	// Could possibily union them later for some speedup
+	// Could possibly union them later for some speedup
 	var r = []models.ResourcePermission{}
 	err := dao.db.NewSelect().Table("authsrv_resourcepermission").
 		ColumnExpr("authsrv_resourcepermission.name as name").

@@ -170,7 +170,7 @@ func TestUpdateRole(t *testing.T) {
 
 	mock.ExpectExec(`UPDATE "authsrv_resourcerole" AS "resourcerole" SET "name" = 'role-` + ruuid + `', .*"organization_id" = '` + ouuid + `', "partner_id" = '` + puuid + `', "is_global" = TRUE, "scope" = 'system' WHERE .id  = '` + ruuid + `'.`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(`DELETE FROM "authsrv_resourcerolepermission" AS "resourcerolepermission" WHERE ."resource_role_id" = '` + ruuid + `'.`).
+	mock.ExpectExec(`UPDATE "authsrv_resourcerolepermission" AS "resourcerolepermission" SET trash = TRUE WHERE ."resource_role_id" = '` + ruuid + `'.`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	mock.ExpectQuery(`SELECT "resourcepermission"."id" FROM "authsrv_resourcepermission" AS "resourcepermission" WHERE .name = 'ops_star.all'.`).
@@ -207,9 +207,9 @@ func TestRoleDelete(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
 	mock.ExpectQuery(`SELECT "resourcerole"."id", "resourcerole"."name", .* FROM "authsrv_resourcerole" AS "resourcerole" WHERE`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(ruuid, "role-"+ruuid))
-	mock.ExpectExec(`DELETE FROM "authsrv_resourcerolepermission" AS "resourcerolepermission" WHERE ."resource_role_id" = '` + ruuid + `'.`).
+	mock.ExpectExec(`UPDATE "authsrv_resourcerolepermission" AS "resourcerolepermission" SET trash = TRUE WHERE ."resource_role_id" = '` + ruuid + `'.`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(`DELETE FROM "authsrv_resourcerole" AS "resourcerole" WHERE .id = '` + ruuid + `'.`).
+	mock.ExpectExec(`UPDATE "authsrv_resourcerole" AS "resourcerole" SET trash = TRUE WHERE .id = '` + ruuid + `'.`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	role := &rolev3.Role{

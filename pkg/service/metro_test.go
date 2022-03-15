@@ -79,7 +79,7 @@ func TestMetroDelete(t *testing.T) {
 	mock.ExpectQuery(`SELECT "metro"."id", "metro"."name", .* FROM "cluster_metro" AS "metro" WHERE`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(puuid, "metro-"+puuid))
 
-	mock.ExpectExec(`DELETE FROM "cluster_metro"`).
+	mock.ExpectExec(`UPDATE "cluster_metro" AS "metro" SET trash = TRUE WHERE`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	metro := &infrav3.Location{

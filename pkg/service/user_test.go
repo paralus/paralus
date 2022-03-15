@@ -187,11 +187,11 @@ func TestUpdateUser(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
-	mock.ExpectExec(`DELETE FROM "authsrv_accountresourcerole" AS "accountresourcerole" WHERE`).
+	mock.ExpectExec(`UPDATE "authsrv_accountresourcerole" AS "accountresourcerole" SET trash = TRUE WHERE`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(`DELETE FROM "authsrv_projectaccountresourcerole" AS "projectaccountresourcerole" WHERE`).
+	mock.ExpectExec(`UPDATE "authsrv_projectaccountresourcerole" AS "projectaccountresourcerole" SET trash = TRUE WHERE`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(`DELETE FROM "authsrv_projectaccountnamespacerole" AS "projectaccountnamespacerole" WHERE`).
+	mock.ExpectExec(`UPDATE "authsrv_projectaccountnamespacerole" AS "projectaccountnamespacerole" SET trash = TRUE WHERE`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectQuery(`SELECT "resourcerole"."id" FROM "authsrv_resourcerole" AS "resourcerole"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(pruuid))
@@ -399,14 +399,14 @@ func TestUserDelete(t *testing.T) {
 
 	mock.ExpectQuery(`SELECT "identities"."id" FROM "identities" WHERE .*traits ->> 'email' = 'user-` + uuuid + `'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).AddRow(uuuid, []byte(`{"email":"johndoe@provider.com"}`)))
-	mock.ExpectExec(`DELETE FROM "authsrv_accountresourcerole" AS "accountresourcerole" WHERE`).
+	mock.ExpectExec(`UPDATE "authsrv_accountresourcerole" AS "accountresourcerole" SET trash = TRUE WHERE`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(`DELETE FROM "authsrv_projectaccountresourcerole" AS "projectaccountresourcerole" WHERE`).
+	mock.ExpectExec(`UPDATE "authsrv_projectaccountresourcerole" AS "projectaccountresourcerole" SET trash = TRUE WHERE`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(`DELETE FROM "authsrv_projectaccountnamespacerole" AS "projectaccountnamespacerole" WHERE`).
+	mock.ExpectExec(`UPDATE "authsrv_projectaccountnamespacerole" AS "projectaccountnamespacerole" SET trash = TRUE WHERE`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	// User delete is via kratos
-	mock.ExpectExec(`DELETE FROM "authsrv_groupaccount" AS "groupaccount" WHERE`).
+	mock.ExpectExec(`UPDATE "authsrv_groupaccount" AS "groupaccount" SET trash = TRUE WHERE`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	user := &userv3.User{
