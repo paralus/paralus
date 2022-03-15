@@ -81,8 +81,7 @@ const (
 	schedulerNamespaceEnv       = "SCHEDULER_NAMESPACE"
 
 	// kratos
-	kratosSchemeEnv = "KRATOS_SCHEME"
-	kratosAddrEnv   = "KRATOS_ADDR"
+	kratosAddrEnv = "KRATOS_ADDR"
 )
 
 var (
@@ -122,9 +121,8 @@ var (
 	schedulerNamespace       string
 
 	// kratos
-	kratosScheme string
-	kratosAddr   string
-	kc           *kclient.APIClient
+	kratosAddr string
+	kc         *kclient.APIClient
 
 	// services
 	ps    service.PartnerService
@@ -195,8 +193,7 @@ func setup() {
 	viper.SetDefault(schedulerNamespaceEnv, "rafay-system")
 
 	// kratos
-	viper.SetDefault(kratosSchemeEnv, "http")
-	viper.SetDefault(kratosAddrEnv, "localhost:4433")
+	viper.SetDefault(kratosAddrEnv, "http://localhost:4433")
 
 	viper.BindEnv(rpcPortEnv)
 	viper.BindEnv(apiPortEnv)
@@ -209,7 +206,6 @@ func setup() {
 	viper.BindEnv(dbUserEnv)
 	viper.BindEnv(dbPasswordEnv)
 
-	viper.BindEnv(kratosSchemeEnv)
 	viper.BindEnv(kratosAddrEnv)
 
 	viper.BindEnv(sentryPeeringHostEnv)
@@ -237,7 +233,6 @@ func setup() {
 	dbUser = viper.GetString(dbUserEnv)
 	dbPassword = viper.GetString(dbPasswordEnv)
 
-	kratosScheme = viper.GetString(kratosSchemeEnv)
 	kratosAddr = viper.GetString(kratosAddrEnv)
 
 	bootstrapKEK = viper.GetString(bootstrapKEKEnv)
@@ -258,8 +253,7 @@ func setup() {
 
 	// Kratos client setup
 	kratosConfig := kclient.NewConfiguration()
-	kratosUrl := kratosScheme + "://" + kratosAddr
-	kratosConfig.Servers[0].URL = kratosUrl
+	kratosConfig.Servers[0].URL = kratosAddr
 	kc = kclient.NewAPIClient(kratosConfig)
 
 	// db setup
@@ -313,7 +307,7 @@ func setup() {
 	rs = service.NewRoleService(db, as)
 	rrs = service.NewRolepermissionService(db)
 	is = service.NewIdpService(db, apiAddr)
-	oidcs = service.NewOIDCProviderService(db, kratosUrl)
+	oidcs = service.NewOIDCProviderService(db, kratosAddr)
 
 	//sentry related services
 	bs = service.NewBootstrapService(db)
