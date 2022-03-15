@@ -270,6 +270,7 @@ func (dao *entityDAO) GetByTraits(ctx context.Context, name string, entity inter
 	// TODO: better name and possibly pass in trait name
 	err := dao.db.NewSelect().Model(entity).
 		Where("traits ->> 'email' = ?", name).
+		Where("trash = ?", false).
 		Scan(ctx)
 	if err != nil {
 		return nil, err
@@ -282,6 +283,7 @@ func (dao *entityDAO) GetIdByTraits(ctx context.Context, name string, entity int
 	// TODO: better name and possibly pass in trait name
 	err := dao.db.NewSelect().Column("id").Model(entity).
 		Where("traits ->> 'email' = ?", name).
+		Where("trash = ?", false).
 		Scan(ctx)
 	if err != nil {
 		return nil, err
