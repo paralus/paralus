@@ -209,6 +209,7 @@ func GetByTraits(ctx context.Context, db bun.IDB, name string, entity interface{
 	// TODO: better name and possibly pass in trait name
 	err := db.NewSelect().Model(entity).
 		Where("traits ->> 'email' = ?", name).
+		Where("trash = ?", false).
 		Scan(ctx)
 	if err != nil {
 		return nil, err
@@ -221,6 +222,7 @@ func GetIdByTraits(ctx context.Context, db bun.IDB, name string, entity interfac
 	// TODO: better name and possibly pass in trait name
 	err := db.NewSelect().Column("id").Model(entity).
 		Where("traits ->> 'email' = ?", name).
+		Where("trash = ?", false).
 		Scan(ctx)
 	if err != nil {
 		return nil, err
