@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"strings"
 	"time"
@@ -49,7 +50,7 @@ func NewRoleService(db *bun.DB, azc AuthzService) RoleService {
 	return &roleService{db: db, azc: azc}
 }
 
-func (s *roleService) getPartnerOrganization(ctx context.Context, role *rolev3.Role) (uuid.UUID, uuid.UUID, error) {
+func (s *roleService) getPartnerOrganization(ctx context.Context, db bun.IDB, role *rolev3.Role) (uuid.UUID, uuid.UUID, error) {
 	partner := role.GetMetadata().GetPartner()
 	org := role.GetMetadata().GetOrganization()
 	partnerId, err := pg.GetPartnerId(ctx, s.db, partner)
@@ -64,7 +65,7 @@ func (s *roleService) getPartnerOrganization(ctx context.Context, role *rolev3.R
 
 }
 
-func (s *roleService) deleteRolePermissionMapping(ctx context.Context, rleId uuid.UUID, role *rolev3.Role) (*rolev3.Role, error) {
+func (s *roleService) deleteRolePermissionMapping(ctx context.Context, db bun.IDB, rleId uuid.UUID, role *rolev3.Role) (*rolev3.Role, error) {
 	err := pg.DeleteX(ctx, s.db, "resource_role_id", rleId, &models.ResourceRolePermission{})
 	if err != nil {
 		return &rolev3.Role{}, err
@@ -82,7 +83,7 @@ func (s *roleService) deleteRolePermissionMapping(ctx context.Context, rleId uui
 	return role, nil
 }
 
-func (s *roleService) createRolePermissionMapping(ctx context.Context, role *rolev3.Role, ids parsedIds) (*rolev3.Role, error) {
+func (s *roleService) createRolePermissionMapping(ctx context.Context, db bun.IDB, role *rolev3.Role, ids parsedIds) (*rolev3.Role, error) {
 	perms := role.GetSpec().GetRolepermissions()
 
 	var items []models.ResourceRolePermission
@@ -121,7 +122,7 @@ func (s *roleService) createRolePermissionMapping(ctx context.Context, role *rol
 }
 
 func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Role, error) {
-	partnerId, organizationId, err := s.getPartnerOrganization(ctx, role)
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, s.db, role)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
@@ -150,21 +151,34 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		IsGlobal:       role.GetSpec().GetIsGlobal(),
 		Scope:          strings.ToLower(scope),
 	}
-	entity, err := pg.Create(ctx, s.db, &rle)
+
+	tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 	if err != nil {
+		return &rolev3.Role{}, err
+	}
+
+	entity, err := pg.Create(ctx, tx, &rle)
+	if err != nil {
+		tx.Rollback()
 		return &rolev3.Role{}, err
 	}
 
 	//update v3 spec
 	if createdRole, ok := entity.(*models.Role); ok {
-		role, err = s.createRolePermissionMapping(ctx, role, parsedIds{Id: createdRole.ID, Partner: partnerId, Organization: organizationId})
+		role, err = s.createRolePermissionMapping(ctx, tx, role, parsedIds{Id: createdRole.ID, Partner: partnerId, Organization: organizationId})
 		if err != nil {
+			tx.Rollback()
 			return &rolev3.Role{}, err
 		}
 	} else {
+		tx.Rollback()
 		return &rolev3.Role{}, fmt.Errorf("unable to create role '%v'", role.GetMetadata().GetName())
 	}
 
+	err = tx.Commit()
+	if err != nil {
+		fmt.Println("unable to commit changes", err)
+	}
 	return role, nil
 
 }
@@ -181,7 +195,7 @@ func (s *roleService) GetByID(ctx context.Context, role *rolev3.Role) (*rolev3.R
 	}
 
 	if rle, ok := entity.(*models.Role); ok {
-		role, err = s.toV3Role(ctx, role, rle)
+		role, err = s.toV3Role(ctx, s.db, role, rle)
 		if err != nil {
 			return &rolev3.Role{}, err
 		}
@@ -193,7 +207,7 @@ func (s *roleService) GetByID(ctx context.Context, role *rolev3.Role) (*rolev3.R
 
 func (s *roleService) GetByName(ctx context.Context, role *rolev3.Role) (*rolev3.Role, error) {
 	name := role.GetMetadata().GetName()
-	partnerId, organizationId, err := s.getPartnerOrganization(ctx, role)
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, s.db, role)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
@@ -203,7 +217,7 @@ func (s *roleService) GetByName(ctx context.Context, role *rolev3.Role) (*rolev3
 	}
 
 	if rle, ok := entity.(*models.Role); ok {
-		role, err = s.toV3Role(ctx, role, rle)
+		role, err = s.toV3Role(ctx, s.db, role, rle)
 		if err != nil {
 			return &rolev3.Role{}, err
 		}
@@ -215,7 +229,7 @@ func (s *roleService) GetByName(ctx context.Context, role *rolev3.Role) (*rolev3
 }
 
 func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Role, error) {
-	partnerId, organizationId, err := s.getPartnerOrganization(ctx, role)
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, s.db, role)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
@@ -234,18 +248,26 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		rle.Scope = role.Spec.Scope
 		rle.ModifiedAt = time.Now()
 
-		_, err = pg.Update(ctx, s.db, rle.ID, rle)
+		tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 		if err != nil {
 			return &rolev3.Role{}, err
 		}
 
-		role, err = s.deleteRolePermissionMapping(ctx, rle.ID, role)
+		_, err = pg.Update(ctx, tx, rle.ID, rle)
 		if err != nil {
+			tx.Rollback()
 			return &rolev3.Role{}, err
 		}
 
-		role, err = s.createRolePermissionMapping(ctx, role, parsedIds{Id: rle.ID, Partner: partnerId, Organization: organizationId})
+		role, err = s.deleteRolePermissionMapping(ctx, tx, rle.ID, role)
 		if err != nil {
+			tx.Rollback()
+			return &rolev3.Role{}, err
+		}
+
+		role, err = s.createRolePermissionMapping(ctx, tx, role, parsedIds{Id: rle.ID, Partner: partnerId, Organization: organizationId})
+		if err != nil {
+			tx.Rollback()
 			return &rolev3.Role{}, err
 		}
 
@@ -254,16 +276,20 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 			IsGlobal: rle.IsGlobal,
 			Scope:    rle.Scope,
 		}
-	} else {
-		return &rolev3.Role{}, fmt.Errorf("unable to update role '%v'", role.GetMetadata().GetName())
-	}
 
-	return role, nil
+		err = tx.Commit()
+		if err != nil {
+			fmt.Println("unable to commit changes", err)
+		}
+		return role, nil
+	}
+	return &rolev3.Role{}, fmt.Errorf("unable to update role '%v'", role.GetMetadata().GetName())
+
 }
 
 func (s *roleService) Delete(ctx context.Context, role *rolev3.Role) (*rolev3.Role, error) {
 	name := role.GetMetadata().GetName()
-	partnerId, organizationId, err := s.getPartnerOrganization(ctx, role)
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, s.db, role)
 	if err != nil {
 		return &rolev3.Role{}, fmt.Errorf("unable to get partner and org id; %v", err)
 	}
@@ -274,21 +300,35 @@ func (s *roleService) Delete(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 	}
 
 	if rle, ok := entity.(*models.Role); ok {
-		role, err = s.deleteRolePermissionMapping(ctx, rle.ID, role)
+
+		tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 		if err != nil {
+			return &rolev3.Role{}, err
+		}
+
+		role, err = s.deleteRolePermissionMapping(ctx, tx, rle.ID, role)
+		if err != nil {
+			tx.Rollback()
 			return &rolev3.Role{}, err
 		}
 
 		err = pg.Delete(ctx, s.db, rle.ID, rle)
 		if err != nil {
+			tx.Rollback()
 			return &rolev3.Role{}, err
 		}
+
+		err = tx.Commit()
+		if err != nil {
+			fmt.Println("unable to commit changes", err)
+		}
+		return role, nil
 	}
 
-	return role, nil
+	return &rolev3.Role{}, fmt.Errorf("unable to delete role '%v'", role.GetMetadata().GetName())
 }
 
-func (s *roleService) toV3Role(ctx context.Context, role *rolev3.Role, rle *models.Role) (*rolev3.Role, error) {
+func (s *roleService) toV3Role(ctx context.Context, db bun.IDB, role *rolev3.Role, rle *models.Role) (*rolev3.Role, error) {
 	labels := make(map[string]string)
 	labels["organization"] = role.GetMetadata().GetOrganization()
 	labels["partner"] = role.GetMetadata().GetPartner()
@@ -346,7 +386,7 @@ func (s *roleService) List(ctx context.Context, role *rolev3.Role) (*rolev3.Role
 		if rles, ok := entities.(*[]models.Role); ok {
 			for _, rle := range *rles {
 				entry := &rolev3.Role{Metadata: role.GetMetadata()}
-				entry, err = s.toV3Role(ctx, entry, &rle)
+				entry, err = s.toV3Role(ctx, s.db, entry, &rle)
 				if err != nil {
 					return roleList, err
 				}
