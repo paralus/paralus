@@ -29,7 +29,6 @@ func TestRolePermissionList(t *testing.T) {
 	defer db.Close()
 
 	rs := NewRolepermissionService(db)
-	defer rs.Close()
 
 	ruuid1 := uuid.New().String()
 	ruuid2 := uuid.New().String()

@@ -8,7 +8,6 @@ import (
 	"github.com/RafaySystems/rcloud-base/internal/constants"
 	"github.com/RafaySystems/rcloud-base/internal/dao"
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	"github.com/RafaySystems/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -17,32 +16,22 @@ import (
 
 // KubeconfigRevocation is the interface for bootstrap operations
 type KubeconfigRevocationService interface {
-	Close() error
 	Get(ctx context.Context, orgID string, accountID string, isSSOUser bool) (*sentry.KubeconfigRevocation, error)
 	Patch(ctx context.Context, kr *sentry.KubeconfigRevocation) error
 }
 
 // bootstrapService implements BootstrapService
 type kubeconfigRevocationService struct {
-	dao  pg.EntityDAO
-	kdao dao.KubeconfigDao
+	db *bun.DB
 }
 
 // NewKubeconfigRevocation return new kubeconfig revocation service
 func NewKubeconfigRevocationService(db *bun.DB) KubeconfigRevocationService {
-	edao := pg.NewEntityDAO(db)
-	return &kubeconfigRevocationService{
-		dao:  edao,
-		kdao: dao.NewKubeconfigDao(edao),
-	}
-}
-
-func (krs *kubeconfigRevocationService) Close() error {
-	return krs.dao.Close()
+	return &kubeconfigRevocationService{db}
 }
 
 func (krs *kubeconfigRevocationService) Get(ctx context.Context, orgID string, accountID string, isSSOUser bool) (*sentry.KubeconfigRevocation, error) {
-	kr, err := krs.kdao.GetKubeconfigRevocation(ctx, uuid.MustParse(orgID), uuid.MustParse(accountID), isSSOUser)
+	kr, err := dao.GetKubeconfigRevocation(ctx, krs.db, uuid.MustParse(orgID), uuid.MustParse(accountID), isSSOUser)
 	if err == sql.ErrNoRows {
 		return nil, constants.ErrNotFound
 	} else if err != nil {
@@ -63,14 +52,14 @@ func prepareKubeCfgRevocationResponse(kr *models.KubeconfigRevocation) *sentry.K
 }
 
 func (krs *kubeconfigRevocationService) Patch(ctx context.Context, kr *sentry.KubeconfigRevocation) error {
-	err := krs.dao.GetInstance().RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
-		_, err := krs.kdao.GetKubeconfigRevocation(ctx, uuid.MustParse(kr.OrganizationID), uuid.MustParse(kr.AccountID), kr.IsSSOUser)
+	err := krs.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
+		_, err := dao.GetKubeconfigRevocation(ctx, krs.db, uuid.MustParse(kr.OrganizationID), uuid.MustParse(kr.AccountID), kr.IsSSOUser)
 		if err != nil && err == sql.ErrNoRows {
 			kcr := convertToModel(kr)
 			kcr.CreatedAt = time.Now()
-			return krs.kdao.CreateKubeconfigRevocation(ctx, kcr)
+			return dao.CreateKubeconfigRevocation(ctx, krs.db, kcr)
 		}
-		return krs.kdao.UpdateKubeconfigRevocation(ctx, convertToModel(kr))
+		return dao.UpdateKubeconfigRevocation(ctx, krs.db, convertToModel(kr))
 	})
 	return err
 }

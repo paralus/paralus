@@ -24,8 +24,6 @@ var KEKFunc cryptoutil.PasswordFunc
 
 // BootstrapService is the interface for bootstrap operations
 type BootstrapService interface {
-	Close() error
-
 	// bootstrap infra methods
 	PatchBootstrapInfra(ctx context.Context, infra *sentry.BootstrapInfra) error
 	GetBootstrapInfra(ctx context.Context, name string) (*sentry.BootstrapInfra, error)
@@ -44,33 +42,28 @@ type BootstrapService interface {
 	GetBootstrapAgentForClusterID(ctx context.Context, clusterID string, orgID string) (*sentry.BootstrapAgent, error)
 	SelectBootstrapAgents(ctx context.Context, templateRef string, opts ...query.Option) (*sentry.BootstrapAgentList, error)
 	RegisterBootstrapAgent(ctx context.Context, token string) error
-	DeleteBoostrapAgent(ctx context.Context, templateRef string, opts ...query.Option) error
+	DeleteBootstrapAgent(ctx context.Context, templateRef string, opts ...query.Option) error
 	PatchBootstrapAgent(ctx context.Context, ba *sentry.BootstrapAgent, templateRef string, opts ...query.Option) error
 }
 
 // bootstrapService implements BootstrapService
 type bootstrapService struct {
-	dao  pg.EntityDAO
-	bdao dao.BootstrapDao
+	db *bun.DB
 }
 
 // NewBootstrapService return new bootstrap service
 func NewBootstrapService(db *bun.DB) BootstrapService {
-	edao := pg.NewEntityDAO(db)
-	return &bootstrapService{
-		dao:  edao,
-		bdao: dao.NewBootstrapDao(edao),
-	}
+	return &bootstrapService{db}
 }
 
 func (s *bootstrapService) PatchBootstrapInfra(ctx context.Context, infra *sentry.BootstrapInfra) error {
-	return s.bdao.CreateOrUpdateBootstrapInfra(ctx, convertToInfraModel(infra))
+	return dao.CreateOrUpdateBootstrapInfra(ctx, s.db, convertToInfraModel(infra))
 }
 
 func (s *bootstrapService) GetBootstrapInfra(ctx context.Context, name string) (*sentry.BootstrapInfra, error) {
 
 	var bi models.BootstrapInfra
-	_, err := s.dao.GetByName(ctx, name, &bi)
+	_, err := pg.GetByName(ctx, s.db, name, &bi)
 	if err != nil {
 		return nil, err
 	}
@@ -96,12 +89,12 @@ func (s *bootstrapService) PatchBootstrapAgentTemplate(ctx context.Context, temp
 		CreatedAt:              time.Now(),
 	}
 
-	return s.bdao.CreateOrUpdateBootstrapAgentTemplate(ctx, &templ)
+	return dao.CreateOrUpdateBootstrapAgentTemplate(ctx, s.db, &templ)
 }
 
 func (s *bootstrapService) GetBootstrapAgentTemplate(ctx context.Context, agentType string) (*sentry.BootstrapAgentTemplate, error) {
 	var template models.BootstrapAgentTemplate
-	_, err := s.dao.GetByName(ctx, agentType, &template)
+	_, err := pg.GetByName(ctx, s.db, agentType, &template)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +103,7 @@ func (s *bootstrapService) GetBootstrapAgentTemplate(ctx context.Context, agentT
 }
 
 func (s *bootstrapService) GetBootstrapAgentTemplateForToken(ctx context.Context, token string) (*sentry.BootstrapAgentTemplate, error) {
-	bat, err := s.bdao.GetBootstrapAgentTemplateForToken(ctx, token)
+	bat, err := dao.GetBootstrapAgentTemplateForToken(ctx, s.db, token)
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +116,7 @@ func (s *bootstrapService) SelectBootstrapAgentTemplates(ctx context.Context, op
 		opt(queryOptions)
 	}
 
-	batl, count, err := s.bdao.SelectBootstrapAgentTemplates(ctx, queryOptions)
+	batl, count, err := dao.SelectBootstrapAgentTemplates(ctx, s.db, queryOptions)
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +134,7 @@ func (s *bootstrapService) SelectBootstrapAgentTemplates(ctx context.Context, op
 func (s *bootstrapService) CreateBootstrapAgent(ctx context.Context, agent *sentry.BootstrapAgent) error {
 	ba := convertToAgentModel(agent)
 	ba.CreatedAt = time.Now()
-	return s.bdao.CreateBootstrapAgent(ctx, ba)
+	return dao.CreateBootstrapAgent(ctx, s.db, ba)
 }
 
 func convertToAgentModel(agent *sentry.BootstrapAgent) *models.BootstrapAgent {
@@ -252,7 +245,7 @@ func prepareTemplateResponse(template *models.BootstrapAgentTemplate) *sentry.Bo
 		json.Unmarshal(template.Hosts, &hosts)
 	}
 	templResp := sentry.BootstrapAgentTemplate{
-		Kind: "BootstapAgentTemplate",
+		Kind: "BootstrapAgentTemplate",
 		Metadata: &commonv3.Metadata{
 			Name:        template.Name,
 			DisplayName: template.DisplayName,
@@ -281,7 +274,7 @@ func (s *bootstrapService) GetBootstrapAgents(ctx context.Context, templateRef s
 		opt(queryOptions)
 	}
 
-	agl, count, err := s.bdao.GetBootstrapAgents(ctx, queryOptions, templateRef)
+	agl, count, err := dao.GetBootstrapAgents(ctx, s.db, queryOptions, templateRef)
 	if err != nil {
 		return nil, err
 	}
@@ -301,7 +294,7 @@ func (s *bootstrapService) GetBootstrapAgent(ctx context.Context, templateRef st
 	for _, opt := range opts {
 		opt(queryOptions)
 	}
-	ba, err := s.bdao.GetBootstrapAgent(ctx, templateRef, queryOptions)
+	ba, err := dao.GetBootstrapAgent(ctx, s.db, templateRef, queryOptions)
 	if err != nil {
 		return nil, err
 	}
@@ -314,7 +307,7 @@ func (s *bootstrapService) SelectBootstrapAgents(ctx context.Context, templateRe
 		opt(queryOptions)
 	}
 
-	agl, count, err := s.bdao.SelectBootstrapAgents(ctx, templateRef, queryOptions)
+	agl, count, err := dao.SelectBootstrapAgents(ctx, s.db, templateRef, queryOptions)
 	if err != nil {
 		return nil, err
 	}
@@ -331,16 +324,19 @@ func (s *bootstrapService) SelectBootstrapAgents(ctx context.Context, templateRe
 }
 
 func (s *bootstrapService) RegisterBootstrapAgent(ctx context.Context, token string) error {
-	return s.bdao.RegisterBootstrapAgent(ctx, token)
+	err := s.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
+		return dao.RegisterBootstrapAgent(ctx, tx, token)
+	})
+	return err
 }
 
-func (s *bootstrapService) DeleteBoostrapAgent(ctx context.Context, templateRef string, opts ...query.Option) error {
+func (s *bootstrapService) DeleteBootstrapAgent(ctx context.Context, templateRef string, opts ...query.Option) error {
 	queryOptions := &commonv3.QueryOptions{}
 	for _, opt := range opts {
 		opt(queryOptions)
 	}
 
-	err := s.bdao.DeleteBootstrapAgent(ctx, templateRef, queryOptions)
+	err := dao.DeleteBootstrapAgent(ctx, s.db, templateRef, queryOptions)
 	return err
 }
 
@@ -351,8 +347,8 @@ func (s *bootstrapService) PatchBootstrapAgent(ctx context.Context, ba *sentry.B
 		opt(queryOptions)
 	}
 
-	err := s.dao.GetInstance().RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
-		bdb, err := s.bdao.GetBootstrapAgent(ctx, templateRef, queryOptions)
+	err := s.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
+		bdb, err := dao.GetBootstrapAgent(ctx, s.db, templateRef, queryOptions)
 		if err != nil {
 			return err
 		}
@@ -376,13 +372,13 @@ func (s *bootstrapService) PatchBootstrapAgent(ctx context.Context, ba *sentry.B
 		}
 		bdb.ModifiedAt = time.Now()
 		bdb.DisplayName = ba.Metadata.DisplayName
-		return s.bdao.UpdateBootstrapAgent(ctx, bdb, queryOptions)
+		return dao.UpdateBootstrapAgent(ctx, s.db, bdb, queryOptions)
 	})
 	return err
 }
 
 func (s *bootstrapService) GetBootstrapAgentForToken(ctx context.Context, token string) (*sentry.BootstrapAgent, error) {
-	ba, err := s.bdao.GetBootstrapAgentForToken(ctx, token)
+	ba, err := dao.GetBootstrapAgentForToken(ctx, s.db, token)
 	if err != nil {
 		return nil, err
 	}
@@ -390,7 +386,7 @@ func (s *bootstrapService) GetBootstrapAgentForToken(ctx context.Context, token 
 }
 
 func (s *bootstrapService) GetBootstrapAgentTemplateForHost(ctx context.Context, host string) (*sentry.BootstrapAgentTemplate, error) {
-	bat, err := s.bdao.GetBootstrapAgentTemplateForHost(ctx, host)
+	bat, err := dao.GetBootstrapAgentTemplateForHost(ctx, s.db, host)
 	if err != nil {
 		return nil, err
 	}
@@ -400,7 +396,7 @@ func (s *bootstrapService) GetBootstrapAgentTemplateForHost(ctx context.Context,
 }
 
 func (s *bootstrapService) GetBootstrapAgentCountForClusterID(ctx context.Context, clusterID string, orgID string) (int, error) {
-	count, err := s.bdao.GetBootstrapAgentCountForClusterID(ctx, clusterID, uuid.MustParse(orgID))
+	count, err := dao.GetBootstrapAgentCountForClusterID(ctx, s.db, clusterID, uuid.MustParse(orgID))
 	if err != nil {
 		return 0, err
 	}
@@ -411,7 +407,7 @@ func (s *bootstrapService) GetBootstrapAgentCountForClusterID(ctx context.Contex
 }
 
 func (s *bootstrapService) GetBootstrapAgentForClusterID(ctx context.Context, clusterID string, orgID string) (*sentry.BootstrapAgent, error) {
-	ba, err := s.bdao.GetBootstrapAgentForClusterID(ctx, clusterID, uuid.MustParse(orgID))
+	ba, err := dao.GetBootstrapAgentForClusterID(ctx, s.db, clusterID, uuid.MustParse(orgID))
 	if err != nil || ba == nil {
 		return nil, err
 	}
@@ -454,8 +450,4 @@ func (s *bootstrapService) GetRelayAgent(ctx context.Context, ClusterScope strin
 	}
 	_log.Infow("did not find relay bootstrap agent for", "cluster", ClusterScope, "template", queryOptions.Name)
 	return nil, fmt.Errorf("failed to get relay agent")
-}
-
-func (s *bootstrapService) Close() error {
-	return s.dao.Close()
 }

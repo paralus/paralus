@@ -8,6 +8,7 @@ import (
 	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	infrav3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
 	"github.com/rs/xid"
+	"github.com/uptrace/bun"
 )
 
 var (
@@ -17,44 +18,24 @@ var (
 	ErrUsedToken = errors.New("used token")
 )
 
-// ClusterTokenDao is the interface for cluster token operations
-type ClusterTokenDao interface {
-	// create cluster token
-	CreateToken(ctx context.Context, c *models.ClusterToken) error
-	//register the token
-	RegisterToken(ctx context.Context, token string) (*models.ClusterToken, error)
-}
-
-// clusterTokenDao implements ClusterTokenDao
-type clusterTokenDao struct {
-	dao pg.EntityDAO
-}
-
-// ClusterDao return new cluster dao
-func NewClusterTokenDao(dao pg.EntityDAO) ClusterTokenDao {
-	return &clusterTokenDao{
-		dao: dao,
-	}
-}
-
 // CreateToken creates a token for given cluster name
-func (s *clusterTokenDao) CreateToken(ctx context.Context, token *models.ClusterToken) error {
+func CreateToken(ctx context.Context, db bun.IDB, token *models.ClusterToken) error {
 	token.Name = xid.New().String()
-	_, err := s.dao.Create(ctx, token)
+	_, err := pg.Create(ctx, db, token)
 	return err
 }
 
 // registerToken registers the cluster token
-func (s *clusterTokenDao) RegisterToken(ctx context.Context, token string) (*models.ClusterToken, error) {
+func RegisterToken(ctx context.Context, db bun.IDB, token string) (*models.ClusterToken, error) {
 
-	entity, err := s.dao.GetX(ctx, "name", token, &models.ClusterToken{})
+	entity, err := pg.GetX(ctx, db, "name", token, &models.ClusterToken{})
 	if err != nil {
 		return nil, ErrInvalidToken
 	}
 	ct := entity.(*models.ClusterToken)
 	ct.State = infrav3.ClusterTokenState_TokenUsed.String()
 
-	s.dao.Update(ctx, ct.ID, ct)
+	pg.Update(ctx, db, ct.ID, ct)
 	if err != nil {
 		return nil, ErrInvalidToken
 	}

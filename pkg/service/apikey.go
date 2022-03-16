@@ -16,7 +16,6 @@ import (
 
 // ApiKeyService is the interface for api key operations
 type ApiKeyService interface {
-	Close() error
 	// create api key
 	Create(ctx context.Context, req *rpcv3.ApiKeyRequest) (*models.ApiKey, error)
 	// get by user
@@ -31,14 +30,12 @@ type ApiKeyService interface {
 
 // apiKeyService implements ApiKeyService
 type apiKeyService struct {
-	dao pg.EntityDAO
+	db *bun.DB
 }
 
 // NewApiKeyService return new api key service
 func NewApiKeyService(db *bun.DB) ApiKeyService {
-	return &apiKeyService{
-		dao: pg.NewEntityDAO(db),
-	}
+	return &apiKeyService{db}
 }
 
 func (s *apiKeyService) Create(ctx context.Context, req *rpcv3.ApiKeyRequest) (*models.ApiKey, error) {
@@ -52,7 +49,7 @@ func (s *apiKeyService) Create(ctx context.Context, req *rpcv3.ApiKeyRequest) (*
 		Secret:     crypto.GenerateSha256Secret(),
 	}
 
-	_, err := s.dao.Create(ctx, apikey)
+	_, err := pg.Create(ctx, s.db, apikey)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +57,7 @@ func (s *apiKeyService) Create(ctx context.Context, req *rpcv3.ApiKeyRequest) (*
 }
 
 func (s *apiKeyService) Delete(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.DeleteUserResponse, error) {
-	_, err := s.dao.GetInstance().NewUpdate().Model(&models.ApiKey{}).
+	_, err := s.db.NewUpdate().Model(&models.ApiKey{}).
 		Set("trash = ?", true).
 		Where("name = ?", req.Username).
 		Where("key = ?", req.Id).Exec(ctx)
@@ -69,7 +66,7 @@ func (s *apiKeyService) Delete(ctx context.Context, req *rpcv3.ApiKeyRequest) (*
 
 func (s *apiKeyService) List(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.ApiKeyResponseList, error) {
 	var apikeys []models.ApiKey
-	resp, err := s.dao.GetByName(ctx, req.Username, &apikeys)
+	resp, err := pg.GetByName(ctx, s.db, req.Username, &apikeys)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -93,7 +90,7 @@ func (s *apiKeyService) List(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rp
 
 func (s *apiKeyService) Get(ctx context.Context, req *rpcv3.ApiKeyRequest) (*models.ApiKey, error) {
 	var apikey models.ApiKey
-	_, err := s.dao.GetByName(ctx, req.Username, &apikey)
+	_, err := pg.GetByName(ctx, s.db, req.Username, &apikey)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -102,13 +99,9 @@ func (s *apiKeyService) Get(ctx context.Context, req *rpcv3.ApiKeyRequest) (*mod
 
 func (s *apiKeyService) GetByKey(ctx context.Context, req *rpcv3.ApiKeyRequest) (*models.ApiKey, error) {
 	var apikey models.ApiKey
-	_, err := s.dao.GetX(ctx, "key", req.Id, &apikey)
+	_, err := pg.GetX(ctx, s.db, "key", req.Id, &apikey)
 	if err != nil {
 		return nil, err
 	}
 	return &apikey, err
-}
-
-func (s *apiKeyService) Close() error {
-	return s.dao.Close()
 }

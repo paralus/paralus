@@ -21,7 +21,6 @@ const (
 
 // ProjectService is the interface for project operations
 type ProjectService interface {
-	Close() error
 	// create project
 	Create(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error)
 	// get project by id
@@ -39,14 +38,12 @@ type ProjectService interface {
 
 // projectService implements ProjectService
 type projectService struct {
-	dao pg.EntityDAO
+	db *bun.DB
 }
 
 // NewProjectService return new project service
 func NewProjectService(db *bun.DB) ProjectService {
-	return &projectService{
-		dao: pg.NewEntityDAO(db),
-	}
+	return &projectService{db}
 }
 
 func (s *projectService) Create(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error) {
@@ -56,7 +53,7 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 	}
 
 	var org models.Organization
-	_, err := s.dao.GetByName(ctx, project.Metadata.Organization, &org)
+	_, err := pg.GetByName(ctx, s.db, project.Metadata.Organization, &org)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +69,7 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 		PartnerId:      org.PartnerId,
 		Default:        project.GetSpec().GetDefault(),
 	}
-	entity, err := s.dao.Create(ctx, &proj)
+	entity, err := pg.Create(ctx, s.db, &proj)
 	if err != nil {
 		project.Status = &v3.Status{
 			ConditionType:   "Create",
@@ -121,7 +118,7 @@ func (s *projectService) GetByID(ctx context.Context, id string) (*systemv3.Proj
 		}
 		return project, err
 	}
-	entity, err := s.dao.GetByID(ctx, uid, &models.Project{})
+	entity, err := pg.GetByID(ctx, s.db, uid, &models.Project{})
 	if err != nil {
 		project.Status = &v3.Status{
 			ConditionType:   "Describe",
@@ -167,7 +164,7 @@ func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.
 		},
 	}
 
-	entity, err := s.dao.GetByName(ctx, name, &models.Project{})
+	entity, err := pg.GetByName(ctx, s.db, name, &models.Project{})
 	if err != nil {
 		project.Status = &v3.Status{
 			ConditionType:   "Describe",
@@ -181,13 +178,13 @@ func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.
 	if proj, ok := entity.(*models.Project); ok {
 
 		var org models.Organization
-		_, err := s.dao.GetByID(ctx, proj.OrganizationId, &org)
+		_, err := pg.GetByID(ctx, s.db, proj.OrganizationId, &org)
 		if err != nil {
 			return nil, err
 		}
 
 		var partner models.Partner
-		_, err = s.dao.GetByID(ctx, proj.PartnerId, &partner)
+		_, err = pg.GetByID(ctx, s.db, proj.PartnerId, &partner)
 		if err != nil {
 			return nil, err
 		}
@@ -216,7 +213,7 @@ func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.
 
 func (s *projectService) Update(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error) {
 
-	entity, err := s.dao.GetByName(ctx, project.Metadata.Name, &models.Project{})
+	entity, err := pg.GetByName(ctx, s.db, project.Metadata.Name, &models.Project{})
 	if err != nil {
 		project.Status = &v3.Status{
 			ConditionType:   "Update",
@@ -233,7 +230,7 @@ func (s *projectService) Update(ctx context.Context, project *systemv3.Project) 
 		proj.Default = project.Spec.Default
 		proj.ModifiedAt = time.Now()
 
-		_, err = s.dao.Update(ctx, proj.ID, proj)
+		_, err = pg.Update(ctx, s.db, proj.ID, proj)
 		if err != nil {
 			project.Status = &v3.Status{
 				ConditionType:   "Update",
@@ -259,7 +256,7 @@ func (s *projectService) Update(ctx context.Context, project *systemv3.Project) 
 }
 
 func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error) {
-	entity, err := s.dao.GetByName(ctx, project.Metadata.Name, &models.Project{})
+	entity, err := pg.GetByName(ctx, s.db, project.Metadata.Name, &models.Project{})
 	if err != nil {
 		project.Status = &v3.Status{
 			ConditionType:   "Delete",
@@ -271,7 +268,7 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 	}
 	if proj, ok := entity.(*models.Project); ok {
 		proj.Trash = true
-		_, err := s.dao.Update(ctx, proj.ID, proj)
+		_, err := pg.Update(ctx, s.db, proj.ID, proj)
 		if err != nil {
 			project.Status = &v3.Status{
 				ConditionType:   "Delete",
@@ -306,17 +303,17 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 	}
 	if len(project.Metadata.Organization) > 0 {
 		var org models.Organization
-		_, err := s.dao.GetByName(ctx, project.Metadata.Organization, &org)
+		_, err := pg.GetByName(ctx, s.db, project.Metadata.Organization, &org)
 		if err != nil {
 			return projectList, err
 		}
 		var part models.Partner
-		_, err = s.dao.GetByName(ctx, project.Metadata.Partner, &part)
+		_, err = pg.GetByName(ctx, s.db, project.Metadata.Partner, &part)
 		if err != nil {
 			return projectList, err
 		}
 		var projs []models.Project
-		entities, err := s.dao.List(ctx, uuid.NullUUID{UUID: part.ID, Valid: true}, uuid.NullUUID{UUID: org.ID, Valid: true}, &projs)
+		entities, err := pg.List(ctx, s.db, uuid.NullUUID{UUID: part.ID, Valid: true}, uuid.NullUUID{UUID: org.ID, Valid: true}, &projs)
 		if err != nil {
 			return projectList, err
 		}
@@ -352,8 +349,4 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 		return projectList, fmt.Errorf("missing organization id in metadata")
 	}
 	return projectList, nil
-}
-
-func (s *projectService) Close() error {
-	return s.dao.Close()
 }

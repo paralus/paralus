@@ -13,7 +13,6 @@ func TestGetKubeconfigRevocation(t *testing.T) {
 	defer db.Close()
 
 	ps := NewKubeconfigRevocationService(db)
-	defer ps.Close()
 
 	ouuid := uuid.New().String()
 	cuuid := uuid.New().String()

@@ -31,7 +31,6 @@ func TestCreateCluster(t *testing.T) {
 	}
 
 	ps := NewClusterService(db, downloadData, NewBootstrapService(db))
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 	cuuid := uuid.New().String()
@@ -77,7 +76,6 @@ func TestUpdateCluster(t *testing.T) {
 	}
 
 	ps := NewClusterService(db, downloadData, NewBootstrapService(db))
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 	cuuid := uuid.New().String()
@@ -112,7 +110,6 @@ func TestSelectCluster(t *testing.T) {
 	}
 
 	ps := NewClusterService(db, downloadData, NewBootstrapService(db))
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 	cuuid := uuid.New().String()
@@ -147,7 +144,6 @@ func TestGetCluster(t *testing.T) {
 	}
 
 	ps := NewClusterService(db, downloadData, NewBootstrapService(db))
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 	cuuid := uuid.New().String()
@@ -181,7 +177,6 @@ func TestListCluster(t *testing.T) {
 	}
 
 	ps := NewClusterService(db, downloadData, NewBootstrapService(db))
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 	ouuid := uuid.New().String()

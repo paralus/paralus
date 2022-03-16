@@ -6,7 +6,6 @@ import (
 
 	"github.com/RafaySystems/rcloud-base/internal/dao"
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	"github.com/RafaySystems/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -15,7 +14,6 @@ import (
 
 // AccountPermissionService is the interface for account permission operations
 type AccountPermissionService interface {
-	Close() error
 	GetAccountPermissions(ctx context.Context, accountID string, orgID, partnerID string) ([]sentry.AccountPermission, error)
 	IsPartnerSuperAdmin(ctx context.Context, accountID, partnerID string) (isPartnerAdmin, isSuperAdmin bool, err error)
 	GetAccountProjectsByPermission(ctx context.Context, accountID, orgID, partnerID string, permission string) ([]sentry.AccountPermission, error)
@@ -30,25 +28,16 @@ type AccountPermissionService interface {
 
 // accountPermissionService implements AccountPermissionService
 type accountPermissionService struct {
-	dao  pg.EntityDAO
-	pdao dao.PermissionDao
+	db *bun.DB
 }
 
 // NewKubeconfigRevocation return new kubeconfig revocation service
 func NewAccountPermissionService(db *bun.DB) AccountPermissionService {
-	edao := pg.NewEntityDAO(db)
-	return &accountPermissionService{
-		dao:  edao,
-		pdao: dao.NewPermissionDao(edao),
-	}
-}
-
-func (s *accountPermissionService) Close() error {
-	return s.dao.Close()
+	return &accountPermissionService{db}
 }
 
 func (a *accountPermissionService) GetAccountPermissions(ctx context.Context, accountID string, orgID, partnerID string) ([]sentry.AccountPermission, error) {
-	aps, err := a.pdao.GetAccountPermissions(ctx, uuid.MustParse(accountID), uuid.MustParse(orgID), uuid.MustParse(partnerID))
+	aps, err := dao.GetAccountPermissions(ctx, a.db, uuid.MustParse(accountID), uuid.MustParse(orgID), uuid.MustParse(partnerID))
 	if err != nil {
 		return nil, err
 	}
@@ -61,11 +50,11 @@ func (a *accountPermissionService) GetAccountPermissions(ctx context.Context, ac
 }
 
 func (a *accountPermissionService) IsPartnerSuperAdmin(ctx context.Context, accountID, partnerID string) (isPartnerAdmin, isSuperAdmin bool, err error) {
-	return a.pdao.IsPartnerSuperAdmin(ctx, uuid.MustParse(accountID), uuid.MustParse(partnerID))
+	return dao.IsPartnerSuperAdmin(ctx, a.db, uuid.MustParse(accountID), uuid.MustParse(partnerID))
 }
 
 func (a *accountPermissionService) GetAccountProjectsByPermission(ctx context.Context, accountID, orgID, partnerID string, permission string) ([]sentry.AccountPermission, error) {
-	aps, err := a.pdao.GetAccountProjectsByPermission(ctx, uuid.MustParse(accountID), uuid.MustParse(orgID), uuid.MustParse(partnerID), permission)
+	aps, err := dao.GetAccountProjectsByPermission(ctx, a.db, uuid.MustParse(accountID), uuid.MustParse(orgID), uuid.MustParse(partnerID), permission)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +74,7 @@ func (a *accountPermissionService) GetAccountPermissionsByProjectIDPermissions(c
 			projids = append(projids, id)
 		}
 	}
-	aps, err := a.pdao.GetAccountPermissionsByProjectIDPermissions(ctx, uuid.MustParse(accountID), uuid.MustParse(orgID), uuid.MustParse(partnerID), projids, permissions)
+	aps, err := dao.GetAccountPermissionsByProjectIDPermissions(ctx, a.db, uuid.MustParse(accountID), uuid.MustParse(orgID), uuid.MustParse(partnerID), projids, permissions)
 	if err != nil {
 		return nil, err
 	}
@@ -98,11 +87,11 @@ func (a *accountPermissionService) GetAccountPermissionsByProjectIDPermissions(c
 }
 
 func (a *accountPermissionService) GetAccount(ctx context.Context, accountID string) (*models.Account, error) {
-	return a.pdao.GetAccountBasics(ctx, uuid.MustParse(accountID))
+	return dao.GetAccountBasics(ctx, a.db, uuid.MustParse(accountID))
 }
 
 func (a *accountPermissionService) GetAccountGroups(ctx context.Context, accountID string) ([]string, error) {
-	ag, err := a.pdao.GetAccountGroups(ctx, uuid.MustParse(accountID))
+	ag, err := dao.GetAccountGroups(ctx, a.db, uuid.MustParse(accountID))
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +120,7 @@ func (a *accountPermissionService) GetSSOAccount(ctx context.Context, accountID,
 
 //TODO: this needs to be revisited as sso users for oidc are stored in identities by kratos
 func (a *accountPermissionService) GetSSOUsersGroupProjectRole(ctx context.Context, orgID string) ([]sentry.SSOAccountGroupProjectRoleData, error) {
-	ssos, err := a.pdao.GetSSOUsersGroupProjectRole(ctx, uuid.MustParse(orgID))
+	ssos, err := dao.GetSSOUsersGroupProjectRole(ctx, a.db, uuid.MustParse(orgID))
 	if err != nil {
 		return nil, err
 	}
@@ -144,7 +133,7 @@ func (a *accountPermissionService) GetSSOUsersGroupProjectRole(ctx context.Conte
 }
 
 func (a *accountPermissionService) GetAcccountsWithApprovalPermission(ctx context.Context, orgID, partnerID string) ([]string, error) {
-	usernames, err := a.pdao.GetAcccountsWithApprovalPermission(ctx, uuid.MustParse(orgID), uuid.MustParse(partnerID))
+	usernames, err := dao.GetAcccountsWithApprovalPermission(ctx, a.db, uuid.MustParse(orgID), uuid.MustParse(partnerID))
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +141,7 @@ func (a *accountPermissionService) GetAcccountsWithApprovalPermission(ctx contex
 }
 
 func (a *accountPermissionService) GetSSOAcccountsWithApprovalPermission(ctx context.Context, orgID, partnerID string) ([]string, error) {
-	usernames, err := a.pdao.GetSSOAcccountsWithApprovalPermission(ctx, uuid.MustParse(orgID), uuid.MustParse(partnerID))
+	usernames, err := dao.GetSSOAcccountsWithApprovalPermission(ctx, a.db, uuid.MustParse(orgID), uuid.MustParse(partnerID))
 	if err != nil {
 		return nil, err
 	}
@@ -160,17 +149,17 @@ func (a *accountPermissionService) GetSSOAcccountsWithApprovalPermission(ctx con
 }
 
 func (a *accountPermissionService) IsOrgAdmin(ctx context.Context, accountID, partnerID string) (isOrgAdmin bool, err error) {
-	return a.pdao.IsOrgAdmin(ctx, uuid.MustParse(accountID), uuid.MustParse(partnerID))
+	return dao.IsOrgAdmin(ctx, a.db, uuid.MustParse(accountID), uuid.MustParse(partnerID))
 }
 
 func (a *accountPermissionService) IsAccountActive(ctx context.Context, accountID, orgID string) (bool, error) {
 	active := false
 
-	group, err := a.pdao.GetDefaultUserGroup(ctx, uuid.MustParse(orgID))
+	group, err := dao.GetDefaultUserGroup(ctx, a.db, uuid.MustParse(orgID))
 	if err != nil {
 		return false, err
 	}
-	ga, err := a.pdao.GetDefaultUserGroupAccount(ctx, uuid.MustParse(accountID), group.ID)
+	ga, err := dao.GetDefaultUserGroupAccount(ctx, a.db, uuid.MustParse(accountID), group.ID)
 	if err != nil {
 		return active, err
 	}

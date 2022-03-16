@@ -13,37 +13,11 @@ import (
 	"github.com/uptrace/bun"
 )
 
-// ClusterNamespacesDao is the interface for cluster namespaces operations
-type ClusterNamespacesDao interface {
-	// Get Namespace
-	GetNamespace(ctx context.Context, clusterID uuid.UUID, name string) (models.ClusterNamespace, error)
-	// GetNamespaces
-	GetNamespaces(ctx context.Context, clusterID uuid.UUID) ([]models.ClusterNamespace, error)
-	// GetNamespacesForConditions
-	GetNamespacesForConditions(ctx context.Context, clusterID uuid.UUID, conditions []scheduler.ClusterNamespaceCondition) ([]models.ClusterNamespace, int, error)
-	// UpdateNamespaceStatus
-	UpdateNamespaceStatus(ctx context.Context, updated *models.ClusterNamespace) error
-	// GetNamespaceHashes
-	GetNamespaceHashes(ctx context.Context, clusterID uuid.UUID) ([]infrav3.NameHash, error)
-}
-
-// clusterNamespacesDao implements ClusterNamespacesDao
-type clusterNamespacesDao struct {
-	dao pg.EntityDAO
-}
-
-// ClusterNamespacesDao return new cluster namespaces dao
-func NewClusterNamespacesDao(dao pg.EntityDAO) ClusterNamespacesDao {
-	return &clusterNamespacesDao{
-		dao: dao,
-	}
-}
-
-func (s clusterNamespacesDao) GetNamespace(ctx context.Context, clusterID uuid.UUID, name string) (models.ClusterNamespace, error) {
+func GetNamespace(ctx context.Context, db bun.IDB, clusterID uuid.UUID, name string) (models.ClusterNamespace, error) {
 
 	var cn models.ClusterNamespace
 
-	err := s.dao.GetInstance().NewSelect().Model(&cn).
+	err := db.NewSelect().Model(&cn).
 		Where("cluster_id = ?", clusterID).
 		Where("name = ?", name).
 		Scan(ctx)
@@ -55,17 +29,17 @@ func (s clusterNamespacesDao) GetNamespace(ctx context.Context, clusterID uuid.U
 	return cn, nil
 }
 
-func (s clusterNamespacesDao) GetNamespaces(ctx context.Context, clusterID uuid.UUID) ([]models.ClusterNamespace, error) {
+func GetNamespaces(ctx context.Context, db bun.IDB, clusterID uuid.UUID) ([]models.ClusterNamespace, error) {
 	var cns []models.ClusterNamespace
 
-	_, err := s.dao.GetX(ctx, "cluster_id", clusterID, &cns)
+	_, err := pg.GetX(ctx, db, "cluster_id", clusterID, &cns)
 	return cns, err
 }
 
-func (s clusterNamespacesDao) GetNamespacesForConditions(ctx context.Context, clusterID uuid.UUID, conditions []scheduler.ClusterNamespaceCondition) ([]models.ClusterNamespace, int, error) {
+func GetNamespacesForConditions(ctx context.Context, db bun.IDB, clusterID uuid.UUID, conditions []scheduler.ClusterNamespaceCondition) ([]models.ClusterNamespace, int, error) {
 	var cns []models.ClusterNamespace
 
-	q := s.dao.GetInstance().NewSelect().Model(&cns).Where("cluster_id = ?", clusterID)
+	q := db.NewSelect().Model(&cns).Where("cluster_id = ?", clusterID)
 
 	for _, condition := range conditions {
 		q.WhereGroup("", func(sq *bun.SelectQuery) *bun.SelectQuery {
@@ -87,9 +61,9 @@ func (s clusterNamespacesDao) GetNamespacesForConditions(ctx context.Context, cl
 	return cns, count, err
 }
 
-func (s clusterNamespacesDao) UpdateNamespaceStatus(ctx context.Context, updated *models.ClusterNamespace) error {
+func UpdateNamespaceStatus(ctx context.Context, db bun.IDB, updated *models.ClusterNamespace) error {
 
-	_, err := s.dao.GetInstance().NewUpdate().Model(updated).
+	_, err := db.NewUpdate().Model(updated).
 		Set("conditions = ?", updated.Conditions).
 		Set("status = ?", updated.Status).
 		Where("cluster_id = ?", updated.ClusterId).
@@ -99,11 +73,11 @@ func (s clusterNamespacesDao) UpdateNamespaceStatus(ctx context.Context, updated
 	return err
 }
 
-func (s clusterNamespacesDao) GetNamespaceHashes(ctx context.Context, clusterID uuid.UUID) ([]infrav3.NameHash, error) {
+func GetNamespaceHashes(ctx context.Context, db bun.IDB, clusterID uuid.UUID) ([]infrav3.NameHash, error) {
 
 	var nameHashes []infrav3.NameHash
 
-	err := s.dao.GetInstance().NewSelect().
+	err := db.NewSelect().
 		Model((*models.ClusterNamespace)(nil)).
 		Column("name", "hash").
 		//TODO: to be changed to ClusterTaskDeleted later once task is supported

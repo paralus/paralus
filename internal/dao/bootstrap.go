@@ -2,7 +2,6 @@ package dao
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 	"time"
@@ -17,44 +16,9 @@ import (
 	"github.com/uptrace/bun"
 )
 
-// BootstrapDao is the interface for bootstrap operations
-type BootstrapDao interface {
-	CreateOrUpdateBootstrapInfra(ctx context.Context, infra *models.BootstrapInfra) error
-	CreateOrUpdateBootstrapAgentTemplate(context.Context, *models.BootstrapAgentTemplate) error
-	GetBootstrapAgentTemplateForToken(ctx context.Context, token string) (*models.BootstrapAgentTemplate, error)
-	SelectBootstrapAgentTemplates(ctx context.Context, opts *commonv3.QueryOptions) (ret []models.BootstrapAgentTemplate, count int, err error)
-	DeleteBootstrapAgentTempate(ctx context.Context, opts *commonv3.QueryOptions, infraRef string) error
-	GetBootstrapAgents(ctx context.Context, opts *commonv3.QueryOptions, templateRef string) (ret []models.BootstrapAgent, count int, err error)
-	CreateBootstrapAgent(ctx context.Context, ba *models.BootstrapAgent) error
-	GetBootstrapAgent(ctx context.Context, templateRef string, opts *commonv3.QueryOptions) (*models.BootstrapAgent, error)
-	SelectBootstrapAgents(ctx context.Context, templateRef string, opts *commonv3.QueryOptions) (ret []models.BootstrapAgent, count int, err error)
-	RegisterBootstrapAgent(ctx context.Context, token string) error
-	DeleteBootstrapAgent(ctx context.Context, templateRef string, opts *commonv3.QueryOptions) error
-	UpdateBootstrapAgent(ctx context.Context, ba *models.BootstrapAgent, opts *commonv3.QueryOptions) error
-	GetBootstrapAgentForToken(ctx context.Context, token string) (*models.BootstrapAgent, error)
-	GetBootstrapAgentTemplateForHost(ctx context.Context, host string) (*models.BootstrapAgentTemplate, error)
-	GetBootstrapAgentCountForClusterID(ctx context.Context, clusterID string, orgID uuid.UUID) (int, error)
-	GetBootstrapAgentForClusterID(ctx context.Context, clusterID string, orgID uuid.UUID) (*models.BootstrapAgent, error)
-	UpdateBootstrapAgentDeleteAt(ctx context.Context, templateRef string) error
-	UpdateBootstrapAgentTempateDeleteAt(ctx context.Context, opts *commonv3.QueryOptions) error
-	UpdateBootstrapInfraDeleteAt(ctx context.Context, opts *commonv3.QueryOptions) error
-}
+func CreateOrUpdateBootstrapInfra(ctx context.Context, db bun.IDB, infra *models.BootstrapInfra) error {
 
-// bootstrapDao implements BootstrapDao
-type bootstrapDao struct {
-	bdao pg.EntityDAO
-}
-
-// BootstrapDao return new bootstrap dao
-func NewBootstrapDao(edao pg.EntityDAO) BootstrapDao {
-	return &bootstrapDao{
-		bdao: edao,
-	}
-}
-
-func (s *bootstrapDao) CreateOrUpdateBootstrapInfra(ctx context.Context, infra *models.BootstrapInfra) error {
-
-	_, err := s.bdao.GetInstance().NewInsert().On("CONFLICT (name) DO UPDATE").
+	_, err := db.NewInsert().On("CONFLICT (name) DO UPDATE").
 		Set("ca_cert = ?", infra.CaCert).
 		Set("ca_key = ?", infra.CaKey).
 		Set("modified_at = ?", time.Now()).
@@ -63,9 +27,9 @@ func (s *bootstrapDao) CreateOrUpdateBootstrapInfra(ctx context.Context, infra *
 	return err
 }
 
-func (s *bootstrapDao) CreateOrUpdateBootstrapAgentTemplate(ctx context.Context, template *models.BootstrapAgentTemplate) error {
+func CreateOrUpdateBootstrapAgentTemplate(ctx context.Context, db bun.IDB, template *models.BootstrapAgentTemplate) error {
 
-	_, err := s.bdao.GetInstance().NewInsert().On("CONFLICT (name) DO UPDATE").
+	_, err := db.NewInsert().On("CONFLICT (name) DO UPDATE").
 		Set("infra_ref = ?", template.InfraRef).
 		Set("ignore_multiple_register = ?", template.IgnoreMultipleRegister).
 		Set("auto_register = ?", template.AutoRegister).
@@ -80,14 +44,14 @@ func (s *bootstrapDao) CreateOrUpdateBootstrapAgentTemplate(ctx context.Context,
 	return err
 }
 
-func (s *bootstrapDao) GetBootstrapAgentTemplateForToken(ctx context.Context, token string) (*models.BootstrapAgentTemplate, error) {
+func GetBootstrapAgentTemplateForToken(ctx context.Context, db bun.IDB, token string) (*models.BootstrapAgentTemplate, error) {
 	var template models.BootstrapAgentTemplate
-	err := s.bdao.GetInstance().NewSelect().Model(&template).Where("token = ?", token).Scan(ctx)
+	err := db.NewSelect().Model(&template).Where("token = ?", token).Scan(ctx)
 	return &template, err
 }
 
-func (s *bootstrapDao) SelectBootstrapAgentTemplates(ctx context.Context, opts *commonv3.QueryOptions) (ret []models.BootstrapAgentTemplate, count int, err error) {
-	q, err := query.Select(s.bdao.GetInstance().NewSelect().Model(&ret), opts)
+func SelectBootstrapAgentTemplates(ctx context.Context, db bun.IDB, opts *commonv3.QueryOptions) (ret []models.BootstrapAgentTemplate, count int, err error) {
+	q, err := query.Select(db.NewSelect().Model(&ret), opts)
 	if err != nil {
 		return
 	}
@@ -99,9 +63,9 @@ func (s *bootstrapDao) SelectBootstrapAgentTemplates(ctx context.Context, opts *
 	return
 }
 
-func (s *bootstrapDao) DeleteBootstrapAgentTempate(ctx context.Context, opts *commonv3.QueryOptions, infraRef string) error {
+func DeleteBootstrapAgentTempate(ctx context.Context, db bun.IDB, opts *commonv3.QueryOptions, infraRef string) error {
 
-	q, err := query.Delete(s.bdao.GetInstance().NewSelect().Model((*models.BootstrapAgentTemplate)(nil)), opts)
+	q, err := query.Delete(db.NewSelect().Model((*models.BootstrapAgentTemplate)(nil)), opts)
 	if err != nil {
 		return err
 	}
@@ -109,9 +73,9 @@ func (s *bootstrapDao) DeleteBootstrapAgentTempate(ctx context.Context, opts *co
 	return err
 }
 
-func (s *bootstrapDao) GetBootstrapAgent(ctx context.Context, templateRef string, opts *commonv3.QueryOptions) (*models.BootstrapAgent, error) {
+func GetBootstrapAgent(ctx context.Context, db bun.IDB, templateRef string, opts *commonv3.QueryOptions) (*models.BootstrapAgent, error) {
 	var ba models.BootstrapAgent
-	q, err := query.Get(s.bdao.GetInstance().NewSelect().Model(&ba), opts)
+	q, err := query.Get(db.NewSelect().Model(&ba), opts)
 	if err != nil {
 		return nil, err
 	}
@@ -127,8 +91,8 @@ func (s *bootstrapDao) GetBootstrapAgent(ctx context.Context, templateRef string
 	return &ba, err
 }
 
-func (s *bootstrapDao) GetBootstrapAgents(ctx context.Context, opts *commonv3.QueryOptions, templateRef string) (ret []models.BootstrapAgent, count int, err error) {
-	q, err := query.Get(s.bdao.GetInstance().NewSelect().Model(&ret), opts)
+func GetBootstrapAgents(ctx context.Context, db bun.IDB, opts *commonv3.QueryOptions, templateRef string) (ret []models.BootstrapAgent, count int, err error) {
+	q, err := query.Get(db.NewSelect().Model(&ret), opts)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -142,9 +106,9 @@ func (s *bootstrapDao) GetBootstrapAgents(ctx context.Context, opts *commonv3.Qu
 	return
 }
 
-func (s *bootstrapDao) SelectBootstrapAgents(ctx context.Context, templateRef string, opts *commonv3.QueryOptions) (ret []models.BootstrapAgent, count int, err error) {
+func SelectBootstrapAgents(ctx context.Context, db bun.IDB, templateRef string, opts *commonv3.QueryOptions) (ret []models.BootstrapAgent, count int, err error) {
 
-	q, err := query.Select(s.bdao.GetInstance().NewSelect().Model(&ret), opts)
+	q, err := query.Select(db.NewSelect().Model(&ret), opts)
 	if err != nil {
 		return
 	}
@@ -158,67 +122,65 @@ func (s *bootstrapDao) SelectBootstrapAgents(ctx context.Context, templateRef st
 	return
 }
 
-func (s *bootstrapDao) CreateBootstrapAgent(ctx context.Context, ba *models.BootstrapAgent) error {
+func CreateBootstrapAgent(ctx context.Context, db bun.IDB, ba *models.BootstrapAgent) error {
 	ba.TokenState = sentry.BootstrapAgentState_NotRegistered.String()
-	_, err := s.bdao.Create(ctx, ba)
+	_, err := pg.Create(ctx, db, ba)
 	return err
 }
 
-func (s *bootstrapDao) RegisterBootstrapAgent(ctx context.Context, token string) error {
+// We are explicitly taking in Tx here as it was previously doing RunInTx
+// TODO: should we take Tx  here or just assume we will be passed in a tx? Or should we create one?
+func RegisterBootstrapAgent(ctx context.Context, db bun.Tx, token string) error {
 
-	err := s.bdao.GetInstance().RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
-		ba, err := s.getBootstrapAgentForToken(ctx, token)
-		if err != nil {
-			return err
-		}
-
-		bat, err := s.getBootstrapAgentTemplate(ctx, ba.TemplateRef)
-		if err != nil {
-			return err
-		}
-
-		state := sentry.BootstrapAgentState_NotApproved
-		if bat.AutoApprove {
-			state = sentry.BootstrapAgentState_Approved
-		}
-
-		switch ba.TokenState {
-		case sentry.BootstrapAgentState_NotRegistered.String():
-			ba.TokenState = sentry.BootstrapAgentState_Approved.String()
-		case sentry.BootstrapAgentState_NotApproved.String(), sentry.BootstrapAgentState_Approved.String():
-			if !bat.IgnoreMultipleRegister {
-				return fmt.Errorf("cannot register token %s state is %s", token, ba.TokenState)
-			}
-		default:
-			return fmt.Errorf("invalid token state %s", ba.TokenState)
-		}
-
-		_, err = s.bdao.GetInstance().NewUpdate().Model(ba).
-			Set("token_state = ?", state).
-			Where("token = ?", token).
-			Exec(ctx)
-
+	ba, err := getBootstrapAgentForToken(ctx, db, token)
+	if err != nil {
 		return err
-	})
+	}
+
+	bat, err := getBootstrapAgentTemplate(ctx, db, ba.TemplateRef)
+	if err != nil {
+		return err
+	}
+
+	state := sentry.BootstrapAgentState_NotApproved
+	if bat.AutoApprove {
+		state = sentry.BootstrapAgentState_Approved
+	}
+
+	switch ba.TokenState {
+	case sentry.BootstrapAgentState_NotRegistered.String():
+		ba.TokenState = sentry.BootstrapAgentState_Approved.String()
+	case sentry.BootstrapAgentState_NotApproved.String(), sentry.BootstrapAgentState_Approved.String():
+		if !bat.IgnoreMultipleRegister {
+			return fmt.Errorf("cannot register token %s state is %s", token, ba.TokenState)
+		}
+	default:
+		return fmt.Errorf("invalid token state %s", ba.TokenState)
+	}
+
+	_, err = db.NewUpdate().Model(ba).
+		Set("token_state = ?", state).
+		Where("token = ?", token).
+		Exec(ctx)
 
 	return err
 }
 
-func (s *bootstrapDao) getBootstrapAgentForToken(ctx context.Context, token string) (*models.BootstrapAgent, error) {
+func getBootstrapAgentForToken(ctx context.Context, db bun.IDB, token string) (*models.BootstrapAgent, error) {
 	var ba models.BootstrapAgent
-	err := s.bdao.GetInstance().NewSelect().Model(&ba).Where("token = ?", token).Scan(ctx)
+	err := db.NewSelect().Model(&ba).Where("token = ?", token).Scan(ctx)
 	return &ba, err
 }
 
-func (s *bootstrapDao) getBootstrapAgentTemplate(ctx context.Context, name string) (*models.BootstrapAgentTemplate, error) {
+func getBootstrapAgentTemplate(ctx context.Context, db bun.IDB, name string) (*models.BootstrapAgentTemplate, error) {
 	var template models.BootstrapAgentTemplate
-	err := s.bdao.GetInstance().NewSelect().Model(&template).Where("name = ?", name).Scan(ctx)
+	err := db.NewSelect().Model(&template).Where("name = ?", name).Scan(ctx)
 	return &template, err
 }
 
-func (s *bootstrapDao) DeleteBootstrapAgent(ctx context.Context, templateRef string, opts *commonv3.QueryOptions) error {
+func DeleteBootstrapAgent(ctx context.Context, db bun.IDB, templateRef string, opts *commonv3.QueryOptions) error {
 
-	dq := s.bdao.GetInstance().NewDelete().Model((*models.BootstrapAgent)(nil)).Where("name = ?", opts.ID)
+	dq := db.NewDelete().Model((*models.BootstrapAgent)(nil)).Where("name = ?", opts.ID)
 	if templateRef != "" {
 		dq = dq.Where("template_ref = ?", templateRef)
 	}
@@ -226,22 +188,22 @@ func (s *bootstrapDao) DeleteBootstrapAgent(ctx context.Context, templateRef str
 	return err
 }
 
-func (s *bootstrapDao) UpdateBootstrapAgent(ctx context.Context, ba *models.BootstrapAgent, opts *commonv3.QueryOptions) error {
-	_, err := s.bdao.GetInstance().NewUpdate().Model(ba).Where("id = ?", ba.ID).Returning("*").Exec(ctx)
+func UpdateBootstrapAgent(ctx context.Context, db bun.IDB, ba *models.BootstrapAgent, opts *commonv3.QueryOptions) error {
+	_, err := db.NewUpdate().Model(ba).Where("id = ?", ba.ID).Returning("*").Exec(ctx)
 	return err
 
 }
 
-func (s *bootstrapDao) GetBootstrapAgentForToken(ctx context.Context, token string) (*models.BootstrapAgent, error) {
+func GetBootstrapAgentForToken(ctx context.Context, db bun.IDB, token string) (*models.BootstrapAgent, error) {
 	var ba models.BootstrapAgent
-	err := s.bdao.GetInstance().NewSelect().Model(&ba).Where("token = ?", token).Scan(ctx)
+	err := db.NewSelect().Model(&ba).Where("token = ?", token).Scan(ctx)
 	return &ba, err
 }
 
-func (s *bootstrapDao) GetBootstrapAgentTemplateForHost(ctx context.Context, host string) (*models.BootstrapAgentTemplate, error) {
+func GetBootstrapAgentTemplateForHost(ctx context.Context, db bun.IDB, host string) (*models.BootstrapAgentTemplate, error) {
 
 	bat := models.BootstrapAgentTemplate{}
-	err := s.bdao.GetInstance().NewSelect().Model(&bat).
+	err := db.NewSelect().Model(&bat).
 		ColumnExpr("bat.*").
 		Join("JOIN sentry_bootstrap_template_host as bth").
 		JoinOn("bat.name = bth.name").
@@ -251,9 +213,9 @@ func (s *bootstrapDao) GetBootstrapAgentTemplateForHost(ctx context.Context, hos
 	return &bat, err
 }
 
-func (s *bootstrapDao) GetBootstrapAgentCountForClusterID(ctx context.Context, clusterID string, orgID uuid.UUID) (int, error) {
+func GetBootstrapAgentCountForClusterID(ctx context.Context, db bun.IDB, clusterID string, orgID uuid.UUID) (int, error) {
 	var ba []models.BootstrapAgent
-	err := s.bdao.GetInstance().NewSelect().Model(&ba).
+	err := db.NewSelect().Model(&ba).
 		Where("name = ?", clusterID).
 		Where("organization_id = ?", orgID).
 		Scan(ctx)
@@ -263,9 +225,9 @@ func (s *bootstrapDao) GetBootstrapAgentCountForClusterID(ctx context.Context, c
 	return len(ba), nil
 }
 
-func (s *bootstrapDao) GetBootstrapAgentForClusterID(ctx context.Context, clusterID string, orgID uuid.UUID) (*models.BootstrapAgent, error) {
+func GetBootstrapAgentForClusterID(ctx context.Context, db bun.IDB, clusterID string, orgID uuid.UUID) (*models.BootstrapAgent, error) {
 	var ba models.BootstrapAgent
-	err := s.bdao.GetInstance().NewSelect().Model(&ba).
+	err := db.NewSelect().Model(&ba).
 		Where("name = ?", clusterID).
 		Where("organization_id = ?", orgID).
 		Scan(ctx)
@@ -276,9 +238,9 @@ func (s *bootstrapDao) GetBootstrapAgentForClusterID(ctx context.Context, cluste
 }
 
 // updateBootstrapAgentDeleteAt builds query for deleting resource
-func (s *bootstrapDao) UpdateBootstrapAgentDeleteAt(ctx context.Context, templateRef string) error {
+func UpdateBootstrapAgentDeleteAt(ctx context.Context, db bun.IDB, templateRef string) error {
 	var toBeDeletedAgent *models.BootstrapAgent
-	_, err := s.bdao.GetX(ctx, "template_ref", templateRef, &toBeDeletedAgent)
+	_, err := pg.GetX(ctx, db, "template_ref", templateRef, &toBeDeletedAgent)
 	if err != nil {
 		return err
 	}
@@ -289,7 +251,7 @@ func (s *bootstrapDao) UpdateBootstrapAgentDeleteAt(ctx context.Context, templat
 
 	opts := &commonv3.QueryOptions{}
 	query.WithName(toBeDeletedAgent.Name)(opts)
-	q, err := query.Update(s.bdao.GetInstance().NewUpdate().Model((*models.BootstrapAgent)(nil)), opts)
+	q, err := query.Update(db.NewUpdate().Model((*models.BootstrapAgent)(nil)), opts)
 	if err != nil {
 		return err
 	}
@@ -300,8 +262,8 @@ func (s *bootstrapDao) UpdateBootstrapAgentDeleteAt(ctx context.Context, templat
 	return err
 }
 
-func (s *bootstrapDao) UpdateBootstrapAgentTempateDeleteAt(ctx context.Context, opts *commonv3.QueryOptions) error {
-	q, err := query.Update(s.bdao.GetInstance().NewUpdate().Model((*models.BootstrapAgentTemplate)(nil)), opts)
+func UpdateBootstrapAgentTempateDeleteAt(ctx context.Context, db bun.IDB, opts *commonv3.QueryOptions) error {
+	q, err := query.Update(db.NewUpdate().Model((*models.BootstrapAgentTemplate)(nil)), opts)
 	if err != nil {
 		return err
 	}
@@ -313,8 +275,8 @@ func (s *bootstrapDao) UpdateBootstrapAgentTempateDeleteAt(ctx context.Context, 
 }
 
 // updateBootstrapInfraDeleteAt builds query for deleting resource
-func (s *bootstrapDao) UpdateBootstrapInfraDeleteAt(ctx context.Context, opts *commonv3.QueryOptions) error {
-	q, err := query.Update(s.bdao.GetInstance().NewUpdate().Model((*models.BootstrapInfra)(nil)), opts)
+func UpdateBootstrapInfraDeleteAt(ctx context.Context, db bun.IDB, opts *commonv3.QueryOptions) error {
+	q, err := query.Update(db.NewUpdate().Model((*models.BootstrapInfra)(nil)), opts)
 	if err != nil {
 		return err
 	}

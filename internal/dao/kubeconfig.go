@@ -8,36 +8,12 @@ import (
 	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	"github.com/RafaySystems/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
+	"github.com/uptrace/bun"
 )
 
-// KubeconfigDao is the interface for kubeconfig operations
-type KubeconfigDao interface {
-	GetKubeconfigRevocation(ctx context.Context, orgID, accountID uuid.UUID, isSSOUser bool) (*models.KubeconfigRevocation, error)
-	CreateKubeconfigRevocation(ctx context.Context, kr *models.KubeconfigRevocation) error
-	UpdateKubeconfigRevocation(ctx context.Context, kr *models.KubeconfigRevocation) error
-	GetKubeconfigSetting(ctx context.Context, orgID, accountID uuid.UUID, issSSO bool) (*models.KubeconfigSetting, error)
-	CreateKubeconfigSetting(ctx context.Context, ks *models.KubeconfigSetting) error
-	UpdateKubeconfigSetting(ctx context.Context, ks *models.KubeconfigSetting) error
-	GetkubectlClusterSettings(ctx context.Context, orgID uuid.UUID, name string) (*models.KubectlClusterSetting, error)
-	CreatekubectlClusterSettings(ctx context.Context, kc *models.KubectlClusterSetting) error
-	UpdatekubectlClusterSettings(ctx context.Context, kc *models.KubectlClusterSetting) error
-}
-
-// kubeconfigDao implements BootstrapDao
-type kubeconfigDao struct {
-	dao pg.EntityDAO
-}
-
-// KubeconfigDao return new kube config dao
-func NewKubeconfigDao(edao pg.EntityDAO) KubeconfigDao {
-	return &kubeconfigDao{
-		dao: edao,
-	}
-}
-
-func (s *kubeconfigDao) GetKubeconfigRevocation(ctx context.Context, orgID, accountID uuid.UUID, isSSOUser bool) (*models.KubeconfigRevocation, error) {
+func GetKubeconfigRevocation(ctx context.Context, db bun.IDB, orgID, accountID uuid.UUID, isSSOUser bool) (*models.KubeconfigRevocation, error) {
 	var kr models.KubeconfigRevocation
-	err := s.dao.GetInstance().NewSelect().Model(&kr).
+	err := db.NewSelect().Model(&kr).
 		Where("organization_id = ?", orgID).
 		Where("account_id = ?", accountID).
 		Where("is_sso_user = ?", isSSOUser).
@@ -45,13 +21,13 @@ func (s *kubeconfigDao) GetKubeconfigRevocation(ctx context.Context, orgID, acco
 	return &kr, err
 }
 
-func (s *kubeconfigDao) CreateKubeconfigRevocation(ctx context.Context, kr *models.KubeconfigRevocation) error {
-	_, err := s.dao.Create(ctx, kr)
+func CreateKubeconfigRevocation(ctx context.Context, db bun.IDB, kr *models.KubeconfigRevocation) error {
+	_, err := pg.Create(ctx, db, kr)
 	return err
 }
 
-func (s *kubeconfigDao) UpdateKubeconfigRevocation(ctx context.Context, kr *models.KubeconfigRevocation) error {
-	q := s.dao.GetInstance().NewUpdate().Model(kr)
+func UpdateKubeconfigRevocation(ctx context.Context, db bun.IDB, kr *models.KubeconfigRevocation) error {
+	q := db.NewUpdate().Model(kr)
 
 	q = q.Where("organization_id = ?", kr.OrganizationId).
 		Where("account_id = ?", kr.AccountId).
@@ -63,9 +39,9 @@ func (s *kubeconfigDao) UpdateKubeconfigRevocation(ctx context.Context, kr *mode
 	return err
 }
 
-func (s *kubeconfigDao) GetKubeconfigSetting(ctx context.Context, orgID, accountID uuid.UUID, issSSO bool) (*models.KubeconfigSetting, error) {
+func GetKubeconfigSetting(ctx context.Context, db bun.IDB, orgID, accountID uuid.UUID, issSSO bool) (*models.KubeconfigSetting, error) {
 	var ks models.KubeconfigSetting
-	err := s.dao.GetInstance().NewSelect().Model(&ks).
+	err := db.NewSelect().Model(&ks).
 		Where("organization_id = ?", orgID).
 		Where("account_id = ?", accountID).
 		Where("is_sso_user= ?", issSSO).
@@ -73,18 +49,18 @@ func (s *kubeconfigDao) GetKubeconfigSetting(ctx context.Context, orgID, account
 	return &ks, err
 }
 
-func (s *kubeconfigDao) CreateKubeconfigSetting(ctx context.Context, ks *models.KubeconfigSetting) error {
+func CreateKubeconfigSetting(ctx context.Context, db bun.IDB, ks *models.KubeconfigSetting) error {
 	if ks.AccountId == uuid.Nil {
 		ks.Scope = sentry.KubeconfigSettingOrganizationScope
 	} else {
 		ks.Scope = sentry.KubeconfigSettingUserScope
 	}
-	_, err := s.dao.Create(ctx, ks)
+	_, err := pg.Create(ctx, db, ks)
 	return err
 }
 
-func (s *kubeconfigDao) UpdateKubeconfigSetting(ctx context.Context, ks *models.KubeconfigSetting) error {
-	q := s.dao.GetInstance().NewUpdate().Model(ks)
+func UpdateKubeconfigSetting(ctx context.Context, db bun.IDB, ks *models.KubeconfigSetting) error {
+	q := db.NewUpdate().Model(ks)
 
 	q = q.Where("organization_id = ?", ks.OrganizationId).
 		Where("account_id = ?", ks.AccountId).
@@ -103,21 +79,21 @@ func (s *kubeconfigDao) UpdateKubeconfigSetting(ctx context.Context, ks *models.
 	return err
 }
 
-func (s *kubeconfigDao) GetkubectlClusterSettings(ctx context.Context, orgID uuid.UUID, name string) (*models.KubectlClusterSetting, error) {
+func GetkubectlClusterSettings(ctx context.Context, db bun.IDB, orgID uuid.UUID, name string) (*models.KubectlClusterSetting, error) {
 	var kc models.KubectlClusterSetting
-	err := s.dao.GetInstance().NewSelect().Model(&kc).
+	err := db.NewSelect().Model(&kc).
 		Where("organization_id = ?", orgID).
 		Where("name = ?", name).Scan(ctx)
 	return &kc, err
 }
 
-func (s *kubeconfigDao) CreatekubectlClusterSettings(ctx context.Context, kc *models.KubectlClusterSetting) error {
-	_, err := s.dao.Create(ctx, kc)
+func CreatekubectlClusterSettings(ctx context.Context, db bun.IDB, kc *models.KubectlClusterSetting) error {
+	_, err := pg.Create(ctx, db, kc)
 	return err
 }
 
-func (s *kubeconfigDao) UpdatekubectlClusterSettings(ctx context.Context, kc *models.KubectlClusterSetting) error {
-	q := s.dao.GetInstance().NewUpdate().Model(kc)
+func UpdatekubectlClusterSettings(ctx context.Context, db bun.IDB, kc *models.KubectlClusterSetting) error {
+	q := db.NewUpdate().Model(kc)
 
 	q = q.Where("organization_id = ?", kc.OrganizationId).
 		Where("name = ?", kc.Name)

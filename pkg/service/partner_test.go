@@ -38,7 +38,6 @@ func TestCreatePartner(t *testing.T) {
 	defer db.Close()
 
 	ps := NewPartnerService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 
@@ -61,7 +60,6 @@ func TestCreatePartnerDuplicate(t *testing.T) {
 	defer db.Close()
 
 	gs := NewPartnerService(db)
-	defer gs.Close()
 
 	puuid := uuid.New().String()
 
@@ -84,7 +82,6 @@ func TestPartnerDelete(t *testing.T) {
 	defer db.Close()
 
 	ps := NewPartnerService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 
@@ -108,7 +105,6 @@ func TestPartnerDeleteNonExist(t *testing.T) {
 	defer db.Close()
 
 	gs := NewPartnerService(db)
-	defer gs.Close()
 
 	puuid := uuid.New().String()
 
@@ -129,7 +125,6 @@ func TestPartnerGetByName(t *testing.T) {
 	defer db.Close()
 
 	ps := NewPartnerService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 
@@ -150,7 +145,6 @@ func TestPartnerGetById(t *testing.T) {
 	defer db.Close()
 
 	ps := NewPartnerService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 
@@ -172,7 +166,6 @@ func TestPartnerUpdate(t *testing.T) {
 	defer db.Close()
 
 	ps := NewPartnerService(db)
-	defer ps.Close()
 
 	puuid := uuid.New().String()
 

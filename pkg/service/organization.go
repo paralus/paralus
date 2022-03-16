@@ -22,7 +22,6 @@ const (
 
 // OrganizationService is the interface for organization operations
 type OrganizationService interface {
-	Close() error
 	// create organization
 	Create(ctx context.Context, organization *systemv3.Organization) (*systemv3.Organization, error)
 	// get organization by id
@@ -39,20 +38,18 @@ type OrganizationService interface {
 
 // organizationService implements OrganizationService
 type organizationService struct {
-	dao pg.EntityDAO
+	db *bun.DB
 }
 
 // NewOrganizationService return new organization service
 func NewOrganizationService(db *bun.DB) OrganizationService {
-	return &organizationService{
-		dao: pg.NewEntityDAO(db),
-	}
+	return &organizationService{db}
 }
 
 func (s *organizationService) Create(ctx context.Context, org *systemv3.Organization) (*systemv3.Organization, error) {
 
 	var partner models.Partner
-	_, err := s.dao.GetByName(ctx, org.Metadata.Partner, &partner)
+	_, err := pg.GetByName(ctx, s.db, org.Metadata.Partner, &partner)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +96,7 @@ func (s *organizationService) Create(ctx context.Context, org *systemv3.Organiza
 		CreatedAt:         time.Now(),
 		ModifiedAt:        time.Now(),
 	}
-	entity, err := s.dao.Create(ctx, &organization)
+	entity, err := pg.Create(ctx, s.db, &organization)
 	if err != nil {
 		org.Status = &v3.Status{
 			ConditionType:   "Create",
@@ -143,7 +140,7 @@ func (s *organizationService) GetByID(ctx context.Context, id string) (*systemv3
 		}
 		return organization, err
 	}
-	entity, err := s.dao.GetByID(ctx, uid, &models.Organization{})
+	entity, err := pg.GetByID(ctx, s.db, uid, &models.Organization{})
 	if err != nil {
 		organization.Status = &v3.Status{
 			ConditionType:   "Describe",
@@ -156,7 +153,7 @@ func (s *organizationService) GetByID(ctx context.Context, id string) (*systemv3
 	if org, ok := entity.(*models.Organization); ok {
 
 		var partner models.Partner
-		_, err := s.dao.GetByID(ctx, org.PartnerId, &partner)
+		_, err := pg.GetByID(ctx, s.db, org.PartnerId, &partner)
 		if err != nil {
 			organization.Status = &v3.Status{
 				ConditionType:   "Describe",
@@ -206,7 +203,7 @@ func (s *organizationService) GetByName(ctx context.Context, name string) (*syst
 			Name: name,
 		},
 	}
-	entity, err := s.dao.GetByName(ctx, name, &models.Organization{})
+	entity, err := pg.GetByName(ctx, s.db, name, &models.Organization{})
 	if err != nil {
 		organization.Metadata = &v3.Metadata{
 			Name: name,
@@ -223,7 +220,7 @@ func (s *organizationService) GetByName(ctx context.Context, name string) (*syst
 	if org, ok := entity.(*models.Organization); ok {
 
 		var partner models.Partner
-		_, err := s.dao.GetByID(ctx, org.PartnerId, &partner)
+		_, err := pg.GetByID(ctx, s.db, org.PartnerId, &partner)
 		if err != nil {
 			organization.Metadata = &v3.Metadata{
 				Name: name,
@@ -254,7 +251,7 @@ func (s *organizationService) GetByName(ctx context.Context, name string) (*syst
 
 func (s *organizationService) Update(ctx context.Context, organization *systemv3.Organization) (*systemv3.Organization, error) {
 
-	entity, err := s.dao.GetByName(ctx, organization.Metadata.Name, &models.Organization{})
+	entity, err := pg.GetByName(ctx, s.db, organization.Metadata.Name, &models.Organization{})
 	if err != nil {
 		organization.Status = &v3.Status{
 			ConditionType:   "Update",
@@ -298,7 +295,7 @@ func (s *organizationService) Update(ctx context.Context, organization *systemv3
 		org.IsTOTPEnabled = organization.GetSpec().GetIsTotpEnabled()
 		org.AreClustersShared = organization.GetSpec().GetAreClustersShared()
 
-		_, err = s.dao.Update(ctx, org.ID, org)
+		_, err = pg.Update(ctx, s.db, org.ID, org)
 		if err != nil {
 			organization.Status = &v3.Status{
 				ConditionType:   "Update",
@@ -324,7 +321,7 @@ func (s *organizationService) Update(ctx context.Context, organization *systemv3
 
 func (s *organizationService) Delete(ctx context.Context, organization *systemv3.Organization) (*systemv3.Organization, error) {
 
-	entity, err := s.dao.GetByName(ctx, organization.Metadata.Name, &models.Organization{})
+	entity, err := pg.GetByName(ctx, s.db, organization.Metadata.Name, &models.Organization{})
 	if err != nil {
 		organization.Status = &v3.Status{
 			ConditionType:   "Delete",
@@ -337,7 +334,7 @@ func (s *organizationService) Delete(ctx context.Context, organization *systemv3
 
 	if org, ok := entity.(*models.Organization); ok {
 		org.Trash = true
-		_, err := s.dao.Update(ctx, org.ID, org)
+		_, err := pg.Update(ctx, s.db, org.ID, org)
 		if err != nil {
 			organization.Status = &v3.Status{
 				ConditionType:   "Delete",
@@ -372,13 +369,13 @@ func (s *organizationService) List(ctx context.Context, organization *systemv3.O
 	}
 	if len(organization.Metadata.Partner) > 0 {
 		var partner models.Partner
-		_, err := s.dao.GetByName(ctx, organization.Metadata.Partner, &partner)
+		_, err := pg.GetByName(ctx, s.db, organization.Metadata.Partner, &partner)
 		if err != nil {
 			return organinzationList, err
 		}
 
 		var orgs []models.Organization
-		entities, err := s.dao.List(ctx, uuid.NullUUID{UUID: partner.ID, Valid: true}, uuid.NullUUID{UUID: uuid.Nil}, &orgs)
+		entities, err := pg.List(ctx, s.db, uuid.NullUUID{UUID: partner.ID, Valid: true}, uuid.NullUUID{UUID: uuid.Nil}, &orgs)
 		if err != nil {
 			return organinzationList, err
 		}
@@ -469,8 +466,4 @@ func prepareOrganizationResponse(organization *systemv3.Organization, org *model
 	}
 
 	return organization, nil
-}
-
-func (s *organizationService) Close() error {
-	return s.dao.Close()
 }

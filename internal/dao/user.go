@@ -9,42 +9,19 @@ import (
 	"github.com/uptrace/bun"
 )
 
-type userDAO struct {
-	db *bun.DB
-}
-
-// User specific db access
-type UserDAO interface {
-	Close() error
-	// get groups for user
-	GetGroups(context.Context, uuid.UUID) ([]models.Group, error)
-	// get roles for user
-	GetRoles(context.Context, uuid.UUID) ([]*userv3.ProjectNamespaceRole, error)
-}
-
-// NewUserDao return new user dao
-func NewUserDAO(db *bun.DB) *userDAO {
-	return &userDAO{db}
-}
-
-func (dao *userDAO) Close() error {
-	// XXX: if one dao closes the db connections, won't other have issues?
-	return dao.db.Close()
-}
-
-func (dao *userDAO) GetGroups(ctx context.Context, id uuid.UUID) ([]models.Group, error) {
+func GetGroups(ctx context.Context, db bun.IDB, id uuid.UUID) ([]models.Group, error) {
 	var entities = []models.Group{}
-	err := dao.db.NewSelect().Model(&entities).
+	err := db.NewSelect().Model(&entities).
 		Join(`JOIN authsrv_groupaccount ON authsrv_groupaccount.group_id="group".id`).
 		Where("authsrv_groupaccount.account_id = ?", id).
 		Scan(ctx)
 	return entities, err
 }
 
-func (dao *userDAO) GetRoles(ctx context.Context, id uuid.UUID) ([]*userv3.ProjectNamespaceRole, error) {
-	// Could possibily union them later for some speedup
+func GetUserRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.ProjectNamespaceRole, error) {
+	// Could possibly union them later for some speedup
 	var r = []*userv3.ProjectNamespaceRole{}
-	err := dao.db.NewSelect().Table("authsrv_accountresourcerole").
+	err := db.NewSelect().Table("authsrv_accountresourcerole").
 		ColumnExpr("authsrv_resourcerole.name as role").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_accountresourcerole.role_id`).
 		Where("authsrv_accountresourcerole.account_id = ?", id).
@@ -54,7 +31,7 @@ func (dao *userDAO) GetRoles(ctx context.Context, id uuid.UUID) ([]*userv3.Proje
 	}
 
 	var pr = []*userv3.ProjectNamespaceRole{}
-	err = dao.db.NewSelect().Table("authsrv_projectaccountresourcerole").
+	err = db.NewSelect().Table("authsrv_projectaccountresourcerole").
 		ColumnExpr("authsrv_resourcerole.name as role, authsrv_project.name as project").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id`).
 		Join(`JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountresourcerole.project_id`).
@@ -65,7 +42,7 @@ func (dao *userDAO) GetRoles(ctx context.Context, id uuid.UUID) ([]*userv3.Proje
 	}
 
 	var pnr = []*userv3.ProjectNamespaceRole{}
-	err = dao.db.NewSelect().Table("authsrv_projectaccountnamespacerole").
+	err = db.NewSelect().Table("authsrv_projectaccountnamespacerole").
 		ColumnExpr("authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id`).
 		Join(`JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id`). // also need a namespace join
