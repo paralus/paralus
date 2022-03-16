@@ -71,7 +71,7 @@ func TestCreateRole(t *testing.T) {
 
 	role := &rolev3.Role{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
-		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "cluster"},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system"},
 	}
 	role, err := rs.Create(context.Background(), role)
 	if err != nil {
@@ -107,7 +107,7 @@ func TestCreateRoleWithPermissions(t *testing.T) {
 
 	role := &rolev3.Role{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
-		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "cluster", Rolepermissions: []string{"ops_star.all"}},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system", Rolepermissions: []string{"ops_star.all"}},
 	}
 	role, err := rs.Create(context.Background(), role)
 	if err != nil {
@@ -141,7 +141,7 @@ func TestCreateRoleDuplicate(t *testing.T) {
 
 	role := &rolev3.Role{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
-		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "cluster"},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system"},
 	}
 	_, err := rs.Create(context.Background(), role)
 	if err == nil {
@@ -168,7 +168,7 @@ func TestUpdateRole(t *testing.T) {
 	mock.ExpectQuery(`SELECT "resourcerole"."id", "resourcerole"."name", .*FROM "authsrv_resourcerole" AS "resourcerole" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'role-` + ruuid + `'.`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name", "organization_id", "partner_id"}).AddRow(ruuid, "role-"+ruuid, ouuid, puuid))
 
-	mock.ExpectExec(`UPDATE "authsrv_resourcerole" AS "resourcerole" SET "name" = 'role-` + ruuid + `', .*"organization_id" = '` + ouuid + `', "partner_id" = '` + puuid + `', "is_global" = TRUE, "scope" = 'cluster' WHERE .id  = '` + ruuid + `'.`).
+	mock.ExpectExec(`UPDATE "authsrv_resourcerole" AS "resourcerole" SET "name" = 'role-` + ruuid + `', .*"organization_id" = '` + ouuid + `', "partner_id" = '` + puuid + `', "is_global" = TRUE, "scope" = 'system' WHERE .id  = '` + ruuid + `'.`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec(`DELETE FROM "authsrv_resourcerolepermission" AS "resourcerolepermission" WHERE ."resource_role_id" = '` + ruuid + `'.`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
@@ -180,7 +180,7 @@ func TestUpdateRole(t *testing.T) {
 
 	role := &rolev3.Role{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
-		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "cluster", Rolepermissions: []string{"ops_star.all"}},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system", Rolepermissions: []string{"ops_star.all"}},
 	}
 	role, err := rs.Update(context.Background(), role)
 	if err != nil {

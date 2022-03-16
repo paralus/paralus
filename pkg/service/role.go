@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/RafaySystems/rcloud-base/internal/dao"
@@ -138,6 +139,14 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		return nil, fmt.Errorf("role '%v' already exists", role.GetMetadata().GetName())
 	}
 
+	scope := role.GetSpec().GetScope()
+	// since this is purely additional metadata at this point, we
+	// can kinda treat it as optional, and so we are allowing empty
+	// TODO: check if "" is valid
+	if !contains([]string{"system", "organization", "project", ""}, strings.ToLower(scope)) {
+		return nil, fmt.Errorf("unknown scope '%v'", scope)
+	}
+
 	// convert v3 spec to internal models
 	rle := models.Role{
 		Name:           role.GetMetadata().GetName(),
@@ -148,7 +157,7 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		OrganizationId: organizationId,
 		PartnerId:      partnerId,
 		IsGlobal:       role.GetSpec().GetIsGlobal(),
-		Scope:          role.GetSpec().GetScope(), // TODO: validate scope is SYSTEM/ORG/PROJECT?
+		Scope:          strings.ToLower(scope),
 	}
 	entity, err := s.dao.Create(ctx, &rle)
 	if err != nil {

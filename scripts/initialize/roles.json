@@ -729,7 +729,6 @@
             "project.aggregate.status.read",
             "project.data.protection.read",
             "project.data.protection.policy.read",
-            "project.data.protection.location.read",
             "hub.namespace.read",
             "hub.namespace.write",
             "hub.openapi.explorer.read",
