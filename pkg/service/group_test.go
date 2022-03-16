@@ -400,7 +400,7 @@ func TestUpdateGroupWithUsersWithRoles(t *testing.T) {
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(guuid, "group-"+guuid))
 
 			// TODO: more precise checks
-			mock.ExpectExec(`DELETE FROM "authsrv_groupaccount" AS "groupaccount" WHERE ."group_id" = '` + guuid).
+			mock.ExpectExec(`UPDATE "authsrv_groupaccount" AS "groupaccount" SET trash = TRUE WHERE ."group_id" = '` + guuid).
 				WillReturnResult(sqlmock.NewResult(1, 1))
 			for _, u := range tc.users {
 				mock.ExpectQuery(`SELECT "identities"."id" FROM "identities" WHERE .*traits ->> 'email' = '` + u + `'`).
@@ -408,11 +408,11 @@ func TestUpdateGroupWithUsersWithRoles(t *testing.T) {
 			}
 			mock.ExpectQuery(`INSERT INTO "authsrv_groupaccount"`).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
-			mock.ExpectExec(`DELETE FROM "authsrv_grouprole" AS "grouprole" WHERE ."group_id" = '` + guuid).
+			mock.ExpectExec(`UPDATE "authsrv_grouprole" AS "grouprole" SET trash = TRUE WHERE ."group_id" = '` + guuid).
 				WillReturnResult(sqlmock.NewResult(1, 1))
-			mock.ExpectExec(`DELETE FROM "authsrv_projectgrouprole" AS "projectgrouprole" WHERE ."group_id" = '` + guuid).
+			mock.ExpectExec(`UPDATE "authsrv_projectgrouprole" AS "projectgrouprole" SET trash = TRUE WHERE ."group_id" = '` + guuid).
 				WillReturnResult(sqlmock.NewResult(1, 1))
-			mock.ExpectExec(`DELETE FROM "authsrv_projectgroupnamespacerole" AS "projectgroupnamespacerole" WHERE ."group_id" = '` + guuid).
+			mock.ExpectExec(`UPDATE "authsrv_projectgroupnamespacerole" AS "projectgroupnamespacerole" SET trash = TRUE WHERE ."group_id" = '` + guuid).
 				WillReturnResult(sqlmock.NewResult(1, 1))
 			mock.ExpectQuery(`SELECT "resourcerole"."id" FROM "authsrv_resourcerole" AS "resourcerole"`).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(pruuid))
@@ -470,15 +470,15 @@ func TestGroupDelete(t *testing.T) {
 	mock.ExpectQuery(`SELECT "group"."id", "group"."name", .* FROM "authsrv_group" AS "group" WHERE`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(guuid, "group-"+guuid))
 
-	mock.ExpectExec(`DELETE FROM "authsrv_grouprole" AS "grouprole" WHERE ."group_id" = '` + guuid).
+	mock.ExpectExec(`UPDATE "authsrv_grouprole" AS "grouprole" SET trash = TRUE WHERE ."group_id" = '` + guuid).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(`DELETE FROM "authsrv_projectgrouprole" AS "projectgrouprole" WHERE ."group_id" = '` + guuid).
+	mock.ExpectExec(`UPDATE "authsrv_projectgrouprole" AS "projectgrouprole" SET trash = TRUE WHERE ."group_id" = '` + guuid).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(`DELETE FROM "authsrv_projectgroupnamespacerole" AS "projectgroupnamespacerole" WHERE ."group_id" = '` + guuid).
+	mock.ExpectExec(`UPDATE "authsrv_projectgroupnamespacerole" AS "projectgroupnamespacerole" SET trash = TRUE WHERE ."group_id" = '` + guuid).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(`DELETE FROM "authsrv_groupaccount" AS "groupaccount" WHERE ."group_id" = '` + guuid).
+	mock.ExpectExec(`UPDATE "authsrv_groupaccount" AS "groupaccount" SET trash = TRUE WHERE ."group_id" = '` + guuid).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(`DELETE FROM "authsrv_group" AS "group" WHERE .id = '` + guuid).
+	mock.ExpectExec(`UPDATE "authsrv_group" AS "group" SET trash = TRUE WHERE .id = '` + guuid).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	group := &userv3.Group{
