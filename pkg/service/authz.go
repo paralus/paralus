@@ -34,8 +34,9 @@ type authzService struct {
 
 func NewAuthzService(db *bun.DB, en *casbin.CachedEnforcer) AuthzService {
 	return &authzService{
-		dao:      pg.NewEntityDAO(db),
-		enforcer: en,
+		dao:          pg.NewEntityDAO(db),
+		enforcer:     en,
+		mappingCache: make(map[string][]rpmUrlAction),
 	}
 }
 
@@ -49,6 +50,45 @@ type rpmUrlAction struct {
 	methods []string
 }
 
+func processRpms(rpm models.ResourcePermission) []rpmUrlAction {
+	urls := []rpmUrlAction{}
+	for _, rurl := range rpm.ResourceUrls {
+		tmp := rpmUrlAction{
+			url:     rpm.BaseUrl,
+			methods: make([]string, 0),
+		}
+		if url, ok := rurl["url"].(string); ok {
+			tmp.url = tmp.url + url
+		}
+		if methods, ok := rurl["methods"].([]interface{}); ok {
+			for _, method := range methods {
+				if met, ok := method.(string); ok {
+					tmp.methods = append(tmp.methods, met)
+				}
+			}
+		}
+		urls = append(urls, tmp)
+	}
+	for _, raurl := range rpm.ResourceActionUrls {
+		tmp := rpmUrlAction{
+			url:     rpm.BaseUrl,
+			methods: make([]string, 0),
+		}
+		if url, ok := raurl["url"].(string); ok {
+			tmp.url = tmp.url + url
+		}
+		if methods, ok := raurl["methods"].([]interface{}); ok {
+			for _, method := range methods {
+				if met, ok := method.(string); ok {
+					tmp.methods = append(tmp.methods, met)
+				}
+			}
+		}
+		urls = append(urls, tmp)
+	}
+	return urls
+}
+
 func (s *authzService) cacheResourceRolePermissions(ctx context.Context) error {
 	var items []models.ResourcePermission
 	entities, err := s.dao.ListAll(ctx, &items)
@@ -58,32 +98,9 @@ func (s *authzService) cacheResourceRolePermissions(ctx context.Context) error {
 	if rpms, ok := entities.(*[]models.ResourcePermission); ok {
 		for _, rpm := range *rpms {
 			if perm, ok := s.mappingCache[rpm.Name]; ok {
-				urls := []rpmUrlAction{}
-				for _, rurl := range rpm.ResourceUrls {
-					tmp := rpmUrlAction{
-						url: rpm.BaseUrl,
-					}
-					if url, ok := rurl["url"].(string); ok {
-						tmp.url = tmp.url + url
-					}
-					if methods, ok := rurl["methods"].([]string); ok {
-						tmp.methods = methods
-					}
-					urls = append(urls, tmp)
-				}
-				for _, raurl := range rpm.ResourceActionUrls {
-					tmp := rpmUrlAction{
-						url: rpm.BaseUrl,
-					}
-					if url, ok := raurl["url"].(string); ok {
-						tmp.url = tmp.url + url
-					}
-					if methods, ok := raurl["methods"].([]string); ok {
-						tmp.methods = methods
-					}
-					urls = append(urls, tmp)
-				}
-				s.mappingCache[rpm.Name] = append(perm, urls...)
+				s.mappingCache[rpm.Name] = append(perm, processRpms(rpm)...)
+			} else {
+				s.mappingCache[rpm.Name] = processRpms(rpm)
 			}
 		}
 	}
