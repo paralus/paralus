@@ -252,8 +252,7 @@ func (s *partnerService) Delete(ctx context.Context, partner *systemv3.Partner) 
 	}
 
 	if part, ok := entity.(*models.Partner); ok {
-		part.Trash = true
-		_, err := pg.Update(ctx, s.db, part.ID, part)
+		err := pg.Delete(ctx, s.db, part.ID, part)
 		if err != nil {
 			return &systemv3.Partner{}, err
 		}
