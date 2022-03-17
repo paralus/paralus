@@ -39,7 +39,8 @@ services:
 
   migrate-admindb:
     depends_on:
-      - kratos-migrate
+      kratos-migrate:
+        condition: service_completed_successfully
     image: migrate/migrate:v4.15.1
     restart: on-failure
     command: -path=/migrations/admindb -database postgres://$DB_USER:$DB_PASSWORD@postgresd:$DB_PORT/$DB_NAME?sslmode=disable up
