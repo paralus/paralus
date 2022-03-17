@@ -13,7 +13,7 @@ import (
 	"github.com/uptrace/bun"
 )
 
-func CreateCluster(ctx context.Context, tx bun.Tx, cluster *models.Cluster) error {
+func CreateCluster(ctx context.Context, tx bun.IDB, cluster *models.Cluster) error {
 
 	clstrToken := &models.ClusterToken{
 		OrganizationId: cluster.OrganizationId,

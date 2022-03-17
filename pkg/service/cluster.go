@@ -235,10 +235,14 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 
 	cluster.Spec.ClusterData.Health = infrav3.Health_EDGE_IGNORE
 
-	err = es.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
-		return dao.CreateCluster(ctx, tx, edb)
-	})
+	tx, err := es.db.BeginTx(ctx, &sql.TxOptions{})
 	if err != nil {
+		return &infrav3.Cluster{}, err
+	}
+
+	err = dao.CreateCluster(ctx, tx, edb)
+	if err != nil {
+		tx.Rollback()
 		return &infrav3.Cluster{}, err
 	}
 
@@ -250,8 +254,9 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 			ProjectID: edb.ProjectId,
 			ClusterID: edb.ID,
 		}
-		err = dao.CreateProjectCluster(ctx, es.db, pc)
+		err = dao.CreateProjectCluster(ctx, tx, pc)
 		if err != nil {
+			tx.Rollback()
 			return &infrav3.Cluster{}, err
 		}
 		pcList = append(pcList, *pc)
@@ -273,9 +278,21 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 			YamlContent: operatorSpecEncoded,
 		}
 
-		es.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
-			return dao.CreateOperatorBootstrap(ctx, tx, &bootstrapData)
-		})
+		err = dao.CreateOperatorBootstrap(ctx, tx, &bootstrapData)
+		if err != nil {
+			tx.Rollback()
+			cluster.Status = &commonv3.Status{
+				ConditionType:   "Create",
+				ConditionStatus: commonv3.ConditionStatus_StatusFailed,
+				Reason:          err.Error(),
+			}
+			return cluster, err
+		}
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		fmt.Println("unable to commit changes", err)
 	}
 
 	ev := event.Resource{

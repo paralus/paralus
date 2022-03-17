@@ -54,17 +54,16 @@ func (kss *kubeconfigSettingService) Patch(ctx context.Context, ks *sentry.Kubec
 	if err != nil {
 		accId = uuid.Nil
 	}
-	err = kss.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
-		_, err := dao.GetKubeconfigSetting(ctx, kss.db, uuid.MustParse(ks.OrganizationID), accId, ks.IsSSOUser)
+	return kss.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
+		_, err := dao.GetKubeconfigSetting(ctx, tx, uuid.MustParse(ks.OrganizationID), accId, ks.IsSSOUser)
 		db := convertToKubeCfgSettingModel(ks)
 		if err != nil && err == sql.ErrNoRows {
 			db.CreatedAt = time.Now()
-			return dao.CreateKubeconfigSetting(ctx, kss.db, convertToKubeCfgSettingModel(ks))
+			return dao.CreateKubeconfigSetting(ctx, tx, convertToKubeCfgSettingModel(ks))
 		}
 		db.ModifiedAt = time.Now()
-		return dao.UpdateKubeconfigSetting(ctx, kss.db, convertToKubeCfgSettingModel(ks))
+		return dao.UpdateKubeconfigSetting(ctx, tx, convertToKubeCfgSettingModel(ks))
 	})
-	return err
 }
 
 func prepareKubeCfgSettingResponse(ks *models.KubeconfigSetting) *sentry.KubeconfigSetting {
