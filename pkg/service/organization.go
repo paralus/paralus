@@ -51,7 +51,7 @@ func (s *organizationService) Create(ctx context.Context, org *systemv3.Organiza
 	var partner models.Partner
 	_, err := pg.GetByName(ctx, s.db, org.Metadata.Partner, &partner)
 	if err != nil {
-		return nil, err
+		return &systemv3.Organization{}, err
 	}
 
 	//update default organization setting values
@@ -65,12 +65,7 @@ func (s *organizationService) Create(ctx context.Context, org *systemv3.Organiza
 	}
 	sb, err := json.MarshalIndent(org.GetSpec().GetSettings(), "", "\t")
 	if err != nil {
-		org.Status = &v3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
+		return &systemv3.Organization{}, err
 	}
 	//convert v3 spec to internal models
 	organization := models.Organization{
@@ -98,23 +93,12 @@ func (s *organizationService) Create(ctx context.Context, org *systemv3.Organiza
 	}
 	entity, err := pg.Create(ctx, s.db, &organization)
 	if err != nil {
-		org.Status = &v3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
-		return org, err
+		return &systemv3.Organization{}, err
 	}
 
 	if createdOrg, ok := entity.(*models.Organization); ok {
 		//update v3 spec
 		org.Metadata.Id = createdOrg.ID.String()
-		org.Status = &v3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-			LastUpdated:     timestamppb.Now(),
-		}
 	}
 
 	return org, nil
@@ -133,21 +117,11 @@ func (s *organizationService) GetByID(ctx context.Context, id string) (*systemv3
 
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		organization.Status = &v3.Status{
-			ConditionType:   "Describe",
-			LastUpdated:     timestamppb.Now(),
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-		}
-		return organization, err
+		return &systemv3.Organization{}, err
 	}
 	entity, err := pg.GetByID(ctx, s.db, uid, &models.Organization{})
 	if err != nil {
-		organization.Status = &v3.Status{
-			ConditionType:   "Describe",
-			LastUpdated:     timestamppb.Now(),
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-		}
-		return organization, err
+		return &systemv3.Organization{}, err
 	}
 
 	if org, ok := entity.(*models.Organization); ok {
@@ -155,24 +129,12 @@ func (s *organizationService) GetByID(ctx context.Context, id string) (*systemv3
 		var partner models.Partner
 		_, err := pg.GetByID(ctx, s.db, org.PartnerId, &partner)
 		if err != nil {
-			organization.Status = &v3.Status{
-				ConditionType:   "Describe",
-				ConditionStatus: v3.ConditionStatus_StatusFailed,
-				Reason:          err.Error(),
-				LastUpdated:     timestamppb.Now(),
-			}
-			return organization, err
+			return &systemv3.Organization{}, err
 		}
 
 		organization, err = prepareOrganizationResponse(organization, org, partner.Name)
 		if err != nil {
-			return organization, err
-		}
-
-		organization.Status = &v3.Status{
-			ConditionType:   "Describe",
-			LastUpdated:     timestamppb.Now(),
-			ConditionStatus: v3.ConditionStatus_StatusOK,
+			return &systemv3.Organization{}, err
 		}
 
 		return organization, nil
@@ -205,16 +167,7 @@ func (s *organizationService) GetByName(ctx context.Context, name string) (*syst
 	}
 	entity, err := pg.GetByName(ctx, s.db, name, &models.Organization{})
 	if err != nil {
-		organization.Metadata = &v3.Metadata{
-			Name: name,
-		}
-		organization.Status = &v3.Status{
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			Reason:          err.Error(),
-			LastUpdated:     timestamppb.Now(),
-		}
-		return organization, err
+		return &systemv3.Organization{}, err
 	}
 
 	if org, ok := entity.(*models.Organization); ok {
@@ -222,27 +175,12 @@ func (s *organizationService) GetByName(ctx context.Context, name string) (*syst
 		var partner models.Partner
 		_, err := pg.GetByID(ctx, s.db, org.PartnerId, &partner)
 		if err != nil {
-			organization.Metadata = &v3.Metadata{
-				Name: name,
-			}
-			organization.Status = &v3.Status{
-				ConditionType:   "Describe",
-				ConditionStatus: v3.ConditionStatus_StatusFailed,
-				Reason:          err.Error(),
-				LastUpdated:     timestamppb.Now(),
-			}
-			return organization, err
+			return &systemv3.Organization{}, err
 		}
 
 		organization, err = prepareOrganizationResponse(organization, org, partner.Name)
 		if err != nil {
-			return organization, err
-		}
-
-		organization.Status = &v3.Status{
-			ConditionType:   "Describe",
-			LastUpdated:     timestamppb.Now(),
-			ConditionStatus: v3.ConditionStatus_StatusOK,
+			return &systemv3.Organization{}, err
 		}
 	}
 
@@ -253,25 +191,14 @@ func (s *organizationService) Update(ctx context.Context, organization *systemv3
 
 	entity, err := pg.GetByName(ctx, s.db, organization.Metadata.Name, &models.Organization{})
 	if err != nil {
-		organization.Status = &v3.Status{
-			ConditionType:   "Update",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			Reason:          err.Error(),
-			LastUpdated:     timestamppb.Now(),
-		}
-		return organization, err
+		return &systemv3.Organization{}, err
 	}
 
 	if org, ok := entity.(*models.Organization); ok {
 
 		sb, err := json.MarshalIndent(organization.GetSpec().GetSettings(), "", "\t")
 		if err != nil {
-			organization.Status = &v3.Status{
-				ConditionType:   "Update",
-				ConditionStatus: v3.ConditionStatus_StatusFailed,
-				Reason:          err.Error(),
-				LastUpdated:     timestamppb.Now(),
-			}
+			return &systemv3.Organization{}, err
 		}
 
 		//update organization details
@@ -297,22 +224,7 @@ func (s *organizationService) Update(ctx context.Context, organization *systemv3
 
 		_, err = pg.Update(ctx, s.db, org.ID, org)
 		if err != nil {
-			organization.Status = &v3.Status{
-				ConditionType:   "Update",
-				ConditionStatus: v3.ConditionStatus_StatusFailed,
-				LastUpdated:     timestamppb.Now(),
-				Reason:          err.Error(),
-			}
-			return organization, err
-		}
-
-		//update status
-		if organization.Status != nil {
-			organization.Status = &v3.Status{
-				ConditionType:   "Update",
-				ConditionStatus: v3.ConditionStatus_StatusOK,
-				LastUpdated:     timestamppb.Now(),
-			}
+			return &systemv3.Organization{}, err
 		}
 	}
 
@@ -323,35 +235,19 @@ func (s *organizationService) Delete(ctx context.Context, organization *systemv3
 
 	entity, err := pg.GetByName(ctx, s.db, organization.Metadata.Name, &models.Organization{})
 	if err != nil {
-		organization.Status = &v3.Status{
-			ConditionType:   "Delete",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			Reason:          err.Error(),
-			LastUpdated:     timestamppb.Now(),
-		}
-		return organization, err
+		return &systemv3.Organization{}, err
 	}
 
 	if org, ok := entity.(*models.Organization); ok {
 		org.Trash = true
 		_, err := pg.Update(ctx, s.db, org.ID, org)
 		if err != nil {
-			organization.Status = &v3.Status{
-				ConditionType:   "Delete",
-				ConditionStatus: v3.ConditionStatus_StatusFailed,
-				Reason:          err.Error(),
-				LastUpdated:     timestamppb.Now(),
-			}
-			return organization, err
+			return &systemv3.Organization{}, err
 		}
+
 		//update v3 status
 		organization.Metadata.Name = org.Name
 		organization.Metadata.ModifiedAt = timestamppb.New(org.ModifiedAt)
-		organization.Status = &v3.Status{
-			ConditionType:   "Deleted",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-			LastUpdated:     timestamppb.Now(),
-		}
 	}
 	return organization, nil
 
@@ -371,20 +267,20 @@ func (s *organizationService) List(ctx context.Context, organization *systemv3.O
 		var partner models.Partner
 		_, err := pg.GetByName(ctx, s.db, organization.Metadata.Partner, &partner)
 		if err != nil {
-			return organinzationList, err
+			return &systemv3.OrganizationList{}, err
 		}
 
 		var orgs []models.Organization
 		entities, err := pg.List(ctx, s.db, uuid.NullUUID{UUID: partner.ID, Valid: true}, uuid.NullUUID{UUID: uuid.Nil}, &orgs)
 		if err != nil {
-			return organinzationList, err
+			return &systemv3.OrganizationList{}, err
 		}
 		if orgs, ok := entities.(*[]models.Organization); ok {
 			for _, org := range *orgs {
 				var settings systemv3.OrganizationSettings
 				err := json.Unmarshal(org.Settings, &settings)
 				if err != nil {
-					return nil, err
+					return &systemv3.OrganizationList{}, err
 				}
 				organization.Metadata = &v3.Metadata{
 					Name:        org.Name,
@@ -431,12 +327,7 @@ func prepareOrganizationResponse(organization *systemv3.Organization, org *model
 	if org.Settings != nil {
 		err := json.Unmarshal(org.Settings, &settings)
 		if err != nil {
-			organization.Status = &v3.Status{
-				ConditionType:   "Describe",
-				LastUpdated:     timestamppb.Now(),
-				ConditionStatus: v3.ConditionStatus_StatusFailed,
-			}
-			return organization, err
+			return &systemv3.Organization{}, err
 		}
 	}
 

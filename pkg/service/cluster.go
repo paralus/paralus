@@ -114,12 +114,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 	var proj models.Project
 	_, err := pg.GetByName(ctx, es.db, cluster.Metadata.Project, &proj)
 	if err != nil {
-		cluster.Status = &commonv3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-			Reason:          err.Error(),
-		}
-		return cluster, err
+		return &infrav3.Cluster{}, err
 	}
 
 	/*reqAuth, err := c.requestAuth(r, ctx, ps)
@@ -129,31 +124,16 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 	}*/
 
 	if cluster.Metadata.Name == "" {
-		cluster.Status = &commonv3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-			Reason:          "Invalid cluster data, Name is missing.",
-		}
-		return cluster, fmt.Errorf("invalid cluster data, name is missing")
+		return &infrav3.Cluster{}, fmt.Errorf("invalid cluster data, name is missing")
 	}
 
 	if cluster.Spec.ClusterType == "" {
-		cluster.Status = &commonv3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-			Reason:          "Invalid cluster data, Cluster type is missing.",
-		}
-		return cluster, fmt.Errorf("invalid cluster data, cluster type is missing")
+		return &infrav3.Cluster{}, fmt.Errorf("invalid cluster data, cluster type is missing")
 	}
 
 	clusterGeneration, err := clstrutil.GetClusterGeneration(cluster.Spec.ClusterType)
 	if err != nil {
-		cluster.Status = &commonv3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-			Reason:          "Invalid cluster data, Cluster generation is invalid.",
-		}
-		return cluster, fmt.Errorf("invalid cluster data, cluster generation is invalid")
+		return &infrav3.Cluster{}, fmt.Errorf("invalid cluster data, cluster generation is invalid")
 	}
 
 	if !clstrutil.HasValidCharacters(strings.ToLower(cluster.Metadata.Name)) {
@@ -181,12 +161,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 		_log.Infof("Skipping as first time cluster create ")
 	} else if clusterPresent != nil {
 		errormsg = "cluster name is already taken. please try another name"
-		cluster.Status = &commonv3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-			Reason:          errormsg,
-		}
-		return cluster, fmt.Errorf(errormsg)
+		return &infrav3.Cluster{}, fmt.Errorf(errormsg)
 	}
 
 	metro := &models.Metro{}
@@ -264,13 +239,9 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 		return dao.CreateCluster(ctx, tx, edb)
 	})
 	if err != nil {
-		cluster.Status = &commonv3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-			Reason:          err.Error(),
-		}
-		return cluster, err
+		return &infrav3.Cluster{}, err
 	}
+
 	// if project is set create project cluster
 	var pc *models.ProjectCluster
 	pcList := make([]models.ProjectCluster, 0)
@@ -281,12 +252,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 		}
 		err = dao.CreateProjectCluster(ctx, es.db, pc)
 		if err != nil {
-			cluster.Status = &commonv3.Status{
-				ConditionType:   "Create",
-				ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-				Reason:          err.Error(),
-			}
-			return cluster, err
+			return &infrav3.Cluster{}, err
 		}
 		pcList = append(pcList, *pc)
 	}
@@ -298,12 +264,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 		operatorSpecStr, err := clstrutil.GetClusterOperatorYaml(ctx, &es.downloadData, clusterResp)
 		if err != nil {
 			_log.Errorw("Error downloading v2 cluster operator yaml", "Error", err)
-			cluster.Status = &commonv3.Status{
-				ConditionType:   "Create",
-				ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-				Reason:          err.Error(),
-			}
-			return cluster, err
+			return &infrav3.Cluster{}, err
 		}
 		_log.Infow("Creating cluster operator yaml", "clusterid", edb.ID)
 		operatorSpecEncoded := base64.StdEncoding.EncodeToString([]byte(operatorSpecStr))
@@ -346,23 +307,14 @@ func (s *clusterService) Select(ctx context.Context, cluster *infrav3.Cluster, i
 	}
 	c, err := dao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: cluster.Metadata.Name})
 	if err != nil {
-		clstr.Status = &commonv3.Status{
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-			Reason:          err.Error(),
-			LastUpdated:     timestamppb.Now(),
-		}
-		return clstr, err
+		return &infrav3.Cluster{}, err
 	}
+
 	var projects []models.ProjectCluster
 	if isExtended {
 		projects, err = dao.GetProjectsForCluster(ctx, s.db, c.ID)
 		if err != nil {
-			clstr.Status = &commonv3.Status{
-				ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-				Reason:          err.Error(),
-				LastUpdated:     timestamppb.Now(),
-			}
-			return clstr, err
+			return &infrav3.Cluster{}, err
 		}
 	}
 
@@ -398,23 +350,13 @@ func (s *clusterService) Get(ctx context.Context, opts ...query.Option) (*infrav
 	}
 	c, err := dao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: queryOptions.Name})
 	if err != nil {
-		clstr.Status = &commonv3.Status{
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-			Reason:          err.Error(),
-			LastUpdated:     timestamppb.Now(),
-		}
-		return clstr, err
+		return &infrav3.Cluster{}, err
 	}
 	var projects []models.ProjectCluster
 	if queryOptions.Extended {
 		projects, err = dao.GetProjectsForCluster(ctx, s.db, c.ID)
 		if err != nil {
-			clstr.Status = &commonv3.Status{
-				ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-				Reason:          err.Error(),
-				LastUpdated:     timestamppb.Now(),
-			}
-			return clstr, err
+			return &infrav3.Cluster{}, err
 		}
 	}
 
@@ -508,10 +450,6 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 			Country: metro.Country,
 		}
 	}
-	clstr.Status = &commonv3.Status{
-		ConditionStatus: commonv3.ConditionStatus_StatusOK,
-		LastUpdated:     timestamppb.New(c.ModifiedAt),
-	}
 	return clstr
 }
 
@@ -530,12 +468,7 @@ func (cs *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) 
 
 	edb, err := pg.GetByName(ctx, cs.db, cluster.Metadata.Name, &models.Cluster{})
 	if err != nil {
-		cluster.Status = &commonv3.Status{
-			ConditionType:   "Update",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-			Reason:          err.Error(),
-		}
-		return cluster, fmt.Errorf(errormsg)
+		return &infrav3.Cluster{}, fmt.Errorf(errormsg)
 	}
 	cdb := edb.(*models.Cluster)
 
@@ -551,12 +484,7 @@ func (cs *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) 
 
 	_, err = clstrutil.GetClusterGeneration(cluster.Spec.ClusterType)
 	if err != nil {
-		cluster.Status = &commonv3.Status{
-			ConditionType:   "Update",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-			Reason:          "Invalid cluster data, Cluster generation is invalid.",
-		}
-		return cluster, fmt.Errorf("invalid cluster data, cluster generation is invalid")
+		return &infrav3.Cluster{}, fmt.Errorf("invalid cluster data, cluster generation is invalid")
 	}
 
 	if len(cluster.Metadata.Labels) == 0 {
@@ -622,18 +550,7 @@ func (cs *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) 
 	}
 	err = dao.UpdateCluster(ctx, cs.db, cdb)
 	if err != nil {
-		cluster.Status = &commonv3.Status{
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
-			ConditionType:   "Update",
-			LastUpdated:     timestamppb.New(cdb.ModifiedAt),
-		}
-		return cluster, err
-	}
-
-	cluster.Status = &commonv3.Status{
-		ConditionStatus: commonv3.ConditionStatus_StatusOK,
-		ConditionType:   "Update",
-		LastUpdated:     timestamppb.New(cdb.ModifiedAt),
+		return &infrav3.Cluster{}, err
 	}
 
 	cs.notifyCluster(ctx, cluster)

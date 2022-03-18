@@ -67,23 +67,13 @@ func (s *partnerService) Create(ctx context.Context, partner *systemv3.Partner) 
 	}
 	entity, err := pg.Create(ctx, s.db, &part)
 	if err != nil {
-		partner.Status = &v3.Status{
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			Reason:          err.Error(),
-		}
-		return partner, err
+		return &systemv3.Partner{}, err
 	}
 
 	if createdPartner, ok := entity.(*models.Partner); ok {
 		//update v3 spec
 		partner.Metadata.Id = createdPartner.ID.String()
 		partner.Metadata.ModifiedAt = timestamppb.New(createdPartner.ModifiedAt)
-		if partner.Status != nil {
-			partner.Status = &v3.Status{
-				ConditionStatus: v3.ConditionStatus_StatusOK,
-				LastUpdated:     timestamppb.Now(),
-			}
-		}
 	}
 
 	return partner, nil
@@ -102,23 +92,11 @@ func (s *partnerService) GetByID(ctx context.Context, id string) (*systemv3.Part
 
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		partner.Status = &v3.Status{
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			Reason:          err.Error(),
-			LastUpdated:     timestamppb.Now(),
-		}
-		return partner, err
+		return &systemv3.Partner{}, err
 	}
 	entity, err := pg.GetByID(ctx, s.db, uid, &models.Partner{})
 	if err != nil {
-		partner.Status = &v3.Status{
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			Reason:          err.Error(),
-			LastUpdated:     timestamppb.Now(),
-		}
-		return partner, err
+		return &systemv3.Partner{}, err
 	}
 
 	if part, ok := entity.(*models.Partner); ok {
@@ -141,11 +119,6 @@ func (s *partnerService) GetByID(ctx context.Context, id string) (*systemv3.Part
 			FavIconLink:       part.FavIconLink,
 			IsTOTPEnabled:     part.IsTOTPEnabled,
 			Settings:          nil, //TODO
-		}
-		partner.Status = &v3.Status{
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-			LastUpdated:     timestamppb.New(part.ModifiedAt),
 		}
 
 		return partner, nil
@@ -181,13 +154,7 @@ func (s *partnerService) GetByName(ctx context.Context, name string) (*systemv3.
 
 	entity, err := pg.GetByName(ctx, s.db, name, &models.Partner{})
 	if err != nil {
-		partner.Status = &v3.Status{
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			Reason:          err.Error(),
-			LastUpdated:     timestamppb.Now(),
-		}
-		return partner, err
+		return &systemv3.Partner{}, err
 	}
 
 	if part, ok := entity.(*models.Partner); ok {
@@ -211,11 +178,6 @@ func (s *partnerService) GetByName(ctx context.Context, name string) (*systemv3.
 			FavIconLink:       part.FavIconLink,
 			IsTOTPEnabled:     part.IsTOTPEnabled,
 			Settings:          nil, //TODO
-		}
-		partner.Status = &v3.Status{
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-			LastUpdated:     timestamppb.New(part.ModifiedAt),
 		}
 
 		return partner, nil
@@ -243,12 +205,7 @@ func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) 
 
 	entity, err := pg.GetByName(ctx, s.db, partner.Metadata.Name, &models.Partner{})
 	if err != nil {
-		partner.Status = &v3.Status{
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			Reason:          err.Error(),
-			LastUpdated:     timestamppb.Now(),
-		}
-		return partner, err
+		return &systemv3.Partner{}, err
 	}
 
 	var sb []byte
@@ -277,20 +234,11 @@ func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) 
 		//Update the partner details
 		_, err = pg.Update(ctx, s.db, part.ID, part)
 		if err != nil {
-			partner.Status = &v3.Status{
-				ConditionStatus: v3.ConditionStatus_StatusFailed,
-				Reason:          err.Error(),
-				LastUpdated:     timestamppb.Now(),
-			}
-			return partner, err
+			return &systemv3.Partner{}, err
 		}
 
 		//update metadata and status
 		partner.Metadata.ModifiedAt = timestamppb.New(part.ModifiedAt)
-		partner.Status = &v3.Status{
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-			LastUpdated:     timestamppb.Now(),
-		}
 
 	}
 
@@ -300,34 +248,14 @@ func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) 
 func (s *partnerService) Delete(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error) {
 	entity, err := pg.GetByName(ctx, s.db, partner.Metadata.Name, &models.Partner{})
 	if err != nil {
-		partner.Status = &v3.Status{
-			ConditionType:   "Delete",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			Reason:          err.Error(),
-			LastUpdated:     timestamppb.Now(),
-		}
-		return partner, err
+		return &systemv3.Partner{}, err
 	}
 
 	if part, ok := entity.(*models.Partner); ok {
 		part.Trash = true
 		_, err := pg.Update(ctx, s.db, part.ID, part)
 		if err != nil {
-			partner.Status = &v3.Status{
-				ConditionType:   "Delete",
-				ConditionStatus: v3.ConditionStatus_StatusFailed,
-				Reason:          err.Error(),
-				LastUpdated:     timestamppb.Now(),
-			}
-			return partner, err
-		}
-		//update status
-		if partner != nil {
-			partner.Metadata.Name = part.Name
-			partner.Status = &v3.Status{
-				ConditionStatus: v3.ConditionStatus_StatusOK,
-				ConditionType:   "Delete",
-			}
+			return &systemv3.Partner{}, err
 		}
 		return partner, nil
 	}
