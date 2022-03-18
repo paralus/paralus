@@ -15,17 +15,20 @@ func GetUsers(ctx context.Context, db bun.IDB, id uuid.UUID) ([]models.KratosIde
 	err := db.NewSelect().Model(&entities).
 		Join(`JOIN authsrv_groupaccount ON identities.id=authsrv_groupaccount.account_id`).
 		Where(`authsrv_groupaccount.group_id = ?`, id).
+		Where("authsrv_groupaccount.trash = ?", false).
 		Scan(ctx)
 	return entities, err
 }
 
 func GetGroupRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.ProjectNamespaceRole, error) {
-	// Could possibily union them later for some speedup
+	// Could possibly union them later for some speedup
 	var r = []*userv3.ProjectNamespaceRole{}
 	err := db.NewSelect().Table("authsrv_grouprole").
 		ColumnExpr("authsrv_resourcerole.name as role").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_grouprole.role_id`).
 		Where("authsrv_grouprole.group_id = ?", id).
+		Where("authsrv_resourcerole.trash = ?", false).
+		Where("authsrv_grouprole.trash = ?", false).
 		Scan(ctx, &r)
 	if err != nil {
 		return nil, err
@@ -37,6 +40,9 @@ func GetGroupRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Pro
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id`).
 		Join(`JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id`).
 		Where("authsrv_projectgrouprole.group_id = ?", id).
+		Where("authsrv_project.trash = ?", false).
+		Where("authsrv_projectgrouprole.trash = ?", false).
+		Where("authsrv_resourcerole.trash = ?", false).
 		Scan(ctx, &pr)
 	if err != nil {
 		return nil, err
@@ -48,6 +54,9 @@ func GetGroupRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Pro
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgroupnamespacerole.role_id`).
 		Join(`JOIN authsrv_project ON authsrv_project.id=authsrv_projectgroupnamespacerole.project_id`). // also need a namespace join
 		Where("authsrv_projectgroupnamespacerole.group_id = ?", id).
+		Where("authsrv_project.trash = ?", false).
+		Where("authsrv_projectgroupnamespacerole.trash = ?", false).
+		Where("authsrv_resourcerole.trash = ?", false).
 		Scan(ctx, &pnr)
 	if err != nil {
 		return nil, err

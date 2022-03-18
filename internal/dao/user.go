@@ -14,6 +14,7 @@ func GetGroups(ctx context.Context, db bun.IDB, id uuid.UUID) ([]models.Group, e
 	err := db.NewSelect().Model(&entities).
 		Join(`JOIN authsrv_groupaccount ON authsrv_groupaccount.group_id="group".id`).
 		Where("authsrv_groupaccount.account_id = ?", id).
+		Where("authsrv_groupaccount.trash = ?", false).
 		Scan(ctx)
 	return entities, err
 }
@@ -25,6 +26,8 @@ func GetUserRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Proj
 		ColumnExpr("authsrv_resourcerole.name as role").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_accountresourcerole.role_id`).
 		Where("authsrv_accountresourcerole.account_id = ?", id).
+		Where("authsrv_resourcerole.trash = ?", false).
+		Where("authsrv_accountresourcerole.trash = ?", false).
 		Scan(ctx, &r)
 	if err != nil {
 		return nil, err
@@ -36,6 +39,9 @@ func GetUserRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Proj
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id`).
 		Join(`JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountresourcerole.project_id`).
 		Where("authsrv_projectaccountresourcerole.account_id = ?", id).
+		Where("authsrv_project.trash = ?", false).
+		Where("authsrv_resourcerole.trash = ?", false).
+		Where("authsrv_projectaccountresourcerole.trash = ?", false).
 		Scan(ctx, &pr)
 	if err != nil {
 		return nil, err
@@ -47,6 +53,9 @@ func GetUserRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Proj
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id`).
 		Join(`JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id`). // also need a namespace join
 		Where("authsrv_projectaccountnamespacerole.account_id = ?", id).
+		Where("authsrv_project.trash = ?", false).
+		Where("authsrv_resourcerole.trash = ?", false).
+		Where("authsrv_projectaccountresourcerole.trash = ?", false).
 		Scan(ctx, &pnr)
 	if err != nil {
 		return nil, err
