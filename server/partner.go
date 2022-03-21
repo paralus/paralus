@@ -5,7 +5,9 @@ import (
 
 	"github.com/RafaySystems/rcloud-base/pkg/service"
 	systemrpc "github.com/RafaySystems/rcloud-base/proto/rpc/system"
+	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	systempbv3 "github.com/RafaySystems/rcloud-base/proto/types/systempb/v3"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type partnerServer struct {
@@ -17,38 +19,34 @@ func NewPartnerServer(ps service.PartnerService) systemrpc.PartnerServer {
 	return &partnerServer{ps}
 }
 
-func (s *partnerServer) CreatePartner(ctx context.Context, p *systempbv3.Partner) (*systempbv3.Partner, error) {
-	p, err := s.Create(ctx, p)
+func updatePartnerStatus(req *systempbv3.Partner, resp *systempbv3.Partner, err error) *systempbv3.Partner {
 	if err != nil {
-		return nil, err
-	}
-	return p, nil
-}
-func (s *partnerServer) GetPartner(ctx context.Context, p *systempbv3.Partner) (*systempbv3.Partner, error) {
-
-	partner, err := s.GetByName(ctx, p.Metadata.Name)
-	if err != nil {
-		partner, err = s.GetByID(ctx, p.Metadata.Id)
-		if err != nil {
-			return nil, err
+		req.Status = &v3.Status{
+			ConditionStatus: v3.ConditionStatus_StatusFailed,
+			LastUpdated:     timestamppb.Now(),
+			Reason:          err.Error(),
 		}
+		return req
 	}
-
-	return partner, nil
+	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_StatusOK}
+	return resp
 }
 
-func (s *partnerServer) DeletePartner(ctx context.Context, p *systempbv3.Partner) (*systempbv3.Partner, error) {
-	partner, err := s.Delete(ctx, p)
-	if err != nil {
-		return nil, err
-	}
-	return partner, nil
+func (s *partnerServer) CreatePartner(ctx context.Context, req *systempbv3.Partner) (*systempbv3.Partner, error) {
+	resp, err := s.Create(ctx, req)
+	return updatePartnerStatus(req, resp, err), err
+}
+func (s *partnerServer) GetPartner(ctx context.Context, req *systempbv3.Partner) (*systempbv3.Partner, error) {
+	resp, err := s.GetByName(ctx, req.Metadata.Name)
+	return updatePartnerStatus(req, resp, err), err
 }
 
-func (s *partnerServer) UpdatePartner(ctx context.Context, p *systempbv3.Partner) (*systempbv3.Partner, error) {
-	partner, err := s.Update(ctx, p)
-	if err != nil {
-		return nil, err
-	}
-	return partner, nil
+func (s *partnerServer) DeletePartner(ctx context.Context, req *systempbv3.Partner) (*systempbv3.Partner, error) {
+	resp, err := s.Delete(ctx, req)
+	return updatePartnerStatus(req, resp, err), err
+}
+
+func (s *partnerServer) UpdatePartner(ctx context.Context, req *systempbv3.Partner) (*systempbv3.Partner, error) {
+	resp, err := s.Update(ctx, req)
+	return updatePartnerStatus(req, resp, err), err
 }

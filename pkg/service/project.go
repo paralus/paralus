@@ -71,12 +71,7 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 	}
 	entity, err := pg.Create(ctx, s.db, &proj)
 	if err != nil {
-		project.Status = &v3.Status{
-			ConditionType:   "Create",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-		}
-		return project, err
+		return &systemv3.Project{}, err
 	}
 
 	//update v3 spec
@@ -84,13 +79,6 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 		project.Metadata.Id = createdProject.ID.String()
 		project.Spec = &systemv3.ProjectSpec{
 			Default: createdProject.Default,
-		}
-		if project.Status != nil {
-			project.Status = &v3.Status{
-				ConditionType:   "Create",
-				ConditionStatus: v3.ConditionStatus_StatusOK,
-				LastUpdated:     timestamppb.Now(),
-			}
 		}
 	}
 
@@ -110,23 +98,11 @@ func (s *projectService) GetByID(ctx context.Context, id string) (*systemv3.Proj
 
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		project.Status = &v3.Status{
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
-		return project, err
+		return &systemv3.Project{}, err
 	}
 	entity, err := pg.GetByID(ctx, s.db, uid, &models.Project{})
 	if err != nil {
-		project.Status = &v3.Status{
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
-		return project, err
+		return &systemv3.Project{}, err
 	}
 
 	if proj, ok := entity.(*models.Project); ok {
@@ -141,11 +117,6 @@ func (s *projectService) GetByID(ctx context.Context, id string) (*systemv3.Proj
 		}
 		project.Spec = &systemv3.ProjectSpec{
 			Default: proj.Default,
-		}
-		project.Status = &v3.Status{
-			LastUpdated:     timestamppb.Now(),
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
 		}
 
 		return project, nil
@@ -166,13 +137,7 @@ func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.
 
 	entity, err := pg.GetByName(ctx, s.db, name, &models.Project{})
 	if err != nil {
-		project.Status = &v3.Status{
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
-		return project, err
+		return &systemv3.Project{}, err
 	}
 
 	if proj, ok := entity.(*models.Project); ok {
@@ -199,11 +164,6 @@ func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.
 		project.Spec = &systemv3.ProjectSpec{
 			Default: proj.Default,
 		}
-		project.Status = &v3.Status{
-			LastUpdated:     timestamppb.Now(),
-			ConditionType:   "Describe",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-		}
 
 		return project, nil
 	}
@@ -215,13 +175,7 @@ func (s *projectService) Update(ctx context.Context, project *systemv3.Project) 
 
 	entity, err := pg.GetByName(ctx, s.db, project.Metadata.Name, &models.Project{})
 	if err != nil {
-		project.Status = &v3.Status{
-			ConditionType:   "Update",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
-		return project, err
+		return &systemv3.Project{}, err
 	}
 
 	if proj, ok := entity.(*models.Project); ok {
@@ -232,23 +186,12 @@ func (s *projectService) Update(ctx context.Context, project *systemv3.Project) 
 
 		_, err = pg.Update(ctx, s.db, proj.ID, proj)
 		if err != nil {
-			project.Status = &v3.Status{
-				ConditionType:   "Update",
-				ConditionStatus: v3.ConditionStatus_StatusFailed,
-				LastUpdated:     timestamppb.Now(),
-				Reason:          err.Error(),
-			}
-			return project, err
+			return &systemv3.Project{}, err
 		}
 
 		//update spec and status
 		project.Spec = &systemv3.ProjectSpec{
 			Default: proj.Default,
-		}
-		project.Status = &v3.Status{
-			ConditionType:   "Update",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-			LastUpdated:     timestamppb.Now(),
 		}
 	}
 
@@ -258,34 +201,17 @@ func (s *projectService) Update(ctx context.Context, project *systemv3.Project) 
 func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error) {
 	entity, err := pg.GetByName(ctx, s.db, project.Metadata.Name, &models.Project{})
 	if err != nil {
-		project.Status = &v3.Status{
-			ConditionType:   "Delete",
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
-			LastUpdated:     timestamppb.Now(),
-			Reason:          err.Error(),
-		}
-		return project, err
+		return &systemv3.Project{}, err
 	}
 	if proj, ok := entity.(*models.Project); ok {
 		proj.Trash = true
 		_, err := pg.Update(ctx, s.db, proj.ID, proj)
 		if err != nil {
-			project.Status = &v3.Status{
-				ConditionType:   "Delete",
-				ConditionStatus: v3.ConditionStatus_StatusFailed,
-				LastUpdated:     timestamppb.Now(),
-				Reason:          err.Error(),
-			}
-			return project, err
+			return &systemv3.Project{}, err
 		}
 		//update v3 spec
 		project.Metadata.Id = proj.ID.String()
 		project.Metadata.Name = proj.Name
-		project.Status = &v3.Status{
-			ConditionType:   "Delete",
-			ConditionStatus: v3.ConditionStatus_StatusOK,
-			LastUpdated:     timestamppb.Now(),
-		}
 	}
 
 	return project, nil
@@ -305,17 +231,17 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 		var org models.Organization
 		_, err := pg.GetByName(ctx, s.db, project.Metadata.Organization, &org)
 		if err != nil {
-			return projectList, err
+			return &systemv3.ProjectList{}, err
 		}
 		var part models.Partner
 		_, err = pg.GetByName(ctx, s.db, project.Metadata.Partner, &part)
 		if err != nil {
-			return projectList, err
+			return &systemv3.ProjectList{}, err
 		}
 		var projs []models.Project
 		entities, err := pg.List(ctx, s.db, uuid.NullUUID{UUID: part.ID, Valid: true}, uuid.NullUUID{UUID: org.ID, Valid: true}, &projs)
 		if err != nil {
-			return projectList, err
+			return &systemv3.ProjectList{}, err
 		}
 		if projs, ok := entities.(*[]models.Project); ok {
 			for _, proj := range *projs {

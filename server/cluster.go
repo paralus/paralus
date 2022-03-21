@@ -11,7 +11,9 @@ import (
 	"github.com/RafaySystems/rcloud-base/pkg/service"
 	rpcv3 "github.com/RafaySystems/rcloud-base/proto/rpc/scheduler"
 	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
+	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	infrapbv3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type clusterServer struct {
@@ -27,28 +29,31 @@ func NewClusterServer(es service.ClusterService, data *common.DownloadData) rpcv
 	}
 }
 
-func (s *clusterServer) CreateCluster(ctx context.Context, e *infrapbv3.Cluster) (*infrapbv3.Cluster, error) {
-	edge, err := s.Create(ctx, e)
+func updateClusterStatus(req *infrapbv3.Cluster, resp *infrapbv3.Cluster, err error) *infrapbv3.Cluster {
 	if err != nil {
-		return nil, err
+		req.Status = &v3.Status{
+			ConditionStatus: v3.ConditionStatus_StatusFailed,
+			LastUpdated:     timestamppb.Now(),
+			Reason:          err.Error(),
+		}
+		return req
 	}
-	return edge, nil
+	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_StatusOK}
+	return resp
 }
 
-func (s *clusterServer) GetClusters(ctx context.Context, e *commonv3.QueryOptions) (*infrapbv3.ClusterList, error) {
-	clusters, err := s.List(ctx, query.WithOptions(e))
-	if err != nil {
-		return nil, err
-	}
-	return clusters, nil
+func (s *clusterServer) CreateCluster(ctx context.Context, req *infrapbv3.Cluster) (*infrapbv3.Cluster, error) {
+	resp, err := s.Create(ctx, req)
+	return updateClusterStatus(req, resp, err), err
 }
 
-func (s *clusterServer) GetCluster(ctx context.Context, e *infrapbv3.Cluster) (*infrapbv3.Cluster, error) {
-	cluster, err := s.Select(ctx, e, true)
-	if err != nil {
-		return nil, err
-	}
-	return cluster, nil
+func (s *clusterServer) GetClusters(ctx context.Context, req *commonv3.QueryOptions) (*infrapbv3.ClusterList, error) {
+	return s.List(ctx, query.WithOptions(req))
+}
+
+func (s *clusterServer) GetCluster(ctx context.Context, req *infrapbv3.Cluster) (*infrapbv3.Cluster, error) {
+	resp, err := s.Select(ctx, req, true)
+	return updateClusterStatus(req, resp, err), err
 }
 
 func (s *clusterServer) DeleteCluster(ctx context.Context, e *infrapbv3.Cluster) (*rpcv3.DeleteClusterResponse, error) {
@@ -59,12 +64,9 @@ func (s *clusterServer) DeleteCluster(ctx context.Context, e *infrapbv3.Cluster)
 	return &rpcv3.DeleteClusterResponse{}, nil
 }
 
-func (s *clusterServer) UpdateCluster(ctx context.Context, e *infrapbv3.Cluster) (*infrapbv3.Cluster, error) {
-	edge, err := s.Update(ctx, e)
-	if err != nil {
-		return nil, err
-	}
-	return edge, nil
+func (s *clusterServer) UpdateCluster(ctx context.Context, req *infrapbv3.Cluster) (*infrapbv3.Cluster, error) {
+	resp, err := s.Update(ctx, req)
+	return updateClusterStatus(req, resp, err), err
 }
 
 func (s *clusterServer) DownloadCluster(ctx context.Context, cluster *infrapbv3.Cluster) (*commonv3.HttpBody, error) {
@@ -100,7 +102,7 @@ func (s *clusterServer) DownloadCluster(ctx context.Context, cluster *infrapbv3.
 func (s *clusterServer) UpdateClusterStatus(ctx context.Context, cluster *infrapbv3.Cluster) (*infrapbv3.Cluster, error) {
 	err := s.UpdateClusterConditionStatus(ctx, cluster)
 	if err != nil {
-		return nil, err
+		return updateClusterStatus(cluster, cluster, err), err
 	}
 	return cluster, nil
 }
