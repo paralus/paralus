@@ -33,8 +33,8 @@ type StepObject struct {
 
 	v1.TypeMeta   `protobuf:"bytes,1,opt,name=typeMeta,proto3,embedded=typeMeta" json:"typeMeta,omitempty"`
 	v1.ObjectMeta `protobuf:"bytes,2,opt,name=objectMeta,proto3,embedded=objectMeta" json:"objectMeta,omitempty"`
-	Name       string         `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Raw        []byte         `protobuf:"bytes,4,opt,name=raw,proto3" json:"raw,omitempty"`
+	Name          string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Raw           []byte `protobuf:"bytes,4,opt,name=raw,proto3" json:"raw,omitempty"`
 }
 
 func (x *StepObject) Reset() {
@@ -531,8 +531,8 @@ type Tasklet struct {
 
 	v1.TypeMeta   `protobuf:"bytes,1,opt,name=typeMeta,proto3,embedded=typeMeta" json:"typeMeta,omitempty"`
 	v1.ObjectMeta `protobuf:"bytes,2,opt,name=objectMeta,proto3,embedded=objectMeta" json:"objectMeta,omitempty"`
-	Spec       *TaskletSpec   `protobuf:"bytes,3,opt,name=spec,proto3" json:"spec,omitempty"`
-	Status     *TaskletStatus `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
+	Spec          *TaskletSpec   `protobuf:"bytes,3,opt,name=spec,proto3" json:"spec,omitempty"`
+	Status        *TaskletStatus `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
 }
 
 func (x *Tasklet) Reset() {
@@ -590,7 +590,7 @@ type TaskletList struct {
 
 	v1.TypeMeta `protobuf:"bytes,1,opt,name=typeMeta,proto3,embedded=typeMeta" json:"typeMeta,omitempty"`
 	v1.ListMeta `protobuf:"bytes,2,opt,name=listMeta,proto3,embedded=listMeta" json:"listMeta,omitempty"`
-	Items    []*Tasklet   `protobuf:"bytes,3,rep,name=items,proto3" json:"items,omitempty"`
+	Items       []*Tasklet `protobuf:"bytes,3,rep,name=items,proto3" json:"items,omitempty"`
 }
 
 func (x *TaskletList) Reset() {
@@ -919,8 +919,8 @@ type Task struct {
 
 	v1.TypeMeta   `protobuf:"bytes,1,opt,name=typeMeta,proto3,embedded=typeMeta" json:"typeMeta,omitempty"`
 	v1.ObjectMeta `protobuf:"bytes,2,opt,name=objectMeta,proto3,embedded=objectMeta" json:"objectMeta,omitempty"`
-	Spec       *TaskSpec      `protobuf:"bytes,3,opt,name=spec,proto3" json:"spec,omitempty"`
-	Status     *TaskStatus    `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
+	Spec          *TaskSpec   `protobuf:"bytes,3,opt,name=spec,proto3" json:"spec,omitempty"`
+	Status        *TaskStatus `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
 }
 
 func (x *Task) Reset() {
@@ -978,7 +978,7 @@ type TaskList struct {
 
 	v1.TypeMeta `protobuf:"bytes,1,opt,name=typeMeta,proto3,embedded=typeMeta" json:"typeMeta,omitempty"`
 	v1.ListMeta `protobuf:"bytes,2,opt,name=listMeta,proto3,embedded=listMeta" json:"listMeta,omitempty"`
-	Items    []*Task      `protobuf:"bytes,3,rep,name=items,proto3" json:"items,omitempty"`
+	Items       []*Task `protobuf:"bytes,3,rep,name=items,proto3" json:"items,omitempty"`
 }
 
 func (x *TaskList) Reset() {
@@ -1263,10 +1263,10 @@ type Namespace struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	v1.TypeMeta     `protobuf:"bytes,1,opt,name=typeMeta,proto3,embedded=typeMeta" json:"typeMeta,omitempty"`
-	v1.ObjectMeta   `protobuf:"bytes,2,opt,name=objectMeta,proto3,embedded=objectMeta" json:"objectMeta,omitempty"`
-	Spec       *NamespaceSpec   `protobuf:"bytes,3,opt,name=spec,proto3" json:"spec,omitempty"`
-	Status     *NamespaceStatus `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
+	v1.TypeMeta   `protobuf:"bytes,1,opt,name=typeMeta,proto3,embedded=typeMeta" json:"typeMeta,omitempty"`
+	v1.ObjectMeta `protobuf:"bytes,2,opt,name=objectMeta,proto3,embedded=objectMeta" json:"objectMeta,omitempty"`
+	Spec          *NamespaceSpec   `protobuf:"bytes,3,opt,name=spec,proto3" json:"spec,omitempty"`
+	Status        *NamespaceStatus `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
 }
 
 func (x *Namespace) Reset() {
@@ -1324,7 +1324,7 @@ type NamespaceList struct {
 
 	v1.TypeMeta `protobuf:"bytes,1,opt,name=typeMeta,proto3,embedded=typeMeta" json:"typeMeta,omitempty"`
 	v1.ListMeta `protobuf:"bytes,2,opt,name=listMeta,proto3,embedded=listMeta" json:"listMeta,omitempty"`
-	Items    []*Namespace `protobuf:"bytes,3,rep,name=items,proto3" json:"items,omitempty"`
+	Items       []*Namespace `protobuf:"bytes,3,rep,name=items,proto3" json:"items,omitempty"`
 }
 
 func (x *NamespaceList) Reset() {
