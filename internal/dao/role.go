@@ -15,6 +15,8 @@ func GetRolePermissions(ctx context.Context, db bun.IDB, id uuid.UUID) ([]models
 		ColumnExpr("authsrv_resourcepermission.name as name").
 		Join(`JOIN authsrv_resourcerolepermission ON authsrv_resourcerolepermission.resource_permission_id=authsrv_resourcepermission.id`).
 		Where("authsrv_resourcerolepermission.resource_role_id = ?", id).
+		Where("authsrv_resourcepermission.trash = ?", false).
+		Where("authsrv_resourcerolepermission.trash = ?", false).
 		Scan(ctx, &r)
 	if err != nil {
 		return nil, err
