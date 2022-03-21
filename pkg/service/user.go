@@ -277,7 +277,8 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 	}
 	err = tx.Commit()
 	if err != nil {
-		fmt.Println("unable to commit changes", err)
+		tx.Rollback()
+		_log.Warn("unable to commit changes", err)
 	}
 
 	rl, err := s.ap.GetRecoveryLink(ctx, id)
@@ -430,7 +431,8 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 
 		err = tx.Commit()
 		if err != nil {
-			fmt.Println("unable to commit changes", err)
+			tx.Rollback()
+			_log.Warn("unable to commit changes", err)
 		}
 		return user, nil
 	}
@@ -473,7 +475,8 @@ func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3
 
 		err = tx.Commit()
 		if err != nil {
-			fmt.Println("unable to commit changes", err)
+			tx.Rollback()
+			_log.Warn("unable to commit changes", err)
 		}
 		return &userrpcv3.DeleteUserResponse{}, nil
 	}

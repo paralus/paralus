@@ -177,7 +177,8 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 
 	err = tx.Commit()
 	if err != nil {
-		fmt.Println("unable to commit changes", err)
+		tx.Rollback()
+		_log.Warn("unable to commit changes", err)
 	}
 	return role, nil
 
@@ -279,7 +280,8 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 
 		err = tx.Commit()
 		if err != nil {
-			fmt.Println("unable to commit changes", err)
+			tx.Rollback()
+			_log.Warn("unable to commit changes", err)
 		}
 		return role, nil
 	}
@@ -320,7 +322,8 @@ func (s *roleService) Delete(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 
 		err = tx.Commit()
 		if err != nil {
-			fmt.Println("unable to commit changes", err)
+			tx.Rollback()
+			_log.Warn("unable to commit changes", err)
 		}
 		return role, nil
 	}

@@ -316,7 +316,8 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 
 		err = tx.Commit()
 		if err != nil {
-			fmt.Println("unable to commit changes", err)
+			tx.Rollback()
+			_log.Warn("unable to commit changes", err)
 		}
 		return group, nil
 	}
@@ -450,7 +451,8 @@ func (s *groupService) Update(ctx context.Context, group *userv3.Group) (*userv3
 
 		err = tx.Commit()
 		if err != nil {
-			fmt.Println("unable to commit changes", err)
+			tx.Rollback()
+			_log.Warn("unable to commit changes", err)
 		}
 
 		// update spec and status
@@ -499,7 +501,8 @@ func (s *groupService) Delete(ctx context.Context, group *userv3.Group) (*userv3
 
 		err = tx.Commit()
 		if err != nil {
-			fmt.Println("unable to commit changes", err)
+			tx.Rollback()
+			_log.Warn("unable to commit changes", err)
 		}
 		return group, nil
 	}

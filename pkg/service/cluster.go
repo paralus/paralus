@@ -292,7 +292,8 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 
 	err = tx.Commit()
 	if err != nil {
-		fmt.Println("unable to commit changes", err)
+		tx.Rollback()
+		_log.Warn("unable to commit changes", err)
 	}
 
 	ev := event.Resource{
