@@ -30,13 +30,16 @@ func (e ClusterConditionType) MarshalJSON() ([]byte, error) {
 func (e *ClusterConditionType) UnmarshalJSON(b []byte) error {
 	if b != nil {
 		var length int
-		if len(b) > 1 { length = len(b) - 1 } else { length = len(b) }
+		if len(b) > 1 {
+			length = len(b) - 1
+		} else {
+			length = len(b)
+		}
 		*e = ClusterConditionType(ClusterConditionType_value[string(b[1:length])])
 	}
 	return nil
 }
 
 // implement proto enum interface
-func (e ClusterConditionType) IsEnum()  {
+func (e ClusterConditionType) IsEnum() {
 }
-

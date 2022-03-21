@@ -201,7 +201,7 @@ func main() {
 	// should we directly interact with kratos and create a user with a password?
 	_, err = us.Create(context.Background(), &userv3.User{
 		Metadata: &commonv3.Metadata{Name: *oae, Partner: *partner, Organization: *org, Description: "..."},
-		Spec: &userv3.UserSpec{FirstName: *oafn, LastName: *oaln, ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Role: "ADMIN"}}},
+		Spec:     &userv3.UserSpec{FirstName: *oafn, LastName: *oaln, ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Role: "ADMIN"}}},
 	})
 
 	if err != nil {

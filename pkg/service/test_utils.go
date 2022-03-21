@@ -23,7 +23,6 @@ func performBasicAuthzChecks(t *testing.T, mazc mockAuthzClient, cpCount, dpCoun
 	}
 }
 
-
 func performBasicAuthProviderChecks(t *testing.T, ma mockAuthProvider, cCount, uCount, rCount, dCount int) {
 	if len(ma.c) != cCount {
 		t.Errorf("unexpected number of calls to Auth Provider Create; expctex '%v', got '%v'", cCount, len(ma.c))

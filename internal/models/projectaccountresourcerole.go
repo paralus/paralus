@@ -20,7 +20,7 @@ type ProjectAccountResourcerole struct {
 	OrganizationId uuid.UUID `bun:"organization_id,type:uuid"`
 	PartnerId      uuid.UUID `bun:"partner_id,type:uuid"`
 	RoleId         uuid.UUID `bun:"role_id,type:uuid"`
-	AccountId        uuid.UUID `bun:"account_id,type:uuid"`
+	AccountId      uuid.UUID `bun:"account_id,type:uuid"`
 	ProjectId      uuid.UUID `bun:"project_id,type:uuid"`
 	Active         bool      `bun:"active,notnull"`
 }
