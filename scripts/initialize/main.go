@@ -52,7 +52,7 @@ const (
 	kratosAddrEnv   = "KRATOS_ADDR"
 )
 
-func addResourcePermissions(dao pg.EntityDAO, basePath string) error {
+func addResourcePermissions(db *bun.DB, basePath string) error {
 	var items []models.ResourcePermission
 
 	files, err := ioutil.ReadDir(basePath)
@@ -77,7 +77,7 @@ func addResourcePermissions(dao pg.EntityDAO, basePath string) error {
 	}
 
 	fmt.Println("Adding", len(items), "resource permissions")
-	_, err = dao.Create(context.Background(), &items)
+	_, err = pg.Create(context.Background(), db, &items)
 	return err
 }
 
@@ -136,7 +136,6 @@ func main() {
 	dsn := "postgres://" + dbUser + ":" + dbPassword + "@" + dbAddr + "/" + dbName + "?sslmode=disable"
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db := bun.NewDB(sqldb, pgdialect.New())
-	dao := pg.NewEntityDAO(db)
 
 	kratosConfig := kclient.NewConfiguration()
 	kratosUrl := kratosScheme + "://" + kratosAddr
@@ -159,11 +158,11 @@ func main() {
 	rs := service.NewRoleService(db, as)
 	us := service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, nil, common.CliConfigDownloadData{})
 
-	err = dao.DeleteAll(context.Background(), &models.ResourcePermission{})
+	err = pg.HardDeleteAll(context.Background(), db, &models.ResourcePermission{})
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = addResourcePermissions(dao, path.Join("scripts", "initialize", "permissions"))
+	err = addResourcePermissions(db, path.Join("scripts", "initialize", "permissions"))
 	if err != nil {
 		fmt.Println("Run from base directory")
 		log.Fatal(err)
