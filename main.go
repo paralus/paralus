@@ -281,7 +281,9 @@ func setup() {
 	pps = service.NewProjectService(db)
 
 	// authz services
-	gormDb, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	gormDb, err := gorm.Open(postgres.New(postgres.Config{
+		Conn: sqldb,
+	}), &gorm.Config{})
 	if err != nil {
 		_log.Fatalw("unable to create db connection", "error", err)
 	}
@@ -289,7 +291,7 @@ func setup() {
 	if err != nil {
 		_log.Fatalw("unable to init enforcer", "error", err)
 	}
-	as = service.NewAuthzService(gormDb, enforcer)
+	as = service.NewAuthzService(db, enforcer)
 
 	// users and role management services
 	cc := common.CliConfigDownloadData{

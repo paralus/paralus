@@ -85,10 +85,6 @@
         "obj": {
           "type": "string",
           "title": "Resource for which the access is needed"
-        },
-        "act": {
-          "type": "string",
-          "title": "Action, read/write; * for both read+write"
         }
       }
     },

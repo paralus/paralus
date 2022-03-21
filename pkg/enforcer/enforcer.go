@@ -29,17 +29,17 @@ func (e *casbinEnforcer) Init() (*casbin.CachedEnforcer, error) {
 r = sub, ns, proj, org, obj, act
 
 [policy_definition]
-p = sub, ns, proj, org, obj, act
+p = sub, ns, proj, org, obj
 
 [role_definition]
-g = _, _
+g = _, _, _
 g2 = _, _
 
 [policy_effect]
 e = some(where (p.eft == allow))
 
 [matchers]
-m = g2(r.sub, p.sub) && globMatch(r.ns, p.ns) && globMatch(r.proj, p.proj) && r.org == p.org && g(r.obj, p.obj) && globMatch(r.act, p.act)
+m = g2(r.sub, p.sub) && globMatch(r.ns, p.ns) && globMatch(r.proj, p.proj) && r.org == p.org && g(r.obj, p.obj, r.act)
 `
 	m, err := model.NewModelFromString(modelText)
 	if err != nil {

@@ -149,7 +149,6 @@ func (s *userService) createUserRoleRelations(ctx context.Context, user *userv3.
 				Proj: project,
 				Org:  org,
 				Obj:  role,
-				Act:  "*",
 			})
 		case project != "":
 			projectId, err := pg.GetProjectId(ctx, s.db, project)
@@ -176,7 +175,6 @@ func (s *userService) createUserRoleRelations(ctx context.Context, user *userv3.
 				Proj: project,
 				Org:  org,
 				Obj:  role,
-				Act:  "*",
 			})
 		default:
 			ar := models.AccountResourcerole{
@@ -198,7 +196,6 @@ func (s *userService) createUserRoleRelations(ctx context.Context, user *userv3.
 				Proj: "*",
 				Org:  org,
 				Obj:  role,
-				Act:  "*",
 			})
 		}
 	}
