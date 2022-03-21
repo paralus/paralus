@@ -239,8 +239,7 @@ func (s *organizationService) Delete(ctx context.Context, organization *systemv3
 	}
 
 	if org, ok := entity.(*models.Organization); ok {
-		org.Trash = true
-		_, err := pg.Update(ctx, s.db, org.ID, org)
+		err := pg.Delete(ctx, s.db, org.ID, org)
 		if err != nil {
 			return &systemv3.Organization{}, err
 		}

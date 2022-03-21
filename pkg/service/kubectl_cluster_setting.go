@@ -41,21 +41,20 @@ func (kcs *kubectlClusterSettingsService) Get(ctx context.Context, orgID string,
 }
 
 func (kcs *kubectlClusterSettingsService) Patch(ctx context.Context, kc *sentry.KubectlClusterSettings) error {
-	err := kcs.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
-		_, err := dao.GetkubectlClusterSettings(ctx, kcs.db, uuid.MustParse(kc.OrganizationID), kc.Name)
+	return kcs.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
+		_, err := dao.GetkubectlClusterSettings(ctx, tx, uuid.MustParse(kc.OrganizationID), kc.Name)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				kcsdb := convertToKubeCtlSettingModel(kc)
 				kcsdb.CreatedAt = time.Now()
-				dao.CreatekubectlClusterSettings(ctx, kcs.db, kcsdb)
+				dao.CreatekubectlClusterSettings(ctx, tx, kcsdb)
 			}
 			return err
 		}
 		kcsdb := convertToKubeCtlSettingModel(kc)
 		kcsdb.ModifiedAt = time.Now()
-		return dao.UpdatekubectlClusterSettings(ctx, kcs.db, kcsdb)
+		return dao.UpdatekubectlClusterSettings(ctx, tx, kcsdb)
 	})
-	return err
 }
 
 func convertToKubeCtlSettingModel(kcs *sentry.KubectlClusterSettings) *models.KubectlClusterSetting {

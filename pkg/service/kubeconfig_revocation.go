@@ -52,16 +52,15 @@ func prepareKubeCfgRevocationResponse(kr *models.KubeconfigRevocation) *sentry.K
 }
 
 func (krs *kubeconfigRevocationService) Patch(ctx context.Context, kr *sentry.KubeconfigRevocation) error {
-	err := krs.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
-		_, err := dao.GetKubeconfigRevocation(ctx, krs.db, uuid.MustParse(kr.OrganizationID), uuid.MustParse(kr.AccountID), kr.IsSSOUser)
+	return krs.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
+		_, err := dao.GetKubeconfigRevocation(ctx, tx, uuid.MustParse(kr.OrganizationID), uuid.MustParse(kr.AccountID), kr.IsSSOUser)
 		if err != nil && err == sql.ErrNoRows {
 			kcr := convertToModel(kr)
 			kcr.CreatedAt = time.Now()
-			return dao.CreateKubeconfigRevocation(ctx, krs.db, kcr)
+			return dao.CreateKubeconfigRevocation(ctx, tx, kcr)
 		}
-		return dao.UpdateKubeconfigRevocation(ctx, krs.db, convertToModel(kr))
+		return dao.UpdateKubeconfigRevocation(ctx, tx, convertToModel(kr))
 	})
-	return err
 }
 
 func convertToModel(kr *sentry.KubeconfigRevocation) *models.KubeconfigRevocation {

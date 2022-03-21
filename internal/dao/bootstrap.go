@@ -128,10 +128,7 @@ func CreateBootstrapAgent(ctx context.Context, db bun.IDB, ba *models.BootstrapA
 	return err
 }
 
-// We are explicitly taking in Tx here as it was previously doing RunInTx
-// TODO: should we take Tx  here or just assume we will be passed in a tx? Or should we create one?
 func RegisterBootstrapAgent(ctx context.Context, db bun.Tx, token string) error {
-
 	ba, err := getBootstrapAgentForToken(ctx, db, token)
 	if err != nil {
 		return err

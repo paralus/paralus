@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"strconv"
 	"time"
@@ -49,18 +50,18 @@ func NewGroupService(db *bun.DB, azc AuthzService) GroupService {
 	return &groupService{db: db, azc: azc}
 }
 
-func (s *groupService) deleteGroupRoleRelaitons(ctx context.Context, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, error) {
+func (s *groupService) deleteGroupRoleRelaitons(ctx context.Context, db bun.IDB, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, error) {
 	// delete previous entries
 	// TODO: single delete command
-	err := pg.DeleteX(ctx, s.db, "group_id", groupId, &models.GroupRole{})
+	err := pg.DeleteX(ctx, db, "group_id", groupId, &models.GroupRole{})
 	if err != nil {
 		return &userv3.Group{}, err
 	}
-	err = pg.DeleteX(ctx, s.db, "group_id", groupId, &models.ProjectGroupRole{})
+	err = pg.DeleteX(ctx, db, "group_id", groupId, &models.ProjectGroupRole{})
 	if err != nil {
 		return &userv3.Group{}, err
 	}
-	err = pg.DeleteX(ctx, s.db, "group_id", groupId, &models.ProjectGroupNamespaceRole{})
+	err = pg.DeleteX(ctx, db, "group_id", groupId, &models.ProjectGroupNamespaceRole{})
 	if err != nil {
 		return &userv3.Group{}, err
 	}
@@ -73,7 +74,7 @@ func (s *groupService) deleteGroupRoleRelaitons(ctx context.Context, groupId uui
 }
 
 // Map roles to groups
-func (s *groupService) createGroupRoleRelations(ctx context.Context, group *userv3.Group, ids parsedIds) (*userv3.Group, error) {
+func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB, group *userv3.Group, ids parsedIds) (*userv3.Group, error) {
 	// TODO: add transactions
 	projectNamespaceRoles := group.GetSpec().GetProjectNamespaceRoles()
 
@@ -83,7 +84,7 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, group *user
 	var ps []*authzv1.Policy
 	for _, pnr := range projectNamespaceRoles {
 		role := pnr.GetRole()
-		entity, err := pg.GetIdByName(ctx, s.db, role, &models.Role{})
+		entity, err := pg.GetIdByName(ctx, db, role, &models.Role{})
 		if err != nil {
 			return &userv3.Group{}, fmt.Errorf("unable to find role '%v'", role)
 		}
@@ -99,7 +100,7 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, group *user
 		namespaceId := pnr.GetNamespace() // TODO: lookup id from name
 		switch {
 		case namespaceId != 0:
-			projectId, err := pg.GetProjectId(ctx, s.db, project)
+			projectId, err := pg.GetProjectId(ctx, db, project)
 			if err != nil {
 				return &userv3.Group{}, fmt.Errorf("unable to find project '%v'", project)
 			}
@@ -123,7 +124,7 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, group *user
 				Obj:  role,
 			})
 		case project != "":
-			projectId, err := pg.GetProjectId(ctx, s.db, project)
+			projectId, err := pg.GetProjectId(ctx, db, project)
 			if err != nil {
 				return &userv3.Group{}, fmt.Errorf("unable to find project '%v'", project)
 			}
@@ -165,19 +166,19 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, group *user
 		}
 	}
 	if len(pgnrs) > 0 {
-		_, err := pg.Create(ctx, s.db, &pgnrs)
+		_, err := pg.Create(ctx, db, &pgnrs)
 		if err != nil {
 			return &userv3.Group{}, err
 		}
 	}
 	if len(pgrs) > 0 {
-		_, err := pg.Create(ctx, s.db, &pgrs)
+		_, err := pg.Create(ctx, db, &pgrs)
 		if err != nil {
 			return &userv3.Group{}, err
 		}
 	}
 	if len(grs) > 0 {
-		_, err := pg.Create(ctx, s.db, &grs)
+		_, err := pg.Create(ctx, db, &grs)
 		if err != nil {
 			return &userv3.Group{}, err
 		}
@@ -193,8 +194,8 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, group *user
 	return group, nil
 }
 
-func (s *groupService) deleteGroupAccountRelations(ctx context.Context, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, error) {
-	err := pg.DeleteX(ctx, s.db, "group_id", groupId, &models.GroupAccount{})
+func (s *groupService) deleteGroupAccountRelations(ctx context.Context, db bun.IDB, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, error) {
+	err := pg.DeleteX(ctx, db, "group_id", groupId, &models.GroupAccount{})
 	if err != nil {
 		return &userv3.Group{}, fmt.Errorf("unable to delete user; %v", err)
 	}
@@ -207,13 +208,13 @@ func (s *groupService) deleteGroupAccountRelations(ctx context.Context, groupId 
 }
 
 // Update the users(account) mapped to each group
-func (s *groupService) createGroupAccountRelations(ctx context.Context, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, error) {
+func (s *groupService) createGroupAccountRelations(ctx context.Context, db bun.IDB, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, error) {
 	// TODO: add transactions
 	var grpaccs []models.GroupAccount
 	var ugs []*authzv1.UserGroup
 	for _, account := range unique(group.GetSpec().GetUsers()) {
 		// FIXME: do combined lookup
-		entity, err := pg.GetIdByTraits(ctx, s.db, account, &models.KratosIdentities{})
+		entity, err := pg.GetIdByTraits(ctx, db, account, &models.KratosIdentities{})
 		if err != nil {
 			return &userv3.Group{}, fmt.Errorf("unable to find user '%v'", account)
 		}
@@ -236,7 +237,7 @@ func (s *groupService) createGroupAccountRelations(ctx context.Context, groupId 
 	if len(grpaccs) == 0 {
 		return group, nil
 	}
-	_, err := pg.Create(ctx, s.db, &grpaccs)
+	_, err := pg.Create(ctx, db, &grpaccs)
 	if err != nil {
 		return &userv3.Group{}, err
 	}
@@ -251,14 +252,14 @@ func (s *groupService) createGroupAccountRelations(ctx context.Context, groupId 
 	return group, nil
 }
 
-func (s *groupService) getPartnerOrganization(ctx context.Context, group *userv3.Group) (uuid.UUID, uuid.UUID, error) {
+func (s *groupService) getPartnerOrganization(ctx context.Context, db bun.IDB, group *userv3.Group) (uuid.UUID, uuid.UUID, error) {
 	partner := group.GetMetadata().GetPartner()
 	org := group.GetMetadata().GetOrganization()
-	partnerId, err := pg.GetPartnerId(ctx, s.db, partner)
+	partnerId, err := pg.GetPartnerId(ctx, db, partner)
 	if err != nil {
 		return uuid.Nil, uuid.Nil, err
 	}
-	organizationId, err := pg.GetOrganizationId(ctx, s.db, org)
+	organizationId, err := pg.GetOrganizationId(ctx, db, org)
 	if err != nil {
 		return partnerId, uuid.Nil, err
 	}
@@ -267,7 +268,7 @@ func (s *groupService) getPartnerOrganization(ctx context.Context, group *userv3
 }
 
 func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
-	partnerId, organizationId, err := s.getPartnerOrganization(ctx, group)
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, s.db, group)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
@@ -286,29 +287,45 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 		PartnerId:      partnerId,
 		Type:           group.GetSpec().GetType(),
 	}
-	entity, err := pg.Create(ctx, s.db, &grp)
+
+	tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 	if err != nil {
+		return &userv3.Group{}, err
+	}
+
+	entity, err := pg.Create(ctx, tx, &grp)
+	if err != nil {
+		tx.Rollback() // TODO: check errors for rollback (and do what?)
 		return &userv3.Group{}, err
 	}
 
 	//update v3 spec
 	if grp, ok := entity.(*models.Group); ok {
 		// we can get previous group using the id, find users/roles from that and delete those
-		group, err = s.createGroupAccountRelations(ctx, grp.ID, group)
+		group, err = s.createGroupAccountRelations(ctx, tx, grp.ID, group)
 		if err != nil {
+			tx.Rollback()
 			return &userv3.Group{}, err
 		}
 
-		group, err = s.createGroupRoleRelations(ctx, group, parsedIds{Id: grp.ID, Partner: partnerId, Organization: organizationId})
+		group, err = s.createGroupRoleRelations(ctx, tx, group, parsedIds{Id: grp.ID, Partner: partnerId, Organization: organizationId})
 		if err != nil {
+			tx.Rollback()
 			return &userv3.Group{}, err
+		}
+
+		err = tx.Commit()
+		if err != nil {
+			tx.Rollback()
+			_log.Warn("unable to commit changes", err)
 		}
 		return group, nil
 	}
+	tx.Rollback()
 	return &userv3.Group{}, fmt.Errorf("unable to create group")
 }
 
-func (s *groupService) toV3Group(ctx context.Context, group *userv3.Group, grp *models.Group) (*userv3.Group, error) {
+func (s *groupService) toV3Group(ctx context.Context, db bun.IDB, group *userv3.Group, grp *models.Group) (*userv3.Group, error) {
 	labels := make(map[string]string)
 	labels["organization"] = group.GetMetadata().GetOrganization()
 	labels["partner"] = group.GetMetadata().GetPartner()
@@ -323,7 +340,7 @@ func (s *groupService) toV3Group(ctx context.Context, group *userv3.Group, grp *
 		Labels:       labels,
 		ModifiedAt:   timestamppb.New(grp.ModifiedAt),
 	}
-	users, err := dao.GetUsers(ctx, s.db, grp.ID)
+	users, err := dao.GetUsers(ctx, db, grp.ID)
 	if err != nil {
 		return &userv3.Group{}, err
 	}
@@ -332,7 +349,7 @@ func (s *groupService) toV3Group(ctx context.Context, group *userv3.Group, grp *
 		userNames = append(userNames, u.Traits["email"].(string))
 	}
 
-	roles, err := dao.GetGroupRoles(ctx, s.db, grp.ID)
+	roles, err := dao.GetGroupRoles(ctx, db, grp.ID)
 	if err != nil {
 		return &userv3.Group{}, err
 	}
@@ -356,7 +373,7 @@ func (s *groupService) GetByID(ctx context.Context, group *userv3.Group) (*userv
 	}
 
 	if grp, ok := entity.(*models.Group); ok {
-		return s.toV3Group(ctx, group, grp)
+		return s.toV3Group(ctx, s.db, group, grp)
 	}
 	return group, nil
 
@@ -364,7 +381,7 @@ func (s *groupService) GetByID(ctx context.Context, group *userv3.Group) (*userv
 
 func (s *groupService) GetByName(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
 	name := group.GetMetadata().GetName()
-	partnerId, organizationId, err := s.getPartnerOrganization(ctx, group)
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, s.db, group)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
@@ -374,7 +391,7 @@ func (s *groupService) GetByName(ctx context.Context, group *userv3.Group) (*use
 	}
 
 	if grp, ok := entity.(*models.Group); ok {
-		return s.toV3Group(ctx, group, grp)
+		return s.toV3Group(ctx, s.db, group, grp)
 	}
 	return group, nil
 
@@ -383,7 +400,7 @@ func (s *groupService) GetByName(ctx context.Context, group *userv3.Group) (*use
 func (s *groupService) Update(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
 	// TODO: inform when unchanged
 	name := group.GetMetadata().GetName()
-	partnerId, organizationId, err := s.getPartnerOrganization(ctx, group)
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, s.db, group)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
@@ -399,27 +416,43 @@ func (s *groupService) Update(ctx context.Context, group *userv3.Group) (*userv3
 		grp.Type = group.Spec.Type
 		grp.ModifiedAt = time.Now()
 
-		// update account/role links
-		group, err = s.deleteGroupAccountRelations(ctx, grp.ID, group)
-		if err != nil {
-			return &userv3.Group{}, err
-		}
-		group, err = s.createGroupAccountRelations(ctx, grp.ID, group)
-		if err != nil {
-			return &userv3.Group{}, err
-		}
-		group, err = s.deleteGroupRoleRelaitons(ctx, grp.ID, group)
-		if err != nil {
-			return &userv3.Group{}, err
-		}
-		group, err = s.createGroupRoleRelations(ctx, group, parsedIds{Id: grp.ID, Partner: partnerId, Organization: organizationId})
+		tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 		if err != nil {
 			return &userv3.Group{}, err
 		}
 
-		_, err = pg.Update(ctx, s.db, grp.ID, grp)
+		// update account/role links
+		group, err = s.deleteGroupAccountRelations(ctx, tx, grp.ID, group)
 		if err != nil {
+			tx.Rollback()
 			return &userv3.Group{}, err
+		}
+		group, err = s.createGroupAccountRelations(ctx, tx, grp.ID, group)
+		if err != nil {
+			tx.Rollback()
+			return &userv3.Group{}, err
+		}
+		group, err = s.deleteGroupRoleRelaitons(ctx, tx, grp.ID, group)
+		if err != nil {
+			tx.Rollback()
+			return &userv3.Group{}, err
+		}
+		group, err = s.createGroupRoleRelations(ctx, tx, group, parsedIds{Id: grp.ID, Partner: partnerId, Organization: organizationId})
+		if err != nil {
+			tx.Rollback()
+			return &userv3.Group{}, err
+		}
+
+		_, err = pg.Update(ctx, tx, grp.ID, grp)
+		if err != nil {
+			tx.Rollback()
+			return &userv3.Group{}, err
+		}
+
+		err = tx.Commit()
+		if err != nil {
+			tx.Rollback()
+			_log.Warn("unable to commit changes", err)
 		}
 
 		// update spec and status
@@ -435,7 +468,7 @@ func (s *groupService) Update(ctx context.Context, group *userv3.Group) (*userv3
 
 func (s *groupService) Delete(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
 	name := group.GetMetadata().GetName()
-	partnerId, organizationId, err := s.getPartnerOrganization(ctx, group)
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, s.db, group)
 	if err != nil {
 		return &userv3.Group{}, fmt.Errorf("unable to get partner and org id")
 	}
@@ -444,21 +477,37 @@ func (s *groupService) Delete(ctx context.Context, group *userv3.Group) (*userv3
 		return &userv3.Group{}, err
 	}
 	if grp, ok := entity.(*models.Group); ok {
-		group, err = s.deleteGroupRoleRelaitons(ctx, grp.ID, group)
+
+		tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 		if err != nil {
 			return &userv3.Group{}, err
 		}
-		group, err = s.deleteGroupAccountRelations(ctx, grp.ID, group)
+
+		group, err = s.deleteGroupRoleRelaitons(ctx, s.db, grp.ID, group)
 		if err != nil {
+			tx.Rollback()
+			return &userv3.Group{}, err
+		}
+		group, err = s.deleteGroupAccountRelations(ctx, s.db, grp.ID, group)
+		if err != nil {
+			tx.Rollback()
 			return &userv3.Group{}, err
 		}
 		err = pg.Delete(ctx, s.db, grp.ID, grp)
 		if err != nil {
+			tx.Rollback()
 			return &userv3.Group{}, err
 		}
+
+		err = tx.Commit()
+		if err != nil {
+			tx.Rollback()
+			_log.Warn("unable to commit changes", err)
+		}
+		return group, nil
 	}
 
-	return group, nil
+	return &userv3.Group{}, fmt.Errorf("unable to delete group")
 }
 
 func (s *groupService) List(ctx context.Context, group *userv3.Group) (*userv3.GroupList, error) {
@@ -487,7 +536,7 @@ func (s *groupService) List(ctx context.Context, group *userv3.Group) (*userv3.G
 		if grps, ok := entities.(*[]models.Group); ok {
 			for _, grp := range *grps {
 				entry := &userv3.Group{Metadata: group.GetMetadata()}
-				entry, err = s.toV3Group(ctx, entry, &grp)
+				entry, err = s.toV3Group(ctx, s.db, entry, &grp)
 				if err != nil {
 					return groupList, err
 				}

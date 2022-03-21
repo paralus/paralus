@@ -94,8 +94,11 @@ func TestCreateGroupNoUsersNoRoles(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
 	mock.ExpectQuery(`SELECT "group"."id" FROM "authsrv_group" AS "group" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'group-` + guuid + `'.`).
 		WillReturnError(fmt.Errorf("no data available"))
+
+	mock.ExpectBegin()
 	mock.ExpectQuery(`INSERT INTO "authsrv_group"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(guuid))
+	mock.ExpectCommit()
 
 	group := &userv3.Group{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "group-" + guuid},
@@ -133,9 +136,12 @@ func TestCreateGroupDuplicate(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
+
+	mock.ExpectBegin()
 	// TODO: more precise checks
 	mock.ExpectQuery(`INSERT INTO "authsrv_group"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(guuid))
+	mock.ExpectCommit()
 	_, err := gs.Create(context.Background(), group)
 	if err == nil {
 		t.Fatal("should not be able to recreate group with same name")
@@ -171,6 +177,8 @@ func TestCreateGroupWithUsersNoRoles(t *testing.T) {
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
 			mock.ExpectQuery(`SELECT "group"."id" FROM "authsrv_group" AS "group" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'group-` + guuid + `'.`).
 				WillReturnError(fmt.Errorf("no data available"))
+
+			mock.ExpectBegin()
 			mock.ExpectQuery(`INSERT INTO "authsrv_group"`).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(guuid))
 			for _, u := range tc.users {
@@ -179,6 +187,7 @@ func TestCreateGroupWithUsersNoRoles(t *testing.T) {
 			}
 			mock.ExpectQuery(`INSERT INTO "authsrv_groupaccount"`).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
+			mock.ExpectCommit()
 
 			group := &userv3.Group{
 				Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "group-" + guuid},
@@ -236,6 +245,8 @@ func TestCreateGroupNoUsersWithRoles(t *testing.T) {
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
 			mock.ExpectQuery(`SELECT "group"."id" FROM "authsrv_group" AS "group" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'group-` + guuid + `'.`).
 				WillReturnError(fmt.Errorf("no data available"))
+
+			mock.ExpectBegin()
 			mock.ExpectQuery(`INSERT INTO "authsrv_group"`).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(guuid))
 			mock.ExpectQuery(`SELECT "resourcerole"."id" FROM "authsrv_resourcerole" AS "resourcerole"`).
@@ -246,6 +257,7 @@ func TestCreateGroupNoUsersWithRoles(t *testing.T) {
 			}
 			mock.ExpectQuery(fmt.Sprintf(`INSERT INTO "%v"`, tc.dbname)).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
+			mock.ExpectCommit()
 
 			group := &userv3.Group{
 				Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "group-" + guuid},
@@ -311,6 +323,7 @@ func TestCreateGroupWithUsersWithRoles(t *testing.T) {
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
 			mock.ExpectQuery(`SELECT "group"."id" FROM "authsrv_group" AS "group" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'group-` + guuid + `'.`).WithArgs()
 
+			mock.ExpectBegin()
 			// TODO: more precise checks
 			mock.ExpectQuery(`INSERT INTO "authsrv_group"`).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(guuid))
@@ -329,6 +342,7 @@ func TestCreateGroupWithUsersWithRoles(t *testing.T) {
 			}
 			mock.ExpectQuery(fmt.Sprintf(`INSERT INTO "%v"`, tc.dbname)).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
+			mock.ExpectCommit()
 
 			group := &userv3.Group{
 				Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "group-" + guuid},
@@ -393,7 +407,7 @@ func TestUpdateGroupWithUsersWithRoles(t *testing.T) {
 			mock.ExpectQuery(`SELECT "group"."id", "group"."name",.* FROM "authsrv_group" AS "group" WHERE .*name = 'group-` + guuid + `'`).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(guuid, "group-"+guuid))
 
-			// TODO: more precise checks
+			mock.ExpectBegin()
 			mock.ExpectExec(`UPDATE "authsrv_groupaccount" AS "groupaccount" SET trash = TRUE WHERE ."group_id" = '` + guuid).
 				WillReturnResult(sqlmock.NewResult(1, 1))
 			for _, u := range tc.users {
@@ -418,6 +432,7 @@ func TestUpdateGroupWithUsersWithRoles(t *testing.T) {
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
 			mock.ExpectExec(`UPDATE "authsrv_group"`).
 				WillReturnResult(sqlmock.NewResult(1, 1))
+			mock.ExpectCommit()
 
 			group := &userv3.Group{
 				Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "group-" + guuid},
@@ -463,6 +478,7 @@ func TestGroupDelete(t *testing.T) {
 	mock.ExpectQuery(`SELECT "group"."id", "group"."name", .* FROM "authsrv_group" AS "group" WHERE`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(guuid, "group-"+guuid))
 
+	mock.ExpectBegin()
 	mock.ExpectExec(`UPDATE "authsrv_grouprole" AS "grouprole" SET trash = TRUE WHERE ."group_id" = '` + guuid).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec(`UPDATE "authsrv_projectgrouprole" AS "projectgrouprole" SET trash = TRUE WHERE ."group_id" = '` + guuid).
@@ -473,6 +489,7 @@ func TestGroupDelete(t *testing.T) {
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec(`UPDATE "authsrv_group" AS "group" SET trash = TRUE WHERE .id = '` + guuid).
 		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectCommit()
 
 	group := &userv3.Group{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "group-" + guuid},

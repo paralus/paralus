@@ -204,8 +204,7 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 		return &systemv3.Project{}, err
 	}
 	if proj, ok := entity.(*models.Project); ok {
-		proj.Trash = true
-		_, err := pg.Update(ctx, s.db, proj.ID, proj)
+		err := pg.Delete(ctx, s.db, proj.ID, proj)
 		if err != nil {
 			return &systemv3.Project{}, err
 		}

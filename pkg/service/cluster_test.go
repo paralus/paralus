@@ -47,10 +47,9 @@ func TestCreateCluster(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(cuuid))
 	mock.ExpectExec(`UPDATE "cluster_clusters"`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectCommit()
-
 	mock.ExpectExec(`INSERT INTO "cluster_project_cluster"`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectCommit()
 
 	cluster := &infrav3.Cluster{
 		Metadata: &v3.Metadata{Id: cuuid, Name: "cluster-" + cuuid, Organization: "orgname", Project: "project-" + puuid},
