@@ -27,14 +27,14 @@ type AuthzService interface {
 }
 
 type authzService struct {
-	dao          pg.EntityDAO
+	db           *bun.DB
 	enforcer     *casbin.CachedEnforcer
 	mappingCache map[string][]rpmUrlAction
 }
 
 func NewAuthzService(db *bun.DB, en *casbin.CachedEnforcer) AuthzService {
 	return &authzService{
-		dao:          pg.NewEntityDAO(db),
+		db:           db,
 		enforcer:     en,
 		mappingCache: make(map[string][]rpmUrlAction),
 	}
@@ -91,7 +91,7 @@ func processRpms(rpm models.ResourcePermission) []rpmUrlAction {
 
 func (s *authzService) cacheResourceRolePermissions(ctx context.Context) error {
 	var items []models.ResourcePermission
-	entities, err := s.dao.ListAll(ctx, &items)
+	entities, err := pg.ListAll(ctx, s.db, &items)
 	if err != nil {
 		return err
 	}

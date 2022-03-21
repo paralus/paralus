@@ -27,16 +27,15 @@ func NewElasticSearchQuery(url string, indexPattern string, logPrefix string) (*
 		_log.Errorw("NewElasticSearchQuery: Not able to get New Elastic Search Client")
 		return nil, err
 	}
-	res, err := esClient.Info()
-	if err != nil {
-		_log.Errorw("NewElasticSearchQuery: Error in getting ES client Info")
-		return nil, err
-	}
-	pattern := indexPattern
-	_log.Infow(logPrefix+":Connected to elastic search ", "cluster", res, "index", pattern)
+	// res, err := esClient.Info()
+	// if err != nil {
+	// 	_log.Errorw("NewElasticSearchQuery: Error in getting ES client Info")
+	// 	return nil, err
+	// }
+	// _log.Infow(logPrefix+":Connected to elastic search ", "cluster", res, "index", indexPattern)
 	esQuery := &ElasticSearchQuery{
 		url:          url,
-		indexPattern: pattern,
+		indexPattern: indexPattern,
 		logPrefix:    logPrefix,
 		esClient:     esClient,
 	}
