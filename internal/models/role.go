@@ -18,6 +18,6 @@ type Role struct {
 	Trash          bool      `bun:"trash,notnull,default:false"`
 	OrganizationId uuid.UUID `bun:"organization_id,type:uuid"`
 	PartnerId      uuid.UUID `bun:"partner_id,type:uuid"`
-	IsGlobal       bool      `bun:"is_global,notnull,default:true"`  // does not matter
+	IsGlobal       bool      `bun:"is_global,notnull,default:true"` // does not matter
 	Scope          string    `bun:"scope,notnull"`
 }

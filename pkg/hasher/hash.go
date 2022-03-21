@@ -121,7 +121,7 @@ func Add(o metav1.Object) error {
 func GetNodeHashFrom(labels map[string]string, taints []v1.Taint, unscheduleable bool) (string, error) {
 	//add sorted labels
 	labelsKeys := make([]string, 0)
-	for k, _ := range labels {
+	for k := range labels {
 		labelsKeys = append(labelsKeys, k)
 	}
 	sort.Strings(labelsKeys)

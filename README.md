@@ -116,3 +116,24 @@ migrate -path ./persistence/migrations/admindb -database "$POSTGRESQL_URL" up
 ```
 
 See [cli-usage](https://github.com/golang-migrate/migrate#cli-usage) for more info.
+
+## Development setup
+
+Copy `env.example` to `.env`:
+
+```
+cp env.example .env
+```
+
+Run following Docker Compose command to setup all requirements like
+Postgres db, Kratos etc. for the rcloud-base:
+
+```
+docker-compose up -d
+```
+
+Start rcloud-base server:
+
+```
+go run github.com/RafaySystems/rcloud-base
+```
