@@ -82,7 +82,7 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 	var ps []*authzv1.Policy
 	for _, pnr := range projectNamespaceRoles {
 		role := pnr.GetRole()
-		entity, err := pg.GetByName(ctx, db, role, &models.Role{})
+		entity, err := dao.GetByName(ctx, db, role, &models.Role{})
 		if err != nil {
 			return &userv3.Group{}, fmt.Errorf("unable to find role '%v'", role)
 		}
@@ -145,7 +145,7 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 			if project == "" {
 				return &userv3.Group{}, fmt.Errorf("no project name provided for role '%v'", roleName)
 			}
-			projectId, err := pg.GetProjectId(ctx, s.db, project)
+			projectId, err := dao.GetProjectId(ctx, s.db, project)
 			if err != nil {
 				return &userv3.Group{}, fmt.Errorf("unable to find project '%v'", project)
 			}

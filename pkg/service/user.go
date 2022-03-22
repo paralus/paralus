@@ -179,7 +179,7 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 			if project == "" {
 				return &userv3.User{}, fmt.Errorf("no project name provided for role '%v'", roleName)
 			}
-			projectId, err := pg.GetProjectId(ctx, db, project)
+			projectId, err := dao.GetProjectId(ctx, db, project)
 			if err != nil {
 				return user, fmt.Errorf("unable to find project '%v'", project)
 			}
