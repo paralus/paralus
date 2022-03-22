@@ -99,14 +99,16 @@ func TestCreateUserWithRole(t *testing.T) {
 		name       string
 		roles      []*userv3.ProjectNamespaceRole
 		dbname     string
+		scope      string
 		shouldfail bool
 	}{
-		{"just role", []*userv3.ProjectNamespaceRole{{Role: rname}}, "authsrv_accountresourcerole", false},
-		{"just project", []*userv3.ProjectNamespaceRole{{Project: &prname}}, "authsrv_accountrole", true},                                   // no role creation without role
-		{"just namespace", []*userv3.ProjectNamespaceRole{{Namespace: &namespaceid}}, "authsrv_accountrole", true},                          // no role creation without role,
-		{"project and namespace", []*userv3.ProjectNamespaceRole{{Project: &prname, Namespace: &namespaceid}}, "authsrv_accountrole", true}, // no role creation without role,
-		{"project and role", []*userv3.ProjectNamespaceRole{{Project: &prname, Role: rname}}, "authsrv_projectaccountresourcerole", false},
-		{"project role namespace", []*userv3.ProjectNamespaceRole{{Project: &prname, Namespace: &namespaceid, Role: rname}}, "authsrv_projectaccountnamespacerole", false},
+		{"just role", []*userv3.ProjectNamespaceRole{{Role: rname}}, "authsrv_accountresourcerole", "system", false},
+		{"just role org scope", []*userv3.ProjectNamespaceRole{{Role: rname}}, "authsrv_accountresourcerole", "organization", false},
+		{"just project", []*userv3.ProjectNamespaceRole{{Project: &prname}}, "authsrv_accountrole", "system", true},                                   // no role creation without role
+		{"just namespace", []*userv3.ProjectNamespaceRole{{Namespace: &namespaceid}}, "authsrv_accountrole", "system", true},                          // no role creation without role,
+		{"project and namespace", []*userv3.ProjectNamespaceRole{{Project: &prname, Namespace: &namespaceid}}, "authsrv_accountrole", "system", true}, // no role creation without role,
+		{"project and role", []*userv3.ProjectNamespaceRole{{Project: &prname, Role: rname}}, "authsrv_projectaccountresourcerole", "project", false},
+		{"project role namespace", []*userv3.ProjectNamespaceRole{{Project: &prname, Namespace: &namespaceid, Role: rname}}, "authsrv_projectaccountresourcerole", "project", false},
 	}
 
 	for _, tc := range tt {
@@ -129,8 +131,8 @@ func TestCreateUserWithRole(t *testing.T) {
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
 
 			mock.ExpectBegin()
-			mock.ExpectQuery(`SELECT "resourcerole"."id" FROM "authsrv_resourcerole" AS "resourcerole"`).
-				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(pruuid))
+			mock.ExpectQuery(`SELECT "resourcerole"."id".* FROM "authsrv_resourcerole" AS "resourcerole"`).
+				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name", "scope"}).AddRow(pruuid, "role-name", tc.scope))
 			if tc.roles[0].Project != nil {
 				mock.ExpectQuery(`SELECT "project"."id" FROM "authsrv_project" AS "project"`).
 					WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(pruuid))
@@ -198,11 +200,11 @@ func TestUpdateUser(t *testing.T) {
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec(`UPDATE "authsrv_projectaccountnamespacerole" AS "projectaccountnamespacerole" SET trash = TRUE WHERE`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectQuery(`SELECT "resourcerole"."id" FROM "authsrv_resourcerole" AS "resourcerole"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(pruuid))
+	mock.ExpectQuery(`SELECT "resourcerole"."id".* FROM "authsrv_resourcerole" AS "resourcerole"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name", "scope"}).AddRow(pruuid, "role-name", "project"))
 	mock.ExpectQuery(`SELECT "project"."id" FROM "authsrv_project" AS "project"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(pruuid))
-	mock.ExpectQuery(`INSERT INTO "authsrv_projectaccountnamespacerole"`).
+	mock.ExpectQuery(`INSERT INTO "authsrv_projectaccountresourcerole"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
 	mock.ExpectCommit()
 
