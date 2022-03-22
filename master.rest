@@ -1,7 +1,8 @@
 :host = http://localhost:11000
-:partner = important-partner
-:org = hello
-:project = hello
+:token = qJeyfD9IthujxqhbaEWOCkX8S3cjwvjk
+:partner = partner0
+:org = org0
+:project = project-uno
 :description = this is my first project
 :opts.urlScope_user = user/b2e4162c-60df-4fd7-b8fd-8fd3e4d6e533
 :opts.urlScope_org = organization/0d95d65f-3ce9-4340-ac05-77f71084d0a6
@@ -24,6 +25,7 @@ opts.urlScope_cluster = cluster/eff85770-1a9e-42bc-824b-d0ff5a0f792c
 # Create Project
 POST :host/auth/v3/partner/:partner/organization/:organization/project
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   partner: :partner
@@ -35,14 +37,17 @@ spec:
 # Get all projects
 GET :host/auth/v3/partner/:partner/organization/:organization/projects
 Content-Type: application/yaml
+X-Session-Token: :token
 
 # Get single project
 GET :host/auth/v3/partner/:partner/organization/:organization/project/:project
 Content-Type: application/yaml
+X-Session-Token: :token
 
 # Update project info
 PUT :host/auth/v3/partner/:partner/organization/:organization/project/:project
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   partner: :partner
@@ -61,6 +66,7 @@ DELETE :host/auth/v3/partner/:partner/organization/:organization/project/:projec
 # Publish kubeconfig setting
 PUT :host/v2/sentry/kubeconfig/:opts.urlScope_user/setting
 Content-Type: application/yaml
+X-Session-Token: :token
 
 opts:
   organization: :orgid
@@ -78,6 +84,7 @@ GET :host/v2/sentry/kubeconfig/:opts.urlScope_user/setting
 # Publish kubeconfig setting
 PUT :host/v2/sentry/kubeconfig/:opts.urlScope_org/setting
 Content-Type: application/yaml
+X-Session-Token: :token
 
 opts:
   organization: :orgid
@@ -103,6 +110,7 @@ GET :host/v2/sentry/kubeconfig/user?opts.selector=&opts.account=c6974c2e-ef14-41
 # Revoke kubeconfig for user
 POST :host/v2/sentry/kubeconfig/revoke
 Content-Type: application/yaml
+X-Session-Token: :token
 
 opts:
   organization: cc02bd83-89d8-4c76-a7dc-06854f93e21d
@@ -111,10 +119,12 @@ opts:
 
 # Kubeconfig get cluster settings
 GET :host/v2/sentry/kubectl/:opts.urlScope_cluster/settings?opts.organization=cc02bd83-89d8-4c76-a7dc-06854f93e21d
+X-Session-Token: :token
 
 # Publish kubectl settings
 PUT :host/v2/sentry/kubectl/:opts.urlScope_cluster/settings
 Content-Type: application/yaml
+X-Session-Token: :token
 
 opts:
   organization: cc02bd83-89d8-4c76-a7dc-06854f93e21d
@@ -129,6 +139,7 @@ GET :host/v2/sentry/authorization/user?userCN=a=b2e4162c-60df-4fd7-b8fd-8fd3e4d6
 # Create Location
 POST :host/v3/partner/:partner/location
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   name: :location
@@ -143,14 +154,17 @@ spec:
 # Get all location
 GET :host/v3/partner/:partner/location
 Content-Type: application/yaml
+X-Session-Token: :token
 
 # Get single location
 GET :host/v3/partner/:partner/location/:location
 Content-Type: application/yaml
+X-Session-Token: :token
 
 # Update location info
 PUT :host/v3/partner/:partner/location/:location
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   name: :location
@@ -171,6 +185,7 @@ DELETE :host/v3/partner/:partner/location/:location
 # Create Cluster
 POST :host/infra/v3/project/:project/cluster
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   name: :cluster
@@ -190,14 +205,17 @@ spec:
 # Get all clusters
 GET :host/infra/v3/project/:project/cluster
 Content-Type: application/yaml
+X-Session-Token: :token
 
 # Get single cluster
 GET :host/infra/v3/project/:project/cluster/:cluster
 Content-Type: application/yaml
+X-Session-Token: :token
 
 # Update cluster info
 PUT :host/infra/v3/project/:project/cluster/:cluster
 Content-Type: application/yaml
+X-Session-Token: :token
 
 apiVersion: infra.k8smgmt.io/v3
 kind: Cluster
@@ -230,6 +248,7 @@ DELETE :host/infra/v3/project/:project/cluster/:cluster
 # Create user
 POST :host/auth/v3/users
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   partner: :partner
@@ -242,6 +261,7 @@ spec:
 # Create user with roles
 POST :host/auth/v3/users
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   partner: :partner
@@ -251,21 +271,14 @@ spec:
   firstName: John
   lastName: Doe
   projectNamespaceRoles:
-    - role: NAMESPACE_ADMIN
+    - role: :role
       namespace: :namespace
       project: :project
-
-# Get all users
-GET :host/auth/v3/users
-Content-Type: application/yaml
-
-# Get single user
-GET :host/auth/v3/user/:user
-Content-Type: application/yaml
 
 # Update user info
 PUT :host/auth/v3/user/:user
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   partner: :partner
@@ -275,10 +288,22 @@ spec:
   firstName: John
   lastName: Cena
   projectNamespaceRoles:
-    - role: ADMIN
+    - role: :role
+
+# Get all users
+GET :host/auth/v3/users
+Content-Type: application/yaml
+X-Session-Token: :token
+
+# Get single user
+GET :host/auth/v3/user/:user
+Content-Type: application/yaml
+X-Session-Token: :token
+
 
 # Delete single user
 DELETE :host/auth/v3/user/:user
+X-Session-Token: :token
 
 
 ## Groups
@@ -304,6 +329,7 @@ spec:
 # Create group no namespace and project
 POST :host/auth/v3/partner/:partner/organization/:org/groups
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   name: :group
@@ -320,6 +346,7 @@ spec:
 # Update group to no namespace
 PUT :host/auth/v3/partner/:partner/organization/:org/group/:group
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   name: :group
@@ -337,20 +364,24 @@ spec:
 # Get all groups
 GET :host/auth/v3/partner/:partner/organization/:org/groups
 Content-Type: application/yaml
+X-Session-Token: :token
 
 # Get a group
 GET :host/auth/v3/partner/:partner/organization/:org/group/:group
 Content-Type: application/yaml
+X-Session-Token: :token
 
 # Delete a group
 DELETE :host/auth/v3/partner/:partner/organization/:org/group/:group
 Content-Type: application/yaml
+X-Session-Token: :token
 
 ## Roles
 
 # Create empty role
 POST :host/auth/v3/partner/:partner/organization/:org/roles
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   name: :role
@@ -364,6 +395,7 @@ spec:
 # Create role
 POST :host/auth/v3/partner/:partner/organization/:org/roles
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   name: :role
@@ -372,7 +404,7 @@ metadata:
   organization: :org
 spec:
   isGlobal: true
-  scope: cluster
+  scope: system
   rolepermissions:
     - account.read
     - ops_star.all
@@ -380,6 +412,7 @@ spec:
 # Update role
 PUT :host/auth/v3/partner/:partner/organization/:org/role/:role
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   name: :role
@@ -388,21 +421,24 @@ metadata:
   organization: :org
 spec:
   isGlobal: true
-  scope: cluster
+  scope: system
   rolepermissions:
-    - account.read
+    - ops_star.all
 
 # Get all roles
 GET :host/auth/v3/partner/:partner/organization/:org/roles
 Content-Type: application/yaml
+X-Session-Token: :token
 
 # Get a role
 GET :host/auth/v3/partner/:partner/organization/:org/role/:role
 Content-Type: application/yaml
+X-Session-Token: :token
 
 # Delete a role
 DELETE :host/auth/v3/partner/:partner/organization/:org/role/:role
 Content-Type: application/yaml
+X-Session-Token: :token
 
 
 ## Rolepermission
@@ -410,6 +446,7 @@ Content-Type: application/yaml
 # Get all rolepermissions
 GET :host/auth/v3/rolepermissions
 Content-Type: application/yaml
+X-Session-Token: :token
 
 ## Audit
 
@@ -421,6 +458,7 @@ GET :host/event/v1/auditlog?filter.timefrom=now-1h
 # Create partner
 POST :host/auth/v3/partner
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   name: :partner
@@ -428,23 +466,39 @@ metadata:
 spec:
   host: "https://important.org"
 
-# List organizations
-GET :host/auth/v3/partner/:partner/organizations
+# Get partner
+GET :host/auth/v3/partner/:partner
+Content-Type: application/yaml
+X-Session-Token: :token
+
+## Organization
 
 # Create organization
 POST :host/auth/v3/partner/:partner/organization
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   partner: :partner
   name: :org
-  description: "Very first organization"
+  description: "Very first organizataion"
 spec:
   active: true
+
+# List organizations
+GET :host/auth/v3/partner/:partner/organizations
+Content-Type: application/yaml
+X-Session-Token: :token
+
+# Get organization
+GET :host/auth/v3/partner/:partner/organization/:org
+Content-Type: application/yaml
+X-Session-Token: :token
 
 # Create project
 POST :host/auth/v3/partner/:partner/organization/:org/project
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   name: :project
@@ -452,6 +506,11 @@ metadata:
 spec:
   active: true
 
+# Get project
+GET :host/auth/v3/partner/:partner/organization/:org/project/:project
+Content-Type: application/yaml
+X-Session-Token: :token
+
 # Delete project
 DELETE :host/auth/v3/partner/:partner/organization/:org/project/:project
-
+X-Session-Token: :token
