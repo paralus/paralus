@@ -5,21 +5,21 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/RafaySystems/rcloud-base/pkg/service"
+	"github.com/RafayLabs/rcloud-base/pkg/service"
 
-	"github.com/RafaySystems/rcloud-base/pkg/gateway"
-	"github.com/RafaySystems/rcloud-base/pkg/log"
-	"github.com/RafaySystems/rcloud-base/pkg/query"
-	sentryrpc "github.com/RafaySystems/rcloud-base/proto/rpc/sentry"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	infrav3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
-	"github.com/RafaySystems/rcloud-base/proto/types/sentry"
+	"github.com/RafayLabs/rcloud-base/pkg/gateway"
+	"github.com/RafayLabs/rcloud-base/pkg/log"
+	"github.com/RafayLabs/rcloud-base/pkg/query"
+	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
+	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"github.com/RafaySystems/rcloud-base/pkg/sentry/cryptoutil"
-	"github.com/RafaySystems/rcloud-base/pkg/sentry/util"
+	"github.com/RafayLabs/rcloud-base/pkg/sentry/cryptoutil"
+	"github.com/RafayLabs/rcloud-base/pkg/sentry/util"
 )
 
 var _log = log.GetLogger()

@@ -14,10 +14,10 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	systemv3 "github.com/RafaySystems/rcloud-base/proto/types/systempb/v3"
+	"github.com/RafayLabs/rcloud-base/internal/dao"
+	"github.com/RafayLabs/rcloud-base/internal/models"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"google.golang.org/grpc/codes"
@@ -104,11 +104,11 @@ func generateSpCert(host string) (string, string, error) {
 func (s *idpService) getPartnerOrganization(ctx context.Context, provider *systemv3.Idp) (uuid.UUID, uuid.UUID, error) {
 	partner := provider.GetMetadata().GetPartner()
 	org := provider.GetMetadata().GetOrganization()
-	partnerId, err := pg.GetPartnerId(ctx, s.db, partner)
+	partnerId, err := dao.GetPartnerId(ctx, s.db, partner)
 	if err != nil {
 		return uuid.Nil, uuid.Nil, err
 	}
-	organizationId, err := pg.GetOrganizationId(ctx, s.db, org)
+	organizationId, err := dao.GetOrganizationId(ctx, s.db, org)
 	if err != nil {
 		return partnerId, uuid.Nil, err
 	}
@@ -131,7 +131,7 @@ func (s *idpService) Create(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
-	i, _ := pg.GetIdByNamePartnerOrg(
+	i, _ := dao.GetIdByNamePartnerOrg(
 		ctx,
 		s.db,
 		idp.GetMetadata().GetName(),
@@ -144,7 +144,7 @@ func (s *idpService) Create(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 	}
 
 	e := &models.Idp{}
-	pg.GetX(ctx, s.db, "domain", domain, e)
+	dao.GetX(ctx, s.db, "domain", domain, e)
 	if e.Domain == domain {
 		return &systemv3.Idp{}, fmt.Errorf("DUPLICATE DOMAIN")
 	}
@@ -176,7 +176,7 @@ func (s *idpService) Create(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 		entity.SpCert = spcert
 		entity.SpKey = spkey
 	}
-	_, err = pg.Create(ctx, s.db, entity)
+	_, err = dao.Create(ctx, s.db, entity)
 	if err != nil {
 		return &systemv3.Idp{}, err
 	}
@@ -215,7 +215,7 @@ func (s *idpService) GetByID(ctx context.Context, idp *systemv3.Idp) (*systemv3.
 	}
 	entity := &models.Idp{}
 	// TODO: Check for existence of id before GetByID
-	_, err = pg.GetByID(ctx, s.db, id, entity)
+	_, err = dao.GetByID(ctx, s.db, id, entity)
 	if err != nil {
 		return &systemv3.Idp{}, err
 	}
@@ -256,7 +256,7 @@ func (s *idpService) GetByName(ctx context.Context, idp *systemv3.Idp) (*systemv
 		return &systemv3.Idp{}, status.Error(codes.InvalidArgument, "EMPTY NAME")
 	}
 	entity := &models.Idp{}
-	_, err := pg.GetByName(ctx, s.db, name, entity)
+	_, err := dao.GetByName(ctx, s.db, name, entity)
 	if err != nil {
 		return &systemv3.Idp{}, err
 	}
@@ -302,14 +302,14 @@ func (s *idpService) Update(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 		return &systemv3.Idp{}, status.Error(codes.InvalidArgument, "EMPTY DOMAIN")
 	}
 
-	_, err := pg.GetByName(ctx, s.db, name, existingIdp)
+	_, err := dao.GetByName(ctx, s.db, name, existingIdp)
 	if err != nil {
 		// TODO: Handle both db and idp not exist errors
 		// separately.
 		return &systemv3.Idp{}, status.Errorf(codes.InvalidArgument, "IDP %q NOT EXIST", name)
 	}
 
-	pg.GetX(ctx, s.db, "domain", domain, existingIdp)
+	dao.GetX(ctx, s.db, "domain", domain, existingIdp)
 	if existingIdp.Domain == domain {
 		return &systemv3.Idp{}, status.Error(codes.InvalidArgument, "DUPLICATE DOMAIN")
 	}
@@ -352,7 +352,7 @@ func (s *idpService) Update(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 		entity.SpKey = spkey
 	}
 
-	_, err = pg.Update(ctx, s.db, existingIdp.Id, entity)
+	_, err = dao.Update(ctx, s.db, existingIdp.Id, entity)
 	if err != nil {
 		return &systemv3.Idp{}, err
 	}
@@ -390,7 +390,7 @@ func (s *idpService) List(ctx context.Context) (*systemv3.IdpList, error) {
 		orgID    uuid.NullUUID
 		parID    uuid.NullUUID
 	)
-	_, err := pg.List(ctx, s.db, parID, orgID, &entities)
+	_, err := dao.List(ctx, s.db, parID, orgID, &entities)
 	if err != nil {
 		return &systemv3.IdpList{}, err
 	}
@@ -443,12 +443,12 @@ func (s *idpService) Delete(ctx context.Context, idp *systemv3.Idp) error {
 		return status.Error(codes.InvalidArgument, "EMPTY NAME")
 	}
 
-	_, err := pg.GetByName(ctx, s.db, name, entity)
+	_, err := dao.GetByName(ctx, s.db, name, entity)
 	if err != nil {
 		return status.Errorf(codes.InvalidArgument, "IDP %q NOT EXISTS", name)
 	}
 
-	err = pg.Delete(ctx, s.db, entity.Id, &models.Idp{})
+	err = dao.Delete(ctx, s.db, entity.Id, &models.Idp{})
 	if err != nil {
 		return err
 	}

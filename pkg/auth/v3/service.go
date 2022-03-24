@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strings"
 
-	rpcv3 "github.com/RafaySystems/rcloud-base/proto/rpc/user"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
+	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	"github.com/spacemonkeygo/httpsig"
 )
 

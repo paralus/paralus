@@ -3,9 +3,9 @@ package dao
 import (
 	"context"
 
-	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
-	"github.com/RafaySystems/rcloud-base/pkg/log"
+	"github.com/RafayLabs/rcloud-base/internal/dao"
+	"github.com/RafayLabs/rcloud-base/internal/models"
+	"github.com/RafayLabs/rcloud-base/pkg/log"
 	"github.com/uptrace/bun"
 )
 
@@ -16,14 +16,14 @@ func CreateOperatorBootstrap(ctx context.Context, db bun.Tx, bootstrap *models.C
 
 	var bstrap *models.ClusterOperatorBootstrap
 
-	entity, err := pg.GetX(ctx, db, "edge_id", bootstrap.ClusterId, &bstrap)
+	entity, err := dao.GetX(ctx, db, "edge_id", bootstrap.ClusterId, &bstrap)
 	if err != nil {
 		_log.Infow("CreateOperatorBootstrap: No existing bootstrap data detected", "edge", bootstrap.ClusterId)
 	} else {
 		_log.Infow("CreateOperatorBootstrap: Removing existing bootstrap data", "edge", bootstrap.ClusterId)
 
 		bstrap = entity.(*models.ClusterOperatorBootstrap)
-		err = pg.DeleteX(ctx, db, "edge_id", bstrap.ClusterId, bstrap)
+		err = dao.DeleteX(ctx, db, "edge_id", bstrap.ClusterId, bstrap)
 		if err != nil {
 			_log.Errorw("Error while deleting bootstrap data", "Error", err)
 			return err
@@ -45,7 +45,7 @@ func CreateOperatorBootstrap(ctx context.Context, db bun.Tx, bootstrap *models.C
 func GetOperatorBootstrap(ctx context.Context, db bun.IDB, clusterid string) (*models.ClusterOperatorBootstrap, error) {
 
 	var bootstrap models.ClusterOperatorBootstrap
-	entity, err := pg.GetX(ctx, db, "clusterid", clusterid, bootstrap)
+	entity, err := dao.GetX(ctx, db, "clusterid", clusterid, bootstrap)
 	if err != nil {
 		_log.Errorw("Error while fetching bootstrap data using tx ", "Error", err)
 		return nil, err

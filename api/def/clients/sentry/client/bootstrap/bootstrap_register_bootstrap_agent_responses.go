@@ -14,7 +14,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"github.com/RafaySystems/rcloud-base/api/def/clients/sentry/models"
+	"github.com/RafayLabs/rcloud-base/api/def/clients/sentry/models"
 )
 
 // BootstrapRegisterBootstrapAgentReader is a Reader for the BootstrapRegisterBootstrapAgent structure.

@@ -7,14 +7,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/internal/dao"
-	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
-	"github.com/RafaySystems/rcloud-base/pkg/converter"
-	"github.com/RafaySystems/rcloud-base/pkg/query"
-	"github.com/RafaySystems/rcloud-base/pkg/sentry/cryptoutil"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	"github.com/RafaySystems/rcloud-base/proto/types/sentry"
+	"github.com/RafayLabs/rcloud-base/internal/dao"
+	"github.com/RafayLabs/rcloud-base/internal/models"
+	"github.com/RafayLabs/rcloud-base/pkg/converter"
+	"github.com/RafayLabs/rcloud-base/pkg/query"
+	"github.com/RafayLabs/rcloud-base/pkg/sentry/cryptoutil"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -63,7 +62,7 @@ func (s *bootstrapService) PatchBootstrapInfra(ctx context.Context, infra *sentr
 func (s *bootstrapService) GetBootstrapInfra(ctx context.Context, name string) (*sentry.BootstrapInfra, error) {
 
 	var bi models.BootstrapInfra
-	_, err := pg.GetByName(ctx, s.db, name, &bi)
+	_, err := dao.GetByName(ctx, s.db, name, &bi)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +93,7 @@ func (s *bootstrapService) PatchBootstrapAgentTemplate(ctx context.Context, temp
 
 func (s *bootstrapService) GetBootstrapAgentTemplate(ctx context.Context, agentType string) (*sentry.BootstrapAgentTemplate, error) {
 	var template models.BootstrapAgentTemplate
-	_, err := pg.GetByName(ctx, s.db, agentType, &template)
+	_, err := dao.GetByName(ctx, s.db, agentType, &template)
 	if err != nil {
 		return nil, err
 	}

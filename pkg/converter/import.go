@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"strings"
 
-	runtimeutil "github.com/RafaySystems/rcloud-base/pkg/controller/runtime"
-	"github.com/RafaySystems/rcloud-base/pkg/hasher"
+	runtimeutil "github.com/RafayLabs/rcloud-base/pkg/controller/runtime"
+	"github.com/RafayLabs/rcloud-base/pkg/hasher"
 
-	"github.com/RafaySystems/rcloud-base/pkg/log"
-	controllerv2 "github.com/RafaySystems/rcloud-base/proto/types/controller"
+	"github.com/RafayLabs/rcloud-base/pkg/log"
+	controllerv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"

@@ -5,10 +5,10 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
-	"github.com/RafaySystems/rcloud-base/pkg/crypto"
-	rpcv3 "github.com/RafaySystems/rcloud-base/proto/rpc/user"
+	"github.com/RafayLabs/rcloud-base/internal/dao"
+	"github.com/RafayLabs/rcloud-base/internal/models"
+	"github.com/RafayLabs/rcloud-base/pkg/crypto"
+	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -49,7 +49,7 @@ func (s *apiKeyService) Create(ctx context.Context, req *rpcv3.ApiKeyRequest) (*
 		Secret:     crypto.GenerateSha256Secret(),
 	}
 
-	_, err := pg.Create(ctx, s.db, apikey)
+	_, err := dao.Create(ctx, s.db, apikey)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ func (s *apiKeyService) Delete(ctx context.Context, req *rpcv3.ApiKeyRequest) (*
 
 func (s *apiKeyService) List(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.ApiKeyResponseList, error) {
 	var apikeys []models.ApiKey
-	resp, err := pg.GetByName(ctx, s.db, req.Username, &apikeys)
+	resp, err := dao.GetByName(ctx, s.db, req.Username, &apikeys)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -90,7 +90,7 @@ func (s *apiKeyService) List(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rp
 
 func (s *apiKeyService) Get(ctx context.Context, req *rpcv3.ApiKeyRequest) (*models.ApiKey, error) {
 	var apikey models.ApiKey
-	_, err := pg.GetByName(ctx, s.db, req.Username, &apikey)
+	_, err := dao.GetByName(ctx, s.db, req.Username, &apikey)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -99,7 +99,7 @@ func (s *apiKeyService) Get(ctx context.Context, req *rpcv3.ApiKeyRequest) (*mod
 
 func (s *apiKeyService) GetByKey(ctx context.Context, req *rpcv3.ApiKeyRequest) (*models.ApiKey, error) {
 	var apikey models.ApiKey
-	_, err := pg.GetX(ctx, s.db, "key", req.Id, &apikey)
+	_, err := dao.GetX(ctx, s.db, "key", req.Id, &apikey)
 	if err != nil {
 		return nil, err
 	}

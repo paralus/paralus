@@ -3,7 +3,7 @@ package authv3
 import (
 	"context"
 
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 )
 
 type contextKey struct{}

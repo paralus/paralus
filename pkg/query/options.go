@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/internal/random"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
+	"github.com/RafayLabs/rcloud-base/internal/random"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	"github.com/uptrace/bun"
 )
 

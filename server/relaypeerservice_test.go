@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/pkg/grpc"
-	"github.com/RafaySystems/rcloud-base/pkg/sentry/peering"
-	relayrpc "github.com/RafaySystems/rcloud-base/proto/rpc/sentry"
+	"github.com/RafayLabs/rcloud-base/pkg/grpc"
+	"github.com/RafayLabs/rcloud-base/pkg/sentry/peering"
+	relayrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/credentials"
 )

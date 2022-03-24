@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/RafaySystems/rcloud-base/internal/cluster/constants"
+	"github.com/RafayLabs/rcloud-base/internal/cluster/constants"
 )
 
 func IsValidKubernetesLabelNameValueRegex(input string) bool {

@@ -7,7 +7,7 @@
 package rpcv3
 
 import (
-	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
+	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

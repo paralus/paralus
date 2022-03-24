@@ -1,7 +1,7 @@
 package server
 
 import (
-	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
+	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

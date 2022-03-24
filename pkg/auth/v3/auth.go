@@ -3,8 +3,8 @@ package authv3
 import (
 	"os"
 
-	logv2 "github.com/RafaySystems/rcloud-base/pkg/log"
-	"github.com/RafaySystems/rcloud-base/pkg/service"
+	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
+	"github.com/RafayLabs/rcloud-base/pkg/service"
 	kclient "github.com/ory/kratos-client-go"
 	"github.com/uptrace/bun"
 )

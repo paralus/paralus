@@ -11,7 +11,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/RafaySystems/rcloud-base/internal/models"
+	"github.com/RafayLabs/rcloud-base/internal/models"
 	"github.com/crewjam/saml"
 	"github.com/crewjam/saml/samlsp"
 )

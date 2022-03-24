@@ -7,12 +7,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/internal/dao"
-	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
-	authzv1 "github.com/RafaySystems/rcloud-base/proto/types/authz"
-	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	rolev3 "github.com/RafaySystems/rcloud-base/proto/types/rolepb/v3"
+	"github.com/RafayLabs/rcloud-base/internal/dao"
+	"github.com/RafayLabs/rcloud-base/internal/models"
+	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
+	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	rolev3 "github.com/RafayLabs/rcloud-base/proto/types/rolepb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -53,11 +52,11 @@ func NewRoleService(db *bun.DB, azc AuthzService) RoleService {
 func (s *roleService) getPartnerOrganization(ctx context.Context, db bun.IDB, role *rolev3.Role) (uuid.UUID, uuid.UUID, error) {
 	partner := role.GetMetadata().GetPartner()
 	org := role.GetMetadata().GetOrganization()
-	partnerId, err := pg.GetPartnerId(ctx, s.db, partner)
+	partnerId, err := dao.GetPartnerId(ctx, s.db, partner)
 	if err != nil {
 		return uuid.Nil, uuid.Nil, err
 	}
-	organizationId, err := pg.GetOrganizationId(ctx, s.db, org)
+	organizationId, err := dao.GetOrganizationId(ctx, s.db, org)
 	if err != nil {
 		return partnerId, uuid.Nil, err
 	}
@@ -66,7 +65,7 @@ func (s *roleService) getPartnerOrganization(ctx context.Context, db bun.IDB, ro
 }
 
 func (s *roleService) deleteRolePermissionMapping(ctx context.Context, db bun.IDB, rleId uuid.UUID, role *rolev3.Role) (*rolev3.Role, error) {
-	err := pg.DeleteX(ctx, s.db, "resource_role_id", rleId, &models.ResourceRolePermission{})
+	err := dao.DeleteX(ctx, s.db, "resource_role_id", rleId, &models.ResourceRolePermission{})
 	if err != nil {
 		return &rolev3.Role{}, err
 	}
@@ -88,7 +87,7 @@ func (s *roleService) createRolePermissionMapping(ctx context.Context, db bun.ID
 
 	var items []models.ResourceRolePermission
 	for _, p := range perms {
-		entity, err := pg.GetIdByName(ctx, s.db, p, &models.ResourcePermission{})
+		entity, err := dao.GetIdByName(ctx, s.db, p, &models.ResourcePermission{})
 		if err != nil {
 			return role, fmt.Errorf("unable to find role permission '%v'", p)
 		}
@@ -102,7 +101,7 @@ func (s *roleService) createRolePermissionMapping(ctx context.Context, db bun.ID
 		}
 	}
 	if len(items) > 0 {
-		_, err := pg.Create(ctx, s.db, &items)
+		_, err := dao.Create(ctx, s.db, &items)
 		if err != nil {
 			return role, err
 		}
@@ -126,7 +125,7 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
-	r, _ := pg.GetIdByNamePartnerOrg(ctx, s.db, role.GetMetadata().GetName(), uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Role{})
+	r, _ := dao.GetIdByNamePartnerOrg(ctx, s.db, role.GetMetadata().GetName(), uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Role{})
 	if r != nil {
 		return nil, fmt.Errorf("role '%v' already exists", role.GetMetadata().GetName())
 	}
@@ -157,7 +156,7 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		return &rolev3.Role{}, err
 	}
 
-	entity, err := pg.Create(ctx, tx, &rle)
+	entity, err := dao.Create(ctx, tx, &rle)
 	if err != nil {
 		tx.Rollback()
 		return &rolev3.Role{}, err
@@ -190,7 +189,7 @@ func (s *roleService) GetByID(ctx context.Context, role *rolev3.Role) (*rolev3.R
 	if err != nil {
 		return &rolev3.Role{}, err
 	}
-	entity, err := pg.GetByID(ctx, s.db, uid, &models.Role{})
+	entity, err := dao.GetByID(ctx, s.db, uid, &models.Role{})
 	if err != nil {
 		return &rolev3.Role{}, err
 	}
@@ -212,7 +211,7 @@ func (s *roleService) GetByName(ctx context.Context, role *rolev3.Role) (*rolev3
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
-	entity, err := pg.GetByNamePartnerOrg(ctx, s.db, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Role{})
+	entity, err := dao.GetByNamePartnerOrg(ctx, s.db, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Role{})
 	if err != nil {
 		return &rolev3.Role{}, err
 	}
@@ -236,7 +235,7 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 	}
 
 	name := role.GetMetadata().GetName()
-	entity, err := pg.GetByNamePartnerOrg(ctx, s.db, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Role{})
+	entity, err := dao.GetByNamePartnerOrg(ctx, s.db, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Role{})
 	if err != nil {
 		return role, fmt.Errorf("unable to find role '%v'", name)
 	}
@@ -254,7 +253,7 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 			return &rolev3.Role{}, err
 		}
 
-		_, err = pg.Update(ctx, tx, rle.ID, rle)
+		_, err = dao.Update(ctx, tx, rle.ID, rle)
 		if err != nil {
 			tx.Rollback()
 			return &rolev3.Role{}, err
@@ -296,7 +295,7 @@ func (s *roleService) Delete(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		return &rolev3.Role{}, fmt.Errorf("unable to get partner and org id; %v", err)
 	}
 
-	entity, err := pg.GetByNamePartnerOrg(ctx, s.db, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Role{})
+	entity, err := dao.GetByNamePartnerOrg(ctx, s.db, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Role{})
 	if err != nil {
 		return &rolev3.Role{}, err
 	}
@@ -314,7 +313,7 @@ func (s *roleService) Delete(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 			return &rolev3.Role{}, err
 		}
 
-		err = pg.Delete(ctx, s.db, rle.ID, rle)
+		err = dao.Delete(ctx, s.db, rle.ID, rle)
 		if err != nil {
 			tx.Rollback()
 			return &rolev3.Role{}, err
@@ -373,16 +372,16 @@ func (s *roleService) List(ctx context.Context, role *rolev3.Role) (*rolev3.Role
 		},
 	}
 	if len(role.Metadata.Organization) > 0 {
-		orgId, err := pg.GetOrganizationId(ctx, s.db, role.Metadata.Organization)
+		orgId, err := dao.GetOrganizationId(ctx, s.db, role.Metadata.Organization)
 		if err != nil {
 			return roleList, err
 		}
-		partId, err := pg.GetPartnerId(ctx, s.db, role.Metadata.Partner)
+		partId, err := dao.GetPartnerId(ctx, s.db, role.Metadata.Partner)
 		if err != nil {
 			return roleList, err
 		}
 		var rles []models.Role
-		entities, err := pg.List(ctx, s.db, uuid.NullUUID{UUID: partId, Valid: true}, uuid.NullUUID{UUID: orgId, Valid: true}, &rles)
+		entities, err := dao.List(ctx, s.db, uuid.NullUUID{UUID: partId, Valid: true}, uuid.NullUUID{UUID: orgId, Valid: true}, &rles)
 		if err != nil {
 			return roleList, err
 		}

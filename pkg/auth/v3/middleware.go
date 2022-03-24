@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"regexp"
 
-	commonpbv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
+	commonpbv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	"github.com/uptrace/bun"
 	"github.com/urfave/negroni"
 )

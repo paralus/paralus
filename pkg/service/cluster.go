@@ -11,22 +11,22 @@ import (
 	"sync"
 	"time"
 
-	clstrutil "github.com/RafaySystems/rcloud-base/internal/cluster"
-	"github.com/RafaySystems/rcloud-base/internal/cluster/constants"
-	"github.com/RafaySystems/rcloud-base/internal/cluster/dao"
-	"github.com/RafaySystems/rcloud-base/internal/cluster/util"
-	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
-	"github.com/RafaySystems/rcloud-base/pkg/common"
-	"github.com/RafaySystems/rcloud-base/pkg/event"
-	"github.com/RafaySystems/rcloud-base/pkg/log"
-	"github.com/RafaySystems/rcloud-base/pkg/patch"
-	"github.com/RafaySystems/rcloud-base/pkg/query"
-	sentryutil "github.com/RafaySystems/rcloud-base/pkg/sentry/util"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	infrav3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
-	"github.com/RafaySystems/rcloud-base/proto/types/scheduler"
-	"github.com/RafaySystems/rcloud-base/proto/types/sentry"
+	clstrutil "github.com/RafayLabs/rcloud-base/internal/cluster"
+	"github.com/RafayLabs/rcloud-base/internal/cluster/constants"
+	cdao "github.com/RafayLabs/rcloud-base/internal/cluster/dao"
+	"github.com/RafayLabs/rcloud-base/internal/cluster/util"
+	"github.com/RafayLabs/rcloud-base/internal/dao"
+	"github.com/RafayLabs/rcloud-base/internal/models"
+	"github.com/RafayLabs/rcloud-base/pkg/common"
+	"github.com/RafayLabs/rcloud-base/pkg/event"
+	"github.com/RafayLabs/rcloud-base/pkg/log"
+	"github.com/RafayLabs/rcloud-base/pkg/patch"
+	"github.com/RafayLabs/rcloud-base/pkg/query"
+	sentryutil "github.com/RafayLabs/rcloud-base/pkg/sentry/util"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
+	"github.com/RafayLabs/rcloud-base/proto/types/scheduler"
+	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/rs/xid"
@@ -112,7 +112,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 	}
 
 	var proj models.Project
-	_, err := pg.GetByName(ctx, es.db, cluster.Metadata.Project, &proj)
+	_, err := dao.GetByName(ctx, es.db, cluster.Metadata.Project, &proj)
 	if err != nil {
 		return &infrav3.Cluster{}, err
 	}
@@ -155,7 +155,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 		return cluster, fmt.Errorf(errormsg)
 	}
 
-	clusterPresent, err := pg.GetByNamePartnerOrg(ctx, es.db, cluster.Metadata.Name, uuid.NullUUID{UUID: proj.PartnerId, Valid: true},
+	clusterPresent, err := dao.GetByNamePartnerOrg(ctx, es.db, cluster.Metadata.Name, uuid.NullUUID{UUID: proj.PartnerId, Valid: true},
 		uuid.NullUUID{UUID: proj.OrganizationId, Valid: true}, &models.Cluster{})
 	if err != nil && err.Error() == "sql: no rows in result set" {
 		_log.Infof("Skipping as first time cluster create ")
@@ -166,7 +166,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 
 	metro := &models.Metro{}
 	if cluster.Spec.Metro != nil && cluster.Spec.Metro.Name != "" {
-		if mdb, err := pg.GetByNamePartnerOrg(ctx, es.db, cluster.Spec.Metro.Name, uuid.NullUUID{UUID: proj.PartnerId, Valid: true}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, metro); err != nil {
+		if mdb, err := dao.GetByNamePartnerOrg(ctx, es.db, cluster.Spec.Metro.Name, uuid.NullUUID{UUID: proj.PartnerId, Valid: true}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, metro); err != nil {
 			errormsg = "Invalid cluster location, provide a valid metro name"
 			cluster.Status = &commonv3.Status{
 				ConditionType:   "Create",
@@ -240,7 +240,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 		return &infrav3.Cluster{}, err
 	}
 
-	err = dao.CreateCluster(ctx, tx, edb)
+	err = cdao.CreateCluster(ctx, tx, edb)
 	if err != nil {
 		tx.Rollback()
 		return &infrav3.Cluster{}, err
@@ -254,7 +254,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 			ProjectID: edb.ProjectId,
 			ClusterID: edb.ID,
 		}
-		err = dao.CreateProjectCluster(ctx, tx, pc)
+		err = cdao.CreateProjectCluster(ctx, tx, pc)
 		if err != nil {
 			tx.Rollback()
 			return &infrav3.Cluster{}, err
@@ -278,7 +278,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 			YamlContent: operatorSpecEncoded,
 		}
 
-		err = dao.CreateOperatorBootstrap(ctx, tx, &bootstrapData)
+		err = cdao.CreateOperatorBootstrap(ctx, tx, &bootstrapData)
 		if err != nil {
 			tx.Rollback()
 			cluster.Status = &commonv3.Status{
@@ -323,14 +323,14 @@ func (s *clusterService) Select(ctx context.Context, cluster *infrav3.Cluster, i
 	if err != nil {
 		id = uuid.Nil
 	}
-	c, err := dao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: cluster.Metadata.Name})
+	c, err := cdao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: cluster.Metadata.Name})
 	if err != nil {
 		return &infrav3.Cluster{}, err
 	}
 
 	var projects []models.ProjectCluster
 	if isExtended {
-		projects, err = dao.GetProjectsForCluster(ctx, s.db, c.ID)
+		projects, err = cdao.GetProjectsForCluster(ctx, s.db, c.ID)
 		if err != nil {
 			return &infrav3.Cluster{}, err
 		}
@@ -338,7 +338,7 @@ func (s *clusterService) Select(ctx context.Context, cluster *infrav3.Cluster, i
 
 	var metro *models.Metro
 	if c.MetroId != uuid.Nil {
-		entity, err := pg.GetByID(ctx, s.db, c.MetroId, &models.Metro{})
+		entity, err := dao.GetByID(ctx, s.db, c.MetroId, &models.Metro{})
 		if err != nil {
 			_log.Errorf("failed to fetch metro details", err)
 		}
@@ -366,13 +366,13 @@ func (s *clusterService) Get(ctx context.Context, opts ...query.Option) (*infrav
 	if err != nil {
 		id = uuid.Nil
 	}
-	c, err := dao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: queryOptions.Name})
+	c, err := cdao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: queryOptions.Name})
 	if err != nil {
 		return &infrav3.Cluster{}, err
 	}
 	var projects []models.ProjectCluster
 	if queryOptions.Extended {
-		projects, err = dao.GetProjectsForCluster(ctx, s.db, c.ID)
+		projects, err = cdao.GetProjectsForCluster(ctx, s.db, c.ID)
 		if err != nil {
 			return &infrav3.Cluster{}, err
 		}
@@ -390,19 +390,19 @@ func (s *clusterService) Get(ctx context.Context, opts ...query.Option) (*infrav
 func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infrav3.Cluster, c *models.Cluster, metro *models.Metro, projects []models.ProjectCluster, isExtended bool) *infrav3.Cluster {
 
 	var part models.Partner
-	_, err := pg.GetNameById(ctx, s.db, c.PartnerId, &part)
+	_, err := dao.GetNameById(ctx, s.db, c.PartnerId, &part)
 	if err != nil {
 		_log.Infow("unable to fetch partner information, ", err.Error())
 	}
 
 	var org models.Organization
-	_, err = pg.GetNameById(ctx, s.db, c.OrganizationId, &org)
+	_, err = dao.GetNameById(ctx, s.db, c.OrganizationId, &org)
 	if err != nil {
 		_log.Infow("unable to fetch organization information, ", err.Error())
 	}
 
 	var proj models.Project
-	_, err = pg.GetNameById(ctx, s.db, c.ProjectId, &proj)
+	_, err = dao.GetNameById(ctx, s.db, c.ProjectId, &proj)
 	if err != nil {
 		_log.Infow("unable to fetch project information, ", err.Error())
 	}
@@ -484,7 +484,7 @@ func (cs *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) 
 		return cluster, fmt.Errorf("invalid cluster data, name is missing")
 	}
 
-	edb, err := pg.GetByName(ctx, cs.db, cluster.Metadata.Name, &models.Cluster{})
+	edb, err := dao.GetByName(ctx, cs.db, cluster.Metadata.Name, &models.Cluster{})
 	if err != nil {
 		return &infrav3.Cluster{}, fmt.Errorf(errormsg)
 	}
@@ -531,7 +531,7 @@ func (cs *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) 
 	if cluster.Spec.Metro != nil && cdb.MetroId.String() != cluster.Spec.Metro.Id {
 		metro := &models.Metro{}
 		if cluster.Spec.Metro.Name != "" {
-			if mdb, err := pg.GetByNamePartnerOrg(ctx, cs.db, cluster.Spec.Metro.Name, uuid.NullUUID{UUID: pid, Valid: true}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, metro); err != nil {
+			if mdb, err := dao.GetByNamePartnerOrg(ctx, cs.db, cluster.Spec.Metro.Name, uuid.NullUUID{UUID: pid, Valid: true}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, metro); err != nil {
 				errormsg = "Invalid cluster location, provide a valid metro name"
 				cluster.Status = &commonv3.Status{
 					ConditionType:   "Update",
@@ -566,7 +566,7 @@ func (cs *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) 
 		}
 
 	}
-	err = dao.UpdateCluster(ctx, cs.db, cdb)
+	err = cdao.UpdateCluster(ctx, cs.db, cdb)
 	if err != nil {
 		return &infrav3.Cluster{}, err
 	}
@@ -643,11 +643,11 @@ func (cs *clusterService) deleteCluster(ctx context.Context, clusterId, projectI
 		ID:        uuid.MustParse(clusterId),
 		ProjectId: uuid.MustParse(projectId),
 	}
-	err := dao.DeleteProjectsForCluster(ctx, cs.db, uuid.MustParse(clusterId))
+	err := cdao.DeleteProjectsForCluster(ctx, cs.db, uuid.MustParse(clusterId))
 	if err != nil {
 		return errors.Wrapf(err, "could not delete projects for cluster %s", clusterId)
 	}
-	return dao.DeleteCluster(ctx, cs.db, &c)
+	return cdao.DeleteCluster(ctx, cs.db, &c)
 }
 
 func (cs *clusterService) List(ctx context.Context, opts ...query.Option) (*infrav3.ClusterList, error) {
@@ -658,12 +658,12 @@ func (cs *clusterService) List(ctx context.Context, opts ...query.Option) (*infr
 	}
 
 	var proj models.Project
-	_, err := pg.GetByName(ctx, cs.db, queryOptions.Project, &proj)
+	_, err := dao.GetByName(ctx, cs.db, queryOptions.Project, &proj)
 	if err != nil {
 		return nil, err
 	}
 
-	cdb, err := dao.ListClusters(ctx, cs.db, commonv3.QueryOptions{
+	cdb, err := cdao.ListClusters(ctx, cs.db, commonv3.QueryOptions{
 		Project:      proj.ID.String(),
 		Organization: proj.OrganizationId.String(),
 		Partner:      proj.PartnerId.String(),
@@ -684,13 +684,13 @@ func (cs *clusterService) List(ctx context.Context, opts ...query.Option) (*infr
 
 	var items []*infrav3.Cluster
 	for _, clstr := range cdb {
-		projects, err := dao.GetProjectsForCluster(ctx, cs.db, clstr.ID)
+		projects, err := cdao.GetProjectsForCluster(ctx, cs.db, clstr.ID)
 		if err != nil {
 			return nil, err
 		}
 		metro := &models.Metro{}
 		if clstr.MetroId != uuid.Nil {
-			entity, err := pg.GetByID(ctx, cs.db, clstr.MetroId, &models.Metro{})
+			entity, err := dao.GetByID(ctx, cs.db, clstr.MetroId, &models.Metro{})
 			if err != nil {
 				return nil, err
 			}
@@ -755,7 +755,7 @@ func (s *clusterService) UpdateClusterConditionStatus(ctx context.Context, curre
 func (s *clusterService) UpdateClusterAnnotations(ctx context.Context, cluster *infrav3.Cluster) error {
 	if len(cluster.Metadata.Annotations) > 0 {
 		annBytes, _ := json.Marshal(cluster.Metadata.Annotations)
-		return dao.UpdateClusterAnnotations(ctx, s.db, &models.Cluster{
+		return cdao.UpdateClusterAnnotations(ctx, s.db, &models.Cluster{
 			ID:          uuid.MustParse(cluster.Metadata.Id),
 			Annotations: json.RawMessage(annBytes),
 		})
@@ -801,11 +801,11 @@ func (s *clusterService) GetClusterProjects(ctx context.Context, cluster *infrav
 	if err != nil {
 		id = uuid.Nil
 	}
-	c, err := dao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: cluster.Metadata.Name})
+	c, err := cdao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: cluster.Metadata.Name})
 	if err != nil {
 		return nil, err
 	}
-	projects, err := dao.GetProjectsForCluster(ctx, s.db, c.ID)
+	projects, err := cdao.GetProjectsForCluster(ctx, s.db, c.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -819,7 +819,7 @@ func (s *clusterService) UpdateStatus(ctx context.Context, current *infrav3.Clus
 		opt(&queryOptions)
 	}
 
-	isAllowed, err := dao.ValidateClusterAccess(ctx, s.db, queryOptions)
+	isAllowed, err := cdao.ValidateClusterAccess(ctx, s.db, queryOptions)
 	if err != nil {
 		return err
 	}
@@ -1087,7 +1087,7 @@ func (s *clusterService) notifyCluster(ctx context.Context, c *infrav3.Cluster) 
 		return
 	}
 
-	err = dao.Notify(s.db, clusterNotifyChan, string(b))
+	err = cdao.Notify(s.db, clusterNotifyChan, string(b))
 	if err != nil {
 		_log.Infow("unable to send cluster notification", "error", err)
 		return

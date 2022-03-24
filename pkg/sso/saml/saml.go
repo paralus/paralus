@@ -1,7 +1,7 @@
 package saml
 
 import (
-	pg "github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
+	pg "github.com/RafayLabs/rcloud-base/internal/persistence/provider/pg"
 	"github.com/crewjam/saml/samlsp"
 	"github.com/uptrace/bun"
 )

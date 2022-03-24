@@ -6,11 +6,11 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/RafaySystems/rcloud-base/pkg/common"
-	"github.com/RafaySystems/rcloud-base/pkg/query"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	infrav3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
+	"github.com/RafayLabs/rcloud-base/pkg/common"
+	"github.com/RafayLabs/rcloud-base/pkg/query"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
 	"github.com/google/uuid"
 )
 

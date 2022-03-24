@@ -3,9 +3,9 @@ package server
 import (
 	"context"
 
-	"github.com/RafaySystems/rcloud-base/pkg/service"
-	rpcv3 "github.com/RafaySystems/rcloud-base/proto/rpc/role"
-	rolepbv3 "github.com/RafaySystems/rcloud-base/proto/types/rolepb/v3"
+	"github.com/RafayLabs/rcloud-base/pkg/service"
+	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/role"
+	rolepbv3 "github.com/RafayLabs/rcloud-base/proto/types/rolepb/v3"
 )
 
 type rolepermissionServer struct {

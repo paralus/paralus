@@ -5,12 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 
-	authv3 "github.com/RafaySystems/rcloud-base/pkg/auth/v3"
-	"github.com/RafaySystems/rcloud-base/pkg/service"
-	rpcv3 "github.com/RafaySystems/rcloud-base/proto/rpc/user"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	userpbv3 "github.com/RafaySystems/rcloud-base/proto/types/userpb/v3"
+	authv3 "github.com/RafayLabs/rcloud-base/pkg/auth/v3"
+	"github.com/RafayLabs/rcloud-base/pkg/service"
+	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	userpbv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

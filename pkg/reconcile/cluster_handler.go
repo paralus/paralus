@@ -4,11 +4,11 @@ import (
 	"context"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/pkg/event"
-	"github.com/RafaySystems/rcloud-base/pkg/query"
-	"github.com/RafaySystems/rcloud-base/pkg/service"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	infrav3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
+	"github.com/RafayLabs/rcloud-base/pkg/event"
+	"github.com/RafayLabs/rcloud-base/pkg/query"
+	"github.com/RafayLabs/rcloud-base/pkg/service"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/util/workqueue"
 )

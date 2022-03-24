@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	logv2 "github.com/RafaySystems/rcloud-base/pkg/log"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
+	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	"github.com/Shopify/sarama"
 	"google.golang.org/grpc/metadata"
 )

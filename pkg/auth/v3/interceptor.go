@@ -3,8 +3,8 @@ package authv3
 import (
 	context "context"
 
-	"github.com/RafaySystems/rcloud-base/pkg/gateway"
-	commonpbv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
+	"github.com/RafayLabs/rcloud-base/pkg/gateway"
+	commonpbv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"

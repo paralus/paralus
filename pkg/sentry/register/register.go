@@ -10,18 +10,18 @@ import (
 	"os"
 	"strings"
 
-	"github.com/RafaySystems/rcloud-base/pkg/sentry/cryptoutil"
-	sentryrpc "github.com/RafaySystems/rcloud-base/proto/rpc/sentry"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	"github.com/RafaySystems/rcloud-base/proto/types/sentry"
+	"github.com/RafayLabs/rcloud-base/pkg/sentry/cryptoutil"
+	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
 	"github.com/pkg/errors"
 	"github.com/rs/xid"
 
-	bootstrapclientv2 "github.com/RafaySystems/rcloud-base/api/def/clients/sentry/client"
-	bootstrapapiv2 "github.com/RafaySystems/rcloud-base/api/def/clients/sentry/client/bootstrap"
+	bootstrapclientv2 "github.com/RafayLabs/rcloud-base/api/def/clients/sentry/client"
+	bootstrapapiv2 "github.com/RafayLabs/rcloud-base/api/def/clients/sentry/client/bootstrap"
 
-	"github.com/RafaySystems/rcloud-base/pkg/log"
-	"github.com/RafaySystems/rcloud-base/pkg/sentry/util"
+	"github.com/RafayLabs/rcloud-base/pkg/log"
+	"github.com/RafayLabs/rcloud-base/pkg/sentry/util"
 )
 
 var (

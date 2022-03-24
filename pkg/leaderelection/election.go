@@ -3,7 +3,7 @@ package leaderelection
 import (
 	"context"
 
-	log "github.com/RafaySystems/rcloud-base/pkg/log"
+	log "github.com/RafayLabs/rcloud-base/pkg/log"
 	le "k8s.io/client-go/tools/leaderelection"
 	rl "k8s.io/client-go/tools/leaderelection/resourcelock"
 )

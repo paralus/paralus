@@ -9,21 +9,21 @@ import (
 	"strings"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/pkg/log"
-	"github.com/RafaySystems/rcloud-base/pkg/query"
-	sentryrpc "github.com/RafaySystems/rcloud-base/proto/rpc/sentry"
-	rpcv3 "github.com/RafaySystems/rcloud-base/proto/rpc/user"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	sentry "github.com/RafaySystems/rcloud-base/proto/types/sentry"
+	"github.com/RafayLabs/rcloud-base/pkg/log"
+	"github.com/RafayLabs/rcloud-base/pkg/query"
+	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
+	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	sentry "github.com/RafayLabs/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
 
 	clientcmdapiv1 "k8s.io/client-go/tools/clientcmd/api/v1"
 	"sigs.k8s.io/yaml"
 
-	"github.com/RafaySystems/rcloud-base/internal/constants"
-	"github.com/RafaySystems/rcloud-base/pkg/sentry/cryptoutil"
-	"github.com/RafaySystems/rcloud-base/pkg/sentry/util"
-	"github.com/RafaySystems/rcloud-base/pkg/service"
+	"github.com/RafayLabs/rcloud-base/internal/constants"
+	"github.com/RafayLabs/rcloud-base/pkg/sentry/cryptoutil"
+	"github.com/RafayLabs/rcloud-base/pkg/sentry/util"
+	"github.com/RafayLabs/rcloud-base/pkg/service"
 )
 
 const (

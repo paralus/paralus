@@ -7,12 +7,12 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 
-	"github.com/RafaySystems/rcloud-base/pkg/controller/scheme"
-	clusterv2 "github.com/RafaySystems/rcloud-base/proto/types/controller"
+	"github.com/RafayLabs/rcloud-base/pkg/controller/scheme"
+	clusterv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
-	cruntime "github.com/RafaySystems/rcloud-base/pkg/controller/runtime"
+	cruntime "github.com/RafayLabs/rcloud-base/pkg/controller/runtime"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )

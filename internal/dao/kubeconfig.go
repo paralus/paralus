@@ -4,9 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
-	"github.com/RafaySystems/rcloud-base/proto/types/sentry"
+	"github.com/RafayLabs/rcloud-base/internal/models"
+	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
@@ -22,7 +21,7 @@ func GetKubeconfigRevocation(ctx context.Context, db bun.IDB, orgID, accountID u
 }
 
 func CreateKubeconfigRevocation(ctx context.Context, db bun.IDB, kr *models.KubeconfigRevocation) error {
-	_, err := pg.Create(ctx, db, kr)
+	_, err := Create(ctx, db, kr)
 	return err
 }
 
@@ -55,7 +54,7 @@ func CreateKubeconfigSetting(ctx context.Context, db bun.IDB, ks *models.Kubecon
 	} else {
 		ks.Scope = sentry.KubeconfigSettingUserScope
 	}
-	_, err := pg.Create(ctx, db, ks)
+	_, err := Create(ctx, db, ks)
 	return err
 }
 
@@ -88,7 +87,7 @@ func GetkubectlClusterSettings(ctx context.Context, db bun.IDB, orgID uuid.UUID,
 }
 
 func CreatekubectlClusterSettings(ctx context.Context, db bun.IDB, kc *models.KubectlClusterSetting) error {
-	_, err := pg.Create(ctx, db, kc)
+	_, err := Create(ctx, db, kc)
 	return err
 }
 

@@ -7,7 +7,7 @@
 package authzv1
 
 import (
-	authz "github.com/RafaySystems/rcloud-base/proto/types/authz"
+	authz "github.com/RafayLabs/rcloud-base/proto/types/authz"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

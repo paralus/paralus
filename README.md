@@ -32,7 +32,7 @@ docker-compose up -d
 Start rcloud-base:
 
 ```bash
-go run github.com/RafaySystems/rcloud-base
+go run github.com/RafayLabs/rcloud-base
 ```
 
 ### Manual
@@ -135,5 +135,5 @@ docker-compose up -d
 Start rcloud-base server:
 
 ```
-go run github.com/RafaySystems/rcloud-base
+go run github.com/RafayLabs/rcloud-base
 ```

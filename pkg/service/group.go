@@ -7,12 +7,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/internal/dao"
-	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
-	authzv1 "github.com/RafaySystems/rcloud-base/proto/types/authz"
-	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	userv3 "github.com/RafaySystems/rcloud-base/proto/types/userpb/v3"
+	"github.com/RafayLabs/rcloud-base/internal/dao"
+	"github.com/RafayLabs/rcloud-base/internal/models"
+	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
+	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	userv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -53,15 +52,15 @@ func NewGroupService(db *bun.DB, azc AuthzService) GroupService {
 func (s *groupService) deleteGroupRoleRelaitons(ctx context.Context, db bun.IDB, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, error) {
 	// delete previous entries
 	// TODO: single delete command
-	err := pg.DeleteX(ctx, db, "group_id", groupId, &models.GroupRole{})
+	err := dao.DeleteX(ctx, db, "group_id", groupId, &models.GroupRole{})
 	if err != nil {
 		return &userv3.Group{}, err
 	}
-	err = pg.DeleteX(ctx, db, "group_id", groupId, &models.ProjectGroupRole{})
+	err = dao.DeleteX(ctx, db, "group_id", groupId, &models.ProjectGroupRole{})
 	if err != nil {
 		return &userv3.Group{}, err
 	}
-	err = pg.DeleteX(ctx, db, "group_id", groupId, &models.ProjectGroupNamespaceRole{})
+	err = dao.DeleteX(ctx, db, "group_id", groupId, &models.ProjectGroupNamespaceRole{})
 	if err != nil {
 		return &userv3.Group{}, err
 	}
@@ -84,7 +83,7 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 	var ps []*authzv1.Policy
 	for _, pnr := range projectNamespaceRoles {
 		role := pnr.GetRole()
-		entity, err := pg.GetIdByName(ctx, db, role, &models.Role{})
+		entity, err := dao.GetIdByName(ctx, db, role, &models.Role{})
 		if err != nil {
 			return &userv3.Group{}, fmt.Errorf("unable to find role '%v'", role)
 		}
@@ -100,7 +99,7 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 		namespaceId := pnr.GetNamespace() // TODO: lookup id from name
 		switch {
 		case namespaceId != 0:
-			projectId, err := pg.GetProjectId(ctx, db, project)
+			projectId, err := dao.GetProjectId(ctx, db, project)
 			if err != nil {
 				return &userv3.Group{}, fmt.Errorf("unable to find project '%v'", project)
 			}
@@ -124,7 +123,7 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 				Obj:  role,
 			})
 		case project != "":
-			projectId, err := pg.GetProjectId(ctx, db, project)
+			projectId, err := dao.GetProjectId(ctx, db, project)
 			if err != nil {
 				return &userv3.Group{}, fmt.Errorf("unable to find project '%v'", project)
 			}
@@ -166,19 +165,19 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 		}
 	}
 	if len(pgnrs) > 0 {
-		_, err := pg.Create(ctx, db, &pgnrs)
+		_, err := dao.Create(ctx, db, &pgnrs)
 		if err != nil {
 			return &userv3.Group{}, err
 		}
 	}
 	if len(pgrs) > 0 {
-		_, err := pg.Create(ctx, db, &pgrs)
+		_, err := dao.Create(ctx, db, &pgrs)
 		if err != nil {
 			return &userv3.Group{}, err
 		}
 	}
 	if len(grs) > 0 {
-		_, err := pg.Create(ctx, db, &grs)
+		_, err := dao.Create(ctx, db, &grs)
 		if err != nil {
 			return &userv3.Group{}, err
 		}
@@ -195,7 +194,7 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 }
 
 func (s *groupService) deleteGroupAccountRelations(ctx context.Context, db bun.IDB, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, error) {
-	err := pg.DeleteX(ctx, db, "group_id", groupId, &models.GroupAccount{})
+	err := dao.DeleteX(ctx, db, "group_id", groupId, &models.GroupAccount{})
 	if err != nil {
 		return &userv3.Group{}, fmt.Errorf("unable to delete user; %v", err)
 	}
@@ -214,7 +213,7 @@ func (s *groupService) createGroupAccountRelations(ctx context.Context, db bun.I
 	var ugs []*authzv1.UserGroup
 	for _, account := range unique(group.GetSpec().GetUsers()) {
 		// FIXME: do combined lookup
-		entity, err := pg.GetIdByTraits(ctx, db, account, &models.KratosIdentities{})
+		entity, err := dao.GetIdByTraits(ctx, db, account, &models.KratosIdentities{})
 		if err != nil {
 			return &userv3.Group{}, fmt.Errorf("unable to find user '%v'", account)
 		}
@@ -237,7 +236,7 @@ func (s *groupService) createGroupAccountRelations(ctx context.Context, db bun.I
 	if len(grpaccs) == 0 {
 		return group, nil
 	}
-	_, err := pg.Create(ctx, db, &grpaccs)
+	_, err := dao.Create(ctx, db, &grpaccs)
 	if err != nil {
 		return &userv3.Group{}, err
 	}
@@ -255,11 +254,11 @@ func (s *groupService) createGroupAccountRelations(ctx context.Context, db bun.I
 func (s *groupService) getPartnerOrganization(ctx context.Context, db bun.IDB, group *userv3.Group) (uuid.UUID, uuid.UUID, error) {
 	partner := group.GetMetadata().GetPartner()
 	org := group.GetMetadata().GetOrganization()
-	partnerId, err := pg.GetPartnerId(ctx, db, partner)
+	partnerId, err := dao.GetPartnerId(ctx, db, partner)
 	if err != nil {
 		return uuid.Nil, uuid.Nil, err
 	}
-	organizationId, err := pg.GetOrganizationId(ctx, db, org)
+	organizationId, err := dao.GetOrganizationId(ctx, db, org)
 	if err != nil {
 		return partnerId, uuid.Nil, err
 	}
@@ -272,7 +271,7 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
-	g, _ := pg.GetIdByNamePartnerOrg(ctx, s.db, group.GetMetadata().GetName(), uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Group{})
+	g, _ := dao.GetIdByNamePartnerOrg(ctx, s.db, group.GetMetadata().GetName(), uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Group{})
 	if g != nil {
 		return nil, fmt.Errorf("group '%v' already exists", group.GetMetadata().GetName())
 	}
@@ -293,7 +292,7 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 		return &userv3.Group{}, err
 	}
 
-	entity, err := pg.Create(ctx, tx, &grp)
+	entity, err := dao.Create(ctx, tx, &grp)
 	if err != nil {
 		tx.Rollback() // TODO: check errors for rollback (and do what?)
 		return &userv3.Group{}, err
@@ -367,7 +366,7 @@ func (s *groupService) GetByID(ctx context.Context, group *userv3.Group) (*userv
 	if err != nil {
 		return &userv3.Group{}, err
 	}
-	entity, err := pg.GetByID(ctx, s.db, uid, &models.Group{})
+	entity, err := dao.GetByID(ctx, s.db, uid, &models.Group{})
 	if err != nil {
 		return &userv3.Group{}, err
 	}
@@ -385,7 +384,7 @@ func (s *groupService) GetByName(ctx context.Context, group *userv3.Group) (*use
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
-	entity, err := pg.GetByNamePartnerOrg(ctx, s.db, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Group{})
+	entity, err := dao.GetByNamePartnerOrg(ctx, s.db, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Group{})
 	if err != nil {
 		return &userv3.Group{}, err
 	}
@@ -404,7 +403,7 @@ func (s *groupService) Update(ctx context.Context, group *userv3.Group) (*userv3
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
-	entity, err := pg.GetByNamePartnerOrg(ctx, s.db, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Group{})
+	entity, err := dao.GetByNamePartnerOrg(ctx, s.db, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Group{})
 	if err != nil {
 		return &userv3.Group{}, fmt.Errorf("no group found with name '%v'", name)
 	}
@@ -443,7 +442,7 @@ func (s *groupService) Update(ctx context.Context, group *userv3.Group) (*userv3
 			return &userv3.Group{}, err
 		}
 
-		_, err = pg.Update(ctx, tx, grp.ID, grp)
+		_, err = dao.Update(ctx, tx, grp.ID, grp)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.Group{}, err
@@ -472,7 +471,7 @@ func (s *groupService) Delete(ctx context.Context, group *userv3.Group) (*userv3
 	if err != nil {
 		return &userv3.Group{}, fmt.Errorf("unable to get partner and org id")
 	}
-	entity, err := pg.GetByNamePartnerOrg(ctx, s.db, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Group{})
+	entity, err := dao.GetByNamePartnerOrg(ctx, s.db, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Group{})
 	if err != nil {
 		return &userv3.Group{}, err
 	}
@@ -493,7 +492,7 @@ func (s *groupService) Delete(ctx context.Context, group *userv3.Group) (*userv3
 			tx.Rollback()
 			return &userv3.Group{}, err
 		}
-		err = pg.Delete(ctx, s.db, grp.ID, grp)
+		err = dao.Delete(ctx, s.db, grp.ID, grp)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.Group{}, err
@@ -520,16 +519,16 @@ func (s *groupService) List(ctx context.Context, group *userv3.Group) (*userv3.G
 		},
 	}
 	if len(group.Metadata.Organization) > 0 {
-		orgId, err := pg.GetOrganizationId(ctx, s.db, group.Metadata.Organization)
+		orgId, err := dao.GetOrganizationId(ctx, s.db, group.Metadata.Organization)
 		if err != nil {
 			return groupList, err
 		}
-		partId, err := pg.GetPartnerId(ctx, s.db, group.Metadata.Partner)
+		partId, err := dao.GetPartnerId(ctx, s.db, group.Metadata.Partner)
 		if err != nil {
 			return groupList, err
 		}
 		var grps []models.Group
-		entities, err := pg.List(ctx, s.db, uuid.NullUUID{UUID: partId, Valid: true}, uuid.NullUUID{UUID: orgId, Valid: true}, &grps)
+		entities, err := dao.List(ctx, s.db, uuid.NullUUID{UUID: partId, Valid: true}, uuid.NullUUID{UUID: orgId, Valid: true}, &grps)
 		if err != nil {
 			return groupList, err
 		}

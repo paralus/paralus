@@ -1,4 +1,4 @@
-module github.com/RafaySystems/rcloud-base
+module github.com/RafayLabs/rcloud-base
 
 go 1.17
 

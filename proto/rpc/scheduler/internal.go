@@ -3,7 +3,7 @@ package rpcv3
 import (
 	"context"
 
-	"github.com/RafaySystems/rcloud-base/pkg/pool"
+	"github.com/RafayLabs/rcloud-base/pkg/pool"
 	grpcpool "github.com/processout/grpc-go-pool"
 )
 

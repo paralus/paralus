@@ -3,7 +3,7 @@ package reconcile
 import (
 	"encoding/json"
 
-	"github.com/RafaySystems/rcloud-base/pkg/event"
+	"github.com/RafayLabs/rcloud-base/pkg/event"
 )
 
 func resourceToKey(r event.Resource) string {

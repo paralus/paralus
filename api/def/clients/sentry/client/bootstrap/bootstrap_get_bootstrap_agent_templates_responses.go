@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/RafaySystems/rcloud-base/api/def/clients/sentry/models"
+	"github.com/RafayLabs/rcloud-base/api/def/clients/sentry/models"
 )
 
 // BootstrapGetBootstrapAgentTemplatesReader is a Reader for the BootstrapGetBootstrapAgentTemplates structure.

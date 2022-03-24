@@ -8,12 +8,12 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/RafaySystems/rcloud-base/internal/cluster/constants"
-	"github.com/RafaySystems/rcloud-base/internal/cluster/fixtures"
-	"github.com/RafaySystems/rcloud-base/internal/cluster/util"
-	"github.com/RafaySystems/rcloud-base/pkg/common"
-	"github.com/RafaySystems/rcloud-base/pkg/log"
-	infrav3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
+	"github.com/RafayLabs/rcloud-base/internal/cluster/constants"
+	"github.com/RafayLabs/rcloud-base/internal/cluster/fixtures"
+	"github.com/RafayLabs/rcloud-base/internal/cluster/util"
+	"github.com/RafayLabs/rcloud-base/pkg/common"
+	"github.com/RafayLabs/rcloud-base/pkg/log"
+	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
 )
 
 var _log = log.GetLogger()
