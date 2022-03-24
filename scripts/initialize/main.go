@@ -11,9 +11,9 @@ import (
 	"os"
 	"path"
 
+	"github.com/RafayLabs/rcloud-base/internal/dao"
 	"github.com/RafayLabs/rcloud-base/internal/models"
-	providers "github.com/RafayLabs/rcloud-base/internal/persistence/provider/kratos"
-	"github.com/RafayLabs/rcloud-base/internal/persistence/provider/pg"
+	providers "github.com/RafayLabs/rcloud-base/internal/provider/kratos"
 	"github.com/RafayLabs/rcloud-base/pkg/common"
 	"github.com/RafayLabs/rcloud-base/pkg/enforcer"
 	"github.com/RafayLabs/rcloud-base/pkg/service"
@@ -77,7 +77,7 @@ func addResourcePermissions(db *bun.DB, basePath string) error {
 	}
 
 	fmt.Println("Adding", len(items), "resource permissions")
-	_, err = pg.Create(context.Background(), db, &items)
+	_, err = dao.Create(context.Background(), db, &items)
 	return err
 }
 
@@ -151,14 +151,14 @@ func main() {
 	if err != nil {
 		log.Fatal("unable to init enforcer", "error", err)
 	}
-	as := service.NewAuthzService(gormDb, enforcer)
+	as := service.NewAuthzService(db, enforcer)
 
 	ps := service.NewPartnerService(db)
 	os := service.NewOrganizationService(db)
 	rs := service.NewRoleService(db, as)
 	us := service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, nil, common.CliConfigDownloadData{})
 
-	err = pg.HardDeleteAll(context.Background(), db, &models.ResourcePermission{})
+	err = dao.HardDeleteAll(context.Background(), db, &models.ResourcePermission{})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -193,7 +193,7 @@ func main() {
 				Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: scope, Rolepermissions: perms},
 			})
 			if err != nil {
-				log.Fatal("unable to create rolepermission", scope, name, err)
+				log.Fatalf("unable to create rolepermission %s %s: %s", scope, name, err)
 			}
 		}
 	}
