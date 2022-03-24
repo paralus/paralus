@@ -2,7 +2,6 @@ package authv3
 
 import (
 	context "context"
-	"reflect"
 	"strings"
 
 	"github.com/RafayLabs/rcloud-base/pkg/gateway"
@@ -12,6 +11,10 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
+
+type hasMetadata interface {
+	GetMetadata() *commonv3.Metadata
+}
 
 func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
@@ -26,22 +29,22 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 		// We have to get the value of org, and project (namespace in
 		// future) as we will be using this inorder to authorize the
 		// user's access to different resources
-		reqValue := reflect.ValueOf(req).Elem()
-		field := reqValue.FieldByName("Metadata")
 		var org string
 		var project string
-		if field != (reflect.Value{}) {
-			org = field.Interface().(*commonv3.Metadata).Organization
-			project = field.Interface().(*commonv3.Metadata).Project
-		}
+		resource, ok := req.(hasMetadata)
+		if ok {
+			meta := resource.GetMetadata()
+			org = meta.Organization
+			project = meta.Project
 
-		// overrides for picking up info when not in default metadata locations
-		// XXX: This requires any new items which does not follow metadata convention added here
-		switch strings.Split(info.FullMethod, "/")[1] {
-		case "rafay.dev.rpc.v3.Project":
-			project = field.Interface().(*commonv3.Metadata).Name
-		case "rafay.dev.rpc.v3.Organization":
-			org = field.Interface().(*commonv3.Metadata).Name
+			// overrides for picking up info when not in default metadata locations
+			// XXX: This requires any new items which does not follow metadata convention added here
+			switch strings.Split(info.FullMethod, "/")[1] {
+			case "rafay.dev.rpc.v3.Project":
+				project = meta.Name
+			case "rafay.dev.rpc.v3.Organization":
+				org = meta.Name
+			}
 		}
 
 		md, ok := metadata.FromIncomingContext(ctx)

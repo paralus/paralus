@@ -6,7 +6,6 @@ import (
 	"github.com/RafayLabs/rcloud-base/pkg/enforcer"
 	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
 	"github.com/RafayLabs/rcloud-base/pkg/service"
-	"github.com/RafayLabs/rcloud-base/pkg/enforcer"
 	kclient "github.com/ory/kratos-client-go"
 	"github.com/uptrace/bun"
 	"gorm.io/driver/postgres"
