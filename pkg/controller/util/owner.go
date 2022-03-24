@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/RafaySystems/rcloud-base/pkg/controller/scheme"
+	"github.com/RafayLabs/rcloud-base/pkg/controller/scheme"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/client/apiutil"
 
-	clusterv2 "github.com/RafaySystems/rcloud-base/proto/types/controller"
+	clusterv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
 	ctrlutil "sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 

@@ -3,9 +3,9 @@ package dao
 import (
 	"context"
 
-	"github.com/RafaySystems/rcloud-base/internal/dao"
-	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/pkg/log"
+	"github.com/RafayLabs/rcloud-base/internal/dao"
+	"github.com/RafayLabs/rcloud-base/internal/models"
+	"github.com/RafayLabs/rcloud-base/pkg/log"
 	"github.com/uptrace/bun"
 )
 

@@ -11,14 +11,14 @@ import (
 	bun "github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"github.com/RafaySystems/rcloud-base/internal/dao"
-	"github.com/RafaySystems/rcloud-base/internal/models"
-	providers "github.com/RafaySystems/rcloud-base/internal/provider/kratos"
-	"github.com/RafaySystems/rcloud-base/pkg/common"
-	userrpcv3 "github.com/RafaySystems/rcloud-base/proto/rpc/user"
-	authzv1 "github.com/RafaySystems/rcloud-base/proto/types/authz"
-	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	userv3 "github.com/RafaySystems/rcloud-base/proto/types/userpb/v3"
+	"github.com/RafayLabs/rcloud-base/internal/dao"
+	"github.com/RafayLabs/rcloud-base/internal/models"
+	providers "github.com/RafayLabs/rcloud-base/internal/provider/kratos"
+	"github.com/RafayLabs/rcloud-base/pkg/common"
+	userrpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
+	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
+	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	userv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 )
 
 const (

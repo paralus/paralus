@@ -3,11 +3,11 @@ package server
 import (
 	"context"
 
-	"github.com/RafaySystems/rcloud-base/internal/constants"
-	"github.com/RafaySystems/rcloud-base/pkg/sentry/util"
-	"github.com/RafaySystems/rcloud-base/pkg/service"
-	sentryrpc "github.com/RafaySystems/rcloud-base/proto/rpc/sentry"
-	"github.com/RafaySystems/rcloud-base/proto/types/sentry"
+	"github.com/RafayLabs/rcloud-base/internal/constants"
+	"github.com/RafayLabs/rcloud-base/pkg/sentry/util"
+	"github.com/RafayLabs/rcloud-base/pkg/service"
+	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
+	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
 	"google.golang.org/grpc/metadata"
 )
 

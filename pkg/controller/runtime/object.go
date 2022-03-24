@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"errors"
 
-	"github.com/RafaySystems/rcloud-base/pkg/controller/scheme"
-	apiv2 "github.com/RafaySystems/rcloud-base/proto/types/controller"
+	"github.com/RafayLabs/rcloud-base/pkg/controller/scheme"
+	apiv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
 	rbacv1 "k8s.io/api/rbac/v1"
 	apixv1beta1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -14,7 +14,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
-	"github.com/RafaySystems/rcloud-base/pkg/controller/util"
+	"github.com/RafayLabs/rcloud-base/pkg/controller/util"
 )
 
 var (

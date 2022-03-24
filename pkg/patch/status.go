@@ -3,9 +3,9 @@ package patch
 import (
 	"encoding/json"
 
-	sp "github.com/RafaySystems/rcloud-base/pkg/controller/strategicpatch"
-	infrav3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
-	"github.com/RafaySystems/rcloud-base/proto/types/scheduler"
+	sp "github.com/RafayLabs/rcloud-base/pkg/controller/strategicpatch"
+	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
+	"github.com/RafayLabs/rcloud-base/proto/types/scheduler"
 )
 
 type clusterConditions struct {

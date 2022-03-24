@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	infrav3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
+	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
 )
 
 const (

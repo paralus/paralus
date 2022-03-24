@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	infrav3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
 	"github.com/google/uuid"
 )
 

@@ -3,9 +3,9 @@ package server
 import (
 	"context"
 	"encoding/json"
-	ec "github.com/RafaySystems/rcloud-base/pkg/common"
-	q "github.com/RafaySystems/rcloud-base/pkg/service"
-	v1 "github.com/RafaySystems/rcloud-base/proto/rpc/audit"
+	ec "github.com/RafayLabs/rcloud-base/pkg/common"
+	q "github.com/RafayLabs/rcloud-base/pkg/service"
+	v1 "github.com/RafayLabs/rcloud-base/proto/rpc/audit"
 )
 
 type relayAuditServer struct {

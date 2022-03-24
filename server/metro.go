@@ -3,9 +3,9 @@ package server
 import (
 	"context"
 
-	"github.com/RafaySystems/rcloud-base/pkg/service"
-	systemrpc "github.com/RafaySystems/rcloud-base/proto/rpc/system"
-	infrav3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
+	"github.com/RafayLabs/rcloud-base/pkg/service"
+	systemrpc "github.com/RafayLabs/rcloud-base/proto/rpc/system"
+	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
 	"github.com/google/uuid"
 )
 

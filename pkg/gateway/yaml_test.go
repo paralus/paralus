@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/RafaySystems/rcloud-base/pkg/gateway"
-	"github.com/RafaySystems/rcloud-base/pkg/gateway/testdata"
+	"github.com/RafayLabs/rcloud-base/pkg/gateway"
+	"github.com/RafayLabs/rcloud-base/pkg/gateway/testdata"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

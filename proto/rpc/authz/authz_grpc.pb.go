@@ -4,7 +4,7 @@ package authzv1
 
 import (
 	context "context"
-	authz "github.com/RafaySystems/rcloud-base/proto/types/authz"
+	authz "github.com/RafayLabs/rcloud-base/proto/types/authz"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"

@@ -5,14 +5,14 @@ import (
 	"encoding/json"
 	"strconv"
 
-	"github.com/RafaySystems/rcloud-base/internal/cluster/dao"
-	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/pkg/converter"
-	"github.com/RafaySystems/rcloud-base/pkg/patch"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	"github.com/RafaySystems/rcloud-base/proto/types/controller"
-	infrav3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
-	"github.com/RafaySystems/rcloud-base/proto/types/scheduler"
+	"github.com/RafayLabs/rcloud-base/internal/cluster/dao"
+	"github.com/RafayLabs/rcloud-base/internal/models"
+	"github.com/RafayLabs/rcloud-base/pkg/converter"
+	"github.com/RafayLabs/rcloud-base/pkg/patch"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	"github.com/RafayLabs/rcloud-base/proto/types/controller"
+	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
+	"github.com/RafayLabs/rcloud-base/proto/types/scheduler"
 	"github.com/google/uuid"
 )
 

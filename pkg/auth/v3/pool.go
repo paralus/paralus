@@ -1,8 +1,8 @@
 package authv3
 
 import (
-	"github.com/RafaySystems/rcloud-base/pkg/pool"
-	rpcv3 "github.com/RafaySystems/rcloud-base/proto/rpc/v3"
+	"github.com/RafayLabs/rcloud-base/pkg/pool"
+	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/v3"
 
 	"context"
 

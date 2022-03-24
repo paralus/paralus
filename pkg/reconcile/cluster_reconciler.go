@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"time"
 
-	clstrutil "github.com/RafaySystems/rcloud-base/internal/cluster"
-	"github.com/RafaySystems/rcloud-base/internal/cluster/constants"
-	"github.com/RafaySystems/rcloud-base/pkg/service"
-	infrav3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
+	clstrutil "github.com/RafayLabs/rcloud-base/internal/cluster"
+	"github.com/RafayLabs/rcloud-base/internal/cluster/constants"
+	"github.com/RafayLabs/rcloud-base/pkg/service"
+	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
 
-	"github.com/RafaySystems/rcloud-base/pkg/query"
+	"github.com/RafayLabs/rcloud-base/pkg/query"
 	"github.com/pkg/errors"
 )
 

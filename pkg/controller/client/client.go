@@ -3,7 +3,7 @@ package client
 import (
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/pkg/controller/scheme"
+	"github.com/RafayLabs/rcloud-base/pkg/controller/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/apiutil"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"

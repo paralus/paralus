@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/RafaySystems/rcloud-base/internal/models"
+	"github.com/RafayLabs/rcloud-base/internal/models"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )

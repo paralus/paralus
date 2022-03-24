@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 
-	"github.com/RafaySystems/rcloud-base/internal/dao"
-	"github.com/RafaySystems/rcloud-base/internal/models"
-	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	rolev3 "github.com/RafaySystems/rcloud-base/proto/types/rolepb/v3"
+	"github.com/RafayLabs/rcloud-base/internal/dao"
+	"github.com/RafayLabs/rcloud-base/internal/models"
+	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	rolev3 "github.com/RafayLabs/rcloud-base/proto/types/rolepb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
 )

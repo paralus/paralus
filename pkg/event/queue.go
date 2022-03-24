@@ -3,7 +3,7 @@ package event
 import (
 	"sync"
 
-	"github.com/RafaySystems/rcloud-base/pkg/log"
+	"github.com/RafayLabs/rcloud-base/pkg/log"
 )
 
 const (

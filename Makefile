@@ -1,6 +1,6 @@
 .PHONY: tidy
 tidy:
-	GOPRIVATE=github.com/RafaySystems/* go mod tidy
+	GOPRIVATE=github.com/RafayLabs/* go mod tidy
 .PHONY: vendor
 vendor:
 	go mod vendor

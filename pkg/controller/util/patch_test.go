@@ -5,9 +5,9 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/RafaySystems/rcloud-base/pkg/controller/scheme"
+	"github.com/RafayLabs/rcloud-base/pkg/controller/scheme"
 
-	apiv2 "github.com/RafaySystems/rcloud-base/proto/types/controller"
+	apiv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/yaml"

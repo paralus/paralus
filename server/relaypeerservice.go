@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/pkg/grpc"
-	sentryrpc "github.com/RafaySystems/rcloud-base/proto/rpc/sentry"
+	"github.com/RafayLabs/rcloud-base/pkg/grpc"
+	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
 	"github.com/dgraph-io/ristretto"
 	"github.com/google/uuid"
 )

@@ -5,10 +5,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/internal/cluster/constants"
-	"github.com/RafaySystems/rcloud-base/internal/dao"
-	"github.com/RafaySystems/rcloud-base/internal/models"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
+	"github.com/RafayLabs/rcloud-base/internal/cluster/constants"
+	"github.com/RafayLabs/rcloud-base/internal/dao"
+	"github.com/RafayLabs/rcloud-base/internal/models"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )

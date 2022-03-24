@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/RafaySystems/rcloud-base/pkg/hasher"
+	"github.com/RafayLabs/rcloud-base/pkg/hasher"
 )
 
 func TestGetRSID(t *testing.T) {

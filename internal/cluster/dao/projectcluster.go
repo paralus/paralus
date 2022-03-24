@@ -3,10 +3,10 @@ package dao
 import (
 	"context"
 
-	"github.com/RafaySystems/rcloud-base/internal/dao"
-	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/pkg/query"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
+	"github.com/RafayLabs/rcloud-base/internal/dao"
+	"github.com/RafayLabs/rcloud-base/internal/models"
+	"github.com/RafayLabs/rcloud-base/pkg/query"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )

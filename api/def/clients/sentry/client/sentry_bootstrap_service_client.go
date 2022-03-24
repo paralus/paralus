@@ -10,7 +10,7 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/RafaySystems/rcloud-base/api/def/clients/sentry/client/bootstrap"
+	"github.com/RafayLabs/rcloud-base/api/def/clients/sentry/client/bootstrap"
 )
 
 // Default sentry bootstrap service HTTP client.

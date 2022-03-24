@@ -4,11 +4,11 @@ import (
 	"context"
 	"time"
 
-	"github.com/RafaySystems/rcloud-base/internal/dao"
-	"github.com/RafaySystems/rcloud-base/internal/models"
-	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	infrav3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
-	"github.com/RafaySystems/rcloud-base/proto/types/scheduler"
+	"github.com/RafayLabs/rcloud-base/internal/dao"
+	"github.com/RafayLabs/rcloud-base/internal/models"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
+	"github.com/RafayLabs/rcloud-base/proto/types/scheduler"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )

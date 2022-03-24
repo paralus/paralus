@@ -3,10 +3,10 @@ package server
 import (
 	"context"
 
-	"github.com/RafaySystems/rcloud-base/pkg/service"
-	systemrpc "github.com/RafaySystems/rcloud-base/proto/rpc/system"
-	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
-	systempbv3 "github.com/RafaySystems/rcloud-base/proto/types/systempb/v3"
+	"github.com/RafayLabs/rcloud-base/pkg/service"
+	systemrpc "github.com/RafayLabs/rcloud-base/proto/rpc/system"
+	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	systempbv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
