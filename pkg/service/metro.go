@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/RafaySystems/rcloud-base/internal/dao"
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	infrav3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
 	"github.com/google/uuid"
@@ -44,7 +44,7 @@ func NewMetroService(db *bun.DB) MetroService {
 func (s *metroService) Create(ctx context.Context, metro *infrav3.Location) (*infrav3.Location, error) {
 
 	var part models.Partner
-	_, err := pg.GetByName(ctx, s.db, metro.Metadata.Partner, &part)
+	_, err := dao.GetByName(ctx, s.db, metro.Metadata.Partner, &part)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func (s *metroService) Create(ctx context.Context, metro *infrav3.Location) (*in
 		OrganizationId: uuid.Nil,
 		PartnerId:      part.ID,
 	}
-	_, err = pg.Create(ctx, s.db, &metrodb)
+	_, err = dao.Create(ctx, s.db, &metrodb)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (s *metroService) GetByName(ctx context.Context, name string) (*infrav3.Loc
 
 	var metro infrav3.Location
 
-	entity, err := pg.GetByName(ctx, s.db, name, &models.Metro{})
+	entity, err := dao.GetByName(ctx, s.db, name, &models.Metro{})
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +109,7 @@ func (s *metroService) GetByName(ctx context.Context, name string) (*infrav3.Loc
 func (s *metroService) GetById(ctx context.Context, id uuid.UUID) (*infrav3.Location, error) {
 	var location infrav3.Location
 
-	entity, err := pg.GetByID(ctx, s.db, id, &models.Metro{})
+	entity, err := dao.GetByID(ctx, s.db, id, &models.Metro{})
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +141,7 @@ func (s *metroService) GetById(ctx context.Context, id uuid.UUID) (*infrav3.Loca
 
 func (s *metroService) Update(ctx context.Context, metro *infrav3.Location) (*infrav3.Location, error) {
 
-	entity, err := pg.GetByName(ctx, s.db, metro.Metadata.Name, &models.Metro{})
+	entity, err := dao.GetByName(ctx, s.db, metro.Metadata.Name, &models.Metro{})
 	if err != nil {
 		return metro, err
 	}
@@ -157,7 +157,7 @@ func (s *metroService) Update(ctx context.Context, metro *infrav3.Location) (*in
 		metrodb.Longitude = metro.Spec.Longitude
 		metrodb.ModifiedAt = time.Now()
 
-		_, err = pg.Update(ctx, s.db, metrodb.ID, metrodb)
+		_, err = dao.Update(ctx, s.db, metrodb.ID, metrodb)
 		if err != nil {
 			return metro, err
 		}
@@ -168,12 +168,12 @@ func (s *metroService) Update(ctx context.Context, metro *infrav3.Location) (*in
 
 func (s *metroService) Delete(ctx context.Context, metro *infrav3.Location) (*infrav3.Location, error) {
 
-	entity, err := pg.GetByName(ctx, s.db, metro.Metadata.Name, &models.Metro{})
+	entity, err := dao.GetByName(ctx, s.db, metro.Metadata.Name, &models.Metro{})
 	if err != nil {
 		return metro, err
 	}
 	if metrodb, ok := entity.(*models.Metro); ok {
-		err = pg.Delete(ctx, s.db, metrodb.ID, metrodb)
+		err = dao.Delete(ctx, s.db, metrodb.ID, metrodb)
 		if err != nil {
 			return metro, err
 		}
@@ -188,12 +188,12 @@ func (s *metroService) List(ctx context.Context, partner string) (*infrav3.Locat
 	var metrodbs []models.Metro
 
 	var part models.Partner
-	_, err := pg.GetByName(ctx, s.db, partner, &part)
+	_, err := dao.GetByName(ctx, s.db, partner, &part)
 	if err != nil {
 		return nil, err
 	}
 
-	entities, err := pg.List(ctx, s.db, uuid.NullUUID{UUID: part.ID, Valid: true}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, &metrodbs)
+	entities, err := dao.List(ctx, s.db, uuid.NullUUID{UUID: part.ID, Valid: true}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, &metrodbs)
 	if err != nil {
 		return nil, err
 	}
@@ -226,7 +226,7 @@ func (s *metroService) List(ctx context.Context, partner string) (*infrav3.Locat
 }
 
 func (s *metroService) GetIDByName(ctx context.Context, name string) (uuid.UUID, error) {
-	entity, err := pg.GetByName(ctx, s.db, name, &models.Metro{})
+	entity, err := dao.GetByName(ctx, s.db, name, &models.Metro{})
 	if err != nil {
 		return uuid.Nil, err
 	}

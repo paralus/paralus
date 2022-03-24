@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/RafaySystems/rcloud-base/internal/dao"
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	systemv3 "github.com/RafaySystems/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
@@ -65,7 +65,7 @@ func (s *partnerService) Create(ctx context.Context, partner *systemv3.Partner) 
 		CreatedAt:                 time.Now(),
 		ModifiedAt:                time.Now(),
 	}
-	entity, err := pg.Create(ctx, s.db, &part)
+	entity, err := dao.Create(ctx, s.db, &part)
 	if err != nil {
 		return &systemv3.Partner{}, err
 	}
@@ -94,7 +94,7 @@ func (s *partnerService) GetByID(ctx context.Context, id string) (*systemv3.Part
 	if err != nil {
 		return &systemv3.Partner{}, err
 	}
-	entity, err := pg.GetByID(ctx, s.db, uid, &models.Partner{})
+	entity, err := dao.GetByID(ctx, s.db, uid, &models.Partner{})
 	if err != nil {
 		return &systemv3.Partner{}, err
 	}
@@ -152,7 +152,7 @@ func (s *partnerService) GetByName(ctx context.Context, name string) (*systemv3.
 		},
 	}
 
-	entity, err := pg.GetByName(ctx, s.db, name, &models.Partner{})
+	entity, err := dao.GetByName(ctx, s.db, name, &models.Partner{})
 	if err != nil {
 		return &systemv3.Partner{}, err
 	}
@@ -203,7 +203,7 @@ func (s *partnerService) GetByName(ctx context.Context, name string) (*systemv3.
 
 func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error) {
 
-	entity, err := pg.GetByName(ctx, s.db, partner.Metadata.Name, &models.Partner{})
+	entity, err := dao.GetByName(ctx, s.db, partner.Metadata.Name, &models.Partner{})
 	if err != nil {
 		return &systemv3.Partner{}, err
 	}
@@ -232,7 +232,7 @@ func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) 
 		part.ModifiedAt = time.Now()
 
 		//Update the partner details
-		_, err = pg.Update(ctx, s.db, part.ID, part)
+		_, err = dao.Update(ctx, s.db, part.ID, part)
 		if err != nil {
 			return &systemv3.Partner{}, err
 		}
@@ -246,13 +246,13 @@ func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) 
 }
 
 func (s *partnerService) Delete(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error) {
-	entity, err := pg.GetByName(ctx, s.db, partner.Metadata.Name, &models.Partner{})
+	entity, err := dao.GetByName(ctx, s.db, partner.Metadata.Name, &models.Partner{})
 	if err != nil {
 		return &systemv3.Partner{}, err
 	}
 
 	if part, ok := entity.(*models.Partner); ok {
-		err := pg.Delete(ctx, s.db, part.ID, part)
+		err := dao.Delete(ctx, s.db, part.ID, part)
 		if err != nil {
 			return &systemv3.Partner{}, err
 		}

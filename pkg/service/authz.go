@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/RafaySystems/rcloud-base/internal/dao"
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	authzpbv1 "github.com/RafaySystems/rcloud-base/proto/types/authz"
 	"github.com/casbin/casbin/v2"
 	"github.com/uptrace/bun"
@@ -91,7 +91,7 @@ func processRpms(rpm models.ResourcePermission) []rpmUrlAction {
 
 func (s *authzService) cacheResourceRolePermissions(ctx context.Context) error {
 	var items []models.ResourcePermission
-	entities, err := pg.ListAll(ctx, s.db, &items)
+	entities, err := dao.ListAll(ctx, s.db, &items)
 	if err != nil {
 		return err
 	}

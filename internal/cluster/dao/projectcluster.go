@@ -3,8 +3,8 @@ package dao
 import (
 	"context"
 
+	"github.com/RafaySystems/rcloud-base/internal/dao"
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	"github.com/RafaySystems/rcloud-base/pkg/query"
 	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	"github.com/google/uuid"
@@ -12,7 +12,7 @@ import (
 )
 
 func CreateProjectCluster(ctx context.Context, db bun.IDB, pc *models.ProjectCluster) error {
-	_, err := pg.Create(ctx, db, pc)
+	_, err := dao.Create(ctx, db, pc)
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func GetProjectsForCluster(ctx context.Context, db bun.IDB, clusterID uuid.UUID)
 }
 
 func DeleteProjectsForCluster(ctx context.Context, db bun.IDB, clusterID uuid.UUID) error {
-	return pg.DeleteX(ctx, db, "cluster_id", clusterID, &models.ProjectCluster{})
+	return dao.DeleteX(ctx, db, "cluster_id", clusterID, &models.ProjectCluster{})
 }
 
 // Check if the project in scope is owner of the cluster

@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/RafaySystems/rcloud-base/internal/dao"
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	systemv3 "github.com/RafaySystems/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
@@ -49,7 +49,7 @@ func NewOrganizationService(db *bun.DB) OrganizationService {
 func (s *organizationService) Create(ctx context.Context, org *systemv3.Organization) (*systemv3.Organization, error) {
 
 	var partner models.Partner
-	_, err := pg.GetByName(ctx, s.db, org.Metadata.Partner, &partner)
+	_, err := dao.GetByName(ctx, s.db, org.Metadata.Partner, &partner)
 	if err != nil {
 		return &systemv3.Organization{}, err
 	}
@@ -91,7 +91,7 @@ func (s *organizationService) Create(ctx context.Context, org *systemv3.Organiza
 		CreatedAt:         time.Now(),
 		ModifiedAt:        time.Now(),
 	}
-	entity, err := pg.Create(ctx, s.db, &organization)
+	entity, err := dao.Create(ctx, s.db, &organization)
 	if err != nil {
 		return &systemv3.Organization{}, err
 	}
@@ -119,7 +119,7 @@ func (s *organizationService) GetByID(ctx context.Context, id string) (*systemv3
 	if err != nil {
 		return &systemv3.Organization{}, err
 	}
-	entity, err := pg.GetByID(ctx, s.db, uid, &models.Organization{})
+	entity, err := dao.GetByID(ctx, s.db, uid, &models.Organization{})
 	if err != nil {
 		return &systemv3.Organization{}, err
 	}
@@ -127,7 +127,7 @@ func (s *organizationService) GetByID(ctx context.Context, id string) (*systemv3
 	if org, ok := entity.(*models.Organization); ok {
 
 		var partner models.Partner
-		_, err := pg.GetByID(ctx, s.db, org.PartnerId, &partner)
+		_, err := dao.GetByID(ctx, s.db, org.PartnerId, &partner)
 		if err != nil {
 			return &systemv3.Organization{}, err
 		}
@@ -165,7 +165,7 @@ func (s *organizationService) GetByName(ctx context.Context, name string) (*syst
 			Name: name,
 		},
 	}
-	entity, err := pg.GetByName(ctx, s.db, name, &models.Organization{})
+	entity, err := dao.GetByName(ctx, s.db, name, &models.Organization{})
 	if err != nil {
 		return &systemv3.Organization{}, err
 	}
@@ -173,7 +173,7 @@ func (s *organizationService) GetByName(ctx context.Context, name string) (*syst
 	if org, ok := entity.(*models.Organization); ok {
 
 		var partner models.Partner
-		_, err := pg.GetByID(ctx, s.db, org.PartnerId, &partner)
+		_, err := dao.GetByID(ctx, s.db, org.PartnerId, &partner)
 		if err != nil {
 			return &systemv3.Organization{}, err
 		}
@@ -189,7 +189,7 @@ func (s *organizationService) GetByName(ctx context.Context, name string) (*syst
 
 func (s *organizationService) Update(ctx context.Context, organization *systemv3.Organization) (*systemv3.Organization, error) {
 
-	entity, err := pg.GetByName(ctx, s.db, organization.Metadata.Name, &models.Organization{})
+	entity, err := dao.GetByName(ctx, s.db, organization.Metadata.Name, &models.Organization{})
 	if err != nil {
 		return &systemv3.Organization{}, err
 	}
@@ -222,7 +222,7 @@ func (s *organizationService) Update(ctx context.Context, organization *systemv3
 		org.IsTOTPEnabled = organization.GetSpec().GetIsTotpEnabled()
 		org.AreClustersShared = organization.GetSpec().GetAreClustersShared()
 
-		_, err = pg.Update(ctx, s.db, org.ID, org)
+		_, err = dao.Update(ctx, s.db, org.ID, org)
 		if err != nil {
 			return &systemv3.Organization{}, err
 		}
@@ -233,13 +233,13 @@ func (s *organizationService) Update(ctx context.Context, organization *systemv3
 
 func (s *organizationService) Delete(ctx context.Context, organization *systemv3.Organization) (*systemv3.Organization, error) {
 
-	entity, err := pg.GetByName(ctx, s.db, organization.Metadata.Name, &models.Organization{})
+	entity, err := dao.GetByName(ctx, s.db, organization.Metadata.Name, &models.Organization{})
 	if err != nil {
 		return &systemv3.Organization{}, err
 	}
 
 	if org, ok := entity.(*models.Organization); ok {
-		err := pg.Delete(ctx, s.db, org.ID, org)
+		err := dao.Delete(ctx, s.db, org.ID, org)
 		if err != nil {
 			return &systemv3.Organization{}, err
 		}
@@ -264,13 +264,13 @@ func (s *organizationService) List(ctx context.Context, organization *systemv3.O
 	}
 	if len(organization.Metadata.Partner) > 0 {
 		var partner models.Partner
-		_, err := pg.GetByName(ctx, s.db, organization.Metadata.Partner, &partner)
+		_, err := dao.GetByName(ctx, s.db, organization.Metadata.Partner, &partner)
 		if err != nil {
 			return &systemv3.OrganizationList{}, err
 		}
 
 		var orgs []models.Organization
-		entities, err := pg.List(ctx, s.db, uuid.NullUUID{UUID: partner.ID, Valid: true}, uuid.NullUUID{UUID: uuid.Nil}, &orgs)
+		entities, err := dao.List(ctx, s.db, uuid.NullUUID{UUID: partner.ID, Valid: true}, uuid.NullUUID{UUID: uuid.Nil}, &orgs)
 		if err != nil {
 			return &systemv3.OrganizationList{}, err
 		}

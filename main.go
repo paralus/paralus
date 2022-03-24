@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/RafaySystems/rcloud-base/internal/fixtures"
-	providers "github.com/RafaySystems/rcloud-base/internal/persistence/provider/kratos"
+	providers "github.com/RafaySystems/rcloud-base/internal/provider/kratos"
 	authv3 "github.com/RafaySystems/rcloud-base/pkg/auth/v3"
 	"github.com/RafaySystems/rcloud-base/pkg/common"
 	"github.com/RafaySystems/rcloud-base/pkg/enforcer"

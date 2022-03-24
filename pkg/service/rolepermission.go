@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
+	"github.com/RafaySystems/rcloud-base/internal/dao"
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	rolev3 "github.com/RafaySystems/rcloud-base/proto/types/rolepb/v3"
 	"github.com/google/uuid"
@@ -47,11 +47,11 @@ func (s *rolepermissionService) toV3Rolepermission(rolepermission *rolev3.RolePe
 func (s *rolepermissionService) getPartnerOrganization(ctx context.Context, rolepermission *rolev3.RolePermission) (uuid.UUID, uuid.UUID, error) {
 	partner := rolepermission.GetMetadata().GetPartner()
 	org := rolepermission.GetMetadata().GetOrganization()
-	partnerId, err := pg.GetPartnerId(ctx, s.db, partner)
+	partnerId, err := dao.GetPartnerId(ctx, s.db, partner)
 	if err != nil {
 		return uuid.Nil, uuid.Nil, err
 	}
-	organizationId, err := pg.GetOrganizationId(ctx, s.db, org)
+	organizationId, err := dao.GetOrganizationId(ctx, s.db, org)
 	if err != nil {
 		return partnerId, uuid.Nil, err
 	}
@@ -61,7 +61,7 @@ func (s *rolepermissionService) getPartnerOrganization(ctx context.Context, role
 
 func (s *rolepermissionService) GetByName(ctx context.Context, rolepermission *rolev3.RolePermission) (*rolev3.RolePermission, error) {
 	name := rolepermission.GetMetadata().GetName()
-	entity, err := pg.GetByName(ctx, s.db, name, &models.ResourcePermission{})
+	entity, err := dao.GetByName(ctx, s.db, name, &models.ResourcePermission{})
 	if err != nil {
 		return rolepermission, err
 	}
@@ -85,7 +85,7 @@ func (s *rolepermissionService) List(ctx context.Context, rolepermission *rolev3
 		},
 	}
 	var rles []models.ResourcePermission
-	entities, err := pg.List(ctx, s.db, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, &rles)
+	entities, err := dao.List(ctx, s.db, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, &rles)
 	if err != nil {
 		return rolepermissionList, err
 	}

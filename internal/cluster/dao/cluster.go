@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/RafaySystems/rcloud-base/internal/cluster/constants"
+	"github.com/RafaySystems/rcloud-base/internal/dao"
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -51,7 +51,7 @@ func CreateCluster(ctx context.Context, tx bun.IDB, cluster *models.Cluster) err
 
 func UpdateCluster(ctx context.Context, db bun.IDB, c *models.Cluster) error {
 
-	_, err := pg.Update(ctx, db, c.ID, c)
+	_, err := dao.Update(ctx, db, c.ID, c)
 	if err != nil {
 		return err
 	}
@@ -74,12 +74,12 @@ func UpdateClusterAnnotations(ctx context.Context, db bun.IDB, c *models.Cluster
 func GetCluster(ctx context.Context, db bun.IDB, cluster *models.Cluster) (*models.Cluster, error) {
 
 	if cluster.ID != uuid.Nil {
-		_, err := pg.GetByID(ctx, db, cluster.ID, cluster)
+		_, err := dao.GetByID(ctx, db, cluster.ID, cluster)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		_, err := pg.GetByName(ctx, db, cluster.Name, cluster)
+		_, err := dao.GetByName(ctx, db, cluster.Name, cluster)
 		if err != nil {
 			return nil, err
 		}
@@ -103,7 +103,7 @@ func ListClusters(ctx context.Context, db bun.IDB, qo commonv3.QueryOptions) (cl
 	oid := uuid.NullUUID{UUID: uuid.MustParse(qo.Organization), Valid: true}
 	prid := uuid.NullUUID{UUID: uuid.MustParse(qo.Project), Valid: true}
 
-	err = pg.ListByProject(ctx, db, pid, oid, prid, &clusters)
+	err = dao.ListByProject(ctx, db, pid, oid, prid, &clusters)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func ListClusters(ctx context.Context, db bun.IDB, qo commonv3.QueryOptions) (cl
 }
 
 func GetClusterForToken(ctx context.Context, db bun.IDB, token string) (cluster *models.Cluster, err error) {
-	entity, err := pg.GetX(ctx, db, "token", token, &models.Cluster{})
+	entity, err := dao.GetX(ctx, db, "token", token, &models.Cluster{})
 	if err != nil {
 		return nil, err
 	}

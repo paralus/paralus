@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/RafaySystems/rcloud-base/internal/dao"
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	v3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	systemv3 "github.com/RafaySystems/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
@@ -53,7 +53,7 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 	}
 
 	var org models.Organization
-	_, err := pg.GetByName(ctx, s.db, project.Metadata.Organization, &org)
+	_, err := dao.GetByName(ctx, s.db, project.Metadata.Organization, &org)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 		PartnerId:      org.PartnerId,
 		Default:        project.GetSpec().GetDefault(),
 	}
-	entity, err := pg.Create(ctx, s.db, &proj)
+	entity, err := dao.Create(ctx, s.db, &proj)
 	if err != nil {
 		return &systemv3.Project{}, err
 	}
@@ -100,7 +100,7 @@ func (s *projectService) GetByID(ctx context.Context, id string) (*systemv3.Proj
 	if err != nil {
 		return &systemv3.Project{}, err
 	}
-	entity, err := pg.GetByID(ctx, s.db, uid, &models.Project{})
+	entity, err := dao.GetByID(ctx, s.db, uid, &models.Project{})
 	if err != nil {
 		return &systemv3.Project{}, err
 	}
@@ -135,7 +135,7 @@ func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.
 		},
 	}
 
-	entity, err := pg.GetByName(ctx, s.db, name, &models.Project{})
+	entity, err := dao.GetByName(ctx, s.db, name, &models.Project{})
 	if err != nil {
 		return &systemv3.Project{}, err
 	}
@@ -143,13 +143,13 @@ func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.
 	if proj, ok := entity.(*models.Project); ok {
 
 		var org models.Organization
-		_, err := pg.GetByID(ctx, s.db, proj.OrganizationId, &org)
+		_, err := dao.GetByID(ctx, s.db, proj.OrganizationId, &org)
 		if err != nil {
 			return nil, err
 		}
 
 		var partner models.Partner
-		_, err = pg.GetByID(ctx, s.db, proj.PartnerId, &partner)
+		_, err = dao.GetByID(ctx, s.db, proj.PartnerId, &partner)
 		if err != nil {
 			return nil, err
 		}
@@ -173,7 +173,7 @@ func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.
 
 func (s *projectService) Update(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error) {
 
-	entity, err := pg.GetByName(ctx, s.db, project.Metadata.Name, &models.Project{})
+	entity, err := dao.GetByName(ctx, s.db, project.Metadata.Name, &models.Project{})
 	if err != nil {
 		return &systemv3.Project{}, err
 	}
@@ -184,7 +184,7 @@ func (s *projectService) Update(ctx context.Context, project *systemv3.Project) 
 		proj.Default = project.Spec.Default
 		proj.ModifiedAt = time.Now()
 
-		_, err = pg.Update(ctx, s.db, proj.ID, proj)
+		_, err = dao.Update(ctx, s.db, proj.ID, proj)
 		if err != nil {
 			return &systemv3.Project{}, err
 		}
@@ -199,12 +199,12 @@ func (s *projectService) Update(ctx context.Context, project *systemv3.Project) 
 }
 
 func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error) {
-	entity, err := pg.GetByName(ctx, s.db, project.Metadata.Name, &models.Project{})
+	entity, err := dao.GetByName(ctx, s.db, project.Metadata.Name, &models.Project{})
 	if err != nil {
 		return &systemv3.Project{}, err
 	}
 	if proj, ok := entity.(*models.Project); ok {
-		err := pg.Delete(ctx, s.db, proj.ID, proj)
+		err := dao.Delete(ctx, s.db, proj.ID, proj)
 		if err != nil {
 			return &systemv3.Project{}, err
 		}
@@ -228,17 +228,17 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 	}
 	if len(project.Metadata.Organization) > 0 {
 		var org models.Organization
-		_, err := pg.GetByName(ctx, s.db, project.Metadata.Organization, &org)
+		_, err := dao.GetByName(ctx, s.db, project.Metadata.Organization, &org)
 		if err != nil {
 			return &systemv3.ProjectList{}, err
 		}
 		var part models.Partner
-		_, err = pg.GetByName(ctx, s.db, project.Metadata.Partner, &part)
+		_, err = dao.GetByName(ctx, s.db, project.Metadata.Partner, &part)
 		if err != nil {
 			return &systemv3.ProjectList{}, err
 		}
 		var projs []models.Project
-		entities, err := pg.List(ctx, s.db, uuid.NullUUID{UUID: part.ID, Valid: true}, uuid.NullUUID{UUID: org.ID, Valid: true}, &projs)
+		entities, err := dao.List(ctx, s.db, uuid.NullUUID{UUID: part.ID, Valid: true}, uuid.NullUUID{UUID: org.ID, Valid: true}, &projs)
 		if err != nil {
 			return &systemv3.ProjectList{}, err
 		}

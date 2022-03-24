@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/RafaySystems/rcloud-base/internal/dao"
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	infrav3 "github.com/RafaySystems/rcloud-base/proto/types/infrapb/v3"
 	"github.com/RafaySystems/rcloud-base/proto/types/scheduler"
@@ -32,7 +32,7 @@ func GetNamespace(ctx context.Context, db bun.IDB, clusterID uuid.UUID, name str
 func GetNamespaces(ctx context.Context, db bun.IDB, clusterID uuid.UUID) ([]models.ClusterNamespace, error) {
 	var cns []models.ClusterNamespace
 
-	_, err := pg.GetX(ctx, db, "cluster_id", clusterID, &cns)
+	_, err := dao.GetX(ctx, db, "cluster_id", clusterID, &cns)
 	return cns, err
 }
 

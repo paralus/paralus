@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/RafaySystems/rcloud-base/internal/models"
-	"github.com/RafaySystems/rcloud-base/internal/persistence/provider/pg"
 	"github.com/RafaySystems/rcloud-base/internal/random"
 	"github.com/RafaySystems/rcloud-base/pkg/query"
 	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
@@ -124,7 +123,7 @@ func SelectBootstrapAgents(ctx context.Context, db bun.IDB, templateRef string, 
 
 func CreateBootstrapAgent(ctx context.Context, db bun.IDB, ba *models.BootstrapAgent) error {
 	ba.TokenState = sentry.BootstrapAgentState_NotRegistered.String()
-	_, err := pg.Create(ctx, db, ba)
+	_, err := Create(ctx, db, ba)
 	return err
 }
 
@@ -237,7 +236,7 @@ func GetBootstrapAgentForClusterID(ctx context.Context, db bun.IDB, clusterID st
 // updateBootstrapAgentDeleteAt builds query for deleting resource
 func UpdateBootstrapAgentDeleteAt(ctx context.Context, db bun.IDB, templateRef string) error {
 	var toBeDeletedAgent *models.BootstrapAgent
-	_, err := pg.GetX(ctx, db, "template_ref", templateRef, &toBeDeletedAgent)
+	_, err := GetX(ctx, db, "template_ref", templateRef, &toBeDeletedAgent)
 	if err != nil {
 		return err
 	}
