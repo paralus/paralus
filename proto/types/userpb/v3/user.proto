@@ -134,3 +134,22 @@ message UserList {
         read_only : true
       } ];
 }
+
+message UserRole {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "UserRole"
+      description : "User, role pairing for permission"
+    }
+  };
+  string user = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "User"
+        description : "User"
+      } ];
+  string role = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Role"
+        description : "Role"
+      } ];
+}

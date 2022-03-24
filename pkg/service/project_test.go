@@ -21,7 +21,13 @@ func TestCreateProject(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
+<<<<<<< Updated upstream
 	ps := NewProjectService(db)
+=======
+	mazc := mockAuthzClient{}
+	ps := NewProjectService(db, &mazc)
+	defer ps.Close()
+>>>>>>> Stashed changes
 
 	puuid := uuid.New().String()
 	ouuid := uuid.New().String()
@@ -47,7 +53,13 @@ func TestCreateProjectDuplicate(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
+<<<<<<< Updated upstream
 	gs := NewProjectService(db)
+=======
+	mazc := mockAuthzClient{}
+	gs := NewProjectService(db, &mazc)
+	defer gs.Close()
+>>>>>>> Stashed changes
 
 	puuid := uuid.New().String()
 
@@ -69,7 +81,13 @@ func TestProjectDelete(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
+<<<<<<< Updated upstream
 	ps := NewProjectService(db)
+=======
+	mazc := mockAuthzClient{}
+	ps := NewProjectService(db, &mazc)
+	defer ps.Close()
+>>>>>>> Stashed changes
 
 	puuid := uuid.New().String()
 
@@ -92,7 +110,13 @@ func TestProjectDeleteNonExist(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
+<<<<<<< Updated upstream
 	ps := NewProjectService(db)
+=======
+	mazc := mockAuthzClient{}
+	ps := NewProjectService(db, &mazc)
+	defer ps.Close()
+>>>>>>> Stashed changes
 
 	puuid := uuid.New().String()
 
@@ -112,7 +136,13 @@ func TestProjectGetByName(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
+<<<<<<< Updated upstream
 	ps := NewProjectService(db)
+=======
+	mazc := mockAuthzClient{}
+	ps := NewProjectService(db, &mazc)
+	defer ps.Close()
+>>>>>>> Stashed changes
 
 	partuuid := uuid.New().String()
 	ouuid := uuid.New().String()
@@ -140,7 +170,13 @@ func TestProjectGetById(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
+<<<<<<< Updated upstream
 	ps := NewProjectService(db)
+=======
+	mazc := mockAuthzClient{}
+	ps := NewProjectService(db, &mazc)
+	defer ps.Close()
+>>>>>>> Stashed changes
 
 	puuid := uuid.New().String()
 
@@ -161,7 +197,13 @@ func TestProjectUpdate(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
+<<<<<<< Updated upstream
 	ps := NewProjectService(db)
+=======
+	mazc := mockAuthzClient{}
+	ps := NewProjectService(db, &mazc)
+	defer ps.Close()
+>>>>>>> Stashed changes
 
 	puuid := uuid.New().String()
 

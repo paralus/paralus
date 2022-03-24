@@ -59,14 +59,14 @@ func (s *apiKeyService) Create(ctx context.Context, req *rpcv3.ApiKeyRequest) (*
 func (s *apiKeyService) Delete(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.DeleteUserResponse, error) {
 	_, err := s.db.NewUpdate().Model(&models.ApiKey{}).
 		Set("trash = ?", true).
-		Where("name = ?", req.Username).
+		Where("account_id = ?", req.Username).
 		Where("key = ?", req.Id).Exec(ctx)
 	return nil, err
 }
 
 func (s *apiKeyService) List(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.ApiKeyResponseList, error) {
 	var apikeys []models.ApiKey
-	resp, err := dao.GetByName(ctx, s.db, req.Username, &apikeys)
+	resp, err := dao.GetX(ctx, s.db, "account_id", req.Username, &apikeys)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}

@@ -35,7 +35,7 @@ func GetUserRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Proj
 
 	var pr = []*userv3.ProjectNamespaceRole{}
 	err = db.NewSelect().Table("authsrv_projectaccountresourcerole").
-		ColumnExpr("authsrv_resourcerole.name as role, authsrv_project.name as project").
+		ColumnExpr("distinct authsrv_resourcerole.name as role, authsrv_project.name as project").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id`).
 		Join(`JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountresourcerole.project_id`).
 		Where("authsrv_projectaccountresourcerole.account_id = ?", id).

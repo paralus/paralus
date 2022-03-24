@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 type PartnerClient interface {
 	CreatePartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error)
 	GetPartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error)
+	GetInitPartner(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*v3.Partner, error)
 	UpdatePartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error)
 	DeletePartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error)
 }
@@ -51,6 +52,15 @@ func (c *partnerClient) GetPartner(ctx context.Context, in *v3.Partner, opts ...
 	return out, nil
 }
 
+func (c *partnerClient) GetInitPartner(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*v3.Partner, error) {
+	out := new(v3.Partner)
+	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Partner/GetInitPartner", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *partnerClient) UpdatePartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error) {
 	out := new(v3.Partner)
 	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Partner/UpdatePartner", in, out, opts...)
@@ -75,6 +85,7 @@ func (c *partnerClient) DeletePartner(ctx context.Context, in *v3.Partner, opts 
 type PartnerServer interface {
 	CreatePartner(context.Context, *v3.Partner) (*v3.Partner, error)
 	GetPartner(context.Context, *v3.Partner) (*v3.Partner, error)
+	GetInitPartner(context.Context, *EmptyRequest) (*v3.Partner, error)
 	UpdatePartner(context.Context, *v3.Partner) (*v3.Partner, error)
 	DeletePartner(context.Context, *v3.Partner) (*v3.Partner, error)
 }
@@ -88,6 +99,9 @@ func (UnimplementedPartnerServer) CreatePartner(context.Context, *v3.Partner) (*
 }
 func (UnimplementedPartnerServer) GetPartner(context.Context, *v3.Partner) (*v3.Partner, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPartner not implemented")
+}
+func (UnimplementedPartnerServer) GetInitPartner(context.Context, *EmptyRequest) (*v3.Partner, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetInitPartner not implemented")
 }
 func (UnimplementedPartnerServer) UpdatePartner(context.Context, *v3.Partner) (*v3.Partner, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePartner not implemented")
@@ -143,6 +157,24 @@ func _Partner_GetPartner_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Partner_GetInitPartner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EmptyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PartnerServer).GetInitPartner(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rafay.dev.rpc.v3.Partner/GetInitPartner",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PartnerServer).GetInitPartner(ctx, req.(*EmptyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Partner_UpdatePartner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Partner)
 	if err := dec(in); err != nil {
@@ -193,6 +225,10 @@ var Partner_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPartner",
 			Handler:    _Partner_GetPartner_Handler,
+		},
+		{
+			MethodName: "GetInitPartner",
+			Handler:    _Partner_GetInitPartner_Handler,
 		},
 		{
 			MethodName: "UpdatePartner",

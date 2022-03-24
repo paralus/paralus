@@ -65,6 +65,11 @@ message ProjectNamespaceRole {
         title : "Role"
         description : "Role"
       } ];
+  optional string group = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Group"
+        description : "Group"
+      } ];
 }
 
 message GroupSpec {

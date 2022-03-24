@@ -7,6 +7,7 @@ import (
 
 	"github.com/RafayLabs/rcloud-base/internal/dao"
 	"github.com/RafayLabs/rcloud-base/internal/models"
+	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
 	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
@@ -38,12 +39,13 @@ type ProjectService interface {
 
 // projectService implements ProjectService
 type projectService struct {
-	db *bun.DB
+	db  *bun.DB
+	azc AuthzService
 }
 
 // NewProjectService return new project service
-func NewProjectService(db *bun.DB) ProjectService {
-	return &projectService{db}
+func NewProjectService(db *bun.DB, azc AuthzService) ProjectService {
+	return &projectService{db: db, azc: azc}
 }
 
 func (s *projectService) Create(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error) {
@@ -76,6 +78,17 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 
 	//update v3 spec
 	if createdProject, ok := entity.(*models.Project); ok {
+
+		project, err = s.createGroupRoleRelations(ctx, project, parsedIds{Id: createdProject.ID, Partner: createdProject.PartnerId, Organization: createdProject.OrganizationId})
+		if err != nil {
+			return &systemv3.Project{}, err
+		}
+
+		project, err = s.createProjectAccountRelations(ctx, createdProject.ID, project)
+		if err != nil {
+			return &systemv3.Project{}, err
+		}
+
 		project.Metadata.Id = createdProject.ID.String()
 		project.Spec = &systemv3.ProjectSpec{
 			Default: createdProject.Default,
@@ -154,6 +167,16 @@ func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.
 			return nil, err
 		}
 
+		pnr, err := dao.GetProjectGroupRoles(ctx, s.db, proj.ID)
+		if err != nil {
+			return nil, err
+		}
+
+		ur, err := dao.GetProjectUserRoles(ctx, s.db, proj.ID)
+		if err != nil {
+			return nil, err
+		}
+
 		project.Metadata = &v3.Metadata{
 			Name:         proj.Name,
 			Description:  proj.Description,
@@ -162,7 +185,9 @@ func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.
 			ModifiedAt:   timestamppb.New(proj.ModifiedAt),
 		}
 		project.Spec = &systemv3.ProjectSpec{
-			Default: proj.Default,
+			Default:               proj.Default,
+			ProjectNamespaceRoles: pnr,
+			UserRoles:             ur,
 		}
 
 		return project, nil
@@ -184,14 +209,44 @@ func (s *projectService) Update(ctx context.Context, project *systemv3.Project) 
 		proj.Default = project.Spec.Default
 		proj.ModifiedAt = time.Now()
 
+		project, err = s.deleteGroupRoleRelaitons(ctx, proj.ID, project)
+		if err != nil {
+			return &systemv3.Project{}, err
+		}
+		project, err = s.createGroupRoleRelations(ctx, project, parsedIds{Id: proj.ID, Partner: proj.PartnerId, Organization: proj.OrganizationId})
+		if err != nil {
+			return &systemv3.Project{}, err
+		}
+
+		project, err = s.deleteProjectAccountRelations(ctx, proj.ID, project)
+		if err != nil {
+			return &systemv3.Project{}, err
+		}
+		project, err = s.createProjectAccountRelations(ctx, proj.ID, project)
+		if err != nil {
+			return &systemv3.Project{}, err
+		}
+
 		_, err = dao.Update(ctx, s.db, proj.ID, proj)
 		if err != nil {
 			return &systemv3.Project{}, err
 		}
 
+		pnr, err := dao.GetProjectGroupRoles(ctx, s.db, proj.ID)
+		if err != nil {
+			return nil, err
+		}
+
+		ur, err := dao.GetProjectUserRoles(ctx, s.db, proj.ID)
+		if err != nil {
+			return nil, err
+		}
+
 		//update spec and status
 		project.Spec = &systemv3.ProjectSpec{
-			Default: proj.Default,
+			Default:               proj.Default,
+			ProjectNamespaceRoles: pnr,
+			UserRoles:             ur,
 		}
 	}
 
@@ -204,6 +259,17 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 		return &systemv3.Project{}, err
 	}
 	if proj, ok := entity.(*models.Project); ok {
+
+		project, err = s.deleteGroupRoleRelaitons(ctx, proj.ID, project)
+		if err != nil {
+			return &systemv3.Project{}, err
+		}
+
+		project, err = s.deleteProjectAccountRelations(ctx, proj.ID, project)
+		if err != nil {
+			return &systemv3.Project{}, err
+		}
+
 		err := dao.Delete(ctx, s.db, proj.ID, proj)
 		if err != nil {
 			return &systemv3.Project{}, err
@@ -248,17 +314,29 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 				labels["organization"] = proj.OrganizationId.String()
 				labels["partner"] = proj.PartnerId.String()
 
-				project.Metadata = &v3.Metadata{
-					Name:         proj.Name,
-					Description:  proj.Description,
-					Id:           proj.ID.String(),
-					Organization: proj.OrganizationId.String(),
-					Partner:      proj.PartnerId.String(),
-					Labels:       labels,
-					ModifiedAt:   timestamppb.New(proj.ModifiedAt),
+				pnr, err := dao.GetProjectGroupRoles(ctx, s.db, proj.ID)
+				if err != nil {
+					return nil, err
 				}
-				project.Spec = &systemv3.ProjectSpec{
-					Default: proj.Default,
+				ur, err := dao.GetProjectUserRoles(ctx, s.db, proj.ID)
+				if err != nil {
+					return nil, err
+				}
+				project := &systemv3.Project{
+					Metadata: &v3.Metadata{
+						Name:         proj.Name,
+						Description:  proj.Description,
+						Id:           proj.ID.String(),
+						Organization: proj.OrganizationId.String(),
+						Partner:      proj.PartnerId.String(),
+						Labels:       labels,
+						ModifiedAt:   timestamppb.New(proj.ModifiedAt),
+					},
+					Spec: &systemv3.ProjectSpec{
+						Default:               proj.Default,
+						ProjectNamespaceRoles: pnr,
+						UserRoles:             ur,
+					},
 				}
 				projects = append(projects, project)
 			}
@@ -274,4 +352,159 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 		return projectList, fmt.Errorf("missing organization id in metadata")
 	}
 	return projectList, nil
+}
+
+// Map roles to groups
+func (s *projectService) createGroupRoleRelations(ctx context.Context, project *systemv3.Project, ids parsedIds) (*systemv3.Project, error) {
+	projectNamespaceRoles := project.GetSpec().GetProjectNamespaceRoles()
+
+	var pgrs []models.ProjectGroupRole
+	var ps []*authzv1.Policy
+	for _, pnr := range projectNamespaceRoles {
+		role := pnr.GetRole()
+		entity, err := dao.GetIdByName(ctx, s.db, role, &models.Role{})
+		if err != nil {
+			return &systemv3.Project{}, fmt.Errorf("unable to find role '%v'", role)
+		}
+		var roleId uuid.UUID
+		if rle, ok := entity.(*models.Role); ok {
+			roleId = rle.ID
+		} else {
+			return &systemv3.Project{}, fmt.Errorf("unable to find role '%v'", role)
+		}
+
+		grp := pnr.GetGroup()
+		entity, err = dao.GetIdByName(ctx, s.db, grp, &models.Group{})
+		if err != nil {
+			return &systemv3.Project{}, fmt.Errorf("unable to find group '%v'", grp)
+		}
+		var grpId uuid.UUID
+		var grpName string
+		if g, ok := entity.(*models.Group); ok {
+			grpId = g.ID
+			grpName = g.Name
+		} else {
+			return &systemv3.Project{}, fmt.Errorf("unable to find group '%v'", grp)
+		}
+
+		org := project.Metadata.Organization
+		pgr := models.ProjectGroupRole{
+			Trash:          false,
+			RoleId:         roleId,
+			PartnerId:      ids.Partner,
+			OrganizationId: ids.Organization,
+			GroupId:        grpId,
+			ProjectId:      ids.Id,
+			Active:         true,
+		}
+		pgrs = append(pgrs, pgr)
+
+		ps = append(ps, &authzv1.Policy{
+			Sub:  "g:" + grpName,
+			Ns:   "*",
+			Proj: project.Metadata.Name,
+			Org:  org,
+			Obj:  role,
+		})
+	}
+	if len(pgrs) > 0 {
+		_, err := dao.Create(ctx, s.db, &pgrs)
+		if err != nil {
+			return &systemv3.Project{}, err
+		}
+	}
+
+	if len(ps) > 0 {
+		success, err := s.azc.CreatePolicies(ctx, &authzv1.Policies{Policies: ps})
+		if err != nil || !success.Res {
+			return &systemv3.Project{}, fmt.Errorf("unable to create mapping in authz; %v", err)
+		}
+	}
+
+	return project, nil
+}
+
+func (s *projectService) deleteGroupRoleRelaitons(ctx context.Context, projectId uuid.UUID, project *systemv3.Project) (*systemv3.Project, error) {
+	// delete previous entries
+	err := dao.DeleteX(ctx, s.db, "project_id", projectId, &models.ProjectGroupRole{})
+	if err != nil {
+		return &systemv3.Project{}, err
+	}
+
+	_, err = s.azc.DeletePolicies(ctx, &authzv1.Policy{Proj: project.GetMetadata().GetName()})
+	if err != nil {
+		return &systemv3.Project{}, fmt.Errorf("unable to delete project group-role relations from authz; %v", err)
+	}
+	return project, nil
+}
+
+func (s *projectService) deleteProjectAccountRelations(ctx context.Context, projectId uuid.UUID, project *systemv3.Project) (*systemv3.Project, error) {
+	err := dao.DeleteX(ctx, s.db, "project_id", projectId, &models.ProjectAccountResourcerole{})
+	if err != nil {
+		return &systemv3.Project{}, fmt.Errorf("unable to delete project; %v", err)
+	}
+
+	_, err = s.azc.DeletePolicies(ctx, &authzv1.Policy{Proj: project.GetMetadata().GetName()})
+	if err != nil {
+		return &systemv3.Project{}, fmt.Errorf("unable to delete project user-role relations from authz; %v", err)
+	}
+	return project, nil
+}
+
+// Update the users(account) mapped to each project
+func (s *projectService) createProjectAccountRelations(ctx context.Context, projectId uuid.UUID, project *systemv3.Project) (*systemv3.Project, error) {
+	var parrs []models.ProjectAccountResourcerole
+	var ugs []*authzv1.Policy
+
+	for _, ur := range project.Spec.UserRoles {
+		// FIXME: do combined lookup
+		entity, err := dao.GetIdByTraits(ctx, s.db, ur.User, &models.KratosIdentities{})
+		if err != nil {
+			return &systemv3.Project{}, fmt.Errorf("unable to find user '%v'", ur.User)
+		}
+		rentity, err := dao.GetByName(ctx, s.db, ur.Role, &models.Role{})
+		if err != nil {
+			return &systemv3.Project{}, fmt.Errorf("unable to find user '%v'", ur.User)
+		}
+
+		if acc, ok := entity.(*models.KratosIdentities); ok {
+			if role, ok := rentity.(*models.Role); ok {
+				parr := models.ProjectAccountResourcerole{
+					CreatedAt:      time.Now(),
+					ModifiedAt:     time.Now(),
+					Trash:          false,
+					AccountId:      acc.ID,
+					ProjectId:      projectId,
+					RoleId:         role.ID,
+					OrganizationId: role.OrganizationId,
+					PartnerId:      role.PartnerId,
+					Active:         true,
+				}
+				parrs = append(parrs, parr)
+				ugs = append(ugs, &authzv1.Policy{
+					Sub:  "u:" + ur.User,
+					Proj: project.Metadata.Name,
+					Org:  project.Metadata.Organization,
+					Ns:   "*",
+					Obj:  role.Name,
+				})
+			}
+		}
+	}
+	if len(parrs) == 0 {
+		return project, nil
+	}
+	_, err := dao.Create(ctx, s.db, &parrs)
+	if err != nil {
+		return &systemv3.Project{}, err
+	}
+
+	// TODO: revert our db inserts if this fails
+	// Just FYI, the succcess can be false if we delete the db directly but casbin has it available internally
+	_, err = s.azc.CreatePolicies(ctx, &authzv1.Policies{Policies: ugs})
+	if err != nil {
+		return &systemv3.Project{}, fmt.Errorf("unable to create mapping in authz; %v", err)
+	}
+
+	return project, nil
 }

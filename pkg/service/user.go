@@ -228,6 +228,64 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 	return user, nil
 }
 
+// Update the groups mapped to each user(account)
+func (s *userService) createGroupAccountRelations(ctx context.Context, db bun.IDB, userId uuid.UUID, usr *userv3.User) (*userv3.User, error) {
+	// TODO: add transactions
+	var grpaccs []models.GroupAccount
+	var ugs []*authzv1.UserGroup
+	for _, group := range unique(usr.GetSpec().GetGroups()) {
+		// FIXME: do combined lookup
+		entity, err := dao.GetByName(ctx, s.db, group, &models.Group{})
+		if err != nil {
+			return &userv3.User{}, fmt.Errorf("unable to find group '%v'", group)
+		}
+		if grp, ok := entity.(*models.Group); ok {
+			grp := models.GroupAccount{
+				CreatedAt:  time.Now(),
+				ModifiedAt: time.Now(),
+				Trash:      false,
+				AccountId:  userId,
+				GroupId:    grp.ID,
+				Active:     true,
+			}
+			grpaccs = append(grpaccs, grp)
+			ugs = append(ugs, &authzv1.UserGroup{
+				Grp:  "g:" + grp.Name,
+				User: "u:" + usr.Metadata.Name,
+			})
+		}
+	}
+	if len(grpaccs) == 0 {
+		return usr, nil
+	}
+	_, err := dao.Create(ctx, db, &grpaccs)
+	if err != nil {
+		return &userv3.User{}, err
+	}
+
+	// TODO: revert our db inserts if this fails
+	// Just FYI, the succcess can be false if we delete the db directly but casbin has it available internally
+	_, err = s.azc.CreateUserGroups(ctx, &authzv1.UserGroups{UserGroups: ugs})
+	if err != nil {
+		return &userv3.User{}, fmt.Errorf("unable to create mapping in authz; %v", err)
+	}
+
+	return usr, nil
+}
+
+func (s *userService) deleteGroupAccountRelations(ctx context.Context, db bun.IDB, userId uuid.UUID, usr *userv3.User) (*userv3.User, error) {
+	err := dao.DeleteX(ctx, db, "account_id", userId, &models.GroupAccount{})
+	if err != nil {
+		return &userv3.User{}, fmt.Errorf("unable to delete user; %v", err)
+	}
+
+	_, err = s.azc.DeleteUserGroups(ctx, &authzv1.UserGroup{Grp: "u:" + usr.GetMetadata().GetName()})
+	if err != nil {
+		return &userv3.User{}, fmt.Errorf("unable to delete group-user relations from authz; %v", err)
+	}
+	return usr, nil
+}
+
 // FIXME: make this generic
 func (s *userService) getPartnerOrganization(ctx context.Context, db bun.IDB, user *userv3.User) (uuid.UUID, uuid.UUID, error) {
 	partner := user.GetMetadata().GetPartner()
@@ -274,6 +332,13 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 		tx.Rollback()
 		return &userv3.User{}, err
 	}
+
+	user, err = s.createGroupAccountRelations(ctx, tx, uuid.MustParse(id), user)
+	if err != nil {
+		tx.Rollback()
+		return &userv3.User{}, err
+	}
+
 	err = tx.Commit()
 	if err != nil {
 		tx.Rollback()
@@ -296,8 +361,16 @@ func (s *userService) identitiesModelToUser(ctx context.Context, db bun.IDB, use
 		return &userv3.User{}, err
 	}
 	groupNames := []string{}
+	allAssociatedRoles := []*userv3.ProjectNamespaceRole{}
 	for _, g := range groups {
 		groupNames = append(groupNames, g.Name)
+
+		//group roles
+		groupRoles, err := dao.GetGroupRoles(ctx, db, g.ID)
+		if err != nil {
+			return &userv3.User{}, err
+		}
+		allAssociatedRoles = append(allAssociatedRoles, groupRoles...)
 	}
 
 	labels := make(map[string]string)
@@ -306,6 +379,7 @@ func (s *userService) identitiesModelToUser(ctx context.Context, db bun.IDB, use
 	if err != nil {
 		return &userv3.User{}, err
 	}
+	roles = append(roles, allAssociatedRoles...)
 
 	user.ApiVersion = apiVersion
 	user.Kind = userKind
@@ -314,6 +388,7 @@ func (s *userService) identitiesModelToUser(ctx context.Context, db bun.IDB, use
 		Description: traits.Description,
 		Labels:      labels,
 		ModifiedAt:  timestamppb.New(usr.UpdatedAt),
+		Id:          usr.ID.String(),
 	}
 	user.Spec = &userv3.UserSpec{
 		FirstName:             traits.FirstName,
@@ -363,7 +438,6 @@ func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3
 
 		return user, nil
 	}
-	fmt.Println("user:", user)
 	return user, nil
 }
 
@@ -422,7 +496,19 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 			return &userv3.User{}, err
 		}
 
+		user, err = s.deleteGroupAccountRelations(ctx, tx, usr.ID, user)
+		if err != nil {
+			tx.Rollback()
+			return &userv3.User{}, err
+		}
+
 		user, err = s.createUserRoleRelations(ctx, tx, user, parsedIds{Id: usr.ID, Partner: partnerId, Organization: organizationId})
+		if err != nil {
+			tx.Rollback()
+			return &userv3.User{}, err
+		}
+
+		user, err = s.createGroupAccountRelations(ctx, tx, usr.ID, user)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.User{}, err
@@ -434,6 +520,9 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 			_log.Warn("unable to commit changes", err)
 		}
 		return user, nil
+
+	} else {
+		return &userv3.User{}, fmt.Errorf("unable to update user '%v'", name)
 	}
 
 	return &userv3.User{}, fmt.Errorf("unable to update user '%v'", name)

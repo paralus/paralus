@@ -8,7 +8,6 @@ import (
 	"net"
 	"net/http"
 	goruntime "runtime"
-	"strings"
 	"sync"
 	"time"
 
@@ -274,12 +273,6 @@ func setup() {
 
 	_log.Infow("printing db", "db", db)
 
-	schedulerPool = schedulerrpc.NewSchedulerPool(schedulerAddr, 5*goruntime.NumCPU())
-
-	ps = service.NewPartnerService(db)
-	os = service.NewOrganizationService(db)
-	pps = service.NewProjectService(db)
-
 	// authz services
 	gormDb, err := gorm.Open(postgres.New(postgres.Config{
 		Conn: sqldb,
@@ -292,6 +285,12 @@ func setup() {
 		_log.Fatalw("unable to init enforcer", "error", err)
 	}
 	as = service.NewAuthzService(db, enforcer)
+
+	schedulerPool = schedulerrpc.NewSchedulerPool(schedulerAddr, 5*goruntime.NumCPU())
+
+	ps = service.NewPartnerService(db)
+	os = service.NewOrganizationService(db)
+	pps = service.NewProjectService(db, as)
 
 	// users and role management services
 	cc := common.CliConfigDownloadData{
@@ -319,7 +318,7 @@ func setup() {
 	aps = service.NewAccountPermissionService(db)
 	gps = service.NewGroupPermissionService(db)
 
-	// audit services
+	/*// audit services
 	aus, err = service.NewAuditLogService(elasticSearchUrl, esIndexPrefix+"-*", "AuditLog API: ")
 	if err != nil {
 		if dev && strings.Contains(err.Error(), "connect: connection refused") {
@@ -347,7 +346,7 @@ func setup() {
 		} else {
 			_log.Fatalw("unable to create auditLog service", "error", err)
 		}
-	}
+	}*/
 
 	// cluster bootstrap
 	downloadData = &common.DownloadData{

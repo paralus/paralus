@@ -24,8 +24,9 @@ func GetGroupRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Pro
 	// Could possibly union them later for some speedup
 	var r = []*userv3.ProjectNamespaceRole{}
 	err := db.NewSelect().Table("authsrv_grouprole").
-		ColumnExpr("authsrv_resourcerole.name as role").
+		ColumnExpr("authsrv_resourcerole.name as role, authsrv_group.name as group").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_grouprole.role_id`).
+		Join(`JOIN authsrv_group ON authsrv_group.id=authsrv_grouprole.group_id`).
 		Where("authsrv_grouprole.group_id = ?", id).
 		Where("authsrv_resourcerole.trash = ?", false).
 		Where("authsrv_grouprole.trash = ?", false).
@@ -36,9 +37,10 @@ func GetGroupRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Pro
 
 	var pr = []*userv3.ProjectNamespaceRole{}
 	err = db.NewSelect().Table("authsrv_projectgrouprole").
-		ColumnExpr("authsrv_resourcerole.name as role, authsrv_project.name as project").
+		ColumnExpr("authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id`).
 		Join(`JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id`).
+		Join(`JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id`).
 		Where("authsrv_projectgrouprole.group_id = ?", id).
 		Where("authsrv_project.trash = ?", false).
 		Where("authsrv_projectgrouprole.trash = ?", false).
@@ -50,9 +52,10 @@ func GetGroupRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Pro
 
 	var pnr = []*userv3.ProjectNamespaceRole{}
 	err = db.NewSelect().Table("authsrv_projectgroupnamespacerole").
-		ColumnExpr("authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace").
+		ColumnExpr("authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace, authsrv_group.name as group").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgroupnamespacerole.role_id`).
 		Join(`JOIN authsrv_project ON authsrv_project.id=authsrv_projectgroupnamespacerole.project_id`). // also need a namespace join
+		Join(`JOIN authsrv_group ON authsrv_group.id=authsrv_projectgroupnamespacerole.group_id`).
 		Where("authsrv_projectgroupnamespacerole.group_id = ?", id).
 		Where("authsrv_project.trash = ?", false).
 		Where("authsrv_projectgroupnamespacerole.trash = ?", false).
