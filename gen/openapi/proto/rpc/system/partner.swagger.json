@@ -25,6 +25,37 @@
   ],
   "paths": {
     "/auth/v3/partner": {
+      "get": {
+        "operationId": "Partner_GetInitPartner",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Partner"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Partner"
+        ]
+      },
       "post": {
         "operationId": "Partner_CreatePartner",
         "responses": {

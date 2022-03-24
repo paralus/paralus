@@ -46,6 +46,15 @@ func (s *partnerServer) DeletePartner(ctx context.Context, req *systempbv3.Partn
 	return updatePartnerStatus(req, resp, err), err
 }
 
+func (s *partnerServer) GetInitPartner(ctx context.Context, req *systemrpc.EmptyRequest) (*systempbv3.Partner, error) {
+
+	partner, err := s.GetOnlyPartner(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return partner, nil
+}
+
 func (s *partnerServer) UpdatePartner(ctx context.Context, req *systempbv3.Partner) (*systempbv3.Partner, error) {
 	resp, err := s.Update(ctx, req)
 	return updatePartnerStatus(req, resp, err), err

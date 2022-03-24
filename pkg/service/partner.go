@@ -26,6 +26,8 @@ type PartnerService interface {
 	Update(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error)
 	// delete partner
 	Delete(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error)
+	// list partner
+	GetOnlyPartner(ctx context.Context) (*systemv3.Partner, error)
 }
 
 // partnerService implements PartnerService
@@ -261,4 +263,46 @@ func (s *partnerService) Delete(ctx context.Context, partner *systemv3.Partner) 
 
 	return partner, nil
 
+}
+
+func (s *partnerService) GetOnlyPartner(ctx context.Context) (partner *systemv3.Partner, err error) {
+	var partners []models.Partner
+	entities, err := dao.ListAll(ctx, s.db, &partners)
+	if err != nil {
+		return nil, err
+	}
+	if pts, ok := entities.(*[]models.Partner); ok {
+		for _, part := range *pts {
+			partner = &systemv3.Partner{
+				Metadata: &v3.Metadata{
+					Name:        part.Name,
+					Id:          part.ID.String(),
+					Description: part.Description,
+					ModifiedAt:  timestamppb.New(part.ModifiedAt),
+				},
+				Spec: &systemv3.PartnerSpec{
+					Host:              part.Host,
+					Domain:            part.Domain,
+					TosLink:           part.TosLink,
+					LogoLink:          part.LogoLink,
+					NotificationEmail: part.NotificationEmail,
+					HelpdeskEmail:     part.HelpdeskEmail,
+					ProductName:       part.ProductName,
+					SupportTeamName:   part.SupportTeamName,
+					OpsHost:           part.OpsHost,
+					FavIconLink:       part.FavIconLink,
+					IsTOTPEnabled:     part.IsTOTPEnabled,
+					Settings:          nil,
+				},
+				Status: &v3.Status{
+					ConditionType:   "Describe",
+					ConditionStatus: v3.ConditionStatus_StatusOK,
+					LastUpdated:     timestamppb.New(part.ModifiedAt),
+				},
+			}
+
+			return partner, nil
+		}
+	}
+	return partner, err
 }

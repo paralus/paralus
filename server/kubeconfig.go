@@ -136,6 +136,7 @@ func (s *kubeConfigServer) GetUserSetting(ctx context.Context, req *sentryrpc.Ge
 	}
 	ks, err := s.kss.Get(ctx, opts.Organization, accountID, false)
 	if err == constants.ErrNotFound {
+		req.Opts.UrlScope = "organization/" + opts.Organization
 		return s.GetOrganizationSetting(ctx, req)
 	} else if err != nil {
 		return nil, err

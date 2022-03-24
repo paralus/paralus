@@ -3,6 +3,8 @@ package rafay.dev.types.system.v3;
 
 import "proto/types/commonpb/v3/common.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
+import "proto/types/userpb/v3/group.proto";
+import "proto/types/userpb/v3/user.proto";
 import "google/api/field_behavior.proto";
 
 message ProjectSpec {
@@ -18,6 +20,16 @@ message ProjectSpec {
         title : "Default"
         description : "flag to indicate if this is the default project in the "
                       "organization"
+      } ];
+  repeated rafay.dev.types.user.v3.ProjectNamespaceRole projectNamespaceRoles = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "ProjectNamespaceRoles"
+        description : "Project, namespace, role associations with groups"
+      } ];
+  repeated rafay.dev.types.user.v3.UserRole userRoles = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "UserRoles"
+        description : "List of users with roles assigned to projects"
       } ];
 }
 

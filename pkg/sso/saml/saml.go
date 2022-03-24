@@ -1,7 +1,6 @@
 package saml
 
 import (
-	pg "github.com/RafayLabs/rcloud-base/internal/persistence/provider/pg"
 	"github.com/crewjam/saml/samlsp"
 	"github.com/uptrace/bun"
 )
@@ -11,11 +10,11 @@ type SAMLMiddleware struct {
 }
 
 type SAMLService struct {
-	EntityDAO pg.EntityDAO
+	db *bun.DB
 }
 
 func NewSAMLService(db *bun.DB) *SAMLService {
 	return &SAMLService{
-		EntityDAO: pg.NewEntityDAO(db),
+		db: db,
 	}
 }

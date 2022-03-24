@@ -864,6 +864,34 @@
       "description": "Project list",
       "title": "ProjectList"
     },
+    "v3ProjectNamespaceRole": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "description": "Project",
+          "title": "Project"
+        },
+        "namespace": {
+          "type": "string",
+          "format": "int64",
+          "description": "Namespace",
+          "title": "Namespace"
+        },
+        "role": {
+          "type": "string",
+          "description": "Role",
+          "title": "Role"
+        },
+        "group": {
+          "type": "string",
+          "description": "Group",
+          "title": "Group"
+        }
+      },
+      "description": "Project, role and namespace pairing for permission",
+      "title": "ProjectNamespaceRole"
+    },
     "v3ProjectSpec": {
       "type": "object",
       "properties": {
@@ -871,10 +899,43 @@
           "type": "boolean",
           "description": "flag to indicate if this is the default project in the organization",
           "title": "Default"
+        },
+        "projectNamespaceRoles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3ProjectNamespaceRole"
+          },
+          "description": "Project, namespace, role associations with groups",
+          "title": "ProjectNamespaceRoles"
+        },
+        "userRoles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3UserRole"
+          },
+          "description": "List of users with roles assigned to projects",
+          "title": "UserRoles"
         }
       },
       "description": "project specification",
       "title": "Project Specification"
+    },
+    "v3UserRole": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "string",
+          "description": "User",
+          "title": "User"
+        },
+        "role": {
+          "type": "string",
+          "description": "Role",
+          "title": "Role"
+        }
+      },
+      "description": "User, role pairing for permission",
+      "title": "UserRole"
     }
   },
   "securityDefinitions": {

@@ -24,7 +24,7 @@
     "application/yaml"
   ],
   "paths": {
-    "/v3/partner/{metadata.partner}/location": {
+    "/infra/v3/partner/{metadata.partner}/location": {
       "get": {
         "operationId": "Location_GetLocations",
         "responses": {
@@ -294,7 +294,7 @@
         ]
       }
     },
-    "/v3/partner/{metadata.partner}/location/{metadata.name}": {
+    "/infra/v3/partner/{metadata.partner}/location/{metadata.name}": {
       "get": {
         "operationId": "Location_GetLocation",
         "responses": {
