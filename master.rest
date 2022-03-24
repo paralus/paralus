@@ -359,7 +359,7 @@ metadata:
   organization: :org
 spec:
   isGlobal: true
-  scope: cluster
+  scope: system
 
 # Create role
 POST :host/auth/v3/partner/:partner/organization/:org/roles
@@ -415,3 +415,43 @@ Content-Type: application/yaml
 
 # Audit by project
 GET :host/event/v1/auditlog?filter.timefrom=now-1h
+
+## Partner
+
+# Create partner
+POST :host/auth/v3/partner
+Content-Type: application/yaml
+
+metadata:
+  name: :partner
+  description: "A very important partner"
+spec:
+  host: "https://important.org"
+
+# List organizations
+GET :host/auth/v3/partner/:partner/organizations
+
+# Create organization
+POST :host/auth/v3/partner/:partner/organization
+Content-Type: application/yaml
+
+metadata:
+  partner: :partner
+  name: :org
+  description: "Very first organization"
+spec:
+  active: true
+
+# Create project
+POST :host/auth/v3/partner/:partner/organization/:org/project
+Content-Type: application/yaml
+
+metadata:
+  name: :project
+  description: "Very first project"
+spec:
+  active: true
+
+# Delete project
+DELETE :host/auth/v3/partner/:partner/organization/:org/project/:project
+
