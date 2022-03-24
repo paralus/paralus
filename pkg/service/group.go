@@ -482,17 +482,17 @@ func (s *groupService) Delete(ctx context.Context, group *userv3.Group) (*userv3
 			return &userv3.Group{}, err
 		}
 
-		group, err = s.deleteGroupRoleRelaitons(ctx, s.db, grp.ID, group)
+		group, err = s.deleteGroupRoleRelaitons(ctx, tx, grp.ID, group)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.Group{}, err
 		}
-		group, err = s.deleteGroupAccountRelations(ctx, s.db, grp.ID, group)
+		group, err = s.deleteGroupAccountRelations(ctx, tx, grp.ID, group)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.Group{}, err
 		}
-		err = dao.Delete(ctx, s.db, grp.ID, grp)
+		err = dao.Delete(ctx, tx, grp.ID, grp)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.Group{}, err
