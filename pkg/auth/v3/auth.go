@@ -1,6 +1,8 @@
 package authv3
 
 import (
+	"database/sql"
+	"fmt"
 	"os"
 
 	"github.com/RafayLabs/rcloud-base/pkg/enforcer"
@@ -8,6 +10,9 @@ import (
 	"github.com/RafayLabs/rcloud-base/pkg/service"
 	kclient "github.com/ory/kratos-client-go"
 	"github.com/uptrace/bun"
+
+	"github.com/uptrace/bun/dialect/pgdialect"
+	"github.com/uptrace/bun/driver/pgdriver"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -33,14 +38,23 @@ type authContext struct {
 }
 
 // NewAuthContext setup authentication and authorization dependencies.
-func NewAuthContext(db *bun.DB) authContext {
+func NewAuthContext() authContext {
 	var (
 		kc           *kclient.APIClient
 		kratosScheme string
 		kratosAddr   string
+		db           *bun.DB
 	)
-	// TODO: https://github.com/RafayLabs/prompt/pull/3#issuecomment-1073557206
-	// Where exactly should we be getting these values from?
+
+	// Initialize database
+	dbUser := getEnvWithDefault("DB_USER", "admindbuser")
+	dbPassword := getEnvWithDefault("DB_PASSWORD", "admindbpassword")
+	dbAddr := getEnvWithDefault("DB_ADDR", "localhost:5432")
+	dbName := getEnvWithDefault("DB_NAME", "admindb")
+	dsn := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", dbUser, dbPassword, dbAddr, dbName)
+	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	db = bun.NewDB(sqldb, pgdialect.New())
+
 	if v, ok := os.LookupEnv("KRATOS_SCHEME"); ok {
 		kratosScheme = v
 	} else {
@@ -70,4 +84,12 @@ func NewAuthContext(db *bun.DB) authContext {
 	as := service.NewAuthzService(db, enforcer)
 
 	return authContext{kc: kc, as: as, ks: service.NewApiKeyService(db)}
+}
+
+func getEnvWithDefault(env, def string) string {
+	val := os.Getenv(env)
+	if val == "" {
+		return def
+	}
+	return val
 }

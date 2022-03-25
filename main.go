@@ -554,7 +554,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	var opts []_grpc.ServerOption
 	if !dev {
 		_log.Infow("adding auth interceptor")
-		ac := authv3.NewAuthContext(db)
+		ac := authv3.NewAuthContext()
 		o := authv3.Option{}
 		opts = append(opts, _grpc.UnaryInterceptor(
 			ac.NewAuthUnaryInterceptor(o),
