@@ -55,7 +55,7 @@ func GetUserRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Proj
 		Where("authsrv_projectaccountnamespacerole.account_id = ?", id).
 		Where("authsrv_project.trash = ?", false).
 		Where("authsrv_resourcerole.trash = ?", false).
-		Where("authsrv_projectaccountresourcerole.trash = ?", false).
+		Where("authsrv_projectaccountnamespacerole.trash = ?", false).
 		Scan(ctx, &pnr)
 	if err != nil {
 		return nil, err
