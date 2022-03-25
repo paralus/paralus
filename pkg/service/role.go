@@ -131,10 +131,7 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 	}
 
 	scope := role.GetSpec().GetScope()
-	// since this is purely additional metadata at this point, we
-	// can kinda treat it as optional, and so we are allowing empty
-	// TODO: check if "" is valid
-	if !contains([]string{"system", "organization", "project", ""}, strings.ToLower(scope)) {
+	if !contains([]string{"system", "organization", "project"}, strings.ToLower(scope)) {
 		return nil, fmt.Errorf("unknown scope '%v'", scope)
 	}
 

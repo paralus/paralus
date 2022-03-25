@@ -3,19 +3,24 @@ package authv3
 import (
 	"net/http"
 	"regexp"
+	"strings"
 
+	"github.com/RafayLabs/rcloud-base/internal/dao"
 	commonpbv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"github.com/urfave/negroni"
 )
 
 type authMiddleware struct {
+	db  *bun.DB
 	ac  authContext
 	opt Option
 }
 
 func NewAuthMiddleware(opt Option, db *bun.DB) negroni.Handler {
 	return &authMiddleware{
+		db:  db,
 		ac:  NewAuthContext(db),
 		opt: opt,
 	}
@@ -34,12 +39,48 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 			return
 		}
 	}
+	// Auth is primarily done via grpc endpoints, this is only used
+	// for endoints which do not go through grpc As of now, it is just
+	// prompt.
+	var proj string
+	var org string
+
+	if strings.HasPrefix(r.URL.String(), "/v2/debug/prompt/project/") {
+		// /v2/debug/prompt/project/:project_id/cluster/:cluster_name
+		splits := strings.Split(r.URL.String(), "/")
+		if len(splits) > 5 {
+			projid, err := uuid.Parse(splits[5])
+			if err != nil {
+				_log.Errorf("Failed to authenticate: unable to parse project uuid")
+				http.Error(rw, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+				return
+			}
+			// What gets sent for project is the id unlike most other
+			// api routes, so we have to fetch the name as well as the
+			// org info for casbin
+			proj, org, err = dao.GetProjectOrganization(r.Context(), am.db, projid)
+			if err != nil {
+				_log.Errorf("Failed to authenticate: unable to find project")
+				http.Error(rw, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+				return
+			}
+		}
+	} else {
+		// The middleware to only used with routes which does not have
+		// a grpc and so fail for any other requests.
+		_log.Errorf("Failed to authenticate: not a prompt request")
+		http.Error(rw, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+		return
+	}
+
 	req := &commonpbv3.IsRequestAllowedRequest{
 		Url:           r.URL.String(),
 		Method:        r.Method,
 		XSessionToken: r.Header.Get("X-Session-Token"),
 		XApiKey:       r.Header.Get("X-RAFAY-API-KEYID"),
 		Cookie:        r.Header.Get("Cookie"),
+		Project:       proj,
+		Org:           org,
 	}
 	res, err := am.ac.IsRequestAllowed(r.Context(), r, req)
 	if err != nil {
@@ -64,5 +105,4 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 
 	// status is unknown
 	http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-	return
 }

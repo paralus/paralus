@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -102,55 +102,83 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 	projectNamespaceRoles := user.GetSpec().GetProjectNamespaceRoles()
 
 	// TODO: add transactions
-	var panrs []models.ProjectAccountNamespaceRole
 	var pars []models.ProjectAccountResourcerole
 	var ars []models.AccountResourcerole
 	var ps []*authzv1.Policy
 	for _, pnr := range projectNamespaceRoles {
 		role := pnr.GetRole()
-		entity, err := dao.GetIdByName(ctx, db, role, &models.Role{})
+		entity, err := dao.GetByName(ctx, db, role, &models.Role{})
 		if err != nil {
-			return user, fmt.Errorf("unable to find role '%v'", role)
+			return &userv3.User{}, fmt.Errorf("unable to find role '%v'", role)
 		}
 		var roleId uuid.UUID
+		var roleName string
+		var scope string
 		if rle, ok := entity.(*models.Role); ok {
 			roleId = rle.ID
+			roleName = rle.Name
+			scope = strings.ToLower(rle.Scope)
 		} else {
-			return user, fmt.Errorf("unable to find role '%v'", role)
+			return &userv3.User{}, fmt.Errorf("unable to find role '%v'", role)
 		}
 
 		project := pnr.GetProject()
 		org := user.GetMetadata().GetOrganization()
-		namespaceId := pnr.GetNamespace() // TODO: lookup id from name
 
-		switch {
-		case pnr.Namespace != nil:
-			projectId, err := dao.GetProjectId(ctx, db, project)
-			if err != nil {
-				return user, fmt.Errorf("unable to find project '%v'", project)
-			}
-			panr := models.ProjectAccountNamespaceRole{
+		switch scope {
+		case "system":
+			ar := models.AccountResourcerole{
 				CreatedAt:      time.Now(),
 				ModifiedAt:     time.Now(),
 				Trash:          false,
+				Default:        true,
+				RoleId:         roleId,
+				PartnerId:      ids.Partner,
+				OrganizationId: ids.Organization, // Not really used
+				AccountId:      ids.Id,
+				Active:         true,
+			}
+			ars = append(ars, ar)
+
+			ps = append(ps, &authzv1.Policy{
+				Sub:  "u:" + user.GetMetadata().GetName(),
+				Ns:   "*",
+				Proj: "*",
+				Org:  "*",
+				Obj:  role,
+			})
+		case "organization":
+			if org == "" {
+				return &userv3.User{}, fmt.Errorf("no org name provided for role '%v'", roleName)
+			}
+
+			ar := models.AccountResourcerole{
+				CreatedAt:      time.Now(),
+				ModifiedAt:     time.Now(),
+				Trash:          false,
+				Default:        true,
 				RoleId:         roleId,
 				PartnerId:      ids.Partner,
 				OrganizationId: ids.Organization,
 				AccountId:      ids.Id,
-				ProjectId:      projectId,
-				NamespaceId:    namespaceId,
 				Active:         true,
 			}
-			panrs = append(panrs, panr)
+			ars = append(ars, ar)
 
 			ps = append(ps, &authzv1.Policy{
 				Sub:  "u:" + user.GetMetadata().GetName(),
-				Ns:   strconv.FormatInt(namespaceId, 10),
-				Proj: project,
+				Ns:   "*",
+				Proj: "*",
 				Org:  org,
 				Obj:  role,
 			})
-		case project != "":
+		case "project":
+			if org == "" {
+				return &userv3.User{}, fmt.Errorf("no org name provided for role '%v'", roleName)
+			}
+			if project == "" {
+				return &userv3.User{}, fmt.Errorf("no project name provided for role '%v'", roleName)
+			}
 			projectId, err := dao.GetProjectId(ctx, db, project)
 			if err != nil {
 				return user, fmt.Errorf("unable to find project '%v'", project)
@@ -177,32 +205,9 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 				Obj:  role,
 			})
 		default:
-			ar := models.AccountResourcerole{
-				CreatedAt:      time.Now(),
-				ModifiedAt:     time.Now(),
-				Trash:          false,
-				Default:        true,
-				RoleId:         roleId,
-				PartnerId:      ids.Partner,
-				OrganizationId: ids.Organization,
-				AccountId:      ids.Id,
-				Active:         true,
+			if err != nil {
+				return user, fmt.Errorf("namespace specific roles are not handled")
 			}
-			ars = append(ars, ar)
-
-			ps = append(ps, &authzv1.Policy{
-				Sub:  "u:" + user.GetMetadata().GetName(),
-				Ns:   "*",
-				Proj: "*",
-				Org:  org,
-				Obj:  role,
-			})
-		}
-	}
-	if len(panrs) > 0 {
-		_, err := dao.Create(ctx, db, &panrs)
-		if err != nil {
-			return &userv3.User{}, err
 		}
 	}
 	if len(pars) > 0 {

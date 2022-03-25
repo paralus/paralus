@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"strconv"
+	"strings"
 	"time"
 
 	"github.com/RafayLabs/rcloud-base/internal/dao"
@@ -77,53 +77,75 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 	// TODO: add transactions
 	projectNamespaceRoles := group.GetSpec().GetProjectNamespaceRoles()
 
-	var pgnrs []models.ProjectGroupNamespaceRole
 	var pgrs []models.ProjectGroupRole
 	var grs []models.GroupRole
 	var ps []*authzv1.Policy
 	for _, pnr := range projectNamespaceRoles {
 		role := pnr.GetRole()
-		entity, err := dao.GetIdByName(ctx, db, role, &models.Role{})
+		entity, err := dao.GetByName(ctx, db, role, &models.Role{})
 		if err != nil {
 			return &userv3.Group{}, fmt.Errorf("unable to find role '%v'", role)
 		}
 		var roleId uuid.UUID
+		var roleName string
+		var scope string
 		if rle, ok := entity.(*models.Role); ok {
 			roleId = rle.ID
+			roleName = rle.Name
+			scope = strings.ToLower(rle.Scope)
 		} else {
 			return &userv3.Group{}, fmt.Errorf("unable to find role '%v'", role)
 		}
 
 		project := pnr.GetProject()
 		org := group.GetMetadata().GetOrganization()
-		namespaceId := pnr.GetNamespace() // TODO: lookup id from name
-		switch {
-		case namespaceId != 0:
-			projectId, err := dao.GetProjectId(ctx, db, project)
-			if err != nil {
-				return &userv3.Group{}, fmt.Errorf("unable to find project '%v'", project)
-			}
-			pgnr := models.ProjectGroupNamespaceRole{
+
+		switch scope {
+		case "system":
+			gr := models.GroupRole{
 				Trash:          false,
 				RoleId:         roleId,
 				PartnerId:      ids.Partner,
 				OrganizationId: ids.Organization,
 				GroupId:        ids.Id,
-				ProjectId:      projectId,
-				NamespaceId:    namespaceId,
 				Active:         true,
 			}
-			pgnrs = append(pgnrs, pgnr)
-
+			grs = append(grs, gr)
 			ps = append(ps, &authzv1.Policy{
 				Sub:  "g:" + group.GetMetadata().GetName(),
-				Ns:   strconv.FormatInt(namespaceId, 10),
-				Proj: project,
+				Ns:   "*",
+				Proj: "*",
+				Org:  "*",
+				Obj:  role,
+			})
+		case "organization":
+			if org == "" {
+				return &userv3.Group{}, fmt.Errorf("no org name provided for role '%v'", roleName)
+			}
+			gr := models.GroupRole{
+				Trash:          false,
+				RoleId:         roleId,
+				PartnerId:      ids.Partner,
+				OrganizationId: ids.Organization,
+				GroupId:        ids.Id,
+				Active:         true,
+			}
+			grs = append(grs, gr)
+			ps = append(ps, &authzv1.Policy{
+				Sub:  "g:" + group.GetMetadata().GetName(),
+				Ns:   "*",
+				Proj: "*",
 				Org:  org,
 				Obj:  role,
 			})
-		case project != "":
-			projectId, err := dao.GetProjectId(ctx, db, project)
+		case "project":
+			if org == "" {
+				return &userv3.Group{}, fmt.Errorf("no org name provided for role '%v'", roleName)
+			}
+			if project == "" {
+				return &userv3.Group{}, fmt.Errorf("no project name provided for role '%v'", roleName)
+			}
+			projectId, err := dao.GetProjectId(ctx, s.db, project)
 			if err != nil {
 				return &userv3.Group{}, fmt.Errorf("unable to find project '%v'", project)
 			}
@@ -145,29 +167,6 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 				Org:  org,
 				Obj:  role,
 			})
-		default:
-			gr := models.GroupRole{
-				Trash:          false,
-				RoleId:         roleId,
-				PartnerId:      ids.Partner,
-				OrganizationId: ids.Organization,
-				GroupId:        ids.Id,
-				Active:         true,
-			}
-			grs = append(grs, gr)
-			ps = append(ps, &authzv1.Policy{
-				Sub:  "g:" + group.GetMetadata().GetName(),
-				Ns:   "*",
-				Proj: "*",
-				Org:  org,
-				Obj:  role,
-			})
-		}
-	}
-	if len(pgnrs) > 0 {
-		_, err := dao.Create(ctx, db, &pgnrs)
-		if err != nil {
-			return &userv3.Group{}, err
 		}
 	}
 	if len(pgrs) > 0 {
