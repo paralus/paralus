@@ -52,11 +52,11 @@ func NewRoleService(db *bun.DB, azc AuthzService) RoleService {
 func (s *roleService) getPartnerOrganization(ctx context.Context, db bun.IDB, role *rolev3.Role) (uuid.UUID, uuid.UUID, error) {
 	partner := role.GetMetadata().GetPartner()
 	org := role.GetMetadata().GetOrganization()
-	partnerId, err := dao.GetPartnerId(ctx, s.db, partner)
+	partnerId, err := dao.GetPartnerId(ctx, db, partner)
 	if err != nil {
 		return uuid.Nil, uuid.Nil, err
 	}
-	organizationId, err := dao.GetOrganizationId(ctx, s.db, org)
+	organizationId, err := dao.GetOrganizationId(ctx, db, org)
 	if err != nil {
 		return partnerId, uuid.Nil, err
 	}
@@ -65,7 +65,7 @@ func (s *roleService) getPartnerOrganization(ctx context.Context, db bun.IDB, ro
 }
 
 func (s *roleService) deleteRolePermissionMapping(ctx context.Context, db bun.IDB, rleId uuid.UUID, role *rolev3.Role) (*rolev3.Role, error) {
-	err := dao.DeleteX(ctx, s.db, "resource_role_id", rleId, &models.ResourceRolePermission{})
+	err := dao.DeleteX(ctx, db, "resource_role_id", rleId, &models.ResourceRolePermission{})
 	if err != nil {
 		return &rolev3.Role{}, err
 	}
@@ -87,7 +87,7 @@ func (s *roleService) createRolePermissionMapping(ctx context.Context, db bun.ID
 
 	var items []models.ResourceRolePermission
 	for _, p := range perms {
-		entity, err := dao.GetIdByName(ctx, s.db, p, &models.ResourcePermission{})
+		entity, err := dao.GetIdByName(ctx, db, p, &models.ResourcePermission{})
 		if err != nil {
 			return role, fmt.Errorf("unable to find role permission '%v'", p)
 		}
@@ -101,7 +101,7 @@ func (s *roleService) createRolePermissionMapping(ctx context.Context, db bun.ID
 		}
 	}
 	if len(items) > 0 {
-		_, err := dao.Create(ctx, s.db, &items)
+		_, err := dao.Create(ctx, db, &items)
 		if err != nil {
 			return role, err
 		}
@@ -313,7 +313,7 @@ func (s *roleService) Delete(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 			return &rolev3.Role{}, err
 		}
 
-		err = dao.Delete(ctx, s.db, rle.ID, rle)
+		err = dao.Delete(ctx, tx, rle.ID, rle)
 		if err != nil {
 			tx.Rollback()
 			return &rolev3.Role{}, err
@@ -345,7 +345,7 @@ func (s *roleService) toV3Role(ctx context.Context, db bun.IDB, role *rolev3.Rol
 		Labels:       labels,
 		ModifiedAt:   timestamppb.New(rle.ModifiedAt),
 	}
-	entities, err := dao.GetRolePermissions(ctx, s.db, rle.ID)
+	entities, err := dao.GetRolePermissions(ctx, db, rle.ID)
 	if err != nil {
 		return role, err
 	}

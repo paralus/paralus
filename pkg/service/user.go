@@ -454,7 +454,7 @@ func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3
 			return &userrpcv3.DeleteUserResponse{}, err
 		}
 
-		err = s.deleteUserRoleRelations(ctx, s.db, usr.ID, user)
+		err = s.deleteUserRoleRelations(ctx, tx, usr.ID, user)
 		if err != nil {
 			tx.Rollback()
 			return &userrpcv3.DeleteUserResponse{}, err
@@ -466,7 +466,7 @@ func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3
 			return &userrpcv3.DeleteUserResponse{}, err
 		}
 
-		err = dao.DeleteX(ctx, s.db, "account_id", usr.ID, &models.GroupAccount{})
+		err = dao.DeleteX(ctx, tx, "account_id", usr.ID, &models.GroupAccount{})
 		if err != nil {
 			tx.Rollback()
 			return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("unable to delete user; %v", err)
