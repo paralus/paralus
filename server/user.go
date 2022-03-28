@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	authv3 "github.com/RafayLabs/rcloud-base/pkg/auth/v3"
+	"github.com/RafayLabs/rcloud-base/pkg/query"
 	"github.com/RafayLabs/rcloud-base/pkg/service"
 	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
@@ -41,8 +42,8 @@ func (s *userServer) CreateUser(ctx context.Context, req *userpbv3.User) (*userp
 	return updateUserStatus(req, resp, err), err
 }
 
-func (s *userServer) GetUsers(ctx context.Context, req *userpbv3.User) (*userpbv3.UserList, error) {
-	return s.us.List(ctx, req)
+func (s *userServer) GetUsers(ctx context.Context, req *commonv3.QueryOptions) (*userpbv3.UserList, error) {
+	return s.us.List(ctx, query.WithOptions(req))
 }
 
 func (s *userServer) GetUser(ctx context.Context, req *userpbv3.User) (*userpbv3.User, error) {

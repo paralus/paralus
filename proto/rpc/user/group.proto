@@ -4,6 +4,7 @@ package rafay.dev.rpc.v3;
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "proto/types/userpb/v3/group.proto";
+import "proto/types/commonpb/v3/common.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {
@@ -69,9 +70,9 @@ service Group {
     };
   };
 
-  rpc GetGroups(rafay.dev.types.user.v3.Group) returns (rafay.dev.types.user.v3.GroupList) {
+  rpc GetGroups(rafay.dev.types.common.v3.QueryOptions) returns (rafay.dev.types.user.v3.GroupList) {
     option (google.api.http) = {
-      get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/groups"
+      get : "/auth/v3/partner/{partner}/organization/{organization}/groups"
     };
   };
 

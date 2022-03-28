@@ -13,6 +13,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	"github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
@@ -71,7 +72,7 @@ var (
 )
 
 func request_User_GetUsers_0(ctx context.Context, marshaler runtime.Marshaler, client UserClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq userv3.User
+	var protoReq commonv3.QueryOptions
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -87,7 +88,7 @@ func request_User_GetUsers_0(ctx context.Context, marshaler runtime.Marshaler, c
 }
 
 func local_request_User_GetUsers_0(ctx context.Context, marshaler runtime.Marshaler, server UserServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq userv3.User
+	var protoReq commonv3.QueryOptions
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {

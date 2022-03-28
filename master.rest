@@ -275,6 +275,18 @@ spec:
       namespace: :namespace
       project: :project
 
+# Get all users
+GET :host/auth/v3/users
+Content-Type: application/yaml
+
+# Get all users with query options
+GET :host/auth/v3/users?q=user&name=john&order_by=email
+Content-Type: application/yaml
+
+# Get single user
+GET :host/auth/v3/user/:user
+Content-Type: application/yaml
+
 # Update user info
 PUT :host/auth/v3/user/:user
 Content-Type: application/yaml
@@ -366,6 +378,11 @@ GET :host/auth/v3/partner/:partner/organization/:org/groups
 Content-Type: application/yaml
 X-Session-Token: :token
 
+# Get filtered groups
+GET :host/auth/v3/partner/:partner/organization/:org/groups?q=group
+Content-Type: application/yaml
+X-Session-Token: :token
+
 # Get a group
 GET :host/auth/v3/partner/:partner/organization/:org/group/:group
 Content-Type: application/yaml
@@ -390,7 +407,7 @@ metadata:
   organization: :org
 spec:
   isGlobal: true
-  scope: system
+  scope: cluster
 
 # Create role
 POST :host/auth/v3/partner/:partner/organization/:org/roles

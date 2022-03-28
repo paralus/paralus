@@ -235,6 +235,13 @@
         },
         "parameters": [
           {
+            "name": "q",
+            "description": "query for filtering.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "name",
             "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID).",
             "in": "query",
@@ -1264,6 +1271,13 @@
             "pattern": "template/[^/]+"
           },
           {
+            "name": "opts.q",
+            "description": "query for filtering.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "opts.name",
             "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID).",
             "in": "query",
@@ -1938,6 +1952,10 @@
     "v3QueryOptions": {
       "type": "object",
       "properties": {
+        "q": {
+          "type": "string",
+          "title": "query for filtering"
+        },
         "name": {
           "type": "string",
           "title": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)"

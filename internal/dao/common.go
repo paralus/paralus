@@ -184,6 +184,36 @@ func List(ctx context.Context, db bun.IDB, partnerId uuid.NullUUID, organization
 	return entities, err
 }
 
+// TODO: Should we simplify this (less args)?
+func ListFiltered(ctx context.Context, db bun.IDB,
+	partnerId uuid.NullUUID, organizationId uuid.NullUUID,
+	entities interface{},
+	query string, orderBy string, order string,
+	limit int, offset int) (interface{}, error) {
+	sq := db.NewSelect().Model(entities)
+	if query != "" {
+		sq = sq.Where("name ILIKE ?", "%"+query+"%") // XXX: ILIKE is not-standard
+	}
+	if partnerId.Valid {
+		sq = sq.Where("partner_id = ?", partnerId)
+	}
+	if organizationId.Valid {
+		sq = sq.Where("organization_id = ?", organizationId)
+	}
+	if orderBy != "" && order != "" {
+		sq.Order(orderBy + " " + order)
+	}
+	if limit != 0 || offset != 0 {
+		sq.Limit(limit)
+		sq.Offset(offset)
+	}
+	err := sq.Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return entities, nil
+}
+
 func ListByProject(ctx context.Context, db bun.IDB, partnerId uuid.NullUUID, organizationId uuid.NullUUID, projectId uuid.NullUUID, entities interface{}) error {
 	sq := db.NewSelect().Model(entities)
 	if partnerId.Valid {

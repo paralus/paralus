@@ -9,7 +9,9 @@ import (
 
 	"github.com/RafayLabs/rcloud-base/internal/dao"
 	"github.com/RafayLabs/rcloud-base/internal/models"
+	"github.com/RafayLabs/rcloud-base/pkg/query"
 	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	userv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 	"github.com/google/uuid"
@@ -35,7 +37,7 @@ type GroupService interface {
 	// delete group
 	Delete(context.Context, *userv3.Group) (*userv3.Group, error)
 	// list groups
-	List(context.Context, *userv3.Group) (*userv3.GroupList, error)
+	List(context.Context, ...query.Option) (*userv3.GroupList, error)
 }
 
 // groupService implements GroupService
@@ -250,6 +252,7 @@ func (s *groupService) createGroupAccountRelations(ctx context.Context, db bun.I
 	return group, nil
 }
 
+// TODO: move this to utils, make it accept two strings (names)
 func (s *groupService) getPartnerOrganization(ctx context.Context, db bun.IDB, group *userv3.Group) (uuid.UUID, uuid.UUID, error) {
 	partner := group.GetMetadata().GetPartner()
 	org := group.GetMetadata().GetOrganization()
@@ -508,7 +511,7 @@ func (s *groupService) Delete(ctx context.Context, group *userv3.Group) (*userv3
 	return &userv3.Group{}, fmt.Errorf("unable to delete group")
 }
 
-func (s *groupService) List(ctx context.Context, group *userv3.Group) (*userv3.GroupList, error) {
+func (s *groupService) List(ctx context.Context, opts ...query.Option) (*userv3.GroupList, error) {
 	var groups []*userv3.Group
 	groupList := &userv3.GroupList{
 		ApiVersion: apiVersion,
@@ -517,39 +520,52 @@ func (s *groupService) List(ctx context.Context, group *userv3.Group) (*userv3.G
 			Count: 0,
 		},
 	}
-	if len(group.Metadata.Organization) > 0 {
-		orgId, err := dao.GetOrganizationId(ctx, s.db, group.Metadata.Organization)
-		if err != nil {
-			return groupList, err
-		}
-		partId, err := dao.GetPartnerId(ctx, s.db, group.Metadata.Partner)
-		if err != nil {
-			return groupList, err
-		}
-		var grps []models.Group
-		entities, err := dao.List(ctx, s.db, uuid.NullUUID{UUID: partId, Valid: true}, uuid.NullUUID{UUID: orgId, Valid: true}, &grps)
-		if err != nil {
-			return groupList, err
-		}
-		if grps, ok := entities.(*[]models.Group); ok {
-			for _, grp := range *grps {
-				entry := &userv3.Group{Metadata: group.GetMetadata()}
-				entry, err = s.toV3Group(ctx, s.db, entry, &grp)
-				if err != nil {
-					return groupList, err
-				}
-				groups = append(groups, entry)
-			}
 
-			//update the list metadata and items response
-			groupList.Metadata = &v3.ListMetadata{
-				Count: int64(len(groups)),
-			}
-			groupList.Items = groups
-		}
-
-	} else {
-		return groupList, fmt.Errorf("missing organization id in metadata")
+	queryOptions := commonv3.QueryOptions{}
+	for _, opt := range opts {
+		opt(&queryOptions)
 	}
+
+	orgId, err := dao.GetOrganizationId(ctx, s.db, queryOptions.Organization)
+	if err != nil {
+		return groupList, err
+	}
+	partId, err := dao.GetPartnerId(ctx, s.db, queryOptions.Partner)
+	if err != nil {
+		return groupList, err
+	}
+	var grps []models.Group
+	entities, err := dao.ListFiltered(ctx, s.db,
+		uuid.NullUUID{UUID: partId, Valid: true}, uuid.NullUUID{UUID: orgId, Valid: true},
+		&grps,
+		queryOptions.Q,
+		queryOptions.OrderBy,
+		queryOptions.Order,
+		int(queryOptions.Limit),
+		int(queryOptions.Offset),
+	)
+	if err != nil {
+		return groupList, err
+	}
+	if grps, ok := entities.(*[]models.Group); ok {
+		for _, grp := range *grps {
+			entry := &userv3.Group{Metadata: &commonv3.Metadata{
+				Organization: queryOptions.Organization,
+				Partner:      queryOptions.Partner,
+			}}
+			entry, err = s.toV3Group(ctx, s.db, entry, &grp)
+			if err != nil {
+				return groupList, err
+			}
+			groups = append(groups, entry)
+		}
+
+		//update the list metadata and items response
+		groupList.Metadata = &v3.ListMetadata{
+			Count: int64(len(groups)),
+		}
+		groupList.Items = groups
+	}
+
 	return groupList, nil
 }

@@ -15,8 +15,10 @@ import (
 	"github.com/RafayLabs/rcloud-base/internal/models"
 	providers "github.com/RafayLabs/rcloud-base/internal/provider/kratos"
 	"github.com/RafayLabs/rcloud-base/pkg/common"
+	"github.com/RafayLabs/rcloud-base/pkg/query"
 	userrpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
 	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	userv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 )
@@ -39,7 +41,7 @@ type UserService interface {
 	// delete user
 	Delete(context.Context, *userv3.User) (*userrpcv3.DeleteUserResponse, error)
 	// list users
-	List(context.Context, *userv3.User) (*userv3.UserList, error)
+	List(context.Context, ...query.Option) (*userv3.UserList, error)
 	// retrieve the cli config for the logged in user
 	RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiKeyRequest) (*common.CliConfigDownloadData, error)
 }
@@ -488,7 +490,7 @@ func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3
 
 }
 
-func (s *userService) List(ctx context.Context, _ *userv3.User) (*userv3.UserList, error) {
+func (s *userService) List(ctx context.Context, opts ...query.Option) (*userv3.UserList, error) {
 	var users []*userv3.User
 	userList := &userv3.UserList{
 		ApiVersion: apiVersion,
@@ -497,12 +499,60 @@ func (s *userService) List(ctx context.Context, _ *userv3.User) (*userv3.UserLis
 			Count: 0,
 		},
 	}
-	var accs []models.KratosIdentities
-	entities, err := dao.ListAll(ctx, s.db, &accs)
-	if err != nil {
-		return userList, err
+
+	queryOptions := commonv3.QueryOptions{}
+	for _, opt := range opts {
+		opt(&queryOptions)
 	}
-	if usrs, ok := entities.(*[]models.KratosIdentities); ok {
+
+	// TODO: group relation stuff
+	// TODO: This is kinda expensive to compute
+	upr, err := getUserProjectRoles(ctx, s.db)
+	if err != nil {
+		return &userv3.UserList{}, err
+	}
+	fmt.Println("upr:", upr)
+
+	projects := []string{}
+	fmt.Println("queryOptions.Project:", queryOptions.Project)
+	if queryOptions.Project != "" {
+		projects = strings.Split(queryOptions.Project, ",")
+	}
+	// TODO: make this a single big query
+	fupr, err := filterUserProjectRoles(upr,
+		projects,
+		"role-name", // TODO: add role to QueryOptions
+		// queryOptions.Role,
+	)
+	if err != nil {
+		return &userv3.UserList{}, err
+	}
+	fmt.Println("fupr:", fupr)
+	uids := []uuid.UUID{}
+	for k := range fupr {
+		uids = append(uids, k)
+	}
+
+	// TODO: add gorup to search
+	if queryOptions.Group {
+
+	// partnerId, organizationId, err := s.getPartnerOrganization(ctx, s.db, group)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("unable to get partner and org id")
+	// }
+	ga := []models.GroupAccount{}
+		g, err := dao.Get(ctx, )
+	}
+
+	if len(fupr) != 0 {
+		var accs []models.KratosIdentities
+		usrs, err := dao.ListFilteredUsers(ctx, s.db, &accs,
+			uids, queryOptions.Q,
+			queryOptions.OrderBy, queryOptions.Order,
+			int(queryOptions.Limit), int(queryOptions.Offset))
+		if err != nil {
+			return userList, err
+		}
 		for _, usr := range *usrs {
 			user := &userv3.User{}
 			user, err := s.identitiesModelToUser(ctx, s.db, user, &usr)
@@ -511,13 +561,13 @@ func (s *userService) List(ctx context.Context, _ *userv3.User) (*userv3.UserLis
 			}
 			users = append(users, user)
 		}
-
-		// update the list metadata and items response
-		userList.Metadata = &v3.ListMetadata{
-			Count: int64(len(users)),
-		}
-		userList.Items = users
 	}
+
+	// update the list metadata and items response
+	userList.Metadata = &v3.ListMetadata{
+		Count: int64(len(users)),
+	}
+	userList.Items = users
 
 	return userList, nil
 }
