@@ -237,13 +237,21 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 		if err != nil {
 			return &systemv3.ProjectList{}, err
 		}
-		var projs []models.Project
-		entities, err := dao.List(ctx, s.db, uuid.NullUUID{UUID: part.ID, Valid: true}, uuid.NullUUID{UUID: org.ID, Valid: true}, &projs)
+
+		// name := project.GetMetadata().GetName() // TODO: get this working
+		name := "user2.name@provider.com"
+
+		entity, err := dao.GetByTraits(ctx, s.db, name, &models.KratosIdentities{})
 		if err != nil {
 			return &systemv3.ProjectList{}, err
 		}
-		if projs, ok := entities.(*[]models.Project); ok {
-			for _, proj := range *projs {
+
+		if usr, ok := entity.(*models.KratosIdentities); ok {
+			projs, err := dao.GetFileteredProjects(ctx, s.db, usr.ID, part.ID, org.ID)
+			if err != nil {
+				return &systemv3.ProjectList{}, err
+			}
+			for _, proj := range projs {
 				labels := make(map[string]string)
 				labels["organization"] = proj.OrganizationId.String()
 				labels["partner"] = proj.PartnerId.String()
@@ -268,10 +276,8 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 				Count: int64(len(projects)),
 			}
 			projectList.Items = projects
+			return projectList, nil
 		}
-
-	} else {
-		return projectList, fmt.Errorf("missing organization id in metadata")
 	}
-	return projectList, nil
+	return projectList, fmt.Errorf("missing organization id in metadata")
 }
