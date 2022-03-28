@@ -102,6 +102,12 @@ service User {
     };
   };
 
+  rpc GetUserInfo(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.UserInfo) {
+    option (google.api.http) = {
+      get : "/auth/v3/userinfo"  // user name if picked from session
+    };
+  };
+
   rpc UpdateUser(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.User) {
     option (google.api.http) = {
       put : "/auth/v3/user/{metadata.name}"

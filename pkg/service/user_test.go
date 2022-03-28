@@ -438,7 +438,7 @@ func TestUserFiletered(t *testing.T) {
 		t.Errorf("incorrect number of users returned, expected 2; got %v", userlist.Metadata.Count)
 	}
 
-	if userlist.Items[0].Metadata.Name != "johndoe@provider.com"{
+	if userlist.Items[0].Metadata.Name != "johndoe@provider.com" {
 		t.Errorf("incorrect user names returned when listing; expected '%v' and '%v'; got '%v' and '%v'", "johndoe@provider.com", "johndoe@provider.com", userlist.Items[0].Metadata.Name, userlist.Items[1].Metadata.Name)
 	}
 

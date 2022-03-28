@@ -27,6 +27,7 @@ type UserClient interface {
 	CreateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
 	GetUsers(ctx context.Context, in *v31.QueryOptions, opts ...grpc.CallOption) (*v3.UserList, error)
 	GetUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
+	GetUserInfo(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.UserInfo, error)
 	UpdateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
 	DeleteUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*DeleteUserResponse, error)
 	DownloadCliConfig(ctx context.Context, in *CliConfigRequest, opts ...grpc.CallOption) (*v31.HttpBody, error)
@@ -63,6 +64,15 @@ func (c *userClient) GetUsers(ctx context.Context, in *v31.QueryOptions, opts ..
 func (c *userClient) GetUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error) {
 	out := new(v3.User)
 	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/GetUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetUserInfo(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.UserInfo, error) {
+	out := new(v3.UserInfo)
+	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/GetUserInfo", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -121,6 +131,7 @@ type UserServer interface {
 	CreateUser(context.Context, *v3.User) (*v3.User, error)
 	GetUsers(context.Context, *v31.QueryOptions) (*v3.UserList, error)
 	GetUser(context.Context, *v3.User) (*v3.User, error)
+	GetUserInfo(context.Context, *v3.User) (*v3.UserInfo, error)
 	UpdateUser(context.Context, *v3.User) (*v3.User, error)
 	DeleteUser(context.Context, *v3.User) (*DeleteUserResponse, error)
 	DownloadCliConfig(context.Context, *CliConfigRequest) (*v31.HttpBody, error)
@@ -140,6 +151,9 @@ func (UnimplementedUserServer) GetUsers(context.Context, *v31.QueryOptions) (*v3
 }
 func (UnimplementedUserServer) GetUser(context.Context, *v3.User) (*v3.User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
+}
+func (UnimplementedUserServer) GetUserInfo(context.Context, *v3.User) (*v3.UserInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
 }
 func (UnimplementedUserServer) UpdateUser(context.Context, *v3.User) (*v3.User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
@@ -218,6 +232,24 @@ func _User_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).GetUser(ctx, req.(*v3.User))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v3.User)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetUserInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rafay.dev.rpc.v3.User/GetUserInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetUserInfo(ctx, req.(*v3.User))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -330,6 +362,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUser",
 			Handler:    _User_GetUser_Handler,
+		},
+		{
+			MethodName: "GetUserInfo",
+			Handler:    _User_GetUserInfo_Handler,
 		},
 		{
 			MethodName: "UpdateUser",

@@ -9,7 +9,7 @@ import (
 )
 
 func GetRolePermissions(ctx context.Context, db bun.IDB, id uuid.UUID) ([]models.ResourcePermission, error) {
-	// Could possibly union them later for some speedup
+	// TODO: filter by parter and org
 	var r = []models.ResourcePermission{}
 	err := db.NewSelect().Table("authsrv_resourcepermission").
 		ColumnExpr("authsrv_resourcepermission.name as name").

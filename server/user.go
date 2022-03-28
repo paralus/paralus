@@ -51,6 +51,20 @@ func (s *userServer) GetUser(ctx context.Context, req *userpbv3.User) (*userpbv3
 	return updateUserStatus(req, resp, err), err
 }
 
+func (s *userServer) GetUserInfo(ctx context.Context, req *userpbv3.User) (*userpbv3.UserInfo, error) {
+	resp, err := s.us.GetUserInfo(ctx, req)
+	if err != nil {
+		req.Status = &v3.Status{
+			ConditionStatus: v3.ConditionStatus_StatusFailed,
+			LastUpdated:     timestamppb.Now(),
+			Reason:          err.Error(),
+		}
+		return resp, err
+	}
+	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_StatusOK}
+	return resp, nil
+}
+
 func (s *userServer) DeleteUser(ctx context.Context, req *userpbv3.User) (*rpcv3.DeleteUserResponse, error) {
 	return s.us.Delete(ctx, req)
 }

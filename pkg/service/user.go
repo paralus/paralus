@@ -34,8 +34,10 @@ type UserService interface {
 	Create(context.Context, *userv3.User) (*userv3.User, error)
 	// get user by id
 	GetByID(context.Context, *userv3.User) (*userv3.User, error)
-	// // get user by name
+	// get user by name
 	GetByName(context.Context, *userv3.User) (*userv3.User, error)
+	// get full user info
+	GetUserInfo(context.Context, *userv3.User) (*userv3.UserInfo, error)
 	// create or update user
 	Update(context.Context, *userv3.User) (*userv3.User, error)
 	// delete user
@@ -370,8 +372,63 @@ func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3
 
 		return user, nil
 	}
-	fmt.Println("user:", user)
 	return user, nil
+}
+
+func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*userv3.UserInfo, error) {
+	name := user.GetMetadata().GetName() // TODO: get this working
+	name = "user2.name@provider.com"
+
+	entity, err := dao.GetByTraits(ctx, s.db, name, &models.KratosIdentities{})
+	if err != nil {
+		return &userv3.UserInfo{}, err
+	}
+
+	if usr, ok := entity.(*models.KratosIdentities); ok {
+		user, err := s.identitiesModelToUser(ctx, s.db, user, usr)
+		if err != nil {
+			return &userv3.UserInfo{}, err
+		}
+
+		userinfo := &userv3.UserInfo{Metadata: user.Metadata}
+		userinfo.ApiVersion = apiVersion
+		userinfo.Kind = userKind
+		userinfo.Spec = &userv3.UserInfoSpec{
+			FirstName: user.Spec.FirstName,
+			LastName:  user.Spec.LastName,
+			Groups:    user.Spec.Groups,
+		}
+		permissions := []*userv3.Permission{}
+		for _, p := range user.Spec.ProjectNamespaceRoles {
+			role, err := dao.GetIdByName(ctx, s.db, p.Role, &models.Role{})
+			if err != nil {
+				return &userv3.UserInfo{}, err
+			}
+			if rle, ok := role.(*models.Role); ok {
+				rpms, err := dao.GetRolePermissions(ctx, s.db, rle.ID)
+				if err != nil {
+					return &userv3.UserInfo{}, err
+				}
+				rps := []string{}
+				for _, r := range rpms {
+					rps = append(rps, r.Name)
+				}
+				permissions = append(
+					permissions,
+					// TODO: rename permissions to permission
+					&userv3.Permission{
+						Project:     p.Project,
+						Namespace:   p.Namespace,
+						Role:        p.Role,
+						Permissions: rps,
+					},
+				)
+			}
+		}
+		userinfo.Spec.Permission = permissions
+		return userinfo, nil
+	}
+	return &userv3.UserInfo{}, fmt.Errorf("unable to get user info")
 }
 
 func (s *userService) deleteUserRoleRelations(ctx context.Context, db bun.IDB, userId uuid.UUID, user *userv3.User) error {
