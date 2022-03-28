@@ -505,47 +505,60 @@ func (s *userService) List(ctx context.Context, opts ...query.Option) (*userv3.U
 		opt(&queryOptions)
 	}
 
-	// TODO: group relation stuff
-	// TODO: This is kinda expensive to compute
-	upr, err := getUserProjectRoles(ctx, s.db)
+	partnerId, orgId, err := getPartnerOrganization(ctx, s.db, queryOptions.Partner, queryOptions.Organization)
 	if err != nil {
-		return &userv3.UserList{}, err
+		return &userv3.UserList{}, fmt.Errorf("unable to find role partner and org")
 	}
-	fmt.Println("upr:", upr)
 
-	projects := []string{}
-	fmt.Println("queryOptions.Project:", queryOptions.Project)
+	roleName := queryOptions.Role
+	roleId := uuid.Nil
+	if roleName != "" {
+		role, err := dao.GetIdByName(ctx, s.db, roleName, &models.Role{})
+		if err != nil {
+			return &userv3.UserList{}, fmt.Errorf("unable to find role '%v'", roleName)
+		}
+		if rle, ok := role.(*models.Role); ok {
+			roleId = rle.ID
+		}
+	}
+
+	groupName := queryOptions.Group
+	groupId := uuid.Nil
+	if groupName != "" {
+		group, err := dao.GetIdByName(ctx, s.db, groupName, &models.Group{})
+		if err != nil {
+			return &userv3.UserList{}, fmt.Errorf("unable to find group '%v'", groupName)
+		}
+		if grp, ok := group.(*models.Group); ok {
+			groupId = grp.ID
+		}
+	}
+
+	projectIds := []uuid.UUID{}
 	if queryOptions.Project != "" {
-		projects = strings.Split(queryOptions.Project, ",")
+		for _, p := range strings.Split(queryOptions.Project, ",") {
+			if p == "ALL" {
+				projectIds = append(projectIds, uuid.Nil)
+			} else {
+				project, err := dao.GetIdByName(ctx, s.db, p, &models.Project{})
+				if err != nil {
+					return &userv3.UserList{}, fmt.Errorf("unable to find project '%v'", p)
+				}
+				if prj, ok := project.(*models.Project); ok {
+					projectIds = append(projectIds, prj.ID)
+				}
+			}
+		}
 	}
-	// TODO: make this a single big query
-	fupr, err := filterUserProjectRoles(upr,
-		projects,
-		"role-name", // TODO: add role to QueryOptions
-		// queryOptions.Role,
-	)
+
+	uids, err := dao.GetQueryFilteredUsers(ctx, s.db, partnerId, orgId, groupId, roleId, projectIds)
 	if err != nil {
 		return &userv3.UserList{}, err
 	}
-	fmt.Println("fupr:", fupr)
-	uids := []uuid.UUID{}
-	for k := range fupr {
-		uids = append(uids, k)
-	}
 
-	// TODO: add gorup to search
-	if queryOptions.Group {
-
-	// partnerId, organizationId, err := s.getPartnerOrganization(ctx, s.db, group)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("unable to get partner and org id")
-	// }
-	ga := []models.GroupAccount{}
-		g, err := dao.Get(ctx, )
-	}
-
-	if len(fupr) != 0 {
+	if len(uids) != 0 {
 		var accs []models.KratosIdentities
+		// TODO: maybe merge this with the previous one into single sql
 		usrs, err := dao.ListFilteredUsers(ctx, s.db, &accs,
 			uids, queryOptions.Q,
 			queryOptions.OrderBy, queryOptions.Order,

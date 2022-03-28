@@ -249,35 +249,37 @@ message QueryOptions {
   string partner = 4;
   string organization = 5;
   string project = 6;
+  string group = 7;
+  string role = 8;
   // displayName only used for update queries to set displayName (READONLY)
-  string displayName = 7;
+  string displayName = 9;
   // labels only used for update queries to set labels (READONLY)
-  map<string, string> labels = 8;
+  map<string, string> labels = 10;
   // annotations only used for update queries to set annotations (READONLY)
-  map<string, string> annotations = 9;
-  sint64 count = 10;
-  sint64 offset = 11;
-  sint64 limit = 12;
+  map<string, string> annotations = 11;
+  sint64 count = 12;
+  sint64 offset = 13;
+  sint64 limit = 14;
   // ignoreScopeDefault ignores default values for partnerID, organizationID and
   // projectID
-  bool ignoreScopeDefault = 13;
+  bool ignoreScopeDefault = 15;
   // globalScope sets partnerID,organizationID,projectID = 0
-  bool globalScope = 14;
-  string orderBy = 15;
-  string order = 16;
-  bool deleted = 17;
+  bool globalScope = 16;
+  string orderBy = 17;
+  string order = 18;
+  bool deleted = 19;
 
-  bool extended = 18;
+  bool extended = 20;
   // urlScope is supposed to be passed in the URL as kind/HashID(value)
-  string urlScope = 19;
-  bool isSSOUser = 20;
-  string username = 21;
-  repeated string groups = 22;
-  string blueprintRef = 23;
-  string publishedVersion = 24;
-  string clusterID = 25;
-  string ID = 26;
-  string account = 27;
+  string urlScope = 21;
+  bool isSSOUser = 22;
+  string username = 23;
+  repeated string groups = 24;
+  string blueprintRef = 25;
+  string publishedVersion = 26;
+  string clusterID = 27;
+  string ID = 28;
+  string account = 29;
 }
 
 // RafayConditionStatus is the status of the status condition

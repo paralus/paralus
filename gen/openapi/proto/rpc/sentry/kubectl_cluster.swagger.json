@@ -101,6 +101,18 @@
             "type": "string"
           },
           {
+            "name": "opts.group",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.role",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "opts.displayName",
             "description": "displayName only used for update queries to set displayName (READONLY).",
             "in": "query",
@@ -352,6 +364,12 @@
           "type": "string"
         },
         "project": {
+          "type": "string"
+        },
+        "group": {
+          "type": "string"
+        },
+        "role": {
           "type": "string"
         },
         "displayName": {

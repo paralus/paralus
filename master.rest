@@ -280,7 +280,7 @@ GET :host/auth/v3/users
 Content-Type: application/yaml
 
 # Get all users with query options
-GET :host/auth/v3/users?q=user&name=john&order_by=email
+GET :host/auth/v3/users?partner=:partner&organization=:org&q=user&name=john&order_by=email&project=ALL,:project
 Content-Type: application/yaml
 
 # Get single user

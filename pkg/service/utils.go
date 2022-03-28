@@ -38,61 +38,15 @@ func remove(l []string, item string) []string {
 	return l
 }
 
-type projectRole struct {
-	Project *string
-	Role    string
-}
-type userProjectRoles map[uuid.UUID][]projectRole
-
-func getUserProjectRoles(ctx context.Context, db bun.IDB) (userProjectRoles, error) {
-	roles, err := dao.ListUserRoles(ctx, db)
+func getPartnerOrganization(ctx context.Context, db bun.IDB, partner, org string) (uuid.UUID, uuid.UUID, error) {
+	partnerId, err := dao.GetPartnerId(ctx, db, partner)
 	if err != nil {
-		return userProjectRoles{}, err
+		return uuid.Nil, uuid.Nil, err
 	}
+	organizationId, err := dao.GetOrganizationId(ctx, db, org)
+	if err != nil {
+		return partnerId, uuid.Nil, err
+	}
+	return partnerId, organizationId, nil
 
-	upr := userProjectRoles{}
-	for _, role := range roles {
-		upr[role.AccountId] = append(upr[role.AccountId], projectRole{Project: role.Project, Role: role.Role})
-	}
-
-	return upr, nil
-}
-
-func projectAvailable(r []projectRole, projects []string) bool {
-	// This is an OR internally
-	// ALL is when the permissions is not project bound
-	all := false
-	if contains(projects, "ALL") {
-		all = true
-		projects = remove(projects, "ALL")
-	}
-	for _, pr := range r {
-		if pr.Project != nil {
-			if contains(projects, *pr.Project) {
-				return true
-			}
-		} else if all {
-			return true
-		}
-	}
-	return false
-}
-
-func roleAvailable(r []projectRole, role string) bool {
-	for _, pr := range r {
-		if pr.Role == role {
-			return true
-		}
-	}
-	return false
-}
-
-func filterUserProjectRoles(upr userProjectRoles, projects []string, role string) (userProjectRoles, error) {
-	fupr := userProjectRoles{}
-	for u, r := range upr {
-		if (len(projects) == 0 || projectAvailable(r, projects)) && (role == "" || roleAvailable(r, role)) {
-			fupr[u] = r
-		}
-	}
-	return fupr, nil
 }

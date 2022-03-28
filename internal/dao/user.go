@@ -71,48 +71,30 @@ type userProjectnamesaceRole struct {
 	Project   *string   `bun:"project,type:string"`
 }
 
-func ListUserRoles(ctx context.Context, db bun.IDB) ([]*userProjectnamesaceRole, error) {
-	// Could possibly union them later for some speedup
-	// TODO: filter by org and partner
-	// TODO: add lookup via group as well
-	var r = []*userProjectnamesaceRole{}
-	err := db.NewSelect().Table("authsrv_accountresourcerole").
-		ColumnExpr("authsrv_accountresourcerole.account_id as account_id, authsrv_resourcerole.name as role").
-		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_accountresourcerole.role_id`).
-		Where("authsrv_resourcerole.trash = ?", false).
-		Where("authsrv_accountresourcerole.trash = ?", false).
-		Scan(ctx, &r)
-	if err != nil {
-		return nil, err
-	}
+// TODO: find a better name for the function
+func GetQueryFilteredUsers(ctx context.Context, db bun.IDB, partner, org, group, role uuid.UUID, projects []uuid.UUID) ([]uuid.UUID, error) {
+	p := []models.SentryPermission{}
+	q := db.NewSelect().Model(&p).ColumnExpr("DISTINCT account_id")
 
-	var pr = []*userProjectnamesaceRole{}
-	err = db.NewSelect().Table("authsrv_projectaccountresourcerole").
-		ColumnExpr("authsrv_projectaccountresourcerole.account_id as account_id, authsrv_resourcerole.name as role, authsrv_project.name as project").
-		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id`).
-		Join(`JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountresourcerole.project_id`).
-		Where("authsrv_project.trash = ?", false).
-		Where("authsrv_resourcerole.trash = ?", false).
-		Where("authsrv_projectaccountresourcerole.trash = ?", false).
-		Scan(ctx, &pr)
-	if err != nil {
-		return nil, err
-	}
+	q.Where("partner_id = ?", partner).
+		Where("organization_id = ?", org)
 
-	var pnr = []*userProjectnamesaceRole{}
-	err = db.NewSelect().Table("authsrv_projectaccountnamespacerole").
-		ColumnExpr("authsrv_projectaccountnamespacerole.account_id as account_id, authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace").
-		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id`).
-		Join(`JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id`). // also need a namespace join
-		Where("authsrv_project.trash = ?", false).
-		Where("authsrv_resourcerole.trash = ?", false).
-		Where("authsrv_projectaccountnamespacerole.trash = ?", false).
-		Scan(ctx, &pnr)
-	if err != nil {
-		return nil, err
+	if group != uuid.Nil {
+		q.Where("group_id = ?", group)
 	}
+	if role != uuid.Nil {
+		q.Where("role_id = ?", role)
+	}
+	if len(projects) != 0 {
+		q.Where("project_id IN (?)", bun.In(projects))
+	}
+	q.Scan(ctx)
 
-	return append(append(r, pr...), pnr...), err
+	acc := []uuid.UUID{}
+	for _, a := range p {
+		acc = append(acc, a.AccountId)
+	}
+	return acc, nil
 }
 
 // ListFilteredUsers will return the list of users fileterd by query
@@ -137,21 +119,3 @@ func ListFilteredUsers(ctx context.Context, db bun.IDB, users *[]models.KratosId
 	}
 	return users, nil
 }
-
-// func FilterUsersByGroups(ctx context.Context, db bun.IDB, users []uuid.UUID, groups []string) ([]uuid.UUID, error) {
-// 	ga := []models.GroupAccount{}
-// 	q := db.NewSelect().Model(&ga).
-// 		Where("name IN (?)", bun.In(groups)).
-// 		Where("account_id IN (?)", bun.In(users))
-
-// 	err := q.Scan(ctx)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	fusers := []uuid.UUID{}
-// 	for _, g := range ga {
-// 		fusers = append(fusers, g.AccountId)
-// 	}
-// 	return fusers, nil
-// }
