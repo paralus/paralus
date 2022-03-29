@@ -442,7 +442,7 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 				},
 			)
 		}
-		userinfo.Spec.Permission = permissions
+		userinfo.Spec.Permissions = permissions
 		return userinfo, nil
 	}
 	return &userv3.UserInfo{}, fmt.Errorf("unable to get user info")

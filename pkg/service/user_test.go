@@ -317,7 +317,6 @@ func TestUserGetInfo(t *testing.T) {
 		t.Fatal("could not get user:", err)
 	}
 
-	fmt.Println("userinfo:", userinfo)
 	if userinfo.Metadata.Name != "johndoe@provider.com" {
 		t.Errorf("incorrect username; expected '%v', got '%v'", "johndoe@provider.com", userinfo.Metadata.Name)
 	}
@@ -333,11 +332,11 @@ func TestUserGetInfo(t *testing.T) {
 	if userinfo.Spec.Groups[0] != "group-"+guuid {
 		t.Errorf("incorrect group name; expected '%v', got '%v'", "group-"+guuid, userinfo.Spec.Groups[0])
 	}
-	if len(userinfo.Spec.Permission) != 3 {
-		t.Errorf("incorrect number of permissions; expected '%v', got '%v'", 3, len(userinfo.Spec.Permission))
+	if len(userinfo.Spec.Permissions) != 3 {
+		t.Errorf("incorrect number of permissions; expected '%v', got '%v'", 3, len(userinfo.Spec.Permissions))
 	}
-	if len(userinfo.Spec.Permission[0].Permissions) != 2 {
-		t.Errorf("incorrect number of permissions; expected '%v', got '%v'", 2, len(userinfo.Spec.Permission[0].Permissions))
+	if len(userinfo.Spec.Permissions[0].Permissions) != 2 {
+		t.Errorf("incorrect number of permissions; expected '%v', got '%v'", 2, len(userinfo.Spec.Permissions[0].Permissions))
 	}
 
 }

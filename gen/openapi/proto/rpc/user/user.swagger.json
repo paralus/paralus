@@ -1445,7 +1445,7 @@
           "title": "Group",
           "readOnly": true
         },
-        "permission": {
+        "permissions": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/v3Permission"
