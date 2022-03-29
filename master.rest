@@ -536,6 +536,11 @@ GET :host/auth/v3/partner/:partner/organization/:org/project/:project
 Content-Type: application/yaml
 X-Session-Token: :token
 
+# Get all projects
+GET :host/auth/v3/partner/:partner/organization/:org/projects
+Content-Type: application/yaml
+X-Session-Token: :token
+
 # Delete project
 DELETE :host/auth/v3/partner/:partner/organization/:org/project/:project
 X-Session-Token: :token

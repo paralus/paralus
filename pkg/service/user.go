@@ -376,10 +376,20 @@ func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3
 }
 
 func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*userv3.UserInfo, error) {
-	name := user.GetMetadata().GetName() // TODO: get this working
-	name = "user2.name@provider.com"
+	sessionData := ctx.Value(common.SessionDataKey)
+	username := ""
+	if sessionData == nil {
+		return &userv3.UserInfo{}, fmt.Errorf("cannot perform project listing without auth")
+	} else {
+		sd, ok := sessionData.(*commonv3.SessionData)
+		if !ok {
+			return &userv3.UserInfo{}, fmt.Errorf("cannot perform project listing without auth")
+		} else {
+			username = sd.Username
+		}
+	}
 
-	entity, err := dao.GetByTraits(ctx, s.db, name, &models.KratosIdentities{})
+	entity, err := dao.GetByTraits(ctx, s.db, username, &models.KratosIdentities{})
 	if err != nil {
 		return &userv3.UserInfo{}, err
 	}

@@ -7,6 +7,8 @@ import (
 
 	"github.com/RafayLabs/rcloud-base/internal/dao"
 	"github.com/RafayLabs/rcloud-base/internal/models"
+	"github.com/RafayLabs/rcloud-base/pkg/common"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
@@ -217,6 +219,18 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 }
 
 func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*systemv3.ProjectList, error) {
+	sessionData := ctx.Value(common.SessionDataKey)
+	username := ""
+	if sessionData == nil {
+		return &systemv3.ProjectList{}, fmt.Errorf("cannot perform project listing without auth")
+	} else {
+		sd, ok := sessionData.(*commonv3.SessionData)
+		if !ok {
+			return &systemv3.ProjectList{}, fmt.Errorf("cannot perform project listing without auth")
+		} else {
+			username = sd.Username
+		}
+	}
 
 	var projects []*systemv3.Project
 	projectList := &systemv3.ProjectList{
@@ -238,10 +252,7 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 			return &systemv3.ProjectList{}, err
 		}
 
-		// name := project.GetMetadata().GetName() // TODO: get this working
-		name := "user2.name@provider.com"
-
-		entity, err := dao.GetByTraits(ctx, s.db, name, &models.KratosIdentities{})
+		entity, err := dao.GetByTraits(ctx, s.db, username, &models.KratosIdentities{})
 		if err != nil {
 			return &systemv3.ProjectList{}, err
 		}

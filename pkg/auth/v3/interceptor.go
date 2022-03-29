@@ -34,8 +34,10 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 		resource, ok := req.(hasMetadata)
 		if ok {
 			meta := resource.GetMetadata()
-			org = meta.Organization
-			project = meta.Project
+			if meta != nil {
+				org = meta.Organization
+				project = meta.Project
+			}
 
 			// overrides for picking up info when not in default metadata locations
 			// XXX: This requires any new items which does not follow metadata convention added here

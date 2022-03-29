@@ -46,3 +46,7 @@ const (
 	RelayAPIAuditType      = "RelayAPI"
 	RelayCommandsAuditType = "RelayCommands"
 )
+
+type contextKey struct{}
+
+var SessionDataKey contextKey
