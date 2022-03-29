@@ -32,9 +32,11 @@ func GetFileteredProjects(ctx context.Context, db bun.IDB, account, partner, org
 	ids := []uuid.UUID{}
 	sp := []models.SentryAccountPermission{}
 	err := db.NewSelect().Model(&sp).
+		ColumnExpr("distinct account_id, project_id").
 		Where("sentry_account_permission.partner_id = ?", partner).
 		Where("sentry_account_permission.organization_id = ?", org).
 		Where("sentry_account_permission.account_id = ?", account).
+		Where("sentry_account_permission.permission_name IN (?)", bun.In([]string{"project.read", "ops_star.all"})).
 		Scan(ctx)
 	if err != nil {
 		return nil, err
