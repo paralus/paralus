@@ -394,6 +394,7 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 		return &userv3.UserInfo{}, err
 	}
 
+	roleMap := map[string][]string{}
 	if usr, ok := entity.(*models.KratosIdentities); ok {
 		user, err := s.identitiesModelToUser(ctx, s.db, user, usr)
 		if err != nil {
@@ -410,30 +411,36 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 		}
 		permissions := []*userv3.Permission{}
 		for _, p := range user.Spec.ProjectNamespaceRoles {
-			role, err := dao.GetIdByName(ctx, s.db, p.Role, &models.Role{})
-			if err != nil {
-				return &userv3.UserInfo{}, err
-			}
-			if rle, ok := role.(*models.Role); ok {
+			rps, ok := roleMap[p.Role]
+			if !ok {
+				role, err := dao.GetIdByName(ctx, s.db, p.Role, &models.Role{})
+				if err != nil {
+					return &userv3.UserInfo{}, err
+				}
+				rle, ok := role.(*models.Role)
+				if !ok {
+					_log.Warn("unable to lookup existing role '%v'", p.Role)
+					return &userv3.UserInfo{}, err
+				}
 				rpms, err := dao.GetRolePermissions(ctx, s.db, rle.ID)
 				if err != nil {
 					return &userv3.UserInfo{}, err
 				}
-				rps := []string{}
 				for _, r := range rpms {
 					rps = append(rps, r.Name)
 				}
-				permissions = append(
-					permissions,
-					// TODO: rename permissions to permission
-					&userv3.Permission{
-						Project:     p.Project,
-						Namespace:   p.Namespace,
-						Role:        p.Role,
-						Permissions: rps,
-					},
-				)
+				roleMap[p.Role] = rps
 			}
+			permissions = append(
+				permissions,
+				// TODO: rename permissions to permission
+				&userv3.Permission{
+					Project:     p.Project,
+					Namespace:   p.Namespace,
+					Role:        p.Role,
+					Permissions: rps,
+				},
+			)
 		}
 		userinfo.Spec.Permission = permissions
 		return userinfo, nil
