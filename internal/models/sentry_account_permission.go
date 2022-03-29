@@ -7,8 +7,8 @@ import (
 	"github.com/uptrace/bun"
 )
 
-type SentryPermission struct {
-	bun.BaseModel `bun:"table:sentry_permission,alias:sentry_permission"`
+type SentryAccountPermission struct {
+	bun.BaseModel `bun:"table:sentry_account_permission,alias:sentry_account_permission"`
 
 	AccountId      uuid.UUID       `bun:"account_id,type:uuid"`
 	ProjectId      uuid.UUID       `bun:"project_id,type:uuid"`

@@ -30,11 +30,11 @@ func GetProjectOrganization(ctx context.Context, db bun.IDB, id uuid.UUID) (stri
 
 func GetFileteredProjects(ctx context.Context, db bun.IDB, account, partner, org uuid.UUID) ([]models.Project, error) {
 	ids := []uuid.UUID{}
-	sp := []models.SentryPermission{}
+	sp := []models.SentryAccountPermission{}
 	err := db.NewSelect().Model(&sp).
-		Where("sentry_permission.partner_id = ?", partner).
-		Where("sentry_permission.organization_id = ?", org).
-		Where("sentry_permission.account_id = ?", account).
+		Where("sentry_account_permission.partner_id = ?", partner).
+		Where("sentry_account_permission.organization_id = ?", org).
+		Where("sentry_account_permission.account_id = ?", account).
 		Scan(ctx)
 	if err != nil {
 		return nil, err
