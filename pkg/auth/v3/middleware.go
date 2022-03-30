@@ -18,10 +18,9 @@ type authMiddleware struct {
 	opt Option
 }
 
-func NewAuthMiddleware(opt Option, db *bun.DB) negroni.Handler {
+func NewAuthMiddleware(opt Option) negroni.Handler {
 	return &authMiddleware{
-		db:  db,
-		ac:  NewAuthContext(db),
+		ac:  SetupAuthContext(),
 		opt: opt,
 	}
 }
