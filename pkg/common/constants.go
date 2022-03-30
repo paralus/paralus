@@ -47,6 +47,4 @@ const (
 	RelayCommandsAuditType = "RelayCommands"
 )
 
-type contextKey struct{}
-
 var SessionDataKey contextKey

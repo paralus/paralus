@@ -4,6 +4,7 @@ import (
 	context "context"
 	"strings"
 
+	"github.com/RafayLabs/rcloud-base/pkg/common"
 	"github.com/RafayLabs/rcloud-base/pkg/gateway"
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	grpc "google.golang.org/grpc"
@@ -88,7 +89,7 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 		s := res.GetStatus()
 		switch s {
 		case commonv3.RequestStatus_RequestAllowed:
-			ctx := NewSessionContext(ctx, res.SessionData)
+			ctx := context.WithValue(ctx, common.SessionDataKey, res.SessionData)
 			return handler(ctx, req)
 		case commonv3.RequestStatus_RequestMethodOrURLNotAllowed:
 			return nil, status.Error(codes.PermissionDenied, res.GetReason())

@@ -219,18 +219,12 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 }
 
 func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*systemv3.ProjectList, error) {
-	sessionData := ctx.Value(common.SessionDataKey)
+	sd, ok := ctx.Value(common.SessionDataKey).(*commonv3.SessionData)
 	username := ""
-	if sessionData == nil {
+	if !ok {
 		return &systemv3.ProjectList{}, fmt.Errorf("cannot perform project listing without auth")
-	} else {
-		sd, ok := sessionData.(*commonv3.SessionData)
-		if !ok {
-			return &systemv3.ProjectList{}, fmt.Errorf("cannot perform project listing without auth")
-		} else {
-			username = sd.Username
-		}
 	}
+	username = sd.Username
 
 	var projects []*systemv3.Project
 	projectList := &systemv3.ProjectList{
