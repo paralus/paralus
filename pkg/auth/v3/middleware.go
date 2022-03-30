@@ -20,7 +20,7 @@ type authMiddleware struct {
 
 func NewAuthMiddleware(opt Option) negroni.Handler {
 	return &authMiddleware{
-		ac:  NewAuthContext(),
+		ac:  SetupAuthContext(),
 		opt: opt,
 	}
 }

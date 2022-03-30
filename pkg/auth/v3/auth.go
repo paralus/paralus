@@ -37,8 +37,10 @@ type authContext struct {
 	as service.AuthzService
 }
 
-// NewAuthContext setup authentication and authorization dependencies.
-func NewAuthContext() authContext {
+// SetupAuthContext sets up new authContext along with its
+// dependencies. If the caller already has instances of authContext
+// fields created then use NewAuthContext instead.
+func SetupAuthContext() authContext {
 	var (
 		kc           *kclient.APIClient
 		kratosScheme string
@@ -92,4 +94,20 @@ func getEnvWithDefault(env, def string) string {
 		return def
 	}
 	return val
+}
+
+// NewAuthContext instantiate authContext. NewAuthContext creates
+// authContext reusing dependency instances from calling function
+// instead of creating new instances. To create authContext along with
+// its dependencies, use SetupAuthContext.
+func NewAuthContext(
+	kc *kclient.APIClient,
+	apiKeySvc service.ApiKeyService,
+	authzSvc service.AuthzService,
+) authContext {
+	return authContext{
+		kc: kc,
+		ks: apiKeySvc,
+		as: authzSvc,
+	}
 }
