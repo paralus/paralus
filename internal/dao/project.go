@@ -30,7 +30,7 @@ func GetProjectOrganization(ctx context.Context, db bun.IDB, id uuid.UUID) (stri
 
 func GetFileteredProjects(ctx context.Context, db bun.IDB, account, partner, org uuid.UUID) ([]models.Project, error) {
 	ids := []uuid.UUID{}
-	sp := []models.SentryAccountPermission{}
+	sp := []models.AccountPermission{}
 	err := db.NewSelect().Model(&sp).
 		ColumnExpr("distinct account_id, project_id").
 		Where("sentry_account_permission.partner_id = ?", partner).

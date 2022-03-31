@@ -192,7 +192,7 @@ func prepareAccountPermissionResponse(aps models.AccountPermission) sentry.Accou
 	}
 	return sentry.AccountPermission{
 		AccountID:      aps.AccountId.String(),
-		ProjectID:      aps.ProjecttId.String(),
+		ProjectID:      aps.ProjectId.String(),
 		OrganizationID: aps.OrganizationId.String(),
 		PartnerID:      aps.PartnerId.String(),
 		RoleName:       aps.RoleName,

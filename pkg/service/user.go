@@ -427,7 +427,6 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 			}
 			permissions = append(
 				permissions,
-				// TODO: rename permissions to permission
 				&userv3.Permission{
 					Project:     p.Project,
 					Namespace:   p.Namespace,
@@ -661,7 +660,7 @@ func (s *userService) RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiK
 	}
 	// fetch the metadata information required to populate cli config
 	var proj models.Project
-	_, err = dao.GetByID(ctx, s.db, ap.ProjecttId, &proj)
+	_, err = dao.GetByID(ctx, s.db, ap.ProjectId, &proj)
 	if err != nil {
 		return nil, err
 	}

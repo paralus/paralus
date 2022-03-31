@@ -409,7 +409,7 @@ func TestUserList(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
-	mock.ExpectQuery(`SELECT DISTINCT account_id FROM "sentry_account_permission" WHERE .partner_id = '` + puuid + `'. AND .organization_id = '` + ouuid + `'`).
+	mock.ExpectQuery(`SELECT DISTINCT account_id FROM "sentry_account_permission" AS "sap" WHERE .partner_id = '` + puuid + `'. AND .organization_id = '` + ouuid + `'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"account_id"}).AddRow(uuuid1).AddRow(uuuid2))
 	mock.ExpectQuery(`SELECT "identities"."id", .*WHERE .id IN .'` + uuuid1 + `', '` + uuuid2 + `'.. LIMIT 10`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).
@@ -442,7 +442,7 @@ func TestUserList(t *testing.T) {
 		t.Fatal("could not list users:", err)
 	}
 	if userlist.Metadata.Count != 2 {
-		t.Errorf("incorrect number of users returned, expected 2; got %v", userlist.Metadata.Count)
+		t.Fatalf("incorrect number of users returned, expected 2; got %v", userlist.Metadata.Count)
 	}
 	if userlist.Items[0].Metadata.Name != "johndoe@provider.com" || userlist.Items[1].Metadata.Name != "johndoe@provider.com" {
 		t.Errorf("incorrect user names returned when listing; expected '%v' and '%v'; got '%v' and '%v'", "johndoe@provider.com", "johndoe@provider.com", userlist.Items[0].Metadata.Name, userlist.Items[1].Metadata.Name)
@@ -480,7 +480,7 @@ func TestUserFiletered(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
-	mock.ExpectQuery(`SELECT DISTINCT account_id FROM "sentry_account_permission" WHERE .partner_id = '` + puuid + `'. AND .organization_id = '` + ouuid + `'`).
+	mock.ExpectQuery(`SELECT DISTINCT account_id FROM "sentry_account_permission" AS "sap" WHERE .partner_id = '` + puuid + `'. AND .organization_id = '` + ouuid + `'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"account_id"}).AddRow(uuuid1).AddRow(uuuid2))
 	mock.ExpectQuery(`SELECT "identities"."id", .*WHERE .id IN .'` + uuuid1 + `', '` + uuuid2 + `'.. AND .traits ->> 'email' ILIKE '%filter-query%'. OR .traits ->> 'first_name' ILIKE '%filter-query%'. OR .traits ->> 'last_name' ILIKE '%filter-query%'. ORDER BY "traits ->> 'email' asc" LIMIT 50 OFFSET 20`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).
@@ -513,7 +513,7 @@ func TestUserFiletered(t *testing.T) {
 		t.Fatal("could not list users:", err)
 	}
 	if userlist.Metadata.Count != 2 {
-		t.Errorf("incorrect number of users returned, expected 2; got %v", userlist.Metadata.Count)
+		t.Fatalf("incorrect number of users returned, expected 2; got %v", userlist.Metadata.Count)
 	}
 
 	if userlist.Items[0].Metadata.Name != "johndoe@provider.com" {

@@ -73,7 +73,7 @@ type userProjectnamesaceRole struct {
 
 // TODO: find a better name for the function
 func GetQueryFilteredUsers(ctx context.Context, db bun.IDB, partner, org, group, role uuid.UUID, projects []uuid.UUID) ([]uuid.UUID, error) {
-	p := []models.SentryAccountPermission{}
+	p := []models.AccountPermission{}
 	q := db.NewSelect().Model(&p).ColumnExpr("DISTINCT account_id")
 
 	q.Where("partner_id = ?", partner).
