@@ -33,8 +33,8 @@ var rafayGatewayAnnotator = func(ctx context.Context, r *http.Request) metadata.
 		// }(),
 		GatewayAPIKey: r.Header.Get(GatewayAPIKey),
 		GatewayMethod: r.Method,
-		// UserAgent:     r.UserAgent(),
-		// Host:          r.Host,
-		// RemoteAddr:    r.RemoteAddr,
+		UserAgent:     r.UserAgent(),
+		Host:          r.Host,
+		RemoteAddr:    r.RemoteAddr,
 	})
 }

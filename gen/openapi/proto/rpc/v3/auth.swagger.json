@@ -203,6 +203,15 @@
         "clientType": {
           "$ref": "#/definitions/v3ClientType"
         },
+        "clientHost": {
+          "type": "string"
+        },
+        "clientIp": {
+          "type": "string"
+        },
+        "clientUa": {
+          "type": "string"
+        },
         "isAllNsAccess": {
           "type": "object",
           "additionalProperties": {
