@@ -8,9 +8,7 @@ import (
 
 	"github.com/RafayLabs/rcloud-base/internal/dao"
 	"github.com/RafayLabs/rcloud-base/internal/models"
-	"github.com/RafayLabs/rcloud-base/pkg/common"
 	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
@@ -105,6 +103,8 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 		project.Spec = &systemv3.ProjectSpec{
 			Default: createdProject.Default,
 		}
+
+		CreateProjectAuditEvent(ctx, AuditActionCreate, project.GetMetadata().GetName(), createdProject.ID)
 	}
 	err = tx.Commit()
 	if err != nil {
@@ -282,6 +282,8 @@ func (s *projectService) Update(ctx context.Context, project *systemv3.Project) 
 			tx.Rollback()
 			_log.Warn("unable to commit changes", err)
 		}
+
+		CreateProjectAuditEvent(ctx, AuditActionUpdate, project.GetMetadata().GetName(), proj.ID)
 	}
 
 	return project, nil
@@ -324,14 +326,17 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 		if err != nil {
 			tx.Rollback()
 			_log.Warn("unable to commit changes", err)
+			return &systemv3.Project{}, err
 		}
+
+		CreateProjectAuditEvent(ctx, AuditActionDelete, project.GetMetadata().GetName(), proj.ID)
 	}
 
 	return project, nil
 }
 
 func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*systemv3.ProjectList, error) {
-	sd, ok := ctx.Value(common.SessionDataKey).(*commonv3.SessionData)
+	sd, ok := GetSessionDataFromContext(ctx)
 	username := ""
 	if !ok {
 		return &systemv3.ProjectList{}, fmt.Errorf("cannot perform project listing without auth")

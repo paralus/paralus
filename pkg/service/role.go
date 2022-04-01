@@ -166,17 +166,20 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 			tx.Rollback()
 			return &rolev3.Role{}, err
 		}
-	} else {
-		tx.Rollback()
-		return &rolev3.Role{}, fmt.Errorf("unable to create role '%v'", role.GetMetadata().GetName())
+
+		err = tx.Commit()
+		if err != nil {
+			tx.Rollback()
+			_log.Warn("unable to commit changes", err)
+		}
+
+		CreateRoleAuditEvent(ctx, AuditActionCreate, role.GetMetadata().GetName(), createdRole.ID, role.GetSpec().GetRolepermissions())
+
+		return role, nil
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		tx.Rollback()
-		_log.Warn("unable to commit changes", err)
-	}
-	return role, nil
+	tx.Rollback()
+	return &rolev3.Role{}, fmt.Errorf("unable to create role '%v'", role.GetMetadata().GetName())
 
 }
 
@@ -279,6 +282,8 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 			tx.Rollback()
 			_log.Warn("unable to commit changes", err)
 		}
+
+		CreateRoleAuditEvent(ctx, AuditActionUpdate, role.GetMetadata().GetName(), rle.ID, role.GetSpec().GetRolepermissions())
 		return role, nil
 	}
 	return &rolev3.Role{}, fmt.Errorf("unable to update role '%v'", role.GetMetadata().GetName())
@@ -321,6 +326,8 @@ func (s *roleService) Delete(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 			tx.Rollback()
 			_log.Warn("unable to commit changes", err)
 		}
+
+		CreateRoleAuditEvent(ctx, AuditActionDelete, role.GetMetadata().GetName(), rle.ID, []string{})
 		return role, nil
 	}
 

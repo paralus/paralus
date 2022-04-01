@@ -49,9 +49,13 @@ func (s *apiKeyService) Create(ctx context.Context, req *rpcv3.ApiKeyRequest) (*
 		Secret:     crypto.GenerateSha256Secret(),
 	}
 
-	_, err := dao.Create(ctx, s.db, apikey)
+	entity, err := dao.Create(ctx, s.db, apikey)
 	if err != nil {
 		return nil, err
+	}
+
+	if ak, ok := entity.(*models.Group); ok {
+		CreateApiKeyAuditEvent(ctx, AuditActionCreate, ak.ID.String())
 	}
 	return apikey, nil
 }
@@ -61,6 +65,12 @@ func (s *apiKeyService) Delete(ctx context.Context, req *rpcv3.ApiKeyRequest) (*
 		Set("trash = ?", true).
 		Where("account_id = ?", req.Username).
 		Where("key = ?", req.Id).Exec(ctx)
+	if err != nil {
+		return &rpcv3.DeleteUserResponse{}, err
+	}
+
+
+	CreateApiKeyAuditEvent(ctx, AuditActionDelete, req.Id)
 	return nil, err
 }
 

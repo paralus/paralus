@@ -10,7 +10,6 @@ import (
 
 	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	"github.com/Shopify/sarama"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -84,7 +83,6 @@ type Event struct {
 }
 
 type createEventOptions struct {
-	producer       sarama.AsyncProducer
 	version        EventVersion
 	origin         EventOrigin
 	category       EventCategory
@@ -96,13 +94,6 @@ type createEventOptions struct {
 	accountID      string
 	username       string
 	groups         []string
-}
-
-// WithProducer sets producer for audit event
-func WithProducer(producer sarama.AsyncProducer) CreateEventOption {
-	return func(opts *createEventOptions) {
-		opts.producer = producer
-	}
 }
 
 // WithVersion sets version for audit event
@@ -193,11 +184,6 @@ func CreateEvent(event *Event, opts ...CreateEventOption) error {
 		opt(&cOpts)
 	}
 
-	if cOpts.producer == nil {
-		_log.Infow("audit event producer is nil")
-		return fmt.Errorf("audit even producer is nil")
-	}
-
 	t := time.Now()
 	dateArray := strings.Fields(t.String())
 	timestamp := fmt.Sprintf("%d-%02d-%02dT%02d:%02d:%02d.%06d%s",
@@ -226,11 +212,7 @@ func CreateEvent(event *Event, opts ...CreateEventOption) error {
 		_log.Infow("unable to marshal audit event", "error", err)
 		return err
 	}
-	rawMessage := &sarama.ProducerMessage{
-		Topic: string(cOpts.topic),
-		Value: sarama.ByteEncoder(payload),
-	}
-	cOpts.producer.Input() <- rawMessage
+	fmt.Println("event:", string(payload)) // TODO: Switch to writing to audit file
 	return nil
 }
 
@@ -288,7 +270,7 @@ func getActor(cOpts createEventOptions) *EventActor {
 }
 
 func GetActorFromSessionData(sd *commonv3.SessionData) *EventActor {
-	pid := sd.GetPartner()
+	pid := sd.GetPartner() // TODO: have this pulled from headers
 	oid := sd.GetOrganization()
 	accountID := sd.GetAccount()
 	username := sd.GetUsername()
@@ -296,11 +278,14 @@ func GetActorFromSessionData(sd *commonv3.SessionData) *EventActor {
 		ID:       accountID,
 		Username: username,
 	}
-	groups := sd.Groups
+	groups := sd.Groups  // TODO: get groups (in interceptor?)
 
 	// Set org id to string "null" for users with PARTNER_ADMIN role
 	if oid == "" {
 		oid = "null"
+	}
+	if pid == "" {
+		pid = "null"
 	}
 
 	return &EventActor{
@@ -321,6 +306,15 @@ func GetClientFromRequest(r *http.Request) *EventClient {
 	}
 }
 
+func GetClientFromSessionData(sd *commonv3.SessionData) *EventClient {
+	return &EventClient{
+		Type:      "BROWSER",
+		IP:        sd.GetClientIp(),
+		UserAgent: sd.GetClientUa(),
+		Host:      sd.GetClientHost(),
+	}
+}
+
 func GetEvent(r *http.Request, sd *commonv3.SessionData, detail *EventDetail, eventType string, projectID string) *Event {
 	event := &Event{
 		Actor:     GetActorFromSessionData(sd),
@@ -332,4 +326,43 @@ func GetEvent(r *http.Request, sd *commonv3.SessionData, detail *EventDetail, ev
 	}
 
 	return event
+}
+
+func CreateV1Event(sd *commonv3.SessionData, detail *EventDetail, eventType string, projectID string) error {
+	actor := GetActorFromSessionData(sd)
+	client := GetClientFromSessionData(sd)
+
+	if projectID == "" {
+		projectID = "null"
+	}
+
+	event := &Event{
+		Version:   VersionV1,
+		Category:  AuditCategory,
+		Origin:    OriginCore,
+		Actor:     actor,
+		Client:    client,
+		Detail:    detail,
+		Type:      eventType,
+		Portal:    "OPS", // TODO: What is the portal?
+		ProjectID: projectID,
+	}
+
+	event.PartnerID = actor.PartnerID
+	event.OrganizationID = actor.OrganizationID
+
+	t := time.Now()
+	dateArray := strings.Fields(t.String())
+	timestamp := fmt.Sprintf("%d-%02d-%02dT%02d:%02d:%02d.%06d%s",
+		t.Year(), t.Month(), t.Day(),
+		t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), dateArray[2])
+	event.Timestamp = timestamp
+
+	payload, err := json.Marshal(event)
+	if err != nil {
+		_log.Infow("unable to marshal audit event", "error", err)
+		return err
+	}
+	fmt.Println("event:", string(payload)) // TODO: Switch to writing to audit file
+	return nil
 }

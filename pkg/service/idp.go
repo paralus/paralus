@@ -205,6 +205,9 @@ func (s *idpService) Create(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 			SpEntityId:         acsURL,
 		},
 	}
+
+	CreateIdpAuditEvent(ctx, AuditActionCreate, rv.GetMetadata().GetName(), entity.Id)
+
 	return rv, nil
 }
 
@@ -381,6 +384,8 @@ func (s *idpService) Update(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 			SpEntityId:         acsURL,
 		},
 	}
+
+	CreateIdpAuditEvent(ctx, AuditActionUpdate, rv.GetMetadata().GetName(), entity.Id)
 	return rv, nil
 }
 
@@ -452,5 +457,7 @@ func (s *idpService) Delete(ctx context.Context, idp *systemv3.Idp) error {
 	if err != nil {
 		return err
 	}
+
+	CreateIdpAuditEvent(ctx, AuditActionDelete, name, entity.Id)
 	return nil
 }

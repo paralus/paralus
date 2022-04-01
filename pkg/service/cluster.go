@@ -309,6 +309,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 		h.OnChange(ev)
 	}
 
+	CreateClusterAuditEvent(ctx, AuditActionCreate, clusterResp.GetMetadata().GetName(), edb.ID)
 	return clusterResp, nil
 }
 
@@ -590,6 +591,8 @@ func (cs *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) 
 		h.OnChange(ev)
 	}*/
 
+	CreateClusterAuditEvent(ctx, AuditActionUpdate, cluster.GetMetadata().GetName(), cdb.ID)
+
 	return cluster, nil
 }
 
@@ -634,6 +637,10 @@ func (cs *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) 
 		h.OnChange(ev)
 	}
 
+	id, err := uuid.Parse(clusterId)
+	if err == nil {
+		CreateClusterAuditEvent(ctx, AuditActionDelete, cluster.GetMetadata().GetName(), id)
+	}
 	return nil
 
 }

@@ -129,3 +129,17 @@ func ListFilteredUsers(ctx context.Context, db bun.IDB, users *[]models.KratosId
 	}
 	return users, nil
 }
+
+func GetUserNamesByIds(ctx context.Context, db bun.IDB, id []uuid.UUID, entity interface{}) ([]string, error) {
+	names := []string{}
+	if len(id) == 0 {
+		return names, nil
+	}
+	err := db.NewSelect().ColumnExpr("traits ->> 'email' as name").Model(entity).
+		Where("id = (?)", bun.In(id)).
+		Scan(ctx, &names)
+	if err != nil {
+		return nil, err
+	}
+	return names, nil
+}
