@@ -90,7 +90,7 @@ service User {
     };
   };
 
-  rpc GetUsers(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.UserList) {
+  rpc GetUsers(rafay.dev.types.common.v3.QueryOptions) returns (rafay.dev.types.user.v3.UserList) {
     option (google.api.http) = {
       get : "/auth/v3/users"
     };
@@ -99,6 +99,12 @@ service User {
   rpc GetUser(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.User) {
     option (google.api.http) = {
       get : "/auth/v3/user/{metadata.name}"
+    };
+  };
+
+  rpc GetUserInfo(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.UserInfo) {
+    option (google.api.http) = {
+      get : "/auth/v3/userinfo"  // user name if picked from session
     };
   };
 

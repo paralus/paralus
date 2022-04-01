@@ -67,6 +67,35 @@ message ProjectNamespaceRole {
       } ];
 }
 
+message Permission {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema : {
+      title : "Permissions"
+      description : "Permissions"
+    }
+  };
+  optional string project = 1
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Project"
+        description : "Project"
+      } ];
+  optional int64 namespace = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Namespace"
+        description : "Namespace"
+      } ];
+  string role = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Role"
+        description : "Role"
+      } ];
+  repeated string permissions = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Permissions"
+        description : "Permissions provided by role"
+      } ];
+}
+
 message GroupSpec {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema : {

@@ -3,8 +3,10 @@ package server
 import (
 	"context"
 
+	"github.com/RafayLabs/rcloud-base/pkg/query"
 	"github.com/RafayLabs/rcloud-base/pkg/service"
 	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	userpbv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -37,8 +39,8 @@ func (s *groupServer) CreateGroup(ctx context.Context, req *userpbv3.Group) (*us
 	return updateGroupStatus(req, resp, err), err
 }
 
-func (s *groupServer) GetGroups(ctx context.Context, req *userpbv3.Group) (*userpbv3.GroupList, error) {
-	return s.List(ctx, req)
+func (s *groupServer) GetGroups(ctx context.Context, req *commonv3.QueryOptions) (*userpbv3.GroupList, error) {
+	return s.List(ctx, query.WithOptions(req))
 }
 
 func (s *groupServer) GetGroup(ctx context.Context, req *userpbv3.Group) (*userpbv3.Group, error) {

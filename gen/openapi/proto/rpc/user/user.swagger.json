@@ -603,14 +603,14 @@
         ]
       }
     },
-    "/auth/v3/users": {
+    "/auth/v3/userinfo": {
       "get": {
-        "operationId": "User_GetUsers",
+        "operationId": "User_GetUserInfo",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v3UserList"
+              "$ref": "#/definitions/v3UserInfo"
             }
           },
           "403": {
@@ -794,6 +794,217 @@
           {
             "name": "status.reason",
             "description": "Reason. reason of the last condition status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/auth/v3/users": {
+      "get": {
+        "operationId": "User_GetUsers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3UserList"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "q",
+            "description": "query for filtering.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID).",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "selector",
+            "description": "selector is used to filter the labels of a resource.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "organization",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "project",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "group",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "displayName",
+            "description": "displayName only used for update queries to set displayName (READONLY).",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "ignoreScopeDefault",
+            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "globalScope",
+            "description": "globalScope sets partnerID,organizationID,projectID = 0.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "deleted",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "extended",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "urlScope",
+            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value).",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "isSSOUser",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "username",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "groups",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "blueprintRef",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "publishedVersion",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "clusterID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "account",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1071,6 +1282,37 @@
         "project"
       ]
     },
+    "v3Permission": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "description": "Project",
+          "title": "Project"
+        },
+        "namespace": {
+          "type": "string",
+          "format": "int64",
+          "description": "Namespace",
+          "title": "Namespace"
+        },
+        "role": {
+          "type": "string",
+          "description": "Role",
+          "title": "Role"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Permissions provided by role",
+          "title": "Permissions"
+        }
+      },
+      "description": "Permissions",
+      "title": "Permissions"
+    },
     "v3ProjectNamespaceRole": {
       "type": "object",
       "properties": {
@@ -1134,6 +1376,98 @@
         "metadata",
         "spec"
       ]
+    },
+    "v3UserInfo": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "system.k8smgmt.io/v3",
+          "description": "API Version of the user resource",
+          "title": "API Version"
+        },
+        "kind": {
+          "type": "string",
+          "default": "User",
+          "description": "Kind of the user resource",
+          "title": "Kind"
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3Metadata",
+          "description": "Metadata of the user resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3UserInfoSpec",
+          "description": "Spec of the user resource",
+          "title": "Spec"
+        },
+        "status": {
+          "$ref": "#/definitions/commonv3Status",
+          "description": "Status of the resource",
+          "title": "Status",
+          "readOnly": true
+        }
+      },
+      "description": "User info",
+      "title": "UserInfo",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+      ]
+    },
+    "v3UserInfoSpec": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "description": "First name of the user",
+          "title": "FirstName"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Last name of the user",
+          "title": "LastName"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number of the user",
+          "title": "Phone"
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Groups the user belongs to",
+          "title": "Group",
+          "readOnly": true
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3Permission"
+          },
+          "description": "Permissions for the user",
+          "title": "Permissions"
+        },
+        "emailVerified": {
+          "type": "boolean",
+          "description": "Flag to show if the email of the user was verified",
+          "title": "EmailVerified",
+          "readOnly": true
+        },
+        "phoneVerified": {
+          "type": "boolean",
+          "description": "Flag to show if phone number of the user was verified",
+          "title": "PhoneVerified",
+          "readOnly": true
+        }
+      },
+      "description": "User info specification",
+      "title": "UserInfo Specification"
     },
     "v3UserList": {
       "type": "object",

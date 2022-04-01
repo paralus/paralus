@@ -21,6 +21,7 @@ func GetGroups(ctx context.Context, db bun.IDB, id uuid.UUID) ([]models.Group, e
 
 func GetUserRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.ProjectNamespaceRole, error) {
 	// Could possibly union them later for some speedup
+	// TODO filter by org and partner
 	var r = []*userv3.ProjectNamespaceRole{}
 	err := db.NewSelect().Table("authsrv_accountresourcerole").
 		ColumnExpr("authsrv_resourcerole.name as role").
@@ -55,11 +56,66 @@ func GetUserRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Proj
 		Where("authsrv_projectaccountnamespacerole.account_id = ?", id).
 		Where("authsrv_project.trash = ?", false).
 		Where("authsrv_resourcerole.trash = ?", false).
-		Where("authsrv_projectaccountresourcerole.trash = ?", false).
+		Where("authsrv_projectaccountnamespacerole.trash = ?", false).
 		Scan(ctx, &pnr)
 	if err != nil {
 		return nil, err
 	}
 
 	return append(append(r, pr...), pnr...), err
+}
+
+type userProjectnamesaceRole struct {
+	AccountId uuid.UUID `bun:"account_id,type:uuid"`
+	Role      string    `bun:"role,type:string"`
+	Project   *string   `bun:"project,type:string"`
+}
+
+// TODO: find a better name for the function
+func GetQueryFilteredUsers(ctx context.Context, db bun.IDB, partner, org, group, role uuid.UUID, projects []uuid.UUID) ([]uuid.UUID, error) {
+	p := []models.AccountPermission{}
+	q := db.NewSelect().Model(&p).ColumnExpr("DISTINCT account_id")
+
+	q.Where("partner_id = ?", partner).
+		Where("organization_id = ?", org)
+
+	if group != uuid.Nil {
+		q.Where("group_id = ?", group)
+	}
+	if role != uuid.Nil {
+		q.Where("role_id = ?", role)
+	}
+	if len(projects) != 0 {
+		q.Where("project_id IN (?)", bun.In(projects))
+	}
+	q.Scan(ctx)
+
+	acc := []uuid.UUID{}
+	for _, a := range p {
+		acc = append(acc, a.AccountId)
+	}
+	return acc, nil
+}
+
+// ListFilteredUsers will return the list of users fileterd by query
+func ListFilteredUsers(ctx context.Context, db bun.IDB, users *[]models.KratosIdentities, fusers []uuid.UUID, query string, orderBy string, order string, limit int, offset int) (*[]models.KratosIdentities, error) {
+	q := db.NewSelect().Model(users)
+	q.Where("id IN (?)", bun.In(fusers))
+	if query != "" {
+		q.Where("traits ->> 'email' ILIKE ?", "%"+query+"%") // XXX: ILIKE is not-standard
+		q.WhereOr("traits ->> 'first_name' ILIKE ?", "%"+query+"%")
+		q.WhereOr("traits ->> 'last_name' ILIKE ?", "%"+query+"%")
+	}
+	if orderBy != "" && order != "" {
+		q.Order("traits ->> '" + orderBy + "' " + order)
+	}
+	if limit != 0 || offset != 0 {
+		q.Limit(limit)
+		q.Offset(offset)
+	}
+	err := q.Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
 }

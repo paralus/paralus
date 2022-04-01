@@ -24,3 +24,5 @@ type CliConfigDownloadData struct {
 	Organization string `json:"organization"`
 	Partner      string `json:"partner"`
 }
+
+type contextKey struct{}

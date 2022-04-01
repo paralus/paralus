@@ -1485,6 +1485,13 @@
             "type": "string"
           },
           {
+            "name": "q",
+            "description": "query for filtering.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "name",
             "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID).",
             "in": "query",
@@ -1506,6 +1513,18 @@
           },
           {
             "name": "organization",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "group",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "role",
             "in": "query",
             "required": false,
             "type": "string"

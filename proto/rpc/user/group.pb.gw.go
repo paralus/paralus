@@ -13,6 +13,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	"github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
@@ -121,11 +122,11 @@ func local_request_Group_CreateGroup_0(ctx context.Context, marshaler runtime.Ma
 }
 
 var (
-	filter_Group_GetGroups_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "organization": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
+	filter_Group_GetGroups_0 = &utilities.DoubleArray{Encoding: map[string]int{"partner": 0, "organization": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
 )
 
 func request_Group_GetGroups_0(ctx context.Context, marshaler runtime.Marshaler, client GroupClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq userv3.Group
+	var protoReq commonv3.QueryOptions
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -135,24 +136,24 @@ func request_Group_GetGroups_0(ctx context.Context, marshaler runtime.Marshaler,
 		_   = err
 	)
 
-	val, ok = pathParams["metadata.partner"]
+	val, ok = pathParams["partner"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.partner")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "partner")
 	}
 
-	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.partner", val)
+	protoReq.Partner, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.partner", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "partner", err)
 	}
 
-	val, ok = pathParams["metadata.organization"]
+	val, ok = pathParams["organization"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.organization")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organization")
 	}
 
-	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.organization", val)
+	protoReq.Organization, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.organization", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organization", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -168,7 +169,7 @@ func request_Group_GetGroups_0(ctx context.Context, marshaler runtime.Marshaler,
 }
 
 func local_request_Group_GetGroups_0(ctx context.Context, marshaler runtime.Marshaler, server GroupServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq userv3.Group
+	var protoReq commonv3.QueryOptions
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -178,24 +179,24 @@ func local_request_Group_GetGroups_0(ctx context.Context, marshaler runtime.Mars
 		_   = err
 	)
 
-	val, ok = pathParams["metadata.partner"]
+	val, ok = pathParams["partner"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.partner")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "partner")
 	}
 
-	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.partner", val)
+	protoReq.Partner, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.partner", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "partner", err)
 	}
 
-	val, ok = pathParams["metadata.organization"]
+	val, ok = pathParams["organization"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "metadata.organization")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organization")
 	}
 
-	err = runtime.PopulateFieldFromPath(&protoReq, "metadata.organization", val)
+	protoReq.Organization, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "metadata.organization", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organization", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -573,7 +574,7 @@ func RegisterGroupHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Group/GetGroups", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/groups"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Group/GetGroups", runtime.WithHTTPPathPattern("/auth/v3/partner/{partner}/organization/{organization}/groups"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -724,7 +725,7 @@ func RegisterGroupHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Group/GetGroups", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/groups"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Group/GetGroups", runtime.WithHTTPPathPattern("/auth/v3/partner/{partner}/organization/{organization}/groups"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -806,7 +807,7 @@ func RegisterGroupHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 var (
 	pattern_Group_CreateGroup_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"auth", "v3", "partner", "metadata.partner", "organization", "metadata.organization", "groups"}, ""))
 
-	pattern_Group_GetGroups_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"auth", "v3", "partner", "metadata.partner", "organization", "metadata.organization", "groups"}, ""))
+	pattern_Group_GetGroups_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"auth", "v3", "partner", "organization", "groups"}, ""))
 
 	pattern_Group_GetGroup_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"auth", "v3", "partner", "metadata.partner", "organization", "metadata.organization", "group", "metadata.name"}, ""))
 

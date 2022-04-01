@@ -4,6 +4,7 @@ import (
 	context "context"
 	"strings"
 
+	"github.com/RafayLabs/rcloud-base/pkg/common"
 	"github.com/RafayLabs/rcloud-base/pkg/gateway"
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	grpc "google.golang.org/grpc"
@@ -34,8 +35,10 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 		resource, ok := req.(hasMetadata)
 		if ok {
 			meta := resource.GetMetadata()
-			org = meta.Organization
-			project = meta.Project
+			if meta != nil {
+				org = meta.Organization
+				project = meta.Project
+			}
 
 			// overrides for picking up info when not in default metadata locations
 			// XXX: This requires any new items which does not follow metadata convention added here
@@ -86,7 +89,7 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 		s := res.GetStatus()
 		switch s {
 		case commonv3.RequestStatus_RequestAllowed:
-			ctx := NewSessionContext(ctx, res.SessionData)
+			ctx := context.WithValue(ctx, common.SessionDataKey, res.SessionData)
 			return handler(ctx, req)
 		case commonv3.RequestStatus_RequestMethodOrURLNotAllowed:
 			return nil, status.Error(codes.PermissionDenied, res.GetReason())

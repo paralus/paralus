@@ -6,6 +6,8 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/RafayLabs/rcloud-base/pkg/query"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	userv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 	"github.com/google/uuid"
@@ -663,10 +665,8 @@ func TestGroupList(t *testing.T) {
 	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace FROM "authsrv_projectgroupnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgroupnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgroupnamespacerole.project_id WHERE .authsrv_projectgroupnamespacerole.group_id = '` + guuid2 + `'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+ruuid, "project-"+pruuid, 9))
 
-	group := &userv3.Group{
-		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid},
-	}
-	grouplist, err := gs.List(context.Background(), group)
+	qo := &commonv3.QueryOptions{}
+	grouplist, err := gs.List(context.Background(), query.WithOptions(qo))
 	if err != nil {
 		t.Fatal("could not list groups:", err)
 	}
@@ -674,6 +674,63 @@ func TestGroupList(t *testing.T) {
 		t.Errorf("incorrect number of groups returned, expected 2; got %v", grouplist.Metadata.Count)
 	}
 	if grouplist.Items[0].Metadata.Name != "group-"+guuid1 || grouplist.Items[1].Metadata.Name != "group-"+guuid2 {
+		t.Errorf("incorrect group ids returned when listing")
+	}
+	if grouplist.Items[0].GetSpec().GetUsers()[0] != "johndoe@provider.com" {
+		t.Errorf("incorrect username in for group, expected johndoe@provider.com ; got '%v'", grouplist.Items[0].GetSpec().GetUsers()[0])
+	}
+}
+
+func TestGroupListFiltered(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
+	mazc := mockAuthzClient{}
+	gs := NewGroupService(db, &mazc)
+
+	guuid1 := uuid.New().String()
+	guuid2 := uuid.New().String()
+	puuid := uuid.New().String()
+	ouuid := uuid.New().String()
+	uuuid := uuid.New().String()
+	ruuid := uuid.New().String()
+	pruuid := uuid.New().String()
+
+	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
+	mock.ExpectQuery(`SELECT "partner"."id" FROM "authsrv_partner" AS "partner"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
+	mock.ExpectQuery(`SELECT "group"."id", "group"."name", .*WHERE .name ILIKE '%filter-query%'. AND .partner_id = '` + puuid + `'. AND .organization_id = '` + ouuid + `'. ORDER BY "email" asc LIMIT 50 OFFSET 20`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).
+		AddRow(guuid1, "group-"+guuid1).AddRow(guuid2, "group-"+guuid2))
+
+	mock.ExpectQuery(`SELECT "identities"."id".* FROM "identities" JOIN authsrv_groupaccount ON identities.id=authsrv_groupaccount.account_id WHERE .authsrv_groupaccount.group_id = '` + guuid1 + `'`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).AddRow(uuuid, []byte(`{"email":"johndoe@provider.com"}`)))
+	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role FROM "authsrv_grouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_grouprole.role_id WHERE .authsrv_grouprole.group_id = '` + guuid1 + `'`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("role-" + ruuid))
+	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id WHERE .authsrv_projectgrouprole.group_id = '` + guuid1 + `'`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+pruuid))
+	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace FROM "authsrv_projectgroupnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgroupnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgroupnamespacerole.project_id WHERE .authsrv_projectgroupnamespacerole.group_id = '` + guuid1 + `'`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+ruuid, "project-"+pruuid, 9))
+
+	mock.ExpectQuery(`SELECT "identities"."id".* FROM "identities" JOIN authsrv_groupaccount ON identities.id=authsrv_groupaccount.account_id WHERE .authsrv_groupaccount.group_id = '` + guuid2 + `'`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).AddRow(uuuid, []byte(`{"email":"johndoe@provider.com"}`)))
+	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role FROM "authsrv_grouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_grouprole.role_id WHERE .authsrv_grouprole.group_id = '` + guuid2 + `'`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("role-" + ruuid))
+	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id WHERE .authsrv_projectgrouprole.group_id = '` + guuid2 + `'`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+pruuid))
+	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace FROM "authsrv_projectgroupnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgroupnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgroupnamespacerole.project_id WHERE .authsrv_projectgroupnamespacerole.group_id = '` + guuid2 + `'`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+ruuid, "project-"+pruuid, 9))
+
+	qo := &commonv3.QueryOptions{Q: "filter-query", Limit: 50, Offset: 20, OrderBy: "email", Order: "asc"}
+	grouplist, err := gs.List(context.Background(), query.WithOptions(qo))
+	if err != nil {
+		t.Fatal("could not list groups:", err)
+	}
+	if grouplist.Metadata.Count != 2 {
+		t.Errorf("incorrect number of groups returned, expected 2; got %v", grouplist.Metadata.Count)
+	}
+	if grouplist.Items[0].Metadata.Name != "group-"+guuid1 {
 		t.Errorf("incorrect group ids returned when listing")
 	}
 	if grouplist.Items[0].GetSpec().GetUsers()[0] != "johndoe@provider.com" {

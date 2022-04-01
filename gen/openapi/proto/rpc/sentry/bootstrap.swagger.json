@@ -235,6 +235,13 @@
         },
         "parameters": [
           {
+            "name": "q",
+            "description": "query for filtering.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "name",
             "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID).",
             "in": "query",
@@ -262,6 +269,18 @@
           },
           {
             "name": "project",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "group",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "role",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1264,6 +1283,13 @@
             "pattern": "template/[^/]+"
           },
           {
+            "name": "opts.q",
+            "description": "query for filtering.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "opts.name",
             "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID).",
             "in": "query",
@@ -1291,6 +1317,18 @@
           },
           {
             "name": "opts.project",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.group",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.role",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1938,6 +1976,10 @@
     "v3QueryOptions": {
       "type": "object",
       "properties": {
+        "q": {
+          "type": "string",
+          "title": "query for filtering"
+        },
         "name": {
           "type": "string",
           "title": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)"
@@ -1953,6 +1995,12 @@
           "type": "string"
         },
         "project": {
+          "type": "string"
+        },
+        "group": {
+          "type": "string"
+        },
+        "role": {
           "type": "string"
         },
         "displayName": {

@@ -7,6 +7,8 @@ import (
 
 	"github.com/RafayLabs/rcloud-base/internal/dao"
 	"github.com/RafayLabs/rcloud-base/internal/models"
+	"github.com/RafayLabs/rcloud-base/pkg/common"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
@@ -217,6 +219,12 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 }
 
 func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*systemv3.ProjectList, error) {
+	sd, ok := ctx.Value(common.SessionDataKey).(*commonv3.SessionData)
+	username := ""
+	if !ok {
+		return &systemv3.ProjectList{}, fmt.Errorf("cannot perform project listing without auth")
+	}
+	username = sd.Username
 
 	var projects []*systemv3.Project
 	projectList := &systemv3.ProjectList{
@@ -237,13 +245,18 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 		if err != nil {
 			return &systemv3.ProjectList{}, err
 		}
-		var projs []models.Project
-		entities, err := dao.List(ctx, s.db, uuid.NullUUID{UUID: part.ID, Valid: true}, uuid.NullUUID{UUID: org.ID, Valid: true}, &projs)
+
+		entity, err := dao.GetByTraits(ctx, s.db, username, &models.KratosIdentities{})
 		if err != nil {
 			return &systemv3.ProjectList{}, err
 		}
-		if projs, ok := entities.(*[]models.Project); ok {
-			for _, proj := range *projs {
+
+		if usr, ok := entity.(*models.KratosIdentities); ok {
+			projs, err := dao.GetFileteredProjects(ctx, s.db, usr.ID, part.ID, org.ID)
+			if err != nil {
+				return &systemv3.ProjectList{}, err
+			}
+			for _, proj := range projs {
 				labels := make(map[string]string)
 				labels["organization"] = proj.OrganizationId.String()
 				labels["partner"] = proj.PartnerId.String()
@@ -268,10 +281,8 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 				Count: int64(len(projects)),
 			}
 			projectList.Items = projects
+			return projectList, nil
 		}
-
-	} else {
-		return projectList, fmt.Errorf("missing organization id in metadata")
 	}
-	return projectList, nil
+	return projectList, fmt.Errorf("missing organization id in metadata")
 }

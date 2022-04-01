@@ -1,11 +1,13 @@
 package authv3
 
 import (
+	context "context"
 	"net/http"
 	"regexp"
 	"strings"
 
 	"github.com/RafayLabs/rcloud-base/internal/dao"
+	"github.com/RafayLabs/rcloud-base/pkg/common"
 	commonpbv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -91,7 +93,7 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 	s := res.GetStatus()
 	switch s {
 	case commonpbv3.RequestStatus_RequestAllowed:
-		ctx := NewSessionContext(r.Context(), res.SessionData)
+		ctx := context.WithValue(r.Context(), common.SessionDataKey, res.SessionData)
 		next(rw, r.WithContext(ctx))
 		return
 	case commonpbv3.RequestStatus_RequestMethodOrURLNotAllowed:

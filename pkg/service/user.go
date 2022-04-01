@@ -15,8 +15,10 @@ import (
 	"github.com/RafayLabs/rcloud-base/internal/models"
 	providers "github.com/RafayLabs/rcloud-base/internal/provider/kratos"
 	"github.com/RafayLabs/rcloud-base/pkg/common"
+	"github.com/RafayLabs/rcloud-base/pkg/query"
 	userrpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
 	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	userv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 )
@@ -32,14 +34,16 @@ type UserService interface {
 	Create(context.Context, *userv3.User) (*userv3.User, error)
 	// get user by id
 	GetByID(context.Context, *userv3.User) (*userv3.User, error)
-	// // get user by name
+	// get user by name
 	GetByName(context.Context, *userv3.User) (*userv3.User, error)
+	// get full user info
+	GetUserInfo(context.Context, *userv3.User) (*userv3.UserInfo, error)
 	// create or update user
 	Update(context.Context, *userv3.User) (*userv3.User, error)
 	// delete user
 	Delete(context.Context, *userv3.User) (*userrpcv3.DeleteUserResponse, error)
 	// list users
-	List(context.Context, *userv3.User) (*userv3.UserList, error)
+	List(context.Context, ...query.Option) (*userv3.UserList, error)
 	// retrieve the cli config for the logged in user
 	RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiKeyRequest) (*common.CliConfigDownloadData, error)
 }
@@ -368,8 +372,73 @@ func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3
 
 		return user, nil
 	}
-	fmt.Println("user:", user)
 	return user, nil
+}
+
+func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*userv3.UserInfo, error) {
+	sd, ok := ctx.Value(common.SessionDataKey).(*commonv3.SessionData)
+	username := ""
+	if !ok {
+		return &userv3.UserInfo{}, fmt.Errorf("cannot perform project listing without auth")
+	}
+	username = sd.Username
+
+	entity, err := dao.GetByTraits(ctx, s.db, username, &models.KratosIdentities{})
+	if err != nil {
+		return &userv3.UserInfo{}, err
+	}
+
+	roleMap := map[string][]string{}
+	if usr, ok := entity.(*models.KratosIdentities); ok {
+		user, err := s.identitiesModelToUser(ctx, s.db, user, usr)
+		if err != nil {
+			return &userv3.UserInfo{}, err
+		}
+
+		userinfo := &userv3.UserInfo{Metadata: user.Metadata}
+		userinfo.ApiVersion = apiVersion
+		userinfo.Kind = userKind
+		userinfo.Spec = &userv3.UserInfoSpec{
+			FirstName: user.Spec.FirstName,
+			LastName:  user.Spec.LastName,
+			Groups:    user.Spec.Groups,
+		}
+		permissions := []*userv3.Permission{}
+		for _, p := range user.Spec.ProjectNamespaceRoles {
+			rps, ok := roleMap[p.Role]
+			if !ok {
+				role, err := dao.GetIdByName(ctx, s.db, p.Role, &models.Role{})
+				if err != nil {
+					return &userv3.UserInfo{}, err
+				}
+				rle, ok := role.(*models.Role)
+				if !ok {
+					_log.Warn("unable to lookup existing role '%v'", p.Role)
+					return &userv3.UserInfo{}, err
+				}
+				rpms, err := dao.GetRolePermissions(ctx, s.db, rle.ID)
+				if err != nil {
+					return &userv3.UserInfo{}, err
+				}
+				for _, r := range rpms {
+					rps = append(rps, r.Name)
+				}
+				roleMap[p.Role] = rps
+			}
+			permissions = append(
+				permissions,
+				&userv3.Permission{
+					Project:     p.Project,
+					Namespace:   p.Namespace,
+					Role:        p.Role,
+					Permissions: rps,
+				},
+			)
+		}
+		userinfo.Spec.Permissions = permissions
+		return userinfo, nil
+	}
+	return &userv3.UserInfo{}, fmt.Errorf("unable to get user info")
 }
 
 func (s *userService) deleteUserRoleRelations(ctx context.Context, db bun.IDB, userId uuid.UUID, user *userv3.User) error {
@@ -488,7 +557,7 @@ func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3
 
 }
 
-func (s *userService) List(ctx context.Context, _ *userv3.User) (*userv3.UserList, error) {
+func (s *userService) List(ctx context.Context, opts ...query.Option) (*userv3.UserList, error) {
 	var users []*userv3.User
 	userList := &userv3.UserList{
 		ApiVersion: apiVersion,
@@ -497,12 +566,73 @@ func (s *userService) List(ctx context.Context, _ *userv3.User) (*userv3.UserLis
 			Count: 0,
 		},
 	}
-	var accs []models.KratosIdentities
-	entities, err := dao.ListAll(ctx, s.db, &accs)
-	if err != nil {
-		return userList, err
+
+	queryOptions := commonv3.QueryOptions{}
+	for _, opt := range opts {
+		opt(&queryOptions)
 	}
-	if usrs, ok := entities.(*[]models.KratosIdentities); ok {
+
+	partnerId, orgId, err := getPartnerOrganization(ctx, s.db, queryOptions.Partner, queryOptions.Organization)
+	if err != nil {
+		return &userv3.UserList{}, fmt.Errorf("unable to find role partner and org")
+	}
+
+	roleName := queryOptions.Role
+	roleId := uuid.Nil
+	if roleName != "" {
+		role, err := dao.GetIdByName(ctx, s.db, roleName, &models.Role{})
+		if err != nil {
+			return &userv3.UserList{}, fmt.Errorf("unable to find role '%v'", roleName)
+		}
+		if rle, ok := role.(*models.Role); ok {
+			roleId = rle.ID
+		}
+	}
+
+	groupName := queryOptions.Group
+	groupId := uuid.Nil
+	if groupName != "" {
+		group, err := dao.GetIdByName(ctx, s.db, groupName, &models.Group{})
+		if err != nil {
+			return &userv3.UserList{}, fmt.Errorf("unable to find group '%v'", groupName)
+		}
+		if grp, ok := group.(*models.Group); ok {
+			groupId = grp.ID
+		}
+	}
+
+	projectIds := []uuid.UUID{}
+	if queryOptions.Project != "" {
+		for _, p := range strings.Split(queryOptions.Project, ",") {
+			if p == "ALL" {
+				projectIds = append(projectIds, uuid.Nil)
+			} else {
+				project, err := dao.GetIdByName(ctx, s.db, p, &models.Project{})
+				if err != nil {
+					return &userv3.UserList{}, fmt.Errorf("unable to find project '%v'", p)
+				}
+				if prj, ok := project.(*models.Project); ok {
+					projectIds = append(projectIds, prj.ID)
+				}
+			}
+		}
+	}
+
+	uids, err := dao.GetQueryFilteredUsers(ctx, s.db, partnerId, orgId, groupId, roleId, projectIds)
+	if err != nil {
+		return &userv3.UserList{}, err
+	}
+
+	if len(uids) != 0 {
+		var accs []models.KratosIdentities
+		// TODO: maybe merge this with the previous one into single sql
+		usrs, err := dao.ListFilteredUsers(ctx, s.db, &accs,
+			uids, queryOptions.Q,
+			queryOptions.OrderBy, queryOptions.Order,
+			int(queryOptions.Limit), int(queryOptions.Offset))
+		if err != nil {
+			return userList, err
+		}
 		for _, usr := range *usrs {
 			user := &userv3.User{}
 			user, err := s.identitiesModelToUser(ctx, s.db, user, &usr)
@@ -511,13 +641,13 @@ func (s *userService) List(ctx context.Context, _ *userv3.User) (*userv3.UserLis
 			}
 			users = append(users, user)
 		}
-
-		// update the list metadata and items response
-		userList.Metadata = &v3.ListMetadata{
-			Count: int64(len(users)),
-		}
-		userList.Items = users
 	}
+
+	// update the list metadata and items response
+	userList.Metadata = &v3.ListMetadata{
+		Count: int64(len(users)),
+	}
+	userList.Items = users
 
 	return userList, nil
 }
@@ -530,7 +660,7 @@ func (s *userService) RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiK
 	}
 	// fetch the metadata information required to populate cli config
 	var proj models.Project
-	_, err = dao.GetByID(ctx, s.db, ap.ProjecttId, &proj)
+	_, err = dao.GetByID(ctx, s.db, ap.ProjectId, &proj)
 	if err != nil {
 		return nil, err
 	}

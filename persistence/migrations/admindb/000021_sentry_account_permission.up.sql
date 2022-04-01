@@ -1,10 +1,12 @@
 CREATE OR REPLACE VIEW sentry_account_permission AS
 SELECT
     apr.account_id,
+    apr.group_id,
     apr.project_id,
     apr.organization_id,
     apr.partner_id,
-    rbu.role_name,
+    rbu.role_name, -- could be dropped in future
+    rbu.role_id,
     rbu.is_global,
     rbu.scope,
     rbu.permission_name,
@@ -13,6 +15,7 @@ SELECT
 FROM (
     SELECT
         ga.account_id,
+        gr.group_id,
         uuid_nil() project_id,
         gr.role_id,
         gr.organization_id,
@@ -26,6 +29,7 @@ FROM (
     UNION
     SELECT
         account_id,
+        uuid_nil() as group_id,
         uuid_nil() project_id,
         role_id,
         organization_id,
@@ -37,6 +41,7 @@ FROM (
     UNION
     SELECT
         ga.account_id,
+        ga.group_id,
         pgr.project_id,
         pgr.role_id,
         pgr.organization_id,
@@ -50,6 +55,7 @@ FROM (
     UNION
     SELECT
         account_id,
+        uuid_nil() as group_id,
         project_id,
         role_id,
         organization_id,
@@ -61,6 +67,7 @@ FROM (
     UNION
     SELECT
         account_id,
+        uuid_nil() as group_id,
         project_id,
         role_id,
         organization_id,
@@ -72,6 +79,7 @@ FROM (
     UNION    
     SELECT
         ga.account_id,
+        ga.group_id,
         pgnr.project_id,
         pgnr.role_id,
         pgnr.organization_id,

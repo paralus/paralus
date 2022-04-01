@@ -239,43 +239,47 @@ message Status {
 
 // QueryOptions is the options for performing queries on resources
 message QueryOptions {
+  // query for filtering
+  string q = 1;
   // name is unique ID of a resource along with (partnerID, organizationID,
   // projectID)
-  string name = 1;
+  string name = 2;
   // selector is used to filter the labels of a resource
-  string selector = 2;
-  string partner = 3;
-  string organization = 4;
-  string project = 5;
+  string selector = 3;
+  string partner = 4;
+  string organization = 5;
+  string project = 6;
+  string group = 7;
+  string role = 8;
   // displayName only used for update queries to set displayName (READONLY)
-  string displayName = 6;
+  string displayName = 9;
   // labels only used for update queries to set labels (READONLY)
-  map<string, string> labels = 7;
+  map<string, string> labels = 10;
   // annotations only used for update queries to set annotations (READONLY)
-  map<string, string> annotations = 8;
-  sint64 count = 9;
-  sint64 offset = 10;
-  sint64 limit = 11;
+  map<string, string> annotations = 11;
+  sint64 count = 12;
+  sint64 offset = 13;
+  sint64 limit = 14;
   // ignoreScopeDefault ignores default values for partnerID, organizationID and
   // projectID
-  bool ignoreScopeDefault = 12;
+  bool ignoreScopeDefault = 15;
   // globalScope sets partnerID,organizationID,projectID = 0
-  bool globalScope = 13;
-  string orderBy = 14;
-  string order = 15;
-  bool deleted = 16;
+  bool globalScope = 16;
+  string orderBy = 17;
+  string order = 18;
+  bool deleted = 19;
 
-  bool extended = 17;
+  bool extended = 20;
   // urlScope is supposed to be passed in the URL as kind/HashID(value)
-  string urlScope = 18;
-  bool isSSOUser = 19;
-  string username = 20;
-  repeated string groups = 21;
-  string blueprintRef = 22;
-  string publishedVersion = 23;
-  string clusterID = 24;
-  string ID = 25;
-  string account = 26;
+  string urlScope = 21;
+  bool isSSOUser = 22;
+  string username = 23;
+  repeated string groups = 24;
+  string blueprintRef = 25;
+  string publishedVersion = 26;
+  string clusterID = 27;
+  string ID = 28;
+  string account = 29;
 }
 
 // RafayConditionStatus is the status of the status condition

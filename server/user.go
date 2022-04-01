@@ -5,7 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	authv3 "github.com/RafayLabs/rcloud-base/pkg/auth/v3"
+	"github.com/RafayLabs/rcloud-base/pkg/common"
+	"github.com/RafayLabs/rcloud-base/pkg/query"
 	"github.com/RafayLabs/rcloud-base/pkg/service"
 	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
@@ -41,13 +42,27 @@ func (s *userServer) CreateUser(ctx context.Context, req *userpbv3.User) (*userp
 	return updateUserStatus(req, resp, err), err
 }
 
-func (s *userServer) GetUsers(ctx context.Context, req *userpbv3.User) (*userpbv3.UserList, error) {
-	return s.us.List(ctx, req)
+func (s *userServer) GetUsers(ctx context.Context, req *commonv3.QueryOptions) (*userpbv3.UserList, error) {
+	return s.us.List(ctx, query.WithOptions(req))
 }
 
 func (s *userServer) GetUser(ctx context.Context, req *userpbv3.User) (*userpbv3.User, error) {
 	resp, err := s.us.GetByName(ctx, req)
 	return updateUserStatus(req, resp, err), err
+}
+
+func (s *userServer) GetUserInfo(ctx context.Context, req *userpbv3.User) (*userpbv3.UserInfo, error) {
+	resp, err := s.us.GetUserInfo(ctx, req)
+	if err != nil {
+		req.Status = &v3.Status{
+			ConditionStatus: v3.ConditionStatus_StatusFailed,
+			LastUpdated:     timestamppb.Now(),
+			Reason:          err.Error(),
+		}
+		return resp, err
+	}
+	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_StatusOK}
+	return resp, nil
 }
 
 func (s *userServer) DeleteUser(ctx context.Context, req *userpbv3.User) (*rpcv3.DeleteUserResponse, error) {
@@ -60,7 +75,7 @@ func (s *userServer) UpdateUser(ctx context.Context, req *userpbv3.User) (*userp
 }
 
 func (s *userServer) DownloadCliConfig(ctx context.Context, req *rpcv3.CliConfigRequest) (*commonv3.HttpBody, error) {
-	sessData, ok := authv3.GetSession(ctx)
+	sessData, ok := ctx.Value(common.SessionDataKey).(*commonv3.SessionData)
 	if !ok {
 		return nil, fmt.Errorf("unable to retrieve session data")
 	}

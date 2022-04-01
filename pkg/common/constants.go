@@ -46,3 +46,5 @@ const (
 	RelayAPIAuditType      = "RelayAPI"
 	RelayCommandsAuditType = "RelayCommands"
 )
+
+var SessionDataKey contextKey
