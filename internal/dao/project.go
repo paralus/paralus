@@ -87,6 +87,10 @@ func GetProjectGroupRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*use
 		Join(`JOIN authsrv_group ON authsrv_group.id=authsrv_projectgroupnamespacerole.group_id`). // also need a namespace join
 		Where("authsrv_projectgroupnamespacerole.project_id = ?", id).
 		Scan(ctx, &pnr)
+	if err != nil {
+		return nil, err
+	}
+
 	return append(pr, pnr...), err
 }
 
