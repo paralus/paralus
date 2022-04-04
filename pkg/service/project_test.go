@@ -29,9 +29,10 @@ func TestCreateProject(t *testing.T) {
 
 	mock.ExpectQuery(`SELECT "organization"."id", "organization"."name"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
-
+	mock.ExpectBegin()
 	mock.ExpectQuery(`INSERT INTO "authsrv_project"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
+	mock.ExpectCommit()
 
 	project := &systemv3.Project{
 		Metadata: &v3.Metadata{Id: puuid, Name: "project-" + puuid, Organization: "orgname"},
@@ -78,9 +79,13 @@ func TestProjectDelete(t *testing.T) {
 
 	mock.ExpectQuery(`SELECT "project"."id", "project"."name", .* FROM "authsrv_project" AS "project" WHERE`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(puuid, "project-"+puuid))
+	mock.ExpectBegin()
+	mock.ExpectExec(`UPDATE "authsrv_projectgrouprole" AS "projectgrouprole" SET trash = TRUE WHERE`).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec(`UPDATE "authsrv_projectaccountresourcerole" AS "projectaccountresourcerole" SET trash = TRUE WHERE`).WillReturnResult(sqlmock.NewResult(1, 1))
 
 	mock.ExpectExec(`UPDATE "authsrv_project"`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectCommit()
 
 	project := &systemv3.Project{
 		Metadata: &v3.Metadata{Id: puuid, Name: "project-" + puuid},
@@ -132,6 +137,21 @@ func TestProjectGetByName(t *testing.T) {
 	mock.ExpectQuery(`SELECT "partner"."id", "partner"."name"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(partuuid))
 
+	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group 
+		FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id 
+		JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id 
+		JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id WHERE`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("ADMIN"))
+
+	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group, 
+		namespace_id as namespace FROM "authsrv_projectgroupnamespacerole" JOIN authsrv_resourcerole 
+		ON authsrv_resourcerole.id=authsrv_projectgroupnamespacerole.role_id JOIN authsrv_project 
+		ON authsrv_project.id=authsrv_projectgroupnamespacerole.project_id JOIN authsrv_group 
+		ON authsrv_group.id=authsrv_projectgroupnamespacerole.group_id WHERE`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("ADMIN"))
+
+	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, identities.traits ->> 'email' as user 
+		FROM "authsrv_projectaccountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id 
+		JOIN identities ON identities.id=authsrv_projectaccountresourcerole.account_id WHERE`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("ADMIN"))
+
 	project := &systemv3.Project{
 		Metadata: &v3.Metadata{Id: puuid, Name: "project-" + puuid},
 	}
@@ -174,9 +194,24 @@ func TestProjectUpdate(t *testing.T) {
 
 	mock.ExpectQuery(`SELECT "project"."id", "project"."name", .* FROM "authsrv_project" AS "project" WHERE`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(puuid, "project-"+puuid))
-
+	mock.ExpectBegin()
+	mock.ExpectExec(`UPDATE "authsrv_projectgrouprole" AS "projectgrouprole" SET trash = TRUE WHERE`).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec(`UPDATE "authsrv_projectaccountresourcerole" AS "projectaccountresourcerole" SET trash = TRUE WHERE`).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec(`UPDATE "authsrv_project"`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group 
+		FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id 
+		JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id 
+		JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id WHERE`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("ADMIN", "project-"+puuid))
+	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group, 
+		namespace_id as namespace FROM "authsrv_projectgroupnamespacerole" 
+		JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgroupnamespacerole.role_id 
+		JOIN authsrv_project ON authsrv_project.id=authsrv_projectgroupnamespacerole.project_id 
+		JOIN authsrv_group ON authsrv_group.id=authsrv_projectgroupnamespacerole.group_id WHERE`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("ADMIN", "project-"+puuid))
+	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, identities.traits ->> 'email' as user 
+		FROM "authsrv_projectaccountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id 
+		JOIN identities ON identities.id=authsrv_projectaccountresourcerole.account_id WHERE`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "user"}).AddRow("ADMIN", "user@email.com"))
+	mock.ExpectCommit()
 
 	project := &systemv3.Project{
 		Metadata: &v3.Metadata{Id: puuid, Name: "project-" + puuid},

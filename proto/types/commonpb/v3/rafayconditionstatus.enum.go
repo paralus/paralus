@@ -30,7 +30,11 @@ func (e RafayConditionStatus) MarshalJSON() ([]byte, error) {
 func (e *RafayConditionStatus) UnmarshalJSON(b []byte) error {
 	if b != nil {
 		var length int
-		if len(b) > 1 { length = len(b) - 1 } else { length = len(b) }
+		if len(b) > 1 {
+			length = len(b) - 1
+		} else {
+			length = len(b)
+		}
 		*e = RafayConditionStatus(RafayConditionStatus_value[string(b[1:length])])
 	}
 	return nil
