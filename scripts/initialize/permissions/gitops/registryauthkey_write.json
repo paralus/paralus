@@ -1,0 +1,22 @@
+{
+  "name": "registryauthkey.write",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:registryauthkey_id/",
+      "methods": [
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/auth/v3/registryauthkeys",
+  "description": "create, manage registry auth keys.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

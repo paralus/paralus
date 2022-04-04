@@ -1,0 +1,16 @@
+{
+  "name": "ssouser.write",
+  "base_url": "/auth/v3/ssousers",
+  "description": "create, manage sso users information.",
+  "resource_urls": [],
+  "resource_action_urls": [
+    {
+      "url": "/:account_id/groups/",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "authenticated": true,
+  "scope": "ORGANIZATION"
+}

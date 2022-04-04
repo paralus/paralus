@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	goruntime "runtime"
+	"strings"
 	"sync"
 	"time"
 
@@ -182,9 +183,9 @@ func setup() {
 
 	// audit
 	viper.SetDefault(esEndPointEnv, "http://127.0.0.1:9200")
-	viper.SetDefault(esIndexPrefixEnv, "auditlog-system")
-	viper.SetDefault(relayAuditESIndexPrefixEnv, "auditlog-relay")
-	viper.SetDefault(relayCommandESIndexPrefix, "auditlog-commands")
+	viper.SetDefault(esIndexPrefixEnv, "events-core")
+	viper.SetDefault(relayAuditESIndexPrefixEnv, "relay-audits")
+	viper.SetDefault(relayCommandESIndexPrefix, "relay-commands")
 
 	// cd relay
 	viper.SetDefault(coreCDRelayUserHostEnv, "*.user.cdrelay.rafay.local:10012")
@@ -318,7 +319,7 @@ func setup() {
 	aps = service.NewAccountPermissionService(db)
 	gps = service.NewGroupPermissionService(db)
 
-	/*// audit services
+	// audit services
 	aus, err = service.NewAuditLogService(elasticSearchUrl, esIndexPrefix+"-*", "AuditLog API: ")
 	if err != nil {
 		if dev && strings.Contains(err.Error(), "connect: connection refused") {
@@ -346,7 +347,7 @@ func setup() {
 		} else {
 			_log.Fatalw("unable to create auditLog service", "error", err)
 		}
-	}*/
+	}
 
 	// cluster bootstrap
 	downloadData = &common.DownloadData{

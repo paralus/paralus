@@ -4,6 +4,7 @@ package rafay.dev.rpc.v3;
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "proto/types/rolepb/v3/rolepermission.proto";
+import "proto/types/commonpb/v3/common.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {
@@ -54,7 +55,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service Rolepermission {
-  rpc GetRolepermissions(rafay.dev.types.role.v3.RolePermission)
+  rpc GetRolepermissions(rafay.dev.types.common.v3.QueryOptions)
       returns (rafay.dev.types.role.v3.RolePermissionList) {
     option (google.api.http) = {
       get : "/auth/v3/rolepermissions"

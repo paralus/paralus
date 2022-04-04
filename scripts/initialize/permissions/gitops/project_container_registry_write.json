@@ -1,0 +1,23 @@
+{
+  "name": "project.container.registry.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:containerRegistry_name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/config/project/:project_id/containerRegistry",
+  "description": "update container registry information.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

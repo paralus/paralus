@@ -19,4 +19,5 @@ type ResourcePermission struct {
 	Trash              bool                     `bun:"trash,notnull,default:false"`
 	ResourceUrls       []map[string]interface{} `bun:"resource_urls,type:jsonb" json:"resource_urls"`
 	ResourceActionUrls []map[string]interface{} `bun:"resource_action_urls,type:jsonb" json:"resource_action_urls"`
+	Scope              string                   `bun:"scope,notnull"`
 }

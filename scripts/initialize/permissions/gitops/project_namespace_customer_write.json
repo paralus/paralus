@@ -1,0 +1,23 @@
+{
+  "name": "project.namespace.customer.write",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:namesapce_id/",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v1/config/projects/:project_id/namespaces",
+  "description": "create, manage project namespaces.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

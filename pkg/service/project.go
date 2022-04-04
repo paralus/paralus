@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
@@ -73,21 +74,30 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 		PartnerId:      org.PartnerId,
 		Default:        project.GetSpec().GetDefault(),
 	}
-	entity, err := dao.Create(ctx, s.db, &proj)
+
+	tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 	if err != nil {
+		return &systemv3.Project{}, err
+	}
+
+	entity, err := dao.Create(ctx, tx, &proj)
+	if err != nil {
+		tx.Rollback()
 		return &systemv3.Project{}, err
 	}
 
 	//update v3 spec
 	if createdProject, ok := entity.(*models.Project); ok {
 
-		project, err = s.createGroupRoleRelations(ctx, project, parsedIds{Id: createdProject.ID, Partner: createdProject.PartnerId, Organization: createdProject.OrganizationId})
+		project, err = s.createGroupRoleRelations(ctx, tx, project, parsedIds{Id: createdProject.ID, Partner: createdProject.PartnerId, Organization: createdProject.OrganizationId})
 		if err != nil {
+			tx.Rollback()
 			return &systemv3.Project{}, err
 		}
 
-		project, err = s.createProjectAccountRelations(ctx, createdProject.ID, project)
+		project, err = s.createProjectAccountRelations(ctx, tx, createdProject.ID, project)
 		if err != nil {
+			tx.Rollback()
 			return &systemv3.Project{}, err
 		}
 
@@ -95,6 +105,11 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 		project.Spec = &systemv3.ProjectSpec{
 			Default: createdProject.Default,
 		}
+	}
+	err = tx.Commit()
+	if err != nil {
+		tx.Rollback()
+		_log.Warn("unable to commit changes", err)
 	}
 
 	return project, nil
@@ -206,40 +221,51 @@ func (s *projectService) Update(ctx context.Context, project *systemv3.Project) 
 	}
 
 	if proj, ok := entity.(*models.Project); ok {
+
+		tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
+		if err != nil {
+			return &systemv3.Project{}, err
+		}
+
 		//update project details
 		proj.Description = project.Metadata.Description
 		proj.Default = project.Spec.Default
 		proj.ModifiedAt = time.Now()
 
-		project, err = s.deleteGroupRoleRelaitons(ctx, proj.ID, project)
+		project, err = s.deleteGroupRoleRelations(ctx, tx, proj.ID, project)
 		if err != nil {
+			tx.Rollback()
 			return &systemv3.Project{}, err
 		}
-		project, err = s.createGroupRoleRelations(ctx, project, parsedIds{Id: proj.ID, Partner: proj.PartnerId, Organization: proj.OrganizationId})
+		project, err = s.createGroupRoleRelations(ctx, tx, project, parsedIds{Id: proj.ID, Partner: proj.PartnerId, Organization: proj.OrganizationId})
 		if err != nil {
-			return &systemv3.Project{}, err
-		}
-
-		project, err = s.deleteProjectAccountRelations(ctx, proj.ID, project)
-		if err != nil {
-			return &systemv3.Project{}, err
-		}
-		project, err = s.createProjectAccountRelations(ctx, proj.ID, project)
-		if err != nil {
+			tx.Rollback()
 			return &systemv3.Project{}, err
 		}
 
-		_, err = dao.Update(ctx, s.db, proj.ID, proj)
+		project, err = s.deleteProjectAccountRelations(ctx, tx, proj.ID, project)
 		if err != nil {
+			tx.Rollback()
+			return &systemv3.Project{}, err
+		}
+		project, err = s.createProjectAccountRelations(ctx, tx, proj.ID, project)
+		if err != nil {
+			tx.Rollback()
 			return &systemv3.Project{}, err
 		}
 
-		pnr, err := dao.GetProjectGroupRoles(ctx, s.db, proj.ID)
+		_, err = dao.Update(ctx, tx, proj.ID, proj)
+		if err != nil {
+			tx.Rollback()
+			return &systemv3.Project{}, err
+		}
+
+		pnr, err := dao.GetProjectGroupRoles(ctx, tx, proj.ID)
 		if err != nil {
 			return nil, err
 		}
 
-		ur, err := dao.GetProjectUserRoles(ctx, s.db, proj.ID)
+		ur, err := dao.GetProjectUserRoles(ctx, tx, proj.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -249,6 +275,12 @@ func (s *projectService) Update(ctx context.Context, project *systemv3.Project) 
 			Default:               proj.Default,
 			ProjectNamespaceRoles: pnr,
 			UserRoles:             ur,
+		}
+
+		err = tx.Commit()
+		if err != nil {
+			tx.Rollback()
+			_log.Warn("unable to commit changes", err)
 		}
 	}
 
@@ -262,23 +294,37 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 	}
 	if proj, ok := entity.(*models.Project); ok {
 
-		project, err = s.deleteGroupRoleRelaitons(ctx, proj.ID, project)
+		tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 		if err != nil {
 			return &systemv3.Project{}, err
 		}
 
-		project, err = s.deleteProjectAccountRelations(ctx, proj.ID, project)
+		project, err = s.deleteGroupRoleRelations(ctx, tx, proj.ID, project)
 		if err != nil {
+			tx.Rollback()
 			return &systemv3.Project{}, err
 		}
 
-		err := dao.Delete(ctx, s.db, proj.ID, proj)
+		project, err = s.deleteProjectAccountRelations(ctx, tx, proj.ID, project)
 		if err != nil {
+			tx.Rollback()
+			return &systemv3.Project{}, err
+		}
+
+		err = dao.Delete(ctx, tx, proj.ID, proj)
+		if err != nil {
+			tx.Rollback()
 			return &systemv3.Project{}, err
 		}
 		//update v3 spec
 		project.Metadata.Id = proj.ID.String()
 		project.Metadata.Name = proj.Name
+
+		err = tx.Commit()
+		if err != nil {
+			tx.Rollback()
+			_log.Warn("unable to commit changes", err)
+		}
 	}
 
 	return project, nil
@@ -366,14 +412,14 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 }
 
 // Map roles to groups
-func (s *projectService) createGroupRoleRelations(ctx context.Context, project *systemv3.Project, ids parsedIds) (*systemv3.Project, error) {
+func (s *projectService) createGroupRoleRelations(ctx context.Context, db bun.IDB, project *systemv3.Project, ids parsedIds) (*systemv3.Project, error) {
 	projectNamespaceRoles := project.GetSpec().GetProjectNamespaceRoles()
 
 	var pgrs []models.ProjectGroupRole
 	var ps []*authzv1.Policy
 	for _, pnr := range projectNamespaceRoles {
 		role := pnr.GetRole()
-		entity, err := dao.GetIdByName(ctx, s.db, role, &models.Role{})
+		entity, err := dao.GetIdByName(ctx, db, role, &models.Role{})
 		if err != nil {
 			return &systemv3.Project{}, fmt.Errorf("unable to find role '%v'", role)
 		}
@@ -419,7 +465,7 @@ func (s *projectService) createGroupRoleRelations(ctx context.Context, project *
 		})
 	}
 	if len(pgrs) > 0 {
-		_, err := dao.Create(ctx, s.db, &pgrs)
+		_, err := dao.Create(ctx, db, &pgrs)
 		if err != nil {
 			return &systemv3.Project{}, err
 		}
@@ -435,9 +481,9 @@ func (s *projectService) createGroupRoleRelations(ctx context.Context, project *
 	return project, nil
 }
 
-func (s *projectService) deleteGroupRoleRelaitons(ctx context.Context, projectId uuid.UUID, project *systemv3.Project) (*systemv3.Project, error) {
+func (s *projectService) deleteGroupRoleRelations(ctx context.Context, db bun.IDB, projectId uuid.UUID, project *systemv3.Project) (*systemv3.Project, error) {
 	// delete previous entries
-	err := dao.DeleteX(ctx, s.db, "project_id", projectId, &models.ProjectGroupRole{})
+	err := dao.DeleteX(ctx, db, "project_id", projectId, &models.ProjectGroupRole{})
 	if err != nil {
 		return &systemv3.Project{}, err
 	}
@@ -449,8 +495,8 @@ func (s *projectService) deleteGroupRoleRelaitons(ctx context.Context, projectId
 	return project, nil
 }
 
-func (s *projectService) deleteProjectAccountRelations(ctx context.Context, projectId uuid.UUID, project *systemv3.Project) (*systemv3.Project, error) {
-	err := dao.DeleteX(ctx, s.db, "project_id", projectId, &models.ProjectAccountResourcerole{})
+func (s *projectService) deleteProjectAccountRelations(ctx context.Context, db bun.IDB, projectId uuid.UUID, project *systemv3.Project) (*systemv3.Project, error) {
+	err := dao.DeleteX(ctx, db, "project_id", projectId, &models.ProjectAccountResourcerole{})
 	if err != nil {
 		return &systemv3.Project{}, fmt.Errorf("unable to delete project; %v", err)
 	}
@@ -463,17 +509,17 @@ func (s *projectService) deleteProjectAccountRelations(ctx context.Context, proj
 }
 
 // Update the users(account) mapped to each project
-func (s *projectService) createProjectAccountRelations(ctx context.Context, projectId uuid.UUID, project *systemv3.Project) (*systemv3.Project, error) {
+func (s *projectService) createProjectAccountRelations(ctx context.Context, db bun.IDB, projectId uuid.UUID, project *systemv3.Project) (*systemv3.Project, error) {
 	var parrs []models.ProjectAccountResourcerole
 	var ugs []*authzv1.Policy
 
 	for _, ur := range project.Spec.UserRoles {
 		// FIXME: do combined lookup
-		entity, err := dao.GetIdByTraits(ctx, s.db, ur.User, &models.KratosIdentities{})
+		entity, err := dao.GetIdByTraits(ctx, db, ur.User, &models.KratosIdentities{})
 		if err != nil {
 			return &systemv3.Project{}, fmt.Errorf("unable to find user '%v'", ur.User)
 		}
-		rentity, err := dao.GetByName(ctx, s.db, ur.Role, &models.Role{})
+		rentity, err := dao.GetByName(ctx, db, ur.Role, &models.Role{})
 		if err != nil {
 			return &systemv3.Project{}, fmt.Errorf("unable to find user '%v'", ur.User)
 		}
@@ -505,7 +551,7 @@ func (s *projectService) createProjectAccountRelations(ctx context.Context, proj
 	if len(parrs) == 0 {
 		return project, nil
 	}
-	_, err := dao.Create(ctx, s.db, &parrs)
+	_, err := dao.Create(ctx, db, &parrs)
 	if err != nil {
 		return &systemv3.Project{}, err
 	}

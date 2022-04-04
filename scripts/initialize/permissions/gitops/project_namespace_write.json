@@ -1,0 +1,36 @@
+{
+  "name": "project.namespace.write",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:namesapce_id/",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:namesapce_id/publish",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:namesapce_id/unpublish",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "base_url": "/config/v1/projects/:project_id/namespaces",
+  "description": "create, manage project namespaces.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

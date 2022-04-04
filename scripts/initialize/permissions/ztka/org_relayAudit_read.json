@@ -1,0 +1,16 @@
+{
+  "name": "org.relayAudit.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/event/v1/relayaudit",
+  "description": "Permission to view kubectl audit logs.",
+  "authenticated": true,
+  "scope": "ORGANIZATION"
+}

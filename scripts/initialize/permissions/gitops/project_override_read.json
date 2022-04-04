@@ -1,0 +1,22 @@
+{
+  "name": "project.override.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:override_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/config/project/:project_id/override",
+  "description": "view project overrides.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

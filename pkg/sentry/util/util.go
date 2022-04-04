@@ -44,6 +44,8 @@ const (
 	clusterPrefixLen      = len(clusterPrefix)
 	userPrefix            = "user/"
 	userPrefixLen         = len(userPrefix)
+	ssoUserPrefix         = "ssouser/"
+	ssoUserPrefixLen      = len(ssoUserPrefix)
 	organizationPrefix    = "organization/"
 	organizationPrefixLen = len(organizationPrefix)
 )
@@ -82,6 +84,10 @@ func ToClusterScope(scope string) string {
 
 // GetUserScope returns user scope from url
 func GetUserScope(userScope string) (scope string, err error) {
+	if strings.HasPrefix(userScope, ssoUserPrefix) {
+		scope = userScope[ssoUserPrefixLen:]
+		return
+	}
 	if strings.HasPrefix(userScope, userPrefix) {
 		scope = userScope[userPrefixLen:]
 		return

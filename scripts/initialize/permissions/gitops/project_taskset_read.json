@@ -1,0 +1,41 @@
+{
+  "name": "project.taskset.read",
+  "base_url": "/v2/config/project/:project_id/taskset",
+  "description": "view taskset information.",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:taskset_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:taskset_name/published",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:taskset_name/snapshot",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:taskset_name/snapshot/:snapshot_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "authenticated": true,
+  "scope": "PROJECT"
+}

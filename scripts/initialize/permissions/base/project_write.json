@@ -1,0 +1,22 @@
+{
+  "name": "project.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:metadata.name",
+      "methods": [
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/auth/v3/partner/:metadata.partner/organization/:metadata.organization/project",
+  "description": "create, manage and delete project information.",
+  "authenticated": true,
+  "scope": "ORGANIZATION"
+}

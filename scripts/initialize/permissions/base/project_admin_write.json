@@ -1,0 +1,16 @@
+{
+  "name": "project.admin.write",
+  "resource_urls": [],
+  "resource_action_urls": [
+    {
+      "url": "/:metadata.name",
+      "methods": [
+        "PUT"
+      ]
+    }
+  ],
+  "base_url": "/auth/v3/partner/:metadata.partner/organization/:metadata.organization/project",
+  "description": "update project associtation with user-role and group-roles.",
+  "authenticated": true,
+  "scope": "ORGANIZATION"
+}

@@ -285,6 +285,7 @@ func (s *organizationService) List(ctx context.Context, organization *systemv3.O
 					Name:        org.Name,
 					Description: org.Description,
 					Partner:     partner.Name,
+					Id:          org.ID.String(),
 					ModifiedAt:  timestamppb.New(org.ModifiedAt),
 				}
 				organization.Spec = &systemv3.OrganizationSpec{

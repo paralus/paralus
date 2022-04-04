@@ -1,0 +1,23 @@
+{
+  "name": "project.pipeline.variable.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:variable_name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/pipeline/project/:project_id/variable",
+  "description": "create, manage pipeline variables.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

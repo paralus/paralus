@@ -1,0 +1,22 @@
+{
+  "name": "project.pipelinesummary.customer.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:pipeline_id",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/pipeline/projects/:project_id/pipelinesummaries",
+  "description": "view project pipeline summary.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

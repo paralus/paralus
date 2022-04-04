@@ -73,7 +73,7 @@ func (s *apiKeyService) List(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rp
 
 	if apikeys, ok := resp.(*[]models.ApiKey); ok {
 		apiKeyResp := &rpcv3.ApiKeyResponseList{
-			Items: make([]*rpcv3.ApiKeyResponse, len(*apikeys)),
+			Items: make([]*rpcv3.ApiKeyResponse, 0),
 		}
 		for _, apikey := range *apikeys {
 			apiKeyResp.Items = append(apiKeyResp.Items, &rpcv3.ApiKeyResponse{

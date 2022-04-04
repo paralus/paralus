@@ -229,7 +229,7 @@ func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchReq
 		_log.Errorw("Error encoding query:", " err", err)
 		return res, err
 	}
-
+	_log.Debug("Executing Query: ", q)
 	r, err = ra.relayQuery.Handle(buf)
 	if err != nil {
 		return res, err

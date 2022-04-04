@@ -204,6 +204,7 @@ func (a *AuditLogService) GetAuditLogByProjects(req *v1.AuditLogSearchRequest) (
 		_log.Errorw("Error encoding query:", " err", err)
 		return res, err
 	}
+	_log.Debug("Executing Query: ", q)
 	r, err = a.auditQuery.Handle(buf)
 	if err != nil {
 		return res, err

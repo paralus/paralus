@@ -1,0 +1,22 @@
+{
+  "name": "project.read",
+  "resource_urls": [
+    {
+      "url": "/projects",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/project/:metadata.name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/auth/v3/partner/:metadata.partner/organization/:metadata.organization",
+  "description": "view project information.",
+  "authenticated": true,
+  "scope": "ORGANIZATION"
+}

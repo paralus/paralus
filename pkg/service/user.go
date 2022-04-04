@@ -600,8 +600,6 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 		return &userv3.User{}, fmt.Errorf("unable to update user '%v'", name)
 	}
 
-	return &userv3.User{}, fmt.Errorf("unable to update user '%v'", name)
-
 }
 
 func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3.DeleteUserResponse, error) {

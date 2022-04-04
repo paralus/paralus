@@ -1,0 +1,16 @@
+{
+  "name": "org.auditLog.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/event/v1/auditlog",
+  "description": "Permission to view system audit logs.",
+  "authenticated": true,
+  "scope": "ORGANIZATION"
+}

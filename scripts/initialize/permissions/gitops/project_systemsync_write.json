@@ -1,0 +1,30 @@
+{
+  "name": "project.systemsync.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:systemsync_name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:systemsync_name/trigger",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "base_url": "/v2/pipeline/project/:project_id/systemsync",
+  "description": "create, manage system sync information.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

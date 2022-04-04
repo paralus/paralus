@@ -50,10 +50,10 @@ message RolePermissionSpec {
       description : "RolePermisson specification"
     }
   };
-  repeated string permissions = 1
+  string scope = 1
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-        title : "Permissions"
-        description : "List of permisions for role"
+        title : "Scope"
+        description : "Scope of permisions for role"
       } ];
 }
 

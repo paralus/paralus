@@ -1,0 +1,22 @@
+{
+  "name": "project.approval.write",
+  "resource_urls": [],
+  "resource_action_urls": [
+    {
+      "url": "/:approval_name/approve",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:approval_name/deny",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "base_url": "/v2/pipeline/project/:project_id/approval",
+  "description": "update project pipeline approval information.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

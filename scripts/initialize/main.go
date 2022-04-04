@@ -17,6 +17,7 @@ import (
 	"github.com/RafayLabs/rcloud-base/pkg/common"
 	"github.com/RafayLabs/rcloud-base/pkg/enforcer"
 	"github.com/RafayLabs/rcloud-base/pkg/service"
+	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	rolev3 "github.com/RafayLabs/rcloud-base/proto/types/rolepb/v3"
 	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
@@ -26,6 +27,7 @@ import (
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
+	"github.com/uptrace/bun/extra/bundebug"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -82,16 +84,18 @@ func addResourcePermissions(db *bun.DB, basePath string) error {
 }
 
 func main() {
-	partner := flag.String("partner", "", "Name of partner")
+	partner := flag.String("partner", "finman", "Name of partner")
 	partnerDesc := flag.String("partner-desc", "", "Description of partner")
 	partnerHost := flag.String("partner-host", "", "Host of partner")
 
-	org := flag.String("org", "", "Name of org")
+	org := flag.String("org", "finmanorg", "Name of org")
 	orgDesc := flag.String("org-desc", "", "Description of org")
 
 	oae := flag.String("admin-email", "", "Email of org admin")
 	oafn := flag.String("admin-first-name", "", "First name of org admin")
 	oaln := flag.String("admin-last-name", "", "Last name of org admin")
+
+	debug := flag.Bool("debug", false, "Enable verbose mode")
 
 	flag.Parse()
 
@@ -122,7 +126,7 @@ func main() {
 	kratosScheme := viper.GetString(kratosSchemeEnv)
 	kratosAddr := viper.GetString(kratosAddrEnv)
 
-	content, err := ioutil.ReadFile(path.Join("scripts", "initialize", "roles.json"))
+	content, err := ioutil.ReadFile(path.Join("scripts", "initialize", "roles", "ztka", "roles.json"))
 	if err != nil {
 		log.Fatal("unable to read file: ", err)
 	}
@@ -136,6 +140,13 @@ func main() {
 	dsn := "postgres://" + dbUser + ":" + dbPassword + "@" + dbAddr + "/" + dbName + "?sslmode=disable"
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db := bun.NewDB(sqldb, pgdialect.New())
+
+	if *debug {
+		db.AddQueryHook(bundebug.NewQueryHook(
+			bundebug.WithVerbose(true),
+			bundebug.FromEnv("BUNDEBUG"),
+		))
+	}
 
 	kratosConfig := kclient.NewConfiguration()
 	kratosUrl := kratosScheme + "://" + kratosAddr
@@ -156,15 +167,35 @@ func main() {
 	ps := service.NewPartnerService(db)
 	os := service.NewOrganizationService(db)
 	rs := service.NewRoleService(db, as)
+	gs := service.NewGroupService(db, as)
 	us := service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, nil, common.CliConfigDownloadData{})
+	prs := service.NewProjectService(db, as)
 
+	//delete all casbin rules
+	as.DeletePolicies(context.Background(), &authzv1.Policy{})
+
+	//delete all role permissions, roles
+	err = dao.HardDeleteAll(context.Background(), db, &models.ResourceRolePermission{})
+	if err != nil {
+		log.Fatal(err)
+	}
 	err = dao.HardDeleteAll(context.Background(), db, &models.ResourcePermission{})
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = addResourcePermissions(db, path.Join("scripts", "initialize", "permissions"))
+	err = dao.HardDeleteAll(context.Background(), db, &models.Role{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	//add resource permissions
+	err = addResourcePermissions(db, path.Join("scripts", "initialize", "permissions", "base"))
 	if err != nil {
 		fmt.Println("Run from base directory")
+		log.Fatal(err)
+	}
+	err = addResourcePermissions(db, path.Join("scripts", "initialize", "permissions", "ztka"))
+	if err != nil {
+		fmt.Println("Run from ztka directory")
 		log.Fatal(err)
 	}
 
@@ -198,14 +229,65 @@ func main() {
 		}
 	}
 
+	//default "All Local Users" group should be created
+	localUsersGrp, err := gs.Create(context.Background(), &userv3.Group{
+		Metadata: &commonv3.Metadata{
+			Name:         "All Local Users",
+			Partner:      *partner,
+			Organization: *org,
+			Description:  "Default group..",
+		},
+		Spec: &userv3.GroupSpec{
+			Type: "DEFAULT_USERS",
+		},
+	})
+	if err != nil {
+		fmt.Println("err:", err)
+		log.Fatal("unable to create default group", err)
+	}
+
+	//default "Organization Admins" group should be created
+	admingrp, err := gs.Create(context.Background(), &userv3.Group{
+		Metadata: &commonv3.Metadata{
+			Name:         "Organization Admins",
+			Partner:      *partner,
+			Organization: *org,
+			Description:  "Default organization admin group..",
+		},
+		Spec: &userv3.GroupSpec{
+			Type: "DEFAULT_ADMINS",
+		},
+	})
+	if err != nil {
+		fmt.Println("err:", err)
+		log.Fatal("unable to create default group", err)
+	}
+
 	// should we directly interact with kratos and create a user with a password?
 	_, err = us.Create(context.Background(), &userv3.User{
 		Metadata: &commonv3.Metadata{Name: *oae, Partner: *partner, Organization: *org, Description: "..."},
-		Spec:     &userv3.UserSpec{FirstName: *oafn, LastName: *oaln, ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Role: "ADMIN"}}},
+		Spec: &userv3.UserSpec{
+			FirstName:             *oafn,
+			LastName:              *oaln,
+			Groups:                []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
+			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Role: "ADMIN", Group: &admingrp.Metadata.Name}}},
 	})
 
 	if err != nil {
 		fmt.Println("err:", err)
 		log.Fatal("unable to bind user to role", err)
 	}
+
+	//default project with name "default" should be created with default flag true
+	prs.Create(context.Background(), &systemv3.Project{
+		Metadata: &commonv3.Metadata{
+			Name:         "default",
+			Description:  "Default project ..",
+			Partner:      *partner,
+			Organization: *org,
+		},
+		Spec: &systemv3.ProjectSpec{
+			Default: true,
+		},
+	})
 }

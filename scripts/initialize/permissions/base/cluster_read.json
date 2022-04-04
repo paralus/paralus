@@ -1,0 +1,35 @@
+{
+  "name": "cluster.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:metadata.name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:metadata.name/status",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:metadata.name/download",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/infra/v3/project/:metadata.project/cluster",
+  "description": "read cluster information, download cluster bootstrap",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

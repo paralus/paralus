@@ -1,0 +1,22 @@
+{
+  "name": "project.approval.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:approval_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/pipeline/project/:project_id/approval",
+  "description": "view project pipeline approval information.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

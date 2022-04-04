@@ -1,0 +1,42 @@
+{
+  "name": "project.pipeline.customer.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:pipeline_id",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:pipeline_id/status/:status",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:pipeline_id/trigger",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:pipeline_id/instances/:instance_id/stop",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "base_url": "/v2/pipeline/projects/:project_id/pipelines",
+  "description": "create, manage project pipelines.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

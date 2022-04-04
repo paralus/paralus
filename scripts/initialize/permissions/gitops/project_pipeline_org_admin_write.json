@@ -1,0 +1,22 @@
+{
+  "name": "project.pipeline.org.admin.write",
+  "resource_urls": [],
+  "resource_action_urls": [
+    {
+      "url": "/:pipeline_name/assignproject",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:pipeline_name/unassignproject",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "base_url": "/v2/pipeline/project/:project_id/pipeline",
+  "description": "create, manage project pipiline assignments.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

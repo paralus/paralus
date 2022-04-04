@@ -1,0 +1,23 @@
+{
+  "name": "project.trigger.customer.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:trigger_id",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/pipeline/projects/:project_id/triggers",
+  "description": "create, manage pipeline trigger information.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

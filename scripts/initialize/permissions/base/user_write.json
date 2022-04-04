@@ -1,0 +1,23 @@
+{
+  "name": "user.write",
+  "resource_urls": [
+    {
+      "url": "/users",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/user/:metadata.id",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/auth/v3",
+  "description": "create, manage users.",
+  "authenticated": true,
+  "scope": "ORGANIZATION"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "project.trigger.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:trigger_name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/pipeline/project/:project_id/trigger",
+  "description": "create, manage pipeline trigger information.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

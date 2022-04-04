@@ -267,12 +267,13 @@ func (s *kubeConfigServer) RevokeKubeconfigSSO(ctx context.Context, req *sentryr
 }
 func (s *kubeConfigServer) GetSSOUserSetting(ctx context.Context, req *sentryrpc.GetKubeconfigSettingRequest) (*sentryrpc.GetKubeconfigSettingResponse, error) {
 	opts := req.Opts
-	accountID, err := query.GetAccountID(opts)
+	accountID, err := util.GetUserScope(opts.UrlScope)
 	if err != nil {
 		return nil, err
 	}
 	ks, err := s.kss.Get(ctx, opts.Organization, accountID, true)
 	if err == constants.ErrNotFound {
+		req.Opts.UrlScope = "organization/" + opts.Organization
 		return s.GetOrganizationSetting(ctx, req)
 	} else if err != nil {
 		return nil, err
@@ -290,10 +291,12 @@ func (s *kubeConfigServer) GetSSOUserSetting(ctx context.Context, req *sentryrpc
 
 func (s *kubeConfigServer) UpdateSSOUserSetting(ctx context.Context, req *sentryrpc.UpdateKubeconfigSettingRequest) (*sentryrpc.UpdateKubeconfigSettingResponse, error) {
 	opts := req.Opts
-	accountID, err := query.GetAccountID(opts)
+	accountID, err := util.GetUserScope(opts.UrlScope)
 	if err != nil {
 		return nil, err
 	}
+	_log.Infow("UpdateSSOUserSetting", "req.EnforceOrgAdminSecretAccess", req.EnforceOrgAdminSecretAccess)
+	_log.Infow("UpdateSSOUserSetting", "req.DisableWebKubectl", req.DisableWebKubectl)
 
 	err = s.kss.Patch(ctx, &sentry.KubeconfigSetting{
 		OrganizationID:              opts.Organization,

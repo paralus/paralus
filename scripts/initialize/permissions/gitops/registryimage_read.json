@@ -1,0 +1,22 @@
+{
+  "name": "registryimage.read",
+  "resource_urls": [],
+  "resource_action_urls": [
+    {
+      "url": "/images/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/image/tags/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/config/v1/registry",
+  "description": "view registry images.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

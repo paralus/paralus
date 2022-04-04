@@ -1,0 +1,41 @@
+{
+  "name": "project.infra.provisioner.runtime.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:provisioner_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:provisioner_name/log",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:provisioner_name/stdout",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:provisioner_name/output",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/v2/infraProvisioner/project/:project_id/infraProvisionerRuntime",
+  "description": "view project infra provisioner runtime information.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

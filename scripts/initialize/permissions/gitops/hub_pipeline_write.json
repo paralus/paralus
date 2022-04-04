@@ -1,0 +1,22 @@
+{
+  "name": "hub.pipeline.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:pipeline_name",
+      "methods": [
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/apis/gitops.k8smgmt.io/v3/projects/:project_name/pipelines",
+  "description": "create, manage and delete pipelines.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}
