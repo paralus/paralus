@@ -1,7 +1,0 @@
-{
-  "name": "kubectl.namespace.read",
-  "base_url": "",
-  "resource_urls": [],
-  "resource_action_urls": [],
-  "authenticated": true
-}

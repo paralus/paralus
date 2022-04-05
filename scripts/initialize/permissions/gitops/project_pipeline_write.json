@@ -1,0 +1,42 @@
+{
+  "name": "project.pipeline.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:pipeline_name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:pipeline_name/status/:status",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:pipeline_name/trigger",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:pipeline_name/instance/:instance_id/stop",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "base_url": "/v2/pipeline/project/:project_id/pipeline",
+  "description": "create, manage project pipelines.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

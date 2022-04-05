@@ -1,0 +1,22 @@
+{
+  "name": "role.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:metadata.name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/auth/v3/partner/:metadata.partner/organization/:metadata.organization/roles",
+  "description": "view roles.",
+  "authenticated": true,
+  "scope": "ORGANIZATION"
+}

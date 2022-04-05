@@ -24,7 +24,3 @@ CREATE INDEX authsrv_resourcerolepermission_resource_role_id_054f52d8 ON authsrv
 ALTER TABLE ONLY authsrv_resourcerolepermission
     ADD CONSTRAINT authsrv_resourcerole_resource_permission__c076e909_fk_authsrv_r FOREIGN KEY (resource_permission_id) 
     REFERENCES authsrv_resourcepermission(id) DEFERRABLE INITIALLY DEFERRED;
-
-ALTER TABLE ONLY authsrv_resourcerolepermission
-    ADD CONSTRAINT authsrv_resourcerole_resource_role_id_054f52d8_fk_authsrv_r FOREIGN KEY (resource_role_id) 
-    REFERENCES authsrv_resourcerole(id) DEFERRABLE INITIALLY DEFERRED;

@@ -1,0 +1,23 @@
+{
+  "name": "project.integrationEndpoint.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:integrationEndpoint_name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/config/project/:project_id/integrationEndpoint",
+  "description": "create, manage project integration endpoint information.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

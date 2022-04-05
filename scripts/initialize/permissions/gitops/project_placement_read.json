@@ -1,0 +1,22 @@
+{
+  "name": "project.placement.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:placement_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/config/project/:project_id/placement",
+  "description": "view project placements.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

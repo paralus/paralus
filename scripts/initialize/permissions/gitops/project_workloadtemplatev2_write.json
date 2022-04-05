@@ -1,0 +1,44 @@
+{
+  "name": "project.v2.config.workloadtemplate.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "url": "/:template_id",
+      "methods": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:template_id/upload",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:template_id/download",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:template_id/remove",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "base_url": "/v2/config/project/:project_id/workloadtemplate",
+  "description": "create, manage workload templates.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

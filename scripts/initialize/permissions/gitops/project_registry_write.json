@@ -1,0 +1,23 @@
+{
+  "name": "project.registry.write",
+  "resource_urls": [
+    {
+      "url": "/registries/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/registries/:registry_id/",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/config/v1/projects/:project_id",
+  "description": "create, manage project registry information.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "workload.publish",
+  "resource_urls": [],
+  "resource_action_urls": [
+    {
+      "url": "/:workload_id/publish/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_id/unpublish/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_id/publish_by_name/",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "base_url": "/config/v1/workloads",
+  "description": "publish workloads.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

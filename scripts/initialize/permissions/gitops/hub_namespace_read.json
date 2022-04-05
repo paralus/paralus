@@ -1,0 +1,35 @@
+{
+  "name": "hub.namespace.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:namespace_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:namespace_name/status",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:namespace_name/artifacts",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/apis/infra.k8smgmt.io/v3/projects/:project_name/namespaces",
+  "description": "read namespaces",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

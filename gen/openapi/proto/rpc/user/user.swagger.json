@@ -1331,6 +1331,11 @@
           "type": "string",
           "description": "Role",
           "title": "Role"
+        },
+        "group": {
+          "type": "string",
+          "description": "Group",
+          "title": "Group"
         }
       },
       "description": "Project, role and namespace pairing for permission",

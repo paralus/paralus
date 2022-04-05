@@ -13,7 +13,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/RafayLabs/rcloud-base/proto/types/rolepb/v3"
+	"github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
 	"google.golang.org/grpc"
@@ -37,7 +37,7 @@ var (
 )
 
 func request_Rolepermission_GetRolepermissions_0(ctx context.Context, marshaler runtime.Marshaler, client RolepermissionClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq rolev3.RolePermission
+	var protoReq commonv3.QueryOptions
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -53,7 +53,7 @@ func request_Rolepermission_GetRolepermissions_0(ctx context.Context, marshaler 
 }
 
 func local_request_Rolepermission_GetRolepermissions_0(ctx context.Context, marshaler runtime.Marshaler, server RolepermissionServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq rolev3.RolePermission
+	var protoReq commonv3.QueryOptions
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {

@@ -1,0 +1,96 @@
+{
+  "name": "workload.write",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_id/",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:workload_id/publish/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_id/upload_payload/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_id/upload_values/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_id/validate_new_workload/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_id/set_image/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_id/unpublish/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_id/update_upgrade_policy/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_id/publish_by_name/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_id/upgrade_workload/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_id/rollout_to_other_edges/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_id/versioned_images/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_id/upload_artifact/",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "base_url": "/config/v1/workloads",
+  "description": "create, manage workloads.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

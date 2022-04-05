@@ -1,0 +1,23 @@
+{
+  "name": "project.override.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:override_name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/config/project/:project_id/override",
+  "description": "create, manage project overrides.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

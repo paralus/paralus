@@ -1,0 +1,101 @@
+{
+  "name": "workload.read",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_id/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:workload_id/workload_component_list/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_id/workload_component_info/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_id/workload_info/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_id/download_v2_payload/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_id/download_values/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_id/workload_status/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_id/history/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_id/validate/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_id/org_info/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_id/basic_info/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_id/download_artifact/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_id/download_values_file/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_id/trend/",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/config/v1/workloads",
+  "description": "view workloads.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

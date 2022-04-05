@@ -1,0 +1,22 @@
+{
+  "name": "project.container.registry.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:containerRegistry_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/config/project/:project_id/containerRegistry",
+  "description": "view container registry information.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

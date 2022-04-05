@@ -1,0 +1,29 @@
+{
+  "name": "project.repository.read",
+  "base_url": "/v2/config/project/:project_id/repository",
+  "description": "view project repository information.",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:repository_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:repository_name/validate",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "authenticated": true,
+  "scope": "PROJECT"
+}

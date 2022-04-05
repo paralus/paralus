@@ -1,0 +1,22 @@
+{
+  "name": "project.trigger.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:trigger_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/pipeline/project/:project_id/trigger",
+  "description": "view pipeline trigger information.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

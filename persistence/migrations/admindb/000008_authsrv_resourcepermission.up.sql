@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS authsrv_resourcepermission (
     id uuid NOT NULL default uuid_generate_v4(),
     name character varying(256) NOT NULL,
+    scope character varying(256) NOT NULL,
     base_url character varying(256) NOT NULL,
     description character varying(512) NOT NULL,
     created_at timestamp with time zone NOT NULL,

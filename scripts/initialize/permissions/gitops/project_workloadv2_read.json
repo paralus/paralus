@@ -1,0 +1,41 @@
+{
+  "name": "project.v2.config.workload.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:workload_name/published",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_name/snapshot",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_name/download",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/v2/config/project/:project_id/workload",
+  "description": "view workloads.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

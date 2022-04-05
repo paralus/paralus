@@ -1,0 +1,16 @@
+{
+  "name": "organization.write",
+  "resource_urls": [
+    {
+      "url": "/:metadata.name",
+      "methods": [
+        "PUT"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/auth/v3/partner/:metadata.partner/organization",
+  "description": "manage organization information.",
+  "authenticated": true,
+  "scope": "ORGANIZATION"
+}

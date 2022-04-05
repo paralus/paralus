@@ -1,0 +1,23 @@
+{
+  "name": "registry.write",
+  "resource_urls": [
+    {
+      "url": "/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:registry_id/",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/config/v1/registries",
+  "description": "create, manage registry and repository.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

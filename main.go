@@ -183,9 +183,9 @@ func setup() {
 
 	// audit
 	viper.SetDefault(esEndPointEnv, "http://127.0.0.1:9200")
-	viper.SetDefault(esIndexPrefixEnv, "auditlog-system")
-	viper.SetDefault(relayAuditESIndexPrefixEnv, "auditlog-relay")
-	viper.SetDefault(relayCommandESIndexPrefix, "auditlog-commands")
+	viper.SetDefault(esIndexPrefixEnv, "events-core")
+	viper.SetDefault(relayAuditESIndexPrefixEnv, "relay-audits")
+	viper.SetDefault(relayCommandESIndexPrefix, "relay-commands")
 
 	// cd relay
 	viper.SetDefault(coreCDRelayUserHostEnv, "*.user.cdrelay.rafay.local:10012")
@@ -274,12 +274,6 @@ func setup() {
 
 	_log.Infow("printing db", "db", db)
 
-	schedulerPool = schedulerrpc.NewSchedulerPool(schedulerAddr, 5*goruntime.NumCPU())
-
-	ps = service.NewPartnerService(db)
-	os = service.NewOrganizationService(db)
-	pps = service.NewProjectService(db)
-
 	// authz services
 	gormDb, err := gorm.Open(postgres.New(postgres.Config{
 		Conn: sqldb,
@@ -292,6 +286,12 @@ func setup() {
 		_log.Fatalw("unable to init enforcer", "error", err)
 	}
 	as = service.NewAuthzService(db, enforcer)
+
+	schedulerPool = schedulerrpc.NewSchedulerPool(schedulerAddr, 5*goruntime.NumCPU())
+
+	ps = service.NewPartnerService(db)
+	os = service.NewOrganizationService(db)
+	pps = service.NewProjectService(db, as)
 
 	// users and role management services
 	cc := common.CliConfigDownloadData{

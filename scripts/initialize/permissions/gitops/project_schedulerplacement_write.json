@@ -1,0 +1,44 @@
+{
+  "name": "project.v2.scheduler.placement.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "url": "/:placement_name",
+      "methods": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:placement_name/clusterworkloads",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:placement_name/ingress",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:placement_name/lastdeployedrelease",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/v2/scheduler/project/:project_id/placement",
+  "description": "create, manage cluster placement configuration.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

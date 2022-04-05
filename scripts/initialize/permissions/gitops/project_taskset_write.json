@@ -1,0 +1,42 @@
+{
+  "name": "project.taskset.write",
+  "base_url": "/v2/config/project/:project_id/taskset",
+  "description": "create, manage taskset information.",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:taskset_name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:taskset_name/publish",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:taskset_name/unpublish",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:taskset_name/snapshot/:snapshot_name/status",
+      "methods": [
+        "PUT"
+      ]
+    }
+  ],
+  "authenticated": true,
+  "scope": "PROJECT"
+}

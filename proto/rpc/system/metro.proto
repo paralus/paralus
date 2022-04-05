@@ -55,7 +55,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     rpc CreateLocation(rafay.dev.types.infra.v3.Location)
         returns (rafay.dev.types.infra.v3.Location) {
       option (google.api.http) = {
-        post : "/v3/partner/{metadata.partner}/location"
+        post : "/infra/v3/partner/{metadata.partner}/location"
         body : "*"
       };
   
@@ -72,21 +72,21 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     rpc GetLocations(rafay.dev.types.infra.v3.Location)
         returns (rafay.dev.types.infra.v3.LocationList) {
       option (google.api.http) = {
-        get : "/v3/partner/{metadata.partner}/location"
+        get : "/infra/v3/partner/{metadata.partner}/location"
       };
     };
   
     rpc GetLocation(rafay.dev.types.infra.v3.Location)
         returns (rafay.dev.types.infra.v3.Location) {
       option (google.api.http) = {
-        get : "/v3/partner/{metadata.partner}/location/{metadata.name}"
+        get : "/infra/v3/partner/{metadata.partner}/location/{metadata.name}"
       };
     };
   
     rpc UpdateLocation(rafay.dev.types.infra.v3.Location)
         returns (rafay.dev.types.infra.v3.Location) {
       option (google.api.http) = {
-        put : "/v3/partner/{metadata.partner}/location/{metadata.name}"
+        put : "/infra/v3/partner/{metadata.partner}/location/{metadata.name}"
         body : "*"
       };
     };
@@ -94,7 +94,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     rpc DeleteLocation(rafay.dev.types.infra.v3.Location)
         returns (rafay.dev.types.infra.v3.Location) {
       option (google.api.http) = {
-        delete : "/v3/partner/{metadata.partner}/location/{metadata.name}"
+        delete : "/infra/v3/partner/{metadata.partner}/location/{metadata.name}"
       };
   
       option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {

@@ -51,6 +51,8 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
+message EmptyRequest {}
+
 service Partner {
   rpc CreatePartner(rafay.dev.types.system.v3.Partner)
       returns (rafay.dev.types.system.v3.Partner) {
@@ -73,6 +75,13 @@ service Partner {
       returns (rafay.dev.types.system.v3.Partner) {
     option (google.api.http) = {
       get : "/auth/v3/partner/{metadata.name}"
+    };
+  };
+
+  rpc GetInitPartner(EmptyRequest)
+      returns (rafay.dev.types.system.v3.Partner) {
+    option (google.api.http) = {
+      get : "/auth/v3/partner"
     };
   };
 

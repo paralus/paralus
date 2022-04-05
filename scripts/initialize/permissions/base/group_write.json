@@ -1,0 +1,23 @@
+{
+  "name": "group.write",
+  "base_url": "/auth/v3/partner/:metadata.partner/organization/:metadata.organization",
+  "description": "manage group and its associations",
+  "resource_urls": [
+    {
+      "url": "/groups",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/group/:metadata.name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "authenticated": true,
+  "scope": "ORGANIZATION"
+}

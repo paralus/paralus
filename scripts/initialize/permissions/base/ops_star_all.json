@@ -1,0 +1,19 @@
+{
+  "name": "ops_star.all",
+  "resource_urls": [
+    {
+      "url": "/:*",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "",
+  "description": "Provides complete access, make me a super admin.",
+  "authenticated": true,
+  "scope": "ORGANIZATION"
+}

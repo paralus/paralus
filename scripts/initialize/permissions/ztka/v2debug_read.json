@@ -1,0 +1,16 @@
+{
+  "name": "v2debug.read",
+  "resource_urls": [
+    {
+      "url": "/prompt/project/:project_id/cluster/:cluster_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/debug",
+  "description": "read web kubectl.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

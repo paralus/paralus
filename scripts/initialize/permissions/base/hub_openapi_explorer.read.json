@@ -1,0 +1,16 @@
+{
+  "name": "hub.openapi.explorer.read",
+  "resource_urls": [
+    {
+      "url": "/openapi-explorer",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/openapi-explorer",
+  "description": "view openapi-explorer",
+  "authenticated": false,
+  "scope": "ORGANIZATION"
+}

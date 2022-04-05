@@ -276,6 +276,12 @@ func (s *bootstrapServer) updateClusterStatus(ctx context.Context, clusterID str
 							LastUpdated: timestamppb.Now(),
 							Reason:      "Relay agent established connection.",
 						},
+						{
+							Type:        infrav3.ClusterConditionType_ClusterReady,
+							Status:      commonv3.RafayConditionStatus_Success,
+							LastUpdated: timestamppb.Now(),
+							Reason:      "Relay agent established connection.",
+						},
 					},
 				},
 			},

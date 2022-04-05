@@ -1,0 +1,112 @@
+{
+    "SYSTEM": {
+        "SUPER_ADMIN": [
+            "ops_star.all"
+        ]
+    },
+    "ORGANIZATION": {
+        "ADMIN": [
+            "user.read",
+            "user.write",
+            "group.read",
+            "group.write",
+            "console.all",
+            "partner.read",
+            "project.read",
+            "project.write",
+            "project.admin.write",
+            "role.read",
+            "role.write",
+            "rolepermission.read",
+            "oidc.read",
+            "oidc.write",
+            "ssouser.write",
+            "ssouser.read",
+            "project.auditLog.read",
+            "project.relayAudit.read",
+            "project.audit.read",
+            "kubeconfig.read",
+            "kubeconfig.write",
+            "v2debug.read",
+            "kubectl.clustersettings.read",
+            "kubectl.clustersettings.write",
+            "kubectl.fullaccess",
+            "org.auditLog.read",
+            "org.relayAudit.read",
+            "audit.read",
+            "organization.read",
+            "organization.write",
+            "cluster.read",
+            "cluster.write",
+            "hub.openapi.explorer.read"
+        ],
+        "ADMIN_READ_ONLY": [
+            "user.read",
+            "group.read",
+            "console.all",
+            "partner.read",
+            "project.read",
+            "role.read",
+            "oidc.read",
+            "project.auditLog.read",
+            "project.relayAudit.read",
+            "kubeconfig.read",
+            "v2debug.read",
+            "kubectl.clustersettings.read",
+            "kubectl.cluster.read",
+            "org.auditLog.read",
+            "org.relayAudit.read",
+            "audit.read",
+            "organization.read",
+            "cluster.read",
+            "hub.openapi.explorer.read"
+        ]
+    },
+    "PROJECT": {
+        "PROJECT_ADMIN": [
+            "console.all",
+            "partner.read",
+            "project.admin.write",
+            "project.auditLog.read",
+            "project.relayAudit.read",
+            "project.audit.read",
+            "kubeconfig.read",
+            "v2debug.read",
+            "kubectl.fullaccess",
+            "cluster.read",
+            "cluster.write",
+            "hub.openapi.explorer.read",
+            "project.read",
+            "project.write"
+        ],
+        "PROJECT_READ_ONLY": [
+            "console.all",
+            "partner.read",
+            "project.read",
+            "project.auditLog.read",
+            "project.relayAudit.read",
+            "project.audit.read",
+            "kubeconfig.read",
+            "v2debug.read",
+            "kubectl.cluster.read",
+            "cluster.read",
+            "hub.openapi.explorer.read"
+        ],
+        "CLUSTER_ADMIN": [
+            "console.all",
+            "partner.read",
+            "project.read",
+            "project.auditLog.read",
+            "project.relayAudit.read",
+            "project.audit.read",
+            "kubeconfig.read",
+            "v2debug.read",
+            "kubectl.clustersettings.read",
+            "kubectl.clustersettings.write",
+            "kubectl.cluster.read",
+            "cluster.read",
+            "cluster.write",
+            "kubectl.fullaccess"
+        ]
+    }
+}

@@ -44,6 +44,7 @@ func NewElasticSearchQuery(url string, indexPattern string, logPrefix string) (*
 
 //Handle Fires the search query
 func (q *ElasticSearchQuery) Handle(msg bytes.Buffer) (map[string]interface{}, error) {
+	_log.Debugw("Searching elastic search: ", "index", q.indexPattern, "url", q.url, "q", q)
 	res, err := q.esClient.Search(
 		q.esClient.Search.WithContext(context.Background()),
 		q.esClient.Search.WithIndex(q.indexPattern),

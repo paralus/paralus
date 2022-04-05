@@ -1,0 +1,22 @@
+{
+  "name": "project.pipeline.variable.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:variable_name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/pipeline/project/:project_id/variable",
+  "description": "view pipeline variables.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

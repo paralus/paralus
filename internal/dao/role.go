@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"strings"
 
 	"github.com/RafayLabs/rcloud-base/internal/models"
 	"github.com/google/uuid"
@@ -17,6 +18,20 @@ func GetRolePermissions(ctx context.Context, db bun.IDB, id uuid.UUID) ([]models
 		Where("authsrv_resourcerolepermission.resource_role_id = ?", id).
 		Where("authsrv_resourcepermission.trash = ?", false).
 		Where("authsrv_resourcerolepermission.trash = ?", false).
+		Scan(ctx, &r)
+	if err != nil {
+		return nil, err
+	}
+	return r, nil
+}
+
+func GetRolePermissionsByScope(ctx context.Context, db bun.IDB, scope string) ([]models.ResourcePermission, error) {
+	// Could possibly union them later for some speedup
+	var r = []models.ResourcePermission{}
+	err := db.NewSelect().Table("authsrv_resourcepermission").
+		ColumnExpr("authsrv_resourcepermission.name as name, authsrv_resourcepermission.scope as scope").
+		Where("scope = ?", strings.ToUpper(scope)).
+		Where("authsrv_resourcepermission.trash = ?", false).
 		Scan(ctx, &r)
 	if err != nil {
 		return nil, err

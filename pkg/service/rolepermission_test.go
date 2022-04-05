@@ -5,7 +5,8 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	"github.com/RafayLabs/rcloud-base/pkg/query"
+	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	rolev3 "github.com/RafayLabs/rcloud-base/proto/types/rolepb/v3"
 	"github.com/google/uuid"
 )
@@ -39,10 +40,11 @@ func TestRolePermissionList(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).
 		AddRow(ruuid1, "role-"+ruuid1).AddRow(ruuid2, "role-"+ruuid2))
 
-	role := &rolev3.RolePermission{
-		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid},
+	req := &commonv3.QueryOptions{
+		Partner:      "partner-" + puuid,
+		Organization: "org-" + ouuid,
 	}
-	rolelist, err := rs.List(context.Background(), role)
+	rolelist, err := rs.List(context.Background(), query.WithOptions(req))
 	if err != nil {
 		t.Fatal("could not list rolepermissions:", err)
 	}

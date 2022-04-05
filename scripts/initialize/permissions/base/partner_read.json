@@ -1,0 +1,22 @@
+{
+  "name": "partner.read",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:metadata.name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/auth/v3/partner",
+  "description": "view partner information.",
+  "authenticated": true,
+  "scope": "ORGANIZATION"
+}

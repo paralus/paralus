@@ -309,7 +309,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 		h.OnChange(ev)
 	}
 
-	return cluster, nil
+	return clusterResp, nil
 }
 
 func (s *clusterService) Select(ctx context.Context, cluster *infrav3.Cluster, isExtended bool) (*infrav3.Cluster, error) {
@@ -416,6 +416,7 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 		json.Unmarshal(c.Annotations, &ann)
 	}
 	clstr.Metadata = &commonv3.Metadata{
+		Id:           c.ID.String(),
 		Name:         c.Name,
 		Description:  c.DisplayName,
 		Labels:       lbls,
@@ -442,7 +443,7 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 		}
 	}
 	var conditions []*infrav3.ClusterCondition
-	if isExtended && c.Conditions != nil {
+	if c.Conditions != nil {
 		json.Unmarshal(c.Conditions, &conditions)
 	}
 	clstr.Spec = &infrav3.ClusterSpec{

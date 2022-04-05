@@ -1,0 +1,22 @@
+{
+  "name": "group.read",
+  "base_url": "/auth/v3/partner/:metadata.partner/organization/:metadata.organization",
+  "description": "view group info and association",
+  "resource_urls": [
+    {
+      "url": "/groups",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/group/:metadata.name",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "authenticated": true,
+  "scope": "ORGANIZATION"
+}

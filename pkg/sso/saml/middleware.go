@@ -11,6 +11,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/RafayLabs/rcloud-base/internal/dao"
 	"github.com/RafayLabs/rcloud-base/internal/models"
 	"github.com/crewjam/saml"
 	"github.com/crewjam/saml/samlsp"
@@ -93,7 +94,7 @@ func (s *SAMLService) SAMLAuth(handler http.Handler) http.Handler {
 		}
 		domain := strings.SplitN(username, "@", 2)[1]
 
-		entity, err := s.EntityDAO.GetX(context.Background(), "domain", domain, &models.Idp{})
+		entity, err := dao.GetX(context.Background(), s.db, "domain", domain, &models.Idp{})
 		if err != nil {
 			http.Error(w, "No idp found for domain", http.StatusInternalServerError)
 			return
@@ -132,7 +133,7 @@ func (s *SAMLService) ServeACS(w http.ResponseWriter, r *http.Request) {
 	base, _ := url.Parse(os.Getenv("APP_HOST_HTTP"))
 	acsURL := base.ResolveReference(r.URL)
 
-	entity, err := s.EntityDAO.GetX(context.Background(), "acs_url", acsURL.String(), &models.Idp{})
+	entity, err := dao.GetX(context.Background(), s.db, "acs_url", acsURL.String(), &models.Idp{})
 	if err != nil {
 		http.Error(w, "No Idp for ACS URL", http.StatusInternalServerError)
 		return

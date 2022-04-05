@@ -1,0 +1,22 @@
+{
+  "name": "hub.namespace.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:namespace_name",
+      "methods": [
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/apis/infra.k8smgmt.io/v3/projects/:project_name/namespaces",
+  "description": "create, manage and delete namespaces",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

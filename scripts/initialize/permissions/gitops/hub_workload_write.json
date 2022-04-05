@@ -1,0 +1,22 @@
+{
+  "name": "hub.workload.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_name",
+      "methods": [
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/apis/apps.k8smgmt.io/v3/projects/:project_name/workloads",
+  "description": "create, manage and delete workloads.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

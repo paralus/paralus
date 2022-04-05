@@ -1,0 +1,23 @@
+{
+  "name": "project.infra.provisioner.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:provisioner_name",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [],
+  "base_url": "/v2/infraProvisioner/project/:project_id/infraProvisioner",
+  "description": "create, manage project infra provisioner information.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

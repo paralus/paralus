@@ -1,0 +1,27 @@
+{
+  "name": "user.read",
+  "resource_urls": [
+    {
+      "url": "/users",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/user/:metadata.name",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/cli/config",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "/auth/v3",
+  "description": "view users information.",
+  "authenticated": true,
+  "scope": "ORGANIZATION"
+}

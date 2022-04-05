@@ -1,0 +1,56 @@
+{
+  "name": "project.v2.config.workload.write",
+  "resource_urls": [
+    {
+      "url": "",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_name",
+      "methods": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "resource_action_urls": [
+    {
+      "url": "/:workload_name/publish",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_name/unpublish",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/:workload_name/published",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_name/snapshot",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/:workload_name/upload",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "base_url": "/v2/config/project/:project_id/workload",
+  "description": "create, manage workloads.",
+  "authenticated": true,
+  "scope": "PROJECT"
+}

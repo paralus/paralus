@@ -1,0 +1,40 @@
+{
+  "name": "console.all",
+  "resource_urls": [],
+  "resource_action_urls": [
+    {
+      "url": "/auth/v3/users/:account_id/current/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/auth/v3/users/:account_id/systemroles/",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "url": "/auth/v3/users/:account_id/change_password/",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "url": "/auth/v3/user/:metadata.id/apikeys/:apikey_id",
+      "methods": [
+        "DELETE"
+      ]
+    },
+    {
+      "url": "/auth/v3/user/:metadata.id/apikeys",
+      "methods": [
+        "GET"
+      ]
+    }
+  ],
+  "base_url": "",
+  "description": "view console and manage user access.",
+  "authenticated": true,
+  "scope": "ORGANIZATION"
+}
