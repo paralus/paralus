@@ -429,9 +429,7 @@ func TestUserList(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
-	mock.ExpectQuery(`SELECT DISTINCT account_id FROM "sentry_account_permission" AS "sap" WHERE .partner_id = '` + puuid + `'. AND .organization_id = '` + ouuid + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"account_id"}).AddRow(uuuid1).AddRow(uuuid2))
-	mock.ExpectQuery(`SELECT "identities"."id", .*WHERE .id IN .'` + uuuid1 + `', '` + uuuid2 + `'.. LIMIT 10`).
+	mock.ExpectQuery(`SELECT "identities"."id", .*FROM "identities" LIMIT 10`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).
 		AddRow(uuuid1, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)).
 		AddRow(uuuid2, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)))
@@ -492,7 +490,7 @@ func TestUserList(t *testing.T) {
 
 	performBasicAuthProviderChecks(t, *ap, 0, 0, 0, 0)
 }
-func TestUserFiletered(t *testing.T) {
+func TestUserFiltered(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
@@ -512,6 +510,8 @@ func TestUserFiletered(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
+	mock.ExpectQuery(`SELECT "group"."id" FROM "authsrv_group" AS "group" WHERE .name = 'group-name'. AND .trash = FALSE.`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(guuid))
 	mock.ExpectQuery(`SELECT DISTINCT account_id FROM "sentry_account_permission" AS "sap" WHERE .partner_id = '` + puuid + `'. AND .organization_id = '` + ouuid + `'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"account_id"}).AddRow(uuuid1).AddRow(uuuid2))
 	mock.ExpectQuery(`SELECT "identities"."id", .*WHERE .id IN .'` + uuuid1 + `', '` + uuuid2 + `'.. AND .traits ->> 'email' ILIKE '%filter-query%'. OR .traits ->> 'first_name' ILIKE '%filter-query%'. OR .traits ->> 'last_name' ILIKE '%filter-query%'. ORDER BY "traits ->> 'email' asc" LIMIT 50 OFFSET 20`).
@@ -563,7 +563,7 @@ func TestUserFiletered(t *testing.T) {
 	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id WHERE .authsrv_projectaccountnamespacerole.account_id = '` + uuuid2 + `'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+ruuid, "project-"+pruuid, 9))
 
-	qo := &commonv3.QueryOptions{Q: "filter-query", Limit: 50, Offset: 20, OrderBy: "email", Order: "asc", Organization: ouuid, Partner: puuid}
+	qo := &commonv3.QueryOptions{Q: "filter-query", Limit: 50, Offset: 20, OrderBy: "email", Order: "asc", Organization: ouuid, Partner: puuid, Group: "group-name"}
 	userlist, err := us.List(context.Background(), query.WithOptions(qo))
 	if err != nil {
 		t.Fatal("could not list users:", err)

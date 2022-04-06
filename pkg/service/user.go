@@ -707,21 +707,36 @@ func (s *userService) List(ctx context.Context, opts ...query.Option) (*userv3.U
 		}
 	}
 
-	uids, err := dao.GetQueryFilteredUsers(ctx, s.db, partnerId, orgId, groupId, roleId, projectIds)
-	if err != nil {
-		return &userv3.UserList{}, err
-	}
+	var usrs *[]models.KratosIdentities
+	var accs []models.KratosIdentities
+	if len(projectIds) != 0 || groupId != uuid.Nil || roleId != uuid.Nil {
+		uids, err := dao.GetQueryFilteredUsers(ctx, s.db, partnerId, orgId, groupId, roleId, projectIds)
+		if err != nil {
+			return &userv3.UserList{}, err
+		}
 
-	if len(uids) != 0 {
-		var accs []models.KratosIdentities
-		// TODO: maybe merge this with the previous one into single sql
-		usrs, err := dao.ListFilteredUsers(ctx, s.db, &accs,
-			uids, queryOptions.Q,
+		if len(uids) != 0 {
+			// TODO: maybe merge this with the previous one into single sql
+			usrs, err = dao.ListFilteredUsers(ctx, s.db, &accs,
+				uids, queryOptions.Q,
+				queryOptions.OrderBy, queryOptions.Order,
+				int(queryOptions.Limit), int(queryOptions.Offset))
+			if err != nil {
+				return userList, err
+			}
+		}
+	} else {
+		// If no filters are available we have to list just using identities table
+		usrs, err = dao.ListFilteredUsers(ctx, s.db, &accs,
+			[]uuid.UUID{}, queryOptions.Q,
 			queryOptions.OrderBy, queryOptions.Order,
 			int(queryOptions.Limit), int(queryOptions.Offset))
 		if err != nil {
 			return userList, err
 		}
+	}
+
+	if usrs != nil {
 		for _, usr := range *usrs {
 			user := &userv3.User{}
 			user, err := s.identitiesModelToUser(ctx, s.db, user, &usr)

@@ -71,7 +71,6 @@ type userProjectnamesaceRole struct {
 	Project   *string   `bun:"project,type:string"`
 }
 
-// TODO: find a better name for the function
 func GetQueryFilteredUsers(ctx context.Context, db bun.IDB, partner, org, group, role uuid.UUID, projects []uuid.UUID) ([]uuid.UUID, error) {
 	p := []models.AccountPermission{}
 	q := db.NewSelect().Model(&p).ColumnExpr("DISTINCT account_id")
@@ -100,7 +99,10 @@ func GetQueryFilteredUsers(ctx context.Context, db bun.IDB, partner, org, group,
 // ListFilteredUsers will return the list of users fileterd by query
 func ListFilteredUsers(ctx context.Context, db bun.IDB, users *[]models.KratosIdentities, fusers []uuid.UUID, query string, orderBy string, order string, limit int, offset int) (*[]models.KratosIdentities, error) {
 	q := db.NewSelect().Model(users)
-	q.Where("id IN (?)", bun.In(fusers))
+	if len(fusers) > 0 {
+		// filter with precomputed users if we have any
+		q.Where("id IN (?)", bun.In(fusers))
+	}
 	if query != "" {
 		q.Where("traits ->> 'email' ILIKE ?", "%"+query+"%") // XXX: ILIKE is not-standard
 		q.WhereOr("traits ->> 'first_name' ILIKE ?", "%"+query+"%")
