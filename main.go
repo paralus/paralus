@@ -166,7 +166,7 @@ func setup() {
 	viper.SetDefault(apiPortEnv, 11000)
 	viper.SetDefault(debugPortEnv, 12000)
 	viper.SetDefault(apiAddrEnv, "localhost:11000")
-	viper.SetDefault(devEnv, false)
+	viper.SetDefault(devEnv, true)
 
 	// db
 	viper.SetDefault(dbAddrEnv, "localhost:5432")
