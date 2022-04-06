@@ -280,6 +280,9 @@ message QueryOptions {
   string clusterID = 27;
   string ID = 28;
   string account = 29;
+
+  // generic way to specify a type of resource, mainly for use in users endpoint
+  string type = 30;
 }
 
 // RafayConditionStatus is the status of the status condition

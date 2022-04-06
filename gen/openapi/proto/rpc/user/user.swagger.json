@@ -217,6 +217,13 @@
             "type": "boolean"
           },
           {
+            "name": "spec.recoveryUrl",
+            "description": "Recovery Url. Initial signup URL returned after user creation",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "status.conditionType",
             "description": "Condition Type. type of the status condition",
             "in": "query",
@@ -418,6 +425,13 @@
             "in": "query",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "name": "spec.recoveryUrl",
+            "description": "Recovery Url. Initial signup URL returned after user creation",
+            "in": "query",
+            "required": false,
+            "type": "string"
           },
           {
             "name": "status.conditionType",
@@ -763,6 +777,13 @@
             "type": "boolean"
           },
           {
+            "name": "spec.recoveryUrl",
+            "description": "Recovery Url. Initial signup URL returned after user creation",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "status.conditionType",
             "description": "Condition Type. type of the status condition",
             "in": "query",
@@ -1005,6 +1026,13 @@
           },
           {
             "name": "account",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "description": "generic way to specify a type of resource, mainly for use in users endpoint.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1561,6 +1589,12 @@
           "type": "boolean",
           "description": "Flag to show if phone number of the user was verified",
           "title": "PhoneVerified",
+          "readOnly": true
+        },
+        "recoveryUrl": {
+          "type": "string",
+          "description": "Initial signup URL returned after user creation",
+          "title": "Recovery Url",
           "readOnly": true
         }
       },

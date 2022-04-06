@@ -264,7 +264,7 @@ func main() {
 	}
 
 	// should we directly interact with kratos and create a user with a password?
-	_, err = us.Create(context.Background(), &userv3.User{
+	orgA, err := us.Create(context.Background(), &userv3.User{
 		Metadata: &commonv3.Metadata{Name: *oae, Partner: *partner, Organization: *org, Description: "..."},
 		Spec: &userv3.UserSpec{
 			FirstName:             *oafn,
@@ -290,4 +290,6 @@ func main() {
 			Default: true,
 		},
 	})
+
+	fmt.Println("Org Admin signup URL: ", orgA.Spec.RecoveryUrl)
 }

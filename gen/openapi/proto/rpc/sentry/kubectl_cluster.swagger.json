@@ -229,6 +229,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "opts.type",
+            "description": "generic way to specify a type of resource, mainly for use in users endpoint.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -452,6 +459,10 @@
         },
         "account": {
           "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "title": "generic way to specify a type of resource, mainly for use in users endpoint"
         }
       },
       "title": "QueryOptions is the options for performing queries on resources"

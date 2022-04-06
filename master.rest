@@ -276,7 +276,7 @@ spec:
       project: :project
 
 # Get all users
-GET :host/auth/v3/users
+GET :host/auth/v3/users?partner=:partner&organization=:org&type=password
 Content-Type: application/yaml
 X-Session-Token: :token
 
