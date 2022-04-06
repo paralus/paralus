@@ -19,8 +19,7 @@ const (
 	AuditActionUpdate = "update"
 )
 
-// TODO: add audit events for user-role or user-group mappings
-func CreateUserAuditEvent(ctx context.Context, db bun.IDB, action string, name string, id uuid.UUID, rolesBefore, rolesAfter []uuid.UUID) {
+func CreateUserAuditEvent(ctx context.Context, db bun.IDB, action string, name string, id uuid.UUID, rolesBefore, rolesAfter, groupsBefore, groupsAfter []uuid.UUID) {
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {
 		_log.Warn("unable to create audit event: could not fetch info from context")
@@ -70,6 +69,42 @@ func CreateUserAuditEvent(ctx context.Context, db bun.IDB, action string, name s
 			},
 		}
 		if err := audit.CreateV1Event(sd, detail, "user.role.deleted", ""); err != nil {
+			_log.Warn("unable to create audit event", err)
+		}
+	}
+
+	cg, _, dg := diffu(groupsBefore, rolesAfter)
+	ncg, err := dao.GetNamesByIds(ctx, db, cg, &models.Group{})
+	if err != nil {
+		_log.Warn("unable to create audit event", err)
+	}
+	ndg, err := dao.GetNamesByIds(ctx, db, dg, &models.Group{})
+	if err != nil {
+		_log.Warn("unable to create audit event", err)
+	}
+	for _, g := range ncg {
+		detail := &audit.EventDetail{
+			Message: fmt.Sprintf("User %s added to group %s", name, g),
+			Meta: map[string]string{
+				"username":   name,
+				"group_name": g,
+			},
+		}
+		// user.role.created is user.project.created in rcloud
+		if err := audit.CreateV1Event(sd, detail, "user.group.created", ""); err != nil {
+			_log.Warn("unable to create audit event", err)
+		}
+	}
+
+	for _, g := range ndg {
+		detail := &audit.EventDetail{
+			Message: fmt.Sprintf("User %s added to group %s", name, g),
+			Meta: map[string]string{
+				"username":   name,
+				"group_name": g,
+			},
+		}
+		if err := audit.CreateV1Event(sd, detail, "user.group.deleted", ""); err != nil {
 			_log.Warn("unable to create audit event", err)
 		}
 	}

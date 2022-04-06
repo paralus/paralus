@@ -69,7 +69,6 @@ func (s *apiKeyService) Delete(ctx context.Context, req *rpcv3.ApiKeyRequest) (*
 		return &rpcv3.DeleteUserResponse{}, err
 	}
 
-
 	CreateApiKeyAuditEvent(ctx, AuditActionDelete, req.Id)
 	return nil, err
 }

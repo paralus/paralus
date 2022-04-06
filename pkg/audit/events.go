@@ -278,7 +278,7 @@ func GetActorFromSessionData(sd *commonv3.SessionData) *EventActor {
 		ID:       accountID,
 		Username: username,
 	}
-	groups := sd.Groups  // TODO: get groups (in interceptor?)
+	groups := sd.Groups // TODO: get groups (in interceptor?)
 
 	// Set org id to string "null" for users with PARTNER_ADMIN role
 	if oid == "" {

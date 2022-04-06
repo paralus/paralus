@@ -65,7 +65,7 @@ func (s *groupService) deleteGroupRoleRelaitons(ctx context.Context, db bun.IDB,
 	}
 
 	pgr := []models.ProjectGroupRole{}
-	err = dao.DeleteX(ctx, db, "group_id", groupId, &pgr)
+	err = dao.DeleteXR(ctx, db, "group_id", groupId, &pgr)
 	if err != nil {
 		return &userv3.Group{}, nil, err
 	}
@@ -74,7 +74,7 @@ func (s *groupService) deleteGroupRoleRelaitons(ctx context.Context, db bun.IDB,
 	}
 
 	pgnr := []models.ProjectGroupNamespaceRole{}
-	err = dao.DeleteX(ctx, db, "group_id", groupId, &pgnr)
+	err = dao.DeleteXR(ctx, db, "group_id", groupId, &pgnr)
 	if err != nil {
 		return &userv3.Group{}, nil, err
 	}
@@ -92,7 +92,6 @@ func (s *groupService) deleteGroupRoleRelaitons(ctx context.Context, db bun.IDB,
 
 // Map roles to groups
 func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB, group *userv3.Group, ids parsedIds) (*userv3.Group, []uuid.UUID, error) {
-	// TODO: add transactions
 	projectNamespaceRoles := group.GetSpec().GetProjectNamespaceRoles()
 
 	var pgrs []models.ProjectGroupRole
@@ -233,7 +232,6 @@ func (s *groupService) deleteGroupAccountRelations(ctx context.Context, db bun.I
 
 // Update the users(account) mapped to each group
 func (s *groupService) createGroupAccountRelations(ctx context.Context, db bun.IDB, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, []uuid.UUID, error) {
-	// TODO: add transactions
 	var grpaccs []models.GroupAccount
 	var ugs []*authzv1.UserGroup
 	var uids []uuid.UUID
@@ -268,8 +266,6 @@ func (s *groupService) createGroupAccountRelations(ctx context.Context, db bun.I
 		return &userv3.Group{}, nil, err
 	}
 
-	// TODO: revert our db inserts if this fails
-	// Just FYI, the success can be false if we delete the db directly but casbin has it available internally
 	_, err = s.azc.CreateUserGroups(ctx, &authzv1.UserGroups{UserGroups: ugs})
 	if err != nil {
 		return &userv3.Group{}, nil, fmt.Errorf("unable to create mapping in authz; %v", err)

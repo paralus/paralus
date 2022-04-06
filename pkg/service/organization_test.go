@@ -76,8 +76,8 @@ func TestOrganizationDelete(t *testing.T) {
 	mock.ExpectQuery(`SELECT "organization"."id", "organization"."name", .* FROM "authsrv_organization" AS "organization" WHERE`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(ouuid, "organization-"+ouuid))
 
-	mock.ExpectExec(`UPDATE "authsrv_organization"`).
-		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectQuery(`UPDATE "authsrv_organization"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(ouuid, "organization-"+ouuid))
 
 	organization := &systemv3.Organization{
 		Metadata: &v3.Metadata{Id: ouuid, Name: "organization-" + ouuid},
@@ -104,7 +104,7 @@ func TestOrganizationDeleteNonExist(t *testing.T) {
 	}
 	_, err := ps.Delete(context.Background(), organization)
 	if err == nil {
-		t.Fatal("deleted non existant organization")
+		t.Fatal("deleted non existent organization")
 	}
 }
 
