@@ -166,7 +166,7 @@ func setup() {
 	viper.SetDefault(apiPortEnv, 11000)
 	viper.SetDefault(debugPortEnv, 12000)
 	viper.SetDefault(apiAddrEnv, "localhost:11000")
-	viper.SetDefault(devEnv, true)
+	viper.SetDefault(devEnv, false)
 
 	// db
 	viper.SetDefault(dbAddrEnv, "localhost:5432")
@@ -555,7 +555,12 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	if !dev {
 		_log.Infow("adding auth interceptor")
 		ac := authv3.NewAuthContext(kc, ks, as)
-		o := authv3.Option{}
+		o := authv3.Option{
+			ExcludeRPCMethods: []string{
+				"/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate",
+				"/rafay.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent",
+			},
+		}
 		opts = append(opts, _grpc.UnaryInterceptor(
 			ac.NewAuthUnaryInterceptor(o),
 		))
