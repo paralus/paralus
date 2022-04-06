@@ -718,7 +718,7 @@ func (s *userService) List(ctx context.Context, opts ...query.Option) (*userv3.U
 		if len(uids) != 0 {
 			// TODO: maybe merge this with the previous one into single sql
 			usrs, err = dao.ListFilteredUsers(ctx, s.db, &accs,
-				uids, queryOptions.Q,
+				uids, queryOptions.Q, queryOptions.Type,
 				queryOptions.OrderBy, queryOptions.Order,
 				int(queryOptions.Limit), int(queryOptions.Offset))
 			if err != nil {
@@ -728,7 +728,7 @@ func (s *userService) List(ctx context.Context, opts ...query.Option) (*userv3.U
 	} else {
 		// If no filters are available we have to list just using identities table
 		usrs, err = dao.ListFilteredUsers(ctx, s.db, &accs,
-			[]uuid.UUID{}, queryOptions.Q,
+			[]uuid.UUID{}, queryOptions.Q, queryOptions.Type,
 			queryOptions.OrderBy, queryOptions.Order,
 			int(queryOptions.Limit), int(queryOptions.Offset))
 		if err != nil {

@@ -97,8 +97,16 @@ func GetQueryFilteredUsers(ctx context.Context, db bun.IDB, partner, org, group,
 }
 
 // ListFilteredUsers will return the list of users fileterd by query
-func ListFilteredUsers(ctx context.Context, db bun.IDB, users *[]models.KratosIdentities, fusers []uuid.UUID, query string, orderBy string, order string, limit int, offset int) (*[]models.KratosIdentities, error) {
+func ListFilteredUsers(ctx context.Context, db bun.IDB, users *[]models.KratosIdentities, fusers []uuid.UUID, query string, utype string, orderBy string, order string, limit int, offset int) (*[]models.KratosIdentities, error) {
 	q := db.NewSelect().Model(users)
+
+	if utype != "" {
+		q.Relation("IdentityCredential").
+			Relation("IdentityCredential.IdentityCredentialType", func(q *bun.SelectQuery) *bun.SelectQuery {
+				return q.Where("name = ?", utype)
+			})
+	}
+
 	if len(fusers) > 0 {
 		// filter with precomputed users if we have any
 		q.Where("id IN (?)", bun.In(fusers))
