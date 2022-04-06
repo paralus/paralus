@@ -273,7 +273,7 @@ func (s *userService) createGroupAccountRelations(ctx context.Context, db bun.ID
 	}
 
 	// TODO: revert our db inserts if this fails
-	// Just FYI, the succcess can be false if we delete the db directly but casbin has it available internally
+	// Just FYI, the success can be false if we delete the db directly but casbin has it available internally
 	_, err = s.azc.CreateUserGroups(ctx, &authzv1.UserGroups{UserGroups: ugs})
 	if err != nil {
 		return &userv3.User{}, fmt.Errorf("unable to create mapping in authz; %v", err)
@@ -355,10 +355,11 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 	}
 
 	rl, err := s.ap.GetRecoveryLink(ctx, id)
-	fmt.Println("Recovery link:", rl) // TODO: email the recovery link to the user
 	if err != nil {
+		_log.Warn("unable to generate recovery url", err)
 		return &userv3.User{}, err
 	}
+	user.Spec.RecoveryUrl = &rl
 
 	return user, nil
 }

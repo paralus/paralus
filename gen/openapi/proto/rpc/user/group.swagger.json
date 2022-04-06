@@ -685,6 +685,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "type",
+            "description": "generic way to specify a type of resource, mainly for use in users endpoint.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
