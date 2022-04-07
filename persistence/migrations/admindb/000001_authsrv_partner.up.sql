@@ -1,4 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+GRANT EXECUTE ON FUNCTION uuid_generate_v4() TO admindbuser;
 CREATE TABLE IF NOT EXISTS authsrv_partner (
     id uuid NOT NULL default uuid_generate_v4(),
     name character varying(256) NOT NULL,
