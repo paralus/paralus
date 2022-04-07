@@ -359,6 +359,11 @@ func CreateV1Event(al *zap.Logger, sd *commonv3.SessionData, detail *EventDetail
 		t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), dateArray[2])
 	event.Timestamp = timestamp
 
+	go WriteEvent(event, al)
+	return nil
+}
+
+func WriteEvent(event *Event, al *zap.Logger) {
 	al.Info(
 		"audit",
 		zap.String("version", string(event.Version)),
@@ -371,5 +376,4 @@ func CreateV1Event(al *zap.Logger, sd *commonv3.SessionData, detail *EventDetail
 		zap.String("portal", event.Portal),
 		zap.String("project_id", event.ProjectID),
 	)
-	return nil
 }
