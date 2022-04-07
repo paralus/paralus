@@ -1,0 +1,7 @@
+FROM golang:1.17
+
+ENV CGO_ENABLED 0
+COPY . /app
+WORKDIR /app
+RUN go build -o rcloud-init scripts/initialize/main.go
+ENTRYPOINT ["./rcloud-init"]
