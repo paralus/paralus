@@ -11,6 +11,7 @@ import (
 	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
+	"go.uber.org/zap"
 )
 
 const (
@@ -19,7 +20,7 @@ const (
 	AuditActionUpdate = "update"
 )
 
-func CreateUserAuditEvent(ctx context.Context, db bun.IDB, action string, name string, id uuid.UUID, rolesBefore, rolesAfter, groupsBefore, groupsAfter []uuid.UUID) {
+func CreateUserAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, action string, name string, id uuid.UUID, rolesBefore, rolesAfter, groupsBefore, groupsAfter []uuid.UUID) {
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {
 		_log.Warn("unable to create audit event: could not fetch info from context")
@@ -33,7 +34,7 @@ func CreateUserAuditEvent(ctx context.Context, db bun.IDB, action string, name s
 			"username":   name,
 		},
 	}
-	if err := audit.CreateV1Event(sd, detail, fmt.Sprintf("user.%s.success", action), ""); err != nil {
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("user.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
 
@@ -55,7 +56,7 @@ func CreateUserAuditEvent(ctx context.Context, db bun.IDB, action string, name s
 			},
 		}
 		// user.role.created is user.project.created in rcloud
-		if err := audit.CreateV1Event(sd, detail, "user.role.created", ""); err != nil {
+		if err := audit.CreateV1Event(al, sd, detail, "user.role.created", ""); err != nil {
 			_log.Warn("unable to create audit event", err)
 		}
 	}
@@ -68,7 +69,7 @@ func CreateUserAuditEvent(ctx context.Context, db bun.IDB, action string, name s
 				"role_name": r,
 			},
 		}
-		if err := audit.CreateV1Event(sd, detail, "user.role.deleted", ""); err != nil {
+		if err := audit.CreateV1Event(al, sd, detail, "user.role.deleted", ""); err != nil {
 			_log.Warn("unable to create audit event", err)
 		}
 	}
@@ -91,7 +92,7 @@ func CreateUserAuditEvent(ctx context.Context, db bun.IDB, action string, name s
 			},
 		}
 		// user.role.created is user.project.created in rcloud
-		if err := audit.CreateV1Event(sd, detail, "user.group.created", ""); err != nil {
+		if err := audit.CreateV1Event(al, sd, detail, "user.group.created", ""); err != nil {
 			_log.Warn("unable to create audit event", err)
 		}
 	}
@@ -104,13 +105,13 @@ func CreateUserAuditEvent(ctx context.Context, db bun.IDB, action string, name s
 				"group_name": g,
 			},
 		}
-		if err := audit.CreateV1Event(sd, detail, "user.group.deleted", ""); err != nil {
+		if err := audit.CreateV1Event(al, sd, detail, "user.group.deleted", ""); err != nil {
 			_log.Warn("unable to create audit event", err)
 		}
 	}
 }
 
-func CreateGroupAuditEvent(ctx context.Context, db bun.IDB, action string, name string, id uuid.UUID, usersBefore, usersAfter, rolesBefore, rolesAfter []uuid.UUID) {
+func CreateGroupAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, action string, name string, id uuid.UUID, usersBefore, usersAfter, rolesBefore, rolesAfter []uuid.UUID) {
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {
 		_log.Warn("unable to create audit event: could not fetch info from context")
@@ -124,7 +125,7 @@ func CreateGroupAuditEvent(ctx context.Context, db bun.IDB, action string, name 
 			"group_name": name,
 		},
 	}
-	if err := audit.CreateV1Event(sd, detail, fmt.Sprintf("group.%s.success", action), ""); err != nil {
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("group.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
 
@@ -148,7 +149,7 @@ func CreateGroupAuditEvent(ctx context.Context, db bun.IDB, action string, name 
 				"username":   u,
 			},
 		}
-		if err := audit.CreateV1Event(sd, detail, "group.user.created", ""); err != nil {
+		if err := audit.CreateV1Event(al, sd, detail, "group.user.created", ""); err != nil {
 			_log.Warn("unable to create audit event", err)
 		}
 	}
@@ -162,7 +163,7 @@ func CreateGroupAuditEvent(ctx context.Context, db bun.IDB, action string, name 
 				"username":   u,
 			},
 		}
-		if err := audit.CreateV1Event(sd, detail, "group.user.deleted", ""); err != nil {
+		if err := audit.CreateV1Event(al, sd, detail, "group.user.deleted", ""); err != nil {
 			_log.Warn("unable to create audit event", err)
 		}
 	}
@@ -186,7 +187,7 @@ func CreateGroupAuditEvent(ctx context.Context, db bun.IDB, action string, name 
 			},
 		}
 		// group.role.created is group.project.created in rcloud
-		if err := audit.CreateV1Event(sd, detail, "group.role.created", ""); err != nil {
+		if err := audit.CreateV1Event(al, sd, detail, "group.role.created", ""); err != nil {
 			_log.Warn("unable to create audit event", err)
 		}
 	}
@@ -200,14 +201,14 @@ func CreateGroupAuditEvent(ctx context.Context, db bun.IDB, action string, name 
 				"role_name":  r,
 			},
 		}
-		if err := audit.CreateV1Event(sd, detail, "group.role.deleted", ""); err != nil {
+		if err := audit.CreateV1Event(al, sd, detail, "group.role.deleted", ""); err != nil {
 			_log.Warn("unable to create audit event", err)
 		}
 	}
 
 }
 
-func CreateRoleAuditEvent(ctx context.Context, action string, name string, id uuid.UUID, permissions []string) {
+func CreateRoleAuditEvent(ctx context.Context, al *zap.Logger, action string, name string, id uuid.UUID, permissions []string) {
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {
 		_log.Warn("unable to create audit event: could not fetch info from context")
@@ -222,12 +223,12 @@ func CreateRoleAuditEvent(ctx context.Context, action string, name string, id uu
 			"permissions": strings.Join(permissions, ","), // TODO: Should we split it into individual ones?
 		},
 	}
-	if err := audit.CreateV1Event(sd, detail, fmt.Sprintf("role.%s.success", action), ""); err != nil {
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("role.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
 }
 
-func CreateProjectAuditEvent(ctx context.Context, action string, name string, id uuid.UUID) {
+func CreateProjectAuditEvent(ctx context.Context, al *zap.Logger, action string, name string, id uuid.UUID) {
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {
 		_log.Warn("unable to create audit event: could not fetch info from context")
@@ -241,12 +242,12 @@ func CreateProjectAuditEvent(ctx context.Context, action string, name string, id
 			"project_name": name,
 		},
 	}
-	if err := audit.CreateV1Event(sd, detail, fmt.Sprintf("project.%s.success", action), id.String()); err != nil {
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("project.%s.success", action), id.String()); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
 }
 
-func CreateOrganizationAuditEvent(ctx context.Context, action string, name string, id uuid.UUID, settingsBefore, settingsAfter *systemv3.OrganizationSettings) {
+func CreateOrganizationAuditEvent(ctx context.Context, al *zap.Logger, action string, name string, id uuid.UUID, settingsBefore, settingsAfter *systemv3.OrganizationSettings) {
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {
 		_log.Warn("unable to create audit event: could not fetch info from context")
@@ -260,7 +261,7 @@ func CreateOrganizationAuditEvent(ctx context.Context, action string, name strin
 			"organization_name": name,
 		},
 	}
-	if err := audit.CreateV1Event(sd, detail, fmt.Sprintf("organization.%s.success", action), ""); err != nil {
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("organization.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
 
@@ -286,7 +287,7 @@ func CreateOrganizationAuditEvent(ctx context.Context, action string, name strin
 			}
 		}
 
-		if err := audit.CreateV1Event(sd, detail, "organization.idle.timeout.settings.updated", ""); err != nil {
+		if err := audit.CreateV1Event(al, sd, detail, "organization.idle.timeout.settings.updated", ""); err != nil {
 			_log.Warn("unable to create audit event", err)
 		}
 	}
@@ -320,13 +321,13 @@ func CreateOrganizationAuditEvent(ctx context.Context, action string, name strin
 			}
 		}
 
-		if err := audit.CreateV1Event(sd, detail, "organization.lockout.settings.updated", ""); err != nil {
+		if err := audit.CreateV1Event(al, sd, detail, "organization.lockout.settings.updated", ""); err != nil {
 			_log.Warn("unable to create audit event", err)
 		}
 	}
 }
 
-func CreateIdpAuditEvent(ctx context.Context, action string, name string, id uuid.UUID) {
+func CreateIdpAuditEvent(ctx context.Context, al *zap.Logger, action string, name string, id uuid.UUID) {
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {
 		_log.Warn("unable to create audit event: could not fetch info from context")
@@ -341,12 +342,12 @@ func CreateIdpAuditEvent(ctx context.Context, action string, name string, id uui
 		},
 	}
 	// TODO: it is idp.config.created in rcloud
-	if err := audit.CreateV1Event(sd, detail, fmt.Sprintf("idp.%s.success", action), ""); err != nil {
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("idp.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
 }
 
-func CreateApiKeyAuditEvent(ctx context.Context, action string, id string) {
+func CreateApiKeyAuditEvent(ctx context.Context, al *zap.Logger, action string, id string) {
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {
 		_log.Warn("unable to create audit event: could not fetch info from context")
@@ -359,12 +360,12 @@ func CreateApiKeyAuditEvent(ctx context.Context, action string, id string) {
 			"apikey": id,
 		},
 	}
-	if err := audit.CreateV1Event(sd, detail, fmt.Sprintf("apikey.%s.success", action), ""); err != nil {
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("apikey.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
 }
 
-func CreateClusterAuditEvent(ctx context.Context, action string, name string, id uuid.UUID) {
+func CreateClusterAuditEvent(ctx context.Context, al *zap.Logger, action string, name string, id uuid.UUID) {
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {
 		_log.Warn("unable to create audit event: could not fetch info from context")
@@ -378,13 +379,13 @@ func CreateClusterAuditEvent(ctx context.Context, action string, name string, id
 			"cluster_name": name,
 		},
 	}
-	if err := audit.CreateV1Event(sd, detail, fmt.Sprintf("cluster.%s.success", action), ""); err != nil {
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("cluster.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
 }
 
 // TODO: figure out how this is to be added
-func CreateLocationAuditEvent(ctx context.Context, action string, name string, id uuid.UUID) {
+func CreateLocationAuditEvent(ctx context.Context, al *zap.Logger, action string, name string, id uuid.UUID) {
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {
 		_log.Warn("unable to create audit event: could not fetch info from context")
@@ -398,7 +399,7 @@ func CreateLocationAuditEvent(ctx context.Context, action string, name string, i
 			"location_name": name,
 		},
 	}
-	if err := audit.CreateV1Event(sd, detail, fmt.Sprintf("location.%s.success", action), ""); err != nil {
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("location.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
 }

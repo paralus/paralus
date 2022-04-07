@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/RafayLabs/rcloud-base/internal/dao"
@@ -54,6 +55,7 @@ type userService struct {
 	azc AuthzService
 	ks  ApiKeyService
 	cc  common.CliConfigDownloadData
+	al  *zap.Logger
 }
 
 type userTraits struct {
@@ -70,8 +72,8 @@ type parsedIds struct {
 	Organization uuid.UUID
 }
 
-func NewUserService(ap providers.AuthProvider, db *bun.DB, azc AuthzService, kss ApiKeyService, cfg common.CliConfigDownloadData) UserService {
-	return &userService{ap: ap, db: db, azc: azc, ks: kss, cc: cfg}
+func NewUserService(ap providers.AuthProvider, db *bun.DB, azc AuthzService, kss ApiKeyService, cfg common.CliConfigDownloadData, al *zap.Logger) UserService {
+	return &userService{ap: ap, db: db, azc: azc, ks: kss, cc: cfg, al: al}
 }
 
 func getUserTraits(traits map[string]interface{}) userTraits {
@@ -366,7 +368,7 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 	}
 	user.Spec.RecoveryUrl = &rl
 
-	CreateUserAuditEvent(ctx, s.db, AuditActionCreate, user.GetMetadata().GetName(), uid, []uuid.UUID{}, rolesAfter, []uuid.UUID{}, groupsAfter)
+	CreateUserAuditEvent(ctx, s.al, s.db, AuditActionCreate, user.GetMetadata().GetName(), uid, []uuid.UUID{}, rolesAfter, []uuid.UUID{}, groupsAfter)
 	return user, nil
 }
 
@@ -618,7 +620,7 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 			_log.Warn("unable to commit changes", err)
 		}
 
-		CreateUserAuditEvent(ctx, s.db, AuditActionUpdate, user.GetMetadata().GetName(), usr.ID, rolesBefore, rolesAfter, groupsBefore, groupsAfter)
+		CreateUserAuditEvent(ctx, s.al, s.db, AuditActionUpdate, user.GetMetadata().GetName(), usr.ID, rolesBefore, rolesAfter, groupsBefore, groupsAfter)
 		return user, nil
 
 	} else {
@@ -665,7 +667,7 @@ func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3
 			_log.Warn("unable to commit changes", err)
 		}
 
-		CreateUserAuditEvent(ctx, s.db, AuditActionDelete, user.GetMetadata().GetName(), usr.ID, rolesBefore, []uuid.UUID{}, groupsBefore, []uuid.UUID{})
+		CreateUserAuditEvent(ctx, s.al, s.db, AuditActionDelete, user.GetMetadata().GetName(), usr.ID, rolesBefore, []uuid.UUID{}, groupsBefore, []uuid.UUID{})
 		return &userrpcv3.DeleteUserResponse{}, nil
 	}
 	return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("unable to delete user '%v'", user.Metadata.Name)

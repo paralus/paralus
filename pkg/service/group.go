@@ -16,6 +16,7 @@ import (
 	userv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -44,11 +45,12 @@ type GroupService interface {
 type groupService struct {
 	db  *bun.DB
 	azc AuthzService
+	al  *zap.Logger
 }
 
 // NewGroupService return new group service
-func NewGroupService(db *bun.DB, azc AuthzService) GroupService {
-	return &groupService{db: db, azc: azc}
+func NewGroupService(db *bun.DB, azc AuthzService, al *zap.Logger) GroupService {
+	return &groupService{db: db, azc: azc, al: al}
 }
 
 // deleteGroupRoleRelaitons deletes existing group-role relations
@@ -343,7 +345,7 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 			_log.Warn("unable to commit changes", err)
 		}
 
-		CreateGroupAuditEvent(ctx, s.db, AuditActionCreate, group.GetMetadata().GetName(), grp.ID, []uuid.UUID{}, usersAfter, []uuid.UUID{}, rolesAfter)
+		CreateGroupAuditEvent(ctx, s.al, s.db, AuditActionCreate, group.GetMetadata().GetName(), grp.ID, []uuid.UUID{}, usersAfter, []uuid.UUID{}, rolesAfter)
 		return group, nil
 	}
 	return &userv3.Group{}, fmt.Errorf("unable to create group")
@@ -486,7 +488,7 @@ func (s *groupService) Update(ctx context.Context, group *userv3.Group) (*userv3
 			ProjectNamespaceRoles: group.Spec.ProjectNamespaceRoles,
 		}
 
-		CreateGroupAuditEvent(ctx, s.db, AuditActionUpdate, group.GetMetadata().GetName(), grp.ID, usersBefore, usersAfter, rolesBefore, rolesAfter)
+		CreateGroupAuditEvent(ctx, s.al, s.db, AuditActionUpdate, group.GetMetadata().GetName(), grp.ID, usersBefore, usersAfter, rolesBefore, rolesAfter)
 	}
 
 	return group, nil
@@ -531,7 +533,7 @@ func (s *groupService) Delete(ctx context.Context, group *userv3.Group) (*userv3
 			_log.Warn("unable to commit changes", err)
 		}
 
-		CreateGroupAuditEvent(ctx, s.db, AuditActionDelete, group.GetMetadata().GetName(), grp.ID, usersBefore, []uuid.UUID{}, rolesBefore, []uuid.UUID{})
+		CreateGroupAuditEvent(ctx, s.al, s.db, AuditActionDelete, group.GetMetadata().GetName(), grp.ID, usersBefore, []uuid.UUID{}, rolesBefore, []uuid.UUID{})
 		return group, nil
 	}
 

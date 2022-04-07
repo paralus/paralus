@@ -12,6 +12,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"github.com/urfave/negroni"
+	"go.uber.org/zap"
 )
 
 type authMiddleware struct {
@@ -20,9 +21,9 @@ type authMiddleware struct {
 	opt Option
 }
 
-func NewAuthMiddleware(opt Option) negroni.Handler {
+func NewAuthMiddleware(al *zap.Logger, opt Option) negroni.Handler {
 	return &authMiddleware{
-		ac:  SetupAuthContext(),
+		ac:  SetupAuthContext(al),
 		opt: opt,
 	}
 }

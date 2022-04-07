@@ -11,6 +11,7 @@ import (
 	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -31,11 +32,12 @@ type ApiKeyService interface {
 // apiKeyService implements ApiKeyService
 type apiKeyService struct {
 	db *bun.DB
+	al *zap.Logger
 }
 
 // NewApiKeyService return new api key service
-func NewApiKeyService(db *bun.DB) ApiKeyService {
-	return &apiKeyService{db}
+func NewApiKeyService(db *bun.DB, al *zap.Logger) ApiKeyService {
+	return &apiKeyService{db, al}
 }
 
 func (s *apiKeyService) Create(ctx context.Context, req *rpcv3.ApiKeyRequest) (*models.ApiKey, error) {
@@ -55,7 +57,7 @@ func (s *apiKeyService) Create(ctx context.Context, req *rpcv3.ApiKeyRequest) (*
 	}
 
 	if ak, ok := entity.(*models.Group); ok {
-		CreateApiKeyAuditEvent(ctx, AuditActionCreate, ak.ID.String())
+		CreateApiKeyAuditEvent(ctx, s.al, AuditActionCreate, ak.ID.String())
 	}
 	return apikey, nil
 }
@@ -69,7 +71,7 @@ func (s *apiKeyService) Delete(ctx context.Context, req *rpcv3.ApiKeyRequest) (*
 		return &rpcv3.DeleteUserResponse{}, err
 	}
 
-	CreateApiKeyAuditEvent(ctx, AuditActionDelete, req.Id)
+	CreateApiKeyAuditEvent(ctx, s.al, AuditActionDelete, req.Id)
 	return nil, err
 }
 

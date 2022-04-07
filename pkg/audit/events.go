@@ -10,6 +10,7 @@ import (
 
 	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -328,7 +329,7 @@ func GetEvent(r *http.Request, sd *commonv3.SessionData, detail *EventDetail, ev
 	return event
 }
 
-func CreateV1Event(sd *commonv3.SessionData, detail *EventDetail, eventType string, projectID string) error {
+func CreateV1Event(al *zap.Logger, sd *commonv3.SessionData, detail *EventDetail, eventType string, projectID string) error {
 	actor := GetActorFromSessionData(sd)
 	client := GetClientFromSessionData(sd)
 
@@ -358,11 +359,17 @@ func CreateV1Event(sd *commonv3.SessionData, detail *EventDetail, eventType stri
 		t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), dateArray[2])
 	event.Timestamp = timestamp
 
-	payload, err := json.Marshal(event)
-	if err != nil {
-		_log.Infow("unable to marshal audit event", "error", err)
-		return err
-	}
-	fmt.Println("event:", string(payload)) // TODO: Switch to writing to audit file
+	al.Info(
+		"audit",
+		zap.String("version", string(event.Version)),
+		zap.String("category", string(event.Category)),
+		zap.String("origin", string(event.Origin)),
+		zap.Reflect("actor", event.Actor),
+		zap.Reflect("client", event.Client),
+		zap.Reflect("detail", event.Detail),
+		zap.String("type", event.Type),
+		zap.String("portal", event.Portal),
+		zap.String("project_id", event.ProjectID),
+	)
 	return nil
 }

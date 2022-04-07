@@ -16,7 +16,7 @@ var (
 	// ErrInvalidAPIKey is returned when api key is invalid
 	ErrInvalidAPIKey = errors.New("invalid api key")
 	// ErrInvalidSignature is returns when signature is invalid
-	ErrInvalidSignature = errors.New("invaid signature")
+	ErrInvalidSignature = errors.New("invalid signature")
 )
 
 func (ac *authContext) IsRequestAllowed(ctx context.Context, httpreq *http.Request, req *commonv3.IsRequestAllowedRequest) (*commonv3.IsRequestAllowedResponse, error) {

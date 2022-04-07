@@ -11,6 +11,7 @@ import (
 	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -33,11 +34,12 @@ type PartnerService interface {
 // partnerService implements PartnerService
 type partnerService struct {
 	db *bun.DB
+	al *zap.Logger
 }
 
 // NewPartnerService return new partner service
-func NewPartnerService(db *bun.DB) PartnerService {
-	return &partnerService{db}
+func NewPartnerService(db *bun.DB, al *zap.Logger) PartnerService {
+	return &partnerService{db, al}
 }
 
 func (s *partnerService) Create(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error) {

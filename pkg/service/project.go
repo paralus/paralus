@@ -13,6 +13,7 @@ import (
 	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -42,11 +43,12 @@ type ProjectService interface {
 type projectService struct {
 	db  *bun.DB
 	azc AuthzService
+	al  *zap.Logger
 }
 
 // NewProjectService return new project service
-func NewProjectService(db *bun.DB, azc AuthzService) ProjectService {
-	return &projectService{db: db, azc: azc}
+func NewProjectService(db *bun.DB, azc AuthzService, al *zap.Logger) ProjectService {
+	return &projectService{db: db, azc: azc, al: al}
 }
 
 func (s *projectService) Create(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error) {
@@ -104,7 +106,7 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 			Default: createdProject.Default,
 		}
 
-		CreateProjectAuditEvent(ctx, AuditActionCreate, project.GetMetadata().GetName(), createdProject.ID)
+		CreateProjectAuditEvent(ctx, s.al, AuditActionCreate, project.GetMetadata().GetName(), createdProject.ID)
 	}
 	err = tx.Commit()
 	if err != nil {
@@ -283,7 +285,7 @@ func (s *projectService) Update(ctx context.Context, project *systemv3.Project) 
 			_log.Warn("unable to commit changes", err)
 		}
 
-		CreateProjectAuditEvent(ctx, AuditActionUpdate, project.GetMetadata().GetName(), proj.ID)
+		CreateProjectAuditEvent(ctx, s.al, AuditActionUpdate, project.GetMetadata().GetName(), proj.ID)
 	}
 
 	return project, nil
@@ -329,7 +331,7 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 			return &systemv3.Project{}, err
 		}
 
-		CreateProjectAuditEvent(ctx, AuditActionDelete, project.GetMetadata().GetName(), proj.ID)
+		CreateProjectAuditEvent(ctx, s.al, AuditActionDelete, project.GetMetadata().GetName(), proj.ID)
 	}
 
 	return project, nil

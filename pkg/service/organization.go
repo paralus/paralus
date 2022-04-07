@@ -12,6 +12,7 @@ import (
 	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -39,11 +40,12 @@ type OrganizationService interface {
 // organizationService implements OrganizationService
 type organizationService struct {
 	db *bun.DB
+	al *zap.Logger
 }
 
 // NewOrganizationService return new organization service
-func NewOrganizationService(db *bun.DB) OrganizationService {
-	return &organizationService{db}
+func NewOrganizationService(db *bun.DB, al *zap.Logger) OrganizationService {
+	return &organizationService{db, al}
 }
 
 func (s *organizationService) Create(ctx context.Context, org *systemv3.Organization) (*systemv3.Organization, error) {
@@ -100,7 +102,7 @@ func (s *organizationService) Create(ctx context.Context, org *systemv3.Organiza
 		//update v3 spec
 		org.Metadata.Id = createdOrg.ID.String()
 
-		CreateOrganizationAuditEvent(ctx, AuditActionCreate, org.GetMetadata().GetName(), createdOrg.ID, nil, org.GetSpec().GetSettings())
+		CreateOrganizationAuditEvent(ctx, s.al, AuditActionCreate, org.GetMetadata().GetName(), createdOrg.ID, nil, org.GetSpec().GetSettings())
 	}
 
 	return org, nil
@@ -232,7 +234,7 @@ func (s *organizationService) Update(ctx context.Context, organization *systemv3
 			return &systemv3.Organization{}, err
 		}
 
-		CreateOrganizationAuditEvent(ctx, AuditActionUpdate, organization.GetMetadata().GetName(), org.ID, &settingsBefore, settingsAfter)
+		CreateOrganizationAuditEvent(ctx, s.al, AuditActionUpdate, organization.GetMetadata().GetName(), org.ID, &settingsBefore, settingsAfter)
 	}
 
 	return organization, nil
@@ -257,7 +259,7 @@ func (s *organizationService) Delete(ctx context.Context, organization *systemv3
 
 		orgSettings := systemv3.OrganizationSettings{}
 		_ = json.Unmarshal(org.Settings, &orgSettings) // ignore any unmarshelling issues
-		CreateOrganizationAuditEvent(ctx, AuditActionDelete, organization.GetMetadata().GetName(), org.ID, &orgSettings, nil)
+		CreateOrganizationAuditEvent(ctx, s.al, AuditActionDelete, organization.GetMetadata().GetName(), org.ID, &orgSettings, nil)
 	}
 	return organization, nil
 

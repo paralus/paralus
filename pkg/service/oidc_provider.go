@@ -14,6 +14,7 @@ import (
 	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
+	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -31,10 +32,11 @@ type OIDCProviderService interface {
 type oidcProvider struct {
 	db        *bun.DB
 	kratosUrl string
+	al        *zap.Logger
 }
 
-func NewOIDCProviderService(db *bun.DB, kratosUrl string) OIDCProviderService {
-	return &oidcProvider{db: db, kratosUrl: kratosUrl}
+func NewOIDCProviderService(db *bun.DB, kratosUrl string, al *zap.Logger) OIDCProviderService {
+	return &oidcProvider{db: db, kratosUrl: kratosUrl, al: al}
 }
 
 func generateCallbackUrl(id string, kUrl string) string {
