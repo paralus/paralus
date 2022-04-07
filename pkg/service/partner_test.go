@@ -37,7 +37,7 @@ func TestCreatePartner(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	ps := NewPartnerService(db)
+	ps := NewPartnerService(db, getLogger())
 
 	puuid := uuid.New().String()
 
@@ -59,7 +59,7 @@ func TestCreatePartnerDuplicate(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	gs := NewPartnerService(db)
+	gs := NewPartnerService(db, getLogger())
 
 	puuid := uuid.New().String()
 
@@ -81,7 +81,7 @@ func TestPartnerDelete(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	ps := NewPartnerService(db)
+	ps := NewPartnerService(db, getLogger())
 
 	puuid := uuid.New().String()
 
@@ -104,7 +104,7 @@ func TestPartnerDeleteNonExist(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	gs := NewPartnerService(db)
+	gs := NewPartnerService(db, getLogger())
 
 	puuid := uuid.New().String()
 
@@ -116,7 +116,7 @@ func TestPartnerDeleteNonExist(t *testing.T) {
 	}
 	_, err := gs.Delete(context.Background(), partner)
 	if err == nil {
-		t.Fatal("deleted non existant group")
+		t.Fatal("deleted non existent group")
 	}
 }
 
@@ -124,7 +124,7 @@ func TestPartnerGetByName(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	ps := NewPartnerService(db)
+	ps := NewPartnerService(db, getLogger())
 
 	puuid := uuid.New().String()
 
@@ -144,7 +144,7 @@ func TestPartnerGetById(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	ps := NewPartnerService(db)
+	ps := NewPartnerService(db, getLogger())
 
 	puuid := uuid.New().String()
 
@@ -165,7 +165,7 @@ func TestPartnerUpdate(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	ps := NewPartnerService(db)
+	ps := NewPartnerService(db, getLogger())
 
 	puuid := uuid.New().String()
 

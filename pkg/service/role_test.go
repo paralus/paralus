@@ -52,7 +52,7 @@ func TestCreateRole(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	rs := NewRoleService(db, &mazc)
+	rs := NewRoleService(db, &mazc, getLogger())
 
 	ruuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -87,7 +87,7 @@ func TestCreateRoleWithPermissions(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	rs := NewRoleService(db, &mazc)
+	rs := NewRoleService(db, &mazc, getLogger())
 
 	ruuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -126,7 +126,7 @@ func TestCreateRoleDuplicate(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	rs := NewRoleService(db, &mazc)
+	rs := NewRoleService(db, &mazc, getLogger())
 
 	ruuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -160,7 +160,7 @@ func TestUpdateRole(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	rs := NewRoleService(db, &mazc)
+	rs := NewRoleService(db, &mazc, getLogger())
 
 	ruuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -201,7 +201,7 @@ func TestRoleDelete(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	rs := NewRoleService(db, &mazc)
+	rs := NewRoleService(db, &mazc, getLogger())
 
 	ruuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -234,7 +234,7 @@ func TestRoleDeleteNonExist(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	rs := NewRoleService(db, &mazc)
+	rs := NewRoleService(db, &mazc, getLogger())
 
 	ruuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -248,7 +248,7 @@ func TestRoleDeleteNonExist(t *testing.T) {
 	}
 	_, err := rs.Delete(context.Background(), role)
 	if err == nil {
-		t.Error("deleted non existant role")
+		t.Error("deleted non existent role")
 	}
 
 }
@@ -258,7 +258,7 @@ func TestRoleGetByName(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	rs := NewRoleService(db, &mazc)
+	rs := NewRoleService(db, &mazc, getLogger())
 
 	ruuid := uuid.New().String()
 	rruuid := uuid.New().String()
@@ -289,7 +289,7 @@ func TestRoleGetById(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	rs := NewRoleService(db, &mazc)
+	rs := NewRoleService(db, &mazc, getLogger())
 
 	ruuid := uuid.New().String()
 	rruuid := uuid.New().String()
@@ -316,7 +316,7 @@ func TestRoleList(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	rs := NewRoleService(db, &mazc)
+	rs := NewRoleService(db, &mazc, getLogger())
 
 	ruuid1 := uuid.New().String()
 	ruuid2 := uuid.New().String()

@@ -5,8 +5,20 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/RafayLabs/rcloud-base/pkg/audit"
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 )
+
+func getLogger() *zap.Logger {
+	ao := audit.AuditOptions{
+		LogPath:    "stdout",
+		MaxSizeMB:  1,
+		MaxBackups: 10, // Should we let sidecar do rotation?
+		MaxAgeDays: 10, // Make these configurable via env
+	}
+	return audit.GetAuditLogger(&ao)
+}
 
 func performBasicAuthzChecks(t *testing.T, mazc mockAuthzClient, cpCount, dpCount, cugCount, dugCount, crpmCount, drpmCount int) {
 	if len(mazc.cp) != cpCount {
