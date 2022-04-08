@@ -170,6 +170,17 @@ func main() {
 	us := service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, nil, common.CliConfigDownloadData{})
 	prs := service.NewProjectService(db, as)
 
+	//check if there are role permissions already present
+	existingPermissions := &[]models.ResourceRolePermission{}
+	_, err = dao.ListAll(context.Background(), db, existingPermissions)
+	if err != nil {
+		log.Fatal("Error verifying existing role permissions ", err)
+	}
+	if len(*existingPermissions) > 0 {
+		fmt.Println("resource permissions already exists! cannot invoke initialize again")
+		return
+	}
+
 	//add resource permissions
 	err = addResourcePermissions(db, path.Join("scripts", "initialize", "permissions", "base"))
 	if err != nil {
