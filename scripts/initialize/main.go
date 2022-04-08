@@ -46,12 +46,11 @@ import (
 // truncate table casbin_rule;
 
 const (
-	dbAddrEnv       = "DB_ADDR"
-	dbNameEnv       = "DB_NAME"
-	dbUserEnv       = "DB_USER"
-	dbPasswordEnv   = "DB_PASSWORD"
-	kratosSchemeEnv = "KRATOS_SCHEME"
-	kratosAddrEnv   = "KRATOS_ADDR"
+	dbAddrEnv     = "DB_ADDR"
+	dbNameEnv     = "DB_NAME"
+	dbUserEnv     = "DB_USER"
+	dbPasswordEnv = "DB_PASSWORD"
+	kratosAddrEnv = "KRATOS_ADDR"
 )
 
 func addResourcePermissions(db *bun.DB, basePath string) error {
@@ -109,21 +108,18 @@ func main() {
 	viper.SetDefault(dbNameEnv, "admindb")
 	viper.SetDefault(dbUserEnv, "admindbuser")
 	viper.SetDefault(dbPasswordEnv, "admindbpassword")
-	viper.SetDefault(kratosSchemeEnv, "http")
-	viper.SetDefault(kratosAddrEnv, "localhost:4433")
+	viper.SetDefault(kratosAddrEnv, "http://localhost:4433")
 
 	viper.BindEnv(dbAddrEnv)
 	viper.BindEnv(dbNameEnv)
 	viper.BindEnv(dbUserEnv)
 	viper.BindEnv(dbPasswordEnv)
-	viper.BindEnv(kratosSchemeEnv)
 	viper.BindEnv(kratosAddrEnv)
 
 	dbAddr := viper.GetString(dbAddrEnv)
 	dbName := viper.GetString(dbNameEnv)
 	dbUser := viper.GetString(dbUserEnv)
 	dbPassword := viper.GetString(dbPasswordEnv)
-	kratosScheme := viper.GetString(kratosSchemeEnv)
 	kratosAddr := viper.GetString(kratosAddrEnv)
 
 	content, err := ioutil.ReadFile(path.Join("scripts", "initialize", "roles", "ztka", "roles.json"))
@@ -149,8 +145,7 @@ func main() {
 	}
 
 	kratosConfig := kclient.NewConfiguration()
-	kratosUrl := kratosScheme + "://" + kratosAddr
-	kratosConfig.Servers[0].URL = kratosUrl
+	kratosConfig.Servers[0].URL = kratosAddr
 	kc := kclient.NewAPIClient(kratosConfig)
 
 	// authz services
