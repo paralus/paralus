@@ -259,7 +259,7 @@ func (s *userService) createGroupAccountRelations(ctx context.Context, db bun.ID
 			}
 			grpaccs = append(grpaccs, grp)
 			ugs = append(ugs, &authzv1.UserGroup{
-				Grp:  "g:" + grp.Name,
+				Grp:  "g:" + group,
 				User: "u:" + usr.Metadata.Name,
 			})
 		}

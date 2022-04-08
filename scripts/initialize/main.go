@@ -17,7 +17,6 @@ import (
 	"github.com/RafayLabs/rcloud-base/pkg/common"
 	"github.com/RafayLabs/rcloud-base/pkg/enforcer"
 	"github.com/RafayLabs/rcloud-base/pkg/service"
-	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	rolev3 "github.com/RafayLabs/rcloud-base/proto/types/rolepb/v3"
 	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
@@ -166,32 +165,25 @@ func main() {
 	us := service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, nil, common.CliConfigDownloadData{})
 	prs := service.NewProjectService(db, as)
 
-	//delete all casbin rules
-	as.DeletePolicies(context.Background(), &authzv1.Policy{})
+	//check if there are role permissions already present
+	existingPermissions := &[]models.ResourceRolePermission{}
+	_, err = dao.ListAll(context.Background(), db, existingPermissions)
+	if err != nil {
+		log.Fatal("Error verifying existing role permissions ", err)
+	}
+	if len(*existingPermissions) > 0 {
+		fmt.Println("resource permissions already exists! cannot invoke initialize again")
+		return
+	}
 
-	//delete all role permissions, roles
-	err = dao.HardDeleteAll(context.Background(), db, &models.ResourceRolePermission{})
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = dao.HardDeleteAll(context.Background(), db, &models.ResourcePermission{})
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = dao.HardDeleteAll(context.Background(), db, &models.Role{})
-	if err != nil {
-		log.Fatal(err)
-	}
 	//add resource permissions
 	err = addResourcePermissions(db, path.Join("scripts", "initialize", "permissions", "base"))
 	if err != nil {
-		fmt.Println("Run from base directory")
-		log.Fatal(err)
+		log.Fatal("Error running from base directory ", err)
 	}
 	err = addResourcePermissions(db, path.Join("scripts", "initialize", "permissions", "ztka"))
 	if err != nil {
-		fmt.Println("Run from ztka directory")
-		log.Fatal(err)
+		log.Fatal("Error running from ztka directory ", err)
 	}
 
 	// Create partner
