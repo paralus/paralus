@@ -154,6 +154,8 @@ func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvid
 			CallbackUrl:     generateCallbackUrl(entity.Id.String(), s.kratosUrl),
 		},
 	}
+
+	CreateOidcAuditEvent(ctx, s.al, AuditActionCreate, rv.GetMetadata().GetName(), entity.Id)
 	return rv, nil
 }
 
@@ -376,6 +378,8 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 			CallbackUrl:     generateCallbackUrl(provider.GetMetadata().GetId(), s.kratosUrl),
 		},
 	}
+
+	CreateOidcAuditEvent(ctx, s.al, AuditActionUpdate, rv.GetMetadata().GetName(), entity.Id)
 	return rv, nil
 }
 
@@ -394,5 +398,7 @@ func (s *oidcProvider) Delete(ctx context.Context, provider *systemv3.OIDCProvid
 	if err != nil {
 		return err
 	}
+
+	CreateOidcAuditEvent(ctx, s.al, AuditActionDelete, name, entity.Id)
 	return nil
 }

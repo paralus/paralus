@@ -247,6 +247,25 @@ func CreateProjectAuditEvent(ctx context.Context, al *zap.Logger, action string,
 	}
 }
 
+func CreatePartnerAuditEvent(ctx context.Context, al *zap.Logger, action string, name string, id uuid.UUID) {
+	sd, ok := GetSessionDataFromContext(ctx)
+	if !ok {
+		_log.Warn("unable to create audit event: could not fetch info from context")
+		return
+	}
+
+	detail := &audit.EventDetail{
+		Message: fmt.Sprintf("Partner %s %sd", name, action),
+		Meta: map[string]string{
+			"partner_id":   id.String(),
+			"partner_name": name,
+		},
+	}
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("partner.%s.success", action), id.String()); err != nil {
+		_log.Warn("unable to create audit event", err)
+	}
+}
+
 func CreateOrganizationAuditEvent(ctx context.Context, al *zap.Logger, action string, name string, id uuid.UUID, settingsBefore, settingsAfter *systemv3.OrganizationSettings) {
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {
@@ -341,8 +360,28 @@ func CreateIdpAuditEvent(ctx context.Context, al *zap.Logger, action string, nam
 			"idp_name": name,
 		},
 	}
-	// TODO: it is idp.config.created in rcloud
+	// idp.create.success is idp.config.created in rcloud
 	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("idp.%s.success", action), ""); err != nil {
+		_log.Warn("unable to create audit event", err)
+	}
+}
+
+func CreateOidcAuditEvent(ctx context.Context, al *zap.Logger, action string, name string, id uuid.UUID) {
+	sd, ok := GetSessionDataFromContext(ctx)
+	if !ok {
+		_log.Warn("unable to create audit event: could not fetch info from context")
+		return
+	}
+
+	detail := &audit.EventDetail{
+		Message: fmt.Sprintf("Oidc %s %sd", name, action),
+		Meta: map[string]string{
+			"oidc_id":   id.String(),
+			"oidc_name": name,
+		},
+	}
+
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("oidc.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
 }

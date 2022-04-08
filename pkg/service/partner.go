@@ -78,6 +78,8 @@ func (s *partnerService) Create(ctx context.Context, partner *systemv3.Partner) 
 		//update v3 spec
 		partner.Metadata.Id = createdPartner.ID.String()
 		partner.Metadata.ModifiedAt = timestamppb.New(createdPartner.ModifiedAt)
+
+		CreatePartnerAuditEvent(ctx, s.al, AuditActionCreate, partner.GetMetadata().GetName(), createdPartner.ID)
 	}
 
 	return partner, nil
@@ -244,6 +246,8 @@ func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) 
 		//update metadata and status
 		partner.Metadata.ModifiedAt = timestamppb.New(part.ModifiedAt)
 
+		CreatePartnerAuditEvent(ctx, s.al, AuditActionUpdate, partner.GetMetadata().GetName(), part.ID)
+
 	}
 
 	return partner, nil
@@ -260,6 +264,8 @@ func (s *partnerService) Delete(ctx context.Context, partner *systemv3.Partner) 
 		if err != nil {
 			return &systemv3.Partner{}, err
 		}
+
+		CreatePartnerAuditEvent(ctx, s.al, AuditActionDelete, partner.GetMetadata().GetName(), part.ID)
 		return partner, nil
 	}
 
