@@ -352,13 +352,6 @@ func CreateV1Event(al *zap.Logger, sd *commonv3.SessionData, detail *EventDetail
 	event.PartnerID = actor.PartnerID
 	event.OrganizationID = actor.OrganizationID
 
-	t := time.Now()
-	dateArray := strings.Fields(t.String())
-	timestamp := fmt.Sprintf("%d-%02d-%02dT%02d:%02d:%02d.%06d%s",
-		t.Year(), t.Month(), t.Day(),
-		t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), dateArray[2])
-	event.Timestamp = timestamp
-
 	go WriteEvent(event, al)
 	return nil
 }
@@ -375,5 +368,7 @@ func WriteEvent(event *Event, al *zap.Logger) {
 		zap.String("type", event.Type),
 		zap.String("portal", event.Portal),
 		zap.String("project_id", event.ProjectID),
+		zap.String("partner_id", event.PartnerID),
+		zap.String("organization_id", event.OrganizationID),
 	)
 }

@@ -15,7 +15,10 @@ type AuditOptions struct {
 }
 
 func GetAuditLogger(opts *AuditOptions) *zap.Logger {
-	encoder := zapcore.EncoderConfig{} // such empty
+	encoder := zapcore.EncoderConfig{
+		TimeKey:    "timestamp",
+		EncodeTime: zapcore.RFC3339NanoTimeEncoder,
+	}
 	logger := zap.New(zapcore.NewCore(
 		zapcore.NewJSONEncoder(encoder),
 		zapcore.AddSync(&lumberjack.Logger{
