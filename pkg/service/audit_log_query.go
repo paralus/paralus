@@ -55,8 +55,6 @@ func getPrjectIdFromUrlScope(urlScope string) (string, error) {
 
 func (a *AuditLogService) GetAuditLogByProjects(req *v1.AuditLogSearchRequest) (res *v1.AuditLogSearchResponse, err error) {
 	// No embedding in golang/protoc (https://github.com/golang/protobuf/issues/192)
-	oid := req.GetMetadata().GetOrganization() // TODO: these are to be filled in by authinterceptor
-	pid := req.GetMetadata().GetPartner()
 	err = validateQueryString(req.GetFilter().QueryString)
 	if err != nil {
 		return nil, err
@@ -72,16 +70,7 @@ func (a *AuditLogService) GetAuditLogByProjects(req *v1.AuditLogSearchRequest) (
 		"query": map[string]interface{}{
 			"bool": map[string]interface{}{
 				"must": []map[string]interface{}{
-					{
-						"term": map[string]interface{}{
-							"organization_id": oid,
-						},
-					},
-					{
-						"term": map[string]interface{}{
-							"partner_id": pid,
-						},
-					},
+					// Add org and partner filter once we have to support multi-org
 					{
 						"term": map[string]interface{}{
 							"category": "AUDIT",
