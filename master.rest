@@ -486,6 +486,7 @@ X-Session-Token: :token
 
 # Audit by project
 GET :host/event/v1/auditlog?filter.timefrom=now-1h
+X-Session-Token: :token
 
 ## Partner
 
