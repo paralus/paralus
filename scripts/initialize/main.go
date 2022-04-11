@@ -300,5 +300,5 @@ retry:
 		goto retry
 	}
 
-  fmt.Println("Org Admin signup URL: ", *orgA.Spec.RecoveryUrl)
+	fmt.Println("Org Admin signup URL: ", *orgA.Spec.RecoveryUrl)
 }
