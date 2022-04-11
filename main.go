@@ -616,7 +616,7 @@ func runEventHandlers(wg *sync.WaitGroup, ctx context.Context) {
 	cs.AddEventHandler(ceh.ClusterHook())
 
 	if !dev {
-		rl, err := leaderelection.NewConfigMapLock("cluster-scheduler", schedulerNamespace, xid.New().String())
+		rl, err := leaderelection.NewConfigMapLock("rcloud-base-config", schedulerNamespace, xid.New().String())
 		if err != nil {
 			_log.Fatalw("unable to create configmap lock", "error", err)
 		}
