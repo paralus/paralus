@@ -46,11 +46,12 @@ type EventActorAccount struct {
 
 // EventActor Event's initiator
 type EventActor struct {
-	Type           string            `json:"type"`
-	PartnerID      string            `json:"partner_id"`
-	OrganizationID string            `json:"organization_id"`
-	Account        EventActorAccount `json:"account"`
-	Groups         []string          `json:"groups"`
+	Type string `json:"type"`
+	// Add org and partner id once we have multi-org support
+	// PartnerID      string            `json:"partner_id"`
+	// OrganizationID string            `json:"organization_id"`
+	Account EventActorAccount `json:"account"`
+	Groups  []string          `json:"groups"`
 }
 
 // EventClient Event's client
@@ -69,18 +70,16 @@ type EventDetail struct {
 
 // Event is struct to hold event data
 type Event struct {
-	Version        EventVersion  `json:"version"`
-	Category       EventCategory `json:"category"`
-	Origin         EventOrigin   `json:"origin"`
-	Portal         string        `json:"portal"`
-	Type           string        `json:"type"`
-	PartnerID      string        `json:"partner_id"`
-	OrganizationID string        `json:"organization_id"`
-	ProjectID      string        `json:"project_id"`
-	Actor          *EventActor   `json:"actor"`
-	Client         *EventClient  `json:"client"`
-	Detail         *EventDetail  `json:"detail"`
-	Timestamp      string        `json:"timestamp"`
+	Version   EventVersion  `json:"version"`
+	Category  EventCategory `json:"category"`
+	Origin    EventOrigin   `json:"origin"`
+	Portal    string        `json:"portal"`
+	Type      string        `json:"type"`
+	ProjectID string        `json:"project_id"`
+	Actor     *EventActor   `json:"actor"`
+	Client    *EventClient  `json:"client"`
+	Detail    *EventDetail  `json:"detail"`
+	Timestamp string        `json:"timestamp"`
 }
 
 type createEventOptions struct {
@@ -196,8 +195,6 @@ func CreateEvent(event *Event, opts ...CreateEventOption) error {
 	event.Category = cOpts.category
 	event.Origin = cOpts.origin
 
-	event.PartnerID = cOpts.partnerID
-	event.OrganizationID = cOpts.organizationID
 	event.ProjectID = cOpts.projectID
 
 	if event.Client == nil {
@@ -262,17 +259,13 @@ func getActor(cOpts createEventOptions) *EventActor {
 		Username: cOpts.username,
 	}
 	return &EventActor{
-		Type:           "USER",
-		PartnerID:      cOpts.partnerID,
-		OrganizationID: cOpts.organizationID,
-		Account:        account,
-		Groups:         cOpts.groups,
+		Type:    "USER",
+		Account: account,
+		Groups:  cOpts.groups,
 	}
 }
 
 func GetActorFromSessionData(sd *commonv3.SessionData) *EventActor {
-	pid := sd.GetPartner() // TODO: have this pulled from headers
-	oid := sd.GetOrganization()
 	accountID := sd.GetAccount()
 	username := sd.GetUsername()
 	account := EventActorAccount{
@@ -281,20 +274,10 @@ func GetActorFromSessionData(sd *commonv3.SessionData) *EventActor {
 	}
 	groups := sd.Groups // TODO: get groups (in interceptor?)
 
-	// Set org id to string "null" for users with PARTNER_ADMIN role
-	if oid == "" {
-		oid = "null"
-	}
-	if pid == "" {
-		pid = "null"
-	}
-
 	return &EventActor{
-		Type:           "USER",
-		PartnerID:      pid,
-		OrganizationID: oid,
-		Account:        account,
-		Groups:         groups,
+		Type:    "USER",
+		Account: account,
+		Groups:  groups,
 	}
 }
 
@@ -349,9 +332,6 @@ func CreateV1Event(al *zap.Logger, sd *commonv3.SessionData, detail *EventDetail
 		ProjectID: projectID,
 	}
 
-	event.PartnerID = actor.PartnerID
-	event.OrganizationID = actor.OrganizationID
-
 	go WriteEvent(event, al)
 	return nil
 }
@@ -368,7 +348,5 @@ func WriteEvent(event *Event, al *zap.Logger) {
 		zap.String("type", event.Type),
 		zap.String("portal", event.Portal),
 		zap.String("project_id", event.ProjectID),
-		zap.String("partner_id", event.PartnerID),
-		zap.String("organization_id", event.OrganizationID),
 	)
 }
