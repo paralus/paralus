@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/RafayLabs/rcloud-base/pkg/common"
 	"github.com/RafayLabs/rcloud-base/pkg/query"
 	"github.com/RafayLabs/rcloud-base/pkg/service"
 	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
@@ -75,7 +74,7 @@ func (s *userServer) UpdateUser(ctx context.Context, req *userpbv3.User) (*userp
 }
 
 func (s *userServer) DownloadCliConfig(ctx context.Context, req *rpcv3.CliConfigRequest) (*commonv3.HttpBody, error) {
-	sessData, ok := ctx.Value(common.SessionDataKey).(*commonv3.SessionData)
+	sessData, ok := service.GetSessionDataFromContext(ctx)
 	if !ok {
 		return nil, fmt.Errorf("unable to retrieve session data")
 	}

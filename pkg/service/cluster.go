@@ -33,6 +33,7 @@ import (
 	"github.com/spf13/viper"
 	bun "github.com/uptrace/bun"
 	"github.com/uptrace/bun/driver/pgdriver"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -93,14 +94,15 @@ type clusterService struct {
 	downloadData    common.DownloadData
 	clusterHandlers []event.Handler
 	bs              BootstrapService
+	al              *zap.Logger
 }
 
 // NewClusterService return new cluster service
-func NewClusterService(db *bun.DB, data *common.DownloadData, bs BootstrapService) ClusterService {
-	return &clusterService{db: db, downloadData: *data, bs: bs}
+func NewClusterService(db *bun.DB, data *common.DownloadData, bs BootstrapService, al *zap.Logger) ClusterService {
+	return &clusterService{db: db, downloadData: *data, bs: bs, al: al}
 }
 
-func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (*infrav3.Cluster, error) {
+func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (*infrav3.Cluster, error) {
 	var errormsg string
 	if cluster.Metadata.Project == "" {
 		cluster.Status = &commonv3.Status{
@@ -112,7 +114,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 	}
 
 	var proj models.Project
-	_, err := dao.GetByName(ctx, es.db, cluster.Metadata.Project, &proj)
+	_, err := dao.GetByName(ctx, s.db, cluster.Metadata.Project, &proj)
 	if err != nil {
 		return &infrav3.Cluster{}, err
 	}
@@ -155,7 +157,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 		return cluster, fmt.Errorf(errormsg)
 	}
 
-	clusterPresent, err := dao.GetByNamePartnerOrg(ctx, es.db, cluster.Metadata.Name, uuid.NullUUID{UUID: proj.PartnerId, Valid: true},
+	clusterPresent, err := dao.GetByNamePartnerOrg(ctx, s.db, cluster.Metadata.Name, uuid.NullUUID{UUID: proj.PartnerId, Valid: true},
 		uuid.NullUUID{UUID: proj.OrganizationId, Valid: true}, &models.Cluster{})
 	if err != nil && err.Error() == "sql: no rows in result set" {
 		_log.Infof("Skipping as first time cluster create ")
@@ -166,7 +168,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 
 	metro := &models.Metro{}
 	if cluster.Spec.Metro != nil && cluster.Spec.Metro.Name != "" {
-		if mdb, err := dao.GetByNamePartnerOrg(ctx, es.db, cluster.Spec.Metro.Name, uuid.NullUUID{UUID: proj.PartnerId, Valid: true}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, metro); err != nil {
+		if mdb, err := dao.GetByNamePartnerOrg(ctx, s.db, cluster.Spec.Metro.Name, uuid.NullUUID{UUID: proj.PartnerId, Valid: true}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, metro); err != nil {
 			errormsg = "Invalid cluster location, provide a valid metro name"
 			cluster.Status = &commonv3.Status{
 				ConditionType:   "Create",
@@ -235,7 +237,7 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 
 	cluster.Spec.ClusterData.Health = infrav3.Health_EDGE_IGNORE
 
-	tx, err := es.db.BeginTx(ctx, &sql.TxOptions{})
+	tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 	if err != nil {
 		return &infrav3.Cluster{}, err
 	}
@@ -263,10 +265,10 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 	}
 	_log.Infow("Created the cluster: ", "Cluster", edb)
 
-	clusterResp := es.prepareClusterResponse(ctx, cluster, edb, metro, pcList, true)
+	clusterResp := s.prepareClusterResponse(ctx, cluster, edb, metro, pcList, true)
 
 	if clusterGeneration == constants.Cluster_V2 && edb.PartnerId != uuid.Nil && edb.OrganizationId != uuid.Nil {
-		operatorSpecStr, err := clstrutil.GetClusterOperatorYaml(ctx, &es.downloadData, clusterResp)
+		operatorSpecStr, err := clstrutil.GetClusterOperatorYaml(ctx, &s.downloadData, clusterResp)
 		if err != nil {
 			_log.Errorw("Error downloading v2 cluster operator yaml", "Error", err)
 			return &infrav3.Cluster{}, err
@@ -305,10 +307,11 @@ func (es *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) 
 		ID:             edb.ID.String(),
 	}
 
-	for _, h := range es.clusterHandlers {
+	for _, h := range s.clusterHandlers {
 		h.OnChange(ev)
 	}
 
+	CreateClusterAuditEvent(ctx, s.al, AuditActionCreate, clusterResp.GetMetadata().GetName(), edb.ID)
 	return clusterResp, nil
 }
 
@@ -472,7 +475,7 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 	return clstr
 }
 
-func (cs *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (*infrav3.Cluster, error) {
+func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (*infrav3.Cluster, error) {
 
 	var errormsg string
 
@@ -485,7 +488,7 @@ func (cs *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) 
 		return cluster, fmt.Errorf("invalid cluster data, name is missing")
 	}
 
-	edb, err := dao.GetByName(ctx, cs.db, cluster.Metadata.Name, &models.Cluster{})
+	edb, err := dao.GetByName(ctx, s.db, cluster.Metadata.Name, &models.Cluster{})
 	if err != nil {
 		return &infrav3.Cluster{}, fmt.Errorf(errormsg)
 	}
@@ -532,7 +535,7 @@ func (cs *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) 
 	if cluster.Spec.Metro != nil && cdb.MetroId.String() != cluster.Spec.Metro.Id {
 		metro := &models.Metro{}
 		if cluster.Spec.Metro.Name != "" {
-			if mdb, err := dao.GetByNamePartnerOrg(ctx, cs.db, cluster.Spec.Metro.Name, uuid.NullUUID{UUID: pid, Valid: true}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, metro); err != nil {
+			if mdb, err := dao.GetByNamePartnerOrg(ctx, s.db, cluster.Spec.Metro.Name, uuid.NullUUID{UUID: pid, Valid: true}, uuid.NullUUID{UUID: uuid.Nil, Valid: false}, metro); err != nil {
 				errormsg = "Invalid cluster location, provide a valid metro name"
 				cluster.Status = &commonv3.Status{
 					ConditionType:   "Update",
@@ -567,12 +570,12 @@ func (cs *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) 
 		}
 
 	}
-	err = cdao.UpdateCluster(ctx, cs.db, cdb)
+	err = cdao.UpdateCluster(ctx, s.db, cdb)
 	if err != nil {
 		return &infrav3.Cluster{}, err
 	}
 
-	cs.notifyCluster(ctx, cluster)
+	s.notifyCluster(ctx, cluster)
 
 	ev := event.Resource{
 		PartnerID:      cluster.Metadata.Partner,
@@ -583,19 +586,21 @@ func (cs *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) 
 		ID:             cluster.Metadata.Id,
 	}
 
-	for _, h := range cs.clusterHandlers {
+	for _, h := range s.clusterHandlers {
 		h.OnChange(ev)
 	}
 	/*for _, h := range s.placementHandlers {
 		h.OnChange(ev)
 	}*/
 
+	CreateClusterAuditEvent(ctx, s.al, AuditActionUpdate, cluster.GetMetadata().GetName(), cdb.ID)
+
 	return cluster, nil
 }
 
-func (cs *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) error {
+func (s *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) error {
 
-	cluster, err := cs.Get(ctx, func(qo *commonv3.QueryOptions) {
+	cluster, err := s.Get(ctx, func(qo *commonv3.QueryOptions) {
 		qo.Name = cluster.Metadata.Name
 		qo.Project = cluster.Metadata.Project
 		qo.Extended = true
@@ -606,7 +611,7 @@ func (cs *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) 
 	clusterId := cluster.Metadata.Id
 	projectId := cluster.Metadata.Project
 
-	err = cs.deleteBootstrapAgentForCluster(ctx, cluster)
+	err = s.deleteBootstrapAgentForCluster(ctx, cluster)
 	if err != nil {
 		return err
 	}
@@ -616,7 +621,7 @@ func (cs *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) 
 	_log.Debugw("setting cluster condition to pending delete", "name", cluster.Metadata.Name, "conditions", cluster.Spec.ClusterData.ClusterStatus.Conditions)
 	clstrutil.SetClusterCondition(cluster, clstrutil.NewClusterDelete(constants.Pending, "deleted"))
 
-	err = cs.UpdateClusterConditionStatus(ctx, cluster)
+	err = s.UpdateClusterConditionStatus(ctx, cluster)
 	if err != nil {
 		return errors.Wrapf(err, "could not update cluster %s status to pending delete", cluster.Metadata.Name)
 	}
@@ -630,10 +635,14 @@ func (cs *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) 
 		ID:             clusterId,
 	}
 
-	for _, h := range cs.clusterHandlers {
+	for _, h := range s.clusterHandlers {
 		h.OnChange(ev)
 	}
 
+	id, err := uuid.Parse(clusterId)
+	if err == nil {
+		CreateClusterAuditEvent(ctx, s.al, AuditActionDelete, cluster.GetMetadata().GetName(), id)
+	}
 	return nil
 
 }

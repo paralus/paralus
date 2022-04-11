@@ -20,6 +20,7 @@ import (
 	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
+	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -36,10 +37,11 @@ type IdpService interface {
 type idpService struct {
 	db      *bun.DB
 	appHost string
+	al      *zap.Logger
 }
 
-func NewIdpService(db *bun.DB, hostUrl string) IdpService {
-	return &idpService{db: db, appHost: hostUrl}
+func NewIdpService(db *bun.DB, hostUrl string, al *zap.Logger) IdpService {
+	return &idpService{db: db, appHost: hostUrl, al: al}
 }
 
 func generateAcsURL(id string, hostUrl string) string {
@@ -205,6 +207,9 @@ func (s *idpService) Create(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 			SpEntityId:         acsURL,
 		},
 	}
+
+	CreateIdpAuditEvent(ctx, s.al, AuditActionCreate, rv.GetMetadata().GetName(), entity.Id)
+
 	return rv, nil
 }
 
@@ -381,6 +386,8 @@ func (s *idpService) Update(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 			SpEntityId:         acsURL,
 		},
 	}
+
+	CreateIdpAuditEvent(ctx, s.al, AuditActionUpdate, rv.GetMetadata().GetName(), entity.Id)
 	return rv, nil
 }
 
@@ -452,5 +459,7 @@ func (s *idpService) Delete(ctx context.Context, idp *systemv3.Idp) error {
 	if err != nil {
 		return err
 	}
+
+	CreateIdpAuditEvent(ctx, s.al, AuditActionDelete, name, entity.Id)
 	return nil
 }

@@ -62,17 +62,10 @@ func TestCreateUser(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
 
 	uuuid := uuid.New().String()
-	puuid := uuid.New().String()
-	ouuid := uuid.New().String()
-
-	mock.ExpectQuery(`SELECT "partner"."id" FROM "authsrv_partner" AS "partner"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
-	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
-
+	puuid, ouuid := addParterOrgFetchExpectation(mock)
 	mock.ExpectBegin()
 	mock.ExpectCommit()
 
@@ -92,25 +85,22 @@ func TestCreateUser(t *testing.T) {
 }
 
 func TestCreateUserWithRole(t *testing.T) {
-	pruuid := uuid.New().String()
-	prname := "project-" + pruuid
-	ruuid := uuid.New().String()
-	rname := "project-" + ruuid
-	var namespaceid int64 = 7
 	tt := []struct {
 		name       string
-		roles      []*userv3.ProjectNamespaceRole
+		role       bool
+		project    bool
+		namespace  bool
 		dbname     string
 		scope      string
 		shouldfail bool
 	}{
-		{"just role", []*userv3.ProjectNamespaceRole{{Role: rname}}, "authsrv_accountresourcerole", "system", false},
-		{"just role org scope", []*userv3.ProjectNamespaceRole{{Role: rname}}, "authsrv_accountresourcerole", "organization", false},
-		{"just project", []*userv3.ProjectNamespaceRole{{Project: &prname}}, "authsrv_accountrole", "system", true},                                   // no role creation without role
-		{"just namespace", []*userv3.ProjectNamespaceRole{{Namespace: &namespaceid}}, "authsrv_accountrole", "system", true},                          // no role creation without role,
-		{"project and namespace", []*userv3.ProjectNamespaceRole{{Project: &prname, Namespace: &namespaceid}}, "authsrv_accountrole", "system", true}, // no role creation without role,
-		{"project and role", []*userv3.ProjectNamespaceRole{{Project: &prname, Role: rname}}, "authsrv_projectaccountresourcerole", "project", false},
-		{"project role namespace", []*userv3.ProjectNamespaceRole{{Project: &prname, Namespace: &namespaceid, Role: rname}}, "authsrv_projectaccountresourcerole", "project", false},
+		{"just role", true, false, false, "authsrv_accountresourcerole", "system", false},
+		{"just role org scope", true, false, false, "authsrv_accountresourcerole", "organization", false},
+		{"just project", false, true, false, "authsrv_accountrole", "system", true},         // no role creation without role
+		{"just namespace", false, false, true, "authsrv_accountrole", "system", true},       // no role creation without role,
+		{"project and namespace", false, true, true, "authsrv_accountrole", "system", true}, // no role creation without role,
+		{"project and role", true, true, false, "authsrv_projectaccountresourcerole", "project", false},
+		{"project role namespace", true, true, true, "authsrv_projectaccountresourcerole", "project", false},
 	}
 
 	for _, tc := range tt {
@@ -120,24 +110,25 @@ func TestCreateUserWithRole(t *testing.T) {
 
 			ap := &mockAuthProvider{}
 			mazc := mockAuthzClient{}
-			us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
+			us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
 
 			uuuid := uuid.New().String()
-			puuid := uuid.New().String()
-			pruuid := uuid.New().String()
-			ouuid := uuid.New().String()
 
-			mock.ExpectQuery(`SELECT "partner"."id" FROM "authsrv_partner" AS "partner"`).
-				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
-			mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
-				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
+			puuid, ouuid := addParterOrgFetchExpectation(mock)
 
 			mock.ExpectBegin()
-			mock.ExpectQuery(`SELECT "resourcerole"."id".* FROM "authsrv_resourcerole" AS "resourcerole"`).
-				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name", "scope"}).AddRow(pruuid, "role-name", tc.scope))
-			if tc.roles[0].Project != nil {
-				mock.ExpectQuery(`SELECT "project"."id" FROM "authsrv_project" AS "project"`).
-					WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(pruuid))
+			ruuid := addResourceRoleFetchExpectation(mock, tc.scope)
+			role := &userv3.ProjectNamespaceRole{}
+			if tc.role {
+				role.Role = idname(ruuid, "role")
+			}
+			if tc.project {
+				pruuid := addFetchIdExpectation(mock, "project")
+				role.Project = &pruuid
+			}
+			if tc.namespace {
+				var ns int64 = 7
+				role.Namespace = &ns
 			}
 			mock.ExpectQuery(fmt.Sprintf(`INSERT INTO "%v"`, tc.dbname)).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
@@ -145,8 +136,9 @@ func TestCreateUserWithRole(t *testing.T) {
 
 			user := &userv3.User{
 				Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
-				Spec:     &userv3.UserSpec{ProjectNamespaceRoles: tc.roles},
+				Spec:     &userv3.UserSpec{ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{role}},
 			}
+
 			user, err := us.Create(context.Background(), user)
 			if tc.shouldfail {
 				if err == nil {
@@ -175,46 +167,24 @@ func TestUpdateUser(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
-
-	uuuid := uuid.New().String()
-	puuid := uuid.New().String()
-	ouuid := uuid.New().String()
-
-	pruuid := uuid.New().String()
-	prname := "project-" + pruuid
-	ruuid := uuid.New().String()
-	rname := "project-" + ruuid
-	var namespaceid int64 = 7
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
 
 	// performing update
-	mock.ExpectQuery(`SELECT "identities"."id" FROM "identities" WHERE .*traits ->> 'email' = 'user-` + uuuid + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).AddRow(uuuid, []byte(`{"email":"johndoe@provider.com"}`)))
-	mock.ExpectQuery(`SELECT "partner"."id" FROM "authsrv_partner" AS "partner"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
-	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
-
+	uuuid := addUserIdFetchExpectation(mock)
+	puuid, ouuid := addParterOrgFetchExpectation(mock)
 	mock.ExpectBegin()
-	mock.ExpectExec(`UPDATE "authsrv_accountresourcerole" AS "accountresourcerole" SET trash = TRUE WHERE`).
-		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(`UPDATE "authsrv_projectaccountresourcerole" AS "projectaccountresourcerole" SET trash = TRUE WHERE`).
-		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(`UPDATE "authsrv_projectaccountnamespacerole" AS "projectaccountnamespacerole" SET trash = TRUE WHERE`).
-		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(`UPDATE "authsrv_groupaccount" AS "groupaccount" SET trash = TRUE WHERE`).
-		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectQuery(`SELECT "resourcerole"."id".* FROM "authsrv_resourcerole" AS "resourcerole"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name", "scope"}).AddRow(pruuid, "role-name", "project"))
-	mock.ExpectQuery(`SELECT "project"."id" FROM "authsrv_project" AS "project"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(pruuid))
+	_ = addUserRoleMappingsUpdateExpectation(mock, uuuid)
+	addUserGroupMappingsUpdateExpectation(mock, uuuid)
+	ruuid := addResourceRoleFetchExpectation(mock, "project")
+	pruuid := addFetchExpectation(mock, "project")
 	mock.ExpectQuery(`INSERT INTO "authsrv_projectaccountresourcerole"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
 	mock.ExpectCommit()
 
+	var ns int64 = 7
 	user := &userv3.User{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
-		Spec:     &userv3.UserSpec{ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: &prname, Namespace: &namespaceid, Role: rname}}},
+		Spec:     &userv3.UserSpec{ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: idnamea(pruuid, "project"), Namespace: &ns, Role: idname(ruuid, "role")}}},
 	}
 	user, err := us.Update(context.Background(), user)
 	if err != nil {
@@ -233,28 +203,29 @@ func TestUserGetByName(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
 
-	uuuid := uuid.New().String()
 	puuid := uuid.New().String()
 	ouuid := uuid.New().String()
 	guuid := uuid.New().String()
 	ruuid := uuid.New().String()
 	pruuid := uuid.New().String()
 
-	mock.ExpectQuery(`SELECT "identities"."id", .* FROM "identities" WHERE .*traits ->> 'email' = 'user-` + uuuid + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).AddRow(uuuid, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)))
+	uuuid := addUserFetchExpectation(mock)
 	mock.ExpectQuery(`SELECT "group"."id".* FROM "authsrv_group" AS "group" JOIN authsrv_groupaccount ON authsrv_groupaccount.group_id="group".id WHERE .authsrv_groupaccount.account_id = '` + uuuid + `'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"name"}).
 		AddRow("group-" + guuid))
 	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_group.name as group FROM "authsrv_grouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_grouprole.role_id JOIN authsrv_group ON authsrv_group.id=authsrv_grouprole.group_id WHERE`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "group"}).AddRow("role-"+ruuid, "group-"+guuid))
+
 	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id WHERE`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
 	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace, authsrv_group.name as group FROM "authsrv_projectgroupnamespacerole"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
+
 	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role FROM "authsrv_accountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_accountresourcerole.role_id WHERE .authsrv_accountresourcerole.account_id = '` + uuuid + `'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("role-" + ruuid))
+
 	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project FROM "authsrv_projectaccountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountresourcerole.project_id WHERE .authsrv_projectaccountresourcerole.account_id = '` + uuuid + `'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+pruuid))
 	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id WHERE .authsrv_projectaccountnamespacerole.account_id = '` + uuuid + `'`).
@@ -268,8 +239,8 @@ func TestUserGetByName(t *testing.T) {
 		t.Fatal("could not get user:", err)
 	}
 	performUserBasicChecks(t, user, uuuid)
-	if user.GetMetadata().GetName() != "johndoe@provider.com" {
-		t.Errorf("invalid email for user, expected johndoe@provider.com; got '%v'", user.GetMetadata().GetName())
+	if user.GetMetadata().GetName() != "user-"+uuuid {
+		t.Errorf("invalid email for user, expected '%v'; got '%v'", "user-"+uuuid, user.GetMetadata().GetName())
 	}
 	if len(user.GetSpec().GetGroups()) != 1 {
 		t.Errorf("invalid number of groups returned for user, expected 2; got '%v'", len(user.GetSpec().GetGroups()))
@@ -289,7 +260,7 @@ func TestUserGetInfo(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
 
 	uuuid := uuid.New().String()
 	fakeuuuid := uuid.New().String()
@@ -361,32 +332,20 @@ func TestUserGetById(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
 
 	uuuid := uuid.New().String()
 	puuid := uuid.New().String()
 	ouuid := uuid.New().String()
-	guuid := uuid.New().String()
-	ruuid := uuid.New().String()
 	pruuid := uuid.New().String()
 
+	// lookup by id
 	mock.ExpectQuery(`SELECT "identities"."id",.* FROM "identities" WHERE .*id = '` + uuuid + `'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).AddRow(uuuid, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)))
-	mock.ExpectQuery(`SELECT "group"."id".* FROM "authsrv_group" AS "group" JOIN authsrv_groupaccount ON authsrv_groupaccount.group_id="group".id WHERE .authsrv_groupaccount.account_id = '` + uuuid + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"name"}).
-		AddRow("group-" + guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_group.name as group FROM "authsrv_grouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_grouprole.role_id JOIN authsrv_group ON authsrv_group.id=authsrv_grouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "group"}).AddRow("role-"+ruuid, "group-"+guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace, authsrv_group.name as group FROM "authsrv_projectgroupnamespacerole"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role FROM "authsrv_accountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_accountresourcerole.role_id WHERE .authsrv_accountresourcerole.account_id = '` + uuuid + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("role-" + ruuid))
-	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project FROM "authsrv_projectaccountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountresourcerole.project_id WHERE .authsrv_projectaccountresourcerole.account_id = '` + uuuid + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+pruuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id WHERE .authsrv_projectaccountnamespacerole.account_id = '` + uuuid + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+ruuid, "project-"+pruuid, 9))
+
+	guuid := addUsersGroupFetchExpectation(mock, uuuid)
+	addGroupRoleMappingsFetchExpectation(mock, guuid, pruuid)
+	addUserRoleMappingsFetchExpectation(mock, uuuid, pruuid)
 
 	user := &userv3.User{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Id: uuuid},
@@ -402,276 +361,132 @@ func TestUserGetById(t *testing.T) {
 	if len(user.GetSpec().GetProjectNamespaceRoles()) != 6 {
 		t.Errorf("invalid number of roles returned for user, expected 6; got '%v'", len(user.GetSpec().GetProjectNamespaceRoles()))
 	}
-	if user.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 9 {
-		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", user.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
+	if user.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 7 {
+		t.Errorf("invalid namespace in role returned for user, expected 7; got '%v'", user.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 	}
 
 	performBasicAuthProviderChecks(t, *ap, 0, 0, 0, 0)
 }
 
 func TestUserList(t *testing.T) {
-	db, mock := getDB(t)
-	defer db.Close()
-
-	ap := &mockAuthProvider{}
-	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
-
-	uuuid1 := uuid.New().String()
-	uuuid2 := uuid.New().String()
-	puuid := uuid.New().String()
-	ouuid := uuid.New().String()
-	guuid := uuid.New().String()
-	ruuid := uuid.New().String()
-	pruuid := uuid.New().String()
-
-	mock.ExpectQuery(`SELECT "partner"."id" FROM "authsrv_partner" AS "partner"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
-	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
-	mock.ExpectQuery(`SELECT "identities"."id", .*FROM "identities" LIMIT 10`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).
-		AddRow(uuuid1, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)).
-		AddRow(uuuid2, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)))
-
-	mock.ExpectQuery(`SELECT "group"."id".* FROM "authsrv_group" AS "group" JOIN authsrv_groupaccount ON authsrv_groupaccount.group_id="group".id WHERE .authsrv_groupaccount.account_id = '` + uuuid1 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"name"}).
-		AddRow("group-" + guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_group.name as group FROM "authsrv_grouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_grouprole.role_id JOIN authsrv_group ON authsrv_group.id=authsrv_grouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "group"}).AddRow("role-"+ruuid, "group-"+guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace, authsrv_group.name as group FROM "authsrv_projectgroupnamespacerole"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role FROM "authsrv_accountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_accountresourcerole.role_id WHERE .authsrv_accountresourcerole.account_id = '` + uuuid1 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("role-" + ruuid))
-	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project FROM "authsrv_projectaccountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountresourcerole.project_id WHERE .authsrv_projectaccountresourcerole.account_id = '` + uuuid1 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+pruuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id WHERE .authsrv_projectaccountnamespacerole.account_id = '` + uuuid1 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+ruuid, "project-"+pruuid, 9))
-
-	mock.ExpectQuery(`SELECT "group"."id".* FROM "authsrv_group" AS "group" JOIN authsrv_groupaccount ON authsrv_groupaccount.group_id="group".id WHERE .authsrv_groupaccount.account_id = '` + uuuid2 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"name"}).
-		AddRow("group-" + guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_group.name as group FROM "authsrv_grouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_grouprole.role_id JOIN authsrv_group ON authsrv_group.id=authsrv_grouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "group"}).AddRow("role-"+ruuid, "group-"+guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace, authsrv_group.name as group FROM "authsrv_projectgroupnamespacerole"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role FROM "authsrv_accountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_accountresourcerole.role_id WHERE .authsrv_accountresourcerole.account_id = '` + uuuid2 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("role-" + ruuid))
-	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project FROM "authsrv_projectaccountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountresourcerole.project_id WHERE .authsrv_projectaccountresourcerole.account_id = '` + uuuid2 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+pruuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id WHERE .authsrv_projectaccountnamespacerole.account_id = '` + uuuid2 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+ruuid, "project-"+pruuid, 9))
-
-	qo := &commonv3.QueryOptions{Organization: ouuid, Partner: puuid}
-	userlist, err := us.List(context.Background(), query.WithOptions(qo))
-	if err != nil {
-		t.Fatal("could not list users:", err)
+	tests := []struct {
+		name     string
+		q        string
+		limit    int64
+		offset   int64
+		orderBy  string
+		order    string
+		role     string
+		group    string
+		projects []string
+		utype    string
+	}{
+		{"simple list", "", 50, 20, "", "", "", "", []string{}, ""},
+		{"simple list with type", "", 50, 20, "", "", "", "", []string{}, "password"},
+		{"sorted list", "", 50, 20, "email", "asc", "", "", []string{}, ""},
+		{"sorted list without dir", "", 50, 20, "email", "", "", "", []string{}, ""},
+		{"sorted list with q", "filter-query", 50, 20, "email", "asc", "", "", []string{}, ""},
+		{"sorted list with role", "", 50, 20, "email", "asc", "role-name", "", []string{}, ""},
+		{"sorted list with role and group", "", 50, 20, "email", "asc", "role-name", "group-name", []string{}, ""},
+		{"sorted list with q and role", "filter-query", 50, 20, "email", "asc", "role-name", "", []string{}, ""},
 	}
-	if userlist.Metadata.Count != 2 {
-		t.Fatalf("incorrect number of users returned, expected 2; got %v", userlist.Metadata.Count)
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			db, mock := getDB(t)
+			defer db.Close()
+
+			ap := &mockAuthProvider{}
+			mazc := mockAuthzClient{}
+			us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
+
+			uuuid1 := uuid.New().String()
+			uuuid2 := uuid.New().String()
+			pruuid := uuid.New().String()
+
+			puuid, ouuid := addParterOrgFetchExpectation(mock)
+			q := ""
+			if tc.q != "" {
+				q = ` AND .traits ->> 'email' ILIKE '%` + tc.q + `%'. OR .traits ->> 'first_name' ILIKE '%` + tc.q + `%'. OR .traits ->> 'last_name' ILIKE '%` + tc.q + `%'. `
+			}
+			order := ""
+			if tc.orderBy != "" {
+				order = `ORDER BY "traits ->> '` + tc.orderBy + `' `
+			}
+			if tc.order != "" {
+				order = order + tc.order + `" `
+			}
+			if tc.role != "" {
+				addFetchExpectation(mock, "resourcerole")
+			}
+			if tc.group != "" {
+				addFetchExpectation(mock, "group")
+			}
+			if tc.role != "" || tc.group != "" || len(tc.projects) != 0 {
+				addSentryLookupExpectation(mock, []string{uuuid1, uuuid2}, puuid, ouuid)
+				mock.ExpectQuery(`SELECT "identities"."id", .*WHERE .id IN .'` + uuuid1 + `', '` + uuuid2 + `'..  ` + q + order + `LIMIT ` + fmt.Sprint(tc.limit) + ` OFFSET ` + fmt.Sprint(tc.offset)).
+					WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).
+					AddRow(uuuid1, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)).
+					AddRow(uuuid2, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)))
+			} else {
+				if tc.utype != "" {
+					mock.ExpectQuery(`SELECT "identities"."id", .*, "identity_credential"."id" AS "identity_credential__id", .*FROM "identities" LEFT JOIN "identity_credentials" AS "identity_credential" ON ."identity_credential"."identity_id" = "identities"."id". LEFT JOIN "identity_credential_types" AS "identity_credential__identity_credential_type" ON ."identity_credential__identity_credential_type"."id" = "identity_credential"."identity_credential_type_id". WHERE .name = '` + tc.utype + `'. LIMIT 50 OFFSET 20`).
+						WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).
+						AddRow(uuuid1, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)).
+						AddRow(uuuid2, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)))
+				} else {
+					mock.ExpectQuery(`SELECT "identities"."id".* LIMIT 50 OFFSET 20$`).
+						WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).
+						AddRow(uuuid1, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)).
+						AddRow(uuuid2, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)))
+				}
+			}
+
+			guuid := addUsersGroupFetchExpectation(mock, uuuid1)
+			addGroupRoleMappingsFetchExpectation(mock, guuid, pruuid)
+			addUserRoleMappingsFetchExpectation(mock, uuuid1, pruuid)
+
+			guuid = addUsersGroupFetchExpectation(mock, uuuid2)
+			addGroupRoleMappingsFetchExpectation(mock, guuid, pruuid)
+			addUserRoleMappingsFetchExpectation(mock, uuuid2, pruuid)
+
+			qo := &commonv3.QueryOptions{
+				Q:            tc.q,
+				Limit:        tc.limit,
+				Offset:       tc.offset,
+				OrderBy:      tc.orderBy,
+				Order:        tc.order,
+				Organization: ouuid,
+				Partner:      puuid,
+				Role:         tc.role,
+				Group:        tc.group,
+				Type:         tc.utype,
+			}
+
+			userlist, err := us.List(context.Background(), query.WithOptions(qo))
+			if err != nil {
+				t.Fatal("could not list users:", err)
+			}
+			if userlist.Metadata.Count != 2 {
+				t.Fatalf("incorrect number of users returned, expected 2; got %v", userlist.Metadata.Count)
+			}
+			if userlist.Items[0].Metadata.Name != "johndoe@provider.com" || userlist.Items[1].Metadata.Name != "johndoe@provider.com" {
+				t.Errorf("incorrect user names returned when listing; expected '%v' and '%v'; got '%v' and '%v'", "johndoe@provider.com", "johndoe@provider.com", userlist.Items[0].Metadata.Name, userlist.Items[1].Metadata.Name)
+			}
+			if len(userlist.Items[0].GetSpec().GetGroups()) != 1 {
+				t.Errorf("invalid number of groups returned for user, expected 1; got '%v'", len(userlist.Items[0].GetSpec().GetGroups()))
+			}
+
+			if len(userlist.Items[0].GetSpec().GetProjectNamespaceRoles()) != 6 {
+				t.Errorf("invalid number of roles returned for user, expected 6; got '%v'", len(userlist.Items[0].GetSpec().GetProjectNamespaceRoles()))
+			}
+			if userlist.Items[0].GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 7 {
+				t.Errorf("invalid namespace in role returned for user, expected 7; got '%v'", userlist.Items[0].GetSpec().GetProjectNamespaceRoles()[2].Namespace)
+			}
+
+			performBasicAuthProviderChecks(t, *ap, 0, 0, 0, 0)
+
+		})
 	}
-	if userlist.Items[0].Metadata.Name != "johndoe@provider.com" || userlist.Items[1].Metadata.Name != "johndoe@provider.com" {
-		t.Errorf("incorrect user names returned when listing; expected '%v' and '%v'; got '%v' and '%v'", "johndoe@provider.com", "johndoe@provider.com", userlist.Items[0].Metadata.Name, userlist.Items[1].Metadata.Name)
-	}
-	if len(userlist.Items[0].GetSpec().GetGroups()) != 1 {
-		t.Errorf("invalid number of groups returned for user, expected 1; got '%v'", len(userlist.Items[0].GetSpec().GetGroups()))
-	}
-
-	if len(userlist.Items[0].GetSpec().GetProjectNamespaceRoles()) != 6 {
-		t.Errorf("invalid number of roles returned for user, expected 6; got '%v'", len(userlist.Items[0].GetSpec().GetProjectNamespaceRoles()))
-	}
-	if userlist.Items[0].GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 9 {
-		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", userlist.Items[0].GetSpec().GetProjectNamespaceRoles()[2].Namespace)
-	}
-
-	performBasicAuthProviderChecks(t, *ap, 0, 0, 0, 0)
-}
-
-func TestUserListWithType(t *testing.T) {
-	// TODO: merge these tests
-	db, mock := getDB(t)
-	defer db.Close()
-
-	ap := &mockAuthProvider{}
-	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
-
-	uuuid1 := uuid.New().String()
-	uuuid2 := uuid.New().String()
-	puuid := uuid.New().String()
-	ouuid := uuid.New().String()
-	guuid := uuid.New().String()
-	ruuid := uuid.New().String()
-	pruuid := uuid.New().String()
-
-	mock.ExpectQuery(`SELECT "partner"."id" FROM "authsrv_partner" AS "partner"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
-	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
-	mock.ExpectQuery(`SELECT "identities"."id", "identities"."schema_id", "identities"."traits", "identities"."created_at", "identities"."updated_at", "identities"."state", "identities"."state_changed_at", "identities"."nid", "identity_credential"."id" AS "identity_credential__id", "identity_credential"."identity_id" AS "identity_credential__identity_id", "identity_credential"."identity_credential_type_id" AS "identity_credential__identity_credential_type_id", "identity_credential__identity_credential_type"."id" AS "identity_credential__identity_credential_type__id", "identity_credential__identity_credential_type"."name" AS "identity_credential__identity_credential_type__name" FROM "identities" LEFT JOIN "identity_credentials" AS "identity_credential" ON ."identity_credential"."identity_id" = "identities"."id". LEFT JOIN "identity_credential_types" AS "identity_credential__identity_credential_type" ON ."identity_credential__identity_credential_type"."id" = "identity_credential"."identity_credential_type_id". WHERE .name = 'password'. LIMIT 10`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).
-		AddRow(uuuid1, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)).
-		AddRow(uuuid2, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)))
-
-	mock.ExpectQuery(`SELECT "group"."id".* FROM "authsrv_group" AS "group" JOIN authsrv_groupaccount ON authsrv_groupaccount.group_id="group".id WHERE .authsrv_groupaccount.account_id = '` + uuuid1 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"name"}).
-		AddRow("group-" + guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_group.name as group FROM "authsrv_grouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_grouprole.role_id JOIN authsrv_group ON authsrv_group.id=authsrv_grouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "group"}).AddRow("role-"+ruuid, "group-"+guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace, authsrv_group.name as group FROM "authsrv_projectgroupnamespacerole"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role FROM "authsrv_accountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_accountresourcerole.role_id WHERE .authsrv_accountresourcerole.account_id = '` + uuuid1 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("role-" + ruuid))
-	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project FROM "authsrv_projectaccountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountresourcerole.project_id WHERE .authsrv_projectaccountresourcerole.account_id = '` + uuuid1 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+pruuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id WHERE .authsrv_projectaccountnamespacerole.account_id = '` + uuuid1 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+ruuid, "project-"+pruuid, 9))
-
-	mock.ExpectQuery(`SELECT "group"."id".* FROM "authsrv_group" AS "group" JOIN authsrv_groupaccount ON authsrv_groupaccount.group_id="group".id WHERE .authsrv_groupaccount.account_id = '` + uuuid2 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"name"}).
-		AddRow("group-" + guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_group.name as group FROM "authsrv_grouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_grouprole.role_id JOIN authsrv_group ON authsrv_group.id=authsrv_grouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "group"}).AddRow("role-"+ruuid, "group-"+guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace, authsrv_group.name as group FROM "authsrv_projectgroupnamespacerole"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role FROM "authsrv_accountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_accountresourcerole.role_id WHERE .authsrv_accountresourcerole.account_id = '` + uuuid2 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("role-" + ruuid))
-	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project FROM "authsrv_projectaccountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountresourcerole.project_id WHERE .authsrv_projectaccountresourcerole.account_id = '` + uuuid2 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+pruuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id WHERE .authsrv_projectaccountnamespacerole.account_id = '` + uuuid2 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+ruuid, "project-"+pruuid, 9))
-
-	qo := &commonv3.QueryOptions{Organization: ouuid, Partner: puuid, Type: "password"}
-	userlist, err := us.List(context.Background(), query.WithOptions(qo))
-	if err != nil {
-		t.Fatal("could not list users:", err)
-	}
-	if userlist.Metadata.Count != 2 {
-		t.Fatalf("incorrect number of users returned, expected 2; got %v", userlist.Metadata.Count)
-	}
-	if userlist.Items[0].Metadata.Name != "johndoe@provider.com" || userlist.Items[1].Metadata.Name != "johndoe@provider.com" {
-		t.Errorf("incorrect user names returned when listing; expected '%v' and '%v'; got '%v' and '%v'", "johndoe@provider.com", "johndoe@provider.com", userlist.Items[0].Metadata.Name, userlist.Items[1].Metadata.Name)
-	}
-	if len(userlist.Items[0].GetSpec().GetGroups()) != 1 {
-		t.Errorf("invalid number of groups returned for user, expected 1; got '%v'", len(userlist.Items[0].GetSpec().GetGroups()))
-	}
-
-	if len(userlist.Items[0].GetSpec().GetProjectNamespaceRoles()) != 6 {
-		t.Errorf("invalid number of roles returned for user, expected 6; got '%v'", len(userlist.Items[0].GetSpec().GetProjectNamespaceRoles()))
-	}
-	if userlist.Items[0].GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 9 {
-		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", userlist.Items[0].GetSpec().GetProjectNamespaceRoles()[2].Namespace)
-	}
-
-	performBasicAuthProviderChecks(t, *ap, 0, 0, 0, 0)
-}
-
-func TestUserFiltered(t *testing.T) {
-	db, mock := getDB(t)
-	defer db.Close()
-
-	ap := &mockAuthProvider{}
-	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
-
-	uuuid1 := uuid.New().String()
-	uuuid2 := uuid.New().String()
-	puuid := uuid.New().String()
-	ouuid := uuid.New().String()
-	guuid := uuid.New().String()
-	ruuid := uuid.New().String()
-	pruuid := uuid.New().String()
-
-	mock.ExpectQuery(`SELECT "partner"."id" FROM "authsrv_partner" AS "partner"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
-	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
-	mock.ExpectQuery(`SELECT "group"."id" FROM "authsrv_group" AS "group" WHERE .name = 'group-name'. AND .trash = FALSE.`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(guuid))
-	mock.ExpectQuery(`SELECT DISTINCT account_id FROM "sentry_account_permission" AS "sap" WHERE .partner_id = '` + puuid + `'. AND .organization_id = '` + ouuid + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"account_id"}).AddRow(uuuid1).AddRow(uuuid2))
-	mock.ExpectQuery(`SELECT "identities"."id", .*WHERE .id IN .'` + uuuid1 + `', '` + uuuid2 + `'.. AND .traits ->> 'email' ILIKE '%filter-query%'. OR .traits ->> 'first_name' ILIKE '%filter-query%'. OR .traits ->> 'last_name' ILIKE '%filter-query%'. ORDER BY "traits ->> 'email' asc" LIMIT 50 OFFSET 20`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).
-		AddRow(uuuid1, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)).
-		AddRow(uuuid2, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)))
-
-	mock.ExpectQuery(`SELECT "group"."id".* FROM "authsrv_group" AS "group" JOIN authsrv_groupaccount ON authsrv_groupaccount.group_id="group".id WHERE .authsrv_groupaccount.account_id = '` + uuuid1 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"name"}).
-		AddRow("group-" + guuid).AddRow("group2-" + guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_group.name as group FROM "authsrv_grouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_grouprole.role_id JOIN authsrv_group ON authsrv_group.id=authsrv_grouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "group"}).AddRow("role-"+ruuid, "group-"+guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace, authsrv_group.name as group FROM "authsrv_projectgroupnamespacerole"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_group.name as group FROM "authsrv_grouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_grouprole.role_id JOIN authsrv_group ON authsrv_group.id=authsrv_grouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "group"}).AddRow("role-"+ruuid, "group2-"+guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace, authsrv_group.name as group FROM "authsrv_projectgroupnamespacerole"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role FROM "authsrv_accountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_accountresourcerole.role_id WHERE .authsrv_accountresourcerole.account_id = '` + uuuid1 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("role-" + ruuid))
-	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project FROM "authsrv_projectaccountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountresourcerole.project_id WHERE .authsrv_projectaccountresourcerole.account_id = '` + uuuid1 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+pruuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id WHERE .authsrv_projectaccountnamespacerole.account_id = '` + uuuid1 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+ruuid, "project-"+pruuid, 9))
-
-	mock.ExpectQuery(`SELECT "group"."id".* FROM "authsrv_group" AS "group" JOIN authsrv_groupaccount ON authsrv_groupaccount.group_id="group".id WHERE .authsrv_groupaccount.account_id = '` + uuuid2 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"name"}).
-		AddRow("group-" + guuid).AddRow("group2-" + guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_group.name as group FROM "authsrv_grouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_grouprole.role_id JOIN authsrv_group ON authsrv_group.id=authsrv_grouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "group"}).AddRow("role-"+ruuid, "group-"+guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace, authsrv_group.name as group FROM "authsrv_projectgroupnamespacerole"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_group.name as group FROM "authsrv_grouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_grouprole.role_id JOIN authsrv_group ON authsrv_group.id=authsrv_grouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "group"}).AddRow("role-"+ruuid, "group2-"+guuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace, authsrv_group.name as group FROM "authsrv_projectgroupnamespacerole"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+puuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role FROM "authsrv_accountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_accountresourcerole.role_id WHERE .authsrv_accountresourcerole.account_id = '` + uuuid2 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("role-" + ruuid))
-	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project FROM "authsrv_projectaccountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountresourcerole.project_id WHERE .authsrv_projectaccountresourcerole.account_id = '` + uuuid2 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+pruuid))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id WHERE .authsrv_projectaccountnamespacerole.account_id = '` + uuuid2 + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+ruuid, "project-"+pruuid, 9))
-
-	qo := &commonv3.QueryOptions{Q: "filter-query", Limit: 50, Offset: 20, OrderBy: "email", Order: "asc", Organization: ouuid, Partner: puuid, Group: "group-name"}
-	userlist, err := us.List(context.Background(), query.WithOptions(qo))
-	if err != nil {
-		t.Fatal("could not list users:", err)
-	}
-	if userlist.Metadata.Count != 2 {
-		t.Fatalf("incorrect number of users returned, expected 2; got %v", userlist.Metadata.Count)
-	}
-
-	if userlist.Items[0].Metadata.Name != "johndoe@provider.com" {
-		t.Errorf("incorrect user names returned when listing; expected '%v' and '%v'; got '%v' and '%v'", "johndoe@provider.com", "johndoe@provider.com", userlist.Items[0].Metadata.Name, userlist.Items[1].Metadata.Name)
-	}
-
-	if len(userlist.Items[0].GetSpec().GetGroups()) != 2 {
-		t.Errorf("invalid number of groups returned for user, expected 2; got '%v'", len(userlist.Items[0].GetSpec().GetGroups()))
-	}
-
-	if len(userlist.Items[0].GetSpec().GetProjectNamespaceRoles()) != 9 {
-		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(userlist.Items[0].GetSpec().GetProjectNamespaceRoles()))
-	}
-	if userlist.Items[0].GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 9 {
-		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", userlist.Items[0].GetSpec().GetProjectNamespaceRoles()[2].Namespace)
-	}
-
-	performBasicAuthProviderChecks(t, *ap, 0, 0, 0, 0)
 }
 
 func TestUserDelete(t *testing.T) {
@@ -680,7 +495,7 @@ func TestUserDelete(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{})
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
 
 	uuuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -689,15 +504,9 @@ func TestUserDelete(t *testing.T) {
 	mock.ExpectQuery(`SELECT "identities"."id" FROM "identities" WHERE .*traits ->> 'email' = 'user-` + uuuid + `'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).AddRow(uuuid, []byte(`{"email":"johndoe@provider.com"}`)))
 	mock.ExpectBegin()
-	mock.ExpectExec(`UPDATE "authsrv_accountresourcerole" AS "accountresourcerole" SET trash = TRUE WHERE`).
-		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(`UPDATE "authsrv_projectaccountresourcerole" AS "projectaccountresourcerole" SET trash = TRUE WHERE`).
-		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(`UPDATE "authsrv_projectaccountnamespacerole" AS "projectaccountnamespacerole" SET trash = TRUE WHERE`).
-		WillReturnResult(sqlmock.NewResult(1, 1))
+	_ = addUserRoleMappingsUpdateExpectation(mock, uuuid)
 	// User delete is via kratos
-	mock.ExpectExec(`UPDATE "authsrv_groupaccount" AS "groupaccount" SET trash = TRUE WHERE`).
-		WillReturnResult(sqlmock.NewResult(1, 1))
+	addUserGroupMappingsUpdateExpectation(mock, uuuid)
 	mock.ExpectCommit()
 
 	user := &userv3.User{

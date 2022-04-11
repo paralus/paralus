@@ -15,6 +15,7 @@ import (
 	"github.com/RafayLabs/rcloud-base/internal/dao"
 	"github.com/RafayLabs/rcloud-base/internal/models"
 	providers "github.com/RafayLabs/rcloud-base/internal/provider/kratos"
+	"github.com/RafayLabs/rcloud-base/pkg/audit"
 	"github.com/RafayLabs/rcloud-base/pkg/common"
 	"github.com/RafayLabs/rcloud-base/pkg/enforcer"
 	"github.com/RafayLabs/rcloud-base/pkg/service"
@@ -51,6 +52,7 @@ const (
 	dbUserEnv     = "DB_USER"
 	dbPasswordEnv = "DB_PASSWORD"
 	kratosAddrEnv = "KRATOS_ADDR"
+	auditFileEnv  = "AUDIT_LOG_FILE"
 )
 
 func addResourcePermissions(db *bun.DB, basePath string) error {
@@ -109,7 +111,9 @@ func main() {
 	viper.SetDefault(dbUserEnv, "admindbuser")
 	viper.SetDefault(dbPasswordEnv, "admindbpassword")
 	viper.SetDefault(kratosAddrEnv, "http://localhost:4433")
+	viper.SetDefault(auditFileEnv, "audit.log")
 
+	viper.BindEnv(auditFileEnv)
 	viper.BindEnv(dbAddrEnv)
 	viper.BindEnv(dbNameEnv)
 	viper.BindEnv(dbUserEnv)
@@ -121,6 +125,7 @@ func main() {
 	dbUser := viper.GetString(dbUserEnv)
 	dbPassword := viper.GetString(dbPasswordEnv)
 	kratosAddr := viper.GetString(kratosAddrEnv)
+	auditFile := viper.GetString(auditFileEnv)
 
 	content, err := ioutil.ReadFile(path.Join("scripts", "initialize", "roles", "ztka", "roles.json"))
 	if err != nil {
@@ -148,6 +153,14 @@ func main() {
 	kratosConfig.Servers[0].URL = kratosAddr
 	kc := kclient.NewAPIClient(kratosConfig)
 
+	ao := audit.AuditOptions{
+		LogPath:    auditFile,
+		MaxSizeMB:  1,
+		MaxBackups: 10, // Should we let sidecar do rotation?
+		MaxAgeDays: 10, // Make these configurable via env
+	}
+	auditLogger := audit.GetAuditLogger(&ao)
+
 	// authz services
 	gormDb, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -159,12 +172,12 @@ func main() {
 	}
 	as := service.NewAuthzService(db, enforcer)
 
-	ps := service.NewPartnerService(db)
-	os := service.NewOrganizationService(db)
-	rs := service.NewRoleService(db, as)
-	gs := service.NewGroupService(db, as)
-	us := service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, nil, common.CliConfigDownloadData{})
-	prs := service.NewProjectService(db, as)
+	ps := service.NewPartnerService(db, auditLogger)
+	os := service.NewOrganizationService(db, auditLogger)
+	rs := service.NewRoleService(db, as, auditLogger)
+	gs := service.NewGroupService(db, as, auditLogger)
+	us := service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, nil, common.CliConfigDownloadData{}, auditLogger)
+	prs := service.NewProjectService(db, as, auditLogger)
 
 	//check if there are role permissions already present
 	existingPermissions := &[]models.ResourceRolePermission{}
@@ -287,6 +300,5 @@ retry:
 		goto retry
 	}
 
-	fmt.Println("Org Admin signup URL: ", orgA.Spec.RecoveryUrl)
-
+	fmt.Println("Org Admin signup URL: ", *orgA.Spec.RecoveryUrl)
 }

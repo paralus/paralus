@@ -21,7 +21,7 @@ func TestCreateOrganization(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	ps := NewOrganizationService(db)
+	ps := NewOrganizationService(db, getLogger())
 
 	puuid := uuid.New().String()
 	ouuid := uuid.New().String()
@@ -47,7 +47,7 @@ func TestCreateOrganizationDuplicate(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	gs := NewOrganizationService(db)
+	gs := NewOrganizationService(db, getLogger())
 
 	ouuid := uuid.New().String()
 
@@ -69,15 +69,15 @@ func TestOrganizationDelete(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	ps := NewOrganizationService(db)
+	ps := NewOrganizationService(db, getLogger())
 
 	ouuid := uuid.New().String()
 
 	mock.ExpectQuery(`SELECT "organization"."id", "organization"."name", .* FROM "authsrv_organization" AS "organization" WHERE`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(ouuid, "organization-"+ouuid))
 
-	mock.ExpectExec(`UPDATE "authsrv_organization"`).
-		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectQuery(`UPDATE "authsrv_organization"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(ouuid, "organization-"+ouuid))
 
 	organization := &systemv3.Organization{
 		Metadata: &v3.Metadata{Id: ouuid, Name: "organization-" + ouuid},
@@ -92,7 +92,7 @@ func TestOrganizationDeleteNonExist(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	ps := NewOrganizationService(db)
+	ps := NewOrganizationService(db, getLogger())
 
 	ouuid := uuid.New().String()
 
@@ -104,7 +104,7 @@ func TestOrganizationDeleteNonExist(t *testing.T) {
 	}
 	_, err := ps.Delete(context.Background(), organization)
 	if err == nil {
-		t.Fatal("deleted non existant organization")
+		t.Fatal("deleted non existent organization")
 	}
 }
 
@@ -112,7 +112,7 @@ func TestOrganizationGetByName(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	ps := NewOrganizationService(db)
+	ps := NewOrganizationService(db, getLogger())
 
 	partuuid := uuid.New().String()
 	ouuid := uuid.New().String()
@@ -137,7 +137,7 @@ func TestOrganizationGetById(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	ps := NewOrganizationService(db)
+	ps := NewOrganizationService(db, getLogger())
 
 	partuuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -162,7 +162,7 @@ func TestOrganizationUpdate(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	ps := NewOrganizationService(db)
+	ps := NewOrganizationService(db, getLogger())
 
 	puuid := uuid.New().String()
 

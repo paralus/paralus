@@ -315,11 +315,20 @@ GET :host/auth/v3/users
 Content-Type: application/yaml
 X-Session-Token: :token
 
+# Get all users with query options
+GET :host/auth/v3/users?partner=:partner&organization=:org&q=user&name=john&order_by=email&project=ALL,:project
+Content-Type: application/yaml
+X-Session-Token: :token
+
 # Get single user
 GET :host/auth/v3/user/:user
 Content-Type: application/yaml
 X-Session-Token: :token
 
+# Get currently logged in user info
+GET :host/auth/v3/userinfo
+Content-Type: application/yaml
+X-Session-Token: :token
 
 # Delete single user
 DELETE :host/auth/v3/user/:user
@@ -477,6 +486,7 @@ X-Session-Token: :token
 
 # Audit by project
 GET :host/event/v1/auditlog?filter.timefrom=now-1h
+X-Session-Token: :token
 
 ## Partner
 
@@ -509,6 +519,24 @@ metadata:
   description: "Very first organizataion"
 spec:
   active: true
+
+# Update organization
+PUT :host/auth/v3/partner/:partner/organization/:org
+Content-Type: application/yaml
+X-Session-Token: :token
+
+metadata:
+  partner: :partner
+  name: :org
+  description: "Very first organizataion"
+spec:
+  active: true
+  settings:
+    idleLogoutMin: 30
+    lockout:
+        enabled: true
+        period_min: 10
+        attempts: 6
 
 # List organizations
 GET :host/auth/v3/partner/:partner/organizations

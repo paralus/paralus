@@ -128,6 +128,22 @@ func GetNameById(ctx context.Context, db bun.IDB, id uuid.UUID, entity interface
 	return entity, nil
 }
 
+func GetNamesByIds(ctx context.Context, db bun.IDB, id []uuid.UUID, entity interface{}) ([]string, error) {
+	names := []string{}
+	if len(id) == 0 {
+		return names, nil
+	}
+	err := db.NewSelect().Column("name").Model(entity).
+		Where("id = (?)", bun.In(id)).
+		Where("trash = ?", false).
+		Scan(ctx, &names)
+	if err != nil {
+		return nil, err
+	}
+
+	return names, nil
+}
+
 func Update(ctx context.Context, db bun.IDB, id uuid.UUID, entity interface{}) (interface{}, error) {
 	if _, err := db.NewUpdate().Model(entity).Where("id  = ?", id).Exec(ctx); err != nil {
 		return nil, err
@@ -147,6 +163,7 @@ func Delete(ctx context.Context, db bun.IDB, id uuid.UUID, entity interface{}) e
 		Model(entity).
 		Column("trash").
 		Where("id  = ?", id).
+		Where("trash = false").
 		Set("trash = ?", true).
 		Exec(ctx)
 	return err
@@ -157,7 +174,34 @@ func DeleteX(ctx context.Context, db bun.IDB, field string, value interface{}, e
 		Model(entity).
 		Column("trash").
 		Where("? = ?", bun.Ident(field), value).
+		Where("trash = false").
 		Set("trash = ?", true).
+		Exec(ctx)
+	return err
+}
+
+// DeleteR delete and returns the changed items
+func DeleteR(ctx context.Context, db bun.IDB, id uuid.UUID, entity interface{}) error {
+	_, err := db.NewUpdate().
+		Model(entity).
+		Column("trash").
+		Where("id  = ?", id).
+		Where("trash = false").
+		Set("trash = ?", true).
+		Returning("*").
+		Exec(ctx)
+	return err
+}
+
+// DeleteXR delete with selector and returns the changed items
+func DeleteXR(ctx context.Context, db bun.IDB, field string, value interface{}, entity interface{}) error {
+	_, err := db.NewUpdate().
+		Model(entity).
+		Column("trash").
+		Where("? = ?", bun.Ident(field), value).
+		Where("trash = false").
+		Set("trash = ?", true).
+		Returning("*").
 		Exec(ctx)
 	return err
 }

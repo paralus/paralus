@@ -2,7 +2,6 @@ package audit
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -10,7 +9,7 @@ import (
 
 	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	"github.com/Shopify/sarama"
+	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -46,11 +45,12 @@ type EventActorAccount struct {
 
 // EventActor Event's initiator
 type EventActor struct {
-	Type           string            `json:"type"`
-	PartnerID      string            `json:"partner_id"`
-	OrganizationID string            `json:"organization_id"`
-	Account        EventActorAccount `json:"account"`
-	Groups         []string          `json:"groups"`
+	Type string `json:"type"`
+	// Add org and partner id once we have multi-org support
+	// PartnerID      string            `json:"partner_id"`
+	// OrganizationID string            `json:"organization_id"`
+	Account EventActorAccount `json:"account"`
+	Groups  []string          `json:"groups"`
 }
 
 // EventClient Event's client
@@ -69,22 +69,19 @@ type EventDetail struct {
 
 // Event is struct to hold event data
 type Event struct {
-	Version        EventVersion  `json:"version"`
-	Category       EventCategory `json:"category"`
-	Origin         EventOrigin   `json:"origin"`
-	Portal         string        `json:"portal"`
-	Type           string        `json:"type"`
-	PartnerID      string        `json:"partner_id"`
-	OrganizationID string        `json:"organization_id"`
-	ProjectID      string        `json:"project_id"`
-	Actor          *EventActor   `json:"actor"`
-	Client         *EventClient  `json:"client"`
-	Detail         *EventDetail  `json:"detail"`
-	Timestamp      string        `json:"timestamp"`
+	Version   EventVersion  `json:"version"`
+	Category  EventCategory `json:"category"`
+	Origin    EventOrigin   `json:"origin"`
+	Portal    string        `json:"portal"`
+	Type      string        `json:"type"`
+	ProjectID string        `json:"project_id"`
+	Actor     *EventActor   `json:"actor"`
+	Client    *EventClient  `json:"client"`
+	Detail    *EventDetail  `json:"detail"`
+	Timestamp string        `json:"timestamp"`
 }
 
 type createEventOptions struct {
-	producer       sarama.AsyncProducer
 	version        EventVersion
 	origin         EventOrigin
 	category       EventCategory
@@ -96,13 +93,6 @@ type createEventOptions struct {
 	accountID      string
 	username       string
 	groups         []string
-}
-
-// WithProducer sets producer for audit event
-func WithProducer(producer sarama.AsyncProducer) CreateEventOption {
-	return func(opts *createEventOptions) {
-		opts.producer = producer
-	}
 }
 
 // WithVersion sets version for audit event
@@ -186,16 +176,11 @@ func WithGroups(groups []string) CreateEventOption {
 type CreateEventOption func(opts *createEventOptions)
 
 // CreateEvent creates an event
-func CreateEvent(event *Event, opts ...CreateEventOption) error {
+func CreateEvent(al *zap.Logger, event *Event, opts ...CreateEventOption) error {
 
 	cOpts := createEventOptions{}
 	for _, opt := range opts {
 		opt(&cOpts)
-	}
-
-	if cOpts.producer == nil {
-		_log.Infow("audit event producer is nil")
-		return fmt.Errorf("audit even producer is nil")
 	}
 
 	t := time.Now()
@@ -209,8 +194,6 @@ func CreateEvent(event *Event, opts ...CreateEventOption) error {
 	event.Category = cOpts.category
 	event.Origin = cOpts.origin
 
-	event.PartnerID = cOpts.partnerID
-	event.OrganizationID = cOpts.organizationID
 	event.ProjectID = cOpts.projectID
 
 	if event.Client == nil {
@@ -221,16 +204,7 @@ func CreateEvent(event *Event, opts ...CreateEventOption) error {
 		event.Actor = getActor(cOpts)
 	}
 
-	payload, err := json.Marshal(event)
-	if err != nil {
-		_log.Infow("unable to marshal audit event", "error", err)
-		return err
-	}
-	rawMessage := &sarama.ProducerMessage{
-		Topic: string(cOpts.topic),
-		Value: sarama.ByteEncoder(payload),
-	}
-	cOpts.producer.Input() <- rawMessage
+	go WriteEvent(event, al)
 	return nil
 }
 
@@ -279,36 +253,25 @@ func getActor(cOpts createEventOptions) *EventActor {
 		Username: cOpts.username,
 	}
 	return &EventActor{
-		Type:           "USER",
-		PartnerID:      cOpts.partnerID,
-		OrganizationID: cOpts.organizationID,
-		Account:        account,
-		Groups:         cOpts.groups,
+		Type:    "USER",
+		Account: account,
+		Groups:  cOpts.groups,
 	}
 }
 
 func GetActorFromSessionData(sd *commonv3.SessionData) *EventActor {
-	pid := sd.GetPartner()
-	oid := sd.GetOrganization()
 	accountID := sd.GetAccount()
 	username := sd.GetUsername()
 	account := EventActorAccount{
 		ID:       accountID,
 		Username: username,
 	}
-	groups := sd.Groups
-
-	// Set org id to string "null" for users with PARTNER_ADMIN role
-	if oid == "" {
-		oid = "null"
-	}
+	groups := sd.Groups // TODO: get groups (in interceptor?)
 
 	return &EventActor{
-		Type:           "USER",
-		PartnerID:      pid,
-		OrganizationID: oid,
-		Account:        account,
-		Groups:         groups,
+		Type:    "USER",
+		Account: account,
+		Groups:  groups,
 	}
 }
 
@@ -318,6 +281,15 @@ func GetClientFromRequest(r *http.Request) *EventClient {
 		IP:        r.Header.Get("X-Forwarded-For"),
 		UserAgent: r.UserAgent(),
 		Host:      r.Host,
+	}
+}
+
+func GetClientFromSessionData(sd *commonv3.SessionData) *EventClient {
+	return &EventClient{
+		Type:      "BROWSER",
+		IP:        sd.GetClientIp(),
+		UserAgent: sd.GetClientUa(),
+		Host:      sd.GetClientHost(),
 	}
 }
 
@@ -332,4 +304,43 @@ func GetEvent(r *http.Request, sd *commonv3.SessionData, detail *EventDetail, ev
 	}
 
 	return event
+}
+
+func CreateV1Event(al *zap.Logger, sd *commonv3.SessionData, detail *EventDetail, eventType string, projectID string) error {
+	actor := GetActorFromSessionData(sd)
+	client := GetClientFromSessionData(sd)
+
+	if projectID == "" {
+		projectID = "null"
+	}
+
+	event := &Event{
+		Version:   VersionV1,
+		Category:  AuditCategory,
+		Origin:    OriginCore,
+		Actor:     actor,
+		Client:    client,
+		Detail:    detail,
+		Type:      eventType,
+		Portal:    "OPS", // TODO: What is the portal?
+		ProjectID: projectID,
+	}
+
+	go WriteEvent(event, al)
+	return nil
+}
+
+func WriteEvent(event *Event, al *zap.Logger) {
+	al.Info(
+		"audit",
+		zap.String("version", string(event.Version)),
+		zap.String("category", string(event.Category)),
+		zap.String("origin", string(event.Origin)),
+		zap.Reflect("actor", event.Actor),
+		zap.Reflect("client", event.Client),
+		zap.Reflect("detail", event.Detail),
+		zap.String("type", event.Type),
+		zap.String("portal", event.Portal),
+		zap.String("project_id", event.ProjectID),
+	)
 }

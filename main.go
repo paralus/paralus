@@ -14,6 +14,7 @@ import (
 
 	"github.com/RafayLabs/rcloud-base/internal/fixtures"
 	providers "github.com/RafayLabs/rcloud-base/internal/provider/kratos"
+	"github.com/RafayLabs/rcloud-base/pkg/audit"
 	authv3 "github.com/RafayLabs/rcloud-base/pkg/auth/v3"
 	"github.com/RafayLabs/rcloud-base/pkg/common"
 	"github.com/RafayLabs/rcloud-base/pkg/enforcer"
@@ -70,6 +71,7 @@ const (
 	relayImageEnv             = "RELAY_IMAGE"
 
 	// audit
+	auditFileEnv               = "AUDIT_LOG_FILE"
 	esEndPointEnv              = "ES_END_POINT"
 	esIndexPrefixEnv           = "ES_INDEX_PREFIX"
 	relayAuditESIndexPrefixEnv = "RELAY_AUDITS_ES_INDEX_PREFIX"
@@ -110,6 +112,7 @@ var (
 	relayImage             string
 
 	// audit
+	auditFile                  string
 	elasticSearchUrl           string
 	esIndexPrefix              string
 	relayAuditsESIndexPrefix   string
@@ -186,6 +189,7 @@ func setup() {
 	viper.SetDefault(esIndexPrefixEnv, "events-core")
 	viper.SetDefault(relayAuditESIndexPrefixEnv, "relay-audits")
 	viper.SetDefault(relayCommandESIndexPrefix, "relay-commands")
+	viper.SetDefault(auditFileEnv, "audit.log")
 
 	// cd relay
 	viper.SetDefault(coreCDRelayUserHostEnv, "*.user.cdrelay.rafay.local:10012")
@@ -217,6 +221,7 @@ func setup() {
 	viper.BindEnv(relayImageEnv)
 	viper.BindEnv(schedulerNamespaceEnv)
 
+	viper.BindEnv(auditFileEnv)
 	viper.BindEnv(esEndPointEnv)
 	viper.BindEnv(esIndexPrefixEnv)
 	viper.BindEnv(relayAuditESIndexPrefixEnv)
@@ -244,6 +249,7 @@ func setup() {
 	relayImage = viper.GetString(relayImageEnv)
 	schedulerNamespace = viper.GetString(schedulerNamespaceEnv)
 
+	auditFile = viper.GetString(auditFileEnv)
 	elasticSearchUrl = viper.GetString(esEndPointEnv)
 	esIndexPrefix = viper.GetString(esIndexPrefixEnv)
 	relayAuditsESIndexPrefix = viper.GetString(relayAuditESIndexPrefixEnv)
@@ -274,6 +280,14 @@ func setup() {
 
 	_log.Infow("printing db", "db", db)
 
+	ao := audit.AuditOptions{
+		LogPath:    auditFile,
+		MaxSizeMB:  1,
+		MaxBackups: 10, // Should we let sidecar do rotation?
+		MaxAgeDays: 10, // Make these configurable via env
+	}
+	auditLogger := audit.GetAuditLogger(&ao)
+
 	// authz services
 	gormDb, err := gorm.Open(postgres.New(postgres.Config{
 		Conn: sqldb,
@@ -289,9 +303,9 @@ func setup() {
 
 	schedulerPool = schedulerrpc.NewSchedulerPool(schedulerAddr, 5*goruntime.NumCPU())
 
-	ps = service.NewPartnerService(db)
-	os = service.NewOrganizationService(db)
-	pps = service.NewProjectService(db, as)
+	ps = service.NewPartnerService(db, auditLogger)
+	os = service.NewOrganizationService(db, auditLogger)
+	pps = service.NewProjectService(db, as, auditLogger)
 
 	// users and role management services
 	cc := common.CliConfigDownloadData{
@@ -303,13 +317,13 @@ func setup() {
 	} else {
 		cc.Profile = "production"
 	}
-	ks = service.NewApiKeyService(db)
-	us = service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, ks, cc)
-	gs = service.NewGroupService(db, as)
-	rs = service.NewRoleService(db, as)
+	ks = service.NewApiKeyService(db, auditLogger)
+	us = service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, ks, cc, auditLogger)
+	gs = service.NewGroupService(db, as, auditLogger)
+	rs = service.NewRoleService(db, as, auditLogger)
 	rrs = service.NewRolepermissionService(db)
-	is = service.NewIdpService(db, apiAddr)
-	oidcs = service.NewOIDCProviderService(db, kratosAddr)
+	is = service.NewIdpService(db, apiAddr, auditLogger)
+	oidcs = service.NewOIDCProviderService(db, kratosAddr, auditLogger)
 
 	//sentry related services
 	bs = service.NewBootstrapService(db)
@@ -355,7 +369,7 @@ func setup() {
 		RelayAgentImage: relayImage,
 	}
 
-	cs = service.NewClusterService(db, downloadData, bs)
+	cs = service.NewClusterService(db, downloadData, bs, auditLogger)
 	ms = service.NewMetroService(db)
 
 	notify.Init(cs)

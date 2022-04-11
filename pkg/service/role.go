@@ -14,6 +14,7 @@ import (
 	rolev3 "github.com/RafayLabs/rcloud-base/proto/types/rolepb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -42,11 +43,12 @@ type RoleService interface {
 type roleService struct {
 	db  *bun.DB
 	azc AuthzService
+	al  *zap.Logger
 }
 
 // NewRoleService return new role service
-func NewRoleService(db *bun.DB, azc AuthzService) RoleService {
-	return &roleService{db: db, azc: azc}
+func NewRoleService(db *bun.DB, azc AuthzService, al *zap.Logger) RoleService {
+	return &roleService{db: db, azc: azc, al: al}
 }
 
 func (s *roleService) getPartnerOrganization(ctx context.Context, db bun.IDB, role *rolev3.Role) (uuid.UUID, uuid.UUID, error) {
@@ -166,17 +168,20 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 			tx.Rollback()
 			return &rolev3.Role{}, err
 		}
-	} else {
-		tx.Rollback()
-		return &rolev3.Role{}, fmt.Errorf("unable to create role '%v'", role.GetMetadata().GetName())
+
+		err = tx.Commit()
+		if err != nil {
+			tx.Rollback()
+			_log.Warn("unable to commit changes", err)
+		}
+
+		CreateRoleAuditEvent(ctx, s.al, AuditActionCreate, role.GetMetadata().GetName(), createdRole.ID, role.GetSpec().GetRolepermissions())
+
+		return role, nil
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		tx.Rollback()
-		_log.Warn("unable to commit changes", err)
-	}
-	return role, nil
+	tx.Rollback()
+	return &rolev3.Role{}, fmt.Errorf("unable to create role '%v'", role.GetMetadata().GetName())
 
 }
 
@@ -279,6 +284,8 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 			tx.Rollback()
 			_log.Warn("unable to commit changes", err)
 		}
+
+		CreateRoleAuditEvent(ctx, s.al, AuditActionUpdate, role.GetMetadata().GetName(), rle.ID, role.GetSpec().GetRolepermissions())
 		return role, nil
 	}
 	return &rolev3.Role{}, fmt.Errorf("unable to update role '%v'", role.GetMetadata().GetName())
@@ -321,6 +328,8 @@ func (s *roleService) Delete(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 			tx.Rollback()
 			_log.Warn("unable to commit changes", err)
 		}
+
+		CreateRoleAuditEvent(ctx, s.al, AuditActionDelete, role.GetMetadata().GetName(), rle.ID, []string{})
 		return role, nil
 	}
 

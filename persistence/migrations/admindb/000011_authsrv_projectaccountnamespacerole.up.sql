@@ -33,10 +33,6 @@ CREATE INDEX authsrv_projectaccountnamespacerole_project_id_66e567ed ON authsrv_
 CREATE INDEX authsrv_projectaccountnamespacerole_role_id_8a5411cc ON authsrv_projectaccountnamespacerole USING btree (role_id);
 
 ALTER TABLE ONLY authsrv_projectaccountnamespacerole
-    ADD CONSTRAINT authsrv_projectaccou_account_id_4fac0ac2_fk_authsrv_a FOREIGN KEY (account_id) 
-    REFERENCES identities(id) DEFERRABLE INITIALLY DEFERRED;
-
-ALTER TABLE ONLY authsrv_projectaccountnamespacerole
     ADD CONSTRAINT authsrv_projectaccou_organization_id_96c921c9_fk_authsrv_o FOREIGN KEY (organization_id) 
     REFERENCES authsrv_organization(id) DEFERRABLE INITIALLY DEFERRED;
 

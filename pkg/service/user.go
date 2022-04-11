@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/RafayLabs/rcloud-base/internal/dao"
@@ -54,6 +55,7 @@ type userService struct {
 	azc AuthzService
 	ks  ApiKeyService
 	cc  common.CliConfigDownloadData
+	al  *zap.Logger
 }
 
 type userTraits struct {
@@ -70,8 +72,8 @@ type parsedIds struct {
 	Organization uuid.UUID
 }
 
-func NewUserService(ap providers.AuthProvider, db *bun.DB, azc AuthzService, kss ApiKeyService, cfg common.CliConfigDownloadData) UserService {
-	return &userService{ap: ap, db: db, azc: azc, ks: kss, cc: cfg}
+func NewUserService(ap providers.AuthProvider, db *bun.DB, azc AuthzService, kss ApiKeyService, cfg common.CliConfigDownloadData, al *zap.Logger) UserService {
+	return &userService{ap: ap, db: db, azc: azc, ks: kss, cc: cfg, al: al}
 }
 
 func getUserTraits(traits map[string]interface{}) userTraits {
@@ -102,18 +104,18 @@ func getUserTraits(traits map[string]interface{}) userTraits {
 }
 
 // Map roles to accounts
-func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, user *userv3.User, ids parsedIds) (*userv3.User, error) {
+func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, user *userv3.User, ids parsedIds) (*userv3.User, []uuid.UUID, error) {
 	projectNamespaceRoles := user.GetSpec().GetProjectNamespaceRoles()
 
-	// TODO: add transactions
 	var pars []models.ProjectAccountResourcerole
 	var ars []models.AccountResourcerole
 	var ps []*authzv1.Policy
+	var rids []uuid.UUID
 	for _, pnr := range projectNamespaceRoles {
 		role := pnr.GetRole()
 		entity, err := dao.GetByName(ctx, db, role, &models.Role{})
 		if err != nil {
-			return &userv3.User{}, fmt.Errorf("unable to find role '%v'", role)
+			return &userv3.User{}, nil, fmt.Errorf("unable to find role '%v'", role)
 		}
 		var roleId uuid.UUID
 		var roleName string
@@ -121,9 +123,10 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 		if rle, ok := entity.(*models.Role); ok {
 			roleId = rle.ID
 			roleName = rle.Name
+			rids = append(rids, rle.ID)
 			scope = strings.ToLower(rle.Scope)
 		} else {
-			return &userv3.User{}, fmt.Errorf("unable to find role '%v'", role)
+			return &userv3.User{}, nil, fmt.Errorf("unable to find role '%v'", role)
 		}
 
 		project := pnr.GetProject()
@@ -153,7 +156,7 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 			})
 		case "organization":
 			if org == "" {
-				return &userv3.User{}, fmt.Errorf("no org name provided for role '%v'", roleName)
+				return &userv3.User{}, nil, fmt.Errorf("no org name provided for role '%v'", roleName)
 			}
 
 			ar := models.AccountResourcerole{
@@ -178,14 +181,14 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 			})
 		case "project":
 			if org == "" {
-				return &userv3.User{}, fmt.Errorf("no org name provided for role '%v'", roleName)
+				return &userv3.User{}, nil, fmt.Errorf("no org name provided for role '%v'", roleName)
 			}
 			if project == "" {
-				return &userv3.User{}, fmt.Errorf("no project name provided for role '%v'", roleName)
+				return &userv3.User{}, nil, fmt.Errorf("no project name provided for role '%v'", roleName)
 			}
 			projectId, err := dao.GetProjectId(ctx, db, project)
 			if err != nil {
-				return user, fmt.Errorf("unable to find project '%v'", project)
+				return user, nil, fmt.Errorf("unable to find project '%v'", project)
 			}
 			par := models.ProjectAccountResourcerole{
 				CreatedAt:      time.Now(),
@@ -210,43 +213,43 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 			})
 		default:
 			if err != nil {
-				return user, fmt.Errorf("namespace specific roles are not handled")
+				return user, nil, fmt.Errorf("namespace specific roles are not handled")
 			}
 		}
 	}
 	if len(pars) > 0 {
 		_, err := dao.Create(ctx, db, &pars)
 		if err != nil {
-			return &userv3.User{}, err
+			return &userv3.User{}, nil, err
 		}
 	}
 	if len(ars) > 0 {
 		_, err := dao.Create(ctx, db, &ars)
 		if err != nil {
-			return &userv3.User{}, err
+			return &userv3.User{}, nil, err
 		}
 	}
 
 	if len(ps) > 0 {
 		success, err := s.azc.CreatePolicies(ctx, &authzv1.Policies{Policies: ps})
 		if err != nil || !success.Res {
-			return &userv3.User{}, fmt.Errorf("unable to create mapping in authz; %v", err)
+			return &userv3.User{}, nil, fmt.Errorf("unable to create mapping in authz; %v", err)
 		}
 	}
 
-	return user, nil
+	return user, rids, nil
 }
 
 // Update the groups mapped to each user(account)
-func (s *userService) createGroupAccountRelations(ctx context.Context, db bun.IDB, userId uuid.UUID, usr *userv3.User) (*userv3.User, error) {
-	// TODO: add transactions
+func (s *userService) createGroupAccountRelations(ctx context.Context, db bun.IDB, userId uuid.UUID, usr *userv3.User) (*userv3.User, []uuid.UUID, error) {
 	var grpaccs []models.GroupAccount
 	var ugs []*authzv1.UserGroup
+	var ids []uuid.UUID
 	for _, group := range unique(usr.GetSpec().GetGroups()) {
 		// FIXME: do combined lookup
 		entity, err := dao.GetByName(ctx, s.db, group, &models.Group{})
 		if err != nil {
-			return &userv3.User{}, fmt.Errorf("unable to find group '%v'", group)
+			return &userv3.User{}, nil, fmt.Errorf("unable to find group '%v'", group)
 		}
 		if grp, ok := entity.(*models.Group); ok {
 			grp := models.GroupAccount{
@@ -257,6 +260,7 @@ func (s *userService) createGroupAccountRelations(ctx context.Context, db bun.ID
 				GroupId:    grp.ID,
 				Active:     true,
 			}
+			ids = append(ids, grp.ID)
 			grpaccs = append(grpaccs, grp)
 			ugs = append(ugs, &authzv1.UserGroup{
 				Grp:  "g:" + group,
@@ -265,34 +269,38 @@ func (s *userService) createGroupAccountRelations(ctx context.Context, db bun.ID
 		}
 	}
 	if len(grpaccs) == 0 {
-		return usr, nil
+		return usr, []uuid.UUID{}, nil
 	}
 	_, err := dao.Create(ctx, db, &grpaccs)
 	if err != nil {
-		return &userv3.User{}, err
+		return &userv3.User{}, []uuid.UUID{}, err
 	}
 
-	// TODO: revert our db inserts if this fails
-	// Just FYI, the success can be false if we delete the db directly but casbin has it available internally
 	_, err = s.azc.CreateUserGroups(ctx, &authzv1.UserGroups{UserGroups: ugs})
 	if err != nil {
-		return &userv3.User{}, fmt.Errorf("unable to create mapping in authz; %v", err)
+		return &userv3.User{}, []uuid.UUID{}, fmt.Errorf("unable to create mapping in authz; %v", err)
 	}
 
-	return usr, nil
+	return usr, ids, nil
 }
 
-func (s *userService) deleteGroupAccountRelations(ctx context.Context, db bun.IDB, userId uuid.UUID, usr *userv3.User) (*userv3.User, error) {
-	err := dao.DeleteX(ctx, db, "account_id", userId, &models.GroupAccount{})
+func (s *userService) deleteGroupAccountRelations(ctx context.Context, db bun.IDB, userId uuid.UUID, usr *userv3.User) (*userv3.User, []uuid.UUID, error) {
+	ugs := []models.GroupAccount{}
+	ids := []uuid.UUID{}
+	err := dao.DeleteXR(ctx, db, "account_id", userId, &ugs)
 	if err != nil {
-		return &userv3.User{}, fmt.Errorf("unable to delete user; %v", err)
+		return &userv3.User{}, ids, fmt.Errorf("unable to delete user; %v", err)
 	}
 
 	_, err = s.azc.DeleteUserGroups(ctx, &authzv1.UserGroup{Grp: "u:" + usr.GetMetadata().GetName()})
 	if err != nil {
-		return &userv3.User{}, fmt.Errorf("unable to delete group-user relations from authz; %v", err)
+		return &userv3.User{}, ids, fmt.Errorf("unable to delete group-user relations from authz; %v", err)
 	}
-	return usr, nil
+
+	for _, ug := range ugs {
+		ids = append(ids, ug.GroupId)
+	}
+	return usr, ids, nil
 }
 
 // FIXME: make this generic
@@ -312,7 +320,6 @@ func (s *userService) getPartnerOrganization(ctx context.Context, db bun.IDB, us
 }
 
 func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.User, error) {
-	// TODO: restrict endpoint to admin
 	partnerId, organizationId, err := s.getPartnerOrganization(ctx, s.db, user)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get partner and org id")
@@ -336,13 +343,13 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 		return &userv3.User{}, err
 	}
 
-	user, err = s.createUserRoleRelations(ctx, tx, user, parsedIds{Id: uid, Partner: partnerId, Organization: organizationId})
+	user, rolesAfter, err := s.createUserRoleRelations(ctx, tx, user, parsedIds{Id: uid, Partner: partnerId, Organization: organizationId})
 	if err != nil {
 		tx.Rollback()
 		return &userv3.User{}, err
 	}
 
-	user, err = s.createGroupAccountRelations(ctx, tx, uuid.MustParse(id), user)
+	user, groupsAfter, err := s.createGroupAccountRelations(ctx, tx, uuid.MustParse(id), user)
 	if err != nil {
 		tx.Rollback()
 		return &userv3.User{}, err
@@ -361,6 +368,7 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 	}
 	user.Spec.RecoveryUrl = &rl
 
+	CreateUserAuditEvent(ctx, s.al, s.db, AuditActionCreate, user.GetMetadata().GetName(), uid, []uuid.UUID{}, rolesAfter, []uuid.UUID{}, groupsAfter)
 	return user, nil
 }
 
@@ -452,10 +460,10 @@ func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3
 }
 
 func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*userv3.UserInfo, error) {
-	sd, ok := ctx.Value(common.SessionDataKey).(*commonv3.SessionData)
+	sd, ok := GetSessionDataFromContext(ctx)
 	username := ""
 	if !ok {
-		return &userv3.UserInfo{}, fmt.Errorf("cannot perform project listing without auth")
+		return &userv3.UserInfo{}, fmt.Errorf("cannot get user info without auth")
 	}
 	username = sd.Username
 
@@ -517,26 +525,42 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 	return &userv3.UserInfo{}, fmt.Errorf("unable to get user info")
 }
 
-func (s *userService) deleteUserRoleRelations(ctx context.Context, db bun.IDB, userId uuid.UUID, user *userv3.User) error {
-	err := dao.DeleteX(ctx, db, "account_id", userId, &models.AccountResourcerole{})
+func (s *userService) deleteUserRoleRelations(ctx context.Context, db bun.IDB, userId uuid.UUID, user *userv3.User) ([]uuid.UUID, error) {
+	ids := []uuid.UUID{}
+
+	ar := []models.AccountResourcerole{}
+	err := dao.DeleteXR(ctx, db, "account_id", userId, &ar)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	err = dao.DeleteX(ctx, db, "account_id", userId, &models.ProjectAccountResourcerole{})
-	if err != nil {
-		return err
+	for _, r := range ar {
+		ids = append(ids, r.RoleId)
 	}
-	err = dao.DeleteX(ctx, db, "account_id", userId, &models.ProjectAccountNamespaceRole{})
+
+	par := []models.ProjectAccountResourcerole{}
+	err = dao.DeleteXR(ctx, db, "account_id", userId, &par)
 	if err != nil {
-		return err
+		return nil, err
+	}
+	for _, r := range par {
+		ids = append(ids, r.RoleId)
+	}
+
+	panr := []models.ProjectAccountNamespaceRole{}
+	err = dao.DeleteXR(ctx, db, "account_id", userId, &panr)
+	if err != nil {
+		return nil, err
+	}
+	for _, r := range panr {
+		ids = append(ids, r.RoleId)
 	}
 
 	_, err = s.azc.DeletePolicies(ctx, &authzv1.Policy{Sub: "u:" + user.GetMetadata().GetName()})
 	if err != nil {
-		return fmt.Errorf("unable to delete user-role relations from authz; %v", err)
+		return nil, fmt.Errorf("unable to delete user-role relations from authz; %v", err)
 	}
 
-	return nil
+	return ids, nil
 }
 
 func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.User, error) {
@@ -566,25 +590,25 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 			return &userv3.User{}, err
 		}
 
-		err = s.deleteUserRoleRelations(ctx, tx, usr.ID, user)
+		rolesBefore, err := s.deleteUserRoleRelations(ctx, tx, usr.ID, user)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.User{}, err
 		}
 
-		user, err = s.deleteGroupAccountRelations(ctx, tx, usr.ID, user)
+		user, groupsBefore, err := s.deleteGroupAccountRelations(ctx, tx, usr.ID, user)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.User{}, err
 		}
 
-		user, err = s.createUserRoleRelations(ctx, tx, user, parsedIds{Id: usr.ID, Partner: partnerId, Organization: organizationId})
+		user, rolesAfter, err := s.createUserRoleRelations(ctx, tx, user, parsedIds{Id: usr.ID, Partner: partnerId, Organization: organizationId})
 		if err != nil {
 			tx.Rollback()
 			return &userv3.User{}, err
 		}
 
-		user, err = s.createGroupAccountRelations(ctx, tx, usr.ID, user)
+		user, groupsAfter, err := s.createGroupAccountRelations(ctx, tx, usr.ID, user)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.User{}, err
@@ -595,6 +619,8 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 			tx.Rollback()
 			_log.Warn("unable to commit changes", err)
 		}
+
+		CreateUserAuditEvent(ctx, s.al, s.db, AuditActionUpdate, user.GetMetadata().GetName(), usr.ID, rolesBefore, rolesAfter, groupsBefore, groupsAfter)
 		return user, nil
 
 	} else {
@@ -617,10 +643,16 @@ func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3
 			return &userrpcv3.DeleteUserResponse{}, err
 		}
 
-		err = s.deleteUserRoleRelations(ctx, tx, usr.ID, user)
+		rolesBefore, err := s.deleteUserRoleRelations(ctx, tx, usr.ID, user)
 		if err != nil {
 			tx.Rollback()
 			return &userrpcv3.DeleteUserResponse{}, err
+		}
+
+		user, groupsBefore, err := s.deleteGroupAccountRelations(ctx, tx, usr.ID, user)
+		if err != nil {
+			tx.Rollback()
+			return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("unable to delete user; %v", err)
 		}
 
 		err = s.ap.Delete(ctx, usr.ID.String())
@@ -629,17 +661,13 @@ func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3
 			return &userrpcv3.DeleteUserResponse{}, err
 		}
 
-		err = dao.DeleteX(ctx, tx, "account_id", usr.ID, &models.GroupAccount{})
-		if err != nil {
-			tx.Rollback()
-			return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("unable to delete user; %v", err)
-		}
-
 		err = tx.Commit()
 		if err != nil {
 			tx.Rollback()
 			_log.Warn("unable to commit changes", err)
 		}
+
+		CreateUserAuditEvent(ctx, s.al, s.db, AuditActionDelete, user.GetMetadata().GetName(), usr.ID, rolesBefore, []uuid.UUID{}, groupsBefore, []uuid.UUID{})
 		return &userrpcv3.DeleteUserResponse{}, nil
 	}
 	return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("unable to delete user '%v'", user.Metadata.Name)

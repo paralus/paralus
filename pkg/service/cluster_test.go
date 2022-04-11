@@ -30,7 +30,7 @@ func TestCreateCluster(t *testing.T) {
 		RelayAgentImage: "rafaysystems/relay:latest",
 	}
 
-	ps := NewClusterService(db, downloadData, NewBootstrapService(db))
+	ps := NewClusterService(db, downloadData, NewBootstrapService(db), getLogger())
 
 	puuid := uuid.New().String()
 	cuuid := uuid.New().String()
@@ -74,7 +74,7 @@ func TestUpdateCluster(t *testing.T) {
 		RelayAgentImage: "rafaysystems/relay:latest",
 	}
 
-	ps := NewClusterService(db, downloadData, NewBootstrapService(db))
+	ps := NewClusterService(db, downloadData, NewBootstrapService(db), getLogger())
 
 	puuid := uuid.New().String()
 	cuuid := uuid.New().String()
@@ -108,7 +108,7 @@ func TestSelectCluster(t *testing.T) {
 		RelayAgentImage: "rafaysystems/relay:latest",
 	}
 
-	ps := NewClusterService(db, downloadData, NewBootstrapService(db))
+	ps := NewClusterService(db, downloadData, NewBootstrapService(db), getLogger())
 
 	puuid := uuid.New().String()
 	cuuid := uuid.New().String()
@@ -142,7 +142,7 @@ func TestGetCluster(t *testing.T) {
 		RelayAgentImage: "rafaysystems/relay:latest",
 	}
 
-	ps := NewClusterService(db, downloadData, NewBootstrapService(db))
+	ps := NewClusterService(db, downloadData, NewBootstrapService(db), getLogger())
 
 	puuid := uuid.New().String()
 	cuuid := uuid.New().String()
@@ -175,7 +175,7 @@ func TestListCluster(t *testing.T) {
 		RelayAgentImage: "rafaysystems/relay:latest",
 	}
 
-	ps := NewClusterService(db, downloadData, NewBootstrapService(db))
+	ps := NewClusterService(db, downloadData, NewBootstrapService(db), getLogger())
 
 	puuid := uuid.New().String()
 	ouuid := uuid.New().String()

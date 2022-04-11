@@ -10,6 +10,7 @@ import (
 	"github.com/RafayLabs/rcloud-base/pkg/service"
 	kclient "github.com/ory/kratos-client-go"
 	"github.com/uptrace/bun"
+	"go.uber.org/zap"
 
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
@@ -40,7 +41,7 @@ type authContext struct {
 // SetupAuthContext sets up new authContext along with its
 // dependencies. If the caller already has instances of authContext
 // fields created then use NewAuthContext instead.
-func SetupAuthContext() authContext {
+func SetupAuthContext(auditLogger *zap.Logger) authContext {
 	var (
 		kc           *kclient.APIClient
 		kratosScheme string
@@ -85,7 +86,7 @@ func SetupAuthContext() authContext {
 	}
 	as := service.NewAuthzService(db, enforcer)
 
-	return authContext{kc: kc, as: as, ks: service.NewApiKeyService(db)}
+	return authContext{kc: kc, as: as, ks: service.NewApiKeyService(db, auditLogger)}
 }
 
 func getEnvWithDefault(env, def string) string {

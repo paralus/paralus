@@ -70,9 +70,12 @@ message SessionData {
     string idp = 15;
     map<string, bool> is_org_admin = 16;
     ClientType client_type = 17;
-    map<string, bool> is_all_ns_access = 18;
-    repeated NamespaceData namespaces = 19;
-    ProjectData project = 20;
+    string client_host = 18;
+    string client_ip = 19;
+    string client_ua = 20;
+    map<string, bool> is_all_ns_access = 21;
+    repeated NamespaceData namespaces = 22;
+    ProjectData project = 23;
 }
 
 message IsRequestAllowedResponse {

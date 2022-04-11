@@ -16,6 +16,7 @@ import (
 	userv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -44,49 +45,66 @@ type GroupService interface {
 type groupService struct {
 	db  *bun.DB
 	azc AuthzService
+	al  *zap.Logger
 }
 
 // NewGroupService return new group service
-func NewGroupService(db *bun.DB, azc AuthzService) GroupService {
-	return &groupService{db: db, azc: azc}
+func NewGroupService(db *bun.DB, azc AuthzService, al *zap.Logger) GroupService {
+	return &groupService{db: db, azc: azc, al: al}
 }
 
-func (s *groupService) deleteGroupRoleRelaitons(ctx context.Context, db bun.IDB, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, error) {
-	// delete previous entries
+// deleteGroupRoleRelaitons deletes existing group-role relations
+func (s *groupService) deleteGroupRoleRelaitons(ctx context.Context, db bun.IDB, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, []uuid.UUID, error) {
 	// TODO: single delete command
-	err := dao.DeleteX(ctx, db, "group_id", groupId, &models.GroupRole{})
+	ids := []uuid.UUID{}
+	gr := []models.GroupRole{}
+	err := dao.DeleteXR(ctx, db, "group_id", groupId, &gr)
 	if err != nil {
-		return &userv3.Group{}, err
+		return &userv3.Group{}, nil, err
 	}
-	err = dao.DeleteX(ctx, db, "group_id", groupId, &models.ProjectGroupRole{})
-	if err != nil {
-		return &userv3.Group{}, err
+	for _, r := range gr {
+		ids = append(ids, r.RoleId)
 	}
-	err = dao.DeleteX(ctx, db, "group_id", groupId, &models.ProjectGroupNamespaceRole{})
+
+	pgr := []models.ProjectGroupRole{}
+	err = dao.DeleteXR(ctx, db, "group_id", groupId, &pgr)
 	if err != nil {
-		return &userv3.Group{}, err
+		return &userv3.Group{}, nil, err
+	}
+	for _, r := range pgr {
+		ids = append(ids, r.RoleId)
+	}
+
+	pgnr := []models.ProjectGroupNamespaceRole{}
+	err = dao.DeleteXR(ctx, db, "group_id", groupId, &pgnr)
+	if err != nil {
+		return &userv3.Group{}, nil, err
+	}
+	for _, r := range pgnr {
+		ids = append(ids, r.RoleId)
 	}
 
 	_, err = s.azc.DeletePolicies(ctx, &authzv1.Policy{Sub: "g:" + group.GetMetadata().GetName()})
 	if err != nil {
-		return &userv3.Group{}, fmt.Errorf("unable to delete group-role relations from authz; %v", err)
+		return &userv3.Group{}, nil, fmt.Errorf("unable to delete group-role relations from authz; %v", err)
 	}
-	return group, nil
+
+	return group, ids, nil
 }
 
 // Map roles to groups
-func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB, group *userv3.Group, ids parsedIds) (*userv3.Group, error) {
-	// TODO: add transactions
+func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB, group *userv3.Group, ids parsedIds) (*userv3.Group, []uuid.UUID, error) {
 	projectNamespaceRoles := group.GetSpec().GetProjectNamespaceRoles()
 
 	var pgrs []models.ProjectGroupRole
 	var grs []models.GroupRole
 	var ps []*authzv1.Policy
+	var rids []uuid.UUID
 	for _, pnr := range projectNamespaceRoles {
 		role := pnr.GetRole()
 		entity, err := dao.GetByName(ctx, db, role, &models.Role{})
 		if err != nil {
-			return &userv3.Group{}, fmt.Errorf("unable to find role '%v'", role)
+			return &userv3.Group{}, nil, fmt.Errorf("unable to find role '%v'", role)
 		}
 		var roleId uuid.UUID
 		var roleName string
@@ -94,9 +112,10 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 		if rle, ok := entity.(*models.Role); ok {
 			roleId = rle.ID
 			roleName = rle.Name
+			rids = append(rids, rle.ID)
 			scope = strings.ToLower(rle.Scope)
 		} else {
-			return &userv3.Group{}, fmt.Errorf("unable to find role '%v'", role)
+			return &userv3.Group{}, nil, fmt.Errorf("unable to find role '%v'", role)
 		}
 
 		project := pnr.GetProject()
@@ -122,7 +141,7 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 			})
 		case "organization":
 			if org == "" {
-				return &userv3.Group{}, fmt.Errorf("no org name provided for role '%v'", roleName)
+				return &userv3.Group{}, nil, fmt.Errorf("no org name provided for role '%v'", roleName)
 			}
 			gr := models.GroupRole{
 				Trash:          false,
@@ -142,14 +161,14 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 			})
 		case "project":
 			if org == "" {
-				return &userv3.Group{}, fmt.Errorf("no org name provided for role '%v'", roleName)
+				return &userv3.Group{}, nil, fmt.Errorf("no org name provided for role '%v'", roleName)
 			}
 			if project == "" {
-				return &userv3.Group{}, fmt.Errorf("no project name provided for role '%v'", roleName)
+				return &userv3.Group{}, nil, fmt.Errorf("no project name provided for role '%v'", roleName)
 			}
 			projectId, err := dao.GetProjectId(ctx, s.db, project)
 			if err != nil {
-				return &userv3.Group{}, fmt.Errorf("unable to find project '%v'", project)
+				return &userv3.Group{}, nil, fmt.Errorf("unable to find project '%v'", project)
 			}
 			pgr := models.ProjectGroupRole{
 				Trash:          false,
@@ -174,49 +193,55 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 	if len(pgrs) > 0 {
 		_, err := dao.Create(ctx, db, &pgrs)
 		if err != nil {
-			return &userv3.Group{}, err
+			return &userv3.Group{}, nil, err
 		}
 	}
 	if len(grs) > 0 {
 		_, err := dao.Create(ctx, db, &grs)
 		if err != nil {
-			return &userv3.Group{}, err
+			return &userv3.Group{}, nil, err
 		}
 	}
 
 	if len(ps) > 0 {
 		success, err := s.azc.CreatePolicies(ctx, &authzv1.Policies{Policies: ps})
 		if err != nil || !success.Res {
-			return &userv3.Group{}, fmt.Errorf("unable to create mapping in authz; %v", err)
+			return &userv3.Group{}, nil, fmt.Errorf("unable to create mapping in authz; %v", err)
 		}
 	}
 
-	return group, nil
+	return group, rids, nil
 }
 
-func (s *groupService) deleteGroupAccountRelations(ctx context.Context, db bun.IDB, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, error) {
-	err := dao.DeleteX(ctx, db, "group_id", groupId, &models.GroupAccount{})
+func (s *groupService) deleteGroupAccountRelations(ctx context.Context, db bun.IDB, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, []uuid.UUID, error) {
+	ga := []models.GroupAccount{}
+	err := dao.DeleteXR(ctx, db, "group_id", groupId, &ga)
 	if err != nil {
-		return &userv3.Group{}, fmt.Errorf("unable to delete user; %v", err)
+		return &userv3.Group{}, nil, fmt.Errorf("unable to remove user from group user; %v", err)
 	}
 
 	_, err = s.azc.DeleteUserGroups(ctx, &authzv1.UserGroup{Grp: "g:" + group.GetMetadata().GetName()})
 	if err != nil {
-		return &userv3.Group{}, fmt.Errorf("unable to delete group-user relations from authz; %v", err)
+		return &userv3.Group{}, nil, fmt.Errorf("unable to delete group-user relations from authz; %v", err)
 	}
-	return group, nil
+
+	ids := []uuid.UUID{}
+	for _, r := range ga {
+		ids = append(ids, r.AccountId)
+	}
+	return group, ids, nil
 }
 
 // Update the users(account) mapped to each group
-func (s *groupService) createGroupAccountRelations(ctx context.Context, db bun.IDB, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, error) {
-	// TODO: add transactions
+func (s *groupService) createGroupAccountRelations(ctx context.Context, db bun.IDB, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, []uuid.UUID, error) {
 	var grpaccs []models.GroupAccount
 	var ugs []*authzv1.UserGroup
+	var uids []uuid.UUID
 	for _, account := range unique(group.GetSpec().GetUsers()) {
 		// FIXME: do combined lookup
 		entity, err := dao.GetIdByTraits(ctx, db, account, &models.KratosIdentities{})
 		if err != nil {
-			return &userv3.Group{}, fmt.Errorf("unable to find user '%v'", account)
+			return &userv3.Group{}, nil, fmt.Errorf("unable to find user '%v'", account)
 		}
 		if acc, ok := entity.(*models.KratosIdentities); ok {
 			grp := models.GroupAccount{
@@ -227,6 +252,7 @@ func (s *groupService) createGroupAccountRelations(ctx context.Context, db bun.I
 				GroupId:    groupId,
 				Active:     true,
 			}
+			uids = append(uids, acc.ID)
 			grpaccs = append(grpaccs, grp)
 			ugs = append(ugs, &authzv1.UserGroup{
 				Grp:  "g:" + group.GetMetadata().GetName(),
@@ -235,21 +261,19 @@ func (s *groupService) createGroupAccountRelations(ctx context.Context, db bun.I
 		}
 	}
 	if len(grpaccs) == 0 {
-		return group, nil
+		return group, nil, nil
 	}
 	_, err := dao.Create(ctx, db, &grpaccs)
 	if err != nil {
-		return &userv3.Group{}, err
+		return &userv3.Group{}, nil, err
 	}
 
-	// TODO: revert our db inserts if this fails
-	// Just FYI, the success can be false if we delete the db directly but casbin has it available internally
 	_, err = s.azc.CreateUserGroups(ctx, &authzv1.UserGroups{UserGroups: ugs})
 	if err != nil {
-		return &userv3.Group{}, fmt.Errorf("unable to create mapping in authz; %v", err)
+		return &userv3.Group{}, nil, fmt.Errorf("unable to create mapping in authz; %v", err)
 	}
 
-	return group, nil
+	return group, uids, nil
 }
 
 // TODO: move this to utils, make it accept two strings (names)
@@ -303,13 +327,13 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 	//update v3 spec
 	if grp, ok := entity.(*models.Group); ok {
 		// we can get previous group using the id, find users/roles from that and delete those
-		group, err = s.createGroupAccountRelations(ctx, tx, grp.ID, group)
+		group, usersAfter, err := s.createGroupAccountRelations(ctx, tx, grp.ID, group)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.Group{}, err
 		}
 
-		group, err = s.createGroupRoleRelations(ctx, tx, group, parsedIds{Id: grp.ID, Partner: partnerId, Organization: organizationId})
+		group, rolesAfter, err := s.createGroupRoleRelations(ctx, tx, group, parsedIds{Id: grp.ID, Partner: partnerId, Organization: organizationId})
 		if err != nil {
 			tx.Rollback()
 			return &userv3.Group{}, err
@@ -320,9 +344,10 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 			tx.Rollback()
 			_log.Warn("unable to commit changes", err)
 		}
+
+		CreateGroupAuditEvent(ctx, s.al, s.db, AuditActionCreate, group.GetMetadata().GetName(), grp.ID, []uuid.UUID{}, usersAfter, []uuid.UUID{}, rolesAfter)
 		return group, nil
 	}
-	tx.Rollback()
 	return &userv3.Group{}, fmt.Errorf("unable to create group")
 }
 
@@ -423,22 +448,22 @@ func (s *groupService) Update(ctx context.Context, group *userv3.Group) (*userv3
 		}
 
 		// update account/role links
-		group, err = s.deleteGroupAccountRelations(ctx, tx, grp.ID, group)
+		group, usersBefore, err := s.deleteGroupAccountRelations(ctx, tx, grp.ID, group)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.Group{}, err
 		}
-		group, err = s.createGroupAccountRelations(ctx, tx, grp.ID, group)
+		group, usersAfter, err := s.createGroupAccountRelations(ctx, tx, grp.ID, group)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.Group{}, err
 		}
-		group, err = s.deleteGroupRoleRelaitons(ctx, tx, grp.ID, group)
+		group, rolesBefore, err := s.deleteGroupRoleRelaitons(ctx, tx, grp.ID, group)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.Group{}, err
 		}
-		group, err = s.createGroupRoleRelations(ctx, tx, group, parsedIds{Id: grp.ID, Partner: partnerId, Organization: organizationId})
+		group, rolesAfter, err := s.createGroupRoleRelations(ctx, tx, group, parsedIds{Id: grp.ID, Partner: partnerId, Organization: organizationId})
 		if err != nil {
 			tx.Rollback()
 			return &userv3.Group{}, err
@@ -462,6 +487,8 @@ func (s *groupService) Update(ctx context.Context, group *userv3.Group) (*userv3
 			Users:                 group.Spec.Users, // TODO: update from db resp or no update?
 			ProjectNamespaceRoles: group.Spec.ProjectNamespaceRoles,
 		}
+
+		CreateGroupAuditEvent(ctx, s.al, s.db, AuditActionUpdate, group.GetMetadata().GetName(), grp.ID, usersBefore, usersAfter, rolesBefore, rolesAfter)
 	}
 
 	return group, nil
@@ -484,12 +511,12 @@ func (s *groupService) Delete(ctx context.Context, group *userv3.Group) (*userv3
 			return &userv3.Group{}, err
 		}
 
-		group, err = s.deleteGroupRoleRelaitons(ctx, tx, grp.ID, group)
+		group, rolesBefore, err := s.deleteGroupRoleRelaitons(ctx, tx, grp.ID, group)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.Group{}, err
 		}
-		group, err = s.deleteGroupAccountRelations(ctx, tx, grp.ID, group)
+		group, usersBefore, err := s.deleteGroupAccountRelations(ctx, tx, grp.ID, group)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.Group{}, err
@@ -505,6 +532,8 @@ func (s *groupService) Delete(ctx context.Context, group *userv3.Group) (*userv3
 			tx.Rollback()
 			_log.Warn("unable to commit changes", err)
 		}
+
+		CreateGroupAuditEvent(ctx, s.al, s.db, AuditActionDelete, group.GetMetadata().GetName(), grp.ID, usersBefore, []uuid.UUID{}, rolesBefore, []uuid.UUID{})
 		return group, nil
 	}
 

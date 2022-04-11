@@ -11,6 +11,7 @@ import (
 	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -33,11 +34,12 @@ type PartnerService interface {
 // partnerService implements PartnerService
 type partnerService struct {
 	db *bun.DB
+	al *zap.Logger
 }
 
 // NewPartnerService return new partner service
-func NewPartnerService(db *bun.DB) PartnerService {
-	return &partnerService{db}
+func NewPartnerService(db *bun.DB, al *zap.Logger) PartnerService {
+	return &partnerService{db, al}
 }
 
 func (s *partnerService) Create(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error) {
@@ -76,6 +78,8 @@ func (s *partnerService) Create(ctx context.Context, partner *systemv3.Partner) 
 		//update v3 spec
 		partner.Metadata.Id = createdPartner.ID.String()
 		partner.Metadata.ModifiedAt = timestamppb.New(createdPartner.ModifiedAt)
+
+		CreatePartnerAuditEvent(ctx, s.al, AuditActionCreate, partner.GetMetadata().GetName(), createdPartner.ID)
 	}
 
 	return partner, nil
@@ -242,6 +246,8 @@ func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) 
 		//update metadata and status
 		partner.Metadata.ModifiedAt = timestamppb.New(part.ModifiedAt)
 
+		CreatePartnerAuditEvent(ctx, s.al, AuditActionUpdate, partner.GetMetadata().GetName(), part.ID)
+
 	}
 
 	return partner, nil
@@ -258,6 +264,8 @@ func (s *partnerService) Delete(ctx context.Context, partner *systemv3.Partner) 
 		if err != nil {
 			return &systemv3.Partner{}, err
 		}
+
+		CreatePartnerAuditEvent(ctx, s.al, AuditActionDelete, partner.GetMetadata().GetName(), part.ID)
 		return partner, nil
 	}
 

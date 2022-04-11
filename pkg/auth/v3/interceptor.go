@@ -59,6 +59,9 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 			method string
 			token  string
 			cookie string
+			host   string
+			ua     string
+			ip     string
 		)
 		if len(md.Get(gateway.GatewayURL)) != 0 {
 			url = md.Get(gateway.GatewayURL)[0]
@@ -72,6 +75,16 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 		if len(md.Get("grpcgateway-cookie")) != 0 {
 			cookie = md.Get("grpcgateway-cookie")[0]
 		}
+		if len(md.Get("x-gateway-host")) != 0 {
+			host = md.Get("x-gateway-host")[0]
+		}
+		if len(md.Get("x-gateway-user-agent")) != 0 {
+			ua = md.Get("x-gateway-user-agent")[0]
+		}
+		if len(md.Get("x-gateway-remote-addr")) != 0 {
+			ip = md.Get("x-gateway-remote-addr")[0]
+		}
+
 		acReq := &commonv3.IsRequestAllowedRequest{
 			Url:           url,
 			Method:        method,
@@ -89,7 +102,11 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 		s := res.GetStatus()
 		switch s {
 		case commonv3.RequestStatus_RequestAllowed:
-			ctx := context.WithValue(ctx, common.SessionDataKey, res.SessionData)
+			sd := res.SessionData
+			sd.ClientIp = ip
+			sd.ClientHost = host
+			sd.ClientUa = ua
+			ctx := context.WithValue(ctx, common.SessionDataKey, sd)
 			return handler(ctx, req)
 		case commonv3.RequestStatus_RequestMethodOrURLNotAllowed:
 			return nil, status.Error(codes.PermissionDenied, res.GetReason())

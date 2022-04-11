@@ -12,6 +12,7 @@ import (
 	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -39,11 +40,12 @@ type OrganizationService interface {
 // organizationService implements OrganizationService
 type organizationService struct {
 	db *bun.DB
+	al *zap.Logger
 }
 
 // NewOrganizationService return new organization service
-func NewOrganizationService(db *bun.DB) OrganizationService {
-	return &organizationService{db}
+func NewOrganizationService(db *bun.DB, al *zap.Logger) OrganizationService {
+	return &organizationService{db, al}
 }
 
 func (s *organizationService) Create(ctx context.Context, org *systemv3.Organization) (*systemv3.Organization, error) {
@@ -99,6 +101,8 @@ func (s *organizationService) Create(ctx context.Context, org *systemv3.Organiza
 	if createdOrg, ok := entity.(*models.Organization); ok {
 		//update v3 spec
 		org.Metadata.Id = createdOrg.ID.String()
+
+		CreateOrganizationAuditEvent(ctx, s.al, AuditActionCreate, org.GetMetadata().GetName(), createdOrg.ID, nil, org.GetSpec().GetSettings())
 	}
 
 	return org, nil
@@ -195,8 +199,11 @@ func (s *organizationService) Update(ctx context.Context, organization *systemv3
 	}
 
 	if org, ok := entity.(*models.Organization); ok {
+		settingsAfter := organization.GetSpec().GetSettings()
+		settingsBefore := systemv3.OrganizationSettings{}
+		_ = json.Unmarshal(org.Settings, &settingsBefore) // ignore any unmarshelling issues
 
-		sb, err := json.MarshalIndent(organization.GetSpec().GetSettings(), "", "\t")
+		sb, err := json.MarshalIndent(settingsAfter, "", "\t")
 		if err != nil {
 			return &systemv3.Organization{}, err
 		}
@@ -226,6 +233,8 @@ func (s *organizationService) Update(ctx context.Context, organization *systemv3
 		if err != nil {
 			return &systemv3.Organization{}, err
 		}
+
+		CreateOrganizationAuditEvent(ctx, s.al, AuditActionUpdate, organization.GetMetadata().GetName(), org.ID, &settingsBefore, settingsAfter)
 	}
 
 	return organization, nil
@@ -239,7 +248,7 @@ func (s *organizationService) Delete(ctx context.Context, organization *systemv3
 	}
 
 	if org, ok := entity.(*models.Organization); ok {
-		err := dao.Delete(ctx, s.db, org.ID, org)
+		err := dao.DeleteR(ctx, s.db, org.ID, org)
 		if err != nil {
 			return &systemv3.Organization{}, err
 		}
@@ -247,6 +256,10 @@ func (s *organizationService) Delete(ctx context.Context, organization *systemv3
 		//update v3 status
 		organization.Metadata.Name = org.Name
 		organization.Metadata.ModifiedAt = timestamppb.New(org.ModifiedAt)
+
+		orgSettings := systemv3.OrganizationSettings{}
+		_ = json.Unmarshal(org.Settings, &orgSettings) // ignore any unmarshelling issues
+		CreateOrganizationAuditEvent(ctx, s.al, AuditActionDelete, organization.GetMetadata().GetName(), org.ID, &orgSettings, nil)
 	}
 	return organization, nil
 
