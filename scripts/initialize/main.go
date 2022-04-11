@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"time"
 
 	"github.com/RafayLabs/rcloud-base/internal/dao"
 	"github.com/RafayLabs/rcloud-base/internal/models"
@@ -263,21 +264,6 @@ func main() {
 		log.Fatal("unable to create default group", err)
 	}
 
-	// should we directly interact with kratos and create a user with a password?
-	orgA, err := us.Create(context.Background(), &userv3.User{
-		Metadata: &commonv3.Metadata{Name: *oae, Partner: *partner, Organization: *org, Description: "..."},
-		Spec: &userv3.UserSpec{
-			FirstName:             *oafn,
-			LastName:              *oaln,
-			Groups:                []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
-			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Role: "ADMIN", Group: &admingrp.Metadata.Name}}},
-	})
-
-	if err != nil {
-		fmt.Println("err:", err)
-		log.Fatal("unable to bind user to role", err)
-	}
-
 	//default project with name "default" should be created with default flag true
 	prs.Create(context.Background(), &systemv3.Project{
 		Metadata: &commonv3.Metadata{
@@ -291,5 +277,28 @@ func main() {
 		},
 	})
 
-	fmt.Println("Org Admin signup URL: ", *orgA.Spec.RecoveryUrl)
+retry:
+	numOfRetries := 0
+	// should we directly interact with kratos and create a user with a password?
+	orgA, err := us.Create(context.Background(), &userv3.User{
+		Metadata: &commonv3.Metadata{Name: *oae, Partner: *partner, Organization: *org, Description: "..."},
+		Spec: &userv3.UserSpec{
+			FirstName:             *oafn,
+			LastName:              *oaln,
+			Groups:                []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
+			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Role: "ADMIN", Group: &admingrp.Metadata.Name}}},
+	})
+
+	if err != nil {
+		fmt.Println("err:", err)
+		numOfRetries = +1
+		if numOfRetries > 20 {
+			log.Fatal("unable to bind user to role", err)
+		}
+		time.Sleep(10 * time.Second)
+		fmt.Println("retrying ... ")
+		goto retry
+	}
+
+  fmt.Println("Org Admin signup URL: ", *orgA.Spec.RecoveryUrl)
 }
