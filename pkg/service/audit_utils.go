@@ -30,8 +30,7 @@ func CreateUserAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, actio
 	detail := &audit.EventDetail{
 		Message: fmt.Sprintf("User %s %sd", name, action),
 		Meta: map[string]string{
-			"account_id": id.String(),
-			"username":   name,
+			"username": name,
 		},
 	}
 	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("user.%s.success", action), ""); err != nil {
@@ -121,7 +120,6 @@ func CreateGroupAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, acti
 	detail := &audit.EventDetail{
 		Message: fmt.Sprintf("Group %s %sd", name, action),
 		Meta: map[string]string{
-			"group_id":   id.String(),
 			"group_name": name,
 		},
 	}
@@ -144,7 +142,6 @@ func CreateGroupAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, acti
 		detail := &audit.EventDetail{
 			Message: fmt.Sprintf("User %s added to group %s", u, name),
 			Meta: map[string]string{
-				"group_id":   id.String(),
 				"group_name": name,
 				"username":   u,
 			},
@@ -158,7 +155,6 @@ func CreateGroupAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, acti
 		detail := &audit.EventDetail{
 			Message: fmt.Sprintf("User %s deleted from group %s", u, name),
 			Meta: map[string]string{
-				"group_id":   id.String(),
 				"group_name": name,
 				"username":   u,
 			},
@@ -181,7 +177,6 @@ func CreateGroupAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, acti
 		detail := &audit.EventDetail{
 			Message: fmt.Sprintf("Role %s added to group %s", r, name),
 			Meta: map[string]string{
-				"group_id":   id.String(),
 				"group_name": name,
 				"roles_name": r, // TODO: add info like namespace and project
 			},
@@ -196,7 +191,6 @@ func CreateGroupAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, acti
 		detail := &audit.EventDetail{
 			Message: fmt.Sprintf("Role %s deleted from group %s", r, name),
 			Meta: map[string]string{
-				"group_id":   id.String(),
 				"group_name": name,
 				"role_name":  r,
 			},
@@ -218,7 +212,6 @@ func CreateRoleAuditEvent(ctx context.Context, al *zap.Logger, action string, na
 	detail := &audit.EventDetail{
 		Message: fmt.Sprintf("Role %s %sd", name, action),
 		Meta: map[string]string{
-			"role_id":     id.String(),
 			"role_name":   name,
 			"permissions": strings.Join(permissions, ","), // TODO: Should we split it into individual ones?
 		},
@@ -238,7 +231,6 @@ func CreateProjectAuditEvent(ctx context.Context, al *zap.Logger, action string,
 	detail := &audit.EventDetail{
 		Message: fmt.Sprintf("Project %s %sd", name, action),
 		Meta: map[string]string{
-			"project_id":   id.String(),
 			"project_name": name,
 		},
 	}
@@ -257,7 +249,6 @@ func CreatePartnerAuditEvent(ctx context.Context, al *zap.Logger, action string,
 	detail := &audit.EventDetail{
 		Message: fmt.Sprintf("Partner %s %sd", name, action),
 		Meta: map[string]string{
-			"partner_id":   id.String(),
 			"partner_name": name,
 		},
 	}
@@ -276,7 +267,6 @@ func CreateOrganizationAuditEvent(ctx context.Context, al *zap.Logger, action st
 	detail := &audit.EventDetail{
 		Message: fmt.Sprintf("Organization %s %sd", name, action),
 		Meta: map[string]string{
-			"organization_id":   id.String(),
 			"organization_name": name,
 		},
 	}
@@ -293,14 +283,12 @@ func CreateOrganizationAuditEvent(ctx context.Context, al *zap.Logger, action st
 		detail := &audit.EventDetail{
 			Message: fmt.Sprintf("Idel logout settings updated for organization %s", name),
 			Meta: map[string]string{
-				"organization_id":   id.String(),
 				"organization_name": name,
 			},
 		}
 
 		if settingsAfter != nil {
 			detail.Meta = map[string]string{
-				"organization_id":   id.String(),
 				"organization_name": name,
 				"idle_logout_min":   string(settingsAfter.IdleLogoutMin),
 			}
@@ -322,7 +310,6 @@ func CreateOrganizationAuditEvent(ctx context.Context, al *zap.Logger, action st
 		detail := &audit.EventDetail{
 			Message: fmt.Sprintf("Lockout settings updated for organization %s", name),
 			Meta: map[string]string{
-				"organization_id":   id.String(),
 				"organization_name": name,
 			},
 		}
@@ -332,7 +319,6 @@ func CreateOrganizationAuditEvent(ctx context.Context, al *zap.Logger, action st
 				enabled = "true"
 			}
 			detail.Meta = map[string]string{
-				"organization_id":    id.String(),
 				"organization_name":  name,
 				"lockout_enabled":    enabled,
 				"lockout_period_min": string(settingsAfter.Lockout.PeriodMin),
@@ -356,7 +342,6 @@ func CreateIdpAuditEvent(ctx context.Context, al *zap.Logger, action string, nam
 	detail := &audit.EventDetail{
 		Message: fmt.Sprintf("Idp %s %sd", name, action),
 		Meta: map[string]string{
-			"idp_id":   id.String(),
 			"idp_name": name,
 		},
 	}
@@ -376,7 +361,6 @@ func CreateOidcAuditEvent(ctx context.Context, al *zap.Logger, action string, na
 	detail := &audit.EventDetail{
 		Message: fmt.Sprintf("Oidc %s %sd", name, action),
 		Meta: map[string]string{
-			"oidc_id":   id.String(),
 			"oidc_name": name,
 		},
 	}
@@ -414,7 +398,6 @@ func CreateClusterAuditEvent(ctx context.Context, al *zap.Logger, action string,
 	detail := &audit.EventDetail{
 		Message: fmt.Sprintf("Cluster %s %sd", name, action),
 		Meta: map[string]string{
-			"cluster_id":   id.String(),
 			"cluster_name": name,
 		},
 	}
@@ -434,7 +417,6 @@ func CreateLocationAuditEvent(ctx context.Context, al *zap.Logger, action string
 	detail := &audit.EventDetail{
 		Message: fmt.Sprintf("Location %s %sd", name, action),
 		Meta: map[string]string{
-			"location_id":   id.String(),
 			"location_name": name,
 		},
 	}
