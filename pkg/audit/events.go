@@ -2,7 +2,6 @@ package audit
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -177,7 +176,7 @@ func WithGroups(groups []string) CreateEventOption {
 type CreateEventOption func(opts *createEventOptions)
 
 // CreateEvent creates an event
-func CreateEvent(event *Event, opts ...CreateEventOption) error {
+func CreateEvent(al *zap.Logger, event *Event, opts ...CreateEventOption) error {
 
 	cOpts := createEventOptions{}
 	for _, opt := range opts {
@@ -205,12 +204,7 @@ func CreateEvent(event *Event, opts ...CreateEventOption) error {
 		event.Actor = getActor(cOpts)
 	}
 
-	payload, err := json.Marshal(event)
-	if err != nil {
-		_log.Infow("unable to marshal audit event", "error", err)
-		return err
-	}
-	fmt.Println("event:", string(payload)) // TODO: Switch to writing to audit file
+	go WriteEvent(event, al)
 	return nil
 }
 
