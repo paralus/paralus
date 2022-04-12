@@ -56,6 +56,7 @@ type userService struct {
 	ks  ApiKeyService
 	cc  common.CliConfigDownloadData
 	al  *zap.Logger
+	dev bool
 }
 
 type userTraits struct {
@@ -72,8 +73,8 @@ type parsedIds struct {
 	Organization uuid.UUID
 }
 
-func NewUserService(ap providers.AuthProvider, db *bun.DB, azc AuthzService, kss ApiKeyService, cfg common.CliConfigDownloadData, al *zap.Logger) UserService {
-	return &userService{ap: ap, db: db, azc: azc, ks: kss, cc: cfg, al: al}
+func NewUserService(ap providers.AuthProvider, db *bun.DB, azc AuthzService, kss ApiKeyService, cfg common.CliConfigDownloadData, al *zap.Logger, dev bool) UserService {
+	return &userService{ap: ap, db: db, azc: azc, ks: kss, cc: cfg, al: al, dev: dev}
 }
 
 func getUserTraits(traits map[string]interface{}) userTraits {
@@ -460,12 +461,19 @@ func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3
 }
 
 func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*userv3.UserInfo, error) {
-	sd, ok := GetSessionDataFromContext(ctx)
 	username := ""
-	if !ok {
-		return &userv3.UserInfo{}, fmt.Errorf("cannot get user info without auth")
+	if s.dev {
+		username = user.Metadata.Name
+		if len(username) == 0 {
+			return &userv3.UserInfo{}, fmt.Errorf("username should be provided")
+		}
+	} else {
+		sd, ok := GetSessionDataFromContext(ctx)
+		if !ok {
+			return &userv3.UserInfo{}, fmt.Errorf("cannot get user info without auth")
+		}
+		username = sd.Username
 	}
-	username = sd.Username
 
 	entity, err := dao.GetByTraits(ctx, s.db, username, &models.KratosIdentities{})
 	if err != nil {

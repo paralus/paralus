@@ -22,7 +22,7 @@ func TestCreateProject(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	ps := NewProjectService(db, &mazc, getLogger())
+	ps := NewProjectService(db, &mazc, getLogger(), true)
 
 	puuid := uuid.New().String()
 	ouuid := uuid.New().String()
@@ -50,7 +50,7 @@ func TestCreateProjectDuplicate(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	gs := NewProjectService(db, &mazc, getLogger())
+	gs := NewProjectService(db, &mazc, getLogger(), true)
 
 	puuid := uuid.New().String()
 
@@ -73,7 +73,7 @@ func TestProjectDelete(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	ps := NewProjectService(db, &mazc, getLogger())
+	ps := NewProjectService(db, &mazc, getLogger(), true)
 
 	puuid := uuid.New().String()
 
@@ -101,7 +101,7 @@ func TestProjectDeleteNonExist(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	ps := NewProjectService(db, &mazc, getLogger())
+	ps := NewProjectService(db, &mazc, getLogger(), true)
 
 	puuid := uuid.New().String()
 
@@ -122,7 +122,7 @@ func TestProjectGetByName(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	ps := NewProjectService(db, &mazc, getLogger())
+	ps := NewProjectService(db, &mazc, getLogger(), true)
 
 	partuuid := uuid.New().String()
 	ouuid := uuid.New().String()
@@ -166,7 +166,7 @@ func TestProjectGetById(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	ps := NewProjectService(db, &mazc, getLogger())
+	ps := NewProjectService(db, &mazc, getLogger(), true)
 
 	puuid := uuid.New().String()
 
@@ -188,7 +188,7 @@ func TestProjectUpdate(t *testing.T) {
 	defer db.Close()
 
 	mazc := mockAuthzClient{}
-	ps := NewProjectService(db, &mazc, getLogger())
+	ps := NewProjectService(db, &mazc, getLogger(), true)
 
 	puuid := uuid.New().String()
 

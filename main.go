@@ -305,7 +305,7 @@ func setup() {
 
 	ps = service.NewPartnerService(db, auditLogger)
 	os = service.NewOrganizationService(db, auditLogger)
-	pps = service.NewProjectService(db, as, auditLogger)
+	pps = service.NewProjectService(db, as, auditLogger, dev)
 
 	// users and role management services
 	cc := common.CliConfigDownloadData{
@@ -318,7 +318,7 @@ func setup() {
 		cc.Profile = "production"
 	}
 	ks = service.NewApiKeyService(db, auditLogger)
-	us = service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, ks, cc, auditLogger)
+	us = service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, ks, cc, auditLogger, dev)
 	gs = service.NewGroupService(db, as, auditLogger)
 	rs = service.NewRoleService(db, as, auditLogger)
 	rrs = service.NewRolepermissionService(db)

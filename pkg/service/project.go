@@ -44,11 +44,12 @@ type projectService struct {
 	db  *bun.DB
 	azc AuthzService
 	al  *zap.Logger
+	dev bool
 }
 
 // NewProjectService return new project service
-func NewProjectService(db *bun.DB, azc AuthzService, al *zap.Logger) ProjectService {
-	return &projectService{db: db, azc: azc, al: al}
+func NewProjectService(db *bun.DB, azc AuthzService, al *zap.Logger, dev bool) ProjectService {
+	return &projectService{db: db, azc: azc, al: al, dev: dev}
 }
 
 func (s *projectService) Create(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error) {
@@ -338,12 +339,15 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 }
 
 func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*systemv3.ProjectList, error) {
-	sd, ok := GetSessionDataFromContext(ctx)
+
 	username := ""
-	if !ok {
-		return &systemv3.ProjectList{}, fmt.Errorf("cannot perform project listing without auth")
+	if !s.dev {
+		sd, ok := GetSessionDataFromContext(ctx)
+		if !ok {
+			return &systemv3.ProjectList{}, fmt.Errorf("cannot perform project listing without auth")
+		}
+		username = sd.Username
 	}
-	username = sd.Username
 
 	var projects []*systemv3.Project
 	projectList := &systemv3.ProjectList{
@@ -365,55 +369,66 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 			return &systemv3.ProjectList{}, err
 		}
 
-		entity, err := dao.GetByTraits(ctx, s.db, username, &models.KratosIdentities{})
-		if err != nil {
-			return &systemv3.ProjectList{}, err
-		}
-
-		if usr, ok := entity.(*models.KratosIdentities); ok {
-			projs, err := dao.GetFileteredProjects(ctx, s.db, usr.ID, part.ID, org.ID)
+		var projs []models.Project
+		if !s.dev {
+			entity, err := dao.GetByTraits(ctx, s.db, username, &models.KratosIdentities{})
 			if err != nil {
 				return &systemv3.ProjectList{}, err
 			}
-			for _, proj := range projs {
-				labels := make(map[string]string)
-				labels["organization"] = proj.OrganizationId.String()
-				labels["partner"] = proj.PartnerId.String()
 
-				pnr, err := dao.GetProjectGroupRoles(ctx, s.db, proj.ID)
+			if usr, ok := entity.(*models.KratosIdentities); ok {
+				projs, err = dao.GetFileteredProjects(ctx, s.db, usr.ID, part.ID, org.ID)
 				if err != nil {
-					return nil, err
+					return &systemv3.ProjectList{}, err
 				}
-				ur, err := dao.GetProjectUserRoles(ctx, s.db, proj.ID)
-				if err != nil {
-					return nil, err
-				}
-				project := &systemv3.Project{
-					Metadata: &v3.Metadata{
-						Name:         proj.Name,
-						Description:  proj.Description,
-						Id:           proj.ID.String(),
-						Organization: proj.OrganizationId.String(),
-						Partner:      proj.PartnerId.String(),
-						Labels:       labels,
-						ModifiedAt:   timestamppb.New(proj.ModifiedAt),
-					},
-					Spec: &systemv3.ProjectSpec{
-						Default:               proj.Default,
-						ProjectNamespaceRoles: pnr,
-						UserRoles:             ur,
-					},
-				}
-				projects = append(projects, project)
 			}
 
-			//update the list metadata and items response
-			projectList.Metadata = &v3.ListMetadata{
-				Count: int64(len(projects)),
+		} else {
+			_, err = dao.List(ctx, s.db, uuid.NullUUID{UUID: part.ID, Valid: true}, uuid.NullUUID{UUID: org.ID, Valid: true}, &projs)
+			if err != nil {
+				return &systemv3.ProjectList{}, err
 			}
-			projectList.Items = projects
-			return projectList, nil
 		}
+
+		for _, proj := range projs {
+			labels := make(map[string]string)
+			labels["organization"] = proj.OrganizationId.String()
+			labels["partner"] = proj.PartnerId.String()
+
+			pnr, err := dao.GetProjectGroupRoles(ctx, s.db, proj.ID)
+			if err != nil {
+				return nil, err
+			}
+			ur, err := dao.GetProjectUserRoles(ctx, s.db, proj.ID)
+			if err != nil {
+				return nil, err
+			}
+			project := &systemv3.Project{
+				Metadata: &v3.Metadata{
+					Name:         proj.Name,
+					Description:  proj.Description,
+					Id:           proj.ID.String(),
+					Organization: proj.OrganizationId.String(),
+					Partner:      proj.PartnerId.String(),
+					Labels:       labels,
+					ModifiedAt:   timestamppb.New(proj.ModifiedAt),
+				},
+				Spec: &systemv3.ProjectSpec{
+					Default:               proj.Default,
+					ProjectNamespaceRoles: pnr,
+					UserRoles:             ur,
+				},
+			}
+			projects = append(projects, project)
+		}
+
+		//update the list metadata and items response
+		projectList.Metadata = &v3.ListMetadata{
+			Count: int64(len(projects)),
+		}
+		projectList.Items = projects
+		return projectList, nil
+
 	}
 	return projectList, fmt.Errorf("missing organization id in metadata")
 }
