@@ -122,5 +122,8 @@ func (ac *authContext) authorize(ctx context.Context, req *commonv3.IsRequestAll
 		res.Reason = "not authorized to perform action"
 		return nil
 	}
+
+	// the following would already be set in auth, but just in case
+	res.Status = commonv3.RequestStatus_RequestAllowed
 	return nil
 }
