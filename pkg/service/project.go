@@ -535,7 +535,7 @@ func (s *projectService) createProjectAccountRelations(ctx context.Context, db b
 	var parrs []models.ProjectAccountResourcerole
 	var ugs []*authzv1.Policy
 
-	for _, ur := range project.Spec.UserRoles {
+	for _, ur := range project.GetSpec().GetUserRoles() {
 		// FIXME: do combined lookup
 		entity, err := dao.GetIdByTraits(ctx, db, ur.User, &models.KratosIdentities{})
 		if err != nil {
