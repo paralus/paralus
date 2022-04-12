@@ -18,6 +18,19 @@ func NewCasbinEnforcer(db *gorm.DB) *casbinEnforcer {
 	}
 }
 
+// KeyMatchCu custom matching function ref: https://casbin.org/docs/en/function
+func KeyMatchCu(key1 string, key2 string) bool {
+	// admin:ops_star
+	if key2 == "*" {
+		return true
+	}
+	// FIXME: instead add permissions for userinfo
+	if key1 == "/auth/v3/userinfo" {
+		return true
+	}
+	return util.KeyMatch2(key1, key2)
+}
+
 func (e *casbinEnforcer) Init() (*casbin.CachedEnforcer, error) {
 	adapter, err := gormadapter.NewAdapterByDB(e.db)
 	if err != nil {
@@ -39,7 +52,7 @@ g2 = _, _
 e = some(where (p.eft == allow))
 
 [matchers]
-m = g2(r.sub, p.sub) && globMatch(r.ns, p.ns) && globMatch(r.proj, p.proj) && r.org == p.org && g(r.obj, p.obj, r.act)
+m = g2(r.sub, p.sub) && (globMatch(r.ns, p.ns) || globMatch(p.ns, r.ns)) && (globMatch(r.proj, p.proj) || globMatch(p.proj, r.proj)) && (globMatch(r.org, p.org) || globMatch(p.org, r.org)) && g(r.obj, p.obj, r.act)
 `
 	m, err := model.NewModelFromString(modelText)
 	if err != nil {
@@ -51,7 +64,8 @@ m = g2(r.sub, p.sub) && globMatch(r.ns, p.ns) && globMatch(r.proj, p.proj) && r.
 		return nil, err
 	}
 
-	enforcer.Enforcer.AddNamedDomainMatchingFunc("g", "", util.KeyMatch2)
+	// enforcer.Enforcer.AddNamedDomainMatchingFunc("g", "", )
+	enforcer.Enforcer.AddNamedMatchingFunc("g", "", KeyMatchCu)
 
 	return enforcer, nil
 }
