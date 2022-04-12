@@ -35,6 +35,10 @@ func (ac *authContext) IsRequestAllowed(ctx context.Context, httpreq *http.Reque
 		return res, nil
 	}
 
+	if req.NoAuthz {
+		return res, nil
+	}
+
 	// Authorize request
 	err = ac.authorize(ctx, req, res)
 	if err != nil {

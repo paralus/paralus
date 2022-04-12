@@ -17,6 +17,7 @@ import (
 	providers "github.com/RafayLabs/rcloud-base/internal/provider/kratos"
 	"github.com/RafayLabs/rcloud-base/pkg/common"
 	"github.com/RafayLabs/rcloud-base/pkg/query"
+	"github.com/RafayLabs/rcloud-base/pkg/utils"
 	userrpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
 	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
@@ -245,7 +246,7 @@ func (s *userService) createGroupAccountRelations(ctx context.Context, db bun.ID
 	var grpaccs []models.GroupAccount
 	var ugs []*authzv1.UserGroup
 	var ids []uuid.UUID
-	for _, group := range unique(usr.GetSpec().GetGroups()) {
+	for _, group := range utils.Unique(usr.GetSpec().GetGroups()) {
 		// FIXME: do combined lookup
 		entity, err := dao.GetByName(ctx, s.db, group, &models.Group{})
 		if err != nil {
@@ -481,7 +482,7 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 
 		userinfo := &userv3.UserInfo{Metadata: user.Metadata}
 		userinfo.ApiVersion = apiVersion
-		userinfo.Kind = userKind
+		userinfo.Kind = "UserInfo"
 		userinfo.Spec = &userv3.UserInfoSpec{
 			FirstName: user.Spec.FirstName,
 			LastName:  user.Spec.LastName,

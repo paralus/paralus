@@ -8,6 +8,7 @@ import (
 	"github.com/RafayLabs/rcloud-base/internal/dao"
 	"github.com/RafayLabs/rcloud-base/internal/models"
 	"github.com/RafayLabs/rcloud-base/pkg/audit"
+	"github.com/RafayLabs/rcloud-base/pkg/utils"
 	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -37,7 +38,7 @@ func CreateUserAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, actio
 		_log.Warn("unable to create audit event", err)
 	}
 
-	cr, _, dr := diffu(rolesBefore, rolesAfter)
+	cr, _, dr := utils.DiffU(rolesBefore, rolesAfter)
 	ncr, err := dao.GetNamesByIds(ctx, db, cr, &models.Role{})
 	if err != nil {
 		_log.Warn("unable to create audit event", err)
@@ -73,7 +74,7 @@ func CreateUserAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, actio
 		}
 	}
 
-	cg, _, dg := diffu(groupsBefore, rolesAfter)
+	cg, _, dg := utils.DiffU(groupsBefore, rolesAfter)
 	ncg, err := dao.GetNamesByIds(ctx, db, cg, &models.Group{})
 	if err != nil {
 		_log.Warn("unable to create audit event", err)
@@ -127,7 +128,7 @@ func CreateGroupAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, acti
 		_log.Warn("unable to create audit event", err)
 	}
 
-	cu, _, du := diffu(usersBefore, usersAfter)
+	cu, _, du := utils.DiffU(usersBefore, usersAfter)
 
 	cun, err := dao.GetUserNamesByIds(ctx, db, cu, &models.KratosIdentities{})
 	if err != nil {
@@ -164,7 +165,7 @@ func CreateGroupAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, acti
 		}
 	}
 
-	cr, _, dr := diffu(rolesBefore, rolesAfter)
+	cr, _, dr := utils.DiffU(rolesBefore, rolesAfter)
 	ncr, err := dao.GetNamesByIds(ctx, db, cr, &models.Role{})
 	if err != nil {
 		_log.Warn("unable to create audit event", err)

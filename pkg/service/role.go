@@ -9,6 +9,7 @@ import (
 
 	"github.com/RafayLabs/rcloud-base/internal/dao"
 	"github.com/RafayLabs/rcloud-base/internal/models"
+	"github.com/RafayLabs/rcloud-base/pkg/utils"
 	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
 	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	rolev3 "github.com/RafayLabs/rcloud-base/proto/types/rolepb/v3"
@@ -133,7 +134,7 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 	}
 
 	scope := role.GetSpec().GetScope()
-	if !contains([]string{"system", "organization", "project"}, strings.ToLower(scope)) {
+	if !utils.Contains([]string{"system", "organization", "project"}, strings.ToLower(scope)) {
 		return nil, fmt.Errorf("unknown scope '%v'", scope)
 	}
 
@@ -289,7 +290,6 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		return role, nil
 	}
 	return &rolev3.Role{}, fmt.Errorf("unable to update role '%v'", role.GetMetadata().GetName())
-
 }
 
 func (s *roleService) Delete(ctx context.Context, role *rolev3.Role) (*rolev3.Role, error) {

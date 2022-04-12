@@ -6,6 +6,7 @@ import (
 
 	"github.com/RafayLabs/rcloud-base/pkg/common"
 	"github.com/RafayLabs/rcloud-base/pkg/gateway"
+	"github.com/RafayLabs/rcloud-base/pkg/utils"
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -40,8 +41,10 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 				project = meta.Project
 			}
 
-			// overrides for picking up info when not in default metadata locations
-			// XXX: This requires any new items which does not follow metadata convention added here
+			// Overrides for picking up info when not in default
+			// metadata locations
+			// XXX: This requires any new items which does not follow
+			// metadata convention to be added here
 			switch strings.Split(info.FullMethod, "/")[1] {
 			case "rafay.dev.rpc.v3.Project":
 				project = meta.Name
@@ -49,6 +52,8 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 				org = meta.Name
 			}
 		}
+
+		noAuthz := utils.Contains(opt.ExcludeAuthzMethods, info.FullMethod)
 
 		md, ok := metadata.FromIncomingContext(ctx)
 		if !ok {
@@ -92,6 +97,7 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 			Cookie:        cookie,
 			Org:           org,
 			Project:       project,
+			NoAuthz:       noAuthz, // FIXME: any better way to do this?
 		}
 		res, err := ac.IsRequestAllowed(ctx, nil, acReq)
 		if err != nil {
