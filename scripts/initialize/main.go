@@ -176,8 +176,8 @@ func main() {
 	os := service.NewOrganizationService(db, auditLogger)
 	rs := service.NewRoleService(db, as, auditLogger)
 	gs := service.NewGroupService(db, as, auditLogger)
-	us := service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, nil, common.CliConfigDownloadData{}, auditLogger)
-	prs := service.NewProjectService(db, as, auditLogger)
+	us := service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, nil, common.CliConfigDownloadData{}, auditLogger, true)
+	prs := service.NewProjectService(db, as, auditLogger, true)
 
 	//check if there are role permissions already present
 	existingPermissions := &[]models.ResourceRolePermission{}
