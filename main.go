@@ -20,7 +20,6 @@ import (
 	"github.com/RafayLabs/rcloud-base/pkg/enforcer"
 	"github.com/RafayLabs/rcloud-base/pkg/gateway"
 	"github.com/RafayLabs/rcloud-base/pkg/grpc"
-	"github.com/RafayLabs/rcloud-base/pkg/leaderelection"
 	"github.com/RafayLabs/rcloud-base/pkg/log"
 	"github.com/RafayLabs/rcloud-base/pkg/notify"
 	"github.com/RafayLabs/rcloud-base/pkg/reconcile"
@@ -35,7 +34,6 @@ import (
 	"github.com/RafayLabs/rcloud-base/server"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	kclient "github.com/ory/kratos-client-go"
-	"github.com/rs/xid"
 	"github.com/spf13/viper"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -194,7 +192,7 @@ func setup() {
 	// cd relay
 	viper.SetDefault(coreCDRelayUserHostEnv, "*.user.cdrelay.rafay.local:10012")
 	viper.SetDefault(coreCDRelayConnectorHostEnv, "*.core-connector.cdrelay.rafay.local:10012")
-	viper.SetDefault(schedulerNamespaceEnv, "rafay-system")
+	viper.SetDefault(schedulerNamespaceEnv, "default")
 
 	// kratos
 	viper.SetDefault(kratosAddrEnv, "http://localhost:4433")
@@ -628,21 +626,6 @@ func runEventHandlers(wg *sync.WaitGroup, ctx context.Context) {
 
 	// listen to cluster events
 	cs.AddEventHandler(ceh.ClusterHook())
-
-	if !dev {
-		rl, err := leaderelection.NewConfigMapLock("rcloud-base-config", schedulerNamespace, xid.New().String())
-		if err != nil {
-			_log.Fatalw("unable to create configmap lock", "error", err)
-		}
-		go func() {
-			err := leaderelection.Run(rl, func(stop <-chan struct{}) {
-			}, ctx.Done())
-
-			if err != nil {
-				_log.Fatalw("unable to run leader election", "error", err)
-			}
-		}()
-	}
 
 	<-ctx.Done()
 }
