@@ -2,11 +2,33 @@ version: v0.7.1-alpha.1
 
 dsn: postgres://admindbuser:admindbpassword@localhost:5432/admindb?sslmode=disable&max_conns=20&max_idle_conns=4
 
+dev: true
+
 serve:
   public:
     base_url: http://127.0.0.1:4433/
     cors:
       enabled: true
+      allowed_origins:
+        - http://127.0.0.1:3000
+        - http://127.0.0.1:3000/*
+        - http://127.0.0.1:19006
+        - http://127.0.0.1:19006/*
+        - http://127.0.0.1:4455
+        - http://127.0.0.1:4455/*
+      allowed_methods:
+        - POST
+        - GET
+        - PUT
+        - PATCH
+        - DELETE
+      allowed_headers:
+        - Authorization
+        - Cookie
+        - Content-Type
+      exposed_headers:
+        - Content-Type
+        - Set-Cookie
   admin:
     base_url: http://127.0.0.1:4434/
 
@@ -19,6 +41,24 @@ selfservice:
     password:
       enabled: true
     oidc:
+      config:
+        providers:
+          - provider: generic
+            id: okta
+            client_id: 0oa4g7baw738BjuNp5d7
+            client_secret: Ezuu9lExU6b8zaQ9LayTFk6fjDauITw8i83kdZmE
+            mapper_url: file://etc/config/kratos/okta-mapper.jsonnet
+            issuer_url: https://dev-59990879.okta.com/oauth2/default
+            scope:
+              - email
+            # auth_url: http://openid-connect-provider/oauth2/auth
+            requested_claims:
+              email:
+                essential: true
+      enabled: true
+    link:
+      enabled: true
+    profile:
       enabled: true
 
   flows:
@@ -44,12 +84,12 @@ selfservice:
         default_browser_return_url: http://127.0.0.1:4455/auth/login
 
     login:
-      ui_url: http://127.0.0.1:4455/auth/login
+      ui_url: http://127.0.0.1:4455/login
       lifespan: 10m
 
     registration:
       lifespan: 10m
-      ui_url: http://127.0.0.1:4455/auth/registration
+      ui_url: http://127.0.0.1:4455/registration
       after:
         password:
           hooks:

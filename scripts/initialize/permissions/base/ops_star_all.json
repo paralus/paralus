@@ -2,7 +2,7 @@
   "name": "ops_star.all",
   "resource_urls": [
     {
-      "url": "/:*",
+      "url": "*",
       "methods": [
         "GET",
         "POST",

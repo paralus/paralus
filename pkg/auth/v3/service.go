@@ -114,7 +114,6 @@ func (ac *authContext) authorize(ctx context.Context, req *commonv3.IsRequestAll
 		Params: []string{"u:" + res.SessionData.Username, "*", proj, org, req.Url, req.Method},
 	}
 	authenticated, err := ac.as.Enforce(ctx, &er)
-
 	if err != nil {
 		return err
 	}
