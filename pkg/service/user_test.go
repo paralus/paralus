@@ -62,7 +62,7 @@ func TestCreateUser(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
 
 	uuuid := uuid.New().String()
 	puuid, ouuid := addParterOrgFetchExpectation(mock)
@@ -110,7 +110,7 @@ func TestCreateUserWithRole(t *testing.T) {
 
 			ap := &mockAuthProvider{}
 			mazc := mockAuthzClient{}
-			us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
+			us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
 
 			uuuid := uuid.New().String()
 
@@ -167,7 +167,7 @@ func TestUpdateUser(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
 
 	// performing update
 	uuuid := addUserIdFetchExpectation(mock)
@@ -203,7 +203,7 @@ func TestUserGetByName(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
 
 	puuid := uuid.New().String()
 	ouuid := uuid.New().String()
@@ -260,7 +260,7 @@ func TestUserGetInfo(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), false)
 
 	uuuid := uuid.New().String()
 	fakeuuuid := uuid.New().String()
@@ -332,7 +332,7 @@ func TestUserGetById(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
 
 	uuuid := uuid.New().String()
 	puuid := uuid.New().String()
@@ -397,7 +397,7 @@ func TestUserList(t *testing.T) {
 
 			ap := &mockAuthProvider{}
 			mazc := mockAuthzClient{}
-			us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
+			us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
 
 			uuuid1 := uuid.New().String()
 			uuuid2 := uuid.New().String()
@@ -495,7 +495,7 @@ func TestUserDelete(t *testing.T) {
 
 	ap := &mockAuthProvider{}
 	mazc := mockAuthzClient{}
-	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger())
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
 
 	uuuid := uuid.New().String()
 	puuid := uuid.New().String()
