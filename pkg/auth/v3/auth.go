@@ -30,6 +30,10 @@ type Option struct {
 	// ExcludeURLs is a list of URL regular expressions that are
 	// excluded from the auth middleware.
 	ExcludeURLs []string
+
+	// ExcludeAuthzMethods is a list of RPC method strings which only
+	// do authentication and not authorization.
+	ExcludeAuthzMethods []string
 }
 
 type authContext struct {

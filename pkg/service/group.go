@@ -10,6 +10,7 @@ import (
 	"github.com/RafayLabs/rcloud-base/internal/dao"
 	"github.com/RafayLabs/rcloud-base/internal/models"
 	"github.com/RafayLabs/rcloud-base/pkg/query"
+	"github.com/RafayLabs/rcloud-base/pkg/utils"
 	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
@@ -237,7 +238,7 @@ func (s *groupService) createGroupAccountRelations(ctx context.Context, db bun.I
 	var grpaccs []models.GroupAccount
 	var ugs []*authzv1.UserGroup
 	var uids []uuid.UUID
-	for _, account := range unique(group.GetSpec().GetUsers()) {
+	for _, account := range utils.Unique(group.GetSpec().GetUsers()) {
 		// FIXME: do combined lookup
 		entity, err := dao.GetIdByTraits(ctx, db, account, &models.KratosIdentities{})
 		if err != nil {

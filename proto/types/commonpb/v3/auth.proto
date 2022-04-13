@@ -10,6 +10,7 @@ message IsRequestAllowedRequest {
     string org = 6;
     string project = 7;
     string namespace = 8;
+    bool noAuthz = 9;
 }
 
 enum RequestStatus {

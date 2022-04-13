@@ -24,10 +24,6 @@ func KeyMatchCu(key1 string, key2 string) bool {
 	if key2 == "*" {
 		return true
 	}
-	// FIXME: instead add permissions for userinfo
-	if key1 == "/auth/v3/userinfo" {
-		return true
-	}
 	return util.KeyMatch2(key1, key2)
 }
 

@@ -23,7 +23,7 @@ opts.urlScope_cluster = cluster/eff85770-1a9e-42bc-824b-d0ff5a0f792c
 ## Project
 
 # Create Project
-POST :host/auth/v3/partner/:partner/organization/:organization/project
+POST :host/auth/v3/partner/:partner/organization/:org/project
 Content-Type: application/yaml
 X-Session-Token: :token
 
@@ -35,17 +35,17 @@ spec:
   default: true
 
 # Get all projects
-GET :host/auth/v3/partner/:partner/organization/:organization/projects
+GET :host/auth/v3/partner/:partner/organization/:org/projects
 Content-Type: application/yaml
 X-Session-Token: :token
 
 # Get single project
-GET :host/auth/v3/partner/:partner/organization/:organization/project/:project
+GET :host/auth/v3/partner/:partner/organization/:org/project/:project
 Content-Type: application/yaml
 X-Session-Token: :token
 
 # Update project info
-PUT :host/auth/v3/partner/:partner/organization/:organization/project/:project
+PUT :host/auth/v3/partner/:partner/organization/:org/project/:project
 Content-Type: application/yaml
 X-Session-Token: :token
 
@@ -58,7 +58,7 @@ spec:
   default: true
 
 # Delete single project
-DELETE :host/auth/v3/partner/:partner/organization/:organization/project/:project
+DELETE :host/auth/v3/partner/:partner/organization/:org/project/:project
 
 
 ## Kubeconfig setting

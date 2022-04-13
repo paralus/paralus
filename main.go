@@ -572,6 +572,9 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 				"/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate",
 				"/rafay.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent",
 			},
+			ExcludeAuthzMethods: []string{
+				"/rafay.dev.rpc.v3.User/GetUserInfo",
+			},
 		}
 		opts = append(opts, _grpc.UnaryInterceptor(
 			ac.NewAuthUnaryInterceptor(o),

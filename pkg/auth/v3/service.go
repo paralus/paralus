@@ -26,12 +26,16 @@ func (ac *authContext) IsRequestAllowed(ctx context.Context, httpreq *http.Reque
 	}
 
 	// Authenticate request
-	err, succ := ac.authenticate(ctx, httpreq, req, res)
+	succ, err := ac.authenticate(ctx, httpreq, req, res)
 	if err != nil {
 		return nil, err
 	}
 	// Don't bother checking authorization if athentication failed
 	if !succ {
+		return res, nil
+	}
+
+	if req.NoAuthz {
 		return res, nil
 	}
 
@@ -46,14 +50,14 @@ func (ac *authContext) IsRequestAllowed(ctx context.Context, httpreq *http.Reque
 
 // authenticate validate whether the request is from a legitimate user
 // and populate relevant information in res.
-func (ac *authContext) authenticate(ctx context.Context, httpreq *http.Request, req *commonv3.IsRequestAllowedRequest, res *commonv3.IsRequestAllowedResponse) (error, bool) {
+func (ac *authContext) authenticate(ctx context.Context, httpreq *http.Request, req *commonv3.IsRequestAllowedRequest, res *commonv3.IsRequestAllowedResponse) (bool, error) {
 	if len(req.XApiKey) > 0 && len(req.XSessionToken) == 0 {
 		resp, err := ac.ks.GetByKey(ctx, &rpcv3.ApiKeyRequest{
 			Id: req.XApiKey,
 		})
 		if err != nil {
 			_log.Infow("unable to get api key", "key", req.XApiKey, "error", err)
-			return ErrInvalidAPIKey, false
+			return false, ErrInvalidAPIKey
 		}
 		var kg httpsig.KeyGetterFunc = func(id string) interface{} {
 			return []byte(resp.Secret)
@@ -63,7 +67,7 @@ func (ac *authContext) authenticate(ctx context.Context, httpreq *http.Request, 
 		verifier.SetRequiredHeaders([]string{"content-md5", "date", "host", "nonce"})
 		err = verifier.Verify(httpreq)
 		if err != nil {
-			return ErrInvalidSignature, false
+			return false, ErrInvalidSignature
 		}
 		res.Status = commonv3.RequestStatus_RequestAllowed
 		res.SessionData.Username = resp.Name
@@ -78,9 +82,9 @@ func (ac *authContext) authenticate(ctx context.Context, httpreq *http.Request, 
 			if strings.Contains(err.Error(), "401 Unauthorized") {
 				res.Status = commonv3.RequestStatus_RequestNotAuthenticated
 				res.Reason = "no or invalid credentials"
-				return nil, false
+				return false, nil
 			} else {
-				return err, false
+				return false, nil
 			}
 		}
 		if session.GetActive() {
@@ -95,7 +99,7 @@ func (ac *authContext) authenticate(ctx context.Context, httpreq *http.Request, 
 			res.Reason = "no active session"
 		}
 	}
-	return nil, true
+	return true, nil
 }
 
 // authorize performs authorization of the request
@@ -122,5 +126,8 @@ func (ac *authContext) authorize(ctx context.Context, req *commonv3.IsRequestAll
 		res.Reason = "not authorized to perform action"
 		return nil
 	}
+
+	// the following would already be set in auth, but just in case
+	res.Status = commonv3.RequestStatus_RequestAllowed
 	return nil
 }
