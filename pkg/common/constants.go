@@ -48,3 +48,4 @@ const (
 )
 
 var SessionDataKey contextKey
+var SessionInternalKey contextKey

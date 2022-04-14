@@ -216,13 +216,15 @@ func main() {
 		log.Fatal("unable to create organization", err)
 	}
 
+	// this is used to figure out if the request originated internally so as to not override `builtin`
+	internalCtx := context.WithValue(context.Background(), common.SessionInternalKey, true)
 	for scope := range data {
 		for name := range data[scope] {
 			perms := data[scope][name]
 			fmt.Println(scope, name, len(perms))
-			_, err := rs.Create(context.Background(), &rolev3.Role{
+			_, err := rs.Create(internalCtx, &rolev3.Role{
 				Metadata: &commonv3.Metadata{Name: name, Partner: *partner, Organization: *org, Description: "..."},
-				Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: scope, Rolepermissions: perms},
+				Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: scope, Rolepermissions: perms, Builtin: true},
 			})
 			if err != nil {
 				log.Fatalf("unable to create rolepermission %s %s: %s", scope, name, err)

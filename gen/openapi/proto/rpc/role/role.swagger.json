@@ -142,18 +142,18 @@
             "collectionFormat": "multi"
           },
           {
-            "name": "spec.isGlobal",
-            "description": "IsGlobal. Specify if this is a global role",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
             "name": "spec.scope",
-            "description": "Scope. Scope of the rol",
+            "description": "Scope. Scope of role",
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "spec.builtin",
+            "description": "Builtin. Specify if this is a builtin role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "status.conditionType",
@@ -317,18 +317,18 @@
             "collectionFormat": "multi"
           },
           {
-            "name": "spec.isGlobal",
-            "description": "IsGlobal. Specify if this is a global role",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
             "name": "spec.scope",
-            "description": "Scope. Scope of the rol",
+            "description": "Scope. Scope of role",
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "spec.builtin",
+            "description": "Builtin. Specify if this is a builtin role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "status.conditionType",
@@ -552,18 +552,18 @@
             "collectionFormat": "multi"
           },
           {
-            "name": "spec.isGlobal",
-            "description": "IsGlobal. Specify if this is a global role",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
             "name": "spec.scope",
-            "description": "Scope. Scope of the rol",
+            "description": "Scope. Scope of role",
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "spec.builtin",
+            "description": "Builtin. Specify if this is a builtin role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "status.conditionType",
@@ -924,15 +924,16 @@
           "description": "Permissions for the role",
           "title": "Role Permissions"
         },
-        "isGlobal": {
-          "type": "boolean",
-          "description": "Specify if this is a global role",
-          "title": "IsGlobal"
-        },
         "scope": {
           "type": "string",
-          "description": "Scope of the rol",
+          "description": "Scope of role",
           "title": "Scope"
+        },
+        "builtin": {
+          "type": "boolean",
+          "description": "Specify if this is a builtin role",
+          "title": "Builtin",
+          "readOnly": true
         }
       },
       "description": "Role specification",
