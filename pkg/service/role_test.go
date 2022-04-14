@@ -69,7 +69,7 @@ func TestCreateRole(t *testing.T) {
 
 	role := &rolev3.Role{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
-		Spec:     &rolev3.RoleSpec{Scope: "system"},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system"},
 	}
 	role, err := rs.Create(context.Background(), role)
 	if err != nil {
@@ -92,13 +92,13 @@ func TestCreateRoleNoBuiltinOverride(t *testing.T) {
 
 	mock.ExpectBegin()
 	// TODO: more precise checks
-	mock.ExpectQuery(`INSERT INTO "authsrv_resourcerole".* FALSE, 'system'`).
+	mock.ExpectQuery(`INSERT INTO "authsrv_resourcerole".* TRUE, FALSE, 'system'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ruuid))
 	mock.ExpectCommit()
 
 	role := &rolev3.Role{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
-		Spec:     &rolev3.RoleSpec{Scope: "system", Builtin: true},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system", Builtin: true},
 	}
 	role, err := rs.Create(context.Background(), role)
 	if err != nil {
@@ -122,13 +122,13 @@ func TestCreateRoleBuiltinOverride(t *testing.T) {
 
 	mock.ExpectBegin()
 	// TODO: more precise checks
-	mock.ExpectQuery(`INSERT INTO "authsrv_resourcerole".* TRUE, 'system'`).
+	mock.ExpectQuery(`INSERT INTO "authsrv_resourcerole".* TRUE, TRUE, 'system'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ruuid))
 	mock.ExpectCommit()
 
 	role := &rolev3.Role{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
-		Spec:     &rolev3.RoleSpec{Scope: "system", Builtin: true},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system", Builtin: true},
 	}
 
 	internalCtx := context.WithValue(context.Background(), common.SessionInternalKey, true)
@@ -163,7 +163,7 @@ func TestCreateRoleWithPermissions(t *testing.T) {
 
 	role := &rolev3.Role{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
-		Spec:     &rolev3.RoleSpec{Scope: "system", Rolepermissions: []string{"ops_star.all"}},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system", Rolepermissions: []string{"ops_star.all"}},
 	}
 	role, err := rs.Create(context.Background(), role)
 	if err != nil {
@@ -194,7 +194,7 @@ func TestCreateRoleDuplicate(t *testing.T) {
 
 	role := &rolev3.Role{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
-		Spec:     &rolev3.RoleSpec{Scope: "system"},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system"},
 	}
 	_, err := rs.Create(context.Background(), role)
 	if err == nil {
@@ -216,7 +216,7 @@ func TestUpdateRole(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name", "organization_id", "partner_id"}).AddRow(ruuid, "role-"+ruuid, ouuid, puuid))
 
 	mock.ExpectBegin()
-	mock.ExpectExec(`UPDATE "authsrv_resourcerole" AS "resourcerole" SET "name" = 'role-` + ruuid + `', .*"organization_id" = '` + ouuid + `', "partner_id" = '` + puuid + `', "builtin" = FALSE, "scope" = 'system' WHERE .id  = '` + ruuid + `'.`).
+	mock.ExpectExec(`UPDATE "authsrv_resourcerole" AS "resourcerole" SET "name" = 'role-` + ruuid + `', .*"organization_id" = '` + ouuid + `', "partner_id" = '` + puuid + `', "is_global" = TRUE, "builtin" = FALSE, "scope" = 'system' WHERE .id  = '` + ruuid + `'.`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec(`UPDATE "authsrv_resourcerolepermission" AS "resourcerolepermission" SET trash = TRUE WHERE ."resource_role_id" = '` + ruuid + `'.`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
@@ -229,7 +229,7 @@ func TestUpdateRole(t *testing.T) {
 
 	role := &rolev3.Role{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
-		Spec:     &rolev3.RoleSpec{Scope: "system", Rolepermissions: []string{"ops_star.all"}},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system", Rolepermissions: []string{"ops_star.all"}},
 	}
 	role, err := rs.Update(context.Background(), role)
 	if err != nil {
@@ -252,7 +252,7 @@ func TestUpdateRoleBuiltin(t *testing.T) {
 
 	role := &rolev3.Role{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
-		Spec:     &rolev3.RoleSpec{Scope: "system", Rolepermissions: []string{"ops_star.all"}},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system", Rolepermissions: []string{"ops_star.all"}},
 	}
 	_, err := rs.Update(context.Background(), role)
 	if err == nil {
