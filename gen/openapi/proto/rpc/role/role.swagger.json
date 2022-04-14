@@ -142,13 +142,6 @@
             "collectionFormat": "multi"
           },
           {
-            "name": "spec.isGlobal",
-            "description": "IsGlobal. Specify if this is a global role",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
             "name": "spec.scope",
             "description": "Scope. Scope of role",
             "in": "query",
@@ -322,13 +315,6 @@
               "type": "string"
             },
             "collectionFormat": "multi"
-          },
-          {
-            "name": "spec.isGlobal",
-            "description": "IsGlobal. Specify if this is a global role",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
           },
           {
             "name": "spec.scope",
@@ -564,13 +550,6 @@
               "type": "string"
             },
             "collectionFormat": "multi"
-          },
-          {
-            "name": "spec.isGlobal",
-            "description": "IsGlobal. Specify if this is a global role",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
           },
           {
             "name": "spec.scope",
@@ -944,11 +923,6 @@
           },
           "description": "Permissions for the role",
           "title": "Role Permissions"
-        },
-        "isGlobal": {
-          "type": "boolean",
-          "description": "Specify if this is a global role",
-          "title": "IsGlobal"
         },
         "scope": {
           "type": "string",

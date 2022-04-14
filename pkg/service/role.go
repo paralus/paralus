@@ -153,7 +153,6 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		Trash:          false,
 		OrganizationId: organizationId,
 		PartnerId:      partnerId,
-		IsGlobal:       role.GetSpec().GetIsGlobal(),
 		Builtin:        builtin,
 		Scope:          strings.ToLower(scope),
 	}
@@ -257,7 +256,6 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		//update role details
 		rle.Name = role.Metadata.Name
 		rle.Description = role.Metadata.Description
-		rle.IsGlobal = role.Spec.IsGlobal
 		rle.Scope = role.Spec.Scope
 		rle.ModifiedAt = time.Now()
 
@@ -286,8 +284,7 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 
 		//update spec and status
 		role.Spec = &rolev3.RoleSpec{
-			IsGlobal: rle.IsGlobal,
-			Scope:    rle.Scope,
+			Scope: rle.Scope,
 		}
 
 		err = tx.Commit()
@@ -374,7 +371,6 @@ func (s *roleService) toV3Role(ctx context.Context, db bun.IDB, role *rolev3.Rol
 	}
 
 	role.Spec = &rolev3.RoleSpec{
-		IsGlobal:        rle.IsGlobal,
 		Scope:           rle.Scope,
 		Rolepermissions: permissions,
 		Builtin:         rle.Builtin,
