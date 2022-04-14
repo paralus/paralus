@@ -1,0 +1,14 @@
+FROM golang:1.17 as build
+LABEL description="Build container"
+
+ENV CGO_ENABLED 0
+COPY . /build
+WORKDIR /build
+RUN go build -o start-sync scripts/kratos/providers_sync.go
+
+FROM alpine:latest as runtime
+LABEL description="Run container"
+
+WORKDIR /usr/bin
+COPY --from=build /build/start-sync /usr/bin/start-sync
+ENTRYPOINT ["./start-sync"]
