@@ -64,7 +64,13 @@ message RoleSpec {
   string scope = 3
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Scope"
-        description : "Scope of the rol"
+        description : "Scope of role"
+      } ];
+  bool builtin = 4
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Builtin"
+        description : "Specify if this is a builtin role"
+        read_only : true
       } ];
 }
 

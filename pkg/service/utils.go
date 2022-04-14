@@ -27,3 +27,9 @@ func GetSessionDataFromContext(ctx context.Context) (*commonv3.SessionData, bool
 	s, ok := ctx.Value(common.SessionDataKey).(*commonv3.SessionData)
 	return s, ok
 }
+
+func IsInternalRequest(ctx context.Context) bool {
+	v := ctx.Value(common.SessionInternalKey)
+	b, ok := v.(bool)
+	return ok && b
+}

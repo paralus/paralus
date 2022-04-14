@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS authsrv_resourcerole (
     modified_at timestamp with time zone NOT NULL,
     trash boolean NOT NULL,
     is_global boolean NOT NULL,
+    builtin boolean NOT NULL,
     scope character varying(256) NOT NULL,
     organization_id uuid,
     partner_id uuid

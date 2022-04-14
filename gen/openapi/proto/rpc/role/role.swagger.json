@@ -150,10 +150,17 @@
           },
           {
             "name": "spec.scope",
-            "description": "Scope. Scope of the rol",
+            "description": "Scope. Scope of role",
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "spec.builtin",
+            "description": "Builtin. Specify if this is a builtin role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "status.conditionType",
@@ -325,10 +332,17 @@
           },
           {
             "name": "spec.scope",
-            "description": "Scope. Scope of the rol",
+            "description": "Scope. Scope of role",
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "spec.builtin",
+            "description": "Builtin. Specify if this is a builtin role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "status.conditionType",
@@ -560,10 +574,17 @@
           },
           {
             "name": "spec.scope",
-            "description": "Scope. Scope of the rol",
+            "description": "Scope. Scope of role",
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "spec.builtin",
+            "description": "Builtin. Specify if this is a builtin role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "status.conditionType",
@@ -931,8 +952,14 @@
         },
         "scope": {
           "type": "string",
-          "description": "Scope of the rol",
+          "description": "Scope of role",
           "title": "Scope"
+        },
+        "builtin": {
+          "type": "boolean",
+          "description": "Specify if this is a builtin role",
+          "title": "Builtin",
+          "readOnly": true
         }
       },
       "description": "Role specification",

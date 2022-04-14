@@ -138,6 +138,12 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		return nil, fmt.Errorf("unknown scope '%v'", scope)
 	}
 
+	// Only allow internal call (eg: initialize) to set builtin flag
+	builtin := role.GetSpec().GetBuiltin()
+	if builtin {
+		builtin = IsInternalRequest(ctx)
+	}
+
 	// convert v3 spec to internal models
 	rle := models.Role{
 		Name:           role.GetMetadata().GetName(),
@@ -148,6 +154,7 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		OrganizationId: organizationId,
 		PartnerId:      partnerId,
 		IsGlobal:       role.GetSpec().GetIsGlobal(),
+		Builtin:        builtin,
 		Scope:          strings.ToLower(scope),
 	}
 
@@ -244,6 +251,9 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 	}
 
 	if rle, ok := entity.(*models.Role); ok {
+		if rle.Builtin {
+			return role, fmt.Errorf("builtin role '%v' cannot be updated", name)
+		}
 		//update role details
 		rle.Name = role.Metadata.Name
 		rle.Description = role.Metadata.Description
@@ -364,6 +374,7 @@ func (s *roleService) toV3Role(ctx context.Context, db bun.IDB, role *rolev3.Rol
 		IsGlobal:        rle.IsGlobal,
 		Scope:           rle.Scope,
 		Rolepermissions: permissions,
+		Builtin:         rle.Builtin,
 	}
 	return role, nil
 }

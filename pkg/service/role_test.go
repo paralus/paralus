@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/RafayLabs/rcloud-base/pkg/common"
 	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	rolev3 "github.com/RafayLabs/rcloud-base/proto/types/rolepb/v3"
 	"github.com/google/uuid"
@@ -55,13 +56,8 @@ func TestCreateRole(t *testing.T) {
 	rs := NewRoleService(db, &mazc, getLogger())
 
 	ruuid := uuid.New().String()
-	puuid := uuid.New().String()
-	ouuid := uuid.New().String()
 
-	mock.ExpectQuery(`SELECT "partner"."id" FROM "authsrv_partner" AS "partner"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
-	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
+	puuid, ouuid := addParterOrgFetchExpectation(mock)
 	mock.ExpectQuery(`SELECT "resourcerole"."id" FROM "authsrv_resourcerole" AS "resourcerole" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'role-` + ruuid + `'.`).
 		WillReturnError(fmt.Errorf("no data available"))
 
@@ -81,6 +77,67 @@ func TestCreateRole(t *testing.T) {
 	}
 	performRoleBasicChecks(t, role, ruuid)
 }
+func TestCreateRoleNoBuiltinOverride(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
+	mazc := mockAuthzClient{}
+	rs := NewRoleService(db, &mazc, getLogger())
+
+	ruuid := uuid.New().String()
+
+	puuid, ouuid := addParterOrgFetchExpectation(mock)
+	mock.ExpectQuery(`SELECT "resourcerole"."id" FROM "authsrv_resourcerole" AS "resourcerole" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'role-` + ruuid + `'.`).
+		WillReturnError(fmt.Errorf("no data available"))
+
+	mock.ExpectBegin()
+	// TODO: more precise checks
+	mock.ExpectQuery(`INSERT INTO "authsrv_resourcerole".* TRUE, FALSE, 'system'`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ruuid))
+	mock.ExpectCommit()
+
+	role := &rolev3.Role{
+		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system", Builtin: true},
+	}
+	role, err := rs.Create(context.Background(), role)
+	if err != nil {
+		t.Fatal("could not create group:", err)
+	}
+	performRoleBasicChecks(t, role, ruuid)
+}
+
+func TestCreateRoleBuiltinOverride(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
+	mazc := mockAuthzClient{}
+	rs := NewRoleService(db, &mazc, getLogger())
+
+	ruuid := uuid.New().String()
+
+	puuid, ouuid := addParterOrgFetchExpectation(mock)
+	mock.ExpectQuery(`SELECT "resourcerole"."id" FROM "authsrv_resourcerole" AS "resourcerole" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'role-` + ruuid + `'.`).
+		WillReturnError(fmt.Errorf("no data available"))
+
+	mock.ExpectBegin()
+	// TODO: more precise checks
+	mock.ExpectQuery(`INSERT INTO "authsrv_resourcerole".* TRUE, TRUE, 'system'`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ruuid))
+	mock.ExpectCommit()
+
+	role := &rolev3.Role{
+		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system", Builtin: true},
+	}
+
+	internalCtx := context.WithValue(context.Background(), common.SessionInternalKey, true)
+	role, err := rs.Create(internalCtx, role)
+	if err != nil {
+		t.Fatal("could not create group:", err)
+	}
+	performRoleBasicChecks(t, role, ruuid)
+}
 
 func TestCreateRoleWithPermissions(t *testing.T) {
 	db, mock := getDB(t)
@@ -90,13 +147,8 @@ func TestCreateRoleWithPermissions(t *testing.T) {
 	rs := NewRoleService(db, &mazc, getLogger())
 
 	ruuid := uuid.New().String()
-	puuid := uuid.New().String()
-	ouuid := uuid.New().String()
 
-	mock.ExpectQuery(`SELECT "partner"."id" FROM "authsrv_partner" AS "partner"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
-	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
+	puuid, ouuid := addParterOrgFetchExpectation(mock)
 	mock.ExpectQuery(`SELECT "resourcerole"."id" FROM "authsrv_resourcerole" AS "resourcerole" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'role-` + ruuid + `'.`).
 		WillReturnError(fmt.Errorf("no data available"))
 
@@ -129,13 +181,8 @@ func TestCreateRoleDuplicate(t *testing.T) {
 	rs := NewRoleService(db, &mazc, getLogger())
 
 	ruuid := uuid.New().String()
-	puuid := uuid.New().String()
-	ouuid := uuid.New().String()
 
-	mock.ExpectQuery(`SELECT "partner"."id" FROM "authsrv_partner" AS "partner"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
-	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
+	puuid, ouuid := addParterOrgFetchExpectation(mock)
 	mock.ExpectQuery(` SELECT "resourcerole"."id" FROM "authsrv_resourcerole" AS "resourcerole" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'role-` + ruuid + `'.`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ruuid))
 
@@ -163,18 +210,13 @@ func TestUpdateRole(t *testing.T) {
 	rs := NewRoleService(db, &mazc, getLogger())
 
 	ruuid := uuid.New().String()
-	puuid := uuid.New().String()
-	ouuid := uuid.New().String()
 
-	mock.ExpectQuery(`SELECT "partner"."id" FROM "authsrv_partner" AS "partner"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
-	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
+	puuid, ouuid := addParterOrgFetchExpectation(mock)
 	mock.ExpectQuery(`SELECT "resourcerole"."id", "resourcerole"."name", .*FROM "authsrv_resourcerole" AS "resourcerole" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'role-` + ruuid + `'.`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name", "organization_id", "partner_id"}).AddRow(ruuid, "role-"+ruuid, ouuid, puuid))
 
 	mock.ExpectBegin()
-	mock.ExpectExec(`UPDATE "authsrv_resourcerole" AS "resourcerole" SET "name" = 'role-` + ruuid + `', .*"organization_id" = '` + ouuid + `', "partner_id" = '` + puuid + `', "is_global" = TRUE, "scope" = 'system' WHERE .id  = '` + ruuid + `'.`).
+	mock.ExpectExec(`UPDATE "authsrv_resourcerole" AS "resourcerole" SET "name" = 'role-` + ruuid + `', .*"organization_id" = '` + ouuid + `', "partner_id" = '` + puuid + `', "is_global" = TRUE, "builtin" = FALSE, "scope" = 'system' WHERE .id  = '` + ruuid + `'.`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec(`UPDATE "authsrv_resourcerolepermission" AS "resourcerolepermission" SET trash = TRUE WHERE ."resource_role_id" = '` + ruuid + `'.`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
@@ -196,6 +238,28 @@ func TestUpdateRole(t *testing.T) {
 	performRoleBasicChecks(t, role, ruuid)
 }
 
+func TestUpdateRoleBuiltin(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
+	mazc := mockAuthzClient{}
+	rs := NewRoleService(db, &mazc, getLogger())
+
+	ruuid := uuid.New().String()
+	puuid, ouuid := addParterOrgFetchExpectation(mock)
+	mock.ExpectQuery(`SELECT "resourcerole"."id", "resourcerole"."name", .*FROM "authsrv_resourcerole" AS "resourcerole" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'role-` + ruuid + `'.`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name", "organization_id", "partner_id", "builtin"}).AddRow(ruuid, "role-"+ruuid, ouuid, puuid, true))
+
+	role := &rolev3.Role{
+		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system", Rolepermissions: []string{"ops_star.all"}},
+	}
+	_, err := rs.Update(context.Background(), role)
+	if err == nil {
+		t.Fatal("builtin roles should not be updated")
+	}
+}
+
 func TestRoleDelete(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
@@ -204,13 +268,8 @@ func TestRoleDelete(t *testing.T) {
 	rs := NewRoleService(db, &mazc, getLogger())
 
 	ruuid := uuid.New().String()
-	puuid := uuid.New().String()
-	ouuid := uuid.New().String()
 
-	mock.ExpectQuery(`SELECT "partner"."id" FROM "authsrv_partner" AS "partner"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
-	mock.ExpectQuery(`SELECT "organization"."id" FROM "authsrv_organization" AS "organization"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
+	puuid, ouuid := addParterOrgFetchExpectation(mock)
 	mock.ExpectQuery(`SELECT "resourcerole"."id", "resourcerole"."name", .* FROM "authsrv_resourcerole" AS "resourcerole" WHERE`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(ruuid, "role-"+ruuid))
 	mock.ExpectBegin()
