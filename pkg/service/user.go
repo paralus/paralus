@@ -466,6 +466,7 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 	if s.dev {
 		username = user.GetMetadata().GetName()
 		if len(username) == 0 {
+			fmt.Println("Unable to fetch username. Don't use DEV mode when using from UI.")
 			return &userv3.UserInfo{}, fmt.Errorf("username should be provided")
 		}
 	} else {
