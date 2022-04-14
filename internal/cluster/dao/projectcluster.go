@@ -21,7 +21,7 @@ func CreateProjectCluster(ctx context.Context, db bun.IDB, pc *models.ProjectClu
 
 func GetProjectsForCluster(ctx context.Context, db bun.IDB, clusterID uuid.UUID) ([]models.ProjectCluster, error) {
 	var projectClusters []models.ProjectCluster
-	err := db.NewSelect().Model(&projectClusters).Where("cluster_id = ?", clusterID).Scan(ctx)
+	err := db.NewSelect().Model(&projectClusters).Where("cluster_id = ?", clusterID).Where("trash = ?", false).Scan(ctx)
 	if err != nil {
 		return nil, err
 	}

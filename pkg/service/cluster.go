@@ -119,12 +119,6 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 		return &infrav3.Cluster{}, err
 	}
 
-	/*reqAuth, err := c.requestAuth(r, ctx, ps)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
-		returnrequestAuth
-	}*/
-
 	if cluster.Metadata.Name == "" {
 		return &infrav3.Cluster{}, fmt.Errorf("invalid cluster data, name is missing")
 	}
@@ -236,6 +230,11 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 	edb.Conditions = json.RawMessage(cnds)
 
 	cluster.Spec.ClusterData.Health = infrav3.Health_EDGE_IGNORE
+
+	if cluster.Spec.Params != nil {
+		prmssByts, _ := json.Marshal(cluster.Spec.Params)
+		edb.Extra = json.RawMessage(prmssByts)
+	}
 
 	tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 	if err != nil {
@@ -435,6 +434,10 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 	if c.ProxyConfig != nil {
 		json.Unmarshal(c.ProxyConfig, &proxy)
 	}
+	var params infrav3.ProvisionParams
+	if c.Extra != nil {
+		json.Unmarshal(c.Extra, &params)
+	}
 	var pcs []*infrav3.ProjectCluster
 	if len(projects) > 0 {
 		pcs = make([]*infrav3.ProjectCluster, len(projects)-1)
@@ -454,6 +457,7 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 		OverrideSelector: c.OverrideSelector,
 		ShareMode:        infrav3.ClusterShareMode(sm),
 		ProxyConfig:      &proxy,
+		Params:           &params,
 		ClusterData: &infrav3.ClusterData{
 			ClusterBlueprint: c.BlueprintRef,
 			Projects:         pcs,
@@ -556,6 +560,11 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 	if cluster.Spec.ProxyConfig != nil {
 		pcfgsByts, _ := json.Marshal(cluster.Spec.ProxyConfig)
 		cdb.ProxyConfig = json.RawMessage(pcfgsByts)
+	}
+
+	if cluster.Spec.Params != nil {
+		prmsByts, _ := json.Marshal(cluster.Spec.Params)
+		cdb.Extra = json.RawMessage(prmsByts)
 	}
 
 	if cluster.Spec.ClusterData != nil {
