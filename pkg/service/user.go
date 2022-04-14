@@ -464,7 +464,7 @@ func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3
 func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*userv3.UserInfo, error) {
 	username := ""
 	if s.dev {
-		username = user.Metadata.Name
+		username = user.GetMetadata().GetName()
 		if len(username) == 0 {
 			return &userv3.UserInfo{}, fmt.Errorf("username should be provided")
 		}
