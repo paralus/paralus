@@ -65,6 +65,7 @@ const (
 	sentryPeeringHostEnv      = "SENTRY_PEERING_HOST"
 	coreRelayConnectorHostEnv = "CORE_RELAY_CONNECTOR_HOST"
 	coreRelayUserHostEnv      = "CORE_RELAY_USER_HOST"
+	sentryBootstrapEnv        = "SENTRY_BOOTSTRAP_ADDR"
 	bootstrapKEKEnv           = "BOOTSTRAP_KEK"
 	relayImageEnv             = "RELAY_IMAGE"
 
@@ -179,6 +180,7 @@ func setup() {
 	viper.SetDefault(sentryPeeringHostEnv, "peering.sentry.rafay.local:10001")
 	viper.SetDefault(coreRelayConnectorHostEnv, "*.core-connector.relay.rafay.local:10002")
 	viper.SetDefault(coreRelayUserHostEnv, "*.user.relay.rafay.local:10002")
+	viper.SetDefault(sentryBootstrapEnv, "console.rafay.dev:443")
 	viper.SetDefault(bootstrapKEKEnv, "rafay")
 	viper.SetDefault(relayImageEnv, "registry.rafay-edge.net/rafay/rafay-relay-agent:r1.10.0-24")
 
@@ -213,6 +215,7 @@ func setup() {
 	viper.BindEnv(sentryPeeringHostEnv)
 	viper.BindEnv(coreRelayConnectorHostEnv)
 	viper.BindEnv(coreRelayUserHostEnv)
+	viper.BindEnv(sentryBootstrapEnv)
 	viper.BindEnv(bootstrapKEKEnv)
 	viper.BindEnv(coreCDRelayConnectorHostEnv)
 	viper.BindEnv(coreCDRelayUserHostEnv)

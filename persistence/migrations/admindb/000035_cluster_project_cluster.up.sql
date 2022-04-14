@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS cluster_project_cluster (
     project_id uuid NOT NULL,
-    cluster_id uuid NOT NULL
+    cluster_id uuid NOT NULL,
+    trash boolean NOT NULL default false
 );
 
 ALTER TABLE cluster_project_cluster OWNER TO admindbuser;
