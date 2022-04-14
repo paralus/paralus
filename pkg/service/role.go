@@ -315,6 +315,9 @@ func (s *roleService) Delete(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 	}
 
 	if rle, ok := entity.(*models.Role); ok {
+		if rle.Builtin {
+			return role, fmt.Errorf("builtin role '%v' cannot be deleted", name)
+		}
 
 		tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 		if err != nil {
