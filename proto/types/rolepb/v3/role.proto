@@ -56,12 +56,17 @@ message RoleSpec {
         title : "Role Permissions"
         description : "Permissions for the role"
       } ];
-  string scope = 2
+  bool isGlobal = 2
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "IsGlobal"
+        description : "Specify if this is a global role"
+      } ];
+  string scope = 3
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Scope"
         description : "Scope of role"
       } ];
-  bool builtin = 3
+  bool builtin = 4
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Builtin"
         description : "Specify if this is a builtin role"
