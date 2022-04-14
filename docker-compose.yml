@@ -3,7 +3,6 @@ version: '3.7'
 services:
   postgresd:
     image: postgres:13.4
-    restart: always
     container_name: rcloud_postgres_13
     ports:
       - "$DB_PORT:$DB_PORT"
@@ -16,7 +15,6 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.0.0
-    restart: always
     container_name: rcloud_elasticsearch_8
     ports:
       - '${ES_PORT:-9200}:9200'
@@ -56,7 +54,6 @@ services:
     ports:
       - '4433:4433' # public
       - '4434:4434' # admin
-    restart: unless-stopped
     environment:
       - DSN=postgres://$DB_USER:$DB_PASSWORD@postgresd:$DB_PORT/$DB_NAME?sslmode=disable&max_conns=20&max_idle_conns=4
       - LOG_LEVEL=trace
