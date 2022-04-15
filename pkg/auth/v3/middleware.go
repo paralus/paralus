@@ -9,7 +9,6 @@ import (
 	"github.com/RafayLabs/rcloud-base/internal/dao"
 	"github.com/RafayLabs/rcloud-base/pkg/common"
 	commonpbv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"github.com/urfave/negroni"
 	"go.uber.org/zap"
@@ -48,24 +47,17 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 	var org string
 
 	if strings.HasPrefix(r.URL.String(), "/v2/debug/prompt/project/") {
-		// /v2/debug/prompt/project/:project_id/cluster/:cluster_name
+		// /v2/debug/prompt/project/:project/cluster/:cluster_name
 		splits := strings.Split(r.URL.String(), "/")
 		if len(splits) > 5 {
-			projid, err := uuid.Parse(splits[5])
-			if err != nil {
-				_log.Errorf("Failed to authenticate: unable to parse project uuid")
-				http.Error(rw, http.StatusText(http.StatusForbidden), http.StatusForbidden)
-				return
-			}
-			// What gets sent for project is the id unlike most other
-			// api routes, so we have to fetch the name as well as the
-			// org info for casbin
-			proj, org, err = dao.GetProjectOrganization(r.Context(), am.db, projid)
+			// we have to fetch the org info for casbin
+			proj, org, err := dao.GetProjectOrganization(r.Context(), am.db, splits[5])
 			if err != nil {
 				_log.Errorf("Failed to authenticate: unable to find project")
 				http.Error(rw, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 				return
 			}
+			_log.Info("found project with organization %s %s", proj, org)
 		}
 	} else {
 		// The middleware to only used with routes which does not have

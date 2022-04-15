@@ -9,7 +9,7 @@ import (
 	"github.com/uptrace/bun"
 )
 
-func GetProjectOrganization(ctx context.Context, db bun.IDB, id uuid.UUID) (string, string, error) {
+func GetProjectOrganization(ctx context.Context, db bun.IDB, name string) (string, string, error) {
 	type projectOrg struct {
 		Project      string
 		Organization string
@@ -19,7 +19,7 @@ func GetProjectOrganization(ctx context.Context, db bun.IDB, id uuid.UUID) (stri
 		ColumnExpr("authsrv_project.name as project").
 		ColumnExpr("authsrv_organization.name as organization").
 		Join(`JOIN authsrv_organization ON authsrv_project.organization_id=authsrv_organization.id`).
-		Where("authsrv_project.id = ?", id).
+		Where("authsrv_project.name = ?", name).
 		Where("authsrv_project.trash = ?", false).
 		Where("authsrv_organization.trash = ?", false).
 		Scan(ctx, &r)
