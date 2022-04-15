@@ -200,6 +200,7 @@ func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.
 		project.Metadata = &v3.Metadata{
 			Name:         proj.Name,
 			Description:  proj.Description,
+			Id:           proj.ID.String(),
 			Organization: org.Name,
 			Partner:      partner.Name,
 			ModifiedAt:   timestamppb.New(proj.ModifiedAt),
