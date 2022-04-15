@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/cloudflare/cfssl/log"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -20,7 +21,7 @@ type Provider struct {
 	MapperURL       string                 `bun:"mapper_url" yaml:"mapper_url"`
 	ClientId        string                 `bun:"client_id,notnull" yaml:"client_id"`
 	ClientSecret    string                 `bun:"client_secret,notnull" yaml:"client_secret"`
-	Scope           []string               `bun:"scopes,notnull"`
+	Scope           []string               `bun:"scopes,array,notnull"`
 	IssuerURL       string                 `bun:"issuer_url,notnull" yaml:"issuer_url"`
 	AuthURL         string                 `bun:"auth_url" yaml:"auth_url,omitempty"`
 	TokenURL        string                 `bun:"token_url" yaml:"token_url,omitempty"`
@@ -41,7 +42,7 @@ type Config struct {
 
 var ProvidersDB []Provider
 
-func sync(ctx context.Context, db *bun.DB) error {
+func sync(ctx context.Context, db *bun.DB, path string) error {
 	err := db.NewSelect().Model(&ProvidersDB).ModelTableExpr("authsrv_oidc_provider AS provider").Scan(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to fetch providers from DB: %s", err)
@@ -53,7 +54,7 @@ func sync(ctx context.Context, db *bun.DB) error {
 	if err != nil {
 		return fmt.Errorf("failed to marshal: %s", err)
 	}
-	err = os.WriteFile("kratos_oidc.yml", d, 0644)
+	err = os.WriteFile(path, d, 0644)
 	if err != nil {
 		return fmt.Errorf("failed to write data: %s", err)
 	}
@@ -61,22 +62,37 @@ func sync(ctx context.Context, db *bun.DB) error {
 }
 
 func main() {
+	dsn := "postgres://"
+	outputPath := "/etc/kratos/providers.yaml"
 	ctx := context.Background()
-	dsn := "postgres://admindbuser:admindbpassword@localhost:5432/admindb?sslmode=disable"
+	channel := "provider:changed"
+
+	if len(os.Getenv("DSN")) != 0 {
+		dsn = os.Getenv("DSN")
+	}
+
+	if len(os.Getenv("KRATOS_PROVIDER_CFG")) != 0 {
+		outputPath = os.Getenv("KRATOS_PROVIDER_CFG")
+	}
+
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db := bun.NewDB(sqldb, pgdialect.New())
 
 	ln := pgdriver.NewListener(db)
-	if err := ln.Listen(ctx, "provider:changed"); err != nil {
-		panic(err)
+listen:
+	if err := ln.Listen(ctx, channel); err != nil {
+		log.Errorf("error listening for notifications on channel %q: %s", channel, err)
+		time.Sleep(2 * time.Second)
+		goto listen
 	}
 
+	log.Infof("Started listening for notification on channel %q", channel)
 	for range ln.Channel() {
-		fmt.Printf("%s: Received notification\n", time.Now())
-		if err := sync(ctx, db); err != nil {
-			fmt.Println(err)
+		log.Info("A notification received")
+		if err := sync(ctx, db, outputPath); err != nil {
+			log.Errorf("sync failed: %s", err)
 		} else {
-			fmt.Println("Synchronized successfully")
+			log.Info("Synchronized successfully")
 		}
 	}
 
