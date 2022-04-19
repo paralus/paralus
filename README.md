@@ -1,4 +1,4 @@
-# `rcloud-base`
+# Rcloud Base
 
 This repository contains all the rcloud-system components that are the backbone for ztka and gitops.
 
@@ -26,7 +26,7 @@ run the kratos migrations. It will also run all the necessary
 migrations. It also starts up a mail slurper for you to use Kratos._
 
 ```bash
-docker-compose up -d
+docker-compose --env-file ./env.example up -d
 ```
 
 Start rcloud-base:
@@ -58,9 +58,7 @@ docker run --network host \
     -it docker.elastic.co/elasticsearch/elasticsearch:8.0.0
 ```
 
-#### Create the initial db/user
-
-Scripts for `admindb`:
+#### Create the initial db and user
 
 ```sql
 create database admindb;
@@ -68,29 +66,21 @@ CREATE ROLE admindbuser WITH LOGIN PASSWORD '<your_password>';
 GRANT ALL PRIVILEGES ON DATABASE admindb to admindbuser;
 ```
 
-Now in the newly created db:
+#### Ory Kratos
 
-```sql
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-grant execute on function uuid_generate_v4() to admindbuser;
+Install Ory Kratos using the [installation
+guide](https://www.ory.sh/docs/kratos/install) from Kratos
+documentation.
+
+Perform the Kratos migrations:
+
+```bash
+export DSN='postgres://<user>:<pass>@<host>:<port>/admindb?sslmode=disable'
+kratos -c <kratos-config> migrate sql -e --yes
 ```
 
-Scripts for `clusterdb`:
-
-```sql
-create database clusterdb;
-CREATE ROLE clusterdbuser WITH LOGIN PASSWORD '<your_password>';
-GRANT ALL PRIVILEGES ON DATABASE clusterdb to clusterdbuser;
-```
-
-Now in the newly created db:
-
-```sql
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-grant execute on function uuid_generate_v4() to clusterdbuser;
-```
-
-_This will grant the necessary permission to the newly created user to run uuid_generate_v4()_
+Start the Ory Kratos server using kratos config provided in
+[_kratos](./_kratos) directory.
 
 #### Run application migrations
 
@@ -108,7 +98,7 @@ You can refer to the [guide](https://github.com/golang-migrate/migrate/tree/mast
 
 ##### Run migrations
 
-Example for `admindb`:
+_It is required to perform Kratos migrations before this step._
 
 ```shell
 export POSTGRESQL_URL='postgres://<user>:<pass>@<host>:<port>/admindb?sslmode=disable'
@@ -117,23 +107,10 @@ migrate -path ./persistence/migrations/admindb -database "$POSTGRESQL_URL" up
 
 See [cli-usage](https://github.com/golang-migrate/migrate#cli-usage) for more info.
 
-## Development setup
+#### Start application
 
-Copy `env.example` to `.env`:
+Start rcloud-base:
 
-```
-cp env.example .env
-```
-
-Run following Docker Compose command to setup all requirements like
-Postgres db, Kratos etc. for the rcloud-base:
-
-```
-docker-compose up -d
-```
-
-Start rcloud-base server:
-
-```
+```bash
 go run github.com/RafayLabs/rcloud-base
 ```
