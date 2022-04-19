@@ -47,10 +47,9 @@ type authContext struct {
 // fields created then use NewAuthContext instead.
 func SetupAuthContext(auditLogger *zap.Logger) authContext {
 	var (
-		kc           *kclient.APIClient
-		kratosScheme string
-		kratosAddr   string
-		db           *bun.DB
+		kc         *kclient.APIClient
+		kratosAddr string
+		db         *bun.DB
 	)
 
 	// Initialize database
@@ -62,19 +61,13 @@ func SetupAuthContext(auditLogger *zap.Logger) authContext {
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db = bun.NewDB(sqldb, pgdialect.New())
 
-	if v, ok := os.LookupEnv("KRATOS_SCHEME"); ok {
-		kratosScheme = v
-	} else {
-		kratosScheme = "http"
-	}
-
 	if v, ok := os.LookupEnv("KRATOS_ADDR"); ok {
 		kratosAddr = v
 	} else {
-		kratosAddr = "localhost:4433"
+		kratosAddr = "http://localhost:4433"
 	}
 	kratosConfig := kclient.NewConfiguration()
-	kratosConfig.Servers[0].URL = kratosScheme + "://" + kratosAddr
+	kratosConfig.Servers[0].URL = kratosAddr
 	kc = kclient.NewAPIClient(kratosConfig)
 
 	gormDb, err := gorm.Open(
