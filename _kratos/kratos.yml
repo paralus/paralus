@@ -66,12 +66,12 @@ selfservice:
       ui_url: http://127.0.0.1:4455/error
 
     settings:
-      ui_url: http://127.0.0.1:4455/settings
+      ui_url: http://127.0.0.1:3000/ksettings
       privileged_session_max_age: 15m
 
     recovery:
       enabled: true
-      ui_url: http://127.0.0.1:4455/recovery
+      ui_url: http://127.0.0.1:3000/ksettings
 
     verification:
       enabled: true
