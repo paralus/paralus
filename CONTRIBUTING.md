@@ -133,6 +133,4 @@ go run github.com/RafayLabs/rcloud-base
 
 ## Need Help?
 
-We’re there for you - the best part of being a part of an open source community. If you are stuck somewhere or are facing an issue or just don’t know how to get started, feel free to let us know.
-
-You can reach out to us via our Slack Channel, Twitter, Discord etc.
+If you are interested to contribute to rcloud-base but are stuck with any of the steps, feel free to reach out to us. Please create an issue in this repository describing your issue and we'll take it up from there.
