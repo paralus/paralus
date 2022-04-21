@@ -39,7 +39,6 @@ const (
 
 // EventActorAccount Event's initiator account
 type EventActorAccount struct {
-	ID       string `json:"id"`
 	Username string `json:"username"`
 }
 
@@ -249,7 +248,6 @@ func getEventClientFromContext(ctx context.Context) *EventClient {
 
 func getActor(cOpts createEventOptions) *EventActor {
 	account := EventActorAccount{
-		ID:       cOpts.accountID,
 		Username: cOpts.username,
 	}
 	return &EventActor{
@@ -260,10 +258,8 @@ func getActor(cOpts createEventOptions) *EventActor {
 }
 
 func GetActorFromSessionData(sd *commonv3.SessionData) *EventActor {
-	accountID := sd.GetAccount()
 	username := sd.GetUsername()
 	account := EventActorAccount{
-		ID:       accountID,
 		Username: username,
 	}
 	groups := sd.Groups // TODO: get groups (in interceptor?)
