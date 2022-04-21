@@ -36,10 +36,10 @@ func (a *AuditLogService) GetAuditLog(req *v1.AuditLogSearchRequest) (res *v1.Au
 
 func validateQueryString(queryString string) error {
 	if strings.Contains(queryString, "*") {
-		return fmt.Errorf("Sorry. '*' is not supported in search query")
+		return fmt.Errorf("'*' is not supported in search query")
 	}
 	if len(queryString) > 0 && len(queryString) < 3 {
-		return fmt.Errorf("Search string has to be atleast 3 characters")
+		return fmt.Errorf("search string has to be atleast 3 characters")
 	}
 	return nil
 }
@@ -48,13 +48,12 @@ func getPrjectIdFromUrlScope(urlScope string) (string, error) {
 	s := strings.Split(urlScope, "/")
 	if len(s) != 2 {
 		_log.Errorw("Unable to retrieve projectID from urlScope", "urlScope", urlScope)
-		return "", fmt.Errorf("Unable to retrieve projectID from urlScope")
+		return "", fmt.Errorf("unable to retrieve projectID from urlScope")
 	}
 	return s[1], nil
 }
 
 func (a *AuditLogService) GetAuditLogByProjects(req *v1.AuditLogSearchRequest) (res *v1.AuditLogSearchResponse, err error) {
-	// No embedding in golang/protoc (https://github.com/golang/protobuf/issues/192)
 	err = validateQueryString(req.GetFilter().QueryString)
 	if err != nil {
 		return nil, err
@@ -65,34 +64,33 @@ func (a *AuditLogService) GetAuditLogByProjects(req *v1.AuditLogSearchRequest) (
 	var buf bytes.Buffer
 	var r map[string]interface{}
 	query := map[string]interface{}{
-		"_source": true,
+		"_source": []string{"json"},
 		"size":    500,
 		"query": map[string]interface{}{
 			"bool": map[string]interface{}{
 				"must": []map[string]interface{}{
-					// Add org and partner filter once we have to support multi-org
 					{
 						"term": map[string]interface{}{
-							"category": "AUDIT",
+							"json.category": "AUDIT",
 						},
 					},
 				},
 			},
 		},
 		"sort": map[string]interface{}{
-			"timestamp": map[string]interface{}{
+			"json.timestamp": map[string]interface{}{
 				"order": "desc",
 			},
 		},
 		"aggs": map[string]interface{}{
 			"group_by_username": map[string]interface{}{
 				"terms": map[string]interface{}{
-					"field": "actor.account.username",
+					"field": "json.actor.account.username",
 				},
 			},
 			"group_by_type": map[string]interface{}{
 				"terms": map[string]interface{}{
-					"field": "type",
+					"field": "json.type",
 				},
 			},
 		},
@@ -103,19 +101,19 @@ func (a *AuditLogService) GetAuditLogByProjects(req *v1.AuditLogSearchRequest) (
 	if req.GetFilter().DashboardData {
 		agg["group_by_project"] = map[string]interface{}{
 			"terms": map[string]interface{}{
-				"field": "project_id",
+				"field": "json.project_id",
 				"size":  1000,
 			},
 			"aggs": map[string]interface{}{
 				"group_by_username": map[string]interface{}{
 					"terms": map[string]interface{}{
-						"field": "actor.account.username",
+						"field": "json.actor.account.username",
 						"size":  1000,
 					},
 				},
 				"group_by_type": map[string]interface{}{
 					"terms": map[string]interface{}{
-						"field": "type",
+						"field": "json.type",
 						"size":  1000,
 					},
 				},
@@ -136,7 +134,7 @@ func (a *AuditLogService) GetAuditLogByProjects(req *v1.AuditLogSearchRequest) (
 	if req.GetFilter().Timefrom != "" {
 		b["filter"] = map[string]interface{}{
 			"range": map[string]interface{}{
-				"timestamp": map[string]interface{}{
+				"json.timestamp": map[string]interface{}{
 					"gte": req.GetFilter().Timefrom,
 					"lt":  "now",
 				},
@@ -147,7 +145,7 @@ func (a *AuditLogService) GetAuditLogByProjects(req *v1.AuditLogSearchRequest) (
 	if req.GetFilter().Type != "" {
 		t := map[string]interface{}{
 			"term": map[string]interface{}{
-				"type": req.GetFilter().Type,
+				"json.type": req.GetFilter().Type,
 			},
 		}
 		m = append(m, t)
@@ -156,7 +154,7 @@ func (a *AuditLogService) GetAuditLogByProjects(req *v1.AuditLogSearchRequest) (
 	if req.GetFilter().User != "" {
 		t := map[string]interface{}{
 			"term": map[string]interface{}{
-				"actor.account.username": req.GetFilter().User,
+				"json.actor.account.username": req.GetFilter().User,
 			},
 		}
 		m = append(m, t)
@@ -165,7 +163,7 @@ func (a *AuditLogService) GetAuditLogByProjects(req *v1.AuditLogSearchRequest) (
 	if req.GetFilter().Client != "" {
 		t := map[string]interface{}{
 			"term": map[string]interface{}{
-				"client.type": req.GetFilter().Client,
+				"json.client.type": req.GetFilter().Client,
 			},
 		}
 		m = append(m, t)
@@ -174,7 +172,7 @@ func (a *AuditLogService) GetAuditLogByProjects(req *v1.AuditLogSearchRequest) (
 	if len(req.GetFilter().ProjectIds) > 0 {
 		t := map[string]interface{}{
 			"terms": map[string]interface{}{
-				"project_id": req.GetFilter().ProjectIds,
+				"json.project_id": req.GetFilter().ProjectIds,
 			},
 		}
 		m = append(m, t)

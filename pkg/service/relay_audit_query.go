@@ -44,53 +44,53 @@ func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchReq
 	res = &v1.RelayAuditSearchResponse{}
 	//Handle defaults value
 	query := map[string]interface{}{
-		"_source": true,
+		"_source": []string{"json"},
 		"size":    500,
 		"query": map[string]interface{}{
 			"bool": map[string]interface{}{
 				"must": []map[string]interface{}{
 					{
 						"term": map[string]interface{}{
-							"o": oid,
+							"json.o": oid,
 						},
 					},
 					{
 						"term": map[string]interface{}{
-							"p": pid,
+							"json.p": pid,
 						},
 					},
 				},
 			},
 		},
 		"sort": map[string]interface{}{
-			"ts": map[string]interface{}{
+			"json.ts": map[string]interface{}{
 				"order": "desc",
 			},
 		},
 		"aggs": map[string]interface{}{
 			"group_by_username": map[string]interface{}{
 				"terms": map[string]interface{}{
-					"field": "un",
+					"field": "json.un",
 				},
 			},
 			"group_by_cluster": map[string]interface{}{
 				"terms": map[string]interface{}{
-					"field": "cn",
+					"field": "json.cn",
 				},
 			},
 			"group_by_namespace": map[string]interface{}{
 				"terms": map[string]interface{}{
-					"field": "ns",
+					"field": "json.ns",
 				},
 			},
 			"group_by_kind": map[string]interface{}{
 				"terms": map[string]interface{}{
-					"field": "k",
+					"field": "json.k",
 				},
 			},
 			"group_by_method": map[string]interface{}{
 				"terms": map[string]interface{}{
-					"field": "m",
+					"field": "json.m",
 				},
 			},
 		},
@@ -101,19 +101,19 @@ func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchReq
 	if req.GetFilter().DashboardData {
 		agg["group_by_cluster"] = map[string]interface{}{
 			"terms": map[string]interface{}{
-				"field": "cn",
+				"field": "json.cn",
 				"size":  1000,
 			},
 			"aggs": map[string]interface{}{
 				"group_by_username": map[string]interface{}{
 					"terms": map[string]interface{}{
-						"field": "un",
+						"field": "json.un",
 						"size":  1000,
 					},
 				},
 				"group_by_namespace": map[string]interface{}{
 					"terms": map[string]interface{}{
-						"field": "ns",
+						"field": "json.ns",
 						"size":  1000,
 					},
 				},
@@ -142,7 +142,7 @@ func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchReq
 	if req.Filter.Timefrom != "" {
 		b["filter"] = map[string]interface{}{
 			"range": map[string]interface{}{
-				"ts": map[string]interface{}{
+				"json.ts": map[string]interface{}{
 					"gte": req.Filter.Timefrom,
 					"lt":  "now",
 				},
@@ -153,7 +153,7 @@ func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchReq
 	if req.Filter.User != "" {
 		t := map[string]interface{}{
 			"term": map[string]interface{}{
-				"un": req.Filter.User,
+				"json.un": req.Filter.User,
 			},
 		}
 		m = append(m, t)
@@ -162,7 +162,7 @@ func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchReq
 	if req.Filter.Cluster != "" {
 		t := map[string]interface{}{
 			"term": map[string]interface{}{
-				"cn": req.Filter.Cluster,
+				"json.cn": req.Filter.Cluster,
 			},
 		}
 		m = append(m, t)
@@ -171,7 +171,7 @@ func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchReq
 	if req.Filter.Namespace != "" {
 		t := map[string]interface{}{
 			"term": map[string]interface{}{
-				"ns": req.Filter.Namespace,
+				"json.ns": req.Filter.Namespace,
 			},
 		}
 		m = append(m, t)
@@ -180,7 +180,7 @@ func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchReq
 	if req.Filter.Kind != "" {
 		t := map[string]interface{}{
 			"term": map[string]interface{}{
-				"k": req.Filter.Kind,
+				"json.k": req.Filter.Kind,
 			},
 		}
 		m = append(m, t)
@@ -189,7 +189,7 @@ func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchReq
 	if req.Filter.Method != "" {
 		t := map[string]interface{}{
 			"term": map[string]interface{}{
-				"m": req.Filter.Method,
+				"json.m": req.Filter.Method,
 			},
 		}
 		m = append(m, t)
@@ -201,7 +201,7 @@ func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchReq
 			req.Filter.ClusterNames != nil && len(req.Filter.ClusterNames) > 0 {
 			t := map[string]interface{}{
 				"terms": map[string]interface{}{
-					"cn": req.Filter.ClusterNames,
+					"json.cn": req.Filter.ClusterNames,
 				},
 			}
 			m = append(m, t)
@@ -209,7 +209,7 @@ func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchReq
 
 			t := map[string]interface{}{
 				"terms": map[string]interface{}{
-					"project_id": req.Filter.ProjectIds,
+					"json.project_id": req.Filter.ProjectIds,
 				},
 			}
 			m = append(m, t)
