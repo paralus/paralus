@@ -106,12 +106,14 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 		}
 
 		s := res.GetStatus()
+		_log.Debug("user authentication status ", s)
 		switch s {
 		case commonv3.RequestStatus_RequestAllowed:
 			sd := res.SessionData
 			sd.ClientIp = ip
 			sd.ClientHost = host
 			sd.ClientUa = ua
+			_log.Debug("session data ", sd)
 			ctx := context.WithValue(ctx, common.SessionDataKey, sd)
 			return handler(ctx, req)
 		case commonv3.RequestStatus_RequestMethodOrURLNotAllowed:

@@ -82,7 +82,8 @@ const (
 	schedulerNamespaceEnv       = "SCHEDULER_NAMESPACE"
 
 	// kratos
-	kratosAddrEnv = "KRATOS_ADDR"
+	kratosAddrEnv       = "KRATOS_ADDR"
+	kratosPublicAddrEnv = "KRATOS_PUB_ADDR"
 )
 
 var (
@@ -123,8 +124,10 @@ var (
 	schedulerNamespace       string
 
 	// kratos
-	kratosAddr string
-	kc         *kclient.APIClient
+	kratosAddr       string
+	kratosPublicAddr string
+	kc               *kclient.APIClient
+	akc              *kclient.APIClient
 
 	// services
 	ps    service.PartnerService
@@ -198,6 +201,7 @@ func setup() {
 
 	// kratos
 	viper.SetDefault(kratosAddrEnv, "http://localhost:4433")
+	viper.SetDefault(kratosPublicAddrEnv, "http://localhost:4434")
 
 	viper.BindEnv(rpcPortEnv)
 	viper.BindEnv(apiPortEnv)
@@ -211,6 +215,7 @@ func setup() {
 	viper.BindEnv(dbPasswordEnv)
 
 	viper.BindEnv(kratosAddrEnv)
+	viper.BindEnv(kratosPublicAddrEnv)
 
 	viper.BindEnv(sentryPeeringHostEnv)
 	viper.BindEnv(coreRelayConnectorHostEnv)
@@ -240,6 +245,7 @@ func setup() {
 	dbPassword = viper.GetString(dbPasswordEnv)
 
 	kratosAddr = viper.GetString(kratosAddrEnv)
+	kratosPublicAddr = viper.GetString(kratosPublicAddrEnv)
 
 	bootstrapKEK = viper.GetString(bootstrapKEKEnv)
 	sentryPeeringHost = viper.GetString(sentryPeeringHostEnv)
@@ -258,10 +264,15 @@ func setup() {
 
 	rpcRelayPeeringPort = rpcPort + 1
 
-	// Kratos client setup
+	// Kratos client setup for authentication
 	kratosConfig := kclient.NewConfiguration()
-	kratosConfig.Servers[0].URL = kratosAddr
+	kratosConfig.Servers[0].URL = kratosPublicAddr
 	kc = kclient.NewAPIClient(kratosConfig)
+
+	// Kratos client setup for admin purpose
+	kratosAdminConfig := kclient.NewConfiguration()
+	kratosAdminConfig.Servers[0].URL = kratosAddr
+	akc = kclient.NewAPIClient(kratosAdminConfig)
 
 	// db setup
 	dsn := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", dbUser, dbPassword, dbAddr, dbName)
@@ -319,7 +330,7 @@ func setup() {
 		cc.Profile = "production"
 	}
 	ks = service.NewApiKeyService(db, auditLogger)
-	us = service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, ks, cc, auditLogger, dev)
+	us = service.NewUserService(providers.NewKratosAuthProvider(akc), db, as, ks, cc, auditLogger, dev)
 	gs = service.NewGroupService(db, as, auditLogger)
 	rs = service.NewRoleService(db, as, auditLogger)
 	rrs = service.NewRolepermissionService(db)

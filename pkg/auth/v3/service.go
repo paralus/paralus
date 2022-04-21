@@ -84,7 +84,7 @@ func (ac *authContext) authenticate(ctx context.Context, httpreq *http.Request, 
 				res.Reason = "no or invalid credentials"
 				return false, nil
 			} else {
-				return false, nil
+				return false, err
 			}
 		}
 		if session.GetActive() {
