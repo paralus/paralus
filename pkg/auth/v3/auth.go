@@ -53,12 +53,7 @@ func SetupAuthContext(auditLogger *zap.Logger) authContext {
 	)
 
 	// Initialize database
-	dbUser := getEnvWithDefault("DB_USER", "admindbuser")
-	dbPassword := getEnvWithDefault("DB_PASSWORD", "admindbpassword")
-	dbAddr := getEnvWithDefault("DB_ADDR", "localhost:5432")
-	dbName := getEnvWithDefault("DB_NAME", "admindb")
-	dsn := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", dbUser, dbPassword, dbAddr, dbName)
-	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(getDSN())))
 	db = bun.NewDB(sqldb, pgdialect.New())
 
 	if v, ok := os.LookupEnv("KRATOS_ADDR"); ok {
@@ -84,6 +79,18 @@ func SetupAuthContext(auditLogger *zap.Logger) authContext {
 	as := service.NewAuthzService(db, enforcer)
 
 	return authContext{kc: kc, as: as, ks: service.NewApiKeyService(db, auditLogger)}
+}
+
+func getDSN() string {
+	dsn := getEnvWithDefault("DSN", "")
+	if dsn == "" {
+		dbUser := getEnvWithDefault("DB_USER", "admindbuser")
+		dbPassword := getEnvWithDefault("DB_PASSWORD", "admindbpassword")
+		dbAddr := getEnvWithDefault("DB_ADDR", "localhost:5432")
+		dbName := getEnvWithDefault("DB_NAME", "admindb")
+		dsn = fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", dbUser, dbPassword, dbAddr, dbName)
+	}
+	return dsn
 }
 
 func getEnvWithDefault(env, def string) string {

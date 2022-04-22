@@ -38,7 +38,9 @@
             "organization.write",
             "cluster.read",
             "cluster.write",
-            "hub.openapi.explorer.read"
+            "hub.openapi.explorer.read",
+            "location.read",
+            "location.write"
         ],
         "ADMIN_READ_ONLY": [
             "user.read",
