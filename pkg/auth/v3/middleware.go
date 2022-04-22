@@ -2,6 +2,7 @@ package authv3
 
 import (
 	context "context"
+	"database/sql"
 	"net/http"
 	"regexp"
 	"strings"
@@ -10,6 +11,8 @@ import (
 	"github.com/RafayLabs/rcloud-base/pkg/common"
 	commonpbv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/pgdialect"
+	"github.com/uptrace/bun/driver/pgdriver"
 	"github.com/urfave/negroni"
 	"go.uber.org/zap"
 )
@@ -21,9 +24,12 @@ type authMiddleware struct {
 }
 
 func NewAuthMiddleware(al *zap.Logger, opt Option) negroni.Handler {
+	// Initialize database
+	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(getDSN())))
 	return &authMiddleware{
 		ac:  SetupAuthContext(al),
 		opt: opt,
+		db:  bun.NewDB(sqldb, pgdialect.New()),
 	}
 }
 

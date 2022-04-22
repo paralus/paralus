@@ -1,0 +1,16 @@
+{
+    "name": "location.read",
+    "base_url": "/infra/v3/partner/:metadata.partner",
+    "resource_urls": [
+      {
+        "url": "/location",
+        "methods": [
+          "GET"
+        ]
+      }
+    ],
+    "resource_action_urls": [],
+    "description": "view locations.",
+    "authenticated": true,
+    "scope": "ORGANIZATION"
+  }

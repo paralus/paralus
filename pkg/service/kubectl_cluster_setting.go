@@ -47,7 +47,7 @@ func (kcs *kubectlClusterSettingsService) Patch(ctx context.Context, kc *sentry.
 			if err == sql.ErrNoRows {
 				kcsdb := convertToKubeCtlSettingModel(kc)
 				kcsdb.CreatedAt = time.Now()
-				dao.CreatekubectlClusterSettings(ctx, tx, kcsdb)
+				return dao.CreatekubectlClusterSettings(ctx, tx, kcsdb)
 			}
 			return err
 		}
