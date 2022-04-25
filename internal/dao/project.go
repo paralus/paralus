@@ -9,24 +9,31 @@ import (
 	"github.com/uptrace/bun"
 )
 
-func GetProjectOrganization(ctx context.Context, db bun.IDB, name string) (string, string, error) {
-	type projectOrg struct {
-		Project      string
-		Organization string
-	}
-	var r projectOrg
+type ProjectOrg struct {
+	Project        string
+	Organization   string
+	ProjectId      string
+	OrganizationId string
+	PartnerId      string
+}
+
+func GetProjectOrganization(ctx context.Context, db bun.IDB, name string) (ProjectOrg, error) {
+	var r ProjectOrg
 	err := db.NewSelect().Table("authsrv_project").
 		ColumnExpr("authsrv_project.name as project").
 		ColumnExpr("authsrv_organization.name as organization").
+		ColumnExpr("authsrv_project.id as project_id").
+		ColumnExpr("authsrv_organization.id as organization_id").
+		ColumnExpr("authsrv_organization.partner_id as partner_id").
 		Join(`JOIN authsrv_organization ON authsrv_project.organization_id=authsrv_organization.id`).
 		Where("authsrv_project.name = ?", name).
 		Where("authsrv_project.trash = ?", false).
 		Where("authsrv_organization.trash = ?", false).
 		Scan(ctx, &r)
 	if err != nil {
-		return "", "", err
+		return r, err
 	}
-	return r.Project, r.Organization, nil
+	return r, nil
 }
 
 func GetFileteredProjects(ctx context.Context, db bun.IDB, account, partner, org uuid.UUID) ([]models.Project, error) {

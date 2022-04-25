@@ -103,7 +103,7 @@ func getProjectsForAccount(ctx context.Context, accountID, orgID, partnerID stri
 		}
 		projects = append(projects, ap.ProjectID)
 		projectsMap[ap.ProjectID] = ap.Scope
-		if ap.Scope == "ORGANIZATION" {
+		if ap.Scope == "organization" {
 			isOrgScope = true
 		}
 	}
