@@ -585,6 +585,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 			ExcludeRPCMethods: []string{
 				"/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate",
 				"/rafay.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent",
+				"/rafay.dev.sentry.rpc.KubeConfig/GetForClusterWebSession", //TODO: enable auth from prompt
 			},
 			ExcludeAuthzMethods: []string{
 				"/rafay.dev.rpc.v3.User/GetUserInfo",

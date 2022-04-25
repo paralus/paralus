@@ -49,21 +49,21 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 	// Auth is primarily done via grpc endpoints, this is only used
 	// for endoints which do not go through grpc As of now, it is just
 	// prompt.
-	var proj string
-	var org string
+	var poResp dao.ProjectOrg
 
 	if strings.HasPrefix(r.URL.String(), "/v2/debug/prompt/project/") {
 		// /v2/debug/prompt/project/:project/cluster/:cluster_name
 		splits := strings.Split(r.URL.String(), "/")
 		if len(splits) > 5 {
 			// we have to fetch the org info for casbin
-			proj, org, err := dao.GetProjectOrganization(r.Context(), am.db, splits[5])
+			res, err := dao.GetProjectOrganization(r.Context(), am.db, splits[5])
 			if err != nil {
 				_log.Errorf("Failed to authenticate: unable to find project")
 				http.Error(rw, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 				return
 			}
-			_log.Info("found project with organization %s %s", proj, org)
+			_log.Info("found project with organization ", res.Organization)
+			poResp = res
 		}
 	} else {
 		// The middleware to only used with routes which does not have
@@ -79,8 +79,8 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 		XSessionToken: r.Header.Get("X-Session-Token"),
 		XApiKey:       r.Header.Get("X-RAFAY-API-KEYID"),
 		Cookie:        r.Header.Get("Cookie"),
-		Project:       proj,
-		Org:           org,
+		Project:       poResp.Project,
+		Org:           poResp.Organization,
 	}
 	res, err := am.ac.IsRequestAllowed(r.Context(), r, req)
 	if err != nil {
@@ -92,6 +92,16 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 	s := res.GetStatus()
 	switch s {
 	case commonpbv3.RequestStatus_RequestAllowed:
+		//udpate the session data response to be used within prompt
+		res.SessionData.Organization = poResp.OrganizationId
+		res.SessionData.Partner = poResp.PartnerId
+		res.SessionData.Project = &commonpbv3.ProjectData{
+			List: []*commonpbv3.ProjectRole{
+				{
+					ProjectId: poResp.ProjectId,
+				},
+			},
+		}
 		ctx := context.WithValue(r.Context(), common.SessionDataKey, res.SessionData)
 		next(rw, r.WithContext(ctx))
 		return
