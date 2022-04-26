@@ -234,7 +234,7 @@ func GetAccountBasics(ctx context.Context, db bun.IDB, accountID uuid.UUID) (*mo
 	err := db.NewSelect().Model(&acc).
 		Column("identities.id", "traits", "state").
 		ColumnExpr("max(ks.authenticated_at) as lastlogin").
-		ColumnExpr("identities.traits -> 'email' as username").
+		ColumnExpr("identities.traits ->> 'email' as username").
 		Join("INNER JOIN sessions as ks ON identities.id = ks.identity_id").
 		Where("identities.id = ?", accountID).
 		Where("ks.active = ?", true).
