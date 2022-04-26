@@ -114,6 +114,10 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 	var ps []*authzv1.Policy
 	var rids []uuid.UUID
 	for _, pnr := range projectNamespaceRoles {
+		//if this is derived from group, do not persist a direct project resource role assoc
+		if len(pnr.GetGroup()) > 0 {
+			continue
+		}
 		role := pnr.GetRole()
 		entity, err := dao.GetByName(ctx, db, role, &models.Role{})
 		if err != nil {
@@ -400,7 +404,6 @@ func (s *userService) identitiesModelToUser(ctx context.Context, db bun.IDB, use
 		return &userv3.User{}, err
 	}
 	roles = append(roles, allAssociatedRoles...)
-
 	user.ApiVersion = apiVersion
 	user.Kind = userKind
 	user.Metadata = &v3.Metadata{

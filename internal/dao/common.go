@@ -244,6 +244,7 @@ func ListFiltered(ctx context.Context, db bun.IDB,
 	if organizationId.Valid {
 		sq = sq.Where("organization_id = ?", organizationId)
 	}
+	sq = sq.Where("trash = ?", false)
 	if orderBy != "" && order != "" {
 		sq.Order(orderBy + " " + order)
 	}
