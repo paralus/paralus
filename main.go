@@ -501,10 +501,7 @@ func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
 		_log.Fatalw("unable to get create relay peer service")
 	}
 	clusterAuthzServer := server.NewClusterAuthzServer(bs, aps, gps, krs, kcs, kss)
-
-	/*
-		auditInfoServer := server.NewAuditInfoServer(bs, aps)
-	*/
+	auditInfoServer := server.NewAuditInfoServer(bs, aps)
 
 	s, err := grpc.NewSecureServerWithPEM(cert, key, ca)
 	if err != nil {
@@ -521,7 +518,7 @@ func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
 
 	sentryrpc.RegisterRelayPeerServiceServer(s, relayPeerService)
 	sentryrpc.RegisterClusterAuthorizationServer(s, clusterAuthzServer)
-	/*sentryrpc.RegisterAuditInformationServer(s, auditInfoServer)*/
+	sentryrpc.RegisterAuditInformationServer(s, auditInfoServer)
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", rpcRelayPeeringPort))
 	if err != nil {
@@ -549,7 +546,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 
 	bootstrapServer := server.NewBootstrapServer(bs, kekFunc, cs)
 	kubeConfigServer := server.NewKubeConfigServer(bs, aps, gps, kss, krs, kekFunc, ks, os, ps)
-	/*auditInfoServer := rpcv2.NewAuditInfoServer(bs, aps)*/
+	auditInfoServer := server.NewAuditInfoServer(bs, aps)
 	clusterAuthzServer := server.NewClusterAuthzServer(bs, aps, gps, krs, kcs, kss)
 	kubectlClusterSettingsServer := server.NewKubectlClusterSettingsServer(bs, kcs)
 	crpc := server.NewClusterServer(cs, downloadData)
@@ -613,7 +610,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	sentryrpc.RegisterBootstrapServer(s, bootstrapServer)
 	sentryrpc.RegisterKubeConfigServer(s, kubeConfigServer)
 	sentryrpc.RegisterClusterAuthorizationServer(s, clusterAuthzServer)
-	/*pbrpcv2.RegisterAuditInformationServer(s, auditInfoServer)*/
+	sentryrpc.RegisterAuditInformationServer(s, auditInfoServer)
 	sentryrpc.RegisterKubectlClusterSettingsServer(s, kubectlClusterSettingsServer)
 	schedulerrpc.RegisterClusterServer(s, crpc)
 	systemrpc.RegisterLocationServer(s, mserver)
