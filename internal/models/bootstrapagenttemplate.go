@@ -30,4 +30,5 @@ type BootstrapAgentTemplate struct {
 	Token                  string          `bun:"token,notnull"`
 	InclusterTemplate      string          `bun:"incluster_template,notnull"`
 	OutofclusterTemplate   string          `bun:"outofcluster_template,notnull"`
+	Trash                  bool            `bun:"type:bool"`
 }
