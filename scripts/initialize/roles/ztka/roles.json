@@ -68,6 +68,7 @@
         "PROJECT_ADMIN": [
             "console.all",
             "partner.read",
+            "organization.read",
             "project.admin.write",
             "project.auditLog.read",
             "project.relayAudit.read",
@@ -84,6 +85,7 @@
         "PROJECT_READ_ONLY": [
             "console.all",
             "partner.read",
+            "organization.read",
             "project.read",
             "project.auditLog.read",
             "project.relayAudit.read",
@@ -97,6 +99,7 @@
         "CLUSTER_ADMIN": [
             "console.all",
             "partner.read",
+            "organization.read",
             "project.read",
             "project.auditLog.read",
             "project.relayAudit.read",

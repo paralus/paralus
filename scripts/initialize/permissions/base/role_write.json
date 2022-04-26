@@ -2,13 +2,13 @@
   "name": "role.write",
   "resource_urls": [
     {
-      "url": "",
+      "url": "/roles",
       "methods": [
         "POST"
       ]
     },
     {
-      "url": "/:metadata.name",
+      "url": "/role/:metadata.name",
       "methods": [
         "PUT",
         "DELETE"
@@ -16,7 +16,7 @@
     }
   ],
   "resource_action_urls": [],
-  "base_url": "/auth/v3/partner/:metadata.partner/organization/:metadata.organization/roles",
+  "base_url": "/auth/v3/partner/:metadata.partner/organization/:metadata.organization",
   "description": "create, manage roles.",
   "authenticated": true,
   "scope": "ORGANIZATION"
