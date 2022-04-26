@@ -34,8 +34,6 @@ func (ra *RelayAuditService) GetRelayAudit(req *v1.RelayAuditSearchRequest) (res
 
 func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchRequest) (res *v1.RelayAuditSearchResponse, err error) {
 	err = validateQueryString(req.GetFilter().QueryString)
-	oid := req.GetMetadata().GetOrganization()
-	pid := req.GetMetadata().GetPartner()
 	if err != nil {
 		return &v1.RelayAuditSearchResponse{}, err
 	}
@@ -48,18 +46,7 @@ func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchReq
 		"size":    500,
 		"query": map[string]interface{}{
 			"bool": map[string]interface{}{
-				"must": []map[string]interface{}{
-					{
-						"term": map[string]interface{}{
-							"json.o": oid,
-						},
-					},
-					{
-						"term": map[string]interface{}{
-							"json.p": pid,
-						},
-					},
-				},
+				"must": []map[string]interface{}{},
 			},
 		},
 		"sort": map[string]interface{}{
