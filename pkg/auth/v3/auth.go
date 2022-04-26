@@ -56,7 +56,7 @@ func SetupAuthContext(auditLogger *zap.Logger) authContext {
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(getDSN())))
 	db = bun.NewDB(sqldb, pgdialect.New())
 
-	if v, ok := os.LookupEnv("KRATOS_ADDR"); ok {
+	if v, ok := os.LookupEnv("KRATOS_PUB_ADDR"); ok {
 		kratosAddr = v
 	} else {
 		kratosAddr = "http://localhost:4433"
