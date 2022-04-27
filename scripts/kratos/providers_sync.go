@@ -43,7 +43,7 @@ type Config struct {
 var ProvidersDB []Provider
 
 func sync(ctx context.Context, db *bun.DB, path string) error {
-	err := db.NewSelect().Model(&ProvidersDB).ModelTableExpr("authsrv_oidc_provider AS provider").Scan(ctx)
+	err := db.NewSelect().Model(&ProvidersDB).ModelTableExpr("authsrv_oidc_provider AS provider").Where("trash = 'f'").Scan(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to fetch providers from DB: %s", err)
 	}
