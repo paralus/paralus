@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/cloudflare/cfssl/log"
-	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
@@ -16,7 +15,7 @@ import (
 )
 
 type Provider struct {
-	Id              uuid.UUID              `bun:"id,type:uuid"`
+	Id              string                 `bun:"name"`
 	Provider        string                 `bun:"provider_name,notnull"`
 	MapperURL       string                 `bun:"mapper_url" yaml:"mapper_url"`
 	ClientId        string                 `bun:"client_id,notnull" yaml:"client_id"`
