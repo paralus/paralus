@@ -122,6 +122,7 @@ var (
 	coreCDRelayUserHost      string
 	coreCDRelayConnectorHost string
 	schedulerNamespace       string
+	sentryBootstrapAddr      string
 
 	// kratos
 	kratosAddr       string
@@ -255,6 +256,7 @@ func setup() {
 	coreCDRelayUserHost = viper.GetString(coreCDRelayUserHostEnv)
 	relayImage = viper.GetString(relayImageEnv)
 	schedulerNamespace = viper.GetString(schedulerNamespaceEnv)
+	sentryBootstrapAddr = viper.GetString(sentryBootstrapEnv)
 
 	auditFile = viper.GetString(auditFileEnv)
 	elasticSearchUrl = viper.GetString(esEndPointEnv)
@@ -335,7 +337,7 @@ func setup() {
 	rs = service.NewRoleService(db, as, auditLogger)
 	rrs = service.NewRolepermissionService(db)
 	is = service.NewIdpService(db, apiAddr, auditLogger)
-	oidcs = service.NewOIDCProviderService(db, kratosAddr, auditLogger)
+	oidcs = service.NewOIDCProviderService(db, sentryBootstrapAddr, auditLogger)
 
 	//sentry related services
 	bs = service.NewBootstrapService(db)

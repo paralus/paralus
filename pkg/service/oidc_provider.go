@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"net"
 	"net/url"
 	"time"
 
@@ -40,8 +41,14 @@ func NewOIDCProviderService(db *bun.DB, kratosUrl string, al *zap.Logger) OIDCPr
 }
 
 func generateCallbackUrl(id string, kUrl string) string {
-	b, _ := url.Parse(kUrl)
-	return fmt.Sprintf("%s://%s/self-service/methods/oidc/callback/%s", b.Scheme, b.Host, id)
+	scheme := "http"
+	host, port, err := net.SplitHostPort(kUrl)
+	if err == nil {
+		if port == "443" {
+			scheme = "https"
+		}
+	}
+	return fmt.Sprintf("%s://%s/self-service/methods/oidc/callback/%s", scheme, host, id)
 }
 
 func validateURL(rawURL string) error {
@@ -343,6 +350,7 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 		MapperURL:       mapUrl,
 		MapperFilename:  provider.Spec.GetMapperFilename(),
 		ClientId:        provider.Spec.GetClientId(),
+		ClientSecret:    existingP.ClientSecret,
 		Scopes:          provider.Spec.GetScopes(),
 		IssuerURL:       issUrl,
 		AuthURL:         authUrl,
