@@ -2,6 +2,8 @@ package authv3
 
 import (
 	"context"
+	"crypto/md5"
+	"encoding/base64"
 	"errors"
 	"net/http"
 	"strings"
@@ -9,7 +11,6 @@ import (
 	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
 	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	"github.com/spacemonkeygo/httpsig"
 )
 
 var (
@@ -48,6 +49,12 @@ func (ac *authContext) IsRequestAllowed(ctx context.Context, httpreq *http.Reque
 	return res, nil
 }
 
+func getTokenCheckSum(body []byte) string {
+	hash := md5.New()
+	hash.Write(body)
+	return base64.StdEncoding.EncodeToString(hash.Sum(nil))
+}
+
 // authenticate validate whether the request is from a legitimate user
 // and populate relevant information in res.
 func (ac *authContext) authenticate(ctx context.Context, httpreq *http.Request, req *commonv3.IsRequestAllowedRequest, res *commonv3.IsRequestAllowedResponse) (bool, error) {
@@ -59,16 +66,10 @@ func (ac *authContext) authenticate(ctx context.Context, httpreq *http.Request, 
 			_log.Infow("unable to get api key", "key", req.XApiKey, "error", err)
 			return false, ErrInvalidAPIKey
 		}
-		var kg httpsig.KeyGetterFunc = func(id string) interface{} {
-			return []byte(resp.Secret)
-		}
-
-		verifier := httpsig.NewVerifier(kg)
-		verifier.SetRequiredHeaders([]string{"content-md5", "date", "host", "nonce"})
-		err = verifier.Verify(httpreq)
-		if err != nil {
+		if !(req.XApiToken == getTokenCheckSum([]byte(resp.Secret))) {
 			return false, ErrInvalidSignature
 		}
+		_log.Info("successfully validated api key ", req.XApiKey)
 		res.Status = commonv3.RequestStatus_RequestAllowed
 		res.SessionData.Username = resp.Name
 		res.SessionData.Account = resp.AccountID.String()

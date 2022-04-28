@@ -329,7 +329,7 @@ func setup() {
 	if dev {
 		cc.Profile = "staging"
 	} else {
-		cc.Profile = "production"
+		cc.Profile = "prod"
 	}
 	ks = service.NewApiKeyService(db, auditLogger)
 	us = service.NewUserService(providers.NewKratosAuthProvider(akc), db, as, ks, cc, auditLogger, dev)
