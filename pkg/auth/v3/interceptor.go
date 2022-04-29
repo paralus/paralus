@@ -63,6 +63,8 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 			url    string
 			method string
 			token  string
+			apiKey string
+			apiTkn string
 			cookie string
 			host   string
 			ua     string
@@ -76,6 +78,12 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 		}
 		if len(md.Get(gateway.GatewayAPIKey)) != 0 {
 			token = md.Get(gateway.GatewayAPIKey)[0]
+		}
+		if len(md.Get("X-API-KEYID")) != 0 {
+			apiKey = md.Get("X-API-KEYID")[0]
+		}
+		if len(md.Get("X-API-TOKEN")) != 0 {
+			apiTkn = md.Get("X-API-TOKEN")[0]
 		}
 		if len(md.Get("grpcgateway-cookie")) != 0 {
 			cookie = md.Get("grpcgateway-cookie")[0]
@@ -94,11 +102,14 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 			Url:           url,
 			Method:        method,
 			XSessionToken: token,
+			XApiKey:       apiKey,
+			XApiToken:     apiTkn,
 			Cookie:        cookie,
 			Org:           org,
 			Project:       project,
 			NoAuthz:       noAuthz, // FIXME: any better way to do this?
 		}
+
 		res, err := ac.IsRequestAllowed(ctx, nil, acReq)
 		if err != nil {
 			_log.Errorf("Failed to authenticate a request: %s", err)

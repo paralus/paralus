@@ -13,6 +13,8 @@ const (
 	GatewayURL           = "x-gateway-url"
 	GatewaySessionCookie = "ory_kratos_session"
 	GatewayAPIKey        = "X-Session-Token"
+	APIKey               = "X-API-KEYID"
+	APIKeyToken          = "X-API-TOKEN"
 	GatewayMethod        = "x-gateway-method"
 	UserAgent            = "x-gateway-user-agent"
 	Host                 = "x-gateway-host"
@@ -24,17 +26,12 @@ var rafayGatewayAnnotator = func(ctx context.Context, r *http.Request) metadata.
 	return metadata.New(map[string]string{
 		GatewayRequest: "true",
 		GatewayURL:     r.URL.EscapedPath(),
-		// GatewaySessionCookie: func() string {
-		// 	sid, err := r.Cookie(GatewaySessionCookie)
-		// 	if err != nil {
-		// 		return ""
-		// 	}
-		// 	return sid.Value
-		// }(),
-		GatewayAPIKey: r.Header.Get(GatewayAPIKey),
-		GatewayMethod: r.Method,
-		UserAgent:     r.UserAgent(),
-		Host:          r.Host,
-		RemoteAddr:    r.RemoteAddr,
+		GatewayAPIKey:  r.Header.Get(GatewayAPIKey),
+		APIKey:         r.Header.Get(APIKey),
+		APIKeyToken:    r.Header.Get(APIKeyToken),
+		GatewayMethod:  r.Method,
+		UserAgent:      r.UserAgent(),
+		Host:           r.Host,
+		RemoteAddr:     r.RemoteAddr,
 	})
 }

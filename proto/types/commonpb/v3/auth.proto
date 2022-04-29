@@ -11,6 +11,7 @@ message IsRequestAllowedRequest {
     string project = 7;
     string namespace = 8;
     bool noAuthz = 9;
+    string xApiToken = 10;
 }
 
 enum RequestStatus {

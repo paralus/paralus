@@ -608,7 +608,7 @@ func TestGroupListFiltered(t *testing.T) {
 	pruuid := uuid.New().String()
 
 	puuid, ouuid := addOrgParterFetchExpectation(mock)
-	mock.ExpectQuery(`SELECT "group"."id", "group"."name", .*WHERE .name ILIKE '%filter-query%'. AND .partner_id = '` + puuid + `'. AND .organization_id = '` + ouuid + `'. ORDER BY "email" asc LIMIT 50 OFFSET 20`).
+	mock.ExpectQuery(`SELECT "group"."id", "group"."name", .*WHERE .name ILIKE '%filter-query%'. AND .partner_id = '` + puuid + `'. AND .organization_id = '` + ouuid + `'. AND .trash = FALSE. ORDER BY "email" asc LIMIT 50 OFFSET 20`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).
 		AddRow(guuid1, "group-"+guuid1).AddRow(guuid2, "group-"+guuid2))
 
