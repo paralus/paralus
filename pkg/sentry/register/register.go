@@ -233,16 +233,9 @@ func prepareConfig(config *Config) error {
 		return fmt.Errorf("invalid scheme %s", config.Scheme)
 	}
 
-	if config.Scheme == "" && strings.HasPrefix(config.Addr, "localhost") {
-		config.Scheme = schemeHTTP
-	}
-
-	if config.Scheme == "" && strings.Index(config.Addr, "rafay.local") > 0 {
-		config.Scheme = schemeHTTP
-	}
-
 	if config.Scheme == "" {
-		return fmt.Errorf("empty Schema not allowed")
+		_log.Debug("scheme not defined, defaulting to http")
+		config.Scheme = schemeHTTP
 	}
 
 	switch config.Mode {
