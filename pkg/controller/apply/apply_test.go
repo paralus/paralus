@@ -48,21 +48,6 @@ func getObject(name string) ctrlclient.Object {
 	return o
 }
 
-func TestCRDNSApply(t *testing.T) {
-	applier, err := NewDynamicApplier()
-	if err != nil {
-		t.Error(err)
-		return
-	}
-
-	o3 := getObject("rafay-system-ns.yaml")
-	err = applier.Apply(context.TODO(), o3)
-	if err != nil {
-		t.Error(err)
-		return
-	}
-}
-
 func TestApplier(t *testing.T) {
 
 	applier, err := NewDynamicApplier()
