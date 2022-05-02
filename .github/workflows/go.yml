@@ -25,12 +25,11 @@ jobs:
       - name: Format
         run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
 
-      # Tests need to be fixed. https://github.com/RafayLabs/rcloud-base/issues/46
-      # - name: Test all
-      #   run: go test -v ./...
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.2.0
 
-      - name: Test 'service' package
-        run: go test -v ./pkg/service
+      - name: Test all
+        run: go test -v ./...
 
   # golangci:
   #   strategy:
