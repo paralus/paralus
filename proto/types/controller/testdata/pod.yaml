@@ -1,0 +1,148 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2019-09-24T18:32:31Z"
+  generateName: coredns-b7464766c-
+  labels:
+    k8s-app: kube-dns
+    pod-template-hash: b7464766c
+  name: coredns-b7464766c-hlbwt
+  namespace: kube-system
+  ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: coredns-b7464766c
+      uid: ab7ac3fe-def9-11e9-a453-0242ac120002
+  resourceVersion: "2286717"
+  selfLink: /api/v1/namespaces/kube-system/pods/coredns-b7464766c-hlbwt
+  uid: ab7edb72-def9-11e9-a453-0242ac120002
+spec:
+  containers:
+    - args:
+        - -conf
+        - /etc/coredns/Corefile
+      image: coredns/coredns:1.3.0
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 5
+        httpGet:
+          path: /health
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      name: coredns
+      ports:
+        - containerPort: 53
+          name: dns
+          protocol: UDP
+        - containerPort: 53
+          name: dns-tcp
+          protocol: TCP
+        - containerPort: 9153
+          name: metrics
+          protocol: TCP
+      resources:
+        limits:
+          memory: 170Mi
+        requests:
+          cpu: 100m
+          memory: 70Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          add:
+            - NET_BIND_SERVICE
+          drop:
+            - all
+        readOnlyRootFilesystem: true
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+        - mountPath: /etc/coredns
+          name: config-volume
+          readOnly: true
+        - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          name: coredns-token-8bvxc
+          readOnly: true
+  dnsPolicy: Default
+  enableServiceLinks: true
+  nodeName: k3d-sarat-dev-server
+  nodeSelector:
+    beta.kubernetes.io/os: linux
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: coredns
+  serviceAccountName: coredns
+  terminationGracePeriodSeconds: 30
+  tolerations:
+    - key: CriticalAddonsOnly
+      operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+  volumes:
+    - configMap:
+        defaultMode: 420
+        items:
+          - key: Corefile
+            path: Corefile
+          - key: NodeHosts
+            path: NodeHosts
+        name: coredns
+      name: config-volume
+    - name: coredns-token-8bvxc
+      secret:
+        defaultMode: 420
+        secretName: coredns-token-8bvxc
+status:
+  conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2019-09-24T18:32:33Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2020-01-06T03:07:57Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2020-01-06T03:07:57Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2019-09-24T18:32:33Z"
+      status: "True"
+      type: PodScheduled
+  containerStatuses:
+    - containerID: containerd://a4d08c037aeb7e57736d25ce5117f62012baa7ae32d1f81b66b46b1c12fe4935
+      image: docker.io/coredns/coredns:1.3.0
+      imageID: docker.io/coredns/coredns@sha256:e030773c7fee285435ed7fc7623532ee54c4c1c4911fb24d95cd0170a8a768bc
+      lastState:
+        terminated:
+          containerID: containerd://b5339ca5c7771da96bd27d490ed8871cf6d839b8d7a1c09cccebe565f31917ff
+          exitCode: 255
+          finishedAt: "2020-01-06T03:07:53Z"
+          reason: Unknown
+          startedAt: "2019-12-26T23:40:05Z"
+      name: coredns
+      ready: true
+      restartCount: 6
+      state:
+        running:
+          startedAt: "2020-01-06T03:07:56Z"
+  hostIP: 172.18.0.2
+  phase: Running
+  podIP: 10.42.0.161
+  qosClass: Burstable
+  startTime: "2019-09-24T18:32:33Z"
