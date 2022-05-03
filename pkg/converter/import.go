@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	runtimeutil "github.com/RafayLabs/rcloud-base/pkg/controller/runtime"
-	"github.com/RafayLabs/rcloud-base/pkg/hasher"
 
 	"github.com/RafayLabs/rcloud-base/pkg/log"
 	controllerv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
@@ -32,31 +31,15 @@ var (
 var _log = log.GetLogger()
 
 func getIngressAnnotations(name string, orgID, partnerID string) map[string]string {
-	orgHash, err := hasher.HashFromHex(orgID)
-	if err != nil {
-		orgHash = "unknown"
-	}
-	partnerHash, err := hasher.HashFromHex(partnerID)
-	if err != nil {
-		partnerHash = "unknown"
-	}
 	return map[string]string{
-		ingressAnnotationConfigSnippetKey: fmt.Sprintf("set $workload_name \"%s\";set $orgId \"%s\";set $partnerId \"%s\";", name, orgHash, partnerHash),
+		ingressAnnotationConfigSnippetKey: fmt.Sprintf("set $workload_name \"%s\";set $orgId \"%s\";set $partnerId \"%s\";", name, orgID, partnerID),
 	}
 }
 
 func addIngressAnnotations(annotations map[string]string, name string, orgId, partnerId string) {
 	if _, ok := annotations[ingressAnnotationConfigSnippetKey]; !ok {
-		orgHash, err := hasher.HashFromHex(orgId)
-		if err != nil {
-			orgHash = "unknown"
-		}
-		partnerHash, err := hasher.HashFromHex(partnerId)
-		if err != nil {
-			partnerHash = "unknown"
-		}
 		annotations[ingressAnnotationConfigSnippetKey] = fmt.Sprintf("set $workload_name \"%s\";set $orgId \"%s\";set $partnerId \"%s\";",
-			name, orgHash, partnerHash)
+			name, orgId, partnerId)
 	}
 }
 
@@ -92,26 +75,10 @@ func addDebugLabels(stepTemplate *controllerv2.StepTemplate, debugLabels []byte)
 }
 
 func getDebugLabelsMap(orgID, partnerID, projectID string, name string, isSystemWorkload bool) (map[string]string, error) {
-	orgHashID, err := hasher.HashFromHex(orgID)
-	if err != nil {
-		err = fmt.Errorf("failed to convert org id %s %s", orgID, err.Error())
-		return nil, err
-	}
-	partnerHashID, err := hasher.HashFromHex(partnerID)
-	if err != nil {
-		err = fmt.Errorf("failed to convert partner id %s %s", partnerID, err.Error())
-		return nil, err
-	}
-	projectHashID, err := hasher.HashFromHex(projectID)
-	if err != nil {
-		err = fmt.Errorf("failed to convert project id %s %s", orgID, err.Error())
-		return nil, err
-	}
-
 	labels := make(map[string]string)
-	labels["rep-organization"] = orgHashID
-	labels["rep-partner"] = partnerHashID
-	labels["rep-project"] = projectHashID
+	labels["rep-organization"] = orgID
+	labels["rep-partner"] = partnerID
+	labels["rep-project"] = projectID
 	if isSystemWorkload {
 		labels["rep-addon"] = name
 	} else {
