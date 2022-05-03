@@ -158,7 +158,7 @@ func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvid
 			TokenUrl:        entity.TokenURL,
 			RequestedClaims: rclaims,
 			Predefined:      entity.Predefined,
-			CallbackUrl:     generateCallbackUrl(entity.Id.String(), s.kratosUrl),
+			CallbackUrl:     generateCallbackUrl(entity.Name, s.kratosUrl),
 		},
 	}
 
@@ -199,7 +199,7 @@ func (s *oidcProvider) GetByID(ctx context.Context, provider *systemv3.OIDCProvi
 			TokenUrl:        entity.TokenURL,
 			RequestedClaims: rclaims,
 			Predefined:      entity.Predefined,
-			CallbackUrl:     generateCallbackUrl(entity.Id.String(), s.kratosUrl),
+			CallbackUrl:     generateCallbackUrl(entity.Name, s.kratosUrl),
 		},
 	}
 	return rv, nil
@@ -245,7 +245,7 @@ func (s *oidcProvider) GetByName(ctx context.Context, provider *systemv3.OIDCPro
 			TokenUrl:        entity.TokenURL,
 			RequestedClaims: rclaims,
 			Predefined:      entity.Predefined,
-			CallbackUrl:     generateCallbackUrl(entity.Id.String(), s.kratosUrl),
+			CallbackUrl:     generateCallbackUrl(entity.Name, s.kratosUrl),
 		},
 	}
 	return rv, nil
@@ -283,7 +283,7 @@ func (s *oidcProvider) List(ctx context.Context) (*systemv3.OIDCProviderList, er
 				TokenUrl:        entity.TokenURL,
 				RequestedClaims: rclaims,
 				Predefined:      entity.Predefined,
-				CallbackUrl:     generateCallbackUrl(entity.Id.String(), s.kratosUrl),
+				CallbackUrl:     generateCallbackUrl(entity.Name, s.kratosUrl),
 			},
 		}
 		result = append(result, e)
@@ -383,7 +383,7 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 			TokenUrl:        entity.TokenURL,
 			RequestedClaims: rclaims,
 			Predefined:      entity.Predefined,
-			CallbackUrl:     generateCallbackUrl(provider.GetMetadata().GetId(), s.kratosUrl),
+			CallbackUrl:     generateCallbackUrl(provider.GetMetadata().GetName(), s.kratosUrl),
 		},
 	}
 
