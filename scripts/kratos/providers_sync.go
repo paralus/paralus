@@ -77,6 +77,14 @@ func main() {
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db := bun.NewDB(sqldb, pgdialect.New())
 
+	// synchronize first
+	err := sync(ctx, db, outputPath)
+	if err != nil {
+		log.Errorf("sync failed: %s", err)
+	} else {
+		log.Info("Synchronized successfully")
+	}
+
 	ln := pgdriver.NewListener(db)
 listen:
 	if err := ln.Listen(ctx, channel); err != nil {
