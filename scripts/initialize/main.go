@@ -259,6 +259,11 @@ func main() {
 		},
 		Spec: &userv3.GroupSpec{
 			Type: "DEFAULT_ADMINS",
+			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{
+				{
+					Role: "ADMIN",
+				},
+			},
 		},
 	})
 	if err != nil {
