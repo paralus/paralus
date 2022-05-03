@@ -43,8 +43,8 @@ func New(cs service.ClusterService) Notifier {
 	}
 }
 
-func KeyFromMeta(meta commonv3.Metadata) string {
-	return fmt.Sprintf("%d/%d/%d/%s", meta.Partner, meta.Organization, meta.Project, meta.Name)
+func KeyFromMeta(meta *commonv3.Metadata) string {
+	return fmt.Sprintf("%s/%s/%s/%s", meta.Partner, meta.Organization, meta.Project, meta.Name)
 }
 
 func MetaFromKey(key string) (meta commonv3.Metadata) {

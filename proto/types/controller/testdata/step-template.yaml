@@ -1,0 +1,8 @@
+name: test-step
+object:
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: test-secret
+    annotations: null
+  type: Opaque
