@@ -7,66 +7,15 @@ import (
 	"sort"
 
 	jsoniter "github.com/json-iterator/go"
-	"github.com/speps/go-hashids"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8sapijson "sigs.k8s.io/kustomize/pseudo/k8s/apimachinery/pkg/runtime/serializer/json"
 )
 
-var hd *hashids.HashID
-
 const (
 	// ObjectHash is the hash of the object processed by Rafay
 	ObjectHash = "rafay.dev/object-hash"
 )
-
-func init() {
-	hd, _ = hashids.NewWithData(&hashids.HashIDData{
-		Alphabet:  "abcdefghijklmnopqrstuvwxyz1234567890",
-		Salt:      "***REMOVED***",
-		MinLength: 7,
-	})
-}
-
-// IDFromString returns new RafayID for hash id string
-func IDFromString(hashID string) (int64, error) {
-	ids, err := hd.DecodeInt64WithError(hashID)
-	if err != nil {
-		return -1, err
-	}
-
-	if len(ids) < 1 {
-		return -1, fmt.Errorf("no ids could be constructed from string %s", hashID)
-	}
-	return ids[0], nil
-}
-
-// HashFromInt64 returns new RafayID for hash id string
-func HashFromInt64(id int64) (string, error) {
-	stringHash, err := hd.EncodeInt64([]int64{id})
-	if err != nil {
-		return "", err
-	}
-	return stringHash, nil
-}
-
-// HashFromHex returns new Hash for uuid string
-func HashFromHex(id string) (string, error) {
-	stringHash, err := hd.EncodeHex(id)
-	if err != nil {
-		return "", err
-	}
-	return stringHash, nil
-}
-
-// HashFromHex returns new Hash for uuid string
-func IDFromHash(hash string) (string, error) {
-	id, err := hd.DecodeHex(hash)
-	if err != nil {
-		return "", err
-	}
-	return id, nil
-}
 
 var json = k8sapijson.CaseSensitiveJsonIterator()
 
