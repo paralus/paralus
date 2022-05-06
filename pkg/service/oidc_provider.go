@@ -384,7 +384,7 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 		MapperURL:       mapUrl,
 		MapperFilename:  provider.Spec.GetMapperFilename(),
 		ClientId:        provider.Spec.GetClientId(),
-		ClientSecret:    existingP.ClientSecret,
+		ClientSecret:    provider.Spec.GetClientSecret(),
 		Scopes:          provider.Spec.GetScopes(),
 		IssuerURL:       issUrl,
 		AuthURL:         authUrl,
