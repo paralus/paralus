@@ -11,7 +11,7 @@ type OIDCProvider struct {
 	bun.BaseModel `bun:"table:authsrv_oidc_provider,alias:oidcprovider"`
 
 	Id             uuid.UUID `bun:"id,type:uuid,pk,default:uuid_generate_v4()"`
-	Name           string    `bun:"name,notnull,unique"`
+	Name           string    `bun:"name,notnull,unique"` // unique constraint on id,name cols group
 	Description    string    `bun:"description"`
 	OrganizationId uuid.UUID `bun:"organization_id,type:uuid"`
 	PartnerId      uuid.UUID `bun:"partner_id,type:uuid"`

@@ -77,7 +77,7 @@ func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvid
 	}
 	scopes := provider.GetSpec().GetScopes()
 	if scopes == nil || len(scopes) == 0 {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("EMPTY SCOPES")
+		return &systemv3.OIDCProvider{}, fmt.Errorf("NO SCOPES")
 	}
 
 	partnerId, organizationId, err := s.getPartnerOrganization(ctx, provider)
