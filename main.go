@@ -31,6 +31,7 @@ import (
 	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
 	systemrpc "github.com/RafayLabs/rcloud-base/proto/rpc/system"
 	userrpc "github.com/RafayLabs/rcloud-base/proto/rpc/user"
+	authrpc "github.com/RafayLabs/rcloud-base/proto/rpc/v3"
 	"github.com/RafayLabs/rcloud-base/server"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	kclient "github.com/ory/kratos-client-go"
@@ -577,14 +578,17 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	}
 
 	var opts []_grpc.ServerOption
+	var asv authv3.AuthService
 	if !dev {
 		_log.Infow("adding auth interceptor")
 		ac := authv3.NewAuthContext(kc, ks, as)
+		asv = authv3.NewAuthService(ac)
 		o := authv3.Option{
 			ExcludeRPCMethods: []string{
 				"/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate",
 				"/rafay.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent",
 				"/rafay.dev.sentry.rpc.KubeConfig/GetForClusterWebSession", //TODO: enable auth from prompt
+				"/rafay.dev.rpc.v3.Auth/IsRequestAllowed",
 			},
 			ExcludeAuthzMethods: []string{
 				"/rafay.dev.rpc.v3.User/GetUserInfo",
@@ -624,6 +628,12 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	systemrpc.RegisterOIDCProviderServer(s, oidcProviderServer)
 	auditrpc.RegisterAuditLogServer(s, auditLogServer)
 	auditrpc.RegisterRelayAuditServer(s, relayAuditServer)
+
+	if !dev {
+		// if !dev, we should have the asv populated
+		authServer := server.NewAuthServer(asv)
+		authrpc.RegisterAuthServer(s, authServer)
+	}
 
 	_log.Infow("starting rpc server", "port", rpcPort)
 	err = s.Serve(l)

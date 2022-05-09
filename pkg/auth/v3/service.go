@@ -5,7 +5,6 @@ import (
 	"crypto/md5"
 	"encoding/base64"
 	"errors"
-	"net/http"
 	"strings"
 
 	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
@@ -20,14 +19,30 @@ var (
 	ErrInvalidSignature = errors.New("invalid signature")
 )
 
-func (ac *authContext) IsRequestAllowed(ctx context.Context, httpreq *http.Request, req *commonv3.IsRequestAllowedRequest) (*commonv3.IsRequestAllowedResponse, error) {
+type authService struct {
+	ac authContext
+}
+
+type AuthService interface {
+	IsRequestAllowed(context.Context, *commonv3.IsRequestAllowedRequest) (*commonv3.IsRequestAllowedResponse, error)
+}
+
+func NewAuthService(ac authContext) AuthService {
+	return &authService{ac}
+}
+
+func (s *authService) IsRequestAllowed(ctx context.Context, req *commonv3.IsRequestAllowedRequest) (*commonv3.IsRequestAllowedResponse, error) {
+	return s.ac.IsRequestAllowed(ctx, req)
+}
+
+func (ac *authContext) IsRequestAllowed(ctx context.Context, req *commonv3.IsRequestAllowedRequest) (*commonv3.IsRequestAllowedResponse, error) {
 	res := &commonv3.IsRequestAllowedResponse{
 		Status:      commonv3.RequestStatus_Unknown,
 		SessionData: &commonv3.SessionData{},
 	}
 
 	// Authenticate request
-	succ, err := ac.authenticate(ctx, httpreq, req, res)
+	succ, err := ac.authenticate(ctx, req, res)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +72,7 @@ func getTokenCheckSum(body []byte) string {
 
 // authenticate validate whether the request is from a legitimate user
 // and populate relevant information in res.
-func (ac *authContext) authenticate(ctx context.Context, httpreq *http.Request, req *commonv3.IsRequestAllowedRequest, res *commonv3.IsRequestAllowedResponse) (bool, error) {
+func (ac *authContext) authenticate(ctx context.Context, req *commonv3.IsRequestAllowedRequest, res *commonv3.IsRequestAllowedResponse) (bool, error) {
 	if len(req.XApiKey) > 0 && len(req.XSessionToken) == 0 {
 		resp, err := ac.ks.GetByKey(ctx, &rpcv3.ApiKeyRequest{
 			Id: req.XApiKey,
@@ -92,7 +107,6 @@ func (ac *authContext) authenticate(ctx context.Context, httpreq *http.Request, 
 			res.Status = commonv3.RequestStatus_RequestAllowed
 			res.SessionData.Account = session.Identity.GetId()
 
-			// TODO: Better way to access traits
 			t := session.Identity.Traits.(map[string]interface{})
 			res.SessionData.Username = t["email"].(string)
 		} else {
