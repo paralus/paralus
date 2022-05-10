@@ -25,14 +25,9 @@ type authMiddleware struct {
 	opt Option
 }
 
-type remoteAuthMiddleware struct {
-	as  rpcv3.AuthClient
-	db  *bun.DB
-	opt Option
-}
-
+// NewAuthMiddleware creates as a middleware for the HTTP server which
+// does the auth and authz by talking to kratos server and casbin
 func NewAuthMiddleware(al *zap.Logger, opt Option) negroni.Handler {
-	// Initialize database
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(getDSN())))
 	return &authMiddleware{
 		ac:  SetupAuthContext(al),
@@ -41,6 +36,15 @@ func NewAuthMiddleware(al *zap.Logger, opt Option) negroni.Handler {
 	}
 }
 
+type remoteAuthMiddleware struct {
+	as  rpcv3.AuthClient
+	db  *bun.DB
+	opt Option
+}
+
+// NewRemoteAuthMiddleware creates a middleware for the HTTP server
+// which does auth and authz by talking to the auth service exposed by
+// rcloud-base via grpc.
 func NewRemoteAuthMiddleware(al *zap.Logger, as string, opt Option) negroni.Handler {
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(getDSN())))
 	conn, err := grpc.Dial(as, grpc.WithInsecure())
@@ -56,8 +60,14 @@ func NewRemoteAuthMiddleware(al *zap.Logger, as string, opt Option) negroni.Hand
 	}
 }
 
-func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-	for _, ex := range am.opt.ExcludeURLs {
+func serveHTTP(opt Option,
+	db *bun.DB,
+	isRequestAllowed func(context.Context, *commonpbv3.IsRequestAllowedRequest) (*commonpbv3.IsRequestAllowedResponse, error),
+	rw http.ResponseWriter,
+	r *http.Request,
+	next http.HandlerFunc,
+) {
+	for _, ex := range opt.ExcludeURLs {
 		match, err := regexp.MatchString(ex, r.URL.Path)
 		if err != nil {
 			_log.Errorf("failed to match URL expression", err)
@@ -79,7 +89,7 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 		splits := strings.Split(r.URL.String(), "/")
 		if len(splits) > 5 {
 			// we have to fetch the org info for casbin
-			res, err := dao.GetProjectOrganization(r.Context(), am.db, splits[5])
+			res, err := dao.GetProjectOrganization(r.Context(), db, splits[5])
 			if err != nil {
 				_log.Errorf("Failed to authenticate: unable to find project")
 				http.Error(rw, http.StatusText(http.StatusForbidden), http.StatusForbidden)
@@ -106,7 +116,7 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 		Project:       poResp.Project,
 		Org:           poResp.Organization,
 	}
-	res, err := am.ac.IsRequestAllowed(r.Context(), req)
+	res, err := isRequestAllowed(r.Context(), req)
 	if err != nil {
 		_log.Errorf("Failed to authenticate a request: %s", err)
 		http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -141,88 +151,23 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 	http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 }
 
-// Same as previous ServeHTTP, just using remoteAuthMiddleware instead of authMiddleware
+// ServeHTTP function is called by the HTTP server to invoke the
+// middleware
+func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	serveHTTP(am.opt, am.db, am.ac.IsRequestAllowed, rw, r, next)
+}
+
+// ServeHTTP function is called by the HTTP server to invoke the
+// middleware.  Same as previous ServeHTTP, but uses
+// remoteAuthMiddleware instead of authMiddleware
 func (am *remoteAuthMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-	for _, ex := range am.opt.ExcludeURLs {
-		match, err := regexp.MatchString(ex, r.URL.Path)
-		if err != nil {
-			_log.Errorf("failed to match URL expression", err)
-			http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-			return
-		}
-		if match {
-			next(rw, r)
-			return
-		}
-	}
-	// Auth is primarily done via grpc endpoints, this is only used
-	// for endoints which do not go through grpc As of now, it is just
-	// prompt.
-	var poResp dao.ProjectOrg
-
-	if strings.HasPrefix(r.URL.String(), "/v2/debug/prompt/project/") {
-		// /v2/debug/prompt/project/:project/cluster/:cluster_name
-		splits := strings.Split(r.URL.String(), "/")
-		if len(splits) > 5 {
-			// we have to fetch the org info for casbin
-			res, err := dao.GetProjectOrganization(r.Context(), am.db, splits[5])
-			if err != nil {
-				_log.Errorf("Failed to authenticate: unable to find project")
-				http.Error(rw, http.StatusText(http.StatusForbidden), http.StatusForbidden)
-				return
-			}
-			_log.Info("found project with organization ", res.Organization)
-			poResp = res
-		}
-	} else {
-		// The middleware to only used with routes which does not have
-		// a grpc and so fail for any other requests.
-		_log.Errorf("Failed to authenticate: not a prompt request")
-		http.Error(rw, http.StatusText(http.StatusForbidden), http.StatusForbidden)
-		return
-	}
-
-	req := &commonpbv3.IsRequestAllowedRequest{
-		Url:           r.URL.String(),
-		Method:        r.Method,
-		XSessionToken: r.Header.Get("X-Session-Token"),
-		XApiKey:       r.Header.Get("X-API-KEYID"),
-		XApiToken:     r.Header.Get("X-API-TOKEN"),
-		Cookie:        r.Header.Get("Cookie"),
-		Project:       poResp.Project,
-		Org:           poResp.Organization,
-	}
-	res, err := am.as.IsRequestAllowed(r.Context(), req)
-	if err != nil {
-		_log.Errorf("Failed to authenticate a request: %s", err)
-		http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
-	}
-
-	s := res.GetStatus()
-	switch s {
-	case commonpbv3.RequestStatus_RequestAllowed:
-		// update the session data response to be used within prompt
-		res.SessionData.Organization = poResp.OrganizationId
-		res.SessionData.Partner = poResp.PartnerId
-		res.SessionData.Project = &commonpbv3.ProjectData{
-			List: []*commonpbv3.ProjectRole{
-				{
-					ProjectId: poResp.ProjectId,
-				},
-			},
-		}
-		ctx := context.WithValue(r.Context(), common.SessionDataKey, res.SessionData)
-		next(rw, r.WithContext(ctx))
-		return
-	case commonpbv3.RequestStatus_RequestMethodOrURLNotAllowed:
-		http.Error(rw, res.GetReason(), http.StatusForbidden)
-		return
-	case commonpbv3.RequestStatus_RequestNotAuthenticated:
-		http.Error(rw, res.GetReason(), http.StatusUnauthorized)
-		return
-	}
-
-	// status is unknown
-	http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	serveHTTP(
+		am.opt,
+		am.db,
+		func(ctx context.Context, isr *commonpbv3.IsRequestAllowedRequest) (*commonpbv3.IsRequestAllowedResponse, error) {
+			return am.as.IsRequestAllowed(ctx, isr)
+		},
+		rw,
+		r,
+		next)
 }
