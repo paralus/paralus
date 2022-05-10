@@ -110,7 +110,7 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 			NoAuthz:       noAuthz, // FIXME: any better way to do this?
 		}
 
-		res, err := ac.IsRequestAllowed(ctx, nil, acReq)
+		res, err := ac.IsRequestAllowed(ctx, acReq)
 		if err != nil {
 			_log.Errorf("Failed to authenticate a request: %s", err)
 			return nil, status.Error(codes.Internal, codes.Internal.String())

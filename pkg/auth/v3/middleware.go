@@ -9,12 +9,14 @@ import (
 
 	"github.com/RafayLabs/rcloud-base/internal/dao"
 	"github.com/RafayLabs/rcloud-base/pkg/common"
+	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/v3"
 	commonpbv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
 	"github.com/urfave/negroni"
 	"go.uber.org/zap"
+	grpc "google.golang.org/grpc"
 )
 
 type authMiddleware struct {
@@ -23,8 +25,9 @@ type authMiddleware struct {
 	opt Option
 }
 
+// NewAuthMiddleware creates as a middleware for the HTTP server which
+// does the auth and authz by talking to kratos server and casbin
 func NewAuthMiddleware(al *zap.Logger, opt Option) negroni.Handler {
-	// Initialize database
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(getDSN())))
 	return &authMiddleware{
 		ac:  SetupAuthContext(al),
@@ -33,8 +36,38 @@ func NewAuthMiddleware(al *zap.Logger, opt Option) negroni.Handler {
 	}
 }
 
-func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-	for _, ex := range am.opt.ExcludeURLs {
+type remoteAuthMiddleware struct {
+	as  rpcv3.AuthClient
+	db  *bun.DB
+	opt Option
+}
+
+// NewRemoteAuthMiddleware creates a middleware for the HTTP server
+// which does auth and authz by talking to the auth service exposed by
+// rcloud-base via grpc.
+func NewRemoteAuthMiddleware(al *zap.Logger, as string, opt Option) negroni.Handler {
+	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(getDSN())))
+	conn, err := grpc.Dial(as, grpc.WithInsecure())
+	if err != nil {
+		_log.Fatal("Unable to connect to server", err)
+	}
+	client := rpcv3.NewAuthClient(conn)
+
+	return &remoteAuthMiddleware{
+		as:  client,
+		opt: opt,
+		db:  bun.NewDB(sqldb, pgdialect.New()),
+	}
+}
+
+func serveHTTP(opt Option,
+	db *bun.DB,
+	isRequestAllowed func(context.Context, *commonpbv3.IsRequestAllowedRequest) (*commonpbv3.IsRequestAllowedResponse, error),
+	rw http.ResponseWriter,
+	r *http.Request,
+	next http.HandlerFunc,
+) {
+	for _, ex := range opt.ExcludeURLs {
 		match, err := regexp.MatchString(ex, r.URL.Path)
 		if err != nil {
 			_log.Errorf("failed to match URL expression", err)
@@ -56,7 +89,7 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 		splits := strings.Split(r.URL.String(), "/")
 		if len(splits) > 5 {
 			// we have to fetch the org info for casbin
-			res, err := dao.GetProjectOrganization(r.Context(), am.db, splits[5])
+			res, err := dao.GetProjectOrganization(r.Context(), db, splits[5])
 			if err != nil {
 				_log.Errorf("Failed to authenticate: unable to find project")
 				http.Error(rw, http.StatusText(http.StatusForbidden), http.StatusForbidden)
@@ -83,7 +116,7 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 		Project:       poResp.Project,
 		Org:           poResp.Organization,
 	}
-	res, err := am.ac.IsRequestAllowed(r.Context(), r, req)
+	res, err := isRequestAllowed(r.Context(), req)
 	if err != nil {
 		_log.Errorf("Failed to authenticate a request: %s", err)
 		http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -93,7 +126,7 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 	s := res.GetStatus()
 	switch s {
 	case commonpbv3.RequestStatus_RequestAllowed:
-		//udpate the session data response to be used within prompt
+		// update the session data response to be used within prompt
 		res.SessionData.Organization = poResp.OrganizationId
 		res.SessionData.Partner = poResp.PartnerId
 		res.SessionData.Project = &commonpbv3.ProjectData{
@@ -116,4 +149,25 @@ func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, nex
 
 	// status is unknown
 	http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+}
+
+// ServeHTTP function is called by the HTTP server to invoke the
+// middleware
+func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	serveHTTP(am.opt, am.db, am.ac.IsRequestAllowed, rw, r, next)
+}
+
+// ServeHTTP function is called by the HTTP server to invoke the
+// middleware.  Same as previous ServeHTTP, but uses
+// remoteAuthMiddleware instead of authMiddleware
+func (am *remoteAuthMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	serveHTTP(
+		am.opt,
+		am.db,
+		func(ctx context.Context, isr *commonpbv3.IsRequestAllowedRequest) (*commonpbv3.IsRequestAllowedResponse, error) {
+			return am.as.IsRequestAllowed(ctx, isr)
+		},
+		rw,
+		r,
+		next)
 }
