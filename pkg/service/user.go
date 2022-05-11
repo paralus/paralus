@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -48,6 +49,8 @@ type UserService interface {
 	List(context.Context, ...query.Option) (*userv3.UserList, error)
 	// retrieve the cli config for the logged in user
 	RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiKeyRequest) (*common.CliConfigDownloadData, error)
+	// Update UserGroup casbin for OIdC/Idp users
+	UpdateIdpUserGroupPolicy(context.Context, string, string, string) error
 }
 
 type userService struct {
@@ -65,6 +68,7 @@ type userTraits struct {
 	FirstName   string
 	LastName    string
 	Description string
+	IdpGroups   []string `json:"idp_groups"`
 }
 
 // FIXME: find a better way to do this
@@ -849,4 +853,42 @@ func (s *userService) RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiK
 
 	return cliConfig, nil
 
+}
+
+func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, traits string) error {
+	var userInfo userTraits
+	err := json.Unmarshal([]byte(traits), &userInfo)
+	if err != nil {
+		return fmt.Errorf("Encounterd error unmarshing payload to userInfo: %s", err)
+	}
+	switch op {
+	case "DELETE":
+		_, err = s.azc.DeleteUserGroups(ctx, &authzv1.UserGroup{Grp: "u:" + userInfo.Email})
+		if err != nil {
+			return fmt.Errorf("error deleting UserGroups policy: %s", err)
+		}
+	case "UPDATE":
+		// delete old policies
+		_, err = s.azc.DeleteUserGroups(ctx, &authzv1.UserGroup{Grp: "u:" + userInfo.Email})
+		if err != nil {
+			return fmt.Errorf("error deleting UserGroups policy: %s", err)
+		}
+		// create new policies
+		fallthrough
+	case "INSERT":
+		var ugs []*authzv1.UserGroup
+		for _, g := range utils.Unique(userInfo.IdpGroups) {
+			ugs = append(ugs, &authzv1.UserGroup{
+				Grp:  "g:" + g,
+				User: "u:" + userInfo.Email,
+			})
+		}
+		_, err = s.azc.CreateUserGroups(ctx, &authzv1.UserGroups{UserGroups: ugs})
+		if err != nil {
+			return fmt.Errorf("error creating UserGroups policy: %s", err)
+		}
+	default:
+		return fmt.Errorf("Unsupported %s operation in payload", op)
+	}
+	return nil
 }

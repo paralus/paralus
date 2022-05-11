@@ -431,11 +431,11 @@ func run() {
 	go runRelayPeerRPC(&wg, ctx)
 	go runDebug(&wg, ctx)
 	go runEventHandlers(&wg, ctx)
+	go runIdpGroupSync(&wg, ctx)
 
 	<-ctx.Done()
 	_log.Infow("shutting down, waiting for children to die")
 	wg.Wait()
-
 }
 
 func runAPI(wg *sync.WaitGroup, ctx context.Context) {
@@ -673,6 +673,34 @@ func runDebug(wg *sync.WaitGroup, ctx context.Context) {
 	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
 	defer cancel()
 	s.Shutdown(ctx)
+}
+
+func runIdpGroupSync(wg *sync.WaitGroup, ctx context.Context) {
+	defer wg.Done()
+	channel := "identities:changed"
+	ln := pgdriver.NewListener(db)
+listen:
+	if err := ln.Listen(ctx, channel); err != nil {
+		_log.Errorf("error listening for notification on channel %q: %s", channel, err)
+		time.Sleep(2 * time.Second)
+		goto listen
+	}
+
+	_log.Infof("Listening for notifications on channel %q", channel)
+	for n := range ln.Channel() {
+		_log.Info("A identities table notification received")
+		splitPl := strings.SplitN(n.Payload, ",", 3)
+		op := splitPl[0]
+		id := splitPl[1]
+		traits := splitPl[2]
+		err := us.UpdateIdpUserGroupPolicy(ctx, op, id, traits)
+		if err != nil {
+			_log.Warnf("Failed updating policy for IDP user with id %s: %s", id, err)
+		} else {
+			_log.Infof("Policies are updated successfully for IDP user with id %s", id)
+		}
+	}
+	<-ctx.Done()
 }
 
 func main() {
