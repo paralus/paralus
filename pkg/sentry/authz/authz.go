@@ -345,20 +345,8 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 	// get attributes from user CN
 	cnAttr := kubeconfig.GetCNAttributes(req.UserCN)
 	accountID := cnAttr.AccountID
-	if err != nil {
-		_log.Errorw("error getting accountID from user CN", "userCN", req.UserCN)
-		return nil, err
-	}
 	orgID := cnAttr.OrganizationID
-	if err != nil {
-		_log.Errorw("error getting orgID from user CN", "userCN", req.UserCN)
-		return nil, err
-	}
 	partnerID := cnAttr.PartnerID
-	if err != nil {
-		_log.Errorw("error getting partnerID from user CN", "userCN", req.UserCN)
-		return nil, err
-	}
 
 	if cnAttr.SystemUser {
 		return getSystemUserAuthz(cnAttr)
