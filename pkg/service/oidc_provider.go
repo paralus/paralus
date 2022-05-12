@@ -54,7 +54,6 @@ func generateCallbackUrl(id string, kUrl string) string {
 func validateURL(rawURL string) bool {
 	var valid bool
 	pfx := []string{
-		"file://",
 		"http://",
 		"https://",
 		"base64://",
