@@ -251,7 +251,7 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 }
 
 // Update the groups mapped to each user(account)
-func (s *userService) createGroupAccountRelations(ctx context.Context, db bun.IDB, userId uuid.UUID, usr *userv3.User) (*userv3.User, []uuid.UUID, error) {
+func (s *userService) createGroupAccountRelations(ctx context.Context, db bun.IDB, userId uuid.UUID, usr *userv3.User, ignoreGrp bool) (*userv3.User, []uuid.UUID, error) {
 	var grpaccs []models.GroupAccount
 	var ugs []*authzv1.UserGroup
 	var ids []uuid.UUID
@@ -259,6 +259,9 @@ func (s *userService) createGroupAccountRelations(ctx context.Context, db bun.ID
 		// FIXME: do combined lookup
 		entity, err := dao.GetByName(ctx, s.db, group, &models.Group{})
 		if err != nil {
+			if ignoreGrp {
+				continue
+			}
 			return &userv3.User{}, nil, fmt.Errorf("unable to find group '%v'", group)
 		}
 		if grp, ok := entity.(*models.Group); ok {
@@ -302,7 +305,7 @@ func (s *userService) deleteGroupAccountRelations(ctx context.Context, db bun.ID
 		return &userv3.User{}, ids, fmt.Errorf("unable to delete user; %v", err)
 	}
 
-	_, err = s.azc.DeleteUserGroups(ctx, &authzv1.UserGroup{Grp: "u:" + usr.GetMetadata().GetName()})
+	_, err = s.azc.DeleteUserGroups(ctx, &authzv1.UserGroup{User: "u:" + usr.GetMetadata().GetName()})
 	if err != nil {
 		return &userv3.User{}, ids, fmt.Errorf("unable to delete group-user relations from authz; %v", err)
 	}
@@ -359,7 +362,7 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 		return &userv3.User{}, err
 	}
 
-	user, groupsAfter, err := s.createGroupAccountRelations(ctx, tx, uuid.MustParse(id), user)
+	user, groupsAfter, err := s.createGroupAccountRelations(ctx, tx, uuid.MustParse(id), user, false)
 	if err != nil {
 		tx.Rollback()
 		return &userv3.User{}, err
@@ -626,7 +629,7 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 			return &userv3.User{}, err
 		}
 
-		user, groupsAfter, err := s.createGroupAccountRelations(ctx, tx, usr.ID, user)
+		user, groupsAfter, err := s.createGroupAccountRelations(ctx, tx, usr.ID, user, false)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.User{}, err
@@ -856,36 +859,52 @@ func (s *userService) RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiK
 }
 
 func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, traits string) error {
-	var userInfo userTraits
-	err := json.Unmarshal([]byte(traits), &userInfo)
+	var (
+		userInfo userTraits
+		user     *userv3.User
+		userUUID uuid.UUID
+	)
+	userUUID, err := uuid.Parse(id)
+	if err != nil {
+		return fmt.Errorf("error parsing id %s: %s", id, err)
+	}
+	err = json.Unmarshal([]byte(traits), &userInfo)
 	if err != nil {
 		return fmt.Errorf("Encounterd error unmarshing payload to userInfo: %s", err)
 	}
+	// TODO: Revisit to only run by IDP users and not by any other
+	// user
+	if len(userInfo.IdpGroups) == 0 {
+		return fmt.Errorf("Empty idp groups for user with id %s", id)
+	}
+	user = &userv3.User{
+		Metadata: &v3.Metadata{
+			Name: userInfo.Email,
+		},
+		Spec: &userv3.UserSpec{
+			FirstName: userInfo.FirstName,
+			LastName:  userInfo.LastName,
+			Groups:    userInfo.IdpGroups,
+		},
+	}
 	switch op {
 	case "DELETE":
-		_, err = s.azc.DeleteUserGroups(ctx, &authzv1.UserGroup{Grp: "u:" + userInfo.Email})
+		_, _, err = s.deleteGroupAccountRelations(ctx, s.db, userUUID, user)
 		if err != nil {
-			return fmt.Errorf("error deleting UserGroups policy: %s", err)
+			return err
 		}
 	case "UPDATE":
 		// delete old policies
-		_, err = s.azc.DeleteUserGroups(ctx, &authzv1.UserGroup{Grp: "u:" + userInfo.Email})
+		_, _, err = s.deleteGroupAccountRelations(ctx, s.db, userUUID, user)
 		if err != nil {
-			return fmt.Errorf("error deleting UserGroups policy: %s", err)
+			return err
 		}
 		// create new policies
 		fallthrough
 	case "INSERT":
-		var ugs []*authzv1.UserGroup
-		for _, g := range utils.Unique(userInfo.IdpGroups) {
-			ugs = append(ugs, &authzv1.UserGroup{
-				Grp:  "g:" + g,
-				User: "u:" + userInfo.Email,
-			})
-		}
-		_, err = s.azc.CreateUserGroups(ctx, &authzv1.UserGroups{UserGroups: ugs})
+		_, _, err = s.createGroupAccountRelations(ctx, s.db, userUUID, user, true)
 		if err != nil {
-			return fmt.Errorf("error creating UserGroups policy: %s", err)
+			return err
 		}
 	default:
 		return fmt.Errorf("Unsupported %s operation in payload", op)
