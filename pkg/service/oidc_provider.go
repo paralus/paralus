@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net"
-	"net/url"
+	"strings"
 	"time"
 
 	"github.com/RafayLabs/rcloud-base/internal/dao"
@@ -51,9 +51,19 @@ func generateCallbackUrl(id string, kUrl string) string {
 	return fmt.Sprintf("%s://%s/self-service/methods/oidc/callback/%s", scheme, host, id)
 }
 
-func validateURL(rawURL string) error {
-	_, err := url.ParseRequestURI(rawURL)
-	return err
+func validateURL(rawURL string) bool {
+	var valid bool
+	pfx := []string{
+		"http://",
+		"https://",
+		"base64://",
+	}
+	for _, p := range pfx {
+		if strings.HasPrefix(rawURL, p) {
+			valid = true
+		}
+	}
+	return valid
 }
 
 func (s *oidcProvider) getPartnerOrganization(ctx context.Context, provider *systemv3.OIDCProvider) (uuid.UUID, uuid.UUID, error) {
@@ -71,13 +81,17 @@ func (s *oidcProvider) getPartnerOrganization(ctx context.Context, provider *sys
 }
 
 func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvider) (*systemv3.OIDCProvider, error) {
-	name := provider.Metadata.GetName()
+	name := provider.GetMetadata().GetName()
 	if len(name) == 0 {
 		return &systemv3.OIDCProvider{}, fmt.Errorf("EMPTY NAME")
 	}
 	scopes := provider.GetSpec().GetScopes()
 	if scopes == nil || len(scopes) == 0 {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("EMPTY SCOPES")
+		return &systemv3.OIDCProvider{}, fmt.Errorf("NO SCOPES")
+	}
+	issUrl := provider.GetSpec().GetIssuerUrl()
+	if len(issUrl) == 0 {
+		return &systemv3.OIDCProvider{}, fmt.Errorf("EMPTY ISSUER URL")
 	}
 
 	partnerId, organizationId, err := s.getPartnerOrganization(ctx, provider)
@@ -87,30 +101,38 @@ func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvid
 	p, _ := dao.GetIdByNamePartnerOrg(
 		ctx,
 		s.db,
-		provider.GetMetadata().GetName(),
+		name,
 		uuid.NullUUID{UUID: partnerId, Valid: true},
 		uuid.NullUUID{UUID: organizationId, Valid: true},
 		&models.OIDCProvider{},
 	)
 	if p != nil {
-		return nil, fmt.Errorf("OIDC provider %q already exists", provider.GetMetadata().GetName())
+		return nil, fmt.Errorf("OIDC provider %q already exists", name)
+	}
+
+	p, _ = dao.GetM(ctx, s.db, map[string]interface{}{
+		"issuer_url":      issUrl,
+		"partner_id":      partnerId,
+		"organization_id": organizationId,
+	}, &models.OIDCProvider{})
+	if p != nil {
+		return nil, fmt.Errorf("DUPLICATE ISSUER URL")
+	}
+	if !validateURL(issUrl) {
+		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID ISSUER URL")
 	}
 
 	mapUrl := provider.Spec.GetMapperUrl()
-	issUrl := provider.Spec.GetIssuerUrl()
 	authUrl := provider.Spec.GetAuthUrl()
 	tknUrl := provider.Spec.GetTokenUrl()
 
-	if len(mapUrl) != 0 && validateURL(mapUrl) != nil {
+	if len(mapUrl) != 0 && !validateURL(mapUrl) {
 		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID MAPPER URL")
 	}
-	if len(issUrl) != 0 && validateURL(issUrl) != nil {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID ISSUER URL")
-	}
-	if len(authUrl) != 0 && validateURL(authUrl) != nil {
+	if len(authUrl) != 0 && !validateURL(authUrl) {
 		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID AUTH URL")
 	}
-	if len(tknUrl) != 0 && validateURL(tknUrl) != nil {
+	if len(tknUrl) != 0 && !validateURL(tknUrl) {
 		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID TOKEN URL")
 	}
 
@@ -304,7 +326,11 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 	}
 	scopes := provider.GetSpec().GetScopes()
 	if scopes == nil || len(scopes) == 0 {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("EMPTY SCOPES")
+		return &systemv3.OIDCProvider{}, fmt.Errorf("NO SCOPES")
+	}
+	issUrl := provider.GetSpec().GetIssuerUrl()
+	if len(issUrl) == 0 {
+		return &systemv3.OIDCProvider{}, fmt.Errorf("EMPTY ISSUER URL")
 	}
 
 	partnerId, organizationId, err := s.getPartnerOrganization(ctx, provider)
@@ -321,22 +347,29 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 			return &systemv3.OIDCProvider{}, status.Error(codes.Internal, codes.Internal.String())
 		}
 	}
+	p, _ := dao.GetM(ctx, s.db, map[string]interface{}{
+		"issuer_url":      issUrl,
+		"partner_id":      partnerId,
+		"organization_id": organizationId,
+	}, &models.OIDCProvider{})
+	if p != nil {
+		return nil, fmt.Errorf("DUPLICATE ISSUER URL")
+	}
+	if !validateURL(issUrl) {
+		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID ISSUER URL")
+	}
 
 	mapUrl := provider.Spec.GetMapperUrl()
-	issUrl := provider.Spec.GetIssuerUrl()
 	authUrl := provider.Spec.GetAuthUrl()
 	tknUrl := provider.Spec.GetTokenUrl()
 
-	if len(mapUrl) != 0 && validateURL(mapUrl) != nil {
+	if len(mapUrl) != 0 && !validateURL(mapUrl) {
 		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID MAPPER URL")
 	}
-	if len(issUrl) != 0 && validateURL(issUrl) != nil {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID ISSUER URL")
-	}
-	if len(authUrl) != 0 && validateURL(authUrl) != nil {
+	if len(authUrl) != 0 && !validateURL(authUrl) {
 		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID AUTH URL")
 	}
-	if len(tknUrl) != 0 && validateURL(tknUrl) != nil {
+	if len(tknUrl) != 0 && !validateURL(tknUrl) {
 		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID TOKEN URL")
 	}
 
@@ -350,7 +383,7 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 		MapperURL:       mapUrl,
 		MapperFilename:  provider.Spec.GetMapperFilename(),
 		ClientId:        provider.Spec.GetClientId(),
-		ClientSecret:    existingP.ClientSecret,
+		ClientSecret:    provider.Spec.GetClientSecret(),
 		Scopes:          provider.Spec.GetScopes(),
 		IssuerURL:       issUrl,
 		AuthURL:         authUrl,

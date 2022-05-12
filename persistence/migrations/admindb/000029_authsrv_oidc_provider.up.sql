@@ -25,7 +25,7 @@ ALTER TABLE authsrv_oidc_provider OWNER TO admindbuser;
 
 ALTER TABLE ONLY authsrv_oidc_provider ADD CONSTRAINT authsrv_oidc_provider_pkey PRIMARY KEY (id);
 
-ALTER TABLE ONLY authsrv_oidc_provider ADD CONSTRAINT authsrv_oidc_provider_name_key UNIQUE (name);
+ALTER TABLE ONLY authsrv_oidc_provider ADD CONSTRAINT authsrv_oidc_provider_id_name_key UNIQUE (id,name);
 
 CREATE INDEX authsrv_oidc_provider_organization_id_4219d6ee ON authsrv_oidc_provider USING btree (organization_id);
 
