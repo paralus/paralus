@@ -21,7 +21,6 @@ import (
 	"github.com/RafayLabs/rcloud-base/pkg/utils"
 	userrpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
 	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	userv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 )
@@ -101,11 +100,16 @@ func getUserTraits(traits map[string]interface{}) userTraits {
 	if !ok {
 		desc = ""
 	}
+	ig, ok := traits["idp_groups"]
+	if !ok {
+		ig = []string{}
+	}
 	return userTraits{
 		Email:       email.(string),
 		FirstName:   fname.(string),
 		LastName:    lname.(string),
 		Description: desc.(string),
+		IdpGroups:   ig.([]string),
 	}
 }
 
@@ -251,17 +255,16 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 }
 
 // Update the groups mapped to each user(account)
-func (s *userService) createGroupAccountRelations(ctx context.Context, db bun.IDB, userId uuid.UUID, usr *userv3.User, ignoreGrp bool) (*userv3.User, []uuid.UUID, error) {
+func (s *userService) createGroupAccountRelations(ctx context.Context, db bun.IDB, userId uuid.UUID, usr *userv3.User) (*userv3.User, []uuid.UUID, error) {
 	var grpaccs []models.GroupAccount
 	var ugs []*authzv1.UserGroup
 	var ids []uuid.UUID
+
+	// Add managed groups
 	for _, group := range utils.Unique(usr.GetSpec().GetGroups()) {
 		// FIXME: do combined lookup
 		entity, err := dao.GetByName(ctx, s.db, group, &models.Group{})
 		if err != nil {
-			if ignoreGrp {
-				continue
-			}
 			return &userv3.User{}, nil, fmt.Errorf("unable to find group '%v'", group)
 		}
 		if grp, ok := entity.(*models.Group); ok {
@@ -281,6 +284,35 @@ func (s *userService) createGroupAccountRelations(ctx context.Context, db bun.ID
 			})
 		}
 	}
+
+	// Add idp groups
+	for _, group := range utils.Unique(usr.GetSpec().GetIdpGroups()) {
+		entity, err := dao.GetByName(ctx, s.db, group, &models.Group{})
+		if err != nil {
+			// It is possible that a group that has been mapped via
+			// Idp is not available in our system. As of now, we
+			// ignore such cases, later when the group becomes
+			// available we will associate them to the group.
+			continue
+		}
+		if grp, ok := entity.(*models.Group); ok {
+			grp := models.GroupAccount{
+				CreatedAt:  time.Now(),
+				ModifiedAt: time.Now(),
+				Trash:      false,
+				AccountId:  userId,
+				GroupId:    grp.ID,
+				Active:     true,
+			}
+			ids = append(ids, grp.ID)
+			grpaccs = append(grpaccs, grp)
+			ugs = append(ugs, &authzv1.UserGroup{
+				Grp:  "g:" + group,
+				User: "u:" + usr.Metadata.Name,
+			})
+		}
+	}
+
 	if len(grpaccs) == 0 {
 		return usr, []uuid.UUID{}, nil
 	}
@@ -338,6 +370,8 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
 
+	user.Spec.IdpGroups = []string{} // we should not be taking idp groups as input on user creation
+
 	// Kratos checks if the user is already available
 	id, err := s.ap.Create(ctx, map[string]interface{}{
 		"email":       user.GetMetadata().GetName(), // can be just username for API access
@@ -362,7 +396,7 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 		return &userv3.User{}, err
 	}
 
-	user, groupsAfter, err := s.createGroupAccountRelations(ctx, tx, uuid.MustParse(id), user, false)
+	user, groupsAfter, err := s.createGroupAccountRelations(ctx, tx, uuid.MustParse(id), user)
 	if err != nil {
 		tx.Rollback()
 		return &userv3.User{}, err
@@ -387,6 +421,7 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 
 func (s *userService) identitiesModelToUser(ctx context.Context, db bun.IDB, user *userv3.User, usr *models.KratosIdentities) (*userv3.User, error) {
 	traits := getUserTraits(usr.Traits)
+	idpGroups := traits.IdpGroups
 	groups, err := dao.GetGroups(ctx, db, usr.ID)
 	if err != nil {
 		return &userv3.User{}, err
@@ -424,6 +459,7 @@ func (s *userService) identitiesModelToUser(ctx context.Context, db bun.IDB, use
 		FirstName:             traits.FirstName,
 		LastName:              traits.LastName,
 		Groups:                groupNames,
+		IdpGroups:             idpGroups,
 		ProjectNamespaceRoles: roles,
 	}
 
@@ -586,7 +622,7 @@ func (s *userService) deleteUserRoleRelations(ctx context.Context, db bun.IDB, u
 
 func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.User, error) {
 	name := user.GetMetadata().GetName()
-	entity, err := dao.GetIdByTraits(ctx, s.db, name, &models.KratosIdentities{})
+	entity, err := dao.GetByTraits(ctx, s.db, name, &models.KratosIdentities{})
 	if err != nil {
 		return &userv3.User{}, fmt.Errorf("no user found with name '%v'", name)
 	}
@@ -629,7 +665,9 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 			return &userv3.User{}, err
 		}
 
-		user, groupsAfter, err := s.createGroupAccountRelations(ctx, tx, usr.ID, user, false)
+		// Add idp groups to user so that it gets added on update
+		user.Spec.IdpGroups = getUserTraits(usr.Traits).IdpGroups
+		user, groupsAfter, err := s.createGroupAccountRelations(ctx, tx, usr.ID, user)
 		if err != nil {
 			tx.Rollback()
 			return &userv3.User{}, err
@@ -705,7 +743,7 @@ func (s *userService) List(ctx context.Context, opts ...query.Option) (*userv3.U
 		},
 	}
 
-	queryOptions := commonv3.QueryOptions{}
+	queryOptions := v3.QueryOptions{}
 	for _, opt := range opts {
 		opt(&queryOptions)
 	}
@@ -870,12 +908,22 @@ func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, trai
 	}
 	err = json.Unmarshal([]byte(traits), &userInfo)
 	if err != nil {
-		return fmt.Errorf("Encounterd error unmarshing payload to userInfo: %s", err)
+		return fmt.Errorf("Encountered error unmarshing payload to userInfo: %s", err)
 	}
 	// TODO: Revisit to only run by IDP users and not by any other
 	// user
 	if len(userInfo.IdpGroups) == 0 {
 		return fmt.Errorf("Empty idp groups for user with id %s", id)
+	}
+
+	// Get existing user group so that the update does not wipe them out
+	userGroups, err := dao.GetGroups(ctx, s.db, userUUID)
+	ugn := []string{}
+	for _, g := range userGroups {
+		ugn = append(ugn, g.Name)
+	}
+	if err != nil {
+		return fmt.Errorf("Empty to find existing groups for user with id %s", id)
 	}
 	user = &userv3.User{
 		Metadata: &v3.Metadata{
@@ -884,7 +932,8 @@ func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, trai
 		Spec: &userv3.UserSpec{
 			FirstName: userInfo.FirstName,
 			LastName:  userInfo.LastName,
-			Groups:    userInfo.IdpGroups,
+			Groups:    ugn,
+			IdpGroups: userInfo.IdpGroups,
 		},
 	}
 	switch op {
@@ -902,7 +951,7 @@ func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, trai
 		// create new policies
 		fallthrough
 	case "INSERT":
-		_, _, err = s.createGroupAccountRelations(ctx, s.db, userUUID, user, true)
+		_, _, err = s.createGroupAccountRelations(ctx, s.db, userUUID, user)
 		if err != nil {
 			return err
 		}

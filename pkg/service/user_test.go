@@ -170,7 +170,7 @@ func TestUpdateUser(t *testing.T) {
 	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
 
 	// performing update
-	uuuid := addUserIdFetchExpectation(mock)
+	uuuid := addUserFetchExpectation(mock)
 	puuid, ouuid := addParterOrgFetchExpectation(mock)
 	mock.ExpectBegin()
 	_ = addUserRoleMappingsUpdateExpectation(mock, uuuid)
@@ -191,6 +191,90 @@ func TestUpdateUser(t *testing.T) {
 		t.Fatal("could not create user:", err)
 	}
 	performUserBasicChecks(t, user, uuuid)
+	if user.GetMetadata().GetName() != "user-"+uuuid {
+		t.Errorf("expected name 'user-%v'; got '%v'", uuuid, user.GetMetadata().GetName())
+	}
+	performBasicAuthProviderChecks(t, *ap, 0, 1, 0, 0)
+}
+
+func TestUpdateUserWithGroup(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
+	ap := &mockAuthProvider{}
+	mazc := mockAuthzClient{}
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
+
+	// performing update
+	uuuid := addUserFetchExpectation(mock)
+	puuid, ouuid := addParterOrgFetchExpectation(mock)
+	mock.ExpectBegin()
+	_ = addUserRoleMappingsUpdateExpectation(mock, uuuid)
+	addUserGroupMappingsUpdateExpectation(mock, uuuid)
+	ruuid := addResourceRoleFetchExpectation(mock, "project")
+	pruuid := addFetchExpectation(mock, "project")
+	mock.ExpectQuery(`INSERT INTO "authsrv_projectaccountresourcerole"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
+	addFetchExpectation(mock, "group")
+	mock.ExpectQuery(`INSERT INTO "authsrv_groupaccount"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
+	mock.ExpectCommit()
+
+	var ns int64 = 7
+	user := &userv3.User{
+		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
+		Spec: &userv3.UserSpec{
+			Groups:                []string{"group"},
+			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: idnamea(pruuid, "project"), Namespace: &ns, Role: idname(ruuid, "role")}},
+		},
+	}
+	user, err := us.Update(context.Background(), user)
+	if err != nil {
+		t.Fatal("could not create user:", err)
+	}
+	performUserBasicChecks(t, user, uuuid)
+	if user.GetMetadata().GetName() != "user-"+uuuid {
+		t.Errorf("expected name 'user-%v'; got '%v'", uuuid, user.GetMetadata().GetName())
+	}
+	performBasicAuthProviderChecks(t, *ap, 0, 1, 0, 0)
+}
+
+func TestUpdateUserInvalid(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
+	ap := &mockAuthProvider{}
+	mazc := mockAuthzClient{}
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
+
+	// performing update
+	uuuid := addUserFetchExpectation(mock)
+	puuid, ouuid := addParterOrgFetchExpectation(mock)
+	mock.ExpectBegin()
+	_ = addUserRoleMappingsUpdateExpectation(mock, uuuid)
+	addUserGroupMappingsUpdateExpectation(mock, uuuid)
+	ruuid := addResourceRoleFetchExpectation(mock, "project")
+	pruuid := addFetchExpectation(mock, "project")
+	mock.ExpectQuery(`INSERT INTO "authsrv_projectaccountresourcerole"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
+	mock.ExpectCommit()
+
+	var ns int64 = 7
+	user := &userv3.User{
+		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
+		Spec: &userv3.UserSpec{
+			IdpGroups:             []string{"unnecessary"},
+			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: idnamea(pruuid, "project"), Namespace: &ns, Role: idname(ruuid, "role")}},
+		},
+	}
+	user, err := us.Update(context.Background(), user)
+	if err != nil {
+		t.Fatal("could not create user:", err)
+	}
+	performUserBasicChecks(t, user, uuuid)
+	if len(user.Spec.IdpGroups) != 0 {
+		t.Errorf("Idp groups added to local user")
+	}
 	if user.GetMetadata().GetName() != "user-"+uuuid {
 		t.Errorf("expected name 'user-%v'; got '%v'", uuuid, user.GetMetadata().GetName())
 	}
