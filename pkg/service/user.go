@@ -370,7 +370,8 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 		return nil, fmt.Errorf("unable to get partner and org id")
 	}
 
-	user.Spec.IdpGroups = []string{} // we should not be taking idp groups as input on user creation
+	// we should not be taking idp groups as input on local user creation
+	user.Spec.IdpGroups = []string{}
 
 	// Kratos checks if the user is already available
 	id, err := s.ap.Create(ctx, map[string]interface{}{
@@ -429,14 +430,18 @@ func (s *userService) identitiesModelToUser(ctx context.Context, db bun.IDB, use
 	groupNames := []string{}
 	allAssociatedRoles := []*userv3.ProjectNamespaceRole{}
 	for _, g := range groups {
-		groupNames = append(groupNames, g.Name)
-
-		//group roles
+		// group roles (both idp and non idp)
 		groupRoles, err := dao.GetGroupRoles(ctx, db, g.ID)
 		if err != nil {
 			return &userv3.User{}, err
 		}
 		allAssociatedRoles = append(allAssociatedRoles, groupRoles...)
+
+		// idp groups will be available in both traits and groups and
+		// needs to be filetered out
+		if !utils.Contains(idpGroups, g.Name) {
+			groupNames = append(groupNames, g.Name)
+		}
 	}
 
 	labels := make(map[string]string)
@@ -622,7 +627,7 @@ func (s *userService) deleteUserRoleRelations(ctx context.Context, db bun.IDB, u
 
 func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.User, error) {
 	name := user.GetMetadata().GetName()
-	entity, err := dao.GetByTraits(ctx, s.db, name, &models.KratosIdentities{})
+	entity, err := dao.GetByTraitsFull(ctx, s.db, name, &models.KratosIdentities{})
 	if err != nil {
 		return &userv3.User{}, fmt.Errorf("no user found with name '%v'", name)
 	}
@@ -632,14 +637,18 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 		if err != nil {
 			return nil, fmt.Errorf("unable to get partner and org id")
 		}
-		err = s.ap.Update(ctx, usr.ID.String(), map[string]interface{}{
-			"email":       user.GetMetadata().GetName(),
-			"first_name":  user.GetSpec().GetFirstName(),
-			"last_name":   user.GetSpec().GetLastName(),
-			"description": user.GetMetadata().GetDescription(),
-		})
-		if err != nil {
-			return &userv3.User{}, err
+
+		if usr.IdentityCredential.IdentityCredentialType.Name == "password" {
+			// Don't update details for non local(IDP) users
+			err = s.ap.Update(ctx, usr.ID.String(), map[string]interface{}{
+				"email":       user.GetMetadata().GetName(),
+				"first_name":  user.GetSpec().GetFirstName(),
+				"last_name":   user.GetSpec().GetLastName(),
+				"description": user.GetMetadata().GetDescription(),
+			})
+			if err != nil {
+				return &userv3.User{}, err
+			}
 		}
 
 		tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
@@ -920,7 +929,9 @@ func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, trai
 	userGroups, err := dao.GetGroups(ctx, s.db, userUUID)
 	ugn := []string{}
 	for _, g := range userGroups {
-		ugn = append(ugn, g.Name)
+		if !utils.Contains(userInfo.IdpGroups, g.Name) {
+			ugn = append(ugn, g.Name)
+		}
 	}
 	if err != nil {
 		return fmt.Errorf("Empty to find existing groups for user with id %s", id)

@@ -170,7 +170,7 @@ func TestUpdateUser(t *testing.T) {
 	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
 
 	// performing update
-	uuuid := addUserFetchExpectation(mock)
+	uuuid := addUserFullFetchExpectation(mock)
 	puuid, ouuid := addParterOrgFetchExpectation(mock)
 	mock.ExpectBegin()
 	_ = addUserRoleMappingsUpdateExpectation(mock, uuuid)
@@ -206,7 +206,7 @@ func TestUpdateUserWithGroup(t *testing.T) {
 	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
 
 	// performing update
-	uuuid := addUserFetchExpectation(mock)
+	uuuid := addUserFullFetchExpectation(mock)
 	puuid, ouuid := addParterOrgFetchExpectation(mock)
 	mock.ExpectBegin()
 	_ = addUserRoleMappingsUpdateExpectation(mock, uuuid)
@@ -248,7 +248,7 @@ func TestUpdateUserInvalid(t *testing.T) {
 	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
 
 	// performing update
-	uuuid := addUserFetchExpectation(mock)
+	uuuid := addUserFullFetchExpectation(mock)
 	puuid, ouuid := addParterOrgFetchExpectation(mock)
 	mock.ExpectBegin()
 	_ = addUserRoleMappingsUpdateExpectation(mock, uuuid)
