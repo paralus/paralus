@@ -215,6 +215,7 @@ func (s *oidcProvider) GetByID(ctx context.Context, provider *systemv3.OIDCProvi
 			MapperUrl:       entity.MapperURL,
 			MapperFilename:  entity.MapperFilename,
 			ClientId:        entity.ClientId,
+			ClientSecret:    entity.ClientSecret,
 			Scopes:          entity.Scopes,
 			IssuerUrl:       entity.IssuerURL,
 			AuthUrl:         entity.AuthURL,
@@ -261,6 +262,7 @@ func (s *oidcProvider) GetByName(ctx context.Context, provider *systemv3.OIDCPro
 			MapperUrl:       entity.MapperURL,
 			MapperFilename:  entity.MapperFilename,
 			ClientId:        entity.ClientId,
+			ClientSecret:    entity.ClientSecret,
 			Scopes:          entity.Scopes,
 			IssuerUrl:       entity.IssuerURL,
 			AuthUrl:         entity.AuthURL,
@@ -299,6 +301,7 @@ func (s *oidcProvider) List(ctx context.Context) (*systemv3.OIDCProviderList, er
 				MapperUrl:       entity.MapperURL,
 				MapperFilename:  entity.MapperFilename,
 				ClientId:        entity.ClientId,
+				ClientSecret:    entity.ClientSecret,
 				Scopes:          entity.Scopes,
 				IssuerUrl:       entity.IssuerURL,
 				AuthUrl:         entity.AuthURL,
@@ -347,22 +350,14 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 			return &systemv3.OIDCProvider{}, status.Error(codes.Internal, codes.Internal.String())
 		}
 	}
-	p, _ := dao.GetM(ctx, s.db, map[string]interface{}{
-		"issuer_url":      issUrl,
-		"partner_id":      partnerId,
-		"organization_id": organizationId,
-	}, &models.OIDCProvider{})
-	if p != nil {
-		return nil, fmt.Errorf("DUPLICATE ISSUER URL")
-	}
-	if !validateURL(issUrl) {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID ISSUER URL")
-	}
 
 	mapUrl := provider.Spec.GetMapperUrl()
 	authUrl := provider.Spec.GetAuthUrl()
 	tknUrl := provider.Spec.GetTokenUrl()
 
+	if !validateURL(issUrl) {
+		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID ISSUER URL")
+	}
 	if len(mapUrl) != 0 && !validateURL(mapUrl) {
 		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID MAPPER URL")
 	}

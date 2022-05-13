@@ -27,6 +27,8 @@ ALTER TABLE ONLY authsrv_oidc_provider ADD CONSTRAINT authsrv_oidc_provider_pkey
 
 ALTER TABLE ONLY authsrv_oidc_provider ADD CONSTRAINT authsrv_oidc_provider_id_name_key UNIQUE (id,name);
 
+ALTER TABLE ONLY authsrv_oidc_provider ADD CONSTRAINT authsrv_oidc_provider_issuer_url_key UNIQUE (issuer_url);
+
 CREATE INDEX authsrv_oidc_provider_organization_id_4219d6ee ON authsrv_oidc_provider USING btree (organization_id);
 
 CREATE INDEX authsrv_oidc_provider_partner_id_beb7c8df ON authsrv_oidc_provider USING btree (partner_id);

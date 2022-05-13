@@ -24,7 +24,7 @@ type OIDCProvider struct {
 	ClientId        string                 `bun:"client_id,notnull"`
 	ClientSecret    string                 `bun:"client_secret,notnull"`
 	Scopes          []string               `bun:"scopes,array,notnull"`
-	IssuerURL       string                 `bun:"issuer_url,notnull"`
+	IssuerURL       string                 `bun:"issuer_url,unique,notnull"`
 	AuthURL         string                 `bun:"auth_url"`
 	TokenURL        string                 `bun:"token_url"`
 	RequestedClaims map[string]interface{} `bun:"requested_claims,type:jsonb"`
