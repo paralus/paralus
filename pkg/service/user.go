@@ -100,16 +100,23 @@ func getUserTraits(traits map[string]interface{}) userTraits {
 	if !ok {
 		desc = ""
 	}
+
+	igStr := []string{}
 	ig, ok := traits["idp_groups"]
-	if !ok {
-		ig = []string{}
+	if ok {
+		igList := ig.([]interface{})
+		igStr = make([]string, len(igList))
+		for i, g := range igList {
+			igStr[i] = g.(string)
+		}
 	}
+
 	return userTraits{
 		Email:       email.(string),
 		FirstName:   fname.(string),
 		LastName:    lname.(string),
 		Description: desc.(string),
-		IdpGroups:   ig.([]string),
+		IdpGroups:   igStr,
 	}
 }
 
