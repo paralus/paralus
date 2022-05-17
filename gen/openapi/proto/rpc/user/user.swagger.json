@@ -203,6 +203,17 @@
             "collectionFormat": "multi"
           },
           {
+            "name": "spec.idpGroups",
+            "description": "Idp Group. Idp Groups the user belongs to",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
             "name": "spec.emailVerified",
             "description": "EmailVerified. Flag to show if the email of the user was verified",
             "in": "query",
@@ -404,6 +415,17 @@
           {
             "name": "spec.groups",
             "description": "Group. Groups the user belongs to",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "spec.idpGroups",
+            "description": "Idp Group. Idp Groups the user belongs to",
             "in": "query",
             "required": false,
             "type": "array",
@@ -754,6 +776,17 @@
           {
             "name": "spec.groups",
             "description": "Group. Groups the user belongs to",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "spec.idpGroups",
+            "description": "Idp Group. Idp Groups the user belongs to",
             "in": "query",
             "required": false,
             "type": "array",
@@ -1478,6 +1511,15 @@
           "title": "Group",
           "readOnly": true
         },
+        "idpGroups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Idp Groups the user belongs to",
+          "title": "Idp Group",
+          "readOnly": true
+        },
         "permissions": {
           "type": "array",
           "items": {
@@ -1569,6 +1611,15 @@
           },
           "description": "Groups the user belongs to",
           "title": "Group",
+          "readOnly": true
+        },
+        "idpGroups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Idp Groups the user belongs to",
+          "title": "Idp Group",
           "readOnly": true
         },
         "projectNamespaceRoles": {

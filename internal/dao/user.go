@@ -9,6 +9,19 @@ import (
 	"github.com/uptrace/bun"
 )
 
+func GetUserType(ctx context.Context, db bun.IDB, id uuid.UUID) (string, error) {
+	var user = models.KratosIdentities{}
+	q := db.NewSelect().Model(&user)
+	q.Relation("IdentityCredential").
+		Relation("IdentityCredential.IdentityCredentialType")
+	q.Where("id = ?", id)
+	err := q.Scan(ctx)
+	if err != nil {
+		return "", err
+	}
+	return user.IdentityCredential.IdentityCredentialType.Name, nil
+}
+
 func GetGroups(ctx context.Context, db bun.IDB, id uuid.UUID) ([]models.Group, error) {
 	var entities = []models.Group{}
 	err := db.NewSelect().Model(&entities).

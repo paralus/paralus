@@ -292,6 +292,19 @@ func GetByTraits(ctx context.Context, db bun.IDB, name string, entity interface{
 	return entity, nil
 }
 
+func GetByTraitsFull(ctx context.Context, db bun.IDB, name string, entity interface{}) (interface{}, error) {
+	err := db.NewSelect().Model(entity).
+		Where("traits ->> 'email' = ?", name).
+		Relation("IdentityCredential").
+		Relation("IdentityCredential.IdentityCredentialType").
+		Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return entity, nil
+}
+
 func GetIdByTraits(ctx context.Context, db bun.IDB, name string, entity interface{}) (interface{}, error) {
 	// TODO: better name and possibly pass in trait name
 	err := db.NewSelect().Column("id").Model(entity).
