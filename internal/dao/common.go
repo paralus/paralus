@@ -248,8 +248,10 @@ func ListFiltered(ctx context.Context, db bun.IDB,
 	if orderBy != "" && order != "" {
 		sq.Order(orderBy + " " + order)
 	}
-	if limit != 0 || offset != 0 {
+	if limit > 0 {
 		sq.Limit(limit)
+	}
+	if offset > 0 {
 		sq.Offset(offset)
 	}
 	err := sq.Scan(ctx)
