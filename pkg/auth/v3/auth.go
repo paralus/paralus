@@ -37,6 +37,7 @@ type Option struct {
 }
 
 type authContext struct {
+	db *bun.DB
 	kc *kclient.APIClient
 	ks service.ApiKeyService
 	as service.AuthzService
@@ -78,7 +79,7 @@ func SetupAuthContext(auditLogger *zap.Logger) authContext {
 	}
 	as := service.NewAuthzService(db, enforcer)
 
-	return authContext{kc: kc, as: as, ks: service.NewApiKeyService(db, auditLogger)}
+	return authContext{db: db, kc: kc, as: as, ks: service.NewApiKeyService(db, auditLogger)}
 }
 
 func getDSN() string {
@@ -106,11 +107,13 @@ func getEnvWithDefault(env, def string) string {
 // instead of creating new instances. To create authContext along with
 // its dependencies, use SetupAuthContext.
 func NewAuthContext(
+	db *bun.DB,
 	kc *kclient.APIClient,
 	apiKeySvc service.ApiKeyService,
 	authzSvc service.AuthzService,
 ) authContext {
 	return authContext{
+		db: db,
 		kc: kc,
 		ks: apiKeySvc,
 		as: authzSvc,

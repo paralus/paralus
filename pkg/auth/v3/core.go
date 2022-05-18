@@ -7,9 +7,11 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/RafayLabs/rcloud-base/internal/dao"
 	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
 	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	"github.com/google/uuid"
 )
 
 var (
@@ -93,6 +95,23 @@ func (ac *authContext) authenticate(ctx context.Context, req *commonv3.IsRequest
 
 			t := session.Identity.Traits.(map[string]interface{})
 			res.SessionData.Username = t["email"].(string)
+			uid, err := uuid.Parse(session.Identity.Id)
+			if err != nil {
+				res.Status = commonv3.RequestStatus_RequestNotAuthenticated
+				res.Reason = "unable to find identity"
+				return false, err
+			}
+			groups, err := dao.GetGroups(ctx, ac.db, uid)
+			if err != nil {
+				res.Status = commonv3.RequestStatus_RequestNotAuthenticated
+				res.Reason = "unable to find identity"
+				return false, err
+			}
+			groupNames := []string{}
+			for _, g := range groups {
+				groupNames = append(groupNames, g.Name)
+			}
+			res.SessionData.Groups = groupNames
 		} else {
 			res.Status = commonv3.RequestStatus_RequestNotAuthenticated
 			res.Reason = "no active session"
