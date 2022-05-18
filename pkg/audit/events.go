@@ -120,7 +120,7 @@ func WithTopic(topic EventTopic) CreateEventOption {
 	}
 }
 
-// WithProjectID sets project id for audit event
+// WithProject sets project id for audit event
 func WithProject(project string) CreateEventOption {
 	return func(opts *createEventOptions) {
 		opts.project = project

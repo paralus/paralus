@@ -65,7 +65,7 @@ message relayAuditQueryFilter {
   string namespace = 7;
   string kind = 8;
   string method = 9;
-  repeated string projectIds = 10;
+  repeated string projects = 10;
   string queryString = 11;
   bool dashboardData = 12;
   repeated string clusterNames = 13;

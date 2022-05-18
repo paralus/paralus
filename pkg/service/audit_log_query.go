@@ -26,11 +26,11 @@ func (a *AuditLogService) GetAuditLog(req *v1.AuditLogSearchRequest) (res *v1.Au
 	if err != nil {
 		return nil, err
 	}
-	projectID, err := getPrjectIdFromUrlScope(req.GetMetadata().UrlScope)
+	project, err := getPrjectFromUrlScope(req.GetMetadata().UrlScope)
 	if err != nil {
 		return nil, err
 	}
-	req.Filter.ProjectIds = []string{projectID}
+	req.Filter.Projects = []string{project}
 	return a.GetAuditLogByProjects(req)
 }
 
@@ -44,11 +44,11 @@ func validateQueryString(queryString string) error {
 	return nil
 }
 
-func getPrjectIdFromUrlScope(urlScope string) (string, error) {
+func getPrjectFromUrlScope(urlScope string) (string, error) {
 	s := strings.Split(urlScope, "/")
 	if len(s) != 2 {
-		_log.Errorw("Unable to retrieve projectID from urlScope", "urlScope", urlScope)
-		return "", fmt.Errorf("unable to retrieve projectID from urlScope")
+		_log.Errorw("Unable to retrieve project from urlScope", "urlScope", urlScope)
+		return "", fmt.Errorf("unable to retrieve project from urlScope")
 	}
 	return s[1], nil
 }
@@ -101,7 +101,7 @@ func (a *AuditLogService) GetAuditLogByProjects(req *v1.AuditLogSearchRequest) (
 	if req.GetFilter().DashboardData {
 		agg["group_by_project"] = map[string]interface{}{
 			"terms": map[string]interface{}{
-				"field": "json.project_id",
+				"field": "json.project",
 				"size":  1000,
 			},
 			"aggs": map[string]interface{}{
@@ -168,11 +168,11 @@ func (a *AuditLogService) GetAuditLogByProjects(req *v1.AuditLogSearchRequest) (
 		}
 		m = append(m, t)
 	}
-	// ProjectIds
-	if len(req.GetFilter().ProjectIds) > 0 {
+	// Project
+	if len(req.GetFilter().Projects) > 0 {
 		t := map[string]interface{}{
 			"terms": map[string]interface{}{
-				"json.project_id": req.GetFilter().ProjectIds,
+				"json.project": req.GetFilter().Projects,
 			},
 		}
 		m = append(m, t)

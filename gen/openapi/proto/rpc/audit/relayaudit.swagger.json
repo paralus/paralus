@@ -169,7 +169,7 @@
             "type": "string"
           },
           {
-            "name": "filter.projectIds",
+            "name": "filter.projects",
             "in": "query",
             "required": false,
             "type": "array",
@@ -357,7 +357,7 @@
             "type": "string"
           },
           {
-            "name": "filter.projectIds",
+            "name": "filter.projects",
             "in": "query",
             "required": false,
             "type": "array",
@@ -546,7 +546,7 @@
             "type": "string"
           },
           {
-            "name": "filter.projectIds",
+            "name": "filter.projects",
             "in": "query",
             "required": false,
             "type": "array",
@@ -735,7 +735,7 @@
             "type": "string"
           },
           {
-            "name": "filter.projectIds",
+            "name": "filter.projects",
             "in": "query",
             "required": false,
             "type": "array",
@@ -845,7 +845,7 @@
         "method": {
           "type": "string"
         },
-        "projectIds": {
+        "projects": {
           "type": "array",
           "items": {
             "type": "string"
