@@ -14,8 +14,6 @@ serve:
         - http://127.0.0.1:3000/*
         - http://127.0.0.1:19006
         - http://127.0.0.1:19006/*
-        - http://127.0.0.1:4455
-        - http://127.0.0.1:4455/*
       allowed_methods:
         - POST
         - GET
@@ -35,7 +33,7 @@ serve:
 selfservice:
   default_browser_return_url: http://127.0.0.1:3000/
   whitelisted_return_urls:
-    - http://127.0.0.1:4455
+    - http://127.0.0.1:3000
 
   methods:
     password:
@@ -63,7 +61,7 @@ selfservice:
 
   flows:
     error:
-      ui_url: http://127.0.0.1:4455/error
+      ui_url: http://127.0.0.1:3000/error
 
     settings:
       ui_url: http://127.0.0.1:3000/ksettings
@@ -75,16 +73,16 @@ selfservice:
 
     verification:
       enabled: true
-      ui_url: http://127.0.0.1:4455/verify
+      ui_url: http://127.0.0.1:3000/verify
       after:
-        default_browser_return_url: http://127.0.0.1:4455/
+        default_browser_return_url: http://127.0.0.1:3000
 
     logout:
       after:
-        default_browser_return_url: http://127.0.0.1:4455/auth/login
+        default_browser_return_url: http://127.0.0.1:3000/login
 
     login:
-      ui_url: http://127.0.0.1:4455/login
+      ui_url: http://127.0.0.1:3000/login
       lifespan: 10m
 
     registration:
