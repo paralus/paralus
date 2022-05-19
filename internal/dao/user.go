@@ -91,33 +91,50 @@ func GetQueryFilteredUsers(ctx context.Context, db bun.IDB, partner, org, group,
 	q.Where("partner_id = ?", partner).
 		Where("organization_id = ?", org)
 
-	if group != uuid.Nil {
-		q.Where("group_id = ?", group)
-	}
 	if role != uuid.Nil {
 		q.Where("role_id = ?", role)
 	}
 	if len(projects) != 0 {
 		q.Where("project_id IN (?)", bun.In(projects))
 	}
+
+	if group != uuid.Nil {
+		// If the group is not mapped to a project, we won't be able
+		// to pick it from sentry table and that is why we have to do
+		// this.
+		gaccs := []models.GroupAccount{}
+		subq := db.NewSelect().
+			Model(&gaccs).
+			ColumnExpr("DISTINCT account_id").
+			Where("group_id = ?", group).
+			Where("trash = ?", false)
+
+		q = q.Where("account_id IN (?)", subq)
+	}
 	err := q.Scan(ctx)
 	if err != nil {
 		return nil, err
 	}
-
 	acc := []uuid.UUID{}
 	for _, a := range p {
 		acc = append(acc, a.AccountId)
 	}
 	return acc, nil
+
 }
 
-// ListFilteredUsers will return the list of users fileterd by query
-func ListFilteredUsers(ctx context.Context, db bun.IDB, users *[]models.KratosIdentities, fusers []uuid.UUID, query string, utype string, orderBy string, order string, limit int, offset int) (*[]models.KratosIdentities, error) {
-	q := db.NewSelect().Model(users)
-
+func listFilteredUsersQuery(
+	q *bun.SelectQuery,
+	fusers []uuid.UUID,
+	query string,
+	utype string,
+	orderBy string,
+	order string,
+	limit int,
+	offset int,
+) *bun.SelectQuery {
 	if utype != "" {
-		q.Relation("IdentityCredential").
+		q = q.Relation("IdentityCredential").
 			Relation("IdentityCredential.IdentityCredentialType", func(q *bun.SelectQuery) *bun.SelectQuery {
 				return q.Where("name = ?", utype)
 			})
@@ -125,25 +142,77 @@ func ListFilteredUsers(ctx context.Context, db bun.IDB, users *[]models.KratosId
 
 	if len(fusers) > 0 {
 		// filter with precomputed users if we have any
-		q.Where("identities.id IN (?)", bun.In(fusers))
+		q = q.Where("identities.id IN (?)", bun.In(fusers))
 	}
 	if query != "" {
-		q.Where("traits ->> 'email' ILIKE ?", "%"+query+"%") // XXX: ILIKE is not-standard sql
-		q.WhereOr("traits ->> 'first_name' ILIKE ?", "%"+query+"%")
-		q.WhereOr("traits ->> 'last_name' ILIKE ?", "%"+query+"%")
+		q = q.WhereGroup(" AND ", func(q *bun.SelectQuery) *bun.SelectQuery {
+			q = q.Where("traits ->> 'email' ILIKE ?", "%"+query+"%") // XXX: ILIKE is not-standard sql
+			q = q.WhereOr("traits ->> 'first_name' ILIKE ?", "%"+query+"%")
+			q = q.WhereOr("traits ->> 'last_name' ILIKE ?", "%"+query+"%")
+			return q
+		})
 	}
 	if orderBy != "" && order != "" {
-		q.Order("traits ->> '" + orderBy + "' " + order)
+		q = q.Order("traits ->> '" + orderBy + "' " + order)
 	}
 	if limit > 0 {
-		q.Limit(limit)
+		q = q.Limit(limit)
 	}
 	if offset > 0 {
-		q.Offset(offset)
+		q = q.Offset(offset)
 	}
+	return q
+}
+
+// ListFilteredUsers will return the list of users fileterd by query
+func ListFilteredUsers(
+	ctx context.Context,
+	db bun.IDB,
+	fusers []uuid.UUID,
+	query string,
+	utype string,
+	orderBy string,
+	order string,
+	limit int,
+	offset int,
+) ([]models.KratosIdentities, error) {
+	var users []models.KratosIdentities
+	q := db.NewSelect().Model(&users)
+	listFilteredUsersQuery(q, fusers, query, utype, orderBy, order, limit, offset)
 	err := q.Scan(ctx)
 	if err != nil {
 		return nil, err
+	}
+	return users, nil
+}
+
+// ListFilteredUsersWithGroup is ListFilteredUsers but with Group fileter as well
+func ListFilteredUsersWithGroup(
+	ctx context.Context,
+	db bun.IDB,
+	fusers []uuid.UUID,
+	group uuid.UUID,
+	query string,
+	utype string,
+	orderBy string,
+	order string,
+	limit int,
+	offset int,
+) ([]models.KratosIdentities, error) {
+	var users []models.KratosIdentities
+	var gaccs []models.GroupAccount
+	q := db.NewSelect().Model(&gaccs)
+	q.Where("group_id = ?", group).Where("groupaccount.trash = ?", false)
+
+	q = q.Relation("Account", func(q *bun.SelectQuery) *bun.SelectQuery {
+		return listFilteredUsersQuery(q, fusers, query, utype, orderBy, order, limit, offset)
+	})
+	err := q.Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	for _, ga := range gaccs {
+		users = append(users, *ga.Account)
 	}
 	return users, nil
 }
