@@ -192,9 +192,9 @@ func setup() {
 
 	// audit
 	viper.SetDefault(esEndPointEnv, "http://127.0.0.1:9200")
-	viper.SetDefault(esIndexPrefixEnv, "ralogs-system")
-	viper.SetDefault(relayAuditESIndexPrefixEnv, "ralogs-relay")
-	viper.SetDefault(relayCommandESIndexPrefix, "ralogs-prompt")
+	viper.SetDefault(esIndexPrefixEnv, "ralog-system")
+	viper.SetDefault(relayAuditESIndexPrefixEnv, "ralog-relay")
+	viper.SetDefault(relayCommandESIndexPrefix, "ralog-prompt")
 	viper.SetDefault(auditFileEnv, "audit.log")
 
 	// cd relay
