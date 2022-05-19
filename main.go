@@ -43,6 +43,7 @@ import (
 	_grpc "google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
+	"google.golang.org/grpc/reflection"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
@@ -601,6 +602,11 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	s, err := grpc.NewServer(opts...)
 	if err != nil {
 		_log.Fatalw("unable to create grpc server", "error", err)
+	}
+
+	if dev {
+		// Register reflection service on gRPC server.
+		reflection.Register(s)
 	}
 
 	go func() {
