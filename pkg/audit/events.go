@@ -246,7 +246,7 @@ func GetActorFromSessionData(sd *commonv3.SessionData) *EventActor {
 	account := EventActorAccount{
 		Username: username,
 	}
-	groups := sd.Groups // TODO: get groups (in interceptor?)
+	groups := sd.Groups
 
 	return &EventActor{
 		Type:    "USER",
@@ -298,7 +298,7 @@ func CreateV1Event(al *zap.Logger, sd *commonv3.SessionData, detail *EventDetail
 		Client:   client,
 		Detail:   detail,
 		Type:     eventType,
-		Portal:   "OPS", // TODO: What is the portal?
+		Portal:   "OPS",
 		Project:  project,
 	}
 

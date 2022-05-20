@@ -372,7 +372,7 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 
 		var projs []models.Project
 		if !s.dev {
-			entity, err := dao.GetByTraits(ctx, s.db, username, &models.KratosIdentities{})
+			entity, err := dao.GetUserByEmail(ctx, s.db, username, &models.KratosIdentities{})
 			if err != nil {
 				return &systemv3.ProjectList{}, err
 			}
@@ -538,7 +538,7 @@ func (s *projectService) createProjectAccountRelations(ctx context.Context, db b
 
 	for _, ur := range project.GetSpec().GetUserRoles() {
 		// FIXME: do combined lookup
-		entity, err := dao.GetIdByTraits(ctx, db, ur.User, &models.KratosIdentities{})
+		entity, err := dao.GetUserIdByEmail(ctx, db, ur.User, &models.KratosIdentities{})
 		if err != nil {
 			return &systemv3.Project{}, fmt.Errorf("unable to find user '%v'", ur.User)
 		}

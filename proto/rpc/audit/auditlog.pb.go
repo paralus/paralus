@@ -164,7 +164,6 @@ type AuditLogSearchRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// TODO: this was rafay.dev.common.types.v2.RafayMeta
 	Metadata *v3.Metadata         `protobuf:"bytes,1,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	Filter   *AuditLogQueryFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 }

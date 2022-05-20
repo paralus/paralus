@@ -503,7 +503,7 @@ func (s *userService) GetByID(ctx context.Context, user *userv3.User) (*userv3.U
 
 func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3.User, error) {
 	name := user.GetMetadata().GetName()
-	entity, err := dao.GetByTraits(ctx, s.db, name, &models.KratosIdentities{})
+	entity, err := dao.GetUserByEmail(ctx, s.db, name, &models.KratosIdentities{})
 	if err != nil {
 		return &userv3.User{}, err
 	}
@@ -536,7 +536,7 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 	}
 	_log.Info("username ", username)
 
-	entity, err := dao.GetByTraits(ctx, s.db, username, &models.KratosIdentities{})
+	entity, err := dao.GetUserByEmail(ctx, s.db, username, &models.KratosIdentities{})
 	if err != nil {
 		return &userv3.UserInfo{}, err
 	}
@@ -634,7 +634,7 @@ func (s *userService) deleteUserRoleRelations(ctx context.Context, db bun.IDB, u
 
 func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.User, error) {
 	name := user.GetMetadata().GetName()
-	entity, err := dao.GetByTraitsFull(ctx, s.db, name, &models.KratosIdentities{})
+	entity, err := dao.GetUserFullByEmail(ctx, s.db, name, &models.KratosIdentities{})
 	if err != nil {
 		return &userv3.User{}, fmt.Errorf("no user found with name '%v'", name)
 	}
@@ -706,7 +706,7 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 
 func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3.DeleteUserResponse, error) {
 	name := user.GetMetadata().GetName()
-	entity, err := dao.GetIdByTraits(ctx, s.db, name, &models.KratosIdentities{})
+	entity, err := dao.GetUserIdByEmail(ctx, s.db, name, &models.KratosIdentities{})
 	if err != nil {
 		return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("no user founnd with username '%v'", name)
 	}

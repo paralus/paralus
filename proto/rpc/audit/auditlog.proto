@@ -69,7 +69,6 @@ message auditLogQueryFilter {
 }
 
 message auditLogSearchRequest {
-  // TODO: this was rafay.dev.common.types.v2.RafayMeta
   rafay.dev.types.common.v3.Metadata metadata = 1;
   auditLogQueryFilter filter = 2;
 }
