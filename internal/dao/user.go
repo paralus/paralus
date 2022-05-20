@@ -100,7 +100,10 @@ func GetQueryFilteredUsers(ctx context.Context, db bun.IDB, partner, org, group,
 	if len(projects) != 0 {
 		q.Where("project_id IN (?)", bun.In(projects))
 	}
-	q.Scan(ctx)
+	err := q.Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
 
 	acc := []uuid.UUID{}
 	for _, a := range p {
@@ -122,18 +125,20 @@ func ListFilteredUsers(ctx context.Context, db bun.IDB, users *[]models.KratosId
 
 	if len(fusers) > 0 {
 		// filter with precomputed users if we have any
-		q.Where("id IN (?)", bun.In(fusers))
+		q.Where("identities.id IN (?)", bun.In(fusers))
 	}
 	if query != "" {
-		q.Where("traits ->> 'email' ILIKE ?", "%"+query+"%") // XXX: ILIKE is not-standard
+		q.Where("traits ->> 'email' ILIKE ?", "%"+query+"%") // XXX: ILIKE is not-standard sql
 		q.WhereOr("traits ->> 'first_name' ILIKE ?", "%"+query+"%")
 		q.WhereOr("traits ->> 'last_name' ILIKE ?", "%"+query+"%")
 	}
 	if orderBy != "" && order != "" {
 		q.Order("traits ->> '" + orderBy + "' " + order)
 	}
-	if limit != 0 || offset != 0 {
+	if limit > 0 {
 		q.Limit(limit)
+	}
+	if offset > 0 {
 		q.Offset(offset)
 	}
 	err := q.Scan(ctx)

@@ -507,7 +507,7 @@ func TestUserList(t *testing.T) {
 			}
 			if tc.role != "" || tc.group != "" || len(tc.projects) != 0 {
 				addSentryLookupExpectation(mock, []string{uuuid1, uuuid2}, puuid, ouuid)
-				mock.ExpectQuery(`SELECT "identities"."id", .*WHERE .id IN .'` + uuuid1 + `', '` + uuuid2 + `'..  ` + q + order + `LIMIT ` + fmt.Sprint(tc.limit) + ` OFFSET ` + fmt.Sprint(tc.offset)).
+				mock.ExpectQuery(`SELECT "identities"."id", .*WHERE .identities.id IN .'` + uuuid1 + `', '` + uuuid2 + `'..  ` + q + order + `LIMIT ` + fmt.Sprint(tc.limit) + ` OFFSET ` + fmt.Sprint(tc.offset)).
 					WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).
 					AddRow(uuuid1, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)).
 					AddRow(uuuid2, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)))
