@@ -490,7 +490,7 @@ func TestUserList(t *testing.T) {
 			puuid, ouuid := addParterOrgFetchExpectation(mock)
 			q := ""
 			if tc.q != "" {
-				q = ` AND .traits ->> 'email' ILIKE '%` + tc.q + `%'. OR .traits ->> 'first_name' ILIKE '%` + tc.q + `%'. OR .traits ->> 'last_name' ILIKE '%` + tc.q + `%'. `
+				q = ` AND ..traits ->> 'email' ILIKE '%` + tc.q + `%'. OR .traits ->> 'first_name' ILIKE '%` + tc.q + `%'. OR .traits ->> 'last_name' ILIKE '%` + tc.q + `%'.. `
 			}
 			order := ""
 			if tc.orderBy != "" {
