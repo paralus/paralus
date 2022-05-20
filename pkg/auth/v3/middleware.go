@@ -132,6 +132,7 @@ func serveHTTP(opt Option,
 		res.SessionData.Project = &commonpbv3.ProjectData{
 			List: []*commonpbv3.ProjectRole{
 				{
+					Project:   poResp.Project,
 					ProjectId: poResp.ProjectId,
 				},
 			},

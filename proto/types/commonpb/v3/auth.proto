@@ -45,7 +45,8 @@ message NamespaceData {
 }
 
 message ProjectRole {
-    string project_id = 1;
+    string project = 1;
+    string project_id = 2;
     string role = 3;
 }
 
