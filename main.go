@@ -43,6 +43,7 @@ import (
 	_grpc "google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
+	"google.golang.org/grpc/reflection"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
@@ -191,9 +192,9 @@ func setup() {
 
 	// audit
 	viper.SetDefault(esEndPointEnv, "http://127.0.0.1:9200")
-	viper.SetDefault(esIndexPrefixEnv, "ralogs-system")
-	viper.SetDefault(relayAuditESIndexPrefixEnv, "ralogs-relay")
-	viper.SetDefault(relayCommandESIndexPrefix, "ralogs-prompt")
+	viper.SetDefault(esIndexPrefixEnv, "ralog-system")
+	viper.SetDefault(relayAuditESIndexPrefixEnv, "ralog-relay")
+	viper.SetDefault(relayCommandESIndexPrefix, "ralog-prompt")
 	viper.SetDefault(auditFileEnv, "audit.log")
 
 	// cd relay
@@ -581,7 +582,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	var asv authv3.AuthService
 	if !dev {
 		_log.Infow("adding auth interceptor")
-		ac := authv3.NewAuthContext(kc, ks, as)
+		ac := authv3.NewAuthContext(db, kc, ks, as)
 		asv = authv3.NewAuthService(ac)
 		o := authv3.Option{
 			ExcludeRPCMethods: []string{
@@ -601,6 +602,11 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	s, err := grpc.NewServer(opts...)
 	if err != nil {
 		_log.Fatalw("unable to create grpc server", "error", err)
+	}
+
+	if dev {
+		// Register reflection service on gRPC server.
+		reflection.Register(s)
 	}
 
 	go func() {

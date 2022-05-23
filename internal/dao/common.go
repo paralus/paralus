@@ -210,7 +210,7 @@ func DeleteXR(ctx context.Context, db bun.IDB, field string, value interface{}, 
 func HardDeleteAll(ctx context.Context, db bun.IDB, entity interface{}) error {
 	_, err := db.NewDelete().
 		Model(entity).
-		Where("1  = 1"). // TODO: see how to remove this
+		Where("1 = 1"). // TODO: see how to remove this
 		Exec(ctx)
 	return err
 }
@@ -282,8 +282,7 @@ func ListAll(ctx context.Context, db bun.IDB, entities interface{}) (interface{}
 	return entities, err
 }
 
-func GetByTraits(ctx context.Context, db bun.IDB, name string, entity interface{}) (interface{}, error) {
-	// TODO: better name and possibly pass in trait name
+func GetUserByEmail(ctx context.Context, db bun.IDB, name string, entity interface{}) (interface{}, error) {
 	err := db.NewSelect().Model(entity).
 		Where("traits ->> 'email' = ?", name).
 		Scan(ctx)
@@ -294,7 +293,7 @@ func GetByTraits(ctx context.Context, db bun.IDB, name string, entity interface{
 	return entity, nil
 }
 
-func GetByTraitsFull(ctx context.Context, db bun.IDB, name string, entity interface{}) (interface{}, error) {
+func GetUserFullByEmail(ctx context.Context, db bun.IDB, name string, entity interface{}) (interface{}, error) {
 	err := db.NewSelect().Model(entity).
 		Where("traits ->> 'email' = ?", name).
 		Relation("IdentityCredential").
@@ -307,8 +306,7 @@ func GetByTraitsFull(ctx context.Context, db bun.IDB, name string, entity interf
 	return entity, nil
 }
 
-func GetIdByTraits(ctx context.Context, db bun.IDB, name string, entity interface{}) (interface{}, error) {
-	// TODO: better name and possibly pass in trait name
+func GetUserIdByEmail(ctx context.Context, db bun.IDB, name string, entity interface{}) (interface{}, error) {
 	err := db.NewSelect().Column("id").Model(entity).
 		Where("traits ->> 'email' = ?", name).
 		Scan(ctx)

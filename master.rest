@@ -80,6 +80,7 @@ disableCLIKubectl: false
 
 # Get kubeconfig setting
 GET :host/v2/sentry/kubeconfig/:opts.urlScope_user/setting
+X-Session-Token: :token
 
 # Publish kubeconfig setting
 PUT :host/v2/sentry/kubeconfig/:opts.urlScope_org/setting
@@ -97,15 +98,19 @@ disableCLIKubectl: false
 
 # Get kubeconfig setting
 GET :host/v2/sentry/kubeconfig/:opts.urlScope_org/setting
+X-Session-Token: :token
 
 # Get kubeconfig for cluster system session
 GET :host/v2/sentry/kubeconfig/clustersystemsession?systemUser=true&opts.Organization=cc02bd83-89d8-4c76-a7dc-06854f93e21d
+X-Session-Token: :token
 
 # Get kubeconfig for cluster web session
 GET :host/v2/sentry/kubeconfig/clusterwebsession?opts.account=b2e4162c-60df-4fd7-b8fd-8fd3e4d6e533&opts.organization=0d95d65f-3ce9-4340-ac05-77f71084d0a6&opts.partner=1aa87c65-f7a2-41c6-9d74-5fc27969836c&opts.username=nirav.parikh@finman.tech
+X-Session-Token: :token
 
 # Get kubeconfig for user
 GET :host/v2/sentry/kubeconfig/user?opts.selector=&opts.account=c6974c2e-ef14-41bd-a5d5-4297cfe1dd4a&opts.organization=928b87f5-a4e8-4c97-8c91-0d431d7e1b82&opts.partner=a02cdb9f-a84f-49a1-b483-e7722d519cb8
+X-Session-Token: :token
 
 # Revoke kubeconfig for user
 POST :host/v2/sentry/kubeconfig/revoke
@@ -340,6 +345,7 @@ X-Session-Token: :token
 # Create group
 POST :host/auth/v3/partner/:partner/organization/:org/groups
 Content-Type: application/yaml
+X-Session-Token: :token
 
 metadata:
   name: :group

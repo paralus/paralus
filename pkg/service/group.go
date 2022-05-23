@@ -240,7 +240,7 @@ func (s *groupService) createGroupAccountRelations(ctx context.Context, db bun.I
 	var uids []uuid.UUID
 	for _, account := range utils.Unique(group.GetSpec().GetUsers()) {
 		// FIXME: do combined lookup
-		entity, err := dao.GetIdByTraits(ctx, db, account, &models.KratosIdentities{})
+		entity, err := dao.GetUserIdByEmail(ctx, db, account, &models.KratosIdentities{})
 		if err != nil {
 			return &userv3.Group{}, nil, fmt.Errorf("unable to find user '%v'", account)
 		}

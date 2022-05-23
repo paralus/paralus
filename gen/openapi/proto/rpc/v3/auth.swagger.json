@@ -107,6 +107,9 @@
     "v3ProjectRole": {
       "type": "object",
       "properties": {
+        "project": {
+          "type": "string"
+        },
         "projectId": {
           "type": "string"
         },

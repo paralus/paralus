@@ -16,9 +16,10 @@ type GroupAccount struct {
 	CreatedAt   time.Time `bun:"created_at,notnull,default:current_timestamp"`
 	ModifiedAt  time.Time `bun:"modified_at,notnull,default:current_timestamp"`
 	Trash       bool      `bun:"trash,notnull,default:false"`
-	// OrganizationId uuid.UUID `bun:"organization_id,type:uuid"`
-	// PartnerId      uuid.UUID `bun:"partner_id,type:uuid"`
-	AccountId uuid.UUID `bun:"account_id,type:uuid"`
-	GroupId   uuid.UUID `bun:"group_id,type:uuid"`
-	Active    bool      `bun:"active,notnull"`
+	AccountId   uuid.UUID `bun:"account_id,type:uuid"`
+	GroupId     uuid.UUID `bun:"group_id,type:uuid"`
+	Active      bool      `bun:"active,notnull"`
+
+	Account *KratosIdentities `bun:"rel:has-one,join:account_id=id"`
+	Group   *Group            `bun:"rel:has-one,join:group_id=id"`
 }

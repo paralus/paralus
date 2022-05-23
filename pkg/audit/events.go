@@ -73,7 +73,7 @@ type Event struct {
 	Origin    EventOrigin   `json:"origin"`
 	Portal    string        `json:"portal"`
 	Type      string        `json:"type"`
-	ProjectID string        `json:"project_id"`
+	Project   string        `json:"project"`
 	Actor     *EventActor   `json:"actor"`
 	Client    *EventClient  `json:"client"`
 	Detail    *EventDetail  `json:"detail"`
@@ -81,17 +81,15 @@ type Event struct {
 }
 
 type createEventOptions struct {
-	version        EventVersion
-	origin         EventOrigin
-	category       EventCategory
-	topic          EventTopic
-	partnerID      string
-	organizationID string
-	projectID      string
-	ctx            context.Context
-	accountID      string
-	username       string
-	groups         []string
+	version   EventVersion
+	origin    EventOrigin
+	category  EventCategory
+	topic     EventTopic
+	project   string
+	ctx       context.Context
+	accountID string
+	username  string
+	groups    []string
 }
 
 // WithVersion sets version for audit event
@@ -122,24 +120,10 @@ func WithTopic(topic EventTopic) CreateEventOption {
 	}
 }
 
-// WithPartnerID sets partner id for audit event
-func WithPartnerID(partnerID string) CreateEventOption {
+// WithProject sets project id for audit event
+func WithProject(project string) CreateEventOption {
 	return func(opts *createEventOptions) {
-		opts.partnerID = partnerID
-	}
-}
-
-// WithOrganizationID sets organization id for audit event
-func WithOrganizationID(organizationID string) CreateEventOption {
-	return func(opts *createEventOptions) {
-		opts.organizationID = organizationID
-	}
-}
-
-// WithProjectID sets project id for audit event
-func WithProjectID(projectID string) CreateEventOption {
-	return func(opts *createEventOptions) {
-		opts.projectID = projectID
+		opts.project = project
 	}
 }
 
@@ -193,7 +177,7 @@ func CreateEvent(al *zap.Logger, event *Event, opts ...CreateEventOption) error 
 	event.Category = cOpts.category
 	event.Origin = cOpts.origin
 
-	event.ProjectID = cOpts.projectID
+	event.Project = cOpts.project
 
 	if event.Client == nil {
 		event.Client = getEventClientFromContext(cOpts.ctx)
@@ -262,7 +246,7 @@ func GetActorFromSessionData(sd *commonv3.SessionData) *EventActor {
 	account := EventActorAccount{
 		Username: username,
 	}
-	groups := sd.Groups // TODO: get groups (in interceptor?)
+	groups := sd.Groups
 
 	return &EventActor{
 		Type:    "USER",
@@ -289,37 +273,33 @@ func GetClientFromSessionData(sd *commonv3.SessionData) *EventClient {
 	}
 }
 
-func GetEvent(r *http.Request, sd *commonv3.SessionData, detail *EventDetail, eventType string, projectID string) *Event {
+func GetEvent(r *http.Request, sd *commonv3.SessionData, detail *EventDetail, eventType string, project string) *Event {
 	event := &Event{
-		Actor:     GetActorFromSessionData(sd),
-		Client:    GetClientFromRequest(r),
-		Detail:    detail,
-		Type:      eventType,
-		Portal:    "OPS",
-		ProjectID: projectID,
+		Actor:   GetActorFromSessionData(sd),
+		Client:  GetClientFromRequest(r),
+		Detail:  detail,
+		Type:    eventType,
+		Portal:  "OPS",
+		Project: project,
 	}
 
 	return event
 }
 
-func CreateV1Event(al *zap.Logger, sd *commonv3.SessionData, detail *EventDetail, eventType string, projectID string) error {
+func CreateV1Event(al *zap.Logger, sd *commonv3.SessionData, detail *EventDetail, eventType string, project string) error {
 	actor := GetActorFromSessionData(sd)
 	client := GetClientFromSessionData(sd)
 
-	if projectID == "" {
-		projectID = "null"
-	}
-
 	event := &Event{
-		Version:   VersionV1,
-		Category:  AuditCategory,
-		Origin:    OriginCore,
-		Actor:     actor,
-		Client:    client,
-		Detail:    detail,
-		Type:      eventType,
-		Portal:    "OPS", // TODO: What is the portal?
-		ProjectID: projectID,
+		Version:  VersionV1,
+		Category: AuditCategory,
+		Origin:   OriginCore,
+		Actor:    actor,
+		Client:   client,
+		Detail:   detail,
+		Type:     eventType,
+		Portal:   "OPS",
+		Project:  project,
 	}
 
 	go WriteEvent(event, al)
@@ -337,6 +317,6 @@ func WriteEvent(event *Event, al *zap.Logger) {
 		zap.Reflect("detail", event.Detail),
 		zap.String("type", event.Type),
 		zap.String("portal", event.Portal),
-		zap.String("project_id", event.ProjectID),
+		zap.String("project", event.Project),
 	)
 }

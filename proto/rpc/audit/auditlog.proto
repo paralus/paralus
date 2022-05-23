@@ -63,13 +63,12 @@ message auditLogQueryFilter {
   string namespace = 7;
   string kind = 8;
   string method = 9;
-  repeated string projectIds = 10;
+  repeated string projects = 10;
   string queryString = 11;
   bool dashboardData = 12;
 }
 
 message auditLogSearchRequest {
-  // TODO: this was rafay.dev.common.types.v2.RafayMeta
   rafay.dev.types.common.v3.Metadata metadata = 1;
   auditLogQueryFilter filter = 2;
 }

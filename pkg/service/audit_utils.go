@@ -235,7 +235,7 @@ func CreateProjectAuditEvent(ctx context.Context, al *zap.Logger, action string,
 			"project_name": name,
 		},
 	}
-	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("project.%s.success", action), id.String()); err != nil {
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("project.%s.success", action), name); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
 }
@@ -253,7 +253,7 @@ func CreatePartnerAuditEvent(ctx context.Context, al *zap.Logger, action string,
 			"partner_name": name,
 		},
 	}
-	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("partner.%s.success", action), id.String()); err != nil {
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("partner.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
 }

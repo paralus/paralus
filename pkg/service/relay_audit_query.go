@@ -24,11 +24,11 @@ func (ra *RelayAuditService) GetRelayAudit(req *v1.RelayAuditSearchRequest) (res
 	if err != nil {
 		return nil, err
 	}
-	projectID, err := getPrjectIdFromUrlScope(req.GetMetadata().UrlScope)
+	project, err := getPrjectFromUrlScope(req.GetMetadata().UrlScope)
 	if err != nil {
 		return nil, err
 	}
-	req.Filter.ProjectIds = []string{projectID}
+	req.Filter.Projects = []string{project}
 	return ra.GetRelayAuditByProjects(req)
 }
 
@@ -183,7 +183,7 @@ func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchReq
 	}
 	// ProjectIds - [project_id not present ES for relay audit logs currently
 	// so in case of dashboard filtering with cluster name(belonging to the project)]
-	if len(req.Filter.ProjectIds) > 0 {
+	if len(req.Filter.Projects) > 0 {
 		if req.GetFilter().DashboardData &&
 			req.Filter.ClusterNames != nil && len(req.Filter.ClusterNames) > 0 {
 			t := map[string]interface{}{
@@ -196,7 +196,7 @@ func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchReq
 
 			t := map[string]interface{}{
 				"terms": map[string]interface{}{
-					"json.project_id": req.Filter.ProjectIds,
+					"json.project": req.Filter.Projects,
 				},
 			}
 			m = append(m, t)
