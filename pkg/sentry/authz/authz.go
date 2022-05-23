@@ -403,13 +403,11 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 			}
 		}
 
-		_log.Infow("before !cnAttr.IsSSO")
 		// is user active
 		if !cnAttr.IsSSO {
 			active, err := aps.IsAccountActive(ctx, accountID, orgID)
 			_log.Infow("accountID ", accountID, "orgID ", orgID, "active ", active)
 			if err != nil {
-				_log.Infow("failed ", err.Error())
 				return nil, err
 			}
 			if !active {
@@ -417,7 +415,6 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 			}
 		}
 
-		_log.Infow("before get revocation timestamp")
 		// get revocation timestamp
 		kr, err := krs.Get(ctx, orgID, accountID, cnAttr.IsSSO)
 		if err != nil && err != constants.ErrNotFound {
@@ -453,7 +450,6 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 		return nil, err
 	}
 
-	_log.Infow("before get project permissions")
 	// get permissions in the cluster's projects
 	var projectPermissions map[string][]string
 	if !cnAttr.IsSSO {
@@ -486,14 +482,13 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 		nsl := make([]string, 0)
 
 		for _, project := range projects {
-			_log.Infow("before get project namespaces ", project)
 			namespaces, err := ns.GetProjectNamespaces(ctx, uuid.MustParse(project))
 
 			if err != nil {
 				_log.Infow("error ", err.Error())
 			}
 			if err == nil {
-				_log.Infow("Get namespaces ", "project", project, "namespaces", namespaces, "itemslen", len(namespaces))
+				_log.Debugw("Get namespaces ", "project", project, "namespaces", namespaces, "itemslen", len(namespaces))
 				nsl = append(nsl, namespaces...)
 			}
 		}
@@ -501,7 +496,7 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 	}()
 
 	if err != nil {
-		_log.Infow("unable to get project namespaces", "error", err)
+		_log.Debugw("unable to get project namespaces", "error", err)
 		return nil, err
 	}
 
