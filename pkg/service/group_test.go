@@ -267,7 +267,7 @@ func TestCreateGroupNoUsersWithRoles(t *testing.T) {
 
 func TestCreateGroupWithUsersWithRoles(t *testing.T) {
 	projectid := uuid.New().String()
-	var namespaceid string = "7"
+	var namespaceid string = "ns"
 	tt := []struct {
 		name       string
 		users      []string
@@ -503,8 +503,8 @@ func TestGroupGetByName(t *testing.T) {
 	if len(group.GetSpec().GetProjectNamespaceRoles()) != 3 {
 		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(group.GetSpec().GetProjectNamespaceRoles()))
 	}
-	if group.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != "7" {
-		t.Errorf("invalid namespace in role returned for user, expected 7; got '%v'", group.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
+	if group.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != "ns" {
+		t.Errorf("invalid namespace in role returned for user, expected ns; got '%v'", group.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 	}
 }
 
@@ -532,7 +532,7 @@ func TestGroupGetById(t *testing.T) {
 	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id WHERE`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+pruuid))
 	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace, authsrv_group.name as group FROM "authsrv_projectgroupnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgroupnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgroupnamespacerole.project_id JOIN authsrv_group ON authsrv_group.id=authsrv_projectgroupnamespacerole.group_id WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+ruuid, "project-"+pruuid, 9))
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+ruuid, "project-"+pruuid, "ns"))
 
 	group := &userv3.Group{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Id: guuid},
@@ -549,8 +549,8 @@ func TestGroupGetById(t *testing.T) {
 	if len(group.GetSpec().GetProjectNamespaceRoles()) != 3 {
 		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(group.GetSpec().GetProjectNamespaceRoles()))
 	}
-	if group.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != "9" {
-		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", group.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
+	if group.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != "ns" {
+		t.Errorf("invalid namespace in role returned for user, expected ns; got '%v'", group.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 	}
 }
 
