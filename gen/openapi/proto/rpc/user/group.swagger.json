@@ -984,7 +984,6 @@
         },
         "namespace": {
           "type": "string",
-          "format": "int64",
           "description": "Namespace",
           "title": "Namespace"
         },

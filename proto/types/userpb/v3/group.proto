@@ -55,7 +55,7 @@ message ProjectNamespaceRole {
         title : "Project"
         description : "Project"
       } ];
-  optional int64 namespace = 2
+  optional string namespace = 2
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Namespace"
         description : "Namespace"
@@ -84,7 +84,7 @@ message Permission {
         title : "Project"
         description : "Project"
       } ];
-  optional int64 namespace = 2
+  optional string namespace = 2
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Namespace"
         description : "Namespace"

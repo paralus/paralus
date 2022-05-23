@@ -25,7 +25,6 @@ import (
 	sentryutil "github.com/RafayLabs/rcloud-base/pkg/sentry/util"
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
-	"github.com/RafayLabs/rcloud-base/proto/types/scheduler"
 	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
@@ -74,16 +73,6 @@ type ClusterService interface {
 	GetRelaysConfigForCluster(ctx context.Context, cluster *infrav3.Cluster) ([]common.Relay, error)
 	// Update projects for bootstrap agents for cluster
 	UpdateProjectsForBootstrapAgentForCluster(ctx context.Context, cluster *infrav3.Cluster) error
-	// Get Namespaces for cluster and conditions
-	GetNamespacesForConditions(ctx context.Context, conditions []scheduler.ClusterNamespaceCondition, clusterID string) (*scheduler.ClusterNamespaceList, error)
-	// Get Namespaces for given cluster
-	GetNamespaces(ctx context.Context, clusterID string) (*scheduler.ClusterNamespaceList, error)
-	// Get Namespace
-	GetNamespace(ctx context.Context, namespace string, clusterID string) (*scheduler.ClusterNamespace, error)
-	// Update Namespace Status
-	UpdateNamespaceStatus(ctx context.Context, current *scheduler.ClusterNamespace) error
-	// Get Namespace hashes
-	GetNamespaceHashes(ctx context.Context, clusterID string) ([]infrav3.NameHash, error)
 	//Add event handlers
 	AddEventHandler(evh event.Handler)
 }

@@ -127,7 +127,7 @@ func TestCreateUserWithRole(t *testing.T) {
 				role.Project = &pruuid
 			}
 			if tc.namespace {
-				var ns int64 = 7
+				var ns string = "7"
 				role.Namespace = &ns
 			}
 			mock.ExpectQuery(fmt.Sprintf(`INSERT INTO "%v"`, tc.dbname)).
@@ -181,7 +181,7 @@ func TestUpdateUser(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
 	mock.ExpectCommit()
 
-	var ns int64 = 7
+	var ns string = "7"
 	user := &userv3.User{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
 		Spec:     &userv3.UserSpec{ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: idnamea(pruuid, "project"), Namespace: &ns, Role: idname(ruuid, "role")}}},
@@ -220,7 +220,7 @@ func TestUpdateUserWithGroup(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
 	mock.ExpectCommit()
 
-	var ns int64 = 7
+	var ns string = "7"
 	user := &userv3.User{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
 		Spec: &userv3.UserSpec{
@@ -259,7 +259,7 @@ func TestUpdateUserInvalid(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
 	mock.ExpectCommit()
 
-	var ns int64 = 7
+	var ns string = "7"
 	user := &userv3.User{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
 		Spec: &userv3.UserSpec{
@@ -332,7 +332,7 @@ func TestUserGetByName(t *testing.T) {
 	if len(user.GetSpec().GetProjectNamespaceRoles()) != 6 {
 		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(user.GetSpec().GetProjectNamespaceRoles()))
 	}
-	if user.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 9 {
+	if user.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != "9" {
 		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", user.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 	}
 	performBasicAuthProviderChecks(t, *ap, 0, 0, 0, 0)
@@ -445,7 +445,7 @@ func TestUserGetById(t *testing.T) {
 	if len(user.GetSpec().GetProjectNamespaceRoles()) != 6 {
 		t.Errorf("invalid number of roles returned for user, expected 6; got '%v'", len(user.GetSpec().GetProjectNamespaceRoles()))
 	}
-	if user.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 7 {
+	if user.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != "7" {
 		t.Errorf("invalid namespace in role returned for user, expected 7; got '%v'", user.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 	}
 
@@ -563,7 +563,7 @@ func TestUserList(t *testing.T) {
 			if len(userlist.Items[0].GetSpec().GetProjectNamespaceRoles()) != 6 {
 				t.Errorf("invalid number of roles returned for user, expected 6; got '%v'", len(userlist.Items[0].GetSpec().GetProjectNamespaceRoles()))
 			}
-			if userlist.Items[0].GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 7 {
+			if userlist.Items[0].GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != "7" {
 				t.Errorf("invalid namespace in role returned for user, expected 7; got '%v'", userlist.Items[0].GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 			}
 

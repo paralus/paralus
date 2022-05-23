@@ -125,6 +125,7 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 	projectNamespaceRoles := user.GetSpec().GetProjectNamespaceRoles()
 
 	var pars []models.ProjectAccountResourcerole
+	var panr []models.ProjectAccountNamespaceRole
 	var ars []models.AccountResourcerole
 	var ps []*authzv1.Policy
 	var rids []uuid.UUID
@@ -211,6 +212,7 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 			if err != nil {
 				return user, nil, fmt.Errorf("unable to find project '%v'", project)
 			}
+
 			par := models.ProjectAccountResourcerole{
 				CreatedAt:      time.Now(),
 				ModifiedAt:     time.Now(),
@@ -232,14 +234,54 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 				Org:  org,
 				Obj:  role,
 			})
+		case "namespace":
+			if org == "" {
+				return &userv3.User{}, nil, fmt.Errorf("no org name provided for role '%v'", roleName)
+			}
+			if project == "" {
+				return &userv3.User{}, nil, fmt.Errorf("no project name provided for role '%v'", roleName)
+			}
+			projectId, err := dao.GetProjectId(ctx, db, project)
+			if err != nil {
+				return user, nil, fmt.Errorf("unable to find project '%v'", project)
+			}
+
+			namespace := pnr.GetNamespace()
+			panrObj := models.ProjectAccountNamespaceRole{
+				CreatedAt:      time.Now(),
+				ModifiedAt:     time.Now(),
+				Trash:          false,
+				PartnerId:      ids.Partner,
+				OrganizationId: ids.Organization,
+				RoleId:         roleId,
+				AccountId:      ids.Id,
+				ProjectId:      projectId,
+				NamespaceId:    namespace,
+				Active:         true,
+			}
+			panr = append(panr, panrObj)
+
+			ps = append(ps, &authzv1.Policy{
+				Sub:  "u:" + user.GetMetadata().GetName(),
+				Ns:   namespace,
+				Proj: project,
+				Org:  org,
+				Obj:  role,
+			})
 		default:
 			if err != nil {
-				return user, nil, fmt.Errorf("namespace specific roles are not handled")
+				return user, nil, fmt.Errorf("other scoped roles are not handled")
 			}
 		}
 	}
 	if len(pars) > 0 {
 		_, err := dao.Create(ctx, db, &pars)
+		if err != nil {
+			return &userv3.User{}, nil, err
+		}
+	}
+	if len(panr) > 0 {
+		_, err := dao.Create(ctx, db, &panr)
 		if err != nil {
 			return &userv3.User{}, nil, err
 		}

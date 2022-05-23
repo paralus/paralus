@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS authsrv_projectaccountnamespacerole (
     created_at timestamp with time zone NOT NULL,
     modified_at timestamp with time zone NOT NULL,
     trash boolean NOT NULL,
-    namespace_id integer NOT NULL,
+    namespace_id character varying(64) NOT NULL,
     active boolean NOT NULL,
     account_id uuid NOT NULL,
     organization_id uuid,

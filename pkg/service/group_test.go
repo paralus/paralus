@@ -267,7 +267,7 @@ func TestCreateGroupNoUsersWithRoles(t *testing.T) {
 
 func TestCreateGroupWithUsersWithRoles(t *testing.T) {
 	projectid := uuid.New().String()
-	var namespaceid int64 = 7
+	var namespaceid string = "7"
 	tt := []struct {
 		name       string
 		users      []string
@@ -503,7 +503,7 @@ func TestGroupGetByName(t *testing.T) {
 	if len(group.GetSpec().GetProjectNamespaceRoles()) != 3 {
 		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(group.GetSpec().GetProjectNamespaceRoles()))
 	}
-	if group.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 7 {
+	if group.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != "7" {
 		t.Errorf("invalid namespace in role returned for user, expected 7; got '%v'", group.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 	}
 }
@@ -549,7 +549,7 @@ func TestGroupGetById(t *testing.T) {
 	if len(group.GetSpec().GetProjectNamespaceRoles()) != 3 {
 		t.Errorf("invalid number of roles returned for user, expected 3; got '%v'", len(group.GetSpec().GetProjectNamespaceRoles()))
 	}
-	if group.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != 9 {
+	if group.GetSpec().GetProjectNamespaceRoles()[2].GetNamespace() != "9" {
 		t.Errorf("invalid namespace in role returned for user, expected 9; got '%v'", group.GetSpec().GetProjectNamespaceRoles()[2].Namespace)
 	}
 }

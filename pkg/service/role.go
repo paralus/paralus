@@ -134,7 +134,7 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 	}
 
 	scope := role.GetSpec().GetScope()
-	if !utils.Contains([]string{"system", "organization", "project"}, strings.ToLower(scope)) {
+	if !utils.Contains([]string{"system", "organization", "project", "namespace"}, strings.ToLower(scope)) {
 		return nil, fmt.Errorf("unknown scope '%v'", scope)
 	}
 

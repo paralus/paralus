@@ -113,5 +113,27 @@
             "cluster.write",
             "kubectl.fullaccess"
         ]
+    },
+    "NAMESPACE": {
+        "NAMESPACE_ADMIN": [
+            "console.all",
+            "partner.read",
+            "organization.read",
+            "project.read",
+            "cluster.read",
+            "kubeconfig.read",
+            "v2debug.read",
+            "kubectl.namespace.read",
+            "kubectl.namespace.write"
+        ],
+        "NAMESPACE_READ_ONLY": [
+            "partner.read",
+            "organization.read",
+            "project.read",
+            "cluster.read",
+            "kubeconfig.read",
+            "v2debug.read",
+            "kubectl.namespace.read"
+        ]
     }
 }
