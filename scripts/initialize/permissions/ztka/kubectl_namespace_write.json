@@ -4,5 +4,5 @@
   "resource_urls": [],
   "resource_action_urls": [],
   "authenticated": true,
-  "scope": "PROJECT"
+  "scope": "NAMESPACE"
 }

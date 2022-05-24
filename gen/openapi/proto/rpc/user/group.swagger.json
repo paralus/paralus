@@ -124,6 +124,13 @@
             "type": "string"
           },
           {
+            "name": "metadata.createdAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
             "name": "metadata.modifiedAt",
             "in": "query",
             "required": false,
@@ -290,6 +297,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "metadata.createdAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
           },
           {
             "name": "metadata.modifiedAt",
@@ -959,6 +973,11 @@
         },
         "urlScope": {
           "type": "string",
+          "readOnly": true
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
           "readOnly": true
         },
         "modifiedAt": {

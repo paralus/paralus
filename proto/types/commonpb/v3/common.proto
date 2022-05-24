@@ -64,8 +64,10 @@ message Metadata {
         description : "Partner to which the resource belongs"
       } ];
   string id = 9 [ (google.api.field_behavior) = OUTPUT_ONLY ];
-  string urlScope = 11 [ (google.api.field_behavior) = OUTPUT_ONLY ];
-  google.protobuf.Timestamp modifiedAt = 10
+  string urlScope = 10 [ (google.api.field_behavior) = OUTPUT_ONLY ];
+  google.protobuf.Timestamp createdAt = 11
+      [ (google.api.field_behavior) = OUTPUT_ONLY ];
+  google.protobuf.Timestamp modifiedAt = 12
       [ (google.api.field_behavior) = OUTPUT_ONLY ];
 }
 

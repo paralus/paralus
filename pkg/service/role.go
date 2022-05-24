@@ -138,6 +138,13 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		return nil, fmt.Errorf("unknown scope '%v'", scope)
 	}
 
+	//validate namespaced permissions for dynamic role of scope namespace, either one of the permissions should be present as part of namespaced roles
+	if scope == "namespace" {
+		if !utils.Contains(role.Spec.Rolepermissions, namespaceR) && !utils.Contains(role.Spec.Rolepermissions, namespaceW) {
+			return nil, fmt.Errorf("insufficient permissions, either '%v' / '%v' should be present ", namespaceR, namespaceW)
+		}
+	}
+
 	// Only allow internal call (eg: initialize) to set builtin flag
 	builtin := role.GetSpec().GetBuiltin()
 	if builtin {
@@ -248,6 +255,13 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 	entity, err := dao.GetByNamePartnerOrg(ctx, s.db, name, uuid.NullUUID{UUID: partnerId, Valid: true}, uuid.NullUUID{UUID: organizationId, Valid: true}, &models.Role{})
 	if err != nil {
 		return role, fmt.Errorf("unable to find role '%v'", name)
+	}
+
+	//validate namespaced permissions for dynamic role of scope namespace, either one of the permissions should be present as part of namespaced roles
+	if role.GetSpec().GetScope() == "namespace" {
+		if !utils.Contains(role.Spec.Rolepermissions, namespaceR) && !utils.Contains(role.Spec.Rolepermissions, namespaceW) {
+			return nil, fmt.Errorf("insufficient permissions, either '%v' / '%v' should be present ", namespaceR, namespaceW)
+		}
 	}
 
 	if rle, ok := entity.(*models.Role); ok {

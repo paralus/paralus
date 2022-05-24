@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"strings"
 
 	"github.com/RafayLabs/rcloud-base/internal/dao"
 	"github.com/RafayLabs/rcloud-base/internal/models"
@@ -97,6 +98,14 @@ func (s *rolepermissionService) List(ctx context.Context, opts ...query.Option) 
 		rles, err := dao.GetRolePermissionsByScope(ctx, s.db, queryOptions.Selector)
 		if err != nil {
 			return rolepermissionList, err
+		}
+		//fetch project scoped permissions for namespace selector
+		if strings.ToLower(queryOptions.Selector) == namespaceScope {
+			rps, err := dao.GetRolePermissionsByScope(ctx, s.db, projectScope)
+			if err != nil {
+				return rolepermissionList, err
+			}
+			rles = append(rles, rps...)
 		}
 		for _, rle := range rles {
 			entry := &rolev3.RolePermission{}
