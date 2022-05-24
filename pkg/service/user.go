@@ -51,7 +51,7 @@ type UserService interface {
 	// Update UserGroup casbin for OIdC/Idp users
 	UpdateIdpUserGroupPolicy(context.Context, string, string, string) error
 	// Generate recovery link for users
-    ForgotPassword(context.Context, *userrpcv3.ForgotPasswordRequest) (*userrpcv3.ForgotPasswordResponse, error)
+	ForgotPassword(context.Context, *userrpcv3.ForgotPasswordRequest) (*userrpcv3.ForgotPasswordResponse, error)
 }
 
 type userService struct {
@@ -711,6 +711,16 @@ func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3
 	entity, err := dao.GetUserIdByEmail(ctx, s.db, name, &models.KratosIdentities{})
 	if err != nil {
 		return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("no user founnd with username '%v'", name)
+	}
+
+	sd, ok := GetSessionDataFromContext(ctx)
+	if !ok {
+		if err != nil {
+			return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("unable to delete user without auth")
+		}
+	}
+	if sd.Username == name {
+		return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("you cannot delete your own account")
 	}
 
 	if usr, ok := entity.(*models.KratosIdentities); ok {
