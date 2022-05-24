@@ -52,7 +52,6 @@
       "required": [
         "first_name",
         "last_name",
-        "description",
         "email"
       ],
       "additionalProperties": false
