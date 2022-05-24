@@ -639,6 +639,47 @@
         ]
       }
     },
+    "/auth/v3/user/{username}/forgotpassword": {
+      "get": {
+        "operationId": "User_UserForgotPassword",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3ForgotPasswordResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
     "/auth/v3/userinfo": {
       "get": {
         "operationId": "User_GetUserInfo",
@@ -1235,6 +1276,14 @@
     },
     "v3DeleteUserResponse": {
       "type": "object"
+    },
+    "v3ForgotPasswordResponse": {
+      "type": "object",
+      "properties": {
+        "recoveryLink": {
+          "type": "string"
+        }
+      }
     },
     "v3HttpBody": {
       "type": "object",

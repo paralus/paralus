@@ -33,6 +33,7 @@ type UserClient interface {
 	DownloadCliConfig(ctx context.Context, in *CliConfigRequest, opts ...grpc.CallOption) (*v31.HttpBody, error)
 	UserListApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*ApiKeyResponseList, error)
 	UserDeleteApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
+	UserForgotPassword(ctx context.Context, in *ForgotPasswordRequest, opts ...grpc.CallOption) (*ForgotPasswordResponse, error)
 }
 
 type userClient struct {
@@ -124,6 +125,15 @@ func (c *userClient) UserDeleteApiKeys(ctx context.Context, in *ApiKeyRequest, o
 	return out, nil
 }
 
+func (c *userClient) UserForgotPassword(ctx context.Context, in *ForgotPasswordRequest, opts ...grpc.CallOption) (*ForgotPasswordResponse, error) {
+	out := new(ForgotPasswordResponse)
+	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/UserForgotPassword", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations should embed UnimplementedUserServer
 // for forward compatibility
@@ -137,6 +147,7 @@ type UserServer interface {
 	DownloadCliConfig(context.Context, *CliConfigRequest) (*v31.HttpBody, error)
 	UserListApiKeys(context.Context, *ApiKeyRequest) (*ApiKeyResponseList, error)
 	UserDeleteApiKeys(context.Context, *ApiKeyRequest) (*DeleteUserResponse, error)
+	UserForgotPassword(context.Context, *ForgotPasswordRequest) (*ForgotPasswordResponse, error)
 }
 
 // UnimplementedUserServer should be embedded to have forward compatible implementations.
@@ -169,6 +180,9 @@ func (UnimplementedUserServer) UserListApiKeys(context.Context, *ApiKeyRequest) 
 }
 func (UnimplementedUserServer) UserDeleteApiKeys(context.Context, *ApiKeyRequest) (*DeleteUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserDeleteApiKeys not implemented")
+}
+func (UnimplementedUserServer) UserForgotPassword(context.Context, *ForgotPasswordRequest) (*ForgotPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserForgotPassword not implemented")
 }
 
 // UnsafeUserServer may be embedded to opt out of forward compatibility for this service.
@@ -344,6 +358,24 @@ func _User_UserDeleteApiKeys_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_UserForgotPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ForgotPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UserForgotPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rafay.dev.rpc.v3.User/UserForgotPassword",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UserForgotPassword(ctx, req.(*ForgotPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -386,6 +418,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserDeleteApiKeys",
 			Handler:    _User_UserDeleteApiKeys_Handler,
+		},
+		{
+			MethodName: "UserForgotPassword",
+			Handler:    _User_UserForgotPassword_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

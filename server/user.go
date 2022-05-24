@@ -109,3 +109,8 @@ func (s *userServer) UserDeleteApiKeys(ctx context.Context, req *rpcv3.ApiKeyReq
 	}
 	return &rpcv3.DeleteUserResponse{}, nil
 }
+
+func (s *userServer) UserForgotPassword(ctx context.Context, req *rpcv3.ForgotPasswordRequest) (*rpcv3.ForgotPasswordResponse, error) {
+	return s.us.ForgotPassword(ctx, req)
+
+}

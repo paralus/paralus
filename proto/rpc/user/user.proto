@@ -67,9 +67,11 @@ message ApiKeyResponse {
   string name = 5;
 }
 
-message ApiKeyResponseList {
-  repeated ApiKeyResponse items = 1;
-}
+message ApiKeyResponseList { repeated ApiKeyResponse items = 1; }
+
+message ForgotPasswordRequest { string username = 1; }
+
+message ForgotPasswordResponse { string recoveryLink = 1; }
 
 message DeleteUserResponse {}
 message CliConfigRequest {}
@@ -90,25 +92,29 @@ service User {
     };
   };
 
-  rpc GetUsers(rafay.dev.types.common.v3.QueryOptions) returns (rafay.dev.types.user.v3.UserList) {
+  rpc GetUsers(rafay.dev.types.common.v3.QueryOptions)
+      returns (rafay.dev.types.user.v3.UserList) {
     option (google.api.http) = {
       get : "/auth/v3/users"
     };
   };
 
-  rpc GetUser(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.User) {
+  rpc GetUser(rafay.dev.types.user.v3.User)
+      returns (rafay.dev.types.user.v3.User) {
     option (google.api.http) = {
       get : "/auth/v3/user/{metadata.name}"
     };
   };
 
-  rpc GetUserInfo(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.UserInfo) {
+  rpc GetUserInfo(rafay.dev.types.user.v3.User)
+      returns (rafay.dev.types.user.v3.UserInfo) {
     option (google.api.http) = {
-      get : "/auth/v3/userinfo"  // user name if picked from session
+      get : "/auth/v3/userinfo" // user name if picked from session
     };
   };
 
-  rpc UpdateUser(rafay.dev.types.user.v3.User) returns (rafay.dev.types.user.v3.User) {
+  rpc UpdateUser(rafay.dev.types.user.v3.User)
+      returns (rafay.dev.types.user.v3.User) {
     option (google.api.http) = {
       put : "/auth/v3/user/{metadata.name}"
       body : "*"
@@ -123,31 +129,33 @@ service User {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       responses : {
         key : "204"
-        value : {
-          description : "Returned when user is deleted successfully."
-        }
+        value : {description : "Returned when user is deleted successfully."}
       }
     };
   };
 
   rpc DownloadCliConfig(CliConfigRequest)
       returns (rafay.dev.types.common.v3.HttpBody) {
-      option (google.api.http) = {
+    option (google.api.http) = {
       get : "/auth/v3/cli/config"
-      };
+    };
   };
 
-  rpc UserListApiKeys(ApiKeyRequest)
-      returns (ApiKeyResponseList) {
-      option (google.api.http) = {
+  rpc UserListApiKeys(ApiKeyRequest) returns (ApiKeyResponseList) {
+    option (google.api.http) = {
       get : "/auth/v3/user/{username}/apikeys"
-      };
+    };
   };
 
-  rpc UserDeleteApiKeys(ApiKeyRequest)
-      returns (DeleteUserResponse) {
-      option (google.api.http) = {
+  rpc UserDeleteApiKeys(ApiKeyRequest) returns (DeleteUserResponse) {
+    option (google.api.http) = {
       delete : "/auth/v3/user/{username}/apikeys/{id}"
-      };
+    };
+  };
+
+  rpc UserForgotPassword(ForgotPasswordRequest) returns (ForgotPasswordResponse) {
+    option (google.api.http) = {
+      get : "/auth/v3/user/{username}/forgotpassword"
+    };
   };
 }

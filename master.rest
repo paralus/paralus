@@ -295,6 +295,11 @@ GET :host/auth/v3/user/:user
 Content-Type: application/yaml
 X-Session-Token: :token
 
+# Get recovery url (forgot password)
+GET :host/auth/v3/user/:user/forgotpassword
+Content-Type: application/yaml
+X-Session-Token: :token
+
 # Get currently logged in user info
 GET :host/auth/v3/userinfo
 Content-Type: application/yaml

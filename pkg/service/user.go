@@ -50,6 +50,8 @@ type UserService interface {
 	RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiKeyRequest) (*common.CliConfigDownloadData, error)
 	// Update UserGroup casbin for OIdC/Idp users
 	UpdateIdpUserGroupPolicy(context.Context, string, string, string) error
+	// Generate recovery link for users
+    ForgotPassword(context.Context, *userrpcv3.ForgotPasswordRequest) (*userrpcv3.ForgotPasswordResponse, error)
 }
 
 type userService struct {
@@ -974,4 +976,26 @@ func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, trai
 		return fmt.Errorf("Unsupported %s operation in payload", op)
 	}
 	return nil
+}
+
+// ForgotPassword generates a recovery url and sends it back. This can
+// only be invoked by the admin. This is a way for admins to get a
+// recovery link even when we do not have an email setup.
+func (s *userService) ForgotPassword(ctx context.Context, req *userrpcv3.ForgotPasswordRequest) (*userrpcv3.ForgotPasswordResponse, error) {
+	name := req.GetUsername()
+	entity, err := dao.GetUserByEmail(ctx, s.db, name, &models.KratosIdentities{})
+	if err != nil {
+		return &userrpcv3.ForgotPasswordResponse{}, fmt.Errorf("unable to find user %s", name)
+	}
+
+	if usr, ok := entity.(*models.KratosIdentities); ok {
+		rl, err := s.ap.GetRecoveryLink(ctx, usr.ID.String())
+		if err != nil {
+			_log.Warn("unable to generate recovery url", err)
+			return &userrpcv3.ForgotPasswordResponse{}, fmt.Errorf("unable to generate recovery url")
+		}
+		return &userrpcv3.ForgotPasswordResponse{RecoveryLink: rl}, nil
+	} else {
+		return &userrpcv3.ForgotPasswordResponse{}, fmt.Errorf("unable to generate recovery url")
+	}
 }
