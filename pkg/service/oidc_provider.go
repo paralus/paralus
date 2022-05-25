@@ -389,7 +389,9 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 	}
 	_, err = dao.Update(ctx, s.db, existingP.Id, entity)
 	if err != nil {
-		return &systemv3.OIDCProvider{}, err
+		_log.Errorf("Unable to create oidc provider: %s", err)
+		// TODO: catch already existing issuer url and return exact error
+		return &systemv3.OIDCProvider{}, fmt.Errorf("unable to create oidc provider")
 	}
 
 	rclaims, _ := structpb.NewStruct(entity.RequestedClaims)
