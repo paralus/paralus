@@ -14,6 +14,9 @@ ALTER TABLE authsrv_project OWNER TO admindbuser;
 
 ALTER TABLE ONLY authsrv_project ADD CONSTRAINT authsrv_project_pkey PRIMARY KEY (id);
 
+-- update when we have more than one org
+CREATE UNIQUE index authsrv_project_unique_name ON authsrv_project (name) WHERE trash IS false;
+
 CREATE INDEX authsrv_project_name_1b8dd279 ON authsrv_project USING btree (name);
 
 CREATE INDEX authsrv_project_name_1b8dd279_like ON authsrv_project USING btree (name varchar_pattern_ops);

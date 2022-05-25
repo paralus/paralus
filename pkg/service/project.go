@@ -64,6 +64,11 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 		return nil, err
 	}
 
+	p, _ := dao.GetIdByNamePartnerOrg(ctx, s.db, project.GetMetadata().GetName(), uuid.NullUUID{}, uuid.NullUUID{}, &models.Project{})
+	if p != nil {
+		return nil, fmt.Errorf("project '%v' already exists", project.GetMetadata().GetName())
+	}
+
 	//convert v3 spec to internal models
 	proj := models.Project{
 		Name:           project.GetMetadata().GetName(),
