@@ -83,10 +83,10 @@ func (s *oidcProvider) getPartnerOrganization(ctx context.Context, provider *sys
 func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvider) (*systemv3.OIDCProvider, error) {
 	name := provider.GetMetadata().GetName()
 	if len(name) == 0 {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("EMPTY NAME")
+		return &systemv3.OIDCProvider{}, fmt.Errorf("empty name for provider")
 	}
 	scopes := provider.GetSpec().GetScopes()
-	if scopes == nil || len(scopes) == 0 {
+	if len(scopes) == 0 {
 		return &systemv3.OIDCProvider{}, fmt.Errorf("no scopes present")
 	}
 	issUrl := provider.GetSpec().GetIssuerUrl()
@@ -107,7 +107,7 @@ func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvid
 		&models.OIDCProvider{},
 	)
 	if p != nil {
-		return nil, fmt.Errorf("OIDC provider %q already exists", name)
+		return nil, fmt.Errorf("provider %q already exists", name)
 	}
 
 	p, _ = dao.GetM(ctx, s.db, map[string]interface{}{
@@ -326,15 +326,15 @@ func (s *oidcProvider) List(ctx context.Context) (*systemv3.OIDCProviderList, er
 func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvider) (*systemv3.OIDCProvider, error) {
 	name := provider.GetMetadata().GetName()
 	if len(name) == 0 {
-		return &systemv3.OIDCProvider{}, status.Error(codes.InvalidArgument, "EMPTY NAME")
+		return &systemv3.OIDCProvider{}, status.Error(codes.InvalidArgument, "empty name")
 	}
 	scopes := provider.GetSpec().GetScopes()
-	if scopes == nil || len(scopes) == 0 {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("NO SCOPES")
+	if len(scopes) == 0 {
+		return &systemv3.OIDCProvider{}, fmt.Errorf("no scopes")
 	}
 	issUrl := provider.GetSpec().GetIssuerUrl()
 	if len(issUrl) == 0 {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("EMPTY ISSUER URL")
+		return &systemv3.OIDCProvider{}, fmt.Errorf("empty issuer url")
 	}
 
 	partnerId, organizationId, err := s.getPartnerOrganization(ctx, provider)
@@ -346,7 +346,7 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 	_, err = dao.GetByName(ctx, s.db, name, existingP)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return &systemv3.OIDCProvider{}, status.Errorf(codes.InvalidArgument, "OIDC PROVIDER %q NOT EXIST", name)
+			return &systemv3.OIDCProvider{}, status.Errorf(codes.InvalidArgument, "oidc provider %q not exist", name)
 		} else {
 			return &systemv3.OIDCProvider{}, status.Error(codes.Internal, codes.Internal.String())
 		}
@@ -357,16 +357,16 @@ func (s *oidcProvider) Update(ctx context.Context, provider *systemv3.OIDCProvid
 	tknUrl := provider.Spec.GetTokenUrl()
 
 	if !validateURL(issUrl) {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID ISSUER URL")
+		return &systemv3.OIDCProvider{}, fmt.Errorf("invalid issuer url")
 	}
 	if len(mapUrl) != 0 && !validateURL(mapUrl) {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID MAPPER URL")
+		return &systemv3.OIDCProvider{}, fmt.Errorf("invalid mapper url")
 	}
 	if len(authUrl) != 0 && !validateURL(authUrl) {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID AUTH URL")
+		return &systemv3.OIDCProvider{}, fmt.Errorf("invalid auth url")
 	}
 	if len(tknUrl) != 0 && !validateURL(tknUrl) {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID TOKEN URL")
+		return &systemv3.OIDCProvider{}, fmt.Errorf("invalid token url")
 	}
 
 	entity := &models.OIDCProvider{
