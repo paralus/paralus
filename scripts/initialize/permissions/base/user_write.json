@@ -8,6 +8,12 @@
       ]
     },
     {
+      "url": "/user/:username/forgotpassword",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
       "url": "/user/:metadata.id",
       "methods": [
         "PUT",

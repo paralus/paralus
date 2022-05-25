@@ -596,10 +596,40 @@ func TestUserDelete(t *testing.T) {
 	user := &userv3.User{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
 	}
-	_, err := us.Delete(context.Background(), user)
+	ctx := context.WithValue(context.Background(), common.SessionDataKey, &commonv3.SessionData{Username: "not-user-" + uuuid})
+	_, err := us.Delete(ctx, user)
 	if err != nil {
 		t.Fatal("could not delete user:", err)
 	}
 
 	performBasicAuthProviderChecks(t, *ap, 0, 0, 0, 1)
+}
+func TestUserDeleteSelf(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
+	ap := &mockAuthProvider{}
+	mazc := mockAuthzClient{}
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
+
+	uuuid := uuid.New().String()
+	puuid := uuid.New().String()
+	ouuid := uuid.New().String()
+
+	mock.ExpectQuery(`SELECT "identities"."id" FROM "identities" WHERE .*traits ->> 'email' = 'user-` + uuuid + `'`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).AddRow(uuuid, []byte(`{"email":"johndoe@provider.com"}`)))
+	mock.ExpectBegin()
+	_ = addUserRoleMappingsUpdateExpectation(mock, uuuid)
+	// User delete is via kratos
+	addUserGroupMappingsUpdateExpectation(mock, uuuid)
+	mock.ExpectCommit()
+
+	user := &userv3.User{
+		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
+	}
+	ctx := context.WithValue(context.Background(), common.SessionDataKey, &commonv3.SessionData{Username: "user-" + uuuid})
+	_, err := us.Delete(ctx, user)
+	if err == nil {
+		t.Fatal("user able to delete their own account")
+	}
 }
