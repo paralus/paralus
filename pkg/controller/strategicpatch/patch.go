@@ -685,7 +685,7 @@ func diffListsOfScalars(original, modified []interface{}, diffOptions DiffOption
 			}
 			modifiedIndex++
 		default:
-			return nil, nil, fmt.Errorf("Unexpected returned value from compareListValuesAtIndex: %v and %v", originalV, modifiedV)
+			return nil, nil, fmt.Errorf("unexpected returned value from compareListValuesAtIndex: %v and %v", originalV, modifiedV)
 		}
 	}
 
@@ -1022,7 +1022,7 @@ func validatePatchWithSetOrderList(patchList, setOrderList interface{}, mergeKey
 	// If patchIndex is inbound but setOrderIndex if out of bound mean there are items mismatching between the patch list and setElementOrder list.
 	// the second check is is a sanity check, and should always be true if the first is true.
 	if patchIndex < len(nonDeleteList) && setOrderIndex >= len(typedSetOrderList) {
-		return fmt.Errorf("The order in patch list:\n%v\n doesn't match %s list:\n%v\n", typedPatchList, setElementOrderDirectivePrefix, setOrderList)
+		return fmt.Errorf("order in patch list:\n%v\n doesn't match %s list:\n%v\n", typedPatchList, setElementOrderDirectivePrefix, setOrderList)
 	}
 	typedPatchList = append(nonDeleteList, toDeleteList...)
 	return nil

@@ -436,7 +436,7 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 				return nil, err
 			}
 			if !active {
-				return nil, fmt.Errorf("Error: kubeconfig user deactivated")
+				return nil, fmt.Errorf("kubeconfig user deactivated")
 			}
 		}
 
@@ -445,7 +445,7 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 		if err != nil && err != constants.ErrNotFound {
 			return nil, err
 		} else if err == nil && kr.RevokedAt.AsTime().Unix() >= req.CertIssueSeconds {
-			return nil, fmt.Errorf("Error: kubeconfig revoked")
+			return nil, fmt.Errorf("kubeconfig revoked")
 		}
 	}
 

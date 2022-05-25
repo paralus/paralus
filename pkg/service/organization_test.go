@@ -97,7 +97,7 @@ func TestOrganizationDeleteNonExist(t *testing.T) {
 	ouuid := uuid.New().String()
 
 	mock.ExpectQuery(`SELECT "organization"."id", "organization"."name", .* FROM "authsrv_organization" AS "organization" WHERE`).
-		WithArgs().WillReturnError(fmt.Errorf("No data available"))
+		WithArgs().WillReturnError(fmt.Errorf("no data available"))
 
 	organization := &systemv3.Organization{
 		Metadata: &v3.Metadata{Id: ouuid, Name: "organization-" + ouuid},

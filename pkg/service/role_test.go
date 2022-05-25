@@ -300,7 +300,7 @@ func TestRoleDeleteNonExist(t *testing.T) {
 	ouuid := uuid.New().String()
 
 	mock.ExpectQuery(`SELECT "resourcerole"."id", "resourcerole"."name", .* FROM "authsrv_resourcerole" AS "resourcerole" WHERE`).
-		WithArgs().WillReturnError(fmt.Errorf("No data available"))
+		WithArgs().WillReturnError(fmt.Errorf("no data available"))
 
 	role := &rolev3.Role{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},

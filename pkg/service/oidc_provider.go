@@ -87,11 +87,11 @@ func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvid
 	}
 	scopes := provider.GetSpec().GetScopes()
 	if scopes == nil || len(scopes) == 0 {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("NO SCOPES")
+		return &systemv3.OIDCProvider{}, fmt.Errorf("no scopes present")
 	}
 	issUrl := provider.GetSpec().GetIssuerUrl()
 	if len(issUrl) == 0 {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("EMPTY ISSUER URL")
+		return &systemv3.OIDCProvider{}, fmt.Errorf("empty issuer url")
 	}
 
 	partnerId, organizationId, err := s.getPartnerOrganization(ctx, provider)
@@ -114,12 +114,13 @@ func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvid
 		"issuer_url":      issUrl,
 		"partner_id":      partnerId,
 		"organization_id": organizationId,
+		"trash":           false,
 	}, &models.OIDCProvider{})
 	if p != nil {
-		return nil, fmt.Errorf("DUPLICATE ISSUER URL")
+		return nil, fmt.Errorf("duplicate issuer url")
 	}
 	if !validateURL(issUrl) {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID ISSUER URL")
+		return &systemv3.OIDCProvider{}, fmt.Errorf("invalid issuer url")
 	}
 
 	mapUrl := provider.Spec.GetMapperUrl()
@@ -127,13 +128,13 @@ func (s *oidcProvider) Create(ctx context.Context, provider *systemv3.OIDCProvid
 	tknUrl := provider.Spec.GetTokenUrl()
 
 	if len(mapUrl) != 0 && !validateURL(mapUrl) {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID MAPPER URL")
+		return &systemv3.OIDCProvider{}, fmt.Errorf("invalid mapper url")
 	}
 	if len(authUrl) != 0 && !validateURL(authUrl) {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID AUTH URL")
+		return &systemv3.OIDCProvider{}, fmt.Errorf("invalid auth url")
 	}
 	if len(tknUrl) != 0 && !validateURL(tknUrl) {
-		return &systemv3.OIDCProvider{}, fmt.Errorf("INVALID TOKEN URL")
+		return &systemv3.OIDCProvider{}, fmt.Errorf("invalid token url")
 	}
 
 	entity := &models.OIDCProvider{

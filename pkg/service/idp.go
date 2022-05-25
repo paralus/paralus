@@ -123,10 +123,10 @@ func (s *idpService) Create(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 
 	// validate name and domain
 	if len(name) == 0 {
-		return &systemv3.Idp{}, fmt.Errorf("EMPTY NAME")
+		return &systemv3.Idp{}, fmt.Errorf("empty name for idp provider")
 	}
 	if len(domain) == 0 {
-		return &systemv3.Idp{}, fmt.Errorf("EMPTY DOMAIN")
+		return &systemv3.Idp{}, fmt.Errorf("empty domain for idp provider")
 	}
 
 	partnerId, organizationId, err := s.getPartnerOrganization(ctx, idp)
@@ -142,13 +142,13 @@ func (s *idpService) Create(ctx context.Context, idp *systemv3.Idp) (*systemv3.I
 		&models.Idp{},
 	)
 	if i != nil {
-		return nil, fmt.Errorf("Idp %q already exists", idp.GetMetadata().GetName())
+		return nil, fmt.Errorf("idp %q already exists", idp.GetMetadata().GetName())
 	}
 
 	e := &models.Idp{}
 	dao.GetX(ctx, s.db, "domain", domain, e)
 	if e.Domain == domain {
-		return &systemv3.Idp{}, fmt.Errorf("DUPLICATE DOMAIN")
+		return &systemv3.Idp{}, fmt.Errorf("duplicate idp domain")
 	}
 
 	entity := &models.Idp{

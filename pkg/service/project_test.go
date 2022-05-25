@@ -106,7 +106,7 @@ func TestProjectDeleteNonExist(t *testing.T) {
 	puuid := uuid.New().String()
 
 	mock.ExpectQuery(`SELECT "project"."id", "project"."name", .* FROM "authsrv_project" AS "project" WHERE`).
-		WithArgs().WillReturnError(fmt.Errorf("No data available"))
+		WithArgs().WillReturnError(fmt.Errorf("no data available"))
 
 	project := &systemv3.Project{
 		Metadata: &v3.Metadata{Id: puuid, Name: "project-" + puuid},
