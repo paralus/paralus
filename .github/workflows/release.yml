@@ -28,6 +28,9 @@ jobs:
           go-version: ${{ matrix.go-version }}
 
       # Sanity check before publishing
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.2.0
+
       - name: Test all
         run: go test -v ./...
 
