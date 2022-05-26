@@ -17,11 +17,6 @@
           "type": "string",
           "pattern": "^.*$"
         },
-        "description": {
-          "title": "Description",
-          "type": "string",
-          "pattern": "^.*$"
-        },
         "email": {
           "type": "string",
           "format": "email",
