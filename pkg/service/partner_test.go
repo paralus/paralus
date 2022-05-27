@@ -109,7 +109,7 @@ func TestPartnerDeleteNonExist(t *testing.T) {
 	puuid := uuid.New().String()
 
 	mock.ExpectQuery(`SELECT "partner"."id", "partner"."name", .* FROM "authsrv_partner" AS "partner" WHERE`).
-		WithArgs().WillReturnError(fmt.Errorf("No data available"))
+		WithArgs().WillReturnError(fmt.Errorf("no data available"))
 
 	partner := &systemv3.Partner{
 		Metadata: &v3.Metadata{Id: puuid, Name: "partner-" + puuid},

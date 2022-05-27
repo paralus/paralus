@@ -28,6 +28,8 @@ ALTER TABLE authsrv_partner OWNER TO admindbuser;
 
 ALTER TABLE ONLY authsrv_partner ADD CONSTRAINT authsrv_partner_pkey PRIMARY KEY (id);
 
+CREATE UNIQUE index authsrv_partner_unique_name ON authsrv_partner (name) WHERE trash IS false;
+
 CREATE INDEX authsrv_partner_name_b6a8d21f ON authsrv_partner USING btree (name);
 
 CREATE INDEX authsrv_partner_name_b6a8d21f_like ON authsrv_partner USING btree (name varchar_pattern_ops);

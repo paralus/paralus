@@ -250,7 +250,7 @@ func prepareConfig(config *Config) error {
 	}
 
 	if config.TemplateToken == "" && config.Mode == modeClient {
-		return fmt.Errorf("TemplateToken cannot be empty")
+		return fmt.Errorf("template token cannot be empty")
 	}
 
 	if config.PrivateKey == nil {

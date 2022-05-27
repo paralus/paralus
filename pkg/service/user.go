@@ -975,12 +975,12 @@ func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, trai
 	}
 	err = json.Unmarshal([]byte(traits), &userInfo)
 	if err != nil {
-		return fmt.Errorf("Encountered error unmarshing payload to userInfo: %s", err)
+		return fmt.Errorf("encountered error unmarshing payload to userInfo: %s", err)
 	}
 	// TODO: Revisit to only run by IDP users and not by any other
 	// user
 	if len(userInfo.IdpGroups) == 0 {
-		return fmt.Errorf("Empty idp groups for user with id %s", id)
+		return fmt.Errorf("empty idp groups for user with id %s", id)
 	}
 
 	// Get existing user group so that the update does not wipe them out
@@ -992,7 +992,7 @@ func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, trai
 		}
 	}
 	if err != nil {
-		return fmt.Errorf("Empty to find existing groups for user with id %s", id)
+		return fmt.Errorf("empty to find existing groups for user with id %s", id)
 	}
 	user = &userv3.User{
 		Metadata: &v3.Metadata{
@@ -1025,7 +1025,7 @@ func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, trai
 			return err
 		}
 	default:
-		return fmt.Errorf("Unsupported %s operation in payload", op)
+		return fmt.Errorf("unsupported %s operation in payload", op)
 	}
 	return nil
 }

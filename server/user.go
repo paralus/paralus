@@ -8,7 +8,6 @@ import (
 	"github.com/RafayLabs/rcloud-base/pkg/query"
 	"github.com/RafayLabs/rcloud-base/pkg/service"
 	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	userpbv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -41,7 +40,7 @@ func (s *userServer) CreateUser(ctx context.Context, req *userpbv3.User) (*userp
 	return updateUserStatus(req, resp, err), err
 }
 
-func (s *userServer) GetUsers(ctx context.Context, req *commonv3.QueryOptions) (*userpbv3.UserList, error) {
+func (s *userServer) GetUsers(ctx context.Context, req *v3.QueryOptions) (*userpbv3.UserList, error) {
 	return s.us.List(ctx, query.WithOptions(req))
 }
 
@@ -73,7 +72,7 @@ func (s *userServer) UpdateUser(ctx context.Context, req *userpbv3.User) (*userp
 	return updateUserStatus(req, resp, err), err
 }
 
-func (s *userServer) DownloadCliConfig(ctx context.Context, req *rpcv3.CliConfigRequest) (*commonv3.HttpBody, error) {
+func (s *userServer) DownloadCliConfig(ctx context.Context, req *rpcv3.CliConfigRequest) (*v3.HttpBody, error) {
 	sessData, ok := service.GetSessionDataFromContext(ctx)
 	if !ok {
 		return nil, fmt.Errorf("unable to retrieve session data")
@@ -92,7 +91,7 @@ func (s *userServer) DownloadCliConfig(ctx context.Context, req *rpcv3.CliConfig
 		return nil, err
 	}
 
-	return &commonv3.HttpBody{
+	return &v3.HttpBody{
 		ContentType: "application/json",
 		Data:        bb,
 	}, nil

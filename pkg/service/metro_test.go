@@ -98,7 +98,7 @@ func TestMetroDeleteNonExist(t *testing.T) {
 	puuid := uuid.New().String()
 
 	mock.ExpectQuery(`SELECT "metro"."id", "metro"."name", .* FROM "cluster_metro" AS "metro" WHERE`).
-		WithArgs().WillReturnError(fmt.Errorf("No data available"))
+		WithArgs().WillReturnError(fmt.Errorf("no data available"))
 
 	metro := &infrav3.Location{
 		Metadata: &commonv3.Metadata{Id: puuid, Name: "metro-" + puuid},
