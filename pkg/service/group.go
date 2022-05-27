@@ -98,6 +98,7 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 	projectNamespaceRoles := group.GetSpec().GetProjectNamespaceRoles()
 
 	var pgrs []models.ProjectGroupRole
+	var pgnr []models.ProjectGroupNamespaceRole
 	var grs []models.GroupRole
 	var ps []*authzv1.Policy
 	var rids []uuid.UUID
@@ -171,6 +172,7 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 			if err != nil {
 				return &userv3.Group{}, nil, fmt.Errorf("unable to find project '%v'", project)
 			}
+
 			pgr := models.ProjectGroupRole{
 				Trash:          false,
 				RoleId:         roleId,
@@ -189,10 +191,54 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 				Org:  org,
 				Obj:  role,
 			})
+		case "namespace":
+			if org == "" {
+				return &userv3.Group{}, nil, fmt.Errorf("no org name provided for role '%v'", roleName)
+			}
+			if project == "" {
+				return &userv3.Group{}, nil, fmt.Errorf("no project name provided for role '%v'", roleName)
+			}
+			projectId, err := dao.GetProjectId(ctx, s.db, project)
+			if err != nil {
+				return &userv3.Group{}, nil, fmt.Errorf("unable to find project '%v'", project)
+			}
+
+			namespace := pnr.GetNamespace()
+			pgnrObj := models.ProjectGroupNamespaceRole{
+				CreatedAt:      time.Now(),
+				ModifiedAt:     time.Now(),
+				Trash:          false,
+				PartnerId:      ids.Partner,
+				OrganizationId: ids.Organization,
+				RoleId:         roleId,
+				GroupId:        ids.Id,
+				ProjectId:      projectId,
+				Namespace:      namespace,
+				Active:         true,
+			}
+			pgnr = append(pgnr, pgnrObj)
+
+			ps = append(ps, &authzv1.Policy{
+				Sub:  "g:" + group.GetMetadata().GetName(),
+				Ns:   namespace,
+				Proj: project,
+				Org:  org,
+				Obj:  role,
+			})
+		default:
+			if err != nil {
+				return group, nil, fmt.Errorf("other scoped roles are not handled")
+			}
 		}
 	}
 	if len(pgrs) > 0 {
 		_, err := dao.Create(ctx, db, &pgrs)
+		if err != nil {
+			return &userv3.Group{}, nil, err
+		}
+	}
+	if len(pgnr) > 0 {
+		_, err := dao.Create(ctx, db, &pgnr)
 		if err != nil {
 			return &userv3.Group{}, nil, err
 		}

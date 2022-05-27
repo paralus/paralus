@@ -88,7 +88,7 @@ func GetProjectGroupRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*use
 
 	var pnr = []*userv3.ProjectNamespaceRole{}
 	err = db.NewSelect().Table("authsrv_projectgroupnamespacerole").
-		ColumnExpr("distinct authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group, namespace_id as namespace").
+		ColumnExpr("distinct authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group, namespace").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgroupnamespacerole.role_id`).
 		Join(`JOIN authsrv_project ON authsrv_project.id=authsrv_projectgroupnamespacerole.project_id`).
 		Join(`JOIN authsrv_group ON authsrv_group.id=authsrv_projectgroupnamespacerole.group_id`). // also need a namespace join

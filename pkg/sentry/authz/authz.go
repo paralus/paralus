@@ -17,6 +17,7 @@ import (
 	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	"github.com/RafayLabs/rcloud-base/proto/types/controller"
 	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
+	"github.com/google/uuid"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 )
@@ -66,52 +67,25 @@ func getAuthzLabels(userName string) map[string]string {
 	}
 }
 
-/*TODO: pending along with namespaces
-func getAccountProjectNamespace(ctx context.Context, projectID, accountID, orgID int64, apn service.AccountProjectNamespaceService) ([]string, error) {
-	var ns []string
+func getAccountProjectNamespace(ctx context.Context, projectID, accountID string, pns service.NamespaceService) ([]string, error) {
 
-	apns, err := apn.GetAccountProjectNamesapce(ctx, orgID, accountID, projectID)
+	apns, err := pns.GetAccountProjectNamespaces(ctx, uuid.MustParse(projectID), uuid.MustParse(accountID))
 	if err != nil {
 		return nil, err
 	}
 
-	for _, apn := range apns {
-		ns = append(ns, apn.NamespaceName)
-	}
-
-	return ns, nil
+	return apns, nil
 }
 
-func getSSOAccountProjectNamespace(ctx context.Context, projectID, accountID, orgID int64, apn service.AccountProjectNamespaceService) ([]string, error) {
-	var ns []string
+func getGroupAccountProjectNamespace(ctx context.Context, projectID, accountID string, apn service.NamespaceService) ([]string, error) {
 
-	apns, err := apn.GetSSOAccountProjectNamesapce(ctx, orgID, accountID, projectID)
+	apns, err := apn.GetGroupProjectNamespaces(ctx, uuid.MustParse(projectID), uuid.MustParse(accountID))
 	if err != nil {
 		return nil, err
 	}
 
-	for _, apn := range apns {
-		ns = append(ns, apn.NamespaceName)
-	}
-
-	return ns, nil
+	return apns, nil
 }
-
-func getGroupAccountProjectNamespace(ctx context.Context, projectID, accountID, orgID int64, apn service.AccountProjectNamespaceService) ([]string, error) {
-	var ns []string
-
-	apns, err := apn.GetGroupProjectNamesapce(ctx, orgID, accountID, projectID)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, apn := range apns {
-		ns = append(ns, apn.NamespaceName)
-	}
-
-	return ns, nil
-}
-*/
 
 func getProjectPermissions(ctx context.Context, projects []string, accountID, orgID, partnerID string, aps service.AccountPermissionService) (map[string][]string, string, error) {
 	projects = append(projects, "")
@@ -333,7 +307,7 @@ func getProjectsFromLabels(labels map[string]string) ([]string, error) {
 // ENV_READ
 //   -   NO Access to cluster scoped resources
 //   -   Read Access to namespace scoped resources (only within the environment)
-func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRequest, bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, krs service.KubeconfigRevocationService, kcs service.KubectlClusterSettingsService, kss service.KubeconfigSettingService) (resp *sentryrpc.GetUserAuthorizationResponse, err error) {
+func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRequest, bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, krs service.KubeconfigRevocationService, kcs service.KubectlClusterSettingsService, kss service.KubeconfigSettingService, ns service.NamespaceService) (resp *sentryrpc.GetUserAuthorizationResponse, err error) {
 	var userName string
 	var groups []string
 	var rolePrevilage int
@@ -432,6 +406,7 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 		// is user active
 		if !cnAttr.IsSSO {
 			active, err := aps.IsAccountActive(ctx, accountID, orgID)
+			_log.Infow("accountID ", accountID, "orgID ", orgID, "active ", active)
 			if err != nil {
 				return nil, err
 			}
@@ -502,43 +477,30 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 	crbExclusionMap := make(map[string]bool)
 	rbExclusionMap := make(map[string]*roleBindExclusionList)
 
-	projectNamespaces := make([]string, 0)
-	/*TODO: pending with namespaces
+	// Get all namespaces
 	projectNamespaces, err := func() ([]string, error) {
-		var nsl []string
-		configClient, err := cPool.NewClient(ctx)
-		if err != nil {
-			err = errors.Wrap(err, "unable to get config client")
-			return nil, err
-		}
-		defer configClient.Close()
+		nsl := make([]string, 0)
 
 		for _, project := range projects {
-			namespaces, err := configClient.GetNamespaces(ctx, &configrpc.GetAllNamespacesRequest{
-				QueryOptions: commonv3.QueryOptions{
-					Project:      project,
-					Organization: orgID,
-					Partner:      partnerID,
-				},
-			})
+			namespaces, err := ns.GetProjectNamespaces(ctx, uuid.MustParse(project))
 
+			if err != nil {
+				_log.Infow("error ", err.Error())
+			}
 			if err == nil {
-				_log.Debugw("Get namespaces ", "orgID", orgID, "partnerID", partnerID, "project", project, "namespaces", namespaces.Items, "itemslen", len(namespaces.Items))
-				for _, namespace := range namespaces.Items {
-					nsl = append(nsl, namespace.Name)
-				}
+				_log.Debugw("Get namespaces ", "project", project, "namespaces", namespaces, "itemslen", len(namespaces))
+				nsl = append(nsl, namespaces...)
 			}
 		}
 		return nsl, nil
 	}()
 
 	if err != nil {
-		_log.Infow("unable to get project namespaces", "error", err)
+		_log.Debugw("unable to get project namespaces", "error", err)
 		return nil, err
 	}
 
-	_log.Debugw("projectNamespaces", "names", projectNamespaces)
-	*/
+	_log.Infow("projectNamespaces", "names", projectNamespaces)
 
 	for _, pm := range sentry.GetKubeConfigClusterPermissions() {
 		cr, err := getClusterRole(pm)
@@ -564,23 +526,17 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 		var namespaces []string
 		_log.Infow("authorization", "project", project, "user", sa.Name, "permissions", permissions)
 		groups = append(groups, permissions...)
-		/* TODO: pending with namespaces
 		// need to get the namesapces assigned to this user.
-		if !cnAttr.IsSSO {
-			ns1, _ := getAccountProjectNamespace(ctx, project, accountID, orgID, apn)
-			ns2, _ := getGroupAccountProjectNamespace(ctx, project, accountID, orgID, apn)
-			if len(ns1) > 0 {
-				namespaces = append(namespaces, ns1...)
-			}
-			if len(ns2) > 0 {
-				namespaces = append(namespaces, ns2...)
-			}
-			_log.Infow("namespaces", "project", project, "accountID", accountID, "orgID", orgID, "namespaces", namespaces)
-		} else {
-			namespaces, _ = getSSOAccountProjectNamespace(ctx, project, accountID, orgID, apn)
-			_log.Infow("namespacesSSO", "project", project, "accountID", accountID, "orgID", orgID, "namespaces", namespaces)
+		ns1, _ := getAccountProjectNamespace(ctx, project, accountID, ns)
+		ns2, _ := getGroupAccountProjectNamespace(ctx, project, accountID, ns)
+		if len(ns1) > 0 {
+			namespaces = append(namespaces, ns1...)
 		}
-		*/
+		if len(ns2) > 0 {
+			namespaces = append(namespaces, ns2...)
+		}
+		_log.Infow("namespaces", "project", project, "accountID", accountID, "namespaces", namespaces)
+
 		// org scope
 		if project == "" {
 			for _, permission := range permissions {
@@ -732,13 +688,7 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 	resp.EnforceOrgAdminOnlySecretAccess = enforceOrgAdminOnlySecretAccess
 	resp.IsOrgAdmin = isOrgAdmin
 
-	//to be removed along with events
 	_log.Infow("username", userName)
-	/*TODO: pending with events
-	// system audit log event to notify success authz
-	clusterName := labels["rafay.dev/clusterName"]
-	kubectlAuthzEvent("user.login.success", req.ClusterID, clusterName, cnAttr.OrganizationID, cnAttr.PartnerID, userName, cnAttr.AccountID, groups)
-	*/
 
 	return resp, nil
 }
@@ -813,13 +763,6 @@ func verifyClusterKubectlSettings(ctx context.Context, bs service.BootstrapServi
 		_log.Infow("verify cluster kubectl settings invalid clusterid or orgid", "cluster", clusterID, "orgID", orgID)
 		return err
 	}
-
-	/*
-		if cnAttr.RelayNetwork {
-			_log.Debugw("skip verify cluster kubectl settings for relaynetwork sessions")
-			return nil // allow
-		}
-	*/
 
 	kc, err := kcs.Get(ctx, orgID, clusterID)
 	if err == constants.ErrNotFound {

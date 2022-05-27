@@ -141,6 +141,7 @@ var (
 	gps   service.GroupPermissionService
 	krs   service.KubeconfigRevocationService
 	kss   service.KubeconfigSettingService
+	ns    service.NamespaceService
 	kcs   service.KubectlClusterSettingsService
 	as    service.AuthzService
 	cs    service.ClusterService
@@ -345,6 +346,7 @@ func setup() {
 	bs = service.NewBootstrapService(db)
 	krs = service.NewKubeconfigRevocationService(db)
 	kss = service.NewKubeconfigSettingService(db)
+	ns = service.NewNamespaceService(db)
 	kcs = service.NewkubectlClusterSettingsService(db)
 	aps = service.NewAccountPermissionService(db)
 	gps = service.NewGroupPermissionService(db)
@@ -504,7 +506,7 @@ func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
 	if err != nil {
 		_log.Fatalw("unable to get create relay peer service")
 	}
-	clusterAuthzServer := server.NewClusterAuthzServer(bs, aps, gps, krs, kcs, kss)
+	clusterAuthzServer := server.NewClusterAuthzServer(bs, aps, gps, krs, kcs, kss, ns)
 	auditInfoServer := server.NewAuditInfoServer(bs, aps)
 
 	s, err := grpc.NewSecureServerWithPEM(cert, key, ca)
@@ -551,7 +553,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	bootstrapServer := server.NewBootstrapServer(bs, kekFunc, cs)
 	kubeConfigServer := server.NewKubeConfigServer(bs, aps, gps, kss, krs, kekFunc, ks, os, ps)
 	auditInfoServer := server.NewAuditInfoServer(bs, aps)
-	clusterAuthzServer := server.NewClusterAuthzServer(bs, aps, gps, krs, kcs, kss)
+	clusterAuthzServer := server.NewClusterAuthzServer(bs, aps, gps, krs, kcs, kss, ns)
 	kubectlClusterSettingsServer := server.NewKubectlClusterSettingsServer(bs, kcs)
 	crpc := server.NewClusterServer(cs, downloadData)
 	mserver := server.NewLocationServer(ms)

@@ -166,8 +166,8 @@ func addUserRoleMappingsFetchExpectation(mock sqlmock.Sqlmock, user string, proj
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("role-" + uid))
 	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project FROM "authsrv_projectaccountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountresourcerole.project_id WHERE .authsrv_projectaccountresourcerole.account_id = '` + user + `'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+uid, "project-"+project))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id WHERE .authsrv_projectaccountnamespacerole.account_id = '` + user + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+uid, "project-"+project, 7))
+	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id WHERE .authsrv_projectaccountnamespacerole.account_id = '` + user + `'`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+uid, "project-"+project, "ns"))
 }
 
 func addUserRoleMappingsUpdateExpectation(mock sqlmock.Sqlmock, uuuid string) string {
@@ -187,8 +187,8 @@ func addGroupRoleMappingsFetchExpectation(mock sqlmock.Sqlmock, group string, pr
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "group"}).AddRow("role-"+uid, "group-"+group))
 	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id WHERE`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+uid, "project-"+project))
-	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace_id as namespace, authsrv_group.name as group FROM "authsrv_projectgroupnamespacerole"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+uid, "project-"+project, 7))
+	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace, authsrv_group.name as group FROM "authsrv_projectgroupnamespacerole"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+uid, "project-"+project, "ns"))
 }
 
 func addGroupRoleMappingsUpdateExpectation(mock sqlmock.Sqlmock, group string) string {

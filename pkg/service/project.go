@@ -412,6 +412,7 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 					Organization: proj.OrganizationId.String(),
 					Partner:      proj.PartnerId.String(),
 					Labels:       labels,
+					CreatedAt:    timestamppb.New(proj.CreatedAt),
 					ModifiedAt:   timestamppb.New(proj.ModifiedAt),
 				},
 				Spec: &systemv3.ProjectSpec{
