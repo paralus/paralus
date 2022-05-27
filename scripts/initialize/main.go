@@ -288,7 +288,7 @@ retry:
 	numOfRetries := 0
 	// should we directly interact with kratos and create a user with a password?
 	orgA, err := us.Create(context.Background(), &userv3.User{
-		Metadata: &commonv3.Metadata{Name: *oae, Partner: *partner, Organization: *org, Description: "..."},
+		Metadata: &commonv3.Metadata{Name: *oae, Partner: *partner, Organization: *org},
 		Spec: &userv3.UserSpec{
 			FirstName:             *oafn,
 			LastName:              *oaln,
