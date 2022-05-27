@@ -18,7 +18,7 @@ func GetProjectNamespaces(ctx context.Context, db bun.IDB, projectID uuid.UUID) 
 		return nil, err
 	}
 	for _, nr := range panr {
-		cns = append(cns, nr.NamespaceId)
+		cns = append(cns, nr.Namespace)
 	}
 
 	var pgnr []models.ProjectGroupNamespaceRole
@@ -27,7 +27,7 @@ func GetProjectNamespaces(ctx context.Context, db bun.IDB, projectID uuid.UUID) 
 		return nil, err
 	}
 	for _, nr := range pgnr {
-		cns = append(cns, nr.NamespaceId)
+		cns = append(cns, nr.Namespace)
 	}
 
 	return cns, err
@@ -42,7 +42,7 @@ func GetAccountProjectNamespaces(ctx context.Context, db bun.IDB, projectID uuid
 		return nil, err
 	}
 	for _, nr := range panr {
-		cns = append(cns, nr.NamespaceId)
+		cns = append(cns, nr.Namespace)
 	}
 
 	return cns, err
@@ -61,7 +61,7 @@ func GetGroupProjectNamespaces(ctx context.Context, db bun.IDB, projectID uuid.U
 		return nil, err
 	}
 	for _, nr := range pgnr {
-		cns = append(cns, nr.NamespaceId)
+		cns = append(cns, nr.Namespace)
 	}
 
 	return cns, err

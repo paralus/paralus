@@ -213,7 +213,7 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 				RoleId:         roleId,
 				GroupId:        ids.Id,
 				ProjectId:      projectId,
-				NamespaceId:    namespace,
+				Namespace:      namespace,
 				Active:         true,
 			}
 			pgnr = append(pgnr, pgnrObj)

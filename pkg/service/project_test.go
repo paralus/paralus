@@ -143,7 +143,7 @@ func TestProjectGetByName(t *testing.T) {
 		JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id WHERE`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("ADMIN"))
 
 	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group, 
-		namespace_id as namespace FROM "authsrv_projectgroupnamespacerole" JOIN authsrv_resourcerole 
+		namespace FROM "authsrv_projectgroupnamespacerole" JOIN authsrv_resourcerole 
 		ON authsrv_resourcerole.id=authsrv_projectgroupnamespacerole.role_id JOIN authsrv_project 
 		ON authsrv_project.id=authsrv_projectgroupnamespacerole.project_id JOIN authsrv_group 
 		ON authsrv_group.id=authsrv_projectgroupnamespacerole.group_id WHERE`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("ADMIN"))
@@ -204,7 +204,7 @@ func TestProjectUpdate(t *testing.T) {
 		JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id 
 		JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id WHERE`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("ADMIN", "project-"+puuid))
 	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group, 
-		namespace_id as namespace FROM "authsrv_projectgroupnamespacerole" 
+		namespace FROM "authsrv_projectgroupnamespacerole" 
 		JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgroupnamespacerole.role_id 
 		JOIN authsrv_project ON authsrv_project.id=authsrv_projectgroupnamespacerole.project_id 
 		JOIN authsrv_group ON authsrv_group.id=authsrv_projectgroupnamespacerole.group_id WHERE`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("ADMIN", "project-"+puuid))

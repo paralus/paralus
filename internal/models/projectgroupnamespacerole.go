@@ -21,6 +21,6 @@ type ProjectGroupNamespaceRole struct {
 	RoleId         uuid.UUID `bun:"role_id,type:uuid"`
 	GroupId        uuid.UUID `bun:"group_id,type:uuid"`
 	ProjectId      uuid.UUID `bun:"project_id,type:uuid"`
-	NamespaceId    string    `bun:"namespace_id"`
+	Namespace      string    `bun:"namespace"`
 	Active         bool      `bun:"active,notnull"`
 }

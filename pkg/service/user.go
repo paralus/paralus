@@ -256,7 +256,7 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 				RoleId:         roleId,
 				AccountId:      ids.Id,
 				ProjectId:      projectId,
-				NamespaceId:    namespace,
+				Namespace:      namespace,
 				Active:         true,
 			}
 			panr = append(panr, panrObj)
@@ -270,7 +270,7 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 			})
 		default:
 			if err != nil {
-				return user, nil, fmt.Errorf("other scoped roles are not handled")
+				return user, nil, fmt.Errorf("unknown scope for role")
 			}
 		}
 	}
