@@ -65,11 +65,10 @@ type userService struct {
 }
 
 type userTraits struct {
-	Email       string
-	FirstName   string
-	LastName    string
-	Description string
-	IdpGroups   []string `json:"idp_groups"`
+	Email     string
+	FirstName string
+	LastName  string
+	IdpGroups []string `json:"idp_groups"`
 }
 
 // FIXME: find a better way to do this
@@ -98,10 +97,6 @@ func getUserTraits(traits map[string]interface{}) userTraits {
 	if !ok {
 		lname = ""
 	}
-	desc, ok := traits["desc"]
-	if !ok {
-		desc = ""
-	}
 
 	igStr := []string{}
 	ig, ok := traits["idp_groups"]
@@ -114,11 +109,10 @@ func getUserTraits(traits map[string]interface{}) userTraits {
 	}
 
 	return userTraits{
-		Email:       email.(string),
-		FirstName:   fname.(string),
-		LastName:    lname.(string),
-		Description: desc.(string),
-		IdpGroups:   igStr,
+		Email:     email.(string),
+		FirstName: fname.(string),
+		LastName:  lname.(string),
+		IdpGroups: igStr,
 	}
 }
 
@@ -426,10 +420,9 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 
 	// Kratos checks if the user is already available
 	id, err := s.ap.Create(ctx, map[string]interface{}{
-		"email":       user.GetMetadata().GetName(), // can be just username for API access
-		"first_name":  user.GetSpec().GetFirstName(),
-		"last_name":   user.GetSpec().GetLastName(),
-		"description": user.GetMetadata().GetDescription(),
+		"email":      user.GetMetadata().GetName(), // can be just username for API access
+		"first_name": user.GetSpec().GetFirstName(),
+		"last_name":  user.GetSpec().GetLastName(),
 	})
 	if err != nil {
 		return &userv3.User{}, err
@@ -505,11 +498,10 @@ func (s *userService) identitiesModelToUser(ctx context.Context, db bun.IDB, use
 	user.ApiVersion = apiVersion
 	user.Kind = userKind
 	user.Metadata = &v3.Metadata{
-		Name:        traits.Email,
-		Description: traits.Description,
-		Labels:      labels,
-		ModifiedAt:  timestamppb.New(usr.UpdatedAt),
-		Id:          usr.ID.String(),
+		Name:       traits.Email,
+		Labels:     labels,
+		ModifiedAt: timestamppb.New(usr.UpdatedAt),
+		Id:         usr.ID.String(),
 	}
 	user.Spec = &userv3.UserSpec{
 		FirstName:             traits.FirstName,
@@ -692,10 +684,9 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 		if usr.IdentityCredential.IdentityCredentialType.Name == "password" {
 			// Don't update details for non local(IDP) users
 			err = s.ap.Update(ctx, usr.ID.String(), map[string]interface{}{
-				"email":       user.GetMetadata().GetName(),
-				"first_name":  user.GetSpec().GetFirstName(),
-				"last_name":   user.GetSpec().GetLastName(),
-				"description": user.GetMetadata().GetDescription(),
+				"email":      user.GetMetadata().GetName(),
+				"first_name": user.GetSpec().GetFirstName(),
+				"last_name":  user.GetSpec().GetLastName(),
 			})
 			if err != nil {
 				return &userv3.User{}, err
