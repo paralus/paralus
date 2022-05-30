@@ -2,7 +2,10 @@ name: Create, publish container image
 
 on:
   push:
+    branches: [ main ]
     tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ main ]
 
 env:
   REGISTRY: registry.dev.rafay-edge.net
@@ -27,6 +30,9 @@ jobs:
           go-version: ${{ matrix.go-version }}
 
       # Sanity check before publishing
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.2.0
+
       - name: Test all
         run: go test -v ./...
 
@@ -42,6 +48,11 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=tag
+            type=ref,event=pr
+            type=sha
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
