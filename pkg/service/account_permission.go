@@ -24,6 +24,7 @@ type AccountPermissionService interface {
 	GetAccount(ctx context.Context, accountID string) (*models.Account, error)
 	GetAccountGroups(ctx context.Context, accountID string) ([]string, error)
 	IsAccountActive(ctx context.Context, accountID, orgID string) (bool, error)
+	IsSSOAccount(ctx context.Context, accountID string) (bool, error)
 }
 
 // accountPermissionService implements AccountPermissionService
@@ -166,25 +167,10 @@ func (a *accountPermissionService) IsAccountActive(ctx context.Context, accountI
 	return ga.Active, nil
 }
 
-/*
-func (a *accountPermissionService) GetSSOAccounts(ctx context.Context, orgID ctypesv2.RafayID) ([]typesv2.SSOAccountData, error) {
-	var ssoAccounts []ssoAccountData
-
-	err := a.db.WithContext(ctx).Model(&ssoAccounts).
-		Where("organization_id = ?", orgID).
-		Where("trash = ?", false).
-		Select()
-	if err != nil {
-		return nil, err
-	}
-	ssoAccountUsers := []typesv2.SSOAccountData{}
-	for _, sso := range ssoAccounts {
-		ssoAccountUsers = append(ssoAccountUsers, *sso.SSOAccountData)
-	}
-	return ssoAccountUsers, nil
-
+func (a *accountPermissionService) IsSSOAccount(ctx context.Context, accountID string) (bool, error) {
+	return dao.IsSSOAccount(ctx, a.db, uuid.MustParse(accountID))
 }
-*/
+
 func prepareAccountPermissionResponse(aps models.AccountPermission) sentry.AccountPermission {
 	var urls []*sentry.PermissionURL
 	if aps.Urls != nil {

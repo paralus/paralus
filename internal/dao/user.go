@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/RafayLabs/rcloud-base/internal/models"
 	userv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
@@ -134,9 +135,11 @@ func listFilteredUsersQuery(
 	offset int,
 ) *bun.SelectQuery {
 	if utype != "" {
-		q = q.Relation("IdentityCredential").
+		q = q.Relation("IdentityCredential", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.ExcludeColumn("*")
+		}).
 			Relation("IdentityCredential.IdentityCredentialType", func(q *bun.SelectQuery) *bun.SelectQuery {
-				return q.Where("name = ?", utype)
+				return q.ExcludeColumn("*").Where("name = ?", utype)
 			})
 	}
 
@@ -179,6 +182,24 @@ func ListFilteredUsers(
 	var users []models.KratosIdentities
 	q := db.NewSelect().Model(&users)
 	listFilteredUsersQuery(q, fusers, query, utype, orderBy, order, limit, offset)
+
+	//restrict oidc users, this is required as kratos creates entry with credential type password for oidc users as well
+	if utype == KratosPasswordType {
+		var ssousers []models.KratosIdentities
+		oq := db.NewSelect().Model(&ssousers).
+			Relation("IdentityCredential", func(q *bun.SelectQuery) *bun.SelectQuery {
+				return q.ExcludeColumn("*")
+			}).
+			Relation("IdentityCredential.IdentityCredentialType", func(q *bun.SelectQuery) *bun.SelectQuery {
+				return q.ExcludeColumn("*").Where("name = ?", KratosOidcType)
+			})
+		if len(fusers) > 0 {
+			// filter with precomputed users if we have any
+			oq = oq.Where("identities.id IN (?)", bun.In(fusers))
+		}
+		q.Except(oq)
+	}
+
 	err := q.Scan(ctx)
 	if err != nil {
 		return nil, err
@@ -229,4 +250,21 @@ func GetUserNamesByIds(ctx context.Context, db bun.IDB, id []uuid.UUID, entity i
 		return nil, err
 	}
 	return names, nil
+}
+
+func IsSSOAccount(ctx context.Context, db bun.IDB, id uuid.UUID) (bool, error) {
+	var user models.KratosIdentities
+	q := db.NewSelect().Model(&user)
+	q = q.Relation("IdentityCredential").
+		Relation("IdentityCredential.IdentityCredentialType", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Where("name = ?", KratosOidcType)
+		})
+	q = q.Where("identities.id = ?", id)
+	err := q.Scan(ctx)
+	if err != nil && err == sql.ErrNoRows {
+		return false, nil
+	} else if err == nil && user.ID != uuid.Nil {
+		return true, nil
+	}
+	return false, err
 }
