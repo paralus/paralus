@@ -513,7 +513,7 @@ func TestUserList(t *testing.T) {
 					AddRow(uuuid2, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)))
 			} else {
 				if tc.utype != "" {
-					mock.ExpectQuery(`SELECT "identities"."id", .*, "identity_credential"."id" AS "identity_credential__id", .*FROM "identities" LEFT JOIN "identity_credentials" AS "identity_credential" ON ."identity_credential"."identity_id" = "identities"."id". LEFT JOIN "identity_credential_types" AS "identity_credential__identity_credential_type" ON ."identity_credential__identity_credential_type"."id" = "identity_credential"."identity_credential_type_id". WHERE .name = '` + tc.utype + `'. LIMIT 50 OFFSET 20`).
+					mock.ExpectQuery(`SELECT "identities"."id", .*, .*FROM "identities" LEFT JOIN "identity_credentials" AS "identity_credential" ON ."identity_credential"."identity_id" = "identities"."id". LEFT JOIN "identity_credential_types" AS "identity_credential__identity_credential_type" ON ."identity_credential__identity_credential_type"."id" = "identity_credential"."identity_credential_type_id". WHERE .name = '` + tc.utype + `'. LIMIT 50 OFFSET 20 *`).
 						WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).
 						AddRow(uuuid1, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)).
 						AddRow(uuuid2, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)))
