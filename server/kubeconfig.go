@@ -89,14 +89,6 @@ func (s *kubeConfigServer) RevokeKubeconfig(ctx context.Context, req *sentryrpc.
 		return nil, err
 	}
 
-	/*TODO: pending with events
-	revokeUser, err := kubeconfig.GetUserNameFromAccountID(ctx, accountID, opts.Organization, s.aps, opts.IsSSOUser)
-	acID := accountID
-	partnerID := opts.Partner
-	orgID := opts.Organization
-	kubeconfigRevokeEvent(ctx, "user.kubeconfig.revoke", orgID, partnerID, revokeUser, acID, opts.Username, opts.Account, opts.Groups)
-	*/
-
 	return &sentryrpc.RevokeKubeconfigResponse{}, nil
 }
 
@@ -178,12 +170,6 @@ func (s *kubeConfigServer) UpdateOrganizationSetting(ctx context.Context, req *s
 		return nil, err
 	}
 
-	/*TODO:pending with events
-	partnerID := opts.Partner
-	orgIDString := opts.Organization
-	kubeconfigSettingEvent(ctx, "user.kubeconfig.setting", orgIDString, partnerID, "", "", opts.Username, opts.Account, opts.Groups, req.ValiditySeconds, req.EnableSessionCheck)
-	*/
-
 	return &sentryrpc.UpdateKubeconfigSettingResponse{}, nil
 }
 
@@ -211,13 +197,6 @@ func (s *kubeConfigServer) UpdateUserSetting(ctx context.Context, req *sentryrpc
 		return nil, err
 	}
 
-	/*TODO: pending with events
-	forUser, err := kubeconfig.GetUserNameFromAccountID(ctx, accountID, opts.Organization, s.aps, opts.IsSSOUser)
-	acID := accountID
-	partnerID := opts.Partner
-	orgIDString := opts.Organization
-	kubeconfigSettingEvent(ctx, "user.kubeconfig.setting", orgIDString, partnerID, forUser, acID, opts.Username, opts.Account, opts.Groups, req.ValiditySeconds, req.EnableSessionCheck)
-	*/
 	return &sentryrpc.UpdateKubeconfigSettingResponse{}, nil
 }
 

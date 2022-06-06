@@ -383,19 +383,11 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 		if errUser == nil && ks != nil && ks.EnableSessionCheck {
 			// check the last login timestamp
 			var lastLogin time.Time
-			if cnAttr.IsSSO {
-				accountData, err := aps.GetAccount(ctx, accountID)
-				if err != nil {
-					return nil, err
-				}
-				lastLogin = accountData.LastLogin
-			} else {
-				accountData, err := aps.GetAccount(ctx, accountID)
-				if err != nil {
-					return nil, err
-				}
-				lastLogin = accountData.LastLogin
+			accountData, err := aps.GetAccount(ctx, accountID)
+			if err != nil {
+				return nil, err
 			}
+			lastLogin = accountData.LastLogin
 			t1 := time.Now()
 			if t1.Sub(lastLogin) > time.Hour*12 {
 				_log.Infow("get kubectl authorization block access. user did not login to portal in last 12 Hour")
@@ -403,8 +395,8 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 			}
 		}
 
-		// is user active
-		if !cnAttr.IsSSO {
+		// is local user active
+		if ok, _ := aps.IsSSOAccount(ctx, accountID); !ok {
 			active, err := aps.IsAccountActive(ctx, accountID, orgID)
 			_log.Infow("accountID ", accountID, "orgID ", orgID, "active ", active)
 			if err != nil {

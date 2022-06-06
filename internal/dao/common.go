@@ -8,6 +8,11 @@ import (
 	bun "github.com/uptrace/bun"
 )
 
+const (
+	KratosPasswordType = "password"
+	KratosOidcType     = "oidc"
+)
+
 func Create(ctx context.Context, db bun.IDB, entity interface{}) (interface{}, error) {
 	if _, err := db.NewInsert().Model(entity).Exec(ctx); err != nil {
 		return nil, err
