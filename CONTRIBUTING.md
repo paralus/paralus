@@ -1,8 +1,8 @@
 We 💚 Opensource!
 
-Yes, because we feel that it’s the best way to build and improve a product. It allows people like you from across the globe to contribute and improve a product over time. And we’re super happy to see that you’d like to contribute to ZTKA.
+Yes, because we feel that it’s the best way to build and improve a product. It allows people like you from across the globe to contribute and improve a product over time. And we’re super happy to see that you’d like to contribute to Paralus.
 
-We are always on the lookout for anything that can improve the product. Be it feature requests, issues/bugs, code or content, we’d love to see what you’ve got to make this better. If you’ve got anything exciting and would love to contribute, this is the right place to begin your journey as a contributor to ZTKA and the larger open source community.
+We are always on the lookout for anything that can improve the product. Be it feature requests, issues/bugs, code or content, we’d love to see what you’ve got to make this better. If you’ve got anything exciting and would love to contribute, this is the right place to begin your journey as a contributor to Paralus and the larger open source community.
 
 **How to get started?**
 
@@ -16,7 +16,7 @@ Below are all the details you need to know about the `RCloud Base` repo and get 
 
 # Rcloud Base
 
-This repository contains all the rcloud-system components that are the backbone for ztka and gitops.
+This repository contains all the rcloud-system components that are the backbone for Paralus.
 
 ## Prerequisites
 
@@ -48,7 +48,7 @@ docker-compose --env-file ./env.example up -d
 Start rcloud-base:
 
 ```bash
-go run github.com/RafayLabs/rcloud-base
+go run github.com/paralus/rcloud-base
 ```
 
 ### Manual
@@ -128,7 +128,7 @@ See [cli-usage](https://github.com/golang-migrate/migrate#cli-usage) for more in
 Start rcloud-base:
 
 ```bash
-go run github.com/RafayLabs/rcloud-base
+go run github.com/paralus/rcloud-base
 ```
 
 ## Need Help?
