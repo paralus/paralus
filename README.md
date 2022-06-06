@@ -32,7 +32,7 @@ docker-compose --env-file ./env.example up -d
 Start rcloud-base:
 
 ```bash
-go run github.com/RafayLabs/rcloud-base
+go run github.com/paralus/rcloud-base
 ```
 
 ### Manual
@@ -112,5 +112,5 @@ See [cli-usage](https://github.com/golang-migrate/migrate#cli-usage) for more in
 Start rcloud-base:
 
 ```bash
-go run github.com/RafayLabs/rcloud-base
+go run github.com/paralus/rcloud-base
 ```
