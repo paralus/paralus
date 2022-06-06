@@ -68,7 +68,7 @@ type userTraits struct {
 	Email     string
 	FirstName string
 	LastName  string
-	IdpGroups []string `json:"idp_groups"`
+	IdpGroup  string `json:"idp_group"`
 }
 
 // FIXME: find a better way to do this
@@ -97,22 +97,16 @@ func getUserTraits(traits map[string]interface{}) userTraits {
 	if !ok {
 		lname = ""
 	}
-
-	igStr := []string{}
-	ig, ok := traits["idp_groups"]
-	if ok {
-		igList := ig.([]interface{})
-		igStr = make([]string, len(igList))
-		for i, g := range igList {
-			igStr[i] = g.(string)
-		}
+	idpGroup, ok := traits["idp_group"]
+	if !ok {
+		idpGroup = ""
 	}
 
 	return userTraits{
 		Email:     email.(string),
 		FirstName: fname.(string),
 		LastName:  lname.(string),
-		IdpGroups: igStr,
+		IdpGroup:  idpGroup.(string),
 	}
 }
 
@@ -466,7 +460,7 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 
 func (s *userService) identitiesModelToUser(ctx context.Context, db bun.IDB, user *userv3.User, usr *models.KratosIdentities) (*userv3.User, error) {
 	traits := getUserTraits(usr.Traits)
-	idpGroups := traits.IdpGroups
+	idpGroup := traits.IdpGroup
 	groups, err := dao.GetGroups(ctx, db, usr.ID)
 	if err != nil {
 		return &userv3.User{}, err
@@ -483,7 +477,7 @@ func (s *userService) identitiesModelToUser(ctx context.Context, db bun.IDB, use
 
 		// idp groups will be available in both traits and groups and
 		// needs to be filetered out
-		if !utils.Contains(idpGroups, g.Name) {
+		if idpGroup != g.Name {
 			groupNames = append(groupNames, g.Name)
 		}
 	}
@@ -507,7 +501,7 @@ func (s *userService) identitiesModelToUser(ctx context.Context, db bun.IDB, use
 		FirstName:             traits.FirstName,
 		LastName:              traits.LastName,
 		Groups:                groupNames,
-		IdpGroups:             idpGroups,
+		IdpGroups:             []string{idpGroup},
 		ProjectNamespaceRoles: roles,
 	}
 
@@ -717,7 +711,12 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 		}
 
 		// Add idp groups to user so that it gets added on update
-		user.Spec.IdpGroups = getUserTraits(usr.Traits).IdpGroups
+		idpGroupTrait := getUserTraits(usr.Traits).IdpGroup
+		if idpGroupTrait == "" {
+			user.Spec.IdpGroups = []string{}
+		} else {
+			user.Spec.IdpGroups = []string{idpGroupTrait}
+		}
 		user, groupsAfter, err := s.createGroupAccountRelations(ctx, tx, usr.ID, user)
 		if err != nil {
 			tx.Rollback()
@@ -968,22 +967,24 @@ func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, trai
 	if err != nil {
 		return fmt.Errorf("encountered error unmarshing payload to userInfo: %s", err)
 	}
-	// TODO: Revisit to only run by IDP users and not by any other
-	// user
-	if len(userInfo.IdpGroups) == 0 {
+	// Early return if idpGroup is empty.
+	if strings.Trim(userInfo.IdpGroup, " ") == "" {
 		return fmt.Errorf("empty idp groups for user with id %s", id)
 	}
 
-	// Get existing user group so that the update does not wipe them out
+	// Get existing user group so that the update does not wipe
+	// them out.
 	userGroups, err := dao.GetGroups(ctx, s.db, userUUID)
-	ugn := []string{}
-	for _, g := range userGroups {
-		if !utils.Contains(userInfo.IdpGroups, g.Name) {
-			ugn = append(ugn, g.Name)
-		}
-	}
 	if err != nil {
 		return fmt.Errorf("empty to find existing groups for user with id %s", id)
+	}
+
+	// All existing groups except idpGroup
+	ugn := []string{}
+	for _, g := range userGroups {
+		if userInfo.IdpGroup != g.Name {
+			ugn = append(ugn, g.Name)
+		}
 	}
 	user = &userv3.User{
 		Metadata: &v3.Metadata{
@@ -993,7 +994,7 @@ func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, trai
 			FirstName: userInfo.FirstName,
 			LastName:  userInfo.LastName,
 			Groups:    ugn,
-			IdpGroups: userInfo.IdpGroups,
+			IdpGroups: []string{userInfo.IdpGroup},
 		},
 	}
 	switch op {
