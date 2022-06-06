@@ -1,6 +1,6 @@
-# Rcloud Base
+# Core
 
-This repository contains all the rcloud-system components that are the backbone for ztka and gitops.
+This repository contains all the core system components that are the backbone for Paralus.
 
 ## Prerequisites
 
@@ -19,7 +19,7 @@ This repository contains all the rcloud-system components that are the backbone 
 ### Using `docker-compose`
 
 Run following Docker Compose command to setup all requirements like
-Postgres db, Kratos etc. for the rcloud-base.
+Postgres db, Kratos etc. for the core.
 
 _This will start up postgres and elasticsearch as well as kratos and
 run the kratos migrations. It will also run all the necessary
@@ -29,10 +29,10 @@ migrations. It also starts up a mail slurper for you to use Kratos._
 docker-compose --env-file ./env.example up -d
 ```
 
-Start rcloud-base:
+Start core:
 
 ```bash
-go run github.com/paralus/rcloud-base
+go run github.com/paralus/core
 ```
 
 ### Manual
@@ -109,8 +109,8 @@ See [cli-usage](https://github.com/golang-migrate/migrate#cli-usage) for more in
 
 #### Start application
 
-Start rcloud-base:
+Start core:
 
 ```bash
-go run github.com/paralus/rcloud-base
+go run github.com/paralus/core
 ```
