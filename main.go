@@ -175,7 +175,7 @@ func setup() {
 	viper.SetDefault(apiPortEnv, 11000)
 	viper.SetDefault(debugPortEnv, 12000)
 	viper.SetDefault(apiAddrEnv, "localhost:11000")
-	viper.SetDefault(devEnv, true)
+	viper.SetDefault(devEnv, false)
 
 	// db
 	viper.SetDefault(dbAddrEnv, "localhost:5432")
@@ -581,26 +581,24 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	}
 
 	var opts []_grpc.ServerOption
-	var asv authv3.AuthService
-	if !dev {
-		_log.Infow("adding auth interceptor")
-		ac := authv3.NewAuthContext(db, kc, ks, as)
-		asv = authv3.NewAuthService(ac)
-		o := authv3.Option{
-			ExcludeRPCMethods: []string{
-				"/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate",
-				"/rafay.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent",
-				"/rafay.dev.sentry.rpc.KubeConfig/GetForClusterWebSession", //TODO: enable auth from prompt
-				"/rafay.dev.rpc.v3.Auth/IsRequestAllowed",
-			},
-			ExcludeAuthzMethods: []string{
-				"/rafay.dev.rpc.v3.User/GetUserInfo",
-			},
-		}
-		opts = append(opts, _grpc.UnaryInterceptor(
-			ac.NewAuthUnaryInterceptor(o),
-		))
+	// var asv authv3.AuthService
+	_log.Infow("adding auth interceptor")
+	ac := authv3.NewAuthContext(db, kc, ks, as)
+	asv := authv3.NewAuthService(ac)
+	o := authv3.Option{
+		ExcludeRPCMethods: []string{
+			"/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate",
+			"/rafay.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent",
+			"/rafay.dev.sentry.rpc.KubeConfig/GetForClusterWebSession", //TODO: enable auth from prompt
+			"/rafay.dev.rpc.v3.Auth/IsRequestAllowed",
+		},
+		ExcludeAuthzMethods: []string{
+			"/rafay.dev.rpc.v3.User/GetUserInfo",
+		},
 	}
+	opts = append(opts, _grpc.UnaryInterceptor(
+		ac.NewAuthUnaryInterceptor(o),
+	))
 	s, err := grpc.NewServer(opts...)
 	if err != nil {
 		_log.Fatalw("unable to create grpc server", "error", err)
@@ -637,11 +635,8 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	auditrpc.RegisterAuditLogServer(s, auditLogServer)
 	auditrpc.RegisterRelayAuditServer(s, relayAuditServer)
 
-	if !dev {
-		// if !dev, we should have the asv populated
-		authServer := server.NewAuthServer(asv)
-		authrpc.RegisterAuthServer(s, authServer)
-	}
+	authServer := server.NewAuthServer(asv)
+	authrpc.RegisterAuthServer(s, authServer)
 
 	_log.Infow("starting rpc server", "port", rpcPort)
 	err = s.Serve(l)
