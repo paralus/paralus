@@ -514,7 +514,7 @@ func (s *userService) GetByID(ctx context.Context, user *userv3.User) (*userv3.U
 	if err != nil {
 		return &userv3.User{}, err
 	}
-	entity, err := dao.GetByID(ctx, s.db, uid, &models.KratosIdentities{})
+	entity, err := dao.GetM(ctx, s.db, map[string]interface{}{"id": uid}, &models.KratosIdentities{})
 	if err != nil {
 		return &userv3.User{}, err
 	}
