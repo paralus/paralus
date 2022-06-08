@@ -1,7 +1,7 @@
 package gateway
 
 import (
-	common "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	common "github.com/paralus/paralus/proto/types/commonpb/v3"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 )
 

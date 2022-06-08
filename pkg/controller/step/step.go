@@ -3,12 +3,12 @@ package step
 import (
 	"context"
 
-	"github.com/RafayLabs/rcloud-base/pkg/controller/apply"
-	cr "github.com/RafayLabs/rcloud-base/pkg/controller/runtime"
-	"github.com/RafayLabs/rcloud-base/pkg/controller/scheme"
-	"github.com/RafayLabs/rcloud-base/pkg/controller/util"
-	hash "github.com/RafayLabs/rcloud-base/pkg/hasher"
-	clusterv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
+	"github.com/paralus/paralus/pkg/controller/apply"
+	cr "github.com/paralus/paralus/pkg/controller/runtime"
+	"github.com/paralus/paralus/pkg/controller/scheme"
+	"github.com/paralus/paralus/pkg/controller/util"
+	hash "github.com/paralus/paralus/pkg/hasher"
+	clusterv2 "github.com/paralus/paralus/proto/types/controller"
 	corev1 "k8s.io/api/core/v1"
 	apierrs "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"

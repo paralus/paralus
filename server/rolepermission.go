@@ -3,11 +3,11 @@ package server
 import (
 	"context"
 
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
-	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/role"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	rolepbv3 "github.com/RafayLabs/rcloud-base/proto/types/rolepb/v3"
+	"github.com/paralus/paralus/pkg/query"
+	"github.com/paralus/paralus/pkg/service"
+	rpcv3 "github.com/paralus/paralus/proto/rpc/role"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	rolepbv3 "github.com/paralus/paralus/proto/types/rolepb/v3"
 )
 
 type rolepermissionServer struct {

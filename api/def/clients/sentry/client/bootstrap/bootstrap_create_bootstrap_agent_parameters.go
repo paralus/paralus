@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/RafayLabs/rcloud-base/api/def/clients/sentry/models"
+	"github.com/paralus/paralus/api/def/clients/sentry/models"
 )
 
 // NewBootstrapCreateBootstrapAgentParams creates a new BootstrapCreateBootstrapAgentParams object,

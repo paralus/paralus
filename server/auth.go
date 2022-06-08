@@ -3,9 +3,9 @@ package server
 import (
 	"context"
 
-	authv3 "github.com/RafayLabs/rcloud-base/pkg/auth/v3"
-	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/v3"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	authv3 "github.com/paralus/paralus/pkg/auth/v3"
+	rpcv3 "github.com/paralus/paralus/proto/rpc/v3"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 )
 
 type authServer struct {

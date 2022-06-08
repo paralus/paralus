@@ -1,7 +1,7 @@
 package util
 
 import (
-	"github.com/RafayLabs/rcloud-base/pkg/controller/scheme"
+	"github.com/paralus/paralus/pkg/controller/scheme"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/client"

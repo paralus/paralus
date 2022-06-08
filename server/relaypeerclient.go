@@ -10,7 +10,7 @@ import (
 	"regexp"
 	"time"
 
-	relayrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
+	relayrpc "github.com/paralus/paralus/proto/rpc/sentry"
 	"github.com/dgraph-io/ristretto"
 )
 

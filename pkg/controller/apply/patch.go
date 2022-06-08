@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/RafayLabs/rcloud-base/pkg/controller/scheme"
-	"github.com/RafayLabs/rcloud-base/pkg/controller/util"
+	"github.com/paralus/paralus/pkg/controller/scheme"
+	"github.com/paralus/paralus/pkg/controller/util"
 	sp "k8s.io/apimachinery/pkg/util/strategicpatch"
 
 	"k8s.io/apimachinery/pkg/types"

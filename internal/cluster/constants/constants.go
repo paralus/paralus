@@ -3,7 +3,7 @@ package constants
 import (
 	"regexp"
 
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 )
 
 type ClusterGeneration int

@@ -3,12 +3,12 @@ package server
 import (
 	"context"
 
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
-	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	userpbv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
+	"github.com/paralus/paralus/pkg/query"
+	"github.com/paralus/paralus/pkg/service"
+	rpcv3 "github.com/paralus/paralus/proto/rpc/user"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	userpbv3 "github.com/paralus/paralus/proto/types/userpb/v3"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

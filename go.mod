@@ -1,4 +1,4 @@
-module github.com/RafayLabs/rcloud-base
+module github.com/paralus/paralus
 
 go 1.17
 

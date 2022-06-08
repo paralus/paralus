@@ -1,9 +1,9 @@
 version: v1
-name: buf.build/rafay/common
+name: buf.build/paralus/paralus
 deps:
   - buf.build/googleapis/googleapis
   - buf.build/grpc-ecosystem/grpc-gateway
-  - buf.build/rafay/k8s
+  - buf.build/paralus/k8s
 breaking:
   use:
     - FILE

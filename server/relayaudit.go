@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 
-	ec "github.com/RafayLabs/rcloud-base/pkg/common"
-	q "github.com/RafayLabs/rcloud-base/pkg/service"
-	v1 "github.com/RafayLabs/rcloud-base/proto/rpc/audit"
+	ec "github.com/paralus/paralus/pkg/common"
+	q "github.com/paralus/paralus/pkg/service"
+	v1 "github.com/paralus/paralus/proto/rpc/audit"
 )
 
 type relayAuditServer struct {

@@ -8,8 +8,8 @@ package sentry
 
 import (
 	context "context"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	sentry "github.com/RafayLabs/rcloud-base/proto/types/sentry"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	sentry "github.com/paralus/paralus/proto/types/sentry"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"

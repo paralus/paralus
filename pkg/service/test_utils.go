@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/RafayLabs/rcloud-base/pkg/audit"
+	"github.com/paralus/paralus/pkg/audit"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 )

@@ -1,6 +1,6 @@
 .PHONY: tidy
 tidy:
-	GOPRIVATE=github.com/RafayLabs/* go mod tidy
+	GOPRIVATE=github.com/paralus/* go mod tidy
 .PHONY: vendor
 vendor:
 	go mod vendor
@@ -16,13 +16,13 @@ gen-proto:
 .PHONY: test
 test:
 	go test ./...
-	
+
 .PHONY: check
 check:
 	go fmt ./...
-	
+
 	go vet ./...
-	
+
 .PHONY: clean
 clean:
 	rm -rf ./**/gen

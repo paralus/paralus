@@ -3,7 +3,7 @@ package converter
 import (
 	gojson "encoding/json"
 
-	apiv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
+	apiv2 "github.com/paralus/paralus/proto/types/controller"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )

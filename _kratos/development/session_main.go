@@ -3,7 +3,7 @@ package main
 import (
 	"time"
 
-	"github.com/RafayLabs/rcloud-base/_kratos/development/pkg"
+	"github.com/paralus/paralus/_kratos/development/pkg"
 
 	ory "github.com/ory/kratos-client-go"
 )

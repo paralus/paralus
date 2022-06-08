@@ -228,9 +228,9 @@ metadata:
   name: :cluster
   description: this is a test cluster
   labels:
-    rafay.dev/clusterLocation: coimbatore-hq
-    rafay.dev/clusterName: testcluster
-    rafay.dev/clusterType: imported
+    paralus.dev/clusterLocation: coimbatore-hq
+    paralus.dev/clusterName: testcluster
+    paralus.dev/clusterType: imported
   project: myproject
   organization: finmanorg
   partner: finman
@@ -241,7 +241,7 @@ spec:
     city: :city
     state: :state
     country: :country
-  overrideSelector: rafay.dev/overrideCluster=dummycluster
+  overrideSelector: paralus.dev/overrideCluster=dummycluster
   proxyConfig:
     httpProxy: http:localhost:8080/proxy
 

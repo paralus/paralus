@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/RafayLabs/rcloud-base/pkg/enforcer"
-	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
+	"github.com/paralus/paralus/pkg/enforcer"
+	logv2 "github.com/paralus/paralus/pkg/log"
+	"github.com/paralus/paralus/pkg/service"
 	kclient "github.com/ory/kratos-client-go"
 	"github.com/uptrace/bun"
 	"go.uber.org/zap"

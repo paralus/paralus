@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"testing"
 
-	apiv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
+	apiv2 "github.com/paralus/paralus/proto/types/controller"
 	appsv1 "k8s.io/api/apps/v1"
 	"sigs.k8s.io/yaml"
 )

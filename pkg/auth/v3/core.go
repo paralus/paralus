@@ -7,10 +7,10 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/RafayLabs/rcloud-base/internal/dao"
-	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
-	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	"github.com/paralus/paralus/internal/dao"
+	rpcv3 "github.com/paralus/paralus/proto/rpc/user"
+	authzv1 "github.com/paralus/paralus/proto/types/authz"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	"github.com/google/uuid"
 )
 

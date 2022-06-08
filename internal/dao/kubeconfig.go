@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/RafayLabs/rcloud-base/internal/models"
-	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
+	"github.com/paralus/paralus/internal/models"
+	"github.com/paralus/paralus/proto/types/sentry"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )

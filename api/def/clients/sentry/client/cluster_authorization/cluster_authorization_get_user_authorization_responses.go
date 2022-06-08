@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/RafayLabs/rcloud-base/api/def/clients/sentry/models"
+	"github.com/paralus/paralus/api/def/clients/sentry/models"
 )
 
 // ClusterAuthorizationGetUserAuthorizationReader is a Reader for the ClusterAuthorizationGetUserAuthorization structure.

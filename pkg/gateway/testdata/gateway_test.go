@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/RafayLabs/rcloud-base/pkg/gateway"
-	"github.com/RafayLabs/rcloud-base/pkg/grpc"
+	"github.com/paralus/paralus/pkg/gateway"
+	"github.com/paralus/paralus/pkg/grpc"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 )
 

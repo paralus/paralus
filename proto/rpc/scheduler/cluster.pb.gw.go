@@ -13,8 +13,8 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	"github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
+	"github.com/paralus/paralus/proto/types/commonpb/v3"
+	"github.com/paralus/paralus/proto/types/infrapb/v3"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
 	"google.golang.org/grpc"

@@ -7,9 +7,9 @@
 package sentry
 
 import (
-	_ "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	controller "github.com/RafayLabs/rcloud-base/proto/types/controller"
-	_ "github.com/RafayLabs/rcloud-base/proto/types/sentry"
+	_ "github.com/paralus/paralus/proto/types/commonpb/v3"
+	controller "github.com/paralus/paralus/proto/types/controller"
+	_ "github.com/paralus/paralus/proto/types/sentry"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"

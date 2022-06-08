@@ -5,20 +5,20 @@ deps:
     owner: googleapis
     repository: googleapis
     branch: main
-    commit: bcdcd1dee95c4277b2edbae6c21332a2
-    digest: b1-QAdxfRqCgCBZPaGaRiY8Ms_jKvwZrONQXfaOSvL2lB8=
-    create_time: 2022-02-26T15:04:31.725057Z
+    commit: c8fa45ea6c1248769dbbcb53e49d8ee4
+    digest: b1-_uLy2wpZAWZAxd2_vn_b7Mnf6hg1G7ib5M1flA-oLs4=
+    create_time: 2022-06-07T15:06:56.944952Z
   - remote: buf.build
     owner: grpc-ecosystem
     repository: grpc-gateway
     branch: main
-    commit: ff83506eb9cc4cf8972f49ce87e6ed3e
-    digest: b1-iLPHgLaoeWWinMiXXqPnxqE4BThtY3eSbswVGh9GOGI=
-    create_time: 2021-10-23T16:26:52.283938Z
+    commit: 00116f302b12478b85deb33b734e026c
+    digest: b1-iUfkmqGjUB1hlbTkiPKUUeVcFd9pAJ_qRn2oJ4nYpls=
+    create_time: 2022-05-23T22:50:17.0393Z
   - remote: buf.build
-    owner: rafay
+    owner: paralus
     repository: k8s
     branch: main
-    commit: b96f66eb56bc4f279431f4b2187a2fee
+    commit: 6d45aa151ee44c47933787fb5fdebc71
     digest: b1-U7KVig2Fgpf6eRczjqxrYFa3p6HLqgtEy5QJAOVB8BI=
-    create_time: 2022-02-09T08:44:35.431677Z
+    create_time: 2022-06-07T13:30:44.2613Z

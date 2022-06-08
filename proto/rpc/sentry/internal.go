@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	grpctools "github.com/RafayLabs/rcloud-base/pkg/grpc"
-	"github.com/RafayLabs/rcloud-base/pkg/pool"
+	grpctools "github.com/paralus/paralus/pkg/grpc"
+	"github.com/paralus/paralus/pkg/pool"
 	grpcpool "github.com/processout/grpc-go-pool"
 	"google.golang.org/grpc/credentials"
 )

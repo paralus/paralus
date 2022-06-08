@@ -9,14 +9,14 @@ import (
 
 	"crypto/x509/pkix"
 
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/cryptoutil"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
+	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
+	"github.com/paralus/paralus/pkg/service"
 	"github.com/rs/xid"
 	"sigs.k8s.io/yaml"
 
-	"github.com/RafayLabs/rcloud-base/pkg/log"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	sentry "github.com/RafayLabs/rcloud-base/proto/types/sentry"
+	"github.com/paralus/paralus/pkg/log"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	sentry "github.com/paralus/paralus/proto/types/sentry"
 	"github.com/shurcooL/httpfs/vfsutil"
 )
 

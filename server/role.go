@@ -3,10 +3,10 @@ package server
 import (
 	"context"
 
-	"github.com/RafayLabs/rcloud-base/pkg/service"
-	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/role"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	rolepbv3 "github.com/RafayLabs/rcloud-base/proto/types/rolepb/v3"
+	"github.com/paralus/paralus/pkg/service"
+	rpcv3 "github.com/paralus/paralus/proto/rpc/role"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	rolepbv3 "github.com/paralus/paralus/proto/types/rolepb/v3"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

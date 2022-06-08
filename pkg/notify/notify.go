@@ -8,12 +8,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/RafayLabs/rcloud-base/pkg/log"
-	"github.com/RafayLabs/rcloud-base/pkg/match"
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
+	"github.com/paralus/paralus/pkg/log"
+	"github.com/paralus/paralus/pkg/match"
+	"github.com/paralus/paralus/pkg/query"
+	"github.com/paralus/paralus/pkg/service"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
 )
 
 var (

@@ -9,21 +9,21 @@ import (
 	"strings"
 	"time"
 
-	"github.com/RafayLabs/rcloud-base/pkg/log"
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
-	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	sentry "github.com/RafayLabs/rcloud-base/proto/types/sentry"
+	"github.com/paralus/paralus/pkg/log"
+	"github.com/paralus/paralus/pkg/query"
+	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
+	rpcv3 "github.com/paralus/paralus/proto/rpc/user"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	sentry "github.com/paralus/paralus/proto/types/sentry"
 	"github.com/google/uuid"
 
 	clientcmdapiv1 "k8s.io/client-go/tools/clientcmd/api/v1"
 	"sigs.k8s.io/yaml"
 
-	"github.com/RafayLabs/rcloud-base/internal/constants"
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/cryptoutil"
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/util"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
+	"github.com/paralus/paralus/internal/constants"
+	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
+	"github.com/paralus/paralus/pkg/sentry/util"
+	"github.com/paralus/paralus/pkg/service"
 )
 
 const (

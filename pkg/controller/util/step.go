@@ -1,7 +1,7 @@
 package util
 
 import (
-	clusterv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
+	clusterv2 "github.com/paralus/paralus/proto/types/controller"
 )
 
 const (

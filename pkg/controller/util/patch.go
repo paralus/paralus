@@ -3,10 +3,10 @@ package util
 import (
 	"fmt"
 
-	clusterv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
+	clusterv2 "github.com/paralus/paralus/proto/types/controller"
 	apixv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 
-	"github.com/RafayLabs/rcloud-base/pkg/controller/scheme"
+	"github.com/paralus/paralus/pkg/controller/scheme"
 	jp "github.com/evanphx/json-patch"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	jmp "k8s.io/apimachinery/pkg/util/jsonmergepatch"

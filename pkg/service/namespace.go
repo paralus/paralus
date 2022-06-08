@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
-	"github.com/RafayLabs/rcloud-base/internal/dao"
-	"github.com/RafayLabs/rcloud-base/pkg/utils"
+	"github.com/paralus/paralus/internal/dao"
+	"github.com/paralus/paralus/pkg/utils"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )

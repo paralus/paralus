@@ -3,10 +3,10 @@ package cluster
 import (
 	"time"
 
-	"github.com/RafayLabs/rcloud-base/internal/cluster/constants"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
-	"github.com/RafayLabs/rcloud-base/proto/types/scheduler"
+	"github.com/paralus/paralus/internal/cluster/constants"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
+	"github.com/paralus/paralus/proto/types/scheduler"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

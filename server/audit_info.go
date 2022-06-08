@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
+	"github.com/paralus/paralus/pkg/query"
+	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
 
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/kubeconfig"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
+	"github.com/paralus/paralus/pkg/sentry/kubeconfig"
+	"github.com/paralus/paralus/pkg/service"
 )
 
 type auditInfoServer struct {

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	logv2 "github.com/paralus/paralus/pkg/log"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
 )

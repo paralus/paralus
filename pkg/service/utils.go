@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 
-	"github.com/RafayLabs/rcloud-base/internal/dao"
-	"github.com/RafayLabs/rcloud-base/pkg/common"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	"github.com/paralus/paralus/internal/dao"
+	"github.com/paralus/paralus/pkg/common"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )

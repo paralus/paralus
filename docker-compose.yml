@@ -3,11 +3,11 @@ version: '3.7'
 services:
   postgresd:
     image: postgres:13.4
-    container_name: rcloud_postgres_13
+    container_name: paralus_postgres_13
     ports:
       - "$DB_PORT:$DB_PORT"
     volumes:
-      - rcloud_db_data:/var/lib/postgresql/data
+      - paralus_db_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: $DB_USER
       POSTGRES_DB: $DB_NAME
@@ -15,11 +15,11 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.0.0
-    container_name: rcloud_elasticsearch_8
+    container_name: paralus_elasticsearch_8
     ports:
       - '${ES_PORT:-9200}:9200'
     volumes:
-      - rcloud_es_data:/usr/share/elasticsearch/data
+      - paralus_es_data:/usr/share/elasticsearch/data
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false  # disable auth for local dev
@@ -70,5 +70,5 @@ services:
       - '4437:4437'
 
 volumes:
-  rcloud_db_data:
-  rcloud_es_data:
+  paralus_db_data:
+  paralus_es_data:
