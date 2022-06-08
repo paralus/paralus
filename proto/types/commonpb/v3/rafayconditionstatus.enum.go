@@ -6,28 +6,28 @@ import (
 	driver "database/sql/driver"
 )
 
-// Scan converts database string to RafayConditionStatus
-func (e *RafayConditionStatus) Scan(value interface{}) error {
+// Scan converts database string to ParalusConditionStatus
+func (e *ParalusConditionStatus) Scan(value interface{}) error {
 	s := value.([]byte)
-	*e = RafayConditionStatus(RafayConditionStatus_value[string(s)])
+	*e = ParalusConditionStatus(ParalusConditionStatus_value[string(s)])
 	return nil
 }
 
-// Value converts RafayConditionStatus into database string
-func (e RafayConditionStatus) Value() (driver.Value, error) {
-	return RafayConditionStatus_name[int32(e)], nil
+// Value converts ParalusConditionStatus into database string
+func (e ParalusConditionStatus) Value() (driver.Value, error) {
+	return ParalusConditionStatus_name[int32(e)], nil
 }
 
-// MarshalJSON converts RafayConditionStatus to JSON
-func (e RafayConditionStatus) MarshalJSON() ([]byte, error) {
+// MarshalJSON converts ParalusConditionStatus to JSON
+func (e ParalusConditionStatus) MarshalJSON() ([]byte, error) {
 	buffer := bytes.NewBufferString("\"")
 	buffer.WriteString(e.String())
 	buffer.WriteString("\"")
 	return buffer.Bytes(), nil
 }
 
-// UnmarshalJSON converts RafayConditionStatus from JSON
-func (e *RafayConditionStatus) UnmarshalJSON(b []byte) error {
+// UnmarshalJSON converts ParalusConditionStatus from JSON
+func (e *ParalusConditionStatus) UnmarshalJSON(b []byte) error {
 	if b != nil {
 		var length int
 		if len(b) > 1 {
@@ -35,11 +35,11 @@ func (e *RafayConditionStatus) UnmarshalJSON(b []byte) error {
 		} else {
 			length = len(b)
 		}
-		*e = RafayConditionStatus(RafayConditionStatus_value[string(b[1:length])])
+		*e = ParalusConditionStatus(ParalusConditionStatus_value[string(b[1:length])])
 	}
 	return nil
 }
 
 // implement proto enum interface
-func (e RafayConditionStatus) IsEnum() {
+func (e ParalusConditionStatus) IsEnum() {
 }

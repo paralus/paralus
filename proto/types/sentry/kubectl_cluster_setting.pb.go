@@ -195,13 +195,13 @@ func file_proto_types_sentry_kubectl_cluster_setting_proto_rawDescGZIP() []byte 
 
 var file_proto_types_sentry_kubectl_cluster_setting_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_proto_types_sentry_kubectl_cluster_setting_proto_goTypes = []interface{}{
-	(*KubectlClusterSettings)(nil), // 0: rafay.dev.types.sentry.KubectlClusterSettings
+	(*KubectlClusterSettings)(nil), // 0: paralus.dev.types.sentry.KubectlClusterSettings
 	(*timestamppb.Timestamp)(nil),  // 1: google.protobuf.Timestamp
 }
 var file_proto_types_sentry_kubectl_cluster_setting_proto_depIdxs = []int32{
-	1, // 0: rafay.dev.types.sentry.KubectlClusterSettings.modifiedAt:type_name -> google.protobuf.Timestamp
-	1, // 1: rafay.dev.types.sentry.KubectlClusterSettings.createdAt:type_name -> google.protobuf.Timestamp
-	1, // 2: rafay.dev.types.sentry.KubectlClusterSettings.deletedAt:type_name -> google.protobuf.Timestamp
+	1, // 0: paralus.dev.types.sentry.KubectlClusterSettings.modifiedAt:type_name -> google.protobuf.Timestamp
+	1, // 1: paralus.dev.types.sentry.KubectlClusterSettings.createdAt:type_name -> google.protobuf.Timestamp
+	1, // 2: paralus.dev.types.sentry.KubectlClusterSettings.deletedAt:type_name -> google.protobuf.Timestamp
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name

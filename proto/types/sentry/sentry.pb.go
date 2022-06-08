@@ -7,8 +7,8 @@
 package sentry
 
 import (
-	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -69,22 +69,22 @@ func (BootstrapInfraType) EnumDescriptor() ([]byte, []int) {
 type BootstrapAgentType int32
 
 const (
-	BootstrapAgentType_RafayConnector BootstrapAgentType = 0
-	BootstrapAgentType_RelayAgent     BootstrapAgentType = 1
-	BootstrapAgentType_PipelineAgent  BootstrapAgentType = 2
+	BootstrapAgentType_ParalusConnector BootstrapAgentType = 0
+	BootstrapAgentType_RelayAgent       BootstrapAgentType = 1
+	BootstrapAgentType_PipelineAgent    BootstrapAgentType = 2
 )
 
 // Enum value maps for BootstrapAgentType.
 var (
 	BootstrapAgentType_name = map[int32]string{
-		0: "RafayConnector",
+		0: "ParalusConnector",
 		1: "RelayAgent",
 		2: "PipelineAgent",
 	}
 	BootstrapAgentType_value = map[string]int32{
-		"RafayConnector": 0,
-		"RelayAgent":     1,
-		"PipelineAgent":  2,
+		"ParalusConnector": 0,
+		"RelayAgent":       1,
+		"PipelineAgent":    2,
 	}
 )
 
@@ -571,7 +571,7 @@ type BootstrapTemplateHost struct {
 	unknownFields protoimpl.UnknownFields
 
 	Host string                    `protobuf:"bytes,1,opt,name=host,proto3" json:"host,omitempty"`
-	Type BootstrapTemplateHostType `protobuf:"varint,2,opt,name=type,proto3,enum=rafay.dev.types.sentry.BootstrapTemplateHostType" json:"type,omitempty"`
+	Type BootstrapTemplateHostType `protobuf:"varint,2,opt,name=type,proto3,enum=paralus.dev.types.sentry.BootstrapTemplateHostType" json:"type,omitempty"`
 }
 
 func (x *BootstrapTemplateHost) Reset() {
@@ -629,7 +629,7 @@ type BootstrapAgentTemplateSpec struct {
 	AutoRegister           bool                       `protobuf:"varint,2,opt,name=autoRegister,proto3" json:"autoRegister,omitempty"`
 	IgnoreMultipleRegister bool                       `protobuf:"varint,3,opt,name=ignoreMultipleRegister,proto3" json:"ignoreMultipleRegister,omitempty"`
 	AutoApprove            bool                       `protobuf:"varint,4,opt,name=autoApprove,proto3" json:"autoApprove,omitempty"`
-	TemplateType           BootstrapAgentTemplateType `protobuf:"varint,5,opt,name=templateType,proto3,enum=rafay.dev.types.sentry.BootstrapAgentTemplateType" json:"templateType,omitempty"`
+	TemplateType           BootstrapAgentTemplateType `protobuf:"varint,5,opt,name=templateType,proto3,enum=paralus.dev.types.sentry.BootstrapAgentTemplateType" json:"templateType,omitempty"`
 	Token                  string                     `protobuf:"bytes,6,opt,name=token,proto3" json:"token,omitempty"`
 	Hosts                  []*BootstrapTemplateHost   `protobuf:"bytes,7,rep,name=hosts,proto3" json:"hosts,omitempty"`
 	InClusterTemplate      string                     `protobuf:"bytes,8,opt,name=inClusterTemplate,proto3" json:"inClusterTemplate,omitempty"`
@@ -926,7 +926,7 @@ type BootstrapAgentSpec struct {
 
 	Token       string             `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
 	TemplateRef string             `protobuf:"bytes,2,opt,name=templateRef,proto3" json:"templateRef,omitempty"`
-	AgentMode   BootstrapAgentMode `protobuf:"varint,3,opt,name=agentMode,proto3,enum=rafay.dev.types.sentry.BootstrapAgentMode" json:"agentMode,omitempty"`
+	AgentMode   BootstrapAgentMode `protobuf:"varint,3,opt,name=agentMode,proto3,enum=paralus.dev.types.sentry.BootstrapAgentMode" json:"agentMode,omitempty"`
 }
 
 func (x *BootstrapAgentSpec) Reset() {
@@ -987,7 +987,7 @@ type BootStrapAgentStatus struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	TokenState    BootstrapAgentState    `protobuf:"varint,1,opt,name=tokenState,proto3,enum=rafay.dev.types.sentry.BootstrapAgentState" json:"tokenState,omitempty"`
+	TokenState    BootstrapAgentState    `protobuf:"varint,1,opt,name=tokenState,proto3,enum=paralus.dev.types.sentry.BootstrapAgentState" json:"tokenState,omitempty"`
 	IpAddress     string                 `protobuf:"bytes,2,opt,name=ipAddress,proto3" json:"ipAddress,omitempty"`
 	LastCheckedIn *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=lastCheckedIn,proto3" json:"lastCheckedIn,omitempty"`
 	Fingerprint   string                 `protobuf:"bytes,4,opt,name=fingerprint,proto3" json:"fingerprint,omitempty"`
@@ -1506,51 +1506,51 @@ func file_proto_types_sentry_sentry_proto_rawDescGZIP() []byte {
 var file_proto_types_sentry_sentry_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
 var file_proto_types_sentry_sentry_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_proto_types_sentry_sentry_proto_goTypes = []interface{}{
-	(BootstrapInfraType)(0),              // 0: rafay.dev.types.sentry.BootstrapInfraType
-	(BootstrapAgentType)(0),              // 1: rafay.dev.types.sentry.BootstrapAgentType
-	(BootstrapAgentMode)(0),              // 2: rafay.dev.types.sentry.BootstrapAgentMode
-	(BootstrapAgentState)(0),             // 3: rafay.dev.types.sentry.BootstrapAgentState
-	(BootstrapAgentTemplateType)(0),      // 4: rafay.dev.types.sentry.BootstrapAgentTemplateType
-	(BootstrapTemplateHostType)(0),       // 5: rafay.dev.types.sentry.BootstrapTemplateHostType
-	(*BootstrapInfraSpec)(nil),           // 6: rafay.dev.types.sentry.BootstrapInfraSpec
-	(*BootstrapInfraStatus)(nil),         // 7: rafay.dev.types.sentry.BootstrapInfraStatus
-	(*BootstrapInfra)(nil),               // 8: rafay.dev.types.sentry.BootstrapInfra
-	(*BootstrapInfraList)(nil),           // 9: rafay.dev.types.sentry.BootstrapInfraList
-	(*BootstrapTemplateHost)(nil),        // 10: rafay.dev.types.sentry.BootstrapTemplateHost
-	(*BootstrapAgentTemplateSpec)(nil),   // 11: rafay.dev.types.sentry.BootstrapAgentTemplateSpec
-	(*BootstrapAgentTemplateStatus)(nil), // 12: rafay.dev.types.sentry.BootstrapAgentTemplateStatus
-	(*BootstrapAgentTemplate)(nil),       // 13: rafay.dev.types.sentry.BootstrapAgentTemplate
-	(*BootstrapAgentTemplateList)(nil),   // 14: rafay.dev.types.sentry.BootstrapAgentTemplateList
-	(*BootstrapAgentSpec)(nil),           // 15: rafay.dev.types.sentry.BootstrapAgentSpec
-	(*BootStrapAgentStatus)(nil),         // 16: rafay.dev.types.sentry.BootStrapAgentStatus
-	(*BootstrapAgent)(nil),               // 17: rafay.dev.types.sentry.BootstrapAgent
-	(*BootstrapAgentList)(nil),           // 18: rafay.dev.types.sentry.BootstrapAgentList
-	(*v3.Metadata)(nil),                  // 19: rafay.dev.types.common.v3.Metadata
-	(*v3.ListMetadata)(nil),              // 20: rafay.dev.types.common.v3.ListMetadata
+	(BootstrapInfraType)(0),              // 0: paralus.dev.types.sentry.BootstrapInfraType
+	(BootstrapAgentType)(0),              // 1: paralus.dev.types.sentry.BootstrapAgentType
+	(BootstrapAgentMode)(0),              // 2: paralus.dev.types.sentry.BootstrapAgentMode
+	(BootstrapAgentState)(0),             // 3: paralus.dev.types.sentry.BootstrapAgentState
+	(BootstrapAgentTemplateType)(0),      // 4: paralus.dev.types.sentry.BootstrapAgentTemplateType
+	(BootstrapTemplateHostType)(0),       // 5: paralus.dev.types.sentry.BootstrapTemplateHostType
+	(*BootstrapInfraSpec)(nil),           // 6: paralus.dev.types.sentry.BootstrapInfraSpec
+	(*BootstrapInfraStatus)(nil),         // 7: paralus.dev.types.sentry.BootstrapInfraStatus
+	(*BootstrapInfra)(nil),               // 8: paralus.dev.types.sentry.BootstrapInfra
+	(*BootstrapInfraList)(nil),           // 9: paralus.dev.types.sentry.BootstrapInfraList
+	(*BootstrapTemplateHost)(nil),        // 10: paralus.dev.types.sentry.BootstrapTemplateHost
+	(*BootstrapAgentTemplateSpec)(nil),   // 11: paralus.dev.types.sentry.BootstrapAgentTemplateSpec
+	(*BootstrapAgentTemplateStatus)(nil), // 12: paralus.dev.types.sentry.BootstrapAgentTemplateStatus
+	(*BootstrapAgentTemplate)(nil),       // 13: paralus.dev.types.sentry.BootstrapAgentTemplate
+	(*BootstrapAgentTemplateList)(nil),   // 14: paralus.dev.types.sentry.BootstrapAgentTemplateList
+	(*BootstrapAgentSpec)(nil),           // 15: paralus.dev.types.sentry.BootstrapAgentSpec
+	(*BootStrapAgentStatus)(nil),         // 16: paralus.dev.types.sentry.BootStrapAgentStatus
+	(*BootstrapAgent)(nil),               // 17: paralus.dev.types.sentry.BootstrapAgent
+	(*BootstrapAgentList)(nil),           // 18: paralus.dev.types.sentry.BootstrapAgentList
+	(*v3.Metadata)(nil),                  // 19: paralus.dev.types.common.v3.Metadata
+	(*v3.ListMetadata)(nil),              // 20: paralus.dev.types.common.v3.ListMetadata
 	(*timestamppb.Timestamp)(nil),        // 21: google.protobuf.Timestamp
 }
 var file_proto_types_sentry_sentry_proto_depIdxs = []int32{
-	19, // 0: rafay.dev.types.sentry.BootstrapInfra.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	6,  // 1: rafay.dev.types.sentry.BootstrapInfra.spec:type_name -> rafay.dev.types.sentry.BootstrapInfraSpec
-	7,  // 2: rafay.dev.types.sentry.BootstrapInfra.status:type_name -> rafay.dev.types.sentry.BootstrapInfraStatus
-	20, // 3: rafay.dev.types.sentry.BootstrapInfraList.metadata:type_name -> rafay.dev.types.common.v3.ListMetadata
-	8,  // 4: rafay.dev.types.sentry.BootstrapInfraList.items:type_name -> rafay.dev.types.sentry.BootstrapInfra
-	5,  // 5: rafay.dev.types.sentry.BootstrapTemplateHost.type:type_name -> rafay.dev.types.sentry.BootstrapTemplateHostType
-	4,  // 6: rafay.dev.types.sentry.BootstrapAgentTemplateSpec.templateType:type_name -> rafay.dev.types.sentry.BootstrapAgentTemplateType
-	10, // 7: rafay.dev.types.sentry.BootstrapAgentTemplateSpec.hosts:type_name -> rafay.dev.types.sentry.BootstrapTemplateHost
-	19, // 8: rafay.dev.types.sentry.BootstrapAgentTemplate.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	11, // 9: rafay.dev.types.sentry.BootstrapAgentTemplate.spec:type_name -> rafay.dev.types.sentry.BootstrapAgentTemplateSpec
-	12, // 10: rafay.dev.types.sentry.BootstrapAgentTemplate.status:type_name -> rafay.dev.types.sentry.BootstrapAgentTemplateStatus
-	20, // 11: rafay.dev.types.sentry.BootstrapAgentTemplateList.metadata:type_name -> rafay.dev.types.common.v3.ListMetadata
-	13, // 12: rafay.dev.types.sentry.BootstrapAgentTemplateList.items:type_name -> rafay.dev.types.sentry.BootstrapAgentTemplate
-	2,  // 13: rafay.dev.types.sentry.BootstrapAgentSpec.agentMode:type_name -> rafay.dev.types.sentry.BootstrapAgentMode
-	3,  // 14: rafay.dev.types.sentry.BootStrapAgentStatus.tokenState:type_name -> rafay.dev.types.sentry.BootstrapAgentState
-	21, // 15: rafay.dev.types.sentry.BootStrapAgentStatus.lastCheckedIn:type_name -> google.protobuf.Timestamp
-	19, // 16: rafay.dev.types.sentry.BootstrapAgent.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	15, // 17: rafay.dev.types.sentry.BootstrapAgent.spec:type_name -> rafay.dev.types.sentry.BootstrapAgentSpec
-	16, // 18: rafay.dev.types.sentry.BootstrapAgent.status:type_name -> rafay.dev.types.sentry.BootStrapAgentStatus
-	20, // 19: rafay.dev.types.sentry.BootstrapAgentList.metadata:type_name -> rafay.dev.types.common.v3.ListMetadata
-	17, // 20: rafay.dev.types.sentry.BootstrapAgentList.items:type_name -> rafay.dev.types.sentry.BootstrapAgent
+	19, // 0: paralus.dev.types.sentry.BootstrapInfra.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	6,  // 1: paralus.dev.types.sentry.BootstrapInfra.spec:type_name -> paralus.dev.types.sentry.BootstrapInfraSpec
+	7,  // 2: paralus.dev.types.sentry.BootstrapInfra.status:type_name -> paralus.dev.types.sentry.BootstrapInfraStatus
+	20, // 3: paralus.dev.types.sentry.BootstrapInfraList.metadata:type_name -> paralus.dev.types.common.v3.ListMetadata
+	8,  // 4: paralus.dev.types.sentry.BootstrapInfraList.items:type_name -> paralus.dev.types.sentry.BootstrapInfra
+	5,  // 5: paralus.dev.types.sentry.BootstrapTemplateHost.type:type_name -> paralus.dev.types.sentry.BootstrapTemplateHostType
+	4,  // 6: paralus.dev.types.sentry.BootstrapAgentTemplateSpec.templateType:type_name -> paralus.dev.types.sentry.BootstrapAgentTemplateType
+	10, // 7: paralus.dev.types.sentry.BootstrapAgentTemplateSpec.hosts:type_name -> paralus.dev.types.sentry.BootstrapTemplateHost
+	19, // 8: paralus.dev.types.sentry.BootstrapAgentTemplate.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	11, // 9: paralus.dev.types.sentry.BootstrapAgentTemplate.spec:type_name -> paralus.dev.types.sentry.BootstrapAgentTemplateSpec
+	12, // 10: paralus.dev.types.sentry.BootstrapAgentTemplate.status:type_name -> paralus.dev.types.sentry.BootstrapAgentTemplateStatus
+	20, // 11: paralus.dev.types.sentry.BootstrapAgentTemplateList.metadata:type_name -> paralus.dev.types.common.v3.ListMetadata
+	13, // 12: paralus.dev.types.sentry.BootstrapAgentTemplateList.items:type_name -> paralus.dev.types.sentry.BootstrapAgentTemplate
+	2,  // 13: paralus.dev.types.sentry.BootstrapAgentSpec.agentMode:type_name -> paralus.dev.types.sentry.BootstrapAgentMode
+	3,  // 14: paralus.dev.types.sentry.BootStrapAgentStatus.tokenState:type_name -> paralus.dev.types.sentry.BootstrapAgentState
+	21, // 15: paralus.dev.types.sentry.BootStrapAgentStatus.lastCheckedIn:type_name -> google.protobuf.Timestamp
+	19, // 16: paralus.dev.types.sentry.BootstrapAgent.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	15, // 17: paralus.dev.types.sentry.BootstrapAgent.spec:type_name -> paralus.dev.types.sentry.BootstrapAgentSpec
+	16, // 18: paralus.dev.types.sentry.BootstrapAgent.status:type_name -> paralus.dev.types.sentry.BootStrapAgentStatus
+	20, // 19: paralus.dev.types.sentry.BootstrapAgentList.metadata:type_name -> paralus.dev.types.common.v3.ListMetadata
+	17, // 20: paralus.dev.types.sentry.BootstrapAgentList.items:type_name -> paralus.dev.types.sentry.BootstrapAgent
 	21, // [21:21] is the sub-list for method output_type
 	21, // [21:21] is the sub-list for method input_type
 	21, // [21:21] is the sub-list for extension type_name

@@ -87,7 +87,7 @@ func (s *kubectlClusterSettingsServer) UpdateKubectlClusterSettings(ctx context.
 	clusterName = ""
 	ba, _ := s.bs.GetBootstrapAgentForClusterID(ctx, clusterID, opts.Organization)
 	if ba != nil {
-		clusterName = ba.Metadata.Labels["rafay.dev/clusterName"]
+		clusterName = ba.Metadata.Labels["paralus.dev/clusterName"]
 	}
 
 	err = s.kcs.Patch(ctx, &sentry.KubectlClusterSettings{

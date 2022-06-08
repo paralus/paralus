@@ -44,7 +44,7 @@ type remoteAuthMiddleware struct {
 
 // NewRemoteAuthMiddleware creates a middleware for the HTTP server
 // which does auth and authz by talking to the auth service exposed by
-// rcloud-base via grpc.
+// paralus via grpc.
 func NewRemoteAuthMiddleware(al *zap.Logger, as string, opt Option) negroni.Handler {
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(getDSN())))
 	conn, err := grpc.Dial(as, grpc.WithInsecure())

@@ -2,14 +2,14 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    rafay.dev/original: '{"kind": "Service", "spec": {"type": "ClusterIP", "ports":
+    paralus.dev/original: '{"kind": "Service", "spec": {"type": "ClusterIP", "ports":
       [{"name": "log-aggregator-tcp", "port": 8888, "nodePort": null, "protocol":
       "TCP", "targetPort": 8888}, {"name": "log-aggregator-udp", "port": 5140, "nodePort":
       null, "protocol": "UDP", "targetPort": 5140}, {"name": "log-aggregator-fwd",
       "port": 24224, "nodePort": null, "protocol": "TCP", "targetPort": 24224}, {"name":
       "prometheus", "port": 24231, "nodePort": null, "protocol": "TCP", "targetPort":
       24231}], "selector": {"app": "log-aggregator"}}, "metadata": {"name": "log-aggregator",
-      "namespace": "rafay-infra", "annotations": {"rafay.dev/previous": "{\"kind\":
+      "namespace": "rafay-infra", "annotations": {"paralus.dev/previous": "{\"kind\":
       \"Service\", \"spec\": {\"type\": \"ClusterIP\", \"ports\": [{\"name\": \"log-aggregator-tcp\",
       \"port\": 8888, \"protocol\": \"TCP\", \"targetPort\": 8888}, {\"name\": \"log-aggregator-udp\",
       \"port\": 5140, \"protocol\": \"UDP\", \"targetPort\": 5140}, {\"name\": \"log-aggregator-fwd\",

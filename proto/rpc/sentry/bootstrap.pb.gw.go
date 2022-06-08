@@ -13,10 +13,10 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/paralus/paralus/proto/types/commonpb/v3"
-	sentry_0 "github.com/paralus/paralus/proto/types/sentry"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
+	"github.com/paralus/paralus/proto/types/commonpb/v3"
+	sentry_0 "github.com/paralus/paralus/proto/types/sentry"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
@@ -921,7 +921,7 @@ func RegisterBootstrapHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/PatchBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/PatchBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -944,7 +944,7 @@ func RegisterBootstrapHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -967,7 +967,7 @@ func RegisterBootstrapHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/PatchBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/PatchBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -990,7 +990,7 @@ func RegisterBootstrapHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1013,7 +1013,7 @@ func RegisterBootstrapHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplates", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplates", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1036,7 +1036,7 @@ func RegisterBootstrapHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateToken=template/*}/register"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateToken=template/*}/register"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1059,7 +1059,7 @@ func RegisterBootstrapHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentConfig", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}/config"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentConfig", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}/config"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1082,7 +1082,7 @@ func RegisterBootstrapHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/CreateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/CreateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1105,7 +1105,7 @@ func RegisterBootstrapHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1128,7 +1128,7 @@ func RegisterBootstrapHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgents", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateScope=template/*}/agent"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgents", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateScope=template/*}/agent"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1151,7 +1151,7 @@ func RegisterBootstrapHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/DeleteBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/DeleteBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1174,7 +1174,7 @@ func RegisterBootstrapHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/UpdateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/UpdateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1236,7 +1236,7 @@ func RegisterBootstrapHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/PatchBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/PatchBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1256,7 +1256,7 @@ func RegisterBootstrapHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1276,7 +1276,7 @@ func RegisterBootstrapHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/PatchBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/PatchBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1296,7 +1296,7 @@ func RegisterBootstrapHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1316,7 +1316,7 @@ func RegisterBootstrapHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplates", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplates", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1336,7 +1336,7 @@ func RegisterBootstrapHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateToken=template/*}/register"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateToken=template/*}/register"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1356,7 +1356,7 @@ func RegisterBootstrapHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentConfig", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}/config"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentConfig", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}/config"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1376,7 +1376,7 @@ func RegisterBootstrapHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/CreateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/CreateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1396,7 +1396,7 @@ func RegisterBootstrapHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1416,7 +1416,7 @@ func RegisterBootstrapHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgents", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateScope=template/*}/agent"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgents", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateScope=template/*}/agent"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1436,7 +1436,7 @@ func RegisterBootstrapHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/DeleteBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/DeleteBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1456,7 +1456,7 @@ func RegisterBootstrapHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.Bootstrap/UpdateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/UpdateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

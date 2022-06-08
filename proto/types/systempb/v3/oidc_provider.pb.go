@@ -7,8 +7,8 @@
 package systemv3
 
 import (
-	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	structpb "google.golang.org/protobuf/types/known/structpb"
@@ -459,21 +459,21 @@ func file_proto_types_systempb_v3_oidc_provider_proto_rawDescGZIP() []byte {
 
 var file_proto_types_systempb_v3_oidc_provider_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_proto_types_systempb_v3_oidc_provider_proto_goTypes = []interface{}{
-	(*OIDCProvider)(nil),     // 0: rafay.dev.types.system.v3.OIDCProvider
-	(*OIDCProviderSpec)(nil), // 1: rafay.dev.types.system.v3.OIDCProviderSpec
-	(*OIDCProviderList)(nil), // 2: rafay.dev.types.system.v3.OIDCProviderList
-	(*v3.Metadata)(nil),      // 3: rafay.dev.types.common.v3.Metadata
-	(*v3.Status)(nil),        // 4: rafay.dev.types.common.v3.Status
+	(*OIDCProvider)(nil),     // 0: paralus.dev.types.system.v3.OIDCProvider
+	(*OIDCProviderSpec)(nil), // 1: paralus.dev.types.system.v3.OIDCProviderSpec
+	(*OIDCProviderList)(nil), // 2: paralus.dev.types.system.v3.OIDCProviderList
+	(*v3.Metadata)(nil),      // 3: paralus.dev.types.common.v3.Metadata
+	(*v3.Status)(nil),        // 4: paralus.dev.types.common.v3.Status
 	(*structpb.Struct)(nil),  // 5: google.protobuf.Struct
-	(*v3.ListMetadata)(nil),  // 6: rafay.dev.types.common.v3.ListMetadata
+	(*v3.ListMetadata)(nil),  // 6: paralus.dev.types.common.v3.ListMetadata
 }
 var file_proto_types_systempb_v3_oidc_provider_proto_depIdxs = []int32{
-	3, // 0: rafay.dev.types.system.v3.OIDCProvider.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	1, // 1: rafay.dev.types.system.v3.OIDCProvider.spec:type_name -> rafay.dev.types.system.v3.OIDCProviderSpec
-	4, // 2: rafay.dev.types.system.v3.OIDCProvider.status:type_name -> rafay.dev.types.common.v3.Status
-	5, // 3: rafay.dev.types.system.v3.OIDCProviderSpec.requestedClaims:type_name -> google.protobuf.Struct
-	6, // 4: rafay.dev.types.system.v3.OIDCProviderList.metadata:type_name -> rafay.dev.types.common.v3.ListMetadata
-	0, // 5: rafay.dev.types.system.v3.OIDCProviderList.items:type_name -> rafay.dev.types.system.v3.OIDCProvider
+	3, // 0: paralus.dev.types.system.v3.OIDCProvider.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	1, // 1: paralus.dev.types.system.v3.OIDCProvider.spec:type_name -> paralus.dev.types.system.v3.OIDCProviderSpec
+	4, // 2: paralus.dev.types.system.v3.OIDCProvider.status:type_name -> paralus.dev.types.common.v3.Status
+	5, // 3: paralus.dev.types.system.v3.OIDCProviderSpec.requestedClaims:type_name -> google.protobuf.Struct
+	6, // 4: paralus.dev.types.system.v3.OIDCProviderList.metadata:type_name -> paralus.dev.types.common.v3.ListMetadata
+	0, // 5: paralus.dev.types.system.v3.OIDCProviderList.items:type_name -> paralus.dev.types.system.v3.OIDCProvider
 	6, // [6:6] is the sub-list for method output_type
 	6, // [6:6] is the sub-list for method input_type
 	6, // [6:6] is the sub-list for extension type_name

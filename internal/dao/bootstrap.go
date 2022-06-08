@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/paralus/paralus/internal/models"
 	"github.com/paralus/paralus/internal/random"
 	"github.com/paralus/paralus/pkg/query"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	"github.com/paralus/paralus/proto/types/sentry"
-	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 

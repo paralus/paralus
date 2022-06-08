@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.types.common.v3;
+package paralus.dev.types.common.v3;
 
 message IsRequestAllowedRequest {
     string url = 1;

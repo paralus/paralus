@@ -7,7 +7,7 @@ import (
 var (
 	// namespace gvk
 	namespaceGVK = schema.GroupVersionKind{Version: "v1", Kind: "Namespace"}
-	placementGVK = schema.GroupVersionKind{Group: "config.rafay.dev", Version: "v2", Kind: "Placement"}
+	placementGVK = schema.GroupVersionKind{Group: "config.paralus.dev", Version: "v2", Kind: "Placement"}
 
 	// namespace post install gvks
 	limitRangeGVK    = schema.GroupVersionKind{Version: "v1", Kind: "LimitRange"}

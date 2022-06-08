@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/paralus/paralus/internal/dao"
 	"github.com/paralus/paralus/internal/models"
 	"github.com/paralus/paralus/pkg/converter"
@@ -14,7 +15,6 @@ import (
 	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	"github.com/paralus/paralus/proto/types/sentry"
-	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

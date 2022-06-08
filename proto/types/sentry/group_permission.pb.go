@@ -225,11 +225,11 @@ func file_proto_types_sentry_group_permission_proto_rawDescGZIP() []byte {
 
 var file_proto_types_sentry_group_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_proto_types_sentry_group_permission_proto_goTypes = []interface{}{
-	(*GroupPermission)(nil), // 0: rafay.dev.types.sentry.GroupPermission
-	(*PermissionURL)(nil),   // 1: rafay.dev.types.sentry.PermissionURL
+	(*GroupPermission)(nil), // 0: paralus.dev.types.sentry.GroupPermission
+	(*PermissionURL)(nil),   // 1: paralus.dev.types.sentry.PermissionURL
 }
 var file_proto_types_sentry_group_permission_proto_depIdxs = []int32{
-	1, // 0: rafay.dev.types.sentry.GroupPermission.urls:type_name -> rafay.dev.types.sentry.PermissionURL
+	1, // 0: paralus.dev.types.sentry.GroupPermission.urls:type_name -> paralus.dev.types.sentry.PermissionURL
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

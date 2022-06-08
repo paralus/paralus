@@ -13,9 +13,9 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/paralus/paralus/proto/types/systempb/v3"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
+	"github.com/paralus/paralus/proto/types/systempb/v3"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
@@ -305,7 +305,7 @@ func RegisterOIDCProviderHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/CreateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/CreateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -328,7 +328,7 @@ func RegisterOIDCProviderHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/GetOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/GetOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -351,7 +351,7 @@ func RegisterOIDCProviderHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/ListOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/ListOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -374,7 +374,7 @@ func RegisterOIDCProviderHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -397,7 +397,7 @@ func RegisterOIDCProviderHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -459,7 +459,7 @@ func RegisterOIDCProviderHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/CreateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/CreateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -479,7 +479,7 @@ func RegisterOIDCProviderHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/GetOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/GetOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -499,7 +499,7 @@ func RegisterOIDCProviderHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/ListOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/ListOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -519,7 +519,7 @@ func RegisterOIDCProviderHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -539,7 +539,7 @@ func RegisterOIDCProviderHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

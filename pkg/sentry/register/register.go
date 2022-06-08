@@ -187,7 +187,7 @@ func registerGRPC(ctx context.Context, config *Config) error {
 		csr, err := cryptoutil.CreateCSR(pkix.Name{
 			CommonName:         template.Metadata.Description,
 			Country:            []string{"USA"},
-			Organization:       []string{"Rafay Systems Inc"},
+			Organization:       []string{"Paralus"},
 			OrganizationalUnit: []string{template.Metadata.Description},
 			Province:           []string{"California"},
 			Locality:           []string{"Sunnyvale"},

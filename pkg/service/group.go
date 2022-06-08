@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/paralus/paralus/internal/dao"
 	"github.com/paralus/paralus/internal/models"
 	"github.com/paralus/paralus/pkg/query"
@@ -15,7 +16,6 @@ import (
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	userv3 "github.com/paralus/paralus/proto/types/userpb/v3"
-	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"

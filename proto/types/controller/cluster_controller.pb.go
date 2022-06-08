@@ -1736,25 +1736,25 @@ func file_proto_types_controller_cluster_controller_proto_rawDescGZIP() []byte {
 
 var file_proto_types_controller_cluster_controller_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_proto_types_controller_cluster_controller_proto_goTypes = []interface{}{
-	(*StepObject)(nil),              // 0: rafay.dev.types.controller.StepObject
-	(*StepTemplate)(nil),            // 1: rafay.dev.types.controller.StepTemplate
-	(*StepStatus)(nil),              // 2: rafay.dev.types.controller.StepStatus
-	(*TaskletSpec)(nil),             // 3: rafay.dev.types.controller.TaskletSpec
-	(*TaskletCondition)(nil),        // 4: rafay.dev.types.controller.TaskletCondition
-	(*TaskletStatus)(nil),           // 5: rafay.dev.types.controller.TaskletStatus
-	(*Tasklet)(nil),                 // 6: rafay.dev.types.controller.Tasklet
-	(*TaskletList)(nil),             // 7: rafay.dev.types.controller.TaskletList
-	(*TaskletTemplate)(nil),         // 8: rafay.dev.types.controller.TaskletTemplate
-	(*TaskSpec)(nil),                // 9: rafay.dev.types.controller.TaskSpec
-	(*TaskCondition)(nil),           // 10: rafay.dev.types.controller.TaskCondition
-	(*TaskStatus)(nil),              // 11: rafay.dev.types.controller.TaskStatus
-	(*Task)(nil),                    // 12: rafay.dev.types.controller.Task
-	(*TaskList)(nil),                // 13: rafay.dev.types.controller.TaskList
-	(*NamespaceSpec)(nil),           // 14: rafay.dev.types.controller.NamespaceSpec
-	(*NamespaceCondition)(nil),      // 15: rafay.dev.types.controller.NamespaceCondition
-	(*NamespaceStatus)(nil),         // 16: rafay.dev.types.controller.NamespaceStatus
-	(*Namespace)(nil),               // 17: rafay.dev.types.controller.Namespace
-	(*NamespaceList)(nil),           // 18: rafay.dev.types.controller.NamespaceList
+	(*StepObject)(nil),              // 0: paralus.dev.types.controller.StepObject
+	(*StepTemplate)(nil),            // 1: paralus.dev.types.controller.StepTemplate
+	(*StepStatus)(nil),              // 2: paralus.dev.types.controller.StepStatus
+	(*TaskletSpec)(nil),             // 3: paralus.dev.types.controller.TaskletSpec
+	(*TaskletCondition)(nil),        // 4: paralus.dev.types.controller.TaskletCondition
+	(*TaskletStatus)(nil),           // 5: paralus.dev.types.controller.TaskletStatus
+	(*Tasklet)(nil),                 // 6: paralus.dev.types.controller.Tasklet
+	(*TaskletList)(nil),             // 7: paralus.dev.types.controller.TaskletList
+	(*TaskletTemplate)(nil),         // 8: paralus.dev.types.controller.TaskletTemplate
+	(*TaskSpec)(nil),                // 9: paralus.dev.types.controller.TaskSpec
+	(*TaskCondition)(nil),           // 10: paralus.dev.types.controller.TaskCondition
+	(*TaskStatus)(nil),              // 11: paralus.dev.types.controller.TaskStatus
+	(*Task)(nil),                    // 12: paralus.dev.types.controller.Task
+	(*TaskList)(nil),                // 13: paralus.dev.types.controller.TaskList
+	(*NamespaceSpec)(nil),           // 14: paralus.dev.types.controller.NamespaceSpec
+	(*NamespaceCondition)(nil),      // 15: paralus.dev.types.controller.NamespaceCondition
+	(*NamespaceStatus)(nil),         // 16: paralus.dev.types.controller.NamespaceStatus
+	(*Namespace)(nil),               // 17: paralus.dev.types.controller.Namespace
+	(*NamespaceList)(nil),           // 18: paralus.dev.types.controller.NamespaceList
 	(*v1.TypeMeta)(nil),             // 19: k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta
 	(*v1.ObjectMeta)(nil),           // 20: k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
 	(*v1beta1.JobTemplateSpec)(nil), // 21: k8s.io.api.batch.v1beta1.JobTemplateSpec
@@ -1763,63 +1763,63 @@ var file_proto_types_controller_cluster_controller_proto_goTypes = []interface{}
 	(*v1.ListMeta)(nil),             // 24: k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta
 }
 var file_proto_types_controller_cluster_controller_proto_depIdxs = []int32{
-	19, // 0: rafay.dev.types.controller.StepObject.typeMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta
-	20, // 1: rafay.dev.types.controller.StepObject.objectMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
-	0,  // 2: rafay.dev.types.controller.StepTemplate.object:type_name -> rafay.dev.types.controller.StepObject
-	21, // 3: rafay.dev.types.controller.StepTemplate.jobTemplate:type_name -> k8s.io.api.batch.v1beta1.JobTemplateSpec
-	22, // 4: rafay.dev.types.controller.StepStatus.objectRef:type_name -> k8s.io.api.core.v1.ObjectReference
-	22, // 5: rafay.dev.types.controller.StepStatus.jobRef:type_name -> k8s.io.api.core.v1.ObjectReference
-	1,  // 6: rafay.dev.types.controller.TaskletSpec.init:type_name -> rafay.dev.types.controller.StepTemplate
-	1,  // 7: rafay.dev.types.controller.TaskletSpec.install:type_name -> rafay.dev.types.controller.StepTemplate
-	1,  // 8: rafay.dev.types.controller.TaskletSpec.postInstall:type_name -> rafay.dev.types.controller.StepTemplate
-	1,  // 9: rafay.dev.types.controller.TaskletSpec.preDelete:type_name -> rafay.dev.types.controller.StepTemplate
-	23, // 10: rafay.dev.types.controller.TaskletCondition.lastUpdateTime:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.Time
-	4,  // 11: rafay.dev.types.controller.TaskletStatus.conditions:type_name -> rafay.dev.types.controller.TaskletCondition
-	2,  // 12: rafay.dev.types.controller.TaskletStatus.init:type_name -> rafay.dev.types.controller.StepStatus
-	2,  // 13: rafay.dev.types.controller.TaskletStatus.install:type_name -> rafay.dev.types.controller.StepStatus
-	2,  // 14: rafay.dev.types.controller.TaskletStatus.postInstall:type_name -> rafay.dev.types.controller.StepStatus
-	2,  // 15: rafay.dev.types.controller.TaskletStatus.preDelete:type_name -> rafay.dev.types.controller.StepStatus
-	19, // 16: rafay.dev.types.controller.Tasklet.typeMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta
-	20, // 17: rafay.dev.types.controller.Tasklet.objectMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
-	3,  // 18: rafay.dev.types.controller.Tasklet.spec:type_name -> rafay.dev.types.controller.TaskletSpec
-	5,  // 19: rafay.dev.types.controller.Tasklet.status:type_name -> rafay.dev.types.controller.TaskletStatus
-	19, // 20: rafay.dev.types.controller.TaskletList.typeMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta
-	24, // 21: rafay.dev.types.controller.TaskletList.listMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta
-	6,  // 22: rafay.dev.types.controller.TaskletList.items:type_name -> rafay.dev.types.controller.Tasklet
-	20, // 23: rafay.dev.types.controller.TaskletTemplate.objectMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
-	3,  // 24: rafay.dev.types.controller.TaskletTemplate.spec:type_name -> rafay.dev.types.controller.TaskletSpec
-	1,  // 25: rafay.dev.types.controller.TaskSpec.init:type_name -> rafay.dev.types.controller.StepTemplate
-	8,  // 26: rafay.dev.types.controller.TaskSpec.tasklet:type_name -> rafay.dev.types.controller.TaskletTemplate
-	1,  // 27: rafay.dev.types.controller.TaskSpec.preDelete:type_name -> rafay.dev.types.controller.StepTemplate
-	23, // 28: rafay.dev.types.controller.TaskCondition.lastUpdateTime:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.Time
-	10, // 29: rafay.dev.types.controller.TaskStatus.conditions:type_name -> rafay.dev.types.controller.TaskCondition
-	2,  // 30: rafay.dev.types.controller.TaskStatus.init:type_name -> rafay.dev.types.controller.StepStatus
-	22, // 31: rafay.dev.types.controller.TaskStatus.taskletRef:type_name -> k8s.io.api.core.v1.ObjectReference
-	2,  // 32: rafay.dev.types.controller.TaskStatus.preDelete:type_name -> rafay.dev.types.controller.StepStatus
-	19, // 33: rafay.dev.types.controller.Task.typeMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta
-	20, // 34: rafay.dev.types.controller.Task.objectMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
-	9,  // 35: rafay.dev.types.controller.Task.spec:type_name -> rafay.dev.types.controller.TaskSpec
-	11, // 36: rafay.dev.types.controller.Task.status:type_name -> rafay.dev.types.controller.TaskStatus
-	19, // 37: rafay.dev.types.controller.TaskList.typeMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta
-	24, // 38: rafay.dev.types.controller.TaskList.listMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta
-	12, // 39: rafay.dev.types.controller.TaskList.items:type_name -> rafay.dev.types.controller.Task
-	1,  // 40: rafay.dev.types.controller.NamespaceSpec.init:type_name -> rafay.dev.types.controller.StepTemplate
-	20, // 41: rafay.dev.types.controller.NamespaceSpec.namespaceMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
-	1,  // 42: rafay.dev.types.controller.NamespaceSpec.postCreate:type_name -> rafay.dev.types.controller.StepTemplate
-	1,  // 43: rafay.dev.types.controller.NamespaceSpec.preDelete:type_name -> rafay.dev.types.controller.StepTemplate
-	23, // 44: rafay.dev.types.controller.NamespaceCondition.lastUpdateTime:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.Time
-	15, // 45: rafay.dev.types.controller.NamespaceStatus.conditions:type_name -> rafay.dev.types.controller.NamespaceCondition
-	2,  // 46: rafay.dev.types.controller.NamespaceStatus.init:type_name -> rafay.dev.types.controller.StepStatus
-	22, // 47: rafay.dev.types.controller.NamespaceStatus.namespaceRef:type_name -> k8s.io.api.core.v1.ObjectReference
-	2,  // 48: rafay.dev.types.controller.NamespaceStatus.postCreate:type_name -> rafay.dev.types.controller.StepStatus
-	2,  // 49: rafay.dev.types.controller.NamespaceStatus.preDelete:type_name -> rafay.dev.types.controller.StepStatus
-	19, // 50: rafay.dev.types.controller.Namespace.typeMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta
-	20, // 51: rafay.dev.types.controller.Namespace.objectMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
-	14, // 52: rafay.dev.types.controller.Namespace.spec:type_name -> rafay.dev.types.controller.NamespaceSpec
-	16, // 53: rafay.dev.types.controller.Namespace.status:type_name -> rafay.dev.types.controller.NamespaceStatus
-	19, // 54: rafay.dev.types.controller.NamespaceList.typeMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta
-	24, // 55: rafay.dev.types.controller.NamespaceList.listMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta
-	17, // 56: rafay.dev.types.controller.NamespaceList.items:type_name -> rafay.dev.types.controller.Namespace
+	19, // 0: paralus.dev.types.controller.StepObject.typeMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta
+	20, // 1: paralus.dev.types.controller.StepObject.objectMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
+	0,  // 2: paralus.dev.types.controller.StepTemplate.object:type_name -> paralus.dev.types.controller.StepObject
+	21, // 3: paralus.dev.types.controller.StepTemplate.jobTemplate:type_name -> k8s.io.api.batch.v1beta1.JobTemplateSpec
+	22, // 4: paralus.dev.types.controller.StepStatus.objectRef:type_name -> k8s.io.api.core.v1.ObjectReference
+	22, // 5: paralus.dev.types.controller.StepStatus.jobRef:type_name -> k8s.io.api.core.v1.ObjectReference
+	1,  // 6: paralus.dev.types.controller.TaskletSpec.init:type_name -> paralus.dev.types.controller.StepTemplate
+	1,  // 7: paralus.dev.types.controller.TaskletSpec.install:type_name -> paralus.dev.types.controller.StepTemplate
+	1,  // 8: paralus.dev.types.controller.TaskletSpec.postInstall:type_name -> paralus.dev.types.controller.StepTemplate
+	1,  // 9: paralus.dev.types.controller.TaskletSpec.preDelete:type_name -> paralus.dev.types.controller.StepTemplate
+	23, // 10: paralus.dev.types.controller.TaskletCondition.lastUpdateTime:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.Time
+	4,  // 11: paralus.dev.types.controller.TaskletStatus.conditions:type_name -> paralus.dev.types.controller.TaskletCondition
+	2,  // 12: paralus.dev.types.controller.TaskletStatus.init:type_name -> paralus.dev.types.controller.StepStatus
+	2,  // 13: paralus.dev.types.controller.TaskletStatus.install:type_name -> paralus.dev.types.controller.StepStatus
+	2,  // 14: paralus.dev.types.controller.TaskletStatus.postInstall:type_name -> paralus.dev.types.controller.StepStatus
+	2,  // 15: paralus.dev.types.controller.TaskletStatus.preDelete:type_name -> paralus.dev.types.controller.StepStatus
+	19, // 16: paralus.dev.types.controller.Tasklet.typeMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta
+	20, // 17: paralus.dev.types.controller.Tasklet.objectMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
+	3,  // 18: paralus.dev.types.controller.Tasklet.spec:type_name -> paralus.dev.types.controller.TaskletSpec
+	5,  // 19: paralus.dev.types.controller.Tasklet.status:type_name -> paralus.dev.types.controller.TaskletStatus
+	19, // 20: paralus.dev.types.controller.TaskletList.typeMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta
+	24, // 21: paralus.dev.types.controller.TaskletList.listMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta
+	6,  // 22: paralus.dev.types.controller.TaskletList.items:type_name -> paralus.dev.types.controller.Tasklet
+	20, // 23: paralus.dev.types.controller.TaskletTemplate.objectMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
+	3,  // 24: paralus.dev.types.controller.TaskletTemplate.spec:type_name -> paralus.dev.types.controller.TaskletSpec
+	1,  // 25: paralus.dev.types.controller.TaskSpec.init:type_name -> paralus.dev.types.controller.StepTemplate
+	8,  // 26: paralus.dev.types.controller.TaskSpec.tasklet:type_name -> paralus.dev.types.controller.TaskletTemplate
+	1,  // 27: paralus.dev.types.controller.TaskSpec.preDelete:type_name -> paralus.dev.types.controller.StepTemplate
+	23, // 28: paralus.dev.types.controller.TaskCondition.lastUpdateTime:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.Time
+	10, // 29: paralus.dev.types.controller.TaskStatus.conditions:type_name -> paralus.dev.types.controller.TaskCondition
+	2,  // 30: paralus.dev.types.controller.TaskStatus.init:type_name -> paralus.dev.types.controller.StepStatus
+	22, // 31: paralus.dev.types.controller.TaskStatus.taskletRef:type_name -> k8s.io.api.core.v1.ObjectReference
+	2,  // 32: paralus.dev.types.controller.TaskStatus.preDelete:type_name -> paralus.dev.types.controller.StepStatus
+	19, // 33: paralus.dev.types.controller.Task.typeMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta
+	20, // 34: paralus.dev.types.controller.Task.objectMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
+	9,  // 35: paralus.dev.types.controller.Task.spec:type_name -> paralus.dev.types.controller.TaskSpec
+	11, // 36: paralus.dev.types.controller.Task.status:type_name -> paralus.dev.types.controller.TaskStatus
+	19, // 37: paralus.dev.types.controller.TaskList.typeMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta
+	24, // 38: paralus.dev.types.controller.TaskList.listMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta
+	12, // 39: paralus.dev.types.controller.TaskList.items:type_name -> paralus.dev.types.controller.Task
+	1,  // 40: paralus.dev.types.controller.NamespaceSpec.init:type_name -> paralus.dev.types.controller.StepTemplate
+	20, // 41: paralus.dev.types.controller.NamespaceSpec.namespaceMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
+	1,  // 42: paralus.dev.types.controller.NamespaceSpec.postCreate:type_name -> paralus.dev.types.controller.StepTemplate
+	1,  // 43: paralus.dev.types.controller.NamespaceSpec.preDelete:type_name -> paralus.dev.types.controller.StepTemplate
+	23, // 44: paralus.dev.types.controller.NamespaceCondition.lastUpdateTime:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.Time
+	15, // 45: paralus.dev.types.controller.NamespaceStatus.conditions:type_name -> paralus.dev.types.controller.NamespaceCondition
+	2,  // 46: paralus.dev.types.controller.NamespaceStatus.init:type_name -> paralus.dev.types.controller.StepStatus
+	22, // 47: paralus.dev.types.controller.NamespaceStatus.namespaceRef:type_name -> k8s.io.api.core.v1.ObjectReference
+	2,  // 48: paralus.dev.types.controller.NamespaceStatus.postCreate:type_name -> paralus.dev.types.controller.StepStatus
+	2,  // 49: paralus.dev.types.controller.NamespaceStatus.preDelete:type_name -> paralus.dev.types.controller.StepStatus
+	19, // 50: paralus.dev.types.controller.Namespace.typeMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta
+	20, // 51: paralus.dev.types.controller.Namespace.objectMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
+	14, // 52: paralus.dev.types.controller.Namespace.spec:type_name -> paralus.dev.types.controller.NamespaceSpec
+	16, // 53: paralus.dev.types.controller.Namespace.status:type_name -> paralus.dev.types.controller.NamespaceStatus
+	19, // 54: paralus.dev.types.controller.NamespaceList.typeMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.TypeMeta
+	24, // 55: paralus.dev.types.controller.NamespaceList.listMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta
+	17, // 56: paralus.dev.types.controller.NamespaceList.items:type_name -> paralus.dev.types.controller.Namespace
 	57, // [57:57] is the sub-list for method output_type
 	57, // [57:57] is the sub-list for method input_type
 	57, // [57:57] is the sub-list for extension type_name

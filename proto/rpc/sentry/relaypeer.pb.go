@@ -508,22 +508,22 @@ func file_proto_rpc_sentry_relaypeer_proto_rawDescGZIP() []byte {
 
 var file_proto_rpc_sentry_relaypeer_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_proto_rpc_sentry_relaypeer_proto_goTypes = []interface{}{
-	(*PeerHelloRequest)(nil),           // 0: rafay.dev.sentry.rpc.PeerHelloRequest
-	(*PeerHelloResponse)(nil),          // 1: rafay.dev.sentry.rpc.PeerHelloResponse
-	(*PeerProbeRequest)(nil),           // 2: rafay.dev.sentry.rpc.PeerProbeRequest
-	(*RelayClusterConnectionInfo)(nil), // 3: rafay.dev.sentry.rpc.relayClusterConnectionInfo
-	(*PeerProbeResponse)(nil),          // 4: rafay.dev.sentry.rpc.PeerProbeResponse
-	(*PeerSurveyRequest)(nil),          // 5: rafay.dev.sentry.rpc.PeerSurveyRequest
-	(*PeerSurveyResponse)(nil),         // 6: rafay.dev.sentry.rpc.PeerSurveyResponse
+	(*PeerHelloRequest)(nil),           // 0: paralus.dev.sentry.rpc.PeerHelloRequest
+	(*PeerHelloResponse)(nil),          // 1: paralus.dev.sentry.rpc.PeerHelloResponse
+	(*PeerProbeRequest)(nil),           // 2: paralus.dev.sentry.rpc.PeerProbeRequest
+	(*RelayClusterConnectionInfo)(nil), // 3: paralus.dev.sentry.rpc.relayClusterConnectionInfo
+	(*PeerProbeResponse)(nil),          // 4: paralus.dev.sentry.rpc.PeerProbeResponse
+	(*PeerSurveyRequest)(nil),          // 5: paralus.dev.sentry.rpc.PeerSurveyRequest
+	(*PeerSurveyResponse)(nil),         // 6: paralus.dev.sentry.rpc.PeerSurveyResponse
 }
 var file_proto_rpc_sentry_relaypeer_proto_depIdxs = []int32{
-	3, // 0: rafay.dev.sentry.rpc.PeerProbeResponse.items:type_name -> rafay.dev.sentry.rpc.relayClusterConnectionInfo
-	0, // 1: rafay.dev.sentry.rpc.RelayPeerService.RelayPeerHelloRPC:input_type -> rafay.dev.sentry.rpc.PeerHelloRequest
-	2, // 2: rafay.dev.sentry.rpc.RelayPeerService.RelayPeerProbeRPC:input_type -> rafay.dev.sentry.rpc.PeerProbeRequest
-	6, // 3: rafay.dev.sentry.rpc.RelayPeerService.RelayPeerSurveyRPC:input_type -> rafay.dev.sentry.rpc.PeerSurveyResponse
-	1, // 4: rafay.dev.sentry.rpc.RelayPeerService.RelayPeerHelloRPC:output_type -> rafay.dev.sentry.rpc.PeerHelloResponse
-	4, // 5: rafay.dev.sentry.rpc.RelayPeerService.RelayPeerProbeRPC:output_type -> rafay.dev.sentry.rpc.PeerProbeResponse
-	5, // 6: rafay.dev.sentry.rpc.RelayPeerService.RelayPeerSurveyRPC:output_type -> rafay.dev.sentry.rpc.PeerSurveyRequest
+	3, // 0: paralus.dev.sentry.rpc.PeerProbeResponse.items:type_name -> paralus.dev.sentry.rpc.relayClusterConnectionInfo
+	0, // 1: paralus.dev.sentry.rpc.RelayPeerService.RelayPeerHelloRPC:input_type -> paralus.dev.sentry.rpc.PeerHelloRequest
+	2, // 2: paralus.dev.sentry.rpc.RelayPeerService.RelayPeerProbeRPC:input_type -> paralus.dev.sentry.rpc.PeerProbeRequest
+	6, // 3: paralus.dev.sentry.rpc.RelayPeerService.RelayPeerSurveyRPC:input_type -> paralus.dev.sentry.rpc.PeerSurveyResponse
+	1, // 4: paralus.dev.sentry.rpc.RelayPeerService.RelayPeerHelloRPC:output_type -> paralus.dev.sentry.rpc.PeerHelloResponse
+	4, // 5: paralus.dev.sentry.rpc.RelayPeerService.RelayPeerProbeRPC:output_type -> paralus.dev.sentry.rpc.PeerProbeResponse
+	5, // 6: paralus.dev.sentry.rpc.RelayPeerService.RelayPeerSurveyRPC:output_type -> paralus.dev.sentry.rpc.PeerSurveyRequest
 	4, // [4:7] is the sub-list for method output_type
 	1, // [1:4] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

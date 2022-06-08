@@ -1,12 +1,12 @@
 package gateway
 
 import (
-	common "github.com/paralus/paralus/proto/types/commonpb/v3"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	common "github.com/paralus/paralus/proto/types/commonpb/v3"
 )
 
 // httpBodyMarshaler is a Marshaler which supports marshaling of a
-// rafay.dev.common.types.v2.HttpBody message as the full response body if it is
+// paralus.dev.common.types.v2.HttpBody message as the full response body if it is
 // the actual message used as the response. If not, then this will
 // simply fallback to the Marshaler specified as its default Marshaler.
 type httpBodyMarshaler struct {

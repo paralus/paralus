@@ -36,7 +36,7 @@ func NewKubectlClusterSettingsClient(cc grpc.ClientConnInterface) KubectlCluster
 
 func (c *kubectlClusterSettingsClient) UpdateKubectlClusterSettings(ctx context.Context, in *UpdateKubectlClusterSettingsRequest, opts ...grpc.CallOption) (*UpdateKubectlClusterSettingsResponse, error) {
 	out := new(UpdateKubectlClusterSettingsResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.KubectlClusterSettings/UpdateKubectlClusterSettings", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubectlClusterSettings/UpdateKubectlClusterSettings", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (c *kubectlClusterSettingsClient) UpdateKubectlClusterSettings(ctx context.
 
 func (c *kubectlClusterSettingsClient) GetKubectlClusterSettings(ctx context.Context, in *GetKubectlClusterSettingsRequest, opts ...grpc.CallOption) (*GetKubectlClusterSettingsResponse, error) {
 	out := new(GetKubectlClusterSettingsResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.KubectlClusterSettings/GetKubectlClusterSettings", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubectlClusterSettings/GetKubectlClusterSettings", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func _KubectlClusterSettings_UpdateKubectlClusterSettings_Handler(srv interface{
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.KubectlClusterSettings/UpdateKubectlClusterSettings",
+		FullMethod: "/paralus.dev.sentry.rpc.KubectlClusterSettings/UpdateKubectlClusterSettings",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KubectlClusterSettingsServer).UpdateKubectlClusterSettings(ctx, req.(*UpdateKubectlClusterSettingsRequest))
@@ -110,7 +110,7 @@ func _KubectlClusterSettings_GetKubectlClusterSettings_Handler(srv interface{}, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.KubectlClusterSettings/GetKubectlClusterSettings",
+		FullMethod: "/paralus.dev.sentry.rpc.KubectlClusterSettings/GetKubectlClusterSettings",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KubectlClusterSettingsServer).GetKubectlClusterSettings(ctx, req.(*GetKubectlClusterSettingsRequest))
@@ -122,7 +122,7 @@ func _KubectlClusterSettings_GetKubectlClusterSettings_Handler(srv interface{}, 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var KubectlClusterSettings_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.sentry.rpc.KubectlClusterSettings",
+	ServiceName: "paralus.dev.sentry.rpc.KubectlClusterSettings",
 	HandlerType: (*KubectlClusterSettingsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

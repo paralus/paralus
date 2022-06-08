@@ -7,9 +7,9 @@
 package sentry
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	sentry "github.com/paralus/paralus/proto/types/sentry"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -651,50 +651,50 @@ func file_proto_rpc_sentry_bootstrap_proto_rawDescGZIP() []byte {
 
 var file_proto_rpc_sentry_bootstrap_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_proto_rpc_sentry_bootstrap_proto_goTypes = []interface{}{
-	(*RegisterAgentRequest)(nil),              // 0: rafay.dev.sentry.rpc.RegisterAgentRequest
-	(*RegisterAgentResponse)(nil),             // 1: rafay.dev.sentry.rpc.RegisterAgentResponse
-	(*GetBootstrapAgentsRequest)(nil),         // 2: rafay.dev.sentry.rpc.GetBootstrapAgentsRequest
-	(*DeleteBootstrapAgentResponse)(nil),      // 3: rafay.dev.sentry.rpc.DeleteBootstrapAgentResponse
-	(*DeleteRelayNetworkResponse)(nil),        // 4: rafay.dev.sentry.rpc.DeleteRelayNetworkResponse
-	(*GetRelayNetworksRequest)(nil),           // 5: rafay.dev.sentry.rpc.GetRelayNetworksRequest
-	(*RelayAgentDownloadRequest)(nil),         // 6: rafay.dev.sentry.rpc.RelayAgentDownloadRequest
-	(*v3.QueryOptions)(nil),                   // 7: rafay.dev.types.common.v3.QueryOptions
-	(*v3.Metadata)(nil),                       // 8: rafay.dev.types.common.v3.Metadata
-	(*sentry.BootstrapInfra)(nil),             // 9: rafay.dev.types.sentry.BootstrapInfra
-	(*sentry.BootstrapAgentTemplate)(nil),     // 10: rafay.dev.types.sentry.BootstrapAgentTemplate
-	(*sentry.BootstrapAgent)(nil),             // 11: rafay.dev.types.sentry.BootstrapAgent
-	(*sentry.BootstrapAgentTemplateList)(nil), // 12: rafay.dev.types.sentry.BootstrapAgentTemplateList
-	(*v3.HttpBody)(nil),                       // 13: rafay.dev.types.common.v3.HttpBody
-	(*sentry.BootstrapAgentList)(nil),         // 14: rafay.dev.types.sentry.BootstrapAgentList
+	(*RegisterAgentRequest)(nil),              // 0: paralus.dev.sentry.rpc.RegisterAgentRequest
+	(*RegisterAgentResponse)(nil),             // 1: paralus.dev.sentry.rpc.RegisterAgentResponse
+	(*GetBootstrapAgentsRequest)(nil),         // 2: paralus.dev.sentry.rpc.GetBootstrapAgentsRequest
+	(*DeleteBootstrapAgentResponse)(nil),      // 3: paralus.dev.sentry.rpc.DeleteBootstrapAgentResponse
+	(*DeleteRelayNetworkResponse)(nil),        // 4: paralus.dev.sentry.rpc.DeleteRelayNetworkResponse
+	(*GetRelayNetworksRequest)(nil),           // 5: paralus.dev.sentry.rpc.GetRelayNetworksRequest
+	(*RelayAgentDownloadRequest)(nil),         // 6: paralus.dev.sentry.rpc.RelayAgentDownloadRequest
+	(*v3.QueryOptions)(nil),                   // 7: paralus.dev.types.common.v3.QueryOptions
+	(*v3.Metadata)(nil),                       // 8: paralus.dev.types.common.v3.Metadata
+	(*sentry.BootstrapInfra)(nil),             // 9: paralus.dev.types.sentry.BootstrapInfra
+	(*sentry.BootstrapAgentTemplate)(nil),     // 10: paralus.dev.types.sentry.BootstrapAgentTemplate
+	(*sentry.BootstrapAgent)(nil),             // 11: paralus.dev.types.sentry.BootstrapAgent
+	(*sentry.BootstrapAgentTemplateList)(nil), // 12: paralus.dev.types.sentry.BootstrapAgentTemplateList
+	(*v3.HttpBody)(nil),                       // 13: paralus.dev.types.common.v3.HttpBody
+	(*sentry.BootstrapAgentList)(nil),         // 14: paralus.dev.types.sentry.BootstrapAgentList
 }
 var file_proto_rpc_sentry_bootstrap_proto_depIdxs = []int32{
-	7,  // 0: rafay.dev.sentry.rpc.GetBootstrapAgentsRequest.opts:type_name -> rafay.dev.types.common.v3.QueryOptions
-	7,  // 1: rafay.dev.sentry.rpc.GetRelayNetworksRequest.opts:type_name -> rafay.dev.types.common.v3.QueryOptions
-	8,  // 2: rafay.dev.sentry.rpc.RelayAgentDownloadRequest.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	9,  // 3: rafay.dev.sentry.rpc.Bootstrap.PatchBootstrapInfra:input_type -> rafay.dev.types.sentry.BootstrapInfra
-	9,  // 4: rafay.dev.sentry.rpc.Bootstrap.GetBootstrapInfra:input_type -> rafay.dev.types.sentry.BootstrapInfra
-	10, // 5: rafay.dev.sentry.rpc.Bootstrap.PatchBootstrapAgentTemplate:input_type -> rafay.dev.types.sentry.BootstrapAgentTemplate
-	10, // 6: rafay.dev.sentry.rpc.Bootstrap.GetBootstrapAgentTemplate:input_type -> rafay.dev.types.sentry.BootstrapAgentTemplate
-	7,  // 7: rafay.dev.sentry.rpc.Bootstrap.GetBootstrapAgentTemplates:input_type -> rafay.dev.types.common.v3.QueryOptions
-	0,  // 8: rafay.dev.sentry.rpc.Bootstrap.RegisterBootstrapAgent:input_type -> rafay.dev.sentry.rpc.RegisterAgentRequest
-	11, // 9: rafay.dev.sentry.rpc.Bootstrap.GetBootstrapAgentConfig:input_type -> rafay.dev.types.sentry.BootstrapAgent
-	11, // 10: rafay.dev.sentry.rpc.Bootstrap.CreateBootstrapAgent:input_type -> rafay.dev.types.sentry.BootstrapAgent
-	11, // 11: rafay.dev.sentry.rpc.Bootstrap.GetBootstrapAgent:input_type -> rafay.dev.types.sentry.BootstrapAgent
-	2,  // 12: rafay.dev.sentry.rpc.Bootstrap.GetBootstrapAgents:input_type -> rafay.dev.sentry.rpc.GetBootstrapAgentsRequest
-	11, // 13: rafay.dev.sentry.rpc.Bootstrap.DeleteBootstrapAgent:input_type -> rafay.dev.types.sentry.BootstrapAgent
-	11, // 14: rafay.dev.sentry.rpc.Bootstrap.UpdateBootstrapAgent:input_type -> rafay.dev.types.sentry.BootstrapAgent
-	9,  // 15: rafay.dev.sentry.rpc.Bootstrap.PatchBootstrapInfra:output_type -> rafay.dev.types.sentry.BootstrapInfra
-	9,  // 16: rafay.dev.sentry.rpc.Bootstrap.GetBootstrapInfra:output_type -> rafay.dev.types.sentry.BootstrapInfra
-	10, // 17: rafay.dev.sentry.rpc.Bootstrap.PatchBootstrapAgentTemplate:output_type -> rafay.dev.types.sentry.BootstrapAgentTemplate
-	10, // 18: rafay.dev.sentry.rpc.Bootstrap.GetBootstrapAgentTemplate:output_type -> rafay.dev.types.sentry.BootstrapAgentTemplate
-	12, // 19: rafay.dev.sentry.rpc.Bootstrap.GetBootstrapAgentTemplates:output_type -> rafay.dev.types.sentry.BootstrapAgentTemplateList
-	1,  // 20: rafay.dev.sentry.rpc.Bootstrap.RegisterBootstrapAgent:output_type -> rafay.dev.sentry.rpc.RegisterAgentResponse
-	13, // 21: rafay.dev.sentry.rpc.Bootstrap.GetBootstrapAgentConfig:output_type -> rafay.dev.types.common.v3.HttpBody
-	11, // 22: rafay.dev.sentry.rpc.Bootstrap.CreateBootstrapAgent:output_type -> rafay.dev.types.sentry.BootstrapAgent
-	11, // 23: rafay.dev.sentry.rpc.Bootstrap.GetBootstrapAgent:output_type -> rafay.dev.types.sentry.BootstrapAgent
-	14, // 24: rafay.dev.sentry.rpc.Bootstrap.GetBootstrapAgents:output_type -> rafay.dev.types.sentry.BootstrapAgentList
-	3,  // 25: rafay.dev.sentry.rpc.Bootstrap.DeleteBootstrapAgent:output_type -> rafay.dev.sentry.rpc.DeleteBootstrapAgentResponse
-	11, // 26: rafay.dev.sentry.rpc.Bootstrap.UpdateBootstrapAgent:output_type -> rafay.dev.types.sentry.BootstrapAgent
+	7,  // 0: paralus.dev.sentry.rpc.GetBootstrapAgentsRequest.opts:type_name -> paralus.dev.types.common.v3.QueryOptions
+	7,  // 1: paralus.dev.sentry.rpc.GetRelayNetworksRequest.opts:type_name -> paralus.dev.types.common.v3.QueryOptions
+	8,  // 2: paralus.dev.sentry.rpc.RelayAgentDownloadRequest.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	9,  // 3: paralus.dev.sentry.rpc.Bootstrap.PatchBootstrapInfra:input_type -> paralus.dev.types.sentry.BootstrapInfra
+	9,  // 4: paralus.dev.sentry.rpc.Bootstrap.GetBootstrapInfra:input_type -> paralus.dev.types.sentry.BootstrapInfra
+	10, // 5: paralus.dev.sentry.rpc.Bootstrap.PatchBootstrapAgentTemplate:input_type -> paralus.dev.types.sentry.BootstrapAgentTemplate
+	10, // 6: paralus.dev.sentry.rpc.Bootstrap.GetBootstrapAgentTemplate:input_type -> paralus.dev.types.sentry.BootstrapAgentTemplate
+	7,  // 7: paralus.dev.sentry.rpc.Bootstrap.GetBootstrapAgentTemplates:input_type -> paralus.dev.types.common.v3.QueryOptions
+	0,  // 8: paralus.dev.sentry.rpc.Bootstrap.RegisterBootstrapAgent:input_type -> paralus.dev.sentry.rpc.RegisterAgentRequest
+	11, // 9: paralus.dev.sentry.rpc.Bootstrap.GetBootstrapAgentConfig:input_type -> paralus.dev.types.sentry.BootstrapAgent
+	11, // 10: paralus.dev.sentry.rpc.Bootstrap.CreateBootstrapAgent:input_type -> paralus.dev.types.sentry.BootstrapAgent
+	11, // 11: paralus.dev.sentry.rpc.Bootstrap.GetBootstrapAgent:input_type -> paralus.dev.types.sentry.BootstrapAgent
+	2,  // 12: paralus.dev.sentry.rpc.Bootstrap.GetBootstrapAgents:input_type -> paralus.dev.sentry.rpc.GetBootstrapAgentsRequest
+	11, // 13: paralus.dev.sentry.rpc.Bootstrap.DeleteBootstrapAgent:input_type -> paralus.dev.types.sentry.BootstrapAgent
+	11, // 14: paralus.dev.sentry.rpc.Bootstrap.UpdateBootstrapAgent:input_type -> paralus.dev.types.sentry.BootstrapAgent
+	9,  // 15: paralus.dev.sentry.rpc.Bootstrap.PatchBootstrapInfra:output_type -> paralus.dev.types.sentry.BootstrapInfra
+	9,  // 16: paralus.dev.sentry.rpc.Bootstrap.GetBootstrapInfra:output_type -> paralus.dev.types.sentry.BootstrapInfra
+	10, // 17: paralus.dev.sentry.rpc.Bootstrap.PatchBootstrapAgentTemplate:output_type -> paralus.dev.types.sentry.BootstrapAgentTemplate
+	10, // 18: paralus.dev.sentry.rpc.Bootstrap.GetBootstrapAgentTemplate:output_type -> paralus.dev.types.sentry.BootstrapAgentTemplate
+	12, // 19: paralus.dev.sentry.rpc.Bootstrap.GetBootstrapAgentTemplates:output_type -> paralus.dev.types.sentry.BootstrapAgentTemplateList
+	1,  // 20: paralus.dev.sentry.rpc.Bootstrap.RegisterBootstrapAgent:output_type -> paralus.dev.sentry.rpc.RegisterAgentResponse
+	13, // 21: paralus.dev.sentry.rpc.Bootstrap.GetBootstrapAgentConfig:output_type -> paralus.dev.types.common.v3.HttpBody
+	11, // 22: paralus.dev.sentry.rpc.Bootstrap.CreateBootstrapAgent:output_type -> paralus.dev.types.sentry.BootstrapAgent
+	11, // 23: paralus.dev.sentry.rpc.Bootstrap.GetBootstrapAgent:output_type -> paralus.dev.types.sentry.BootstrapAgent
+	14, // 24: paralus.dev.sentry.rpc.Bootstrap.GetBootstrapAgents:output_type -> paralus.dev.types.sentry.BootstrapAgentList
+	3,  // 25: paralus.dev.sentry.rpc.Bootstrap.DeleteBootstrapAgent:output_type -> paralus.dev.sentry.rpc.DeleteBootstrapAgentResponse
+	11, // 26: paralus.dev.sentry.rpc.Bootstrap.UpdateBootstrapAgent:output_type -> paralus.dev.types.sentry.BootstrapAgent
 	15, // [15:27] is the sub-list for method output_type
 	3,  // [3:15] is the sub-list for method input_type
 	3,  // [3:3] is the sub-list for extension type_name

@@ -77,26 +77,26 @@ func (ConditionStatus) EnumDescriptor() ([]byte, []int) {
 	return file_proto_types_commonpb_v3_common_proto_rawDescGZIP(), []int{0}
 }
 
-// RafayConditionStatus is the status of the status condition
-type RafayConditionStatus int32
+// ParalusConditionStatus is the status of the status condition
+type ParalusConditionStatus int32
 
 const (
-	RafayConditionStatus_NotSet     RafayConditionStatus = 0
-	RafayConditionStatus_Pending    RafayConditionStatus = 1
-	RafayConditionStatus_InProgress RafayConditionStatus = 2
-	RafayConditionStatus_Success    RafayConditionStatus = 3
-	RafayConditionStatus_Failed     RafayConditionStatus = 4
-	RafayConditionStatus_Retry      RafayConditionStatus = 5
-	RafayConditionStatus_Skipped    RafayConditionStatus = 6
-	RafayConditionStatus_Stopped    RafayConditionStatus = 7
-	RafayConditionStatus_Expired    RafayConditionStatus = 8
-	RafayConditionStatus_Stopping   RafayConditionStatus = 9
-	RafayConditionStatus_Submitted  RafayConditionStatus = 10
+	ParalusConditionStatus_NotSet     ParalusConditionStatus = 0
+	ParalusConditionStatus_Pending    ParalusConditionStatus = 1
+	ParalusConditionStatus_InProgress ParalusConditionStatus = 2
+	ParalusConditionStatus_Success    ParalusConditionStatus = 3
+	ParalusConditionStatus_Failed     ParalusConditionStatus = 4
+	ParalusConditionStatus_Retry      ParalusConditionStatus = 5
+	ParalusConditionStatus_Skipped    ParalusConditionStatus = 6
+	ParalusConditionStatus_Stopped    ParalusConditionStatus = 7
+	ParalusConditionStatus_Expired    ParalusConditionStatus = 8
+	ParalusConditionStatus_Stopping   ParalusConditionStatus = 9
+	ParalusConditionStatus_Submitted  ParalusConditionStatus = 10
 )
 
-// Enum value maps for RafayConditionStatus.
+// Enum value maps for ParalusConditionStatus.
 var (
-	RafayConditionStatus_name = map[int32]string{
+	ParalusConditionStatus_name = map[int32]string{
 		0:  "NotSet",
 		1:  "Pending",
 		2:  "InProgress",
@@ -109,7 +109,7 @@ var (
 		9:  "Stopping",
 		10: "Submitted",
 	}
-	RafayConditionStatus_value = map[string]int32{
+	ParalusConditionStatus_value = map[string]int32{
 		"NotSet":     0,
 		"Pending":    1,
 		"InProgress": 2,
@@ -124,35 +124,35 @@ var (
 	}
 )
 
-func (x RafayConditionStatus) Enum() *RafayConditionStatus {
-	p := new(RafayConditionStatus)
+func (x ParalusConditionStatus) Enum() *ParalusConditionStatus {
+	p := new(ParalusConditionStatus)
 	*p = x
 	return p
 }
 
-func (x RafayConditionStatus) String() string {
+func (x ParalusConditionStatus) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (RafayConditionStatus) Descriptor() protoreflect.EnumDescriptor {
+func (ParalusConditionStatus) Descriptor() protoreflect.EnumDescriptor {
 	return file_proto_types_commonpb_v3_common_proto_enumTypes[1].Descriptor()
 }
 
-func (RafayConditionStatus) Type() protoreflect.EnumType {
+func (ParalusConditionStatus) Type() protoreflect.EnumType {
 	return &file_proto_types_commonpb_v3_common_proto_enumTypes[1]
 }
 
-func (x RafayConditionStatus) Number() protoreflect.EnumNumber {
+func (x ParalusConditionStatus) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use RafayConditionStatus.Descriptor instead.
-func (RafayConditionStatus) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use ParalusConditionStatus.Descriptor instead.
+func (ParalusConditionStatus) EnumDescriptor() ([]byte, []int) {
 	return file_proto_types_commonpb_v3_common_proto_rawDescGZIP(), []int{1}
 }
 
-// RafayTypeMeta is the type meta for rafay resources
-type RafayTypeMeta struct {
+// ParalusTypeMeta is the type meta for rafay resources
+type ParalusTypeMeta struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -161,8 +161,8 @@ type RafayTypeMeta struct {
 	Kind       string `protobuf:"bytes,2,opt,name=kind,proto3" json:"kind,omitempty"`
 }
 
-func (x *RafayTypeMeta) Reset() {
-	*x = RafayTypeMeta{}
+func (x *ParalusTypeMeta) Reset() {
+	*x = ParalusTypeMeta{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_types_commonpb_v3_common_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -170,13 +170,13 @@ func (x *RafayTypeMeta) Reset() {
 	}
 }
 
-func (x *RafayTypeMeta) String() string {
+func (x *ParalusTypeMeta) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RafayTypeMeta) ProtoMessage() {}
+func (*ParalusTypeMeta) ProtoMessage() {}
 
-func (x *RafayTypeMeta) ProtoReflect() protoreflect.Message {
+func (x *ParalusTypeMeta) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_types_commonpb_v3_common_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -188,19 +188,19 @@ func (x *RafayTypeMeta) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RafayTypeMeta.ProtoReflect.Descriptor instead.
-func (*RafayTypeMeta) Descriptor() ([]byte, []int) {
+// Deprecated: Use ParalusTypeMeta.ProtoReflect.Descriptor instead.
+func (*ParalusTypeMeta) Descriptor() ([]byte, []int) {
 	return file_proto_types_commonpb_v3_common_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *RafayTypeMeta) GetApiVersion() string {
+func (x *ParalusTypeMeta) GetApiVersion() string {
 	if x != nil {
 		return x.ApiVersion
 	}
 	return ""
 }
 
-func (x *RafayTypeMeta) GetKind() string {
+func (x *ParalusTypeMeta) GetKind() string {
 	if x != nil {
 		return x.Kind
 	}
@@ -689,7 +689,7 @@ type Status struct {
 	unknownFields protoimpl.UnknownFields
 
 	ConditionType   string                 `protobuf:"bytes,1,opt,name=conditionType,proto3" json:"conditionType,omitempty"`
-	ConditionStatus ConditionStatus        `protobuf:"varint,2,opt,name=conditionStatus,proto3,enum=rafay.dev.types.common.v3.ConditionStatus" json:"conditionStatus,omitempty"`
+	ConditionStatus ConditionStatus        `protobuf:"varint,2,opt,name=conditionStatus,proto3,enum=paralus.dev.types.common.v3.ConditionStatus" json:"conditionStatus,omitempty"`
 	LastUpdated     *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=lastUpdated,proto3" json:"lastUpdated,omitempty"`
 	Reason          string                 `protobuf:"bytes,4,opt,name=reason,proto3" json:"reason,omitempty"`
 }
@@ -1445,36 +1445,36 @@ func file_proto_types_commonpb_v3_common_proto_rawDescGZIP() []byte {
 var file_proto_types_commonpb_v3_common_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_proto_types_commonpb_v3_common_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_proto_types_commonpb_v3_common_proto_goTypes = []interface{}{
-	(ConditionStatus)(0),          // 0: rafay.dev.types.common.v3.ConditionStatus
-	(RafayConditionStatus)(0),     // 1: rafay.dev.types.common.v3.RafayConditionStatus
-	(*RafayTypeMeta)(nil),         // 2: rafay.dev.types.common.v3.RafayTypeMeta
-	(*Metadata)(nil),              // 3: rafay.dev.types.common.v3.Metadata
-	(*ProjectMeta)(nil),           // 4: rafay.dev.types.common.v3.ProjectMeta
-	(*SharingSpec)(nil),           // 5: rafay.dev.types.common.v3.SharingSpec
-	(*DriftSpec)(nil),             // 6: rafay.dev.types.common.v3.DriftSpec
-	(*ListMetadata)(nil),          // 7: rafay.dev.types.common.v3.ListMetadata
-	(*PlacementLabel)(nil),        // 8: rafay.dev.types.common.v3.PlacementLabel
-	(*PlacementSpec)(nil),         // 9: rafay.dev.types.common.v3.PlacementSpec
-	(*Status)(nil),                // 10: rafay.dev.types.common.v3.Status
-	(*QueryOptions)(nil),          // 11: rafay.dev.types.common.v3.QueryOptions
-	(*HttpBody)(nil),              // 12: rafay.dev.types.common.v3.HttpBody
-	nil,                           // 13: rafay.dev.types.common.v3.Metadata.LabelsEntry
-	nil,                           // 14: rafay.dev.types.common.v3.Metadata.AnnotationsEntry
-	nil,                           // 15: rafay.dev.types.common.v3.QueryOptions.LabelsEntry
-	nil,                           // 16: rafay.dev.types.common.v3.QueryOptions.AnnotationsEntry
+	(ConditionStatus)(0),          // 0: paralus.dev.types.common.v3.ConditionStatus
+	(ParalusConditionStatus)(0),   // 1: paralus.dev.types.common.v3.ParalusConditionStatus
+	(*ParalusTypeMeta)(nil),       // 2: paralus.dev.types.common.v3.ParalusTypeMeta
+	(*Metadata)(nil),              // 3: paralus.dev.types.common.v3.Metadata
+	(*ProjectMeta)(nil),           // 4: paralus.dev.types.common.v3.ProjectMeta
+	(*SharingSpec)(nil),           // 5: paralus.dev.types.common.v3.SharingSpec
+	(*DriftSpec)(nil),             // 6: paralus.dev.types.common.v3.DriftSpec
+	(*ListMetadata)(nil),          // 7: paralus.dev.types.common.v3.ListMetadata
+	(*PlacementLabel)(nil),        // 8: paralus.dev.types.common.v3.PlacementLabel
+	(*PlacementSpec)(nil),         // 9: paralus.dev.types.common.v3.PlacementSpec
+	(*Status)(nil),                // 10: paralus.dev.types.common.v3.Status
+	(*QueryOptions)(nil),          // 11: paralus.dev.types.common.v3.QueryOptions
+	(*HttpBody)(nil),              // 12: paralus.dev.types.common.v3.HttpBody
+	nil,                           // 13: paralus.dev.types.common.v3.Metadata.LabelsEntry
+	nil,                           // 14: paralus.dev.types.common.v3.Metadata.AnnotationsEntry
+	nil,                           // 15: paralus.dev.types.common.v3.QueryOptions.LabelsEntry
+	nil,                           // 16: paralus.dev.types.common.v3.QueryOptions.AnnotationsEntry
 	(*timestamppb.Timestamp)(nil), // 17: google.protobuf.Timestamp
 }
 var file_proto_types_commonpb_v3_common_proto_depIdxs = []int32{
-	13, // 0: rafay.dev.types.common.v3.Metadata.labels:type_name -> rafay.dev.types.common.v3.Metadata.LabelsEntry
-	14, // 1: rafay.dev.types.common.v3.Metadata.annotations:type_name -> rafay.dev.types.common.v3.Metadata.AnnotationsEntry
-	17, // 2: rafay.dev.types.common.v3.Metadata.createdAt:type_name -> google.protobuf.Timestamp
-	17, // 3: rafay.dev.types.common.v3.Metadata.modifiedAt:type_name -> google.protobuf.Timestamp
-	4,  // 4: rafay.dev.types.common.v3.SharingSpec.projects:type_name -> rafay.dev.types.common.v3.ProjectMeta
-	8,  // 5: rafay.dev.types.common.v3.PlacementSpec.labels:type_name -> rafay.dev.types.common.v3.PlacementLabel
-	0,  // 6: rafay.dev.types.common.v3.Status.conditionStatus:type_name -> rafay.dev.types.common.v3.ConditionStatus
-	17, // 7: rafay.dev.types.common.v3.Status.lastUpdated:type_name -> google.protobuf.Timestamp
-	15, // 8: rafay.dev.types.common.v3.QueryOptions.labels:type_name -> rafay.dev.types.common.v3.QueryOptions.LabelsEntry
-	16, // 9: rafay.dev.types.common.v3.QueryOptions.annotations:type_name -> rafay.dev.types.common.v3.QueryOptions.AnnotationsEntry
+	13, // 0: paralus.dev.types.common.v3.Metadata.labels:type_name -> paralus.dev.types.common.v3.Metadata.LabelsEntry
+	14, // 1: paralus.dev.types.common.v3.Metadata.annotations:type_name -> paralus.dev.types.common.v3.Metadata.AnnotationsEntry
+	17, // 2: paralus.dev.types.common.v3.Metadata.createdAt:type_name -> google.protobuf.Timestamp
+	17, // 3: paralus.dev.types.common.v3.Metadata.modifiedAt:type_name -> google.protobuf.Timestamp
+	4,  // 4: paralus.dev.types.common.v3.SharingSpec.projects:type_name -> paralus.dev.types.common.v3.ProjectMeta
+	8,  // 5: paralus.dev.types.common.v3.PlacementSpec.labels:type_name -> paralus.dev.types.common.v3.PlacementLabel
+	0,  // 6: paralus.dev.types.common.v3.Status.conditionStatus:type_name -> paralus.dev.types.common.v3.ConditionStatus
+	17, // 7: paralus.dev.types.common.v3.Status.lastUpdated:type_name -> google.protobuf.Timestamp
+	15, // 8: paralus.dev.types.common.v3.QueryOptions.labels:type_name -> paralus.dev.types.common.v3.QueryOptions.LabelsEntry
+	16, // 9: paralus.dev.types.common.v3.QueryOptions.annotations:type_name -> paralus.dev.types.common.v3.QueryOptions.AnnotationsEntry
 	10, // [10:10] is the sub-list for method output_type
 	10, // [10:10] is the sub-list for method input_type
 	10, // [10:10] is the sub-list for extension type_name
@@ -1489,7 +1489,7 @@ func file_proto_types_commonpb_v3_common_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_proto_types_commonpb_v3_common_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*RafayTypeMeta); i {
+			switch v := v.(*ParalusTypeMeta); i {
 			case 0:
 				return &v.state
 			case 1:

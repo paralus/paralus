@@ -9,8 +9,8 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func TestRafayJSONMarshaller(t *testing.T) {
-	m := gateway.NewRafayJSON()
+func TestParalusJSONMarshaller(t *testing.T) {
+	m := gateway.NewParalusJSON()
 
 	t1 := testdata.TestYAML{
 		Name:   "test",

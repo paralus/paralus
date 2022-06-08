@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/google/uuid"
 	"github.com/paralus/paralus/internal/dao"
 	"github.com/paralus/paralus/internal/models"
 	"github.com/paralus/paralus/proto/types/sentry"
-	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 

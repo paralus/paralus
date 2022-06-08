@@ -7,9 +7,9 @@
 package rpcv3
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	v31 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/infrapb/v3"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -319,27 +319,27 @@ func file_proto_rpc_scheduler_cluster_proto_rawDescGZIP() []byte {
 
 var file_proto_rpc_scheduler_cluster_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_proto_rpc_scheduler_cluster_proto_goTypes = []interface{}{
-	(*RegisterClusterRequest)(nil),  // 0: rafay.dev.rpc.v3.RegisterClusterRequest
-	(*RegisterClusterResponse)(nil), // 1: rafay.dev.rpc.v3.RegisterClusterResponse
-	(*DeleteClusterResponse)(nil),   // 2: rafay.dev.rpc.v3.DeleteClusterResponse
-	(*v3.Cluster)(nil),              // 3: rafay.dev.types.infra.v3.Cluster
-	(*v31.QueryOptions)(nil),        // 4: rafay.dev.types.common.v3.QueryOptions
-	(*v3.ClusterList)(nil),          // 5: rafay.dev.types.infra.v3.ClusterList
-	(*v31.HttpBody)(nil),            // 6: rafay.dev.types.common.v3.HttpBody
+	(*RegisterClusterRequest)(nil),  // 0: paralus.dev.rpc.v3.RegisterClusterRequest
+	(*RegisterClusterResponse)(nil), // 1: paralus.dev.rpc.v3.RegisterClusterResponse
+	(*DeleteClusterResponse)(nil),   // 2: paralus.dev.rpc.v3.DeleteClusterResponse
+	(*v3.Cluster)(nil),              // 3: paralus.dev.types.infra.v3.Cluster
+	(*v31.QueryOptions)(nil),        // 4: paralus.dev.types.common.v3.QueryOptions
+	(*v3.ClusterList)(nil),          // 5: paralus.dev.types.infra.v3.ClusterList
+	(*v31.HttpBody)(nil),            // 6: paralus.dev.types.common.v3.HttpBody
 }
 var file_proto_rpc_scheduler_cluster_proto_depIdxs = []int32{
-	3, // 0: rafay.dev.rpc.v3.Cluster.CreateCluster:input_type -> rafay.dev.types.infra.v3.Cluster
-	4, // 1: rafay.dev.rpc.v3.Cluster.GetClusters:input_type -> rafay.dev.types.common.v3.QueryOptions
-	3, // 2: rafay.dev.rpc.v3.Cluster.GetCluster:input_type -> rafay.dev.types.infra.v3.Cluster
-	3, // 3: rafay.dev.rpc.v3.Cluster.UpdateCluster:input_type -> rafay.dev.types.infra.v3.Cluster
-	3, // 4: rafay.dev.rpc.v3.Cluster.DeleteCluster:input_type -> rafay.dev.types.infra.v3.Cluster
-	3, // 5: rafay.dev.rpc.v3.Cluster.DownloadCluster:input_type -> rafay.dev.types.infra.v3.Cluster
-	3, // 6: rafay.dev.rpc.v3.Cluster.CreateCluster:output_type -> rafay.dev.types.infra.v3.Cluster
-	5, // 7: rafay.dev.rpc.v3.Cluster.GetClusters:output_type -> rafay.dev.types.infra.v3.ClusterList
-	3, // 8: rafay.dev.rpc.v3.Cluster.GetCluster:output_type -> rafay.dev.types.infra.v3.Cluster
-	3, // 9: rafay.dev.rpc.v3.Cluster.UpdateCluster:output_type -> rafay.dev.types.infra.v3.Cluster
-	2, // 10: rafay.dev.rpc.v3.Cluster.DeleteCluster:output_type -> rafay.dev.rpc.v3.DeleteClusterResponse
-	6, // 11: rafay.dev.rpc.v3.Cluster.DownloadCluster:output_type -> rafay.dev.types.common.v3.HttpBody
+	3, // 0: paralus.dev.rpc.v3.Cluster.CreateCluster:input_type -> paralus.dev.types.infra.v3.Cluster
+	4, // 1: paralus.dev.rpc.v3.Cluster.GetClusters:input_type -> paralus.dev.types.common.v3.QueryOptions
+	3, // 2: paralus.dev.rpc.v3.Cluster.GetCluster:input_type -> paralus.dev.types.infra.v3.Cluster
+	3, // 3: paralus.dev.rpc.v3.Cluster.UpdateCluster:input_type -> paralus.dev.types.infra.v3.Cluster
+	3, // 4: paralus.dev.rpc.v3.Cluster.DeleteCluster:input_type -> paralus.dev.types.infra.v3.Cluster
+	3, // 5: paralus.dev.rpc.v3.Cluster.DownloadCluster:input_type -> paralus.dev.types.infra.v3.Cluster
+	3, // 6: paralus.dev.rpc.v3.Cluster.CreateCluster:output_type -> paralus.dev.types.infra.v3.Cluster
+	5, // 7: paralus.dev.rpc.v3.Cluster.GetClusters:output_type -> paralus.dev.types.infra.v3.ClusterList
+	3, // 8: paralus.dev.rpc.v3.Cluster.GetCluster:output_type -> paralus.dev.types.infra.v3.Cluster
+	3, // 9: paralus.dev.rpc.v3.Cluster.UpdateCluster:output_type -> paralus.dev.types.infra.v3.Cluster
+	2, // 10: paralus.dev.rpc.v3.Cluster.DeleteCluster:output_type -> paralus.dev.rpc.v3.DeleteClusterResponse
+	6, // 11: paralus.dev.rpc.v3.Cluster.DownloadCluster:output_type -> paralus.dev.types.common.v3.HttpBody
 	6, // [6:12] is the sub-list for method output_type
 	0, // [0:6] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

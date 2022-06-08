@@ -15,8 +15,8 @@ const (
 type rafayJSON struct {
 }
 
-// NewRafayJSON returns new grpc gateway rafay json marshaller
-func NewRafayJSON() runtime.Marshaler {
+// NewParalusJSON returns new grpc gateway rafay json marshaller
+func NewParalusJSON() runtime.Marshaler {
 	return &rafayJSON{}
 }
 

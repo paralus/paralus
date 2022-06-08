@@ -7,8 +7,8 @@
 package eventv1
 
 import (
-	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -389,11 +389,11 @@ var file_proto_rpc_audit_auditlog_proto_goTypes = []interface{}{
 	(*AuditLogQueryFilter)(nil),    // 0: rep.framework.event.v1.auditLogQueryFilter
 	(*AuditLogSearchRequest)(nil),  // 1: rep.framework.event.v1.auditLogSearchRequest
 	(*AuditLogSearchResponse)(nil), // 2: rep.framework.event.v1.auditLogSearchResponse
-	(*v3.Metadata)(nil),            // 3: rafay.dev.types.common.v3.Metadata
+	(*v3.Metadata)(nil),            // 3: paralus.dev.types.common.v3.Metadata
 	(*structpb.Struct)(nil),        // 4: google.protobuf.Struct
 }
 var file_proto_rpc_audit_auditlog_proto_depIdxs = []int32{
-	3, // 0: rep.framework.event.v1.auditLogSearchRequest.metadata:type_name -> rafay.dev.types.common.v3.Metadata
+	3, // 0: rep.framework.event.v1.auditLogSearchRequest.metadata:type_name -> paralus.dev.types.common.v3.Metadata
 	0, // 1: rep.framework.event.v1.auditLogSearchRequest.filter:type_name -> rep.framework.event.v1.auditLogQueryFilter
 	4, // 2: rep.framework.event.v1.auditLogSearchResponse.result:type_name -> google.protobuf.Struct
 	1, // 3: rep.framework.event.v1.AuditLog.getAuditLog:input_type -> rep.framework.event.v1.auditLogSearchRequest

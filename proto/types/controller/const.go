@@ -2,20 +2,20 @@ package controller
 
 const (
 	// PreDeleteFinalizer is the finalizer for all cluster CRD pre delete
-	PreDeleteFinalizer = "cluster.rafay.dev.v2.predelete"
+	PreDeleteFinalizer = "cluster.paralus.dev.v2.predelete"
 	// OwnerRef is set if a kubernetes resource is owned by rafay cluster controllers
 	// this is used in place of k8s owner ref to enable managing namespaced/non namespaced
 	// resources across namespaces
-	OwnerRef = "rafay.dev/ownerRef"
+	OwnerRef = "paralus.dev/ownerRef"
 
 	// PrunedSteps is the annotation describing steps pruned from the object
-	PrunedSteps = "rafay.dev/pruned"
+	PrunedSteps = "paralus.dev/pruned"
 
 	// OrignalConfig is the annotation which stores the last applied config (this is equivalent to kubectl last applied config)
 	// on an k8s resource
 	// this is used to caliculating 3 way merge patches
-	// Note: Rafay CRDs are not patched, they are updated and all the resouces created through them are patched
-	OrignalConfig = "rafay.dev/original"
+	// Note: Paralus CRDs are not patched, they are updated and all the resouces created through them are patched
+	OrignalConfig = "paralus.dev/original"
 )
 
 // StepOnFailed determines what should be done when execution of a step fails

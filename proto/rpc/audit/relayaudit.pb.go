@@ -7,8 +7,8 @@
 package eventv1
 
 import (
-	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -172,7 +172,7 @@ type RelayAuditSearchRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// TODO: this was rafay.dev.common.types.v2.RafayMeta
+	// TODO: this was paralus.dev.common.types.v2.ParalusMeta
 	Metadata  *v3.Metadata           `protobuf:"bytes,1,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	Filter    *RelayAuditQueryFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	AuditType string                 `protobuf:"bytes,3,opt,name=auditType,proto3" json:"auditType,omitempty"`
@@ -444,11 +444,11 @@ var file_proto_rpc_audit_relayaudit_proto_goTypes = []interface{}{
 	(*RelayAuditQueryFilter)(nil),    // 0: rep.framework.event.v1.relayAuditQueryFilter
 	(*RelayAuditSearchRequest)(nil),  // 1: rep.framework.event.v1.relayAuditSearchRequest
 	(*RelayAuditSearchResponse)(nil), // 2: rep.framework.event.v1.relayAuditSearchResponse
-	(*v3.Metadata)(nil),              // 3: rafay.dev.types.common.v3.Metadata
+	(*v3.Metadata)(nil),              // 3: paralus.dev.types.common.v3.Metadata
 	(*structpb.Struct)(nil),          // 4: google.protobuf.Struct
 }
 var file_proto_rpc_audit_relayaudit_proto_depIdxs = []int32{
-	3, // 0: rep.framework.event.v1.relayAuditSearchRequest.metadata:type_name -> rafay.dev.types.common.v3.Metadata
+	3, // 0: rep.framework.event.v1.relayAuditSearchRequest.metadata:type_name -> paralus.dev.types.common.v3.Metadata
 	0, // 1: rep.framework.event.v1.relayAuditSearchRequest.filter:type_name -> rep.framework.event.v1.relayAuditQueryFilter
 	4, // 2: rep.framework.event.v1.relayAuditSearchResponse.result:type_name -> google.protobuf.Struct
 	1, // 3: rep.framework.event.v1.RelayAudit.getRelayAPIAudit:input_type -> rep.framework.event.v1.relayAuditSearchRequest

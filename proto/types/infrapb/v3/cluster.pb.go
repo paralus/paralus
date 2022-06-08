@@ -7,8 +7,8 @@
 package infrav3
 
 import (
-	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -492,7 +492,7 @@ type ClusterSpec struct {
 	Metro            *Metro           `protobuf:"bytes,2,opt,name=metro,proto3" json:"metro,omitempty"`
 	OverrideSelector string           `protobuf:"bytes,3,opt,name=overrideSelector,proto3" json:"overrideSelector,omitempty"`
 	Params           *ProvisionParams `protobuf:"bytes,4,opt,name=params,proto3" json:"params,omitempty"`
-	ShareMode        ClusterShareMode `protobuf:"varint,5,opt,name=shareMode,proto3,enum=rafay.dev.types.infra.v3.ClusterShareMode" json:"shareMode,omitempty"`
+	ShareMode        ClusterShareMode `protobuf:"varint,5,opt,name=shareMode,proto3,enum=paralus.dev.types.infra.v3.ClusterShareMode" json:"shareMode,omitempty"`
 	ProxyConfig      *ProxyConfig     `protobuf:"bytes,6,opt,name=proxyConfig,proto3" json:"proxyConfig,omitempty"`
 	ClusterData      *ClusterData     `protobuf:"bytes,7,opt,name=clusterData,proto3" json:"clusterData,omitempty"`
 }
@@ -588,7 +588,7 @@ type ClusterData struct {
 	Cname            string            `protobuf:"bytes,3,opt,name=cname,proto3" json:"cname,omitempty"`
 	Arecord          string            `protobuf:"bytes,4,opt,name=arecord,proto3" json:"arecord,omitempty"`
 	DisplayName      string            `protobuf:"bytes,5,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
-	Health           Health            `protobuf:"varint,6,opt,name=health,proto3,enum=rafay.dev.types.infra.v3.Health" json:"health,omitempty"`
+	Health           Health            `protobuf:"varint,6,opt,name=health,proto3,enum=paralus.dev.types.infra.v3.Health" json:"health,omitempty"`
 	Manufacturer     string            `protobuf:"bytes,7,opt,name=manufacturer,proto3" json:"manufacturer,omitempty"`
 	ClusterBlueprint string            `protobuf:"bytes,8,opt,name=cluster_blueprint,json=clusterBlueprint,proto3" json:"cluster_blueprint,omitempty"`
 	Nodes            []*ClusterNode    `protobuf:"bytes,9,rep,name=nodes,proto3" json:"nodes,omitempty"`
@@ -1049,7 +1049,7 @@ type ClusterNodeStatus struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	State       ClusterNodeState    `protobuf:"varint,1,opt,name=state,proto3,enum=rafay.dev.types.infra.v3.ClusterNodeState" json:"state,omitempty"`
+	State       ClusterNodeState    `protobuf:"varint,1,opt,name=state,proto3,enum=paralus.dev.types.infra.v3.ClusterNodeState" json:"state,omitempty"`
 	Conditions  []*v1.NodeCondition `protobuf:"bytes,2,rep,name=conditions,proto3" json:"conditions,omitempty"`
 	NodeInfo    *v1.NodeSystemInfo  `protobuf:"bytes,3,opt,name=nodeInfo,proto3" json:"nodeInfo,omitempty"`
 	Capacity    *Resources          `protobuf:"bytes,4,opt,name=capacity,proto3" json:"capacity,omitempty"`
@@ -1199,10 +1199,10 @@ type ClusterCondition struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Type        ClusterConditionType    `protobuf:"varint,1,opt,name=type,proto3,enum=rafay.dev.types.infra.v3.ClusterConditionType" json:"type,omitempty"`
-	Status      v3.RafayConditionStatus `protobuf:"varint,2,opt,name=status,proto3,enum=rafay.dev.types.common.v3.RafayConditionStatus" json:"status,omitempty"`
-	LastUpdated *timestamppb.Timestamp  `protobuf:"bytes,3,opt,name=lastUpdated,proto3" json:"lastUpdated,omitempty"`
-	Reason      string                  `protobuf:"bytes,4,opt,name=reason,proto3" json:"reason,omitempty"`
+	Type        ClusterConditionType      `protobuf:"varint,1,opt,name=type,proto3,enum=paralus.dev.types.infra.v3.ClusterConditionType" json:"type,omitempty"`
+	Status      v3.ParalusConditionStatus `protobuf:"varint,2,opt,name=status,proto3,enum=paralus.dev.types.common.v3.ParalusConditionStatus" json:"status,omitempty"`
+	LastUpdated *timestamppb.Timestamp    `protobuf:"bytes,3,opt,name=lastUpdated,proto3" json:"lastUpdated,omitempty"`
+	Reason      string                    `protobuf:"bytes,4,opt,name=reason,proto3" json:"reason,omitempty"`
 }
 
 func (x *ClusterCondition) Reset() {
@@ -1244,11 +1244,11 @@ func (x *ClusterCondition) GetType() ClusterConditionType {
 	return ClusterConditionType_ClusterBlueprintSync
 }
 
-func (x *ClusterCondition) GetStatus() v3.RafayConditionStatus {
+func (x *ClusterCondition) GetStatus() v3.ParalusConditionStatus {
 	if x != nil {
 		return x.Status
 	}
-	return v3.RafayConditionStatus(0)
+	return v3.ParalusConditionStatus(0)
 }
 
 func (x *ClusterCondition) GetLastUpdated() *timestamppb.Timestamp {
@@ -1721,7 +1721,7 @@ type ClusterTokenSpec struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	TokenType ClusterTokenType `protobuf:"varint,1,opt,name=tokenType,proto3,enum=rafay.dev.types.infra.v3.ClusterTokenType" json:"tokenType,omitempty"`
+	TokenType ClusterTokenType `protobuf:"varint,1,opt,name=tokenType,proto3,enum=paralus.dev.types.infra.v3.ClusterTokenType" json:"tokenType,omitempty"`
 }
 
 func (x *ClusterTokenSpec) Reset() {
@@ -1768,7 +1768,7 @@ type ClusterTokenStatus struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	State ClusterTokenState `protobuf:"varint,1,opt,name=state,proto3,enum=rafay.dev.types.infra.v3.ClusterTokenState" json:"state,omitempty"`
+	State ClusterTokenState `protobuf:"varint,1,opt,name=state,proto3,enum=paralus.dev.types.infra.v3.ClusterTokenState" json:"state,omitempty"`
 }
 
 func (x *ClusterTokenStatus) Reset() {
@@ -2580,82 +2580,82 @@ func file_proto_types_infrapb_v3_cluster_proto_rawDescGZIP() []byte {
 var file_proto_types_infrapb_v3_cluster_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
 var file_proto_types_infrapb_v3_cluster_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_proto_types_infrapb_v3_cluster_proto_goTypes = []interface{}{
-	(ClusterNodeState)(0),         // 0: rafay.dev.types.infra.v3.ClusterNodeState
-	(ClusterConditionType)(0),     // 1: rafay.dev.types.infra.v3.ClusterConditionType
-	(ClusterShareMode)(0),         // 2: rafay.dev.types.infra.v3.ClusterShareMode
-	(Health)(0),                   // 3: rafay.dev.types.infra.v3.Health
-	(ClusterTokenType)(0),         // 4: rafay.dev.types.infra.v3.ClusterTokenType
-	(ClusterTokenState)(0),        // 5: rafay.dev.types.infra.v3.ClusterTokenState
-	(*Cluster)(nil),               // 6: rafay.dev.types.infra.v3.Cluster
-	(*ClusterList)(nil),           // 7: rafay.dev.types.infra.v3.ClusterList
-	(*ClusterSpec)(nil),           // 8: rafay.dev.types.infra.v3.ClusterSpec
-	(*ClusterData)(nil),           // 9: rafay.dev.types.infra.v3.ClusterData
-	(*ClusterStatus)(nil),         // 10: rafay.dev.types.infra.v3.ClusterStatus
-	(*Resources)(nil),             // 11: rafay.dev.types.infra.v3.Resources
-	(*ProjectCluster)(nil),        // 12: rafay.dev.types.infra.v3.ProjectCluster
-	(*ClusterNode)(nil),           // 13: rafay.dev.types.infra.v3.ClusterNode
-	(*ClusterNodeSpec)(nil),       // 14: rafay.dev.types.infra.v3.ClusterNodeSpec
-	(*ClusterNodeStatus)(nil),     // 15: rafay.dev.types.infra.v3.ClusterNodeStatus
-	(*ClusterNodeIP)(nil),         // 16: rafay.dev.types.infra.v3.ClusterNodeIP
-	(*ClusterCondition)(nil),      // 17: rafay.dev.types.infra.v3.ClusterCondition
-	(*Location)(nil),              // 18: rafay.dev.types.infra.v3.Location
-	(*Metro)(nil),                 // 19: rafay.dev.types.infra.v3.Metro
-	(*LocationList)(nil),          // 20: rafay.dev.types.infra.v3.LocationList
-	(*ProvisionParams)(nil),       // 21: rafay.dev.types.infra.v3.ProvisionParams
-	(*ProxyConfig)(nil),           // 22: rafay.dev.types.infra.v3.ProxyConfig
-	(*ClusterTokenSpec)(nil),      // 23: rafay.dev.types.infra.v3.ClusterTokenSpec
-	(*ClusterTokenStatus)(nil),    // 24: rafay.dev.types.infra.v3.ClusterTokenStatus
-	(*ClusterToken)(nil),          // 25: rafay.dev.types.infra.v3.ClusterToken
-	(*NameHash)(nil),              // 26: rafay.dev.types.infra.v3.NameHash
-	(*v3.Metadata)(nil),           // 27: rafay.dev.types.common.v3.Metadata
-	(*v3.Status)(nil),             // 28: rafay.dev.types.common.v3.Status
-	(*v3.ListMetadata)(nil),       // 29: rafay.dev.types.common.v3.ListMetadata
-	(*v1.Taint)(nil),              // 30: k8s.io.api.core.v1.Taint
-	(*v1.NodeCondition)(nil),      // 31: k8s.io.api.core.v1.NodeCondition
-	(*v1.NodeSystemInfo)(nil),     // 32: k8s.io.api.core.v1.NodeSystemInfo
-	(v3.RafayConditionStatus)(0),  // 33: rafay.dev.types.common.v3.RafayConditionStatus
-	(*timestamppb.Timestamp)(nil), // 34: google.protobuf.Timestamp
+	(ClusterNodeState)(0),          // 0: paralus.dev.types.infra.v3.ClusterNodeState
+	(ClusterConditionType)(0),      // 1: paralus.dev.types.infra.v3.ClusterConditionType
+	(ClusterShareMode)(0),          // 2: paralus.dev.types.infra.v3.ClusterShareMode
+	(Health)(0),                    // 3: paralus.dev.types.infra.v3.Health
+	(ClusterTokenType)(0),          // 4: paralus.dev.types.infra.v3.ClusterTokenType
+	(ClusterTokenState)(0),         // 5: paralus.dev.types.infra.v3.ClusterTokenState
+	(*Cluster)(nil),                // 6: paralus.dev.types.infra.v3.Cluster
+	(*ClusterList)(nil),            // 7: paralus.dev.types.infra.v3.ClusterList
+	(*ClusterSpec)(nil),            // 8: paralus.dev.types.infra.v3.ClusterSpec
+	(*ClusterData)(nil),            // 9: paralus.dev.types.infra.v3.ClusterData
+	(*ClusterStatus)(nil),          // 10: paralus.dev.types.infra.v3.ClusterStatus
+	(*Resources)(nil),              // 11: paralus.dev.types.infra.v3.Resources
+	(*ProjectCluster)(nil),         // 12: paralus.dev.types.infra.v3.ProjectCluster
+	(*ClusterNode)(nil),            // 13: paralus.dev.types.infra.v3.ClusterNode
+	(*ClusterNodeSpec)(nil),        // 14: paralus.dev.types.infra.v3.ClusterNodeSpec
+	(*ClusterNodeStatus)(nil),      // 15: paralus.dev.types.infra.v3.ClusterNodeStatus
+	(*ClusterNodeIP)(nil),          // 16: paralus.dev.types.infra.v3.ClusterNodeIP
+	(*ClusterCondition)(nil),       // 17: paralus.dev.types.infra.v3.ClusterCondition
+	(*Location)(nil),               // 18: paralus.dev.types.infra.v3.Location
+	(*Metro)(nil),                  // 19: paralus.dev.types.infra.v3.Metro
+	(*LocationList)(nil),           // 20: paralus.dev.types.infra.v3.LocationList
+	(*ProvisionParams)(nil),        // 21: paralus.dev.types.infra.v3.ProvisionParams
+	(*ProxyConfig)(nil),            // 22: paralus.dev.types.infra.v3.ProxyConfig
+	(*ClusterTokenSpec)(nil),       // 23: paralus.dev.types.infra.v3.ClusterTokenSpec
+	(*ClusterTokenStatus)(nil),     // 24: paralus.dev.types.infra.v3.ClusterTokenStatus
+	(*ClusterToken)(nil),           // 25: paralus.dev.types.infra.v3.ClusterToken
+	(*NameHash)(nil),               // 26: paralus.dev.types.infra.v3.NameHash
+	(*v3.Metadata)(nil),            // 27: paralus.dev.types.common.v3.Metadata
+	(*v3.Status)(nil),              // 28: paralus.dev.types.common.v3.Status
+	(*v3.ListMetadata)(nil),        // 29: paralus.dev.types.common.v3.ListMetadata
+	(*v1.Taint)(nil),               // 30: k8s.io.api.core.v1.Taint
+	(*v1.NodeCondition)(nil),       // 31: k8s.io.api.core.v1.NodeCondition
+	(*v1.NodeSystemInfo)(nil),      // 32: k8s.io.api.core.v1.NodeSystemInfo
+	(v3.ParalusConditionStatus)(0), // 33: paralus.dev.types.common.v3.ParalusConditionStatus
+	(*timestamppb.Timestamp)(nil),  // 34: google.protobuf.Timestamp
 }
 var file_proto_types_infrapb_v3_cluster_proto_depIdxs = []int32{
-	27, // 0: rafay.dev.types.infra.v3.Cluster.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	8,  // 1: rafay.dev.types.infra.v3.Cluster.spec:type_name -> rafay.dev.types.infra.v3.ClusterSpec
-	28, // 2: rafay.dev.types.infra.v3.Cluster.status:type_name -> rafay.dev.types.common.v3.Status
-	29, // 3: rafay.dev.types.infra.v3.ClusterList.metadata:type_name -> rafay.dev.types.common.v3.ListMetadata
-	6,  // 4: rafay.dev.types.infra.v3.ClusterList.items:type_name -> rafay.dev.types.infra.v3.Cluster
-	19, // 5: rafay.dev.types.infra.v3.ClusterSpec.metro:type_name -> rafay.dev.types.infra.v3.Metro
-	21, // 6: rafay.dev.types.infra.v3.ClusterSpec.params:type_name -> rafay.dev.types.infra.v3.ProvisionParams
-	2,  // 7: rafay.dev.types.infra.v3.ClusterSpec.shareMode:type_name -> rafay.dev.types.infra.v3.ClusterShareMode
-	22, // 8: rafay.dev.types.infra.v3.ClusterSpec.proxyConfig:type_name -> rafay.dev.types.infra.v3.ProxyConfig
-	9,  // 9: rafay.dev.types.infra.v3.ClusterSpec.clusterData:type_name -> rafay.dev.types.infra.v3.ClusterData
-	3,  // 10: rafay.dev.types.infra.v3.ClusterData.health:type_name -> rafay.dev.types.infra.v3.Health
-	13, // 11: rafay.dev.types.infra.v3.ClusterData.nodes:type_name -> rafay.dev.types.infra.v3.ClusterNode
-	12, // 12: rafay.dev.types.infra.v3.ClusterData.projects:type_name -> rafay.dev.types.infra.v3.ProjectCluster
-	10, // 13: rafay.dev.types.infra.v3.ClusterData.cluster_status:type_name -> rafay.dev.types.infra.v3.ClusterStatus
-	17, // 14: rafay.dev.types.infra.v3.ClusterStatus.conditions:type_name -> rafay.dev.types.infra.v3.ClusterCondition
-	27, // 15: rafay.dev.types.infra.v3.ClusterNode.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	14, // 16: rafay.dev.types.infra.v3.ClusterNode.spec:type_name -> rafay.dev.types.infra.v3.ClusterNodeSpec
-	15, // 17: rafay.dev.types.infra.v3.ClusterNode.status:type_name -> rafay.dev.types.infra.v3.ClusterNodeStatus
-	30, // 18: rafay.dev.types.infra.v3.ClusterNodeSpec.taints:type_name -> k8s.io.api.core.v1.Taint
-	0,  // 19: rafay.dev.types.infra.v3.ClusterNodeStatus.state:type_name -> rafay.dev.types.infra.v3.ClusterNodeState
-	31, // 20: rafay.dev.types.infra.v3.ClusterNodeStatus.conditions:type_name -> k8s.io.api.core.v1.NodeCondition
-	32, // 21: rafay.dev.types.infra.v3.ClusterNodeStatus.nodeInfo:type_name -> k8s.io.api.core.v1.NodeSystemInfo
-	11, // 22: rafay.dev.types.infra.v3.ClusterNodeStatus.capacity:type_name -> rafay.dev.types.infra.v3.Resources
-	11, // 23: rafay.dev.types.infra.v3.ClusterNodeStatus.allocatable:type_name -> rafay.dev.types.infra.v3.Resources
-	11, // 24: rafay.dev.types.infra.v3.ClusterNodeStatus.allocated:type_name -> rafay.dev.types.infra.v3.Resources
-	16, // 25: rafay.dev.types.infra.v3.ClusterNodeStatus.ips:type_name -> rafay.dev.types.infra.v3.ClusterNodeIP
-	1,  // 26: rafay.dev.types.infra.v3.ClusterCondition.type:type_name -> rafay.dev.types.infra.v3.ClusterConditionType
-	33, // 27: rafay.dev.types.infra.v3.ClusterCondition.status:type_name -> rafay.dev.types.common.v3.RafayConditionStatus
-	34, // 28: rafay.dev.types.infra.v3.ClusterCondition.lastUpdated:type_name -> google.protobuf.Timestamp
-	27, // 29: rafay.dev.types.infra.v3.Location.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	19, // 30: rafay.dev.types.infra.v3.Location.spec:type_name -> rafay.dev.types.infra.v3.Metro
-	28, // 31: rafay.dev.types.infra.v3.Location.status:type_name -> rafay.dev.types.common.v3.Status
-	29, // 32: rafay.dev.types.infra.v3.LocationList.metadata:type_name -> rafay.dev.types.common.v3.ListMetadata
-	19, // 33: rafay.dev.types.infra.v3.LocationList.items:type_name -> rafay.dev.types.infra.v3.Metro
-	4,  // 34: rafay.dev.types.infra.v3.ClusterTokenSpec.tokenType:type_name -> rafay.dev.types.infra.v3.ClusterTokenType
-	5,  // 35: rafay.dev.types.infra.v3.ClusterTokenStatus.state:type_name -> rafay.dev.types.infra.v3.ClusterTokenState
-	27, // 36: rafay.dev.types.infra.v3.ClusterToken.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	23, // 37: rafay.dev.types.infra.v3.ClusterToken.spec:type_name -> rafay.dev.types.infra.v3.ClusterTokenSpec
-	24, // 38: rafay.dev.types.infra.v3.ClusterToken.status:type_name -> rafay.dev.types.infra.v3.ClusterTokenStatus
+	27, // 0: paralus.dev.types.infra.v3.Cluster.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	8,  // 1: paralus.dev.types.infra.v3.Cluster.spec:type_name -> paralus.dev.types.infra.v3.ClusterSpec
+	28, // 2: paralus.dev.types.infra.v3.Cluster.status:type_name -> paralus.dev.types.common.v3.Status
+	29, // 3: paralus.dev.types.infra.v3.ClusterList.metadata:type_name -> paralus.dev.types.common.v3.ListMetadata
+	6,  // 4: paralus.dev.types.infra.v3.ClusterList.items:type_name -> paralus.dev.types.infra.v3.Cluster
+	19, // 5: paralus.dev.types.infra.v3.ClusterSpec.metro:type_name -> paralus.dev.types.infra.v3.Metro
+	21, // 6: paralus.dev.types.infra.v3.ClusterSpec.params:type_name -> paralus.dev.types.infra.v3.ProvisionParams
+	2,  // 7: paralus.dev.types.infra.v3.ClusterSpec.shareMode:type_name -> paralus.dev.types.infra.v3.ClusterShareMode
+	22, // 8: paralus.dev.types.infra.v3.ClusterSpec.proxyConfig:type_name -> paralus.dev.types.infra.v3.ProxyConfig
+	9,  // 9: paralus.dev.types.infra.v3.ClusterSpec.clusterData:type_name -> paralus.dev.types.infra.v3.ClusterData
+	3,  // 10: paralus.dev.types.infra.v3.ClusterData.health:type_name -> paralus.dev.types.infra.v3.Health
+	13, // 11: paralus.dev.types.infra.v3.ClusterData.nodes:type_name -> paralus.dev.types.infra.v3.ClusterNode
+	12, // 12: paralus.dev.types.infra.v3.ClusterData.projects:type_name -> paralus.dev.types.infra.v3.ProjectCluster
+	10, // 13: paralus.dev.types.infra.v3.ClusterData.cluster_status:type_name -> paralus.dev.types.infra.v3.ClusterStatus
+	17, // 14: paralus.dev.types.infra.v3.ClusterStatus.conditions:type_name -> paralus.dev.types.infra.v3.ClusterCondition
+	27, // 15: paralus.dev.types.infra.v3.ClusterNode.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	14, // 16: paralus.dev.types.infra.v3.ClusterNode.spec:type_name -> paralus.dev.types.infra.v3.ClusterNodeSpec
+	15, // 17: paralus.dev.types.infra.v3.ClusterNode.status:type_name -> paralus.dev.types.infra.v3.ClusterNodeStatus
+	30, // 18: paralus.dev.types.infra.v3.ClusterNodeSpec.taints:type_name -> k8s.io.api.core.v1.Taint
+	0,  // 19: paralus.dev.types.infra.v3.ClusterNodeStatus.state:type_name -> paralus.dev.types.infra.v3.ClusterNodeState
+	31, // 20: paralus.dev.types.infra.v3.ClusterNodeStatus.conditions:type_name -> k8s.io.api.core.v1.NodeCondition
+	32, // 21: paralus.dev.types.infra.v3.ClusterNodeStatus.nodeInfo:type_name -> k8s.io.api.core.v1.NodeSystemInfo
+	11, // 22: paralus.dev.types.infra.v3.ClusterNodeStatus.capacity:type_name -> paralus.dev.types.infra.v3.Resources
+	11, // 23: paralus.dev.types.infra.v3.ClusterNodeStatus.allocatable:type_name -> paralus.dev.types.infra.v3.Resources
+	11, // 24: paralus.dev.types.infra.v3.ClusterNodeStatus.allocated:type_name -> paralus.dev.types.infra.v3.Resources
+	16, // 25: paralus.dev.types.infra.v3.ClusterNodeStatus.ips:type_name -> paralus.dev.types.infra.v3.ClusterNodeIP
+	1,  // 26: paralus.dev.types.infra.v3.ClusterCondition.type:type_name -> paralus.dev.types.infra.v3.ClusterConditionType
+	33, // 27: paralus.dev.types.infra.v3.ClusterCondition.status:type_name -> paralus.dev.types.common.v3.ParalusConditionStatus
+	34, // 28: paralus.dev.types.infra.v3.ClusterCondition.lastUpdated:type_name -> google.protobuf.Timestamp
+	27, // 29: paralus.dev.types.infra.v3.Location.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	19, // 30: paralus.dev.types.infra.v3.Location.spec:type_name -> paralus.dev.types.infra.v3.Metro
+	28, // 31: paralus.dev.types.infra.v3.Location.status:type_name -> paralus.dev.types.common.v3.Status
+	29, // 32: paralus.dev.types.infra.v3.LocationList.metadata:type_name -> paralus.dev.types.common.v3.ListMetadata
+	19, // 33: paralus.dev.types.infra.v3.LocationList.items:type_name -> paralus.dev.types.infra.v3.Metro
+	4,  // 34: paralus.dev.types.infra.v3.ClusterTokenSpec.tokenType:type_name -> paralus.dev.types.infra.v3.ClusterTokenType
+	5,  // 35: paralus.dev.types.infra.v3.ClusterTokenStatus.state:type_name -> paralus.dev.types.infra.v3.ClusterTokenState
+	27, // 36: paralus.dev.types.infra.v3.ClusterToken.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	23, // 37: paralus.dev.types.infra.v3.ClusterToken.spec:type_name -> paralus.dev.types.infra.v3.ClusterTokenSpec
+	24, // 38: paralus.dev.types.infra.v3.ClusterToken.status:type_name -> paralus.dev.types.infra.v3.ClusterTokenStatus
 	39, // [39:39] is the sub-list for method output_type
 	39, // [39:39] is the sub-list for method input_type
 	39, // [39:39] is the sub-list for extension type_name

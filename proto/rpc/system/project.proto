@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.rpc.v3;
+package paralus.dev.rpc.v3;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -9,7 +9,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {
     title : "Project Service"
     version : "3.0"
-    contact : {name : "Rafay Dev"}
+    contact : {name : "Paralus Dev"}
   }
   schemes : HTTPS
   consumes : "application/json"
@@ -23,7 +23,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     }
     security : {
       key : "ApiKeyAuth"
-      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-RAFAY-API-KEYID"}
+      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-PARALUS-API-KEYID"}
     }
   }
   security : {
@@ -53,8 +53,8 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service Project {
-    rpc CreateProject(rafay.dev.types.system.v3.Project)
-        returns (rafay.dev.types.system.v3.Project) {
+    rpc CreateProject(paralus.dev.types.system.v3.Project)
+        returns (paralus.dev.types.system.v3.Project) {
       option (google.api.http) = {
         post : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project"
         body : "*"
@@ -70,23 +70,23 @@ service Project {
       };
     };
   
-    rpc GetProjects(rafay.dev.types.system.v3.Project)
-        returns (rafay.dev.types.system.v3.ProjectList) {
+    rpc GetProjects(paralus.dev.types.system.v3.Project)
+        returns (paralus.dev.types.system.v3.ProjectList) {
       option (google.api.http) = {
         get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/projects"
       };
     };
   
-    rpc GetProject(rafay.dev.types.system.v3.Project)
-        returns (rafay.dev.types.system.v3.Project) {
+    rpc GetProject(paralus.dev.types.system.v3.Project)
+        returns (paralus.dev.types.system.v3.Project) {
       option (google.api.http) = {
         get : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/"
               "{metadata.name}"
       };
     };
   
-    rpc UpdateProject(rafay.dev.types.system.v3.Project)
-        returns (rafay.dev.types.system.v3.Project) {
+    rpc UpdateProject(paralus.dev.types.system.v3.Project)
+        returns (paralus.dev.types.system.v3.Project) {
       option (google.api.http) = {
         put : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/"
               "{metadata.name}"
@@ -94,8 +94,8 @@ service Project {
       };
     };
   
-    rpc DeleteProject(rafay.dev.types.system.v3.Project)
-        returns (rafay.dev.types.system.v3.Project) {
+    rpc DeleteProject(paralus.dev.types.system.v3.Project)
+        returns (paralus.dev.types.system.v3.Project) {
       option (google.api.http) = {
         delete : "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/"
                  "{metadata.name}"

@@ -46,9 +46,9 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 			// XXX: This requires any new items which does not follow
 			// metadata convention to be added here
 			switch strings.Split(info.FullMethod, "/")[1] {
-			case "rafay.dev.rpc.v3.Project":
+			case "paralus.dev.rpc.v3.Project":
 				project = meta.Name
-			case "rafay.dev.rpc.v3.Organization":
+			case "paralus.dev.rpc.v3.Organization":
 				org = meta.Name
 			}
 		}

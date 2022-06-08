@@ -24,8 +24,8 @@ const (
 	TerminalShell = "ts"
 	// WebShell is the session originated for browser based kubectl
 	WebShell = "ws"
-	// RafaySystem is the session originated for rafay system controller purpose e.g. native helm
-	RafaySystem = "rs"
+	// ParalusSystem is the session originated for rafay system controller purpose e.g. native helm
+	ParalusSystem = "rs"
 	// RelayNetwork is the session originated for custom relay network (non-core-relay)
 	RelayNetworkCN = "rn"
 )
@@ -82,7 +82,7 @@ func GetSessionTypeString(t string) string {
 		return "kubectl cli"
 	case WebShell:
 		return "browser shell"
-	case RafaySystem:
+	case ParalusSystem:
 		return "rafay system"
 	default:
 		return "unknown session type " + t

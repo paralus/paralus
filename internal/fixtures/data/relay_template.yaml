@@ -55,7 +55,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        - name: RAFAY_RELAY_PEERSERVICE
+        - name: PARALUS_RELAY_PEERSERVICE
           valueFrom:
             configMapKeyRef:
               key: sentry.peering.host
@@ -192,7 +192,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        - name: RAFAY_RELAY_PEERSERVICE
+        - name: PARALUS_RELAY_PEERSERVICE
           valueFrom:
             configMapKeyRef:
               key: sentry.peering.host

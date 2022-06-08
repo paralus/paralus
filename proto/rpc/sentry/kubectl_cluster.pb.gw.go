@@ -181,7 +181,7 @@ func RegisterKubectlClusterSettingsHandlerServer(ctx context.Context, mux *runti
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubectlClusterSettings/UpdateKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubectlClusterSettings/UpdateKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -204,7 +204,7 @@ func RegisterKubectlClusterSettingsHandlerServer(ctx context.Context, mux *runti
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubectlClusterSettings/GetKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubectlClusterSettings/GetKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -266,7 +266,7 @@ func RegisterKubectlClusterSettingsHandlerClient(ctx context.Context, mux *runti
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubectlClusterSettings/UpdateKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubectlClusterSettings/UpdateKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -286,7 +286,7 @@ func RegisterKubectlClusterSettingsHandlerClient(ctx context.Context, mux *runti
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubectlClusterSettings/GetKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubectlClusterSettings/GetKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

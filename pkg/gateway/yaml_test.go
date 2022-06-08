@@ -10,7 +10,7 @@ import (
 )
 
 func TestYamlMarshaller(t *testing.T) {
-	m := gateway.NewRafayYAML()
+	m := gateway.NewParalusYAML()
 
 	t1 := testdata.TestYAML{
 		Name:   "test",

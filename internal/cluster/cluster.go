@@ -65,7 +65,7 @@ func ExtractV2ClusterLabels(edgeDataLabels, clusterV2Labels map[string]string, e
 	}
 	// Copy over the labels inserted by platform
 	for key, value := range clusterV2Labels {
-		if strings.HasPrefix(key, constants.RafayDomainLabel+"/") {
+		if strings.HasPrefix(key, constants.ParalusDomainLabel+"/") {
 			switch key {
 			case constants.ClusterGPU, constants.ClusterGPUVendor, constants.ClusterLabelKey, constants.ClusterTypeKey, constants.ClusterLocationKey:
 				// Ignore the labels that infra adds so that we don't overwrite newer values

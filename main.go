@@ -12,6 +12,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	kclient "github.com/ory/kratos-client-go"
 	"github.com/paralus/paralus/internal/fixtures"
 	providers "github.com/paralus/paralus/internal/provider/kratos"
 	"github.com/paralus/paralus/pkg/audit"
@@ -33,8 +35,6 @@ import (
 	userrpc "github.com/paralus/paralus/proto/rpc/user"
 	authrpc "github.com/paralus/paralus/proto/rpc/v3"
 	"github.com/paralus/paralus/server"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	kclient "github.com/ory/kratos-client-go"
 	"github.com/spf13/viper"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -184,10 +184,10 @@ func setup() {
 	viper.SetDefault(dbPasswordEnv, "admindbpassword")
 
 	// relay
-	viper.SetDefault(sentryPeeringHostEnv, "peering.sentry.rafay.local:10001")
-	viper.SetDefault(coreRelayConnectorHostEnv, "*.core-connector.relay.rafay.local:10002")
-	viper.SetDefault(coreRelayUserHostEnv, "*.user.relay.rafay.local:10002")
-	viper.SetDefault(sentryBootstrapEnv, "console.rafay.dev:443")
+	viper.SetDefault(sentryPeeringHostEnv, "peering.sentry.paralus.local:10001")
+	viper.SetDefault(coreRelayConnectorHostEnv, "*.core-connector.relay.paralus.local:10002")
+	viper.SetDefault(coreRelayUserHostEnv, "*.user.relay.paralus.local:10002")
+	viper.SetDefault(sentryBootstrapEnv, "console.paralus.dev:443")
 	viper.SetDefault(bootstrapKEKEnv, "rafay")
 	viper.SetDefault(relayImageEnv, "registry.rafay-edge.net/rafay/rafay-relay-agent:r1.10.0-24")
 
@@ -199,8 +199,8 @@ func setup() {
 	viper.SetDefault(auditFileEnv, "audit.log")
 
 	// cd relay
-	viper.SetDefault(coreCDRelayUserHostEnv, "*.user.cdrelay.rafay.local:10012")
-	viper.SetDefault(coreCDRelayConnectorHostEnv, "*.core-connector.cdrelay.rafay.local:10012")
+	viper.SetDefault(coreCDRelayUserHostEnv, "*.user.cdrelay.paralus.local:10012")
+	viper.SetDefault(coreCDRelayConnectorHostEnv, "*.core-connector.cdrelay.paralus.local:10012")
 	viper.SetDefault(schedulerNamespaceEnv, "default")
 
 	// kratos
@@ -358,7 +358,7 @@ func setup() {
 			// This is primarily from ES not being available. ES being
 			// pretty heavy, you might not always wanna have it
 			// running in the background. This way, you can continue
-			// working on rcloud-base with ES eating up all the cpu.
+			// working on paralus with ES eating up all the cpu.
 			_log.Warn("unable to create auditLog service: ", err)
 		} else {
 			_log.Fatalw("unable to create auditLog service", "error", err)
@@ -587,13 +587,13 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	asv := authv3.NewAuthService(ac)
 	o := authv3.Option{
 		ExcludeRPCMethods: []string{
-			"/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate",
-			"/rafay.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent",
-			"/rafay.dev.sentry.rpc.KubeConfig/GetForClusterWebSession", //TODO: enable auth from prompt
-			"/rafay.dev.rpc.v3.Auth/IsRequestAllowed",
+			"/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate",
+			"/paralus.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent",
+			"/paralus.dev.sentry.rpc.KubeConfig/GetForClusterWebSession", //TODO: enable auth from prompt
+			"/paralus.dev.rpc.v3.Auth/IsRequestAllowed",
 		},
 		ExcludeAuthzMethods: []string{
-			"/rafay.dev.rpc.v3.User/GetUserInfo",
+			"/paralus.dev.rpc.v3.User/GetUserInfo",
 		},
 	}
 	opts = append(opts, _grpc.UnaryInterceptor(

@@ -7,8 +7,8 @@
 package rpcv3
 
 import (
-	v3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	v3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -138,20 +138,20 @@ var file_proto_rpc_system_organization_proto_rawDesc = []byte{
 }
 
 var file_proto_rpc_system_organization_proto_goTypes = []interface{}{
-	(*v3.Organization)(nil),     // 0: rafay.dev.types.system.v3.Organization
-	(*v3.OrganizationList)(nil), // 1: rafay.dev.types.system.v3.OrganizationList
+	(*v3.Organization)(nil),     // 0: paralus.dev.types.system.v3.Organization
+	(*v3.OrganizationList)(nil), // 1: paralus.dev.types.system.v3.OrganizationList
 }
 var file_proto_rpc_system_organization_proto_depIdxs = []int32{
-	0, // 0: rafay.dev.rpc.v3.Organization.CreateOrganization:input_type -> rafay.dev.types.system.v3.Organization
-	0, // 1: rafay.dev.rpc.v3.Organization.GetOrganizations:input_type -> rafay.dev.types.system.v3.Organization
-	0, // 2: rafay.dev.rpc.v3.Organization.GetOrganization:input_type -> rafay.dev.types.system.v3.Organization
-	0, // 3: rafay.dev.rpc.v3.Organization.UpdateOrganization:input_type -> rafay.dev.types.system.v3.Organization
-	0, // 4: rafay.dev.rpc.v3.Organization.DeleteOrganization:input_type -> rafay.dev.types.system.v3.Organization
-	0, // 5: rafay.dev.rpc.v3.Organization.CreateOrganization:output_type -> rafay.dev.types.system.v3.Organization
-	1, // 6: rafay.dev.rpc.v3.Organization.GetOrganizations:output_type -> rafay.dev.types.system.v3.OrganizationList
-	0, // 7: rafay.dev.rpc.v3.Organization.GetOrganization:output_type -> rafay.dev.types.system.v3.Organization
-	0, // 8: rafay.dev.rpc.v3.Organization.UpdateOrganization:output_type -> rafay.dev.types.system.v3.Organization
-	0, // 9: rafay.dev.rpc.v3.Organization.DeleteOrganization:output_type -> rafay.dev.types.system.v3.Organization
+	0, // 0: paralus.dev.rpc.v3.Organization.CreateOrganization:input_type -> paralus.dev.types.system.v3.Organization
+	0, // 1: paralus.dev.rpc.v3.Organization.GetOrganizations:input_type -> paralus.dev.types.system.v3.Organization
+	0, // 2: paralus.dev.rpc.v3.Organization.GetOrganization:input_type -> paralus.dev.types.system.v3.Organization
+	0, // 3: paralus.dev.rpc.v3.Organization.UpdateOrganization:input_type -> paralus.dev.types.system.v3.Organization
+	0, // 4: paralus.dev.rpc.v3.Organization.DeleteOrganization:input_type -> paralus.dev.types.system.v3.Organization
+	0, // 5: paralus.dev.rpc.v3.Organization.CreateOrganization:output_type -> paralus.dev.types.system.v3.Organization
+	1, // 6: paralus.dev.rpc.v3.Organization.GetOrganizations:output_type -> paralus.dev.types.system.v3.OrganizationList
+	0, // 7: paralus.dev.rpc.v3.Organization.GetOrganization:output_type -> paralus.dev.types.system.v3.Organization
+	0, // 8: paralus.dev.rpc.v3.Organization.UpdateOrganization:output_type -> paralus.dev.types.system.v3.Organization
+	0, // 9: paralus.dev.rpc.v3.Organization.DeleteOrganization:output_type -> paralus.dev.types.system.v3.Organization
 	5, // [5:10] is the sub-list for method output_type
 	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

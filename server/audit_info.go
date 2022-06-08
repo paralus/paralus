@@ -76,13 +76,13 @@ func (s *auditInfoServer) LookupCluster(ctx context.Context, req *sentryrpc.Look
 		return nil, err
 	}
 
-	ba, err := s.bs.GetBootstrapAgent(ctx, bat.Metadata.Labels["rafay.dev/connectorAgentTemplate"], query.WithName(clusterID), query.WithIgnoreScopeDefault(), query.WithDeleted())
+	ba, err := s.bs.GetBootstrapAgent(ctx, bat.Metadata.Labels["paralus.dev/connectorAgentTemplate"], query.WithName(clusterID), query.WithIgnoreScopeDefault(), query.WithDeleted())
 	if err != nil {
 		_log.Infow("unable to get bootstrap agent", "req", req, "error", err)
 		return nil, err
 	}
 
 	return &sentryrpc.LookupClusterResponse{
-		Name: ba.Metadata.Labels["rafay.dev/clusterName"],
+		Name: ba.Metadata.Labels["paralus.dev/clusterName"],
 	}, nil
 }

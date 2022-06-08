@@ -11,7 +11,7 @@ import (
 )
 
 // SentryClient is the interface for accessing all the RPCs
-// exposed by Rafay Sentry
+// exposed by Paralus Sentry
 type SentryClient interface {
 	Unhealthy()
 	Close() error
@@ -21,7 +21,7 @@ type SentryClient interface {
 }
 
 // SentryAuthorizationClient is the interface for accessing all the RPCs
-// exposed by Rafay Sentry for Authorization
+// exposed by Paralus Sentry for Authorization
 type SentryAuthorizationClient interface {
 	Unhealthy()
 	Close() error

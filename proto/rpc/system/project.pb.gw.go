@@ -13,9 +13,9 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/paralus/paralus/proto/types/systempb/v3"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
+	"github.com/paralus/paralus/proto/types/systempb/v3"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
@@ -550,7 +550,7 @@ func RegisterProjectHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Project/CreateProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Project/CreateProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -573,7 +573,7 @@ func RegisterProjectHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Project/GetProjects", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/projects"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Project/GetProjects", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/projects"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -596,7 +596,7 @@ func RegisterProjectHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Project/GetProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Project/GetProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -619,7 +619,7 @@ func RegisterProjectHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Project/UpdateProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Project/UpdateProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -642,7 +642,7 @@ func RegisterProjectHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Project/DeleteProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Project/DeleteProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -704,7 +704,7 @@ func RegisterProjectHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Project/CreateProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Project/CreateProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -724,7 +724,7 @@ func RegisterProjectHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Project/GetProjects", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/projects"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Project/GetProjects", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/projects"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -744,7 +744,7 @@ func RegisterProjectHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Project/GetProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Project/GetProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -764,7 +764,7 @@ func RegisterProjectHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Project/UpdateProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Project/UpdateProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -784,7 +784,7 @@ func RegisterProjectHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Project/DeleteProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Project/DeleteProject", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

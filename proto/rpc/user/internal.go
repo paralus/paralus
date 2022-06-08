@@ -8,7 +8,7 @@ import (
 )
 
 // UserClient is the interface for accessing all User & Group RPCs
-// exposed by Rafay Base
+// exposed by Paralus Base
 type UGClient interface {
 	Unhealthy()
 	Close() error

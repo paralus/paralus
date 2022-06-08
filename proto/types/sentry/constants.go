@@ -2,7 +2,7 @@ package sentry
 
 // rafay specific annotations/labels keys
 const (
-	ConfigV2Group = "config.rafay.dev/v2"
+	ConfigV2Group = "config.paralus.dev/v2"
 )
 
 // kubectl/kubeconfig permissions

@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.sentry.rpc;
+package paralus.dev.sentry.rpc;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -11,7 +11,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {
     title : "Sentry Cluster Authorization Service"
     version : "2.0"
-    contact : {name : "Rafay Dev"}
+    contact : {name : "Paralus Dev"}
   }
   schemes : HTTPS
   consumes : "application/json"
@@ -25,7 +25,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     }
     security : {
       key : "ApiKeyAuth"
-      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-RAFAY-API-KEYID"}
+      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-PARALUS-API-KEYID"}
     }
   }
   security : {
@@ -56,14 +56,14 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 
 message GetUserAuthorizationResponse {
   string userName = 1;
-  rafay.dev.types.controller.StepObject serviceAccount = 2;
-  repeated rafay.dev.types.controller.StepObject clusterRoles = 3;
-  repeated rafay.dev.types.controller.StepObject clusterRoleBindings = 4;
-  repeated rafay.dev.types.controller.StepObject roles = 5;
-  repeated rafay.dev.types.controller.StepObject roleBindings = 6;
-  repeated rafay.dev.types.controller.StepObject deleteClusterRoleBindings = 7;
-  repeated rafay.dev.types.controller.StepObject deleteRoleBindings = 8;
-  repeated rafay.dev.types.controller.StepObject namespaces = 9;
+  paralus.dev.types.controller.StepObject serviceAccount = 2;
+  repeated paralus.dev.types.controller.StepObject clusterRoles = 3;
+  repeated paralus.dev.types.controller.StepObject clusterRoleBindings = 4;
+  repeated paralus.dev.types.controller.StepObject roles = 5;
+  repeated paralus.dev.types.controller.StepObject roleBindings = 6;
+  repeated paralus.dev.types.controller.StepObject deleteClusterRoleBindings = 7;
+  repeated paralus.dev.types.controller.StepObject deleteRoleBindings = 8;
+  repeated paralus.dev.types.controller.StepObject namespaces = 9;
   string roleName = 10;
   bool isRead = 11;
   bool enforceOrgAdminOnlySecretAccess = 12;

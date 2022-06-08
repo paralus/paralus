@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.sentry.rpc;
+package paralus.dev.sentry.rpc;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -10,7 +10,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {
     title : "Sentry KubectlClusterSettings Service"
     version : "2.0"
-    contact : {name : "Rafay Dev"}
+    contact : {name : "Paralus Dev"}
   }
   schemes : HTTPS
   consumes : "application/json"
@@ -24,7 +24,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     }
     security : {
       key : "ApiKeyAuth"
-      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-RAFAY-API-KEYID"}
+      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-PARALUS-API-KEYID"}
     }
   }
   security : {
@@ -55,7 +55,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 
 
 message UpdateKubectlClusterSettingsRequest {
-	rafay.dev.types.common.v3.QueryOptions opts = 1;
+	paralus.dev.types.common.v3.QueryOptions opts = 1;
 	bool disableWebKubectl = 2;
   bool disableCLIKubectl = 3;
 }
@@ -63,7 +63,7 @@ message UpdateKubectlClusterSettingsRequest {
 message UpdateKubectlClusterSettingsResponse {}
 
 message GetKubectlClusterSettingsRequest {
-	rafay.dev.types.common.v3.QueryOptions opts = 1;
+	paralus.dev.types.common.v3.QueryOptions opts = 1;
 }
 
 message GetKubectlClusterSettingsResponse {

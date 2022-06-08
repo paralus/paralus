@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/paralus/paralus/internal/dao"
 	"github.com/paralus/paralus/internal/models"
 	"github.com/paralus/paralus/pkg/audit"
 	"github.com/paralus/paralus/pkg/utils"
 	systemv3 "github.com/paralus/paralus/proto/types/systempb/v3"
-	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"go.uber.org/zap"
 )
@@ -55,7 +55,7 @@ func CreateUserAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, actio
 				"roles_name": r, // TODO: add info like namespace and project
 			},
 		}
-		// user.role.created is user.project.created in rcloud
+		// user.role.created is user.project.created in paralus
 		if err := audit.CreateV1Event(al, sd, detail, "user.role.created", ""); err != nil {
 			_log.Warn("unable to create audit event", err)
 		}
@@ -91,7 +91,7 @@ func CreateUserAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, actio
 				"group_name": g,
 			},
 		}
-		// user.role.created is user.project.created in rcloud
+		// user.role.created is user.project.created in paralus
 		if err := audit.CreateV1Event(al, sd, detail, "user.group.created", ""); err != nil {
 			_log.Warn("unable to create audit event", err)
 		}
@@ -182,7 +182,7 @@ func CreateGroupAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, acti
 				"roles_name": r, // TODO: add info like namespace and project
 			},
 		}
-		// group.role.created is group.project.created in rcloud
+		// group.role.created is group.project.created in paralus
 		if err := audit.CreateV1Event(al, sd, detail, "group.role.created", ""); err != nil {
 			_log.Warn("unable to create audit event", err)
 		}
@@ -346,7 +346,7 @@ func CreateIdpAuditEvent(ctx context.Context, al *zap.Logger, action string, nam
 			"idp_name": name,
 		},
 	}
-	// idp.create.success is idp.config.created in rcloud
+	// idp.create.success is idp.config.created in paralus
 	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("idp.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}

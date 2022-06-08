@@ -12,14 +12,14 @@ func TestVerifyCertHostname(t *testing.T) {
 			CommonName: "---",
 		},
 		DNSNames: []string{
-			"peering.sentry.rafay.local",
-			"peering.sentry.rafay.local",
+			"peering.sentry.paralus.local",
+			"peering.sentry.paralus.local",
 			"rafay-sentry",
 			"rafay-sentry.rafay-system",
 			"rafay-sentry.rafay-system.cluster.local",
 		},
 	}
-	err := cert.VerifyHostname("peering.sentry.rafay.local")
+	err := cert.VerifyHostname("peering.sentry.paralus.local")
 	if err != nil {
 		t.Error(err)
 		return

@@ -7,8 +7,8 @@
 package systemv3
 
 import (
-	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	structpb "google.golang.org/protobuf/types/known/structpb"
@@ -380,17 +380,17 @@ func file_proto_types_systempb_v3_partner_proto_rawDescGZIP() []byte {
 
 var file_proto_types_systempb_v3_partner_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_types_systempb_v3_partner_proto_goTypes = []interface{}{
-	(*PartnerSpec)(nil),     // 0: rafay.dev.types.system.v3.PartnerSpec
-	(*Partner)(nil),         // 1: rafay.dev.types.system.v3.Partner
+	(*PartnerSpec)(nil),     // 0: paralus.dev.types.system.v3.PartnerSpec
+	(*Partner)(nil),         // 1: paralus.dev.types.system.v3.Partner
 	(*structpb.Struct)(nil), // 2: google.protobuf.Struct
-	(*v3.Metadata)(nil),     // 3: rafay.dev.types.common.v3.Metadata
-	(*v3.Status)(nil),       // 4: rafay.dev.types.common.v3.Status
+	(*v3.Metadata)(nil),     // 3: paralus.dev.types.common.v3.Metadata
+	(*v3.Status)(nil),       // 4: paralus.dev.types.common.v3.Status
 }
 var file_proto_types_systempb_v3_partner_proto_depIdxs = []int32{
-	2, // 0: rafay.dev.types.system.v3.PartnerSpec.settings:type_name -> google.protobuf.Struct
-	3, // 1: rafay.dev.types.system.v3.Partner.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	0, // 2: rafay.dev.types.system.v3.Partner.spec:type_name -> rafay.dev.types.system.v3.PartnerSpec
-	4, // 3: rafay.dev.types.system.v3.Partner.status:type_name -> rafay.dev.types.common.v3.Status
+	2, // 0: paralus.dev.types.system.v3.PartnerSpec.settings:type_name -> google.protobuf.Struct
+	3, // 1: paralus.dev.types.system.v3.Partner.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	0, // 2: paralus.dev.types.system.v3.Partner.spec:type_name -> paralus.dev.types.system.v3.PartnerSpec
+	4, // 3: paralus.dev.types.system.v3.Partner.status:type_name -> paralus.dev.types.common.v3.Status
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name

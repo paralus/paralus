@@ -4,7 +4,7 @@
     "title": "Cluster Service",
     "version": "3.0",
     "contact": {
-      "name": "Rafay Dev"
+      "name": "Paralus Dev"
     }
   },
   "tags": [
@@ -1922,7 +1922,7 @@
           "title": "Cluster Information"
         },
         "status": {
-          "$ref": "#/definitions/v3RafayConditionStatus",
+          "$ref": "#/definitions/v3ParalusConditionStatus",
           "description": "Current status of the cluster",
           "title": "Cluster Condition Status"
         },
@@ -2525,7 +2525,7 @@
         }
       }
     },
-    "v3RafayConditionStatus": {
+    "v3ParalusConditionStatus": {
       "type": "string",
       "enum": [
         "NotSet",
@@ -2541,7 +2541,7 @@
         "Submitted"
       ],
       "default": "NotSet",
-      "title": "RafayConditionStatus is the status of the status condition"
+      "title": "ParalusConditionStatus is the status of the status condition"
     },
     "v3Resources": {
       "type": "object",
@@ -2572,7 +2572,7 @@
   "securityDefinitions": {
     "ApiKeyAuth": {
       "type": "apiKey",
-      "name": "X-RAFAY-API-KEYID",
+      "name": "X-PARALUS-API-KEYID",
       "in": "header"
     },
     "BasicAuth": {

@@ -19,8 +19,8 @@ type HandlerFromEndpoint func(ctx context.Context, mux *runtime.ServeMux, endpoi
 // NewGateway returns new grpc gateway
 func NewGateway(ctx context.Context, endpoint string, serveMuxOptions []runtime.ServeMuxOption, handlers ...HandlerFromEndpoint) (http.Handler, error) {
 
-	rafayJSON := NewRafayJSON()
-	rafayYAML := NewRafayYAML()
+	rafayJSON := NewParalusJSON()
+	rafayYAML := NewParalusYAML()
 	httpBody := NewHTTPBodyMarshaler()
 	serveMuxOptions = append(serveMuxOptions,
 		runtime.WithMarshalerOption(runtime.MIMEWildcard, httpBody),

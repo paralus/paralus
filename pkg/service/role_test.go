@@ -6,10 +6,10 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/google/uuid"
 	"github.com/paralus/paralus/pkg/common"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	rolev3 "github.com/paralus/paralus/proto/types/rolepb/v3"
-	"github.com/google/uuid"
 )
 
 func performRoleBasicChecks(t *testing.T, role *rolev3.Role, ruuid string) {

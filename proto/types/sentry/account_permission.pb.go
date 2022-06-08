@@ -475,16 +475,16 @@ func file_proto_types_sentry_account_permission_proto_rawDescGZIP() []byte {
 
 var file_proto_types_sentry_account_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_proto_types_sentry_account_permission_proto_goTypes = []interface{}{
-	(*PermissionURL)(nil),                  // 0: rafay.dev.types.sentry.PermissionURL
-	(*AccountPermission)(nil),              // 1: rafay.dev.types.sentry.AccountPermission
-	(*SSOAccountGroupProjectRoleData)(nil), // 2: rafay.dev.types.sentry.SSOAccountGroupProjectRoleData
+	(*PermissionURL)(nil),                  // 0: paralus.dev.types.sentry.PermissionURL
+	(*AccountPermission)(nil),              // 1: paralus.dev.types.sentry.AccountPermission
+	(*SSOAccountGroupProjectRoleData)(nil), // 2: paralus.dev.types.sentry.SSOAccountGroupProjectRoleData
 	(*timestamppb.Timestamp)(nil),          // 3: google.protobuf.Timestamp
 }
 var file_proto_types_sentry_account_permission_proto_depIdxs = []int32{
-	0, // 0: rafay.dev.types.sentry.AccountPermission.urls:type_name -> rafay.dev.types.sentry.PermissionURL
-	3, // 1: rafay.dev.types.sentry.SSOAccountGroupProjectRoleData.lastLogin:type_name -> google.protobuf.Timestamp
-	3, // 2: rafay.dev.types.sentry.SSOAccountGroupProjectRoleData.createdAt:type_name -> google.protobuf.Timestamp
-	3, // 3: rafay.dev.types.sentry.SSOAccountGroupProjectRoleData.lastLogout:type_name -> google.protobuf.Timestamp
+	0, // 0: paralus.dev.types.sentry.AccountPermission.urls:type_name -> paralus.dev.types.sentry.PermissionURL
+	3, // 1: paralus.dev.types.sentry.SSOAccountGroupProjectRoleData.lastLogin:type_name -> google.protobuf.Timestamp
+	3, // 2: paralus.dev.types.sentry.SSOAccountGroupProjectRoleData.createdAt:type_name -> google.protobuf.Timestamp
+	3, // 3: paralus.dev.types.sentry.SSOAccountGroupProjectRoleData.lastLogout:type_name -> google.protobuf.Timestamp
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name

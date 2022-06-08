@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/paralus/paralus/internal/dao"
 	"github.com/paralus/paralus/pkg/utils"
-	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 

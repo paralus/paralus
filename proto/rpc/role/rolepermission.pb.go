@@ -7,9 +7,9 @@
 package rpcv3
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v31 "github.com/paralus/paralus/proto/types/rolepb/v3"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -90,12 +90,12 @@ var file_proto_rpc_role_rolepermission_proto_rawDesc = []byte{
 }
 
 var file_proto_rpc_role_rolepermission_proto_goTypes = []interface{}{
-	(*v3.QueryOptions)(nil),        // 0: rafay.dev.types.common.v3.QueryOptions
-	(*v31.RolePermissionList)(nil), // 1: rafay.dev.types.role.v3.RolePermissionList
+	(*v3.QueryOptions)(nil),        // 0: paralus.dev.types.common.v3.QueryOptions
+	(*v31.RolePermissionList)(nil), // 1: paralus.dev.types.role.v3.RolePermissionList
 }
 var file_proto_rpc_role_rolepermission_proto_depIdxs = []int32{
-	0, // 0: rafay.dev.rpc.v3.Rolepermission.GetRolepermissions:input_type -> rafay.dev.types.common.v3.QueryOptions
-	1, // 1: rafay.dev.rpc.v3.Rolepermission.GetRolepermissions:output_type -> rafay.dev.types.role.v3.RolePermissionList
+	0, // 0: paralus.dev.rpc.v3.Rolepermission.GetRolepermissions:input_type -> paralus.dev.types.common.v3.QueryOptions
+	1, // 1: paralus.dev.rpc.v3.Rolepermission.GetRolepermissions:output_type -> paralus.dev.types.role.v3.RolePermissionList
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

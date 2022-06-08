@@ -1,15 +1,15 @@
-apiVersion: cluster.rafay.dev/v2
+apiVersion: cluster.paralus.dev/v2
 kind: Task
 metadata:
   annotations:
-    rafay.dev/object-hash: 25dc4a1045d581e9cb506c8e8c840c3ea0e68ee1007d2a0e60b2fa109e7088c4
-    rafay.dev/resource-hash: 508efe2a19717df6493adfa2dc65b9aef2e3db72316a954689da2c45346ddda6
+    paralus.dev/object-hash: 25dc4a1045d581e9cb506c8e8c840c3ea0e68ee1007d2a0e60b2fa109e7088c4
+    paralus.dev/resource-hash: 508efe2a19717df6493adfa2dc65b9aef2e3db72316a954689da2c45346ddda6
   finalizers:
-  - cluster.rafay.dev.v2.predelete
+  - cluster.paralus.dev.v2.predelete
   labels:
-    rafay.dev/component: v1-prometheus
-    rafay.dev/global: "true"
-    rafay.dev/system: "true"
+    paralus.dev/component: v1-prometheus
+    paralus.dev/global: "true"
+    paralus.dev/system: "true"
   name: v1-prometheus
   namespace: default
 spec:
@@ -6460,7 +6460,7 @@ spec:
       kind: Secret
       metadata:
         annotations:
-          rafay.dev/overridedBy: cluster/default-override-eks-london-1118
+          paralus.dev/overridedBy: cluster/default-override-eks-london-1118
         name: alertmanager-main
         namespace: rafay-infra
       type: Opaque
@@ -6770,7 +6770,7 @@ spec:
       kind: Secret
       metadata:
         annotations:
-          rafay.dev/overridedBy: cluster/default-override-eks-london-1118
+          paralus.dev/overridedBy: cluster/default-override-eks-london-1118
         name: edge-creds
         namespace: rafay-infra
       type: Opaque
@@ -6778,7 +6778,7 @@ spec:
     metadata:
       creationTimestamp: null
       finalizers:
-      - cluster.rafay.dev.v2.predelete
+      - cluster.paralus.dev.v2.predelete
       name: v1-prometheus
       namespace: rafay-infra
     spec:
@@ -6789,7 +6789,7 @@ spec:
           kind: Prometheus
           metadata:
             annotations:
-              rafay.dev/overridedBy: cluster/default-override-eks-london-1118
+              paralus.dev/overridedBy: cluster/default-override-eks-london-1118
             labels:
               prometheus: k8s
             name: k8s
@@ -6825,7 +6825,7 @@ spec:
                 certFile: /etc/prometheus/secrets/edge-creds/client.crt
                 keyFile: /etc/prometheus/secrets/edge-creds/client.key
                 serverName: influxdb01.core.stage.rafay-edge.net
-              url: https://influxdb01.core.stage.rafay-edge.net/api/v1/prom/write?db=monitoringdb&rp=shortterm&u=prometheus_svc&p=Rafay!98
+              url: https://influxdb01.core.stage.rafay-edge.net/api/v1/prom/write?db=monitoringdb&rp=shortterm&u=prometheus_svc&p=Paralus!98
               writeRelabelConfigs:
               - action: keep
                 regex: rcloud.*|kube_daemonset_metadata_generation|kube_deployment_metadata_generation|node_cpu_seconds_total|kube_pod_container_status_running|kube_pod_container_resource_requests_cpu_cores|kube_pod_container_resource_limits_cpu_cores|node:node_num_cpu:sum|:node_memory_MemFreeCachedBuffers_bytes:sum|:node_memory_MemTotal_bytes:sum|node_memory_MemTotal_bytes|kube_pod_container_resource_requests_memory_bytes|kube_pod_container_resource_limits_memory_bytes|amespace_pod_name_container_name:container_cpu_usage_seconds_total:sum_rate|namespace_pod_name_container_name:container_cpu_usage_seconds_total:sum_rate|container_memory_rss|namespace_pod_name_container_name:container_cpu_usage_seconds_total:sum_rate|node:node_cpu_utilisation:avg1m|node:node_cpu_saturation_load1:|kube_pod_info|node:node_memory_utilisation:|node:node_memory_utilisation:ratio|node:node_memory_swap_io_bytes:sum_rate|node:node_disk_utilisation:avg_irate|:kube_pod_info_node_count:|node:node_disk_saturation:avg_irate|node:node_net_utilisation:sum_irate|node:node_net_saturation:sum_irate|node_filesystem_size_bytes|node_filesystem_avail_bytes|node_namespace_pod:kube_pod_info:|node_load1|node_load5|node_load15|node_memory_MemFree_bytes|node_memory_Buffers_bytes|node_memory_Cached_bytes|node_disk_read_bytes_total|node_disk_written_bytes_total|node_disk_io_time_seconds_total|node:node_filesystem_usage:|node_network_receive_bytes_total|node_network_transmit_bytes_total|container_memory_usage_bytes|kube_pod_container_resource_requests_memory_bytes|container_cpu_usage_seconds_total|container_network_receive_bytes_total|container_network_transmit_bytes_total|kube_statefulset_replicas|kube_statefulset_status_replicas|kube_statefulset_status_replicas_ready|kube_statefulset_status_replicas_current|kube_statefulset_status_replicas_updated|node_boot_time_seconds|kube_node_info|kube_pod_container_info|kube_statefulset_metadata_generation|kube_statefulset_status_observed_generation|kubelet_volume_stats_capacity_bytes|kubelet_volume_stats_available_bytes|kubelet_volume_stats_used_bytes|kube_node_status_condition|fluentd_input_status_num_records_total|fluentd_output_status_buffer_queue_length|fluentd_output_status_num_errors|fluentd_output_status_emit_count|fluentd_output_status_buffer_queue_length|fluentd_output_status_retry_count|fluentd_output_status_rollback_count|fluentd_output_status_buffer_total_bytes|fluentd_output_status_num_records_total
@@ -9124,7 +9124,7 @@ status:
     state: StepComplete
   observedGeneration: 1
   taskletRef:
-    apiVersion: cluster.rafay.dev/v2
+    apiVersion: cluster.paralus.dev/v2
     kind: Tasklet
     name: v1-prometheus
     namespace: rafay-infra

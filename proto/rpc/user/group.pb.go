@@ -7,9 +7,9 @@
 package rpcv3
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	v31 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/userpb/v3"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -140,21 +140,21 @@ var file_proto_rpc_user_group_proto_rawDesc = []byte{
 }
 
 var file_proto_rpc_user_group_proto_goTypes = []interface{}{
-	(*v3.Group)(nil),         // 0: rafay.dev.types.user.v3.Group
-	(*v31.QueryOptions)(nil), // 1: rafay.dev.types.common.v3.QueryOptions
-	(*v3.GroupList)(nil),     // 2: rafay.dev.types.user.v3.GroupList
+	(*v3.Group)(nil),         // 0: paralus.dev.types.user.v3.Group
+	(*v31.QueryOptions)(nil), // 1: paralus.dev.types.common.v3.QueryOptions
+	(*v3.GroupList)(nil),     // 2: paralus.dev.types.user.v3.GroupList
 }
 var file_proto_rpc_user_group_proto_depIdxs = []int32{
-	0, // 0: rafay.dev.rpc.v3.Group.CreateGroup:input_type -> rafay.dev.types.user.v3.Group
-	1, // 1: rafay.dev.rpc.v3.Group.GetGroups:input_type -> rafay.dev.types.common.v3.QueryOptions
-	0, // 2: rafay.dev.rpc.v3.Group.GetGroup:input_type -> rafay.dev.types.user.v3.Group
-	0, // 3: rafay.dev.rpc.v3.Group.UpdateGroup:input_type -> rafay.dev.types.user.v3.Group
-	0, // 4: rafay.dev.rpc.v3.Group.DeleteGroup:input_type -> rafay.dev.types.user.v3.Group
-	0, // 5: rafay.dev.rpc.v3.Group.CreateGroup:output_type -> rafay.dev.types.user.v3.Group
-	2, // 6: rafay.dev.rpc.v3.Group.GetGroups:output_type -> rafay.dev.types.user.v3.GroupList
-	0, // 7: rafay.dev.rpc.v3.Group.GetGroup:output_type -> rafay.dev.types.user.v3.Group
-	0, // 8: rafay.dev.rpc.v3.Group.UpdateGroup:output_type -> rafay.dev.types.user.v3.Group
-	0, // 9: rafay.dev.rpc.v3.Group.DeleteGroup:output_type -> rafay.dev.types.user.v3.Group
+	0, // 0: paralus.dev.rpc.v3.Group.CreateGroup:input_type -> paralus.dev.types.user.v3.Group
+	1, // 1: paralus.dev.rpc.v3.Group.GetGroups:input_type -> paralus.dev.types.common.v3.QueryOptions
+	0, // 2: paralus.dev.rpc.v3.Group.GetGroup:input_type -> paralus.dev.types.user.v3.Group
+	0, // 3: paralus.dev.rpc.v3.Group.UpdateGroup:input_type -> paralus.dev.types.user.v3.Group
+	0, // 4: paralus.dev.rpc.v3.Group.DeleteGroup:input_type -> paralus.dev.types.user.v3.Group
+	0, // 5: paralus.dev.rpc.v3.Group.CreateGroup:output_type -> paralus.dev.types.user.v3.Group
+	2, // 6: paralus.dev.rpc.v3.Group.GetGroups:output_type -> paralus.dev.types.user.v3.GroupList
+	0, // 7: paralus.dev.rpc.v3.Group.GetGroup:output_type -> paralus.dev.types.user.v3.Group
+	0, // 8: paralus.dev.rpc.v3.Group.UpdateGroup:output_type -> paralus.dev.types.user.v3.Group
+	0, // 9: paralus.dev.rpc.v3.Group.DeleteGroup:output_type -> paralus.dev.types.user.v3.Group
 	5, // [5:10] is the sub-list for method output_type
 	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

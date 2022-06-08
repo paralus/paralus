@@ -45,7 +45,7 @@ func NewKubeConfigClient(cc grpc.ClientConnInterface) KubeConfigClient {
 
 func (c *kubeConfigClient) GetForClusterWebSession(ctx context.Context, in *GetForClusterRequest, opts ...grpc.CallOption) (*v3.HttpBody, error) {
 	out := new(v3.HttpBody)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.KubeConfig/GetForClusterWebSession", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterWebSession", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func (c *kubeConfigClient) GetForClusterWebSession(ctx context.Context, in *GetF
 
 func (c *kubeConfigClient) GetForClusterSystemSession(ctx context.Context, in *GetForClusterRequest, opts ...grpc.CallOption) (*v3.HttpBody, error) {
 	out := new(v3.HttpBody)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.KubeConfig/GetForClusterSystemSession", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterSystemSession", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func (c *kubeConfigClient) GetForClusterSystemSession(ctx context.Context, in *G
 
 func (c *kubeConfigClient) GetForUser(ctx context.Context, in *GetForUserRequest, opts ...grpc.CallOption) (*v3.HttpBody, error) {
 	out := new(v3.HttpBody)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.KubeConfig/GetForUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/GetForUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +72,7 @@ func (c *kubeConfigClient) GetForUser(ctx context.Context, in *GetForUserRequest
 
 func (c *kubeConfigClient) RevokeKubeconfig(ctx context.Context, in *RevokeKubeconfigRequest, opts ...grpc.CallOption) (*RevokeKubeconfigResponse, error) {
 	out := new(RevokeKubeconfigResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.KubeConfig/RevokeKubeconfig", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/RevokeKubeconfig", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func (c *kubeConfigClient) RevokeKubeconfig(ctx context.Context, in *RevokeKubec
 
 func (c *kubeConfigClient) GetOrganizationSetting(ctx context.Context, in *GetKubeconfigSettingRequest, opts ...grpc.CallOption) (*GetKubeconfigSettingResponse, error) {
 	out := new(GetKubeconfigSettingResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.KubeConfig/GetOrganizationSetting", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/GetOrganizationSetting", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +90,7 @@ func (c *kubeConfigClient) GetOrganizationSetting(ctx context.Context, in *GetKu
 
 func (c *kubeConfigClient) GetUserSetting(ctx context.Context, in *GetKubeconfigSettingRequest, opts ...grpc.CallOption) (*GetKubeconfigSettingResponse, error) {
 	out := new(GetKubeconfigSettingResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.KubeConfig/GetUserSetting", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/GetUserSetting", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +99,7 @@ func (c *kubeConfigClient) GetUserSetting(ctx context.Context, in *GetKubeconfig
 
 func (c *kubeConfigClient) GetSSOUserSetting(ctx context.Context, in *GetKubeconfigSettingRequest, opts ...grpc.CallOption) (*GetKubeconfigSettingResponse, error) {
 	out := new(GetKubeconfigSettingResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.KubeConfig/GetSSOUserSetting", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/GetSSOUserSetting", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +108,7 @@ func (c *kubeConfigClient) GetSSOUserSetting(ctx context.Context, in *GetKubecon
 
 func (c *kubeConfigClient) UpdateOrganizationSetting(ctx context.Context, in *UpdateKubeconfigSettingRequest, opts ...grpc.CallOption) (*UpdateKubeconfigSettingResponse, error) {
 	out := new(UpdateKubeconfigSettingResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.KubeConfig/UpdateOrganizationSetting", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/UpdateOrganizationSetting", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +117,7 @@ func (c *kubeConfigClient) UpdateOrganizationSetting(ctx context.Context, in *Up
 
 func (c *kubeConfigClient) UpdateUserSetting(ctx context.Context, in *UpdateKubeconfigSettingRequest, opts ...grpc.CallOption) (*UpdateKubeconfigSettingResponse, error) {
 	out := new(UpdateKubeconfigSettingResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.KubeConfig/UpdateUserSetting", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/UpdateUserSetting", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +126,7 @@ func (c *kubeConfigClient) UpdateUserSetting(ctx context.Context, in *UpdateKube
 
 func (c *kubeConfigClient) UpdateSSOUserSetting(ctx context.Context, in *UpdateKubeconfigSettingRequest, opts ...grpc.CallOption) (*UpdateKubeconfigSettingResponse, error) {
 	out := new(UpdateKubeconfigSettingResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.KubeConfig/UpdateSSOUserSetting", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/UpdateSSOUserSetting", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -205,7 +205,7 @@ func _KubeConfig_GetForClusterWebSession_Handler(srv interface{}, ctx context.Co
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.KubeConfig/GetForClusterWebSession",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterWebSession",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KubeConfigServer).GetForClusterWebSession(ctx, req.(*GetForClusterRequest))
@@ -223,7 +223,7 @@ func _KubeConfig_GetForClusterSystemSession_Handler(srv interface{}, ctx context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.KubeConfig/GetForClusterSystemSession",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterSystemSession",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KubeConfigServer).GetForClusterSystemSession(ctx, req.(*GetForClusterRequest))
@@ -241,7 +241,7 @@ func _KubeConfig_GetForUser_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.KubeConfig/GetForUser",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/GetForUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KubeConfigServer).GetForUser(ctx, req.(*GetForUserRequest))
@@ -259,7 +259,7 @@ func _KubeConfig_RevokeKubeconfig_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.KubeConfig/RevokeKubeconfig",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/RevokeKubeconfig",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KubeConfigServer).RevokeKubeconfig(ctx, req.(*RevokeKubeconfigRequest))
@@ -277,7 +277,7 @@ func _KubeConfig_GetOrganizationSetting_Handler(srv interface{}, ctx context.Con
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.KubeConfig/GetOrganizationSetting",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/GetOrganizationSetting",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KubeConfigServer).GetOrganizationSetting(ctx, req.(*GetKubeconfigSettingRequest))
@@ -295,7 +295,7 @@ func _KubeConfig_GetUserSetting_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.KubeConfig/GetUserSetting",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/GetUserSetting",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KubeConfigServer).GetUserSetting(ctx, req.(*GetKubeconfigSettingRequest))
@@ -313,7 +313,7 @@ func _KubeConfig_GetSSOUserSetting_Handler(srv interface{}, ctx context.Context,
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.KubeConfig/GetSSOUserSetting",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/GetSSOUserSetting",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KubeConfigServer).GetSSOUserSetting(ctx, req.(*GetKubeconfigSettingRequest))
@@ -331,7 +331,7 @@ func _KubeConfig_UpdateOrganizationSetting_Handler(srv interface{}, ctx context.
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.KubeConfig/UpdateOrganizationSetting",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/UpdateOrganizationSetting",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KubeConfigServer).UpdateOrganizationSetting(ctx, req.(*UpdateKubeconfigSettingRequest))
@@ -349,7 +349,7 @@ func _KubeConfig_UpdateUserSetting_Handler(srv interface{}, ctx context.Context,
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.KubeConfig/UpdateUserSetting",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/UpdateUserSetting",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KubeConfigServer).UpdateUserSetting(ctx, req.(*UpdateKubeconfigSettingRequest))
@@ -367,7 +367,7 @@ func _KubeConfig_UpdateSSOUserSetting_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.KubeConfig/UpdateSSOUserSetting",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/UpdateSSOUserSetting",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KubeConfigServer).UpdateSSOUserSetting(ctx, req.(*UpdateKubeconfigSettingRequest))
@@ -379,7 +379,7 @@ func _KubeConfig_UpdateSSOUserSetting_Handler(srv interface{}, ctx context.Conte
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var KubeConfig_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.sentry.rpc.KubeConfig",
+	ServiceName: "paralus.dev.sentry.rpc.KubeConfig",
 	HandlerType: (*KubeConfigServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

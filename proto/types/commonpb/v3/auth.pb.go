@@ -536,10 +536,10 @@ type SessionData struct {
 	ResourceUrls   map[string]*ResourceURLMethods `protobuf:"bytes,11,rep,name=resource_urls,json=resourceUrls,proto3" json:"resource_urls,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 	Ttl            string                         `protobuf:"bytes,12,opt,name=ttl,proto3" json:"ttl,omitempty"`
 	Groups         []string                       `protobuf:"bytes,13,rep,name=groups,proto3" json:"groups,omitempty"`
-	AuthType       AuthType                       `protobuf:"varint,14,opt,name=auth_type,json=authType,proto3,enum=rafay.dev.types.common.v3.AuthType" json:"auth_type,omitempty"`
+	AuthType       AuthType                       `protobuf:"varint,14,opt,name=auth_type,json=authType,proto3,enum=paralus.dev.types.common.v3.AuthType" json:"auth_type,omitempty"`
 	Idp            string                         `protobuf:"bytes,15,opt,name=idp,proto3" json:"idp,omitempty"`
 	IsOrgAdmin     map[string]bool                `protobuf:"bytes,16,rep,name=is_org_admin,json=isOrgAdmin,proto3" json:"is_org_admin,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
-	ClientType     ClientType                     `protobuf:"varint,17,opt,name=client_type,json=clientType,proto3,enum=rafay.dev.types.common.v3.ClientType" json:"client_type,omitempty"`
+	ClientType     ClientType                     `protobuf:"varint,17,opt,name=client_type,json=clientType,proto3,enum=paralus.dev.types.common.v3.ClientType" json:"client_type,omitempty"`
 	ClientHost     string                         `protobuf:"bytes,18,opt,name=client_host,json=clientHost,proto3" json:"client_host,omitempty"`
 	ClientIp       string                         `protobuf:"bytes,19,opt,name=client_ip,json=clientIp,proto3" json:"client_ip,omitempty"`
 	ClientUa       string                         `protobuf:"bytes,20,opt,name=client_ua,json=clientUa,proto3" json:"client_ua,omitempty"`
@@ -746,7 +746,7 @@ type IsRequestAllowedResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Status      RequestStatus `protobuf:"varint,1,opt,name=status,proto3,enum=rafay.dev.types.common.v3.RequestStatus" json:"status,omitempty"`
+	Status      RequestStatus `protobuf:"varint,1,opt,name=status,proto3,enum=paralus.dev.types.common.v3.RequestStatus" json:"status,omitempty"`
 	Reason      string        `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
 	SessionData *SessionData  `protobuf:"bytes,3,opt,name=sessionData,proto3" json:"sessionData,omitempty"`
 }
@@ -991,32 +991,32 @@ func file_proto_types_commonpb_v3_auth_proto_rawDescGZIP() []byte {
 var file_proto_types_commonpb_v3_auth_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_proto_types_commonpb_v3_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_proto_types_commonpb_v3_auth_proto_goTypes = []interface{}{
-	(RequestStatus)(0),               // 0: rafay.dev.types.common.v3.RequestStatus
-	(AuthType)(0),                    // 1: rafay.dev.types.common.v3.AuthType
-	(ClientType)(0),                  // 2: rafay.dev.types.common.v3.ClientType
-	(*IsRequestAllowedRequest)(nil),  // 3: rafay.dev.types.common.v3.IsRequestAllowedRequest
-	(*ResourceURLMethods)(nil),       // 4: rafay.dev.types.common.v3.ResourceURLMethods
-	(*NamespaceData)(nil),            // 5: rafay.dev.types.common.v3.NamespaceData
-	(*ProjectRole)(nil),              // 6: rafay.dev.types.common.v3.ProjectRole
-	(*ProjectData)(nil),              // 7: rafay.dev.types.common.v3.ProjectData
-	(*SessionData)(nil),              // 8: rafay.dev.types.common.v3.SessionData
-	(*IsRequestAllowedResponse)(nil), // 9: rafay.dev.types.common.v3.IsRequestAllowedResponse
-	nil,                              // 10: rafay.dev.types.common.v3.SessionData.ResourceUrlsEntry
-	nil,                              // 11: rafay.dev.types.common.v3.SessionData.IsOrgAdminEntry
-	nil,                              // 12: rafay.dev.types.common.v3.SessionData.IsAllNsAccessEntry
+	(RequestStatus)(0),               // 0: paralus.dev.types.common.v3.RequestStatus
+	(AuthType)(0),                    // 1: paralus.dev.types.common.v3.AuthType
+	(ClientType)(0),                  // 2: paralus.dev.types.common.v3.ClientType
+	(*IsRequestAllowedRequest)(nil),  // 3: paralus.dev.types.common.v3.IsRequestAllowedRequest
+	(*ResourceURLMethods)(nil),       // 4: paralus.dev.types.common.v3.ResourceURLMethods
+	(*NamespaceData)(nil),            // 5: paralus.dev.types.common.v3.NamespaceData
+	(*ProjectRole)(nil),              // 6: paralus.dev.types.common.v3.ProjectRole
+	(*ProjectData)(nil),              // 7: paralus.dev.types.common.v3.ProjectData
+	(*SessionData)(nil),              // 8: paralus.dev.types.common.v3.SessionData
+	(*IsRequestAllowedResponse)(nil), // 9: paralus.dev.types.common.v3.IsRequestAllowedResponse
+	nil,                              // 10: paralus.dev.types.common.v3.SessionData.ResourceUrlsEntry
+	nil,                              // 11: paralus.dev.types.common.v3.SessionData.IsOrgAdminEntry
+	nil,                              // 12: paralus.dev.types.common.v3.SessionData.IsAllNsAccessEntry
 }
 var file_proto_types_commonpb_v3_auth_proto_depIdxs = []int32{
-	6,  // 0: rafay.dev.types.common.v3.ProjectData.list:type_name -> rafay.dev.types.common.v3.ProjectRole
-	10, // 1: rafay.dev.types.common.v3.SessionData.resource_urls:type_name -> rafay.dev.types.common.v3.SessionData.ResourceUrlsEntry
-	1,  // 2: rafay.dev.types.common.v3.SessionData.auth_type:type_name -> rafay.dev.types.common.v3.AuthType
-	11, // 3: rafay.dev.types.common.v3.SessionData.is_org_admin:type_name -> rafay.dev.types.common.v3.SessionData.IsOrgAdminEntry
-	2,  // 4: rafay.dev.types.common.v3.SessionData.client_type:type_name -> rafay.dev.types.common.v3.ClientType
-	12, // 5: rafay.dev.types.common.v3.SessionData.is_all_ns_access:type_name -> rafay.dev.types.common.v3.SessionData.IsAllNsAccessEntry
-	5,  // 6: rafay.dev.types.common.v3.SessionData.namespaces:type_name -> rafay.dev.types.common.v3.NamespaceData
-	7,  // 7: rafay.dev.types.common.v3.SessionData.project:type_name -> rafay.dev.types.common.v3.ProjectData
-	0,  // 8: rafay.dev.types.common.v3.IsRequestAllowedResponse.status:type_name -> rafay.dev.types.common.v3.RequestStatus
-	8,  // 9: rafay.dev.types.common.v3.IsRequestAllowedResponse.sessionData:type_name -> rafay.dev.types.common.v3.SessionData
-	4,  // 10: rafay.dev.types.common.v3.SessionData.ResourceUrlsEntry.value:type_name -> rafay.dev.types.common.v3.ResourceURLMethods
+	6,  // 0: paralus.dev.types.common.v3.ProjectData.list:type_name -> paralus.dev.types.common.v3.ProjectRole
+	10, // 1: paralus.dev.types.common.v3.SessionData.resource_urls:type_name -> paralus.dev.types.common.v3.SessionData.ResourceUrlsEntry
+	1,  // 2: paralus.dev.types.common.v3.SessionData.auth_type:type_name -> paralus.dev.types.common.v3.AuthType
+	11, // 3: paralus.dev.types.common.v3.SessionData.is_org_admin:type_name -> paralus.dev.types.common.v3.SessionData.IsOrgAdminEntry
+	2,  // 4: paralus.dev.types.common.v3.SessionData.client_type:type_name -> paralus.dev.types.common.v3.ClientType
+	12, // 5: paralus.dev.types.common.v3.SessionData.is_all_ns_access:type_name -> paralus.dev.types.common.v3.SessionData.IsAllNsAccessEntry
+	5,  // 6: paralus.dev.types.common.v3.SessionData.namespaces:type_name -> paralus.dev.types.common.v3.NamespaceData
+	7,  // 7: paralus.dev.types.common.v3.SessionData.project:type_name -> paralus.dev.types.common.v3.ProjectData
+	0,  // 8: paralus.dev.types.common.v3.IsRequestAllowedResponse.status:type_name -> paralus.dev.types.common.v3.RequestStatus
+	8,  // 9: paralus.dev.types.common.v3.IsRequestAllowedResponse.sessionData:type_name -> paralus.dev.types.common.v3.SessionData
+	4,  // 10: paralus.dev.types.common.v3.SessionData.ResourceUrlsEntry.value:type_name -> paralus.dev.types.common.v3.ResourceURLMethods
 	11, // [11:11] is the sub-list for method output_type
 	11, // [11:11] is the sub-list for method input_type
 	11, // [11:11] is the sub-list for extension type_name

@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-// Rafay Gateway annotations
+// Paralus Gateway annotations
 const (
 	GatewayRequest       = "x-gateway-request"
 	GatewayURL           = "x-gateway-url"

@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.rpc.v3;
+package paralus.dev.rpc.v3;
 
 import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
@@ -11,7 +11,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {
     title : "User management Service"
     version : "2.0"
-    contact : {name : "Rafay Dev"}
+    contact : {name : "Paralus Dev"}
   }
   schemes : HTTPS
   consumes : "application/json"
@@ -25,7 +25,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     }
     security : {
       key : "ApiKeyAuth"
-      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-RAFAY-API-KEYID"}
+      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-PARALUS-API-KEYID"}
     }
   }
   security : {
@@ -77,8 +77,8 @@ message DeleteUserResponse {}
 message CliConfigRequest {}
 
 service User {
-  rpc CreateUser(rafay.dev.types.user.v3.User)
-      returns (rafay.dev.types.user.v3.User) {
+  rpc CreateUser(paralus.dev.types.user.v3.User)
+      returns (paralus.dev.types.user.v3.User) {
     option (google.api.http) = {
       post : "/auth/v3/users"
       body : "*"
@@ -92,36 +92,36 @@ service User {
     };
   };
 
-  rpc GetUsers(rafay.dev.types.common.v3.QueryOptions)
-      returns (rafay.dev.types.user.v3.UserList) {
+  rpc GetUsers(paralus.dev.types.common.v3.QueryOptions)
+      returns (paralus.dev.types.user.v3.UserList) {
     option (google.api.http) = {
       get : "/auth/v3/users"
     };
   };
 
-  rpc GetUser(rafay.dev.types.user.v3.User)
-      returns (rafay.dev.types.user.v3.User) {
+  rpc GetUser(paralus.dev.types.user.v3.User)
+      returns (paralus.dev.types.user.v3.User) {
     option (google.api.http) = {
       get : "/auth/v3/user/{metadata.name}"
     };
   };
 
-  rpc GetUserInfo(rafay.dev.types.user.v3.User)
-      returns (rafay.dev.types.user.v3.UserInfo) {
+  rpc GetUserInfo(paralus.dev.types.user.v3.User)
+      returns (paralus.dev.types.user.v3.UserInfo) {
     option (google.api.http) = {
       get : "/auth/v3/userinfo" // user name if picked from session
     };
   };
 
-  rpc UpdateUser(rafay.dev.types.user.v3.User)
-      returns (rafay.dev.types.user.v3.User) {
+  rpc UpdateUser(paralus.dev.types.user.v3.User)
+      returns (paralus.dev.types.user.v3.User) {
     option (google.api.http) = {
       put : "/auth/v3/user/{metadata.name}"
       body : "*"
     };
   };
 
-  rpc DeleteUser(rafay.dev.types.user.v3.User) returns (DeleteUserResponse) {
+  rpc DeleteUser(paralus.dev.types.user.v3.User) returns (DeleteUserResponse) {
     option (google.api.http) = {
       delete : "/auth/v3/user/{metadata.name}"
     };
@@ -135,7 +135,7 @@ service User {
   };
 
   rpc DownloadCliConfig(CliConfigRequest)
-      returns (rafay.dev.types.common.v3.HttpBody) {
+      returns (paralus.dev.types.common.v3.HttpBody) {
     option (google.api.http) = {
       get : "/auth/v3/cli/config"
     };

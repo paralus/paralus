@@ -52,12 +52,12 @@ var file_proto_rpc_v3_auth_proto_rawDesc = []byte{
 }
 
 var file_proto_rpc_v3_auth_proto_goTypes = []interface{}{
-	(*v3.IsRequestAllowedRequest)(nil),  // 0: rafay.dev.types.common.v3.IsRequestAllowedRequest
-	(*v3.IsRequestAllowedResponse)(nil), // 1: rafay.dev.types.common.v3.IsRequestAllowedResponse
+	(*v3.IsRequestAllowedRequest)(nil),  // 0: paralus.dev.types.common.v3.IsRequestAllowedRequest
+	(*v3.IsRequestAllowedResponse)(nil), // 1: paralus.dev.types.common.v3.IsRequestAllowedResponse
 }
 var file_proto_rpc_v3_auth_proto_depIdxs = []int32{
-	0, // 0: rafay.dev.rpc.v3.Auth.IsRequestAllowed:input_type -> rafay.dev.types.common.v3.IsRequestAllowedRequest
-	1, // 1: rafay.dev.rpc.v3.Auth.IsRequestAllowed:output_type -> rafay.dev.types.common.v3.IsRequestAllowedResponse
+	0, // 0: paralus.dev.rpc.v3.Auth.IsRequestAllowed:input_type -> paralus.dev.types.common.v3.IsRequestAllowedRequest
+	1, // 1: paralus.dev.rpc.v3.Auth.IsRequestAllowed:output_type -> paralus.dev.types.common.v3.IsRequestAllowedResponse
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

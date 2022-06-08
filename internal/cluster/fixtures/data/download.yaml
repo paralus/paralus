@@ -12,7 +12,7 @@ metadata:
   name: system-sa
   namespace: rafay-system
 ---
-{{- if and .Cluster.Metadata.Labels (eq (index .Cluster.Metadata.Labels "rafay.dev/kubernetesProvider") "OPENSHIFT") }}
+{{- if and .Cluster.Metadata.Labels (eq (index .Cluster.Metadata.Labels "paralus.dev/kubernetesProvider") "OPENSHIFT") }}
 apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints
 metadata:
@@ -84,7 +84,7 @@ rules:
   verbs:
   - '*'
 - apiGroups:
-  - cluster.rafay.dev
+  - cluster.paralus.dev
   resources:
   - namespaces
   verbs:
@@ -96,7 +96,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - cluster.rafay.dev
+  - cluster.paralus.dev
   resources:
   - namespaces/status
   verbs:
@@ -104,7 +104,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - cluster.rafay.dev
+  - cluster.paralus.dev
   resources:
   - tasklets
   verbs:
@@ -116,7 +116,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - cluster.rafay.dev
+  - cluster.paralus.dev
   resources:
   - tasklets/status
   verbs:
@@ -124,7 +124,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - cluster.rafay.dev
+  - cluster.paralus.dev
   resources:
   - tasks
   verbs:
@@ -136,7 +136,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - cluster.rafay.dev
+  - cluster.paralus.dev
   resources:
   - tasks/status
   verbs:
@@ -281,7 +281,7 @@ metadata:
     meta.helm.sh/release-name: v2-infra
     meta.helm.sh/release-namespace: rafay-system
 data:
-  clusterID: {{if .Cluster.Metadata.Labels}}{{ index .Cluster.Metadata.Labels "rafay.dev/clusterID" }}{{end}}
+  clusterID: {{if .Cluster.Metadata.Labels}}{{ index .Cluster.Metadata.Labels "paralus.dev/clusterID" }}{{end}}
   relays: '{{if .Cluster.Metadata.Annotations}}{{- index .Cluster.Metadata.Annotations "relays" -}}{{end}}'
 ---
 apiVersion: apps/v1

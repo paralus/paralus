@@ -1,6 +1,6 @@
 //protobuf for relay peering service
 syntax = "proto3";
-package rafay.dev.sentry.rpc;
+package paralus.dev.sentry.rpc;
 
 service RelayPeerService {
   rpc RelayPeerHelloRPC(stream PeerHelloRequest) returns (stream PeerHelloResponse) {}

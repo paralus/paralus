@@ -7,8 +7,8 @@
 package rpcv3
 
 import (
-	v3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	v3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -141,20 +141,20 @@ var file_proto_rpc_system_project_proto_rawDesc = []byte{
 }
 
 var file_proto_rpc_system_project_proto_goTypes = []interface{}{
-	(*v3.Project)(nil),     // 0: rafay.dev.types.system.v3.Project
-	(*v3.ProjectList)(nil), // 1: rafay.dev.types.system.v3.ProjectList
+	(*v3.Project)(nil),     // 0: paralus.dev.types.system.v3.Project
+	(*v3.ProjectList)(nil), // 1: paralus.dev.types.system.v3.ProjectList
 }
 var file_proto_rpc_system_project_proto_depIdxs = []int32{
-	0, // 0: rafay.dev.rpc.v3.Project.CreateProject:input_type -> rafay.dev.types.system.v3.Project
-	0, // 1: rafay.dev.rpc.v3.Project.GetProjects:input_type -> rafay.dev.types.system.v3.Project
-	0, // 2: rafay.dev.rpc.v3.Project.GetProject:input_type -> rafay.dev.types.system.v3.Project
-	0, // 3: rafay.dev.rpc.v3.Project.UpdateProject:input_type -> rafay.dev.types.system.v3.Project
-	0, // 4: rafay.dev.rpc.v3.Project.DeleteProject:input_type -> rafay.dev.types.system.v3.Project
-	0, // 5: rafay.dev.rpc.v3.Project.CreateProject:output_type -> rafay.dev.types.system.v3.Project
-	1, // 6: rafay.dev.rpc.v3.Project.GetProjects:output_type -> rafay.dev.types.system.v3.ProjectList
-	0, // 7: rafay.dev.rpc.v3.Project.GetProject:output_type -> rafay.dev.types.system.v3.Project
-	0, // 8: rafay.dev.rpc.v3.Project.UpdateProject:output_type -> rafay.dev.types.system.v3.Project
-	0, // 9: rafay.dev.rpc.v3.Project.DeleteProject:output_type -> rafay.dev.types.system.v3.Project
+	0, // 0: paralus.dev.rpc.v3.Project.CreateProject:input_type -> paralus.dev.types.system.v3.Project
+	0, // 1: paralus.dev.rpc.v3.Project.GetProjects:input_type -> paralus.dev.types.system.v3.Project
+	0, // 2: paralus.dev.rpc.v3.Project.GetProject:input_type -> paralus.dev.types.system.v3.Project
+	0, // 3: paralus.dev.rpc.v3.Project.UpdateProject:input_type -> paralus.dev.types.system.v3.Project
+	0, // 4: paralus.dev.rpc.v3.Project.DeleteProject:input_type -> paralus.dev.types.system.v3.Project
+	0, // 5: paralus.dev.rpc.v3.Project.CreateProject:output_type -> paralus.dev.types.system.v3.Project
+	1, // 6: paralus.dev.rpc.v3.Project.GetProjects:output_type -> paralus.dev.types.system.v3.ProjectList
+	0, // 7: paralus.dev.rpc.v3.Project.GetProject:output_type -> paralus.dev.types.system.v3.Project
+	0, // 8: paralus.dev.rpc.v3.Project.UpdateProject:output_type -> paralus.dev.types.system.v3.Project
+	0, // 9: paralus.dev.rpc.v3.Project.DeleteProject:output_type -> paralus.dev.types.system.v3.Project
 	5, // [5:10] is the sub-list for method output_type
 	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

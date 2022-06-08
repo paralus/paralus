@@ -40,7 +40,7 @@ func NewRoleClient(cc grpc.ClientConnInterface) RoleClient {
 
 func (c *roleClient) CreateRole(ctx context.Context, in *v3.Role, opts ...grpc.CallOption) (*v3.Role, error) {
 	out := new(v3.Role)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Role/CreateRole", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Role/CreateRole", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func (c *roleClient) CreateRole(ctx context.Context, in *v3.Role, opts ...grpc.C
 
 func (c *roleClient) GetRoles(ctx context.Context, in *v3.Role, opts ...grpc.CallOption) (*v3.RoleList, error) {
 	out := new(v3.RoleList)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Role/GetRoles", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Role/GetRoles", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func (c *roleClient) GetRoles(ctx context.Context, in *v3.Role, opts ...grpc.Cal
 
 func (c *roleClient) GetRole(ctx context.Context, in *v3.Role, opts ...grpc.CallOption) (*v3.Role, error) {
 	out := new(v3.Role)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Role/GetRole", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Role/GetRole", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (c *roleClient) GetRole(ctx context.Context, in *v3.Role, opts ...grpc.Call
 
 func (c *roleClient) UpdateRole(ctx context.Context, in *v3.Role, opts ...grpc.CallOption) (*v3.Role, error) {
 	out := new(v3.Role)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Role/UpdateRole", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Role/UpdateRole", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func (c *roleClient) UpdateRole(ctx context.Context, in *v3.Role, opts ...grpc.C
 
 func (c *roleClient) DeleteRole(ctx context.Context, in *v3.Role, opts ...grpc.CallOption) (*v3.Role, error) {
 	out := new(v3.Role)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Role/DeleteRole", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Role/DeleteRole", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +135,7 @@ func _Role_CreateRole_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Role/CreateRole",
+		FullMethod: "/paralus.dev.rpc.v3.Role/CreateRole",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RoleServer).CreateRole(ctx, req.(*v3.Role))
@@ -153,7 +153,7 @@ func _Role_GetRoles_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Role/GetRoles",
+		FullMethod: "/paralus.dev.rpc.v3.Role/GetRoles",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RoleServer).GetRoles(ctx, req.(*v3.Role))
@@ -171,7 +171,7 @@ func _Role_GetRole_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Role/GetRole",
+		FullMethod: "/paralus.dev.rpc.v3.Role/GetRole",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RoleServer).GetRole(ctx, req.(*v3.Role))
@@ -189,7 +189,7 @@ func _Role_UpdateRole_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Role/UpdateRole",
+		FullMethod: "/paralus.dev.rpc.v3.Role/UpdateRole",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RoleServer).UpdateRole(ctx, req.(*v3.Role))
@@ -207,7 +207,7 @@ func _Role_DeleteRole_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Role/DeleteRole",
+		FullMethod: "/paralus.dev.rpc.v3.Role/DeleteRole",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RoleServer).DeleteRole(ctx, req.(*v3.Role))
@@ -219,7 +219,7 @@ func _Role_DeleteRole_Handler(srv interface{}, ctx context.Context, dec func(int
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Role_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.rpc.v3.Role",
+	ServiceName: "paralus.dev.rpc.v3.Role",
 	HandlerType: (*RoleServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

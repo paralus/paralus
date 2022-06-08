@@ -17,21 +17,21 @@ const (
 var KubernetesLabelNameRegex = regexp.MustCompile(`^[A-Za-z0-9]([\.A-Za-z0-9_-]*[A-Za-z0-9])?$`)
 
 const (
-	RafayDomainLabel         = "rafay.dev"
-	ClusterLabelKey          = "rafay.dev/clusterName"
-	ClusterLocationKey       = "rafay.dev/clusterLocation"
-	ClusterTypeKey           = "rafay.dev/clusterType"
-	KubernetesVersionKey     = "rafay.dev/k8sVersion"
-	ClusterGPU               = "rafay.dev/clusterGPU"
-	ClusterGPUVendor         = "rafay.dev/clusterGPUVendor"
-	ClusterUpgradeProtection = "rafay.dev/clusterUpgradeProtection"
+	ParalusDomainLabel       = "paralus.dev"
+	ClusterLabelKey          = "paralus.dev/clusterName"
+	ClusterLocationKey       = "paralus.dev/clusterLocation"
+	ClusterTypeKey           = "paralus.dev/clusterType"
+	KubernetesVersionKey     = "paralus.dev/k8sVersion"
+	ClusterGPU               = "paralus.dev/clusterGPU"
+	ClusterGPUVendor         = "paralus.dev/clusterGPUVendor"
+	ClusterUpgradeProtection = "paralus.dev/clusterUpgradeProtection"
 	EdgeSuffix               = "EDGE_SUFFIX"
 	EdgeCnameSuffix          = "EDGE_CNAME_SUFFIX"
 	DefaultBlueprint         = "default"
-	OverrideCluster          = "rafay.dev/overrideCluster"
-	ClusterID                = "rafay.dev/clusterID"
-	Public                   = "rafay.dev/public"
-	ClusterName              = "rafay.dev/clusterName"
+	OverrideCluster          = "paralus.dev/overrideCluster"
+	ClusterID                = "paralus.dev/clusterID"
+	Public                   = "paralus.dev/public"
+	ClusterName              = "paralus.dev/clusterName"
 )
 
 const (
@@ -41,15 +41,15 @@ const (
 )
 
 const (
-	NotSet     = commonv3.RafayConditionStatus_NotSet
-	Pending    = commonv3.RafayConditionStatus_Pending
-	InProgress = commonv3.RafayConditionStatus_InProgress
-	Success    = commonv3.RafayConditionStatus_Success
-	Failed     = commonv3.RafayConditionStatus_Failed
-	Retry      = commonv3.RafayConditionStatus_Retry
-	Skipped    = commonv3.RafayConditionStatus_Skipped
-	Stopped    = commonv3.RafayConditionStatus_Stopped
-	Expired    = commonv3.RafayConditionStatus_Expired
-	Stopping   = commonv3.RafayConditionStatus_Stopping
-	Submitted  = commonv3.RafayConditionStatus_Submitted
+	NotSet     = commonv3.ParalusConditionStatus_NotSet
+	Pending    = commonv3.ParalusConditionStatus_Pending
+	InProgress = commonv3.ParalusConditionStatus_InProgress
+	Success    = commonv3.ParalusConditionStatus_Success
+	Failed     = commonv3.ParalusConditionStatus_Failed
+	Retry      = commonv3.ParalusConditionStatus_Retry
+	Skipped    = commonv3.ParalusConditionStatus_Skipped
+	Stopped    = commonv3.ParalusConditionStatus_Stopped
+	Expired    = commonv3.ParalusConditionStatus_Expired
+	Stopping   = commonv3.ParalusConditionStatus_Stopping
+	Submitted  = commonv3.ParalusConditionStatus_Submitted
 )

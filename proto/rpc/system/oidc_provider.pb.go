@@ -7,8 +7,8 @@
 package rpcv3
 
 import (
-	v3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	v3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -132,21 +132,21 @@ var file_proto_rpc_system_oidc_provider_proto_rawDesc = []byte{
 }
 
 var file_proto_rpc_system_oidc_provider_proto_goTypes = []interface{}{
-	(*v3.OIDCProvider)(nil),     // 0: rafay.dev.types.system.v3.OIDCProvider
+	(*v3.OIDCProvider)(nil),     // 0: paralus.dev.types.system.v3.OIDCProvider
 	(*emptypb.Empty)(nil),       // 1: google.protobuf.Empty
-	(*v3.OIDCProviderList)(nil), // 2: rafay.dev.types.system.v3.OIDCProviderList
+	(*v3.OIDCProviderList)(nil), // 2: paralus.dev.types.system.v3.OIDCProviderList
 }
 var file_proto_rpc_system_oidc_provider_proto_depIdxs = []int32{
-	0, // 0: rafay.dev.rpc.v3.OIDCProvider.CreateOIDCProvider:input_type -> rafay.dev.types.system.v3.OIDCProvider
-	0, // 1: rafay.dev.rpc.v3.OIDCProvider.GetOIDCProvider:input_type -> rafay.dev.types.system.v3.OIDCProvider
-	1, // 2: rafay.dev.rpc.v3.OIDCProvider.ListOIDCProvider:input_type -> google.protobuf.Empty
-	0, // 3: rafay.dev.rpc.v3.OIDCProvider.UpdateOIDCProvider:input_type -> rafay.dev.types.system.v3.OIDCProvider
-	0, // 4: rafay.dev.rpc.v3.OIDCProvider.DeleteOIDCProvider:input_type -> rafay.dev.types.system.v3.OIDCProvider
-	0, // 5: rafay.dev.rpc.v3.OIDCProvider.CreateOIDCProvider:output_type -> rafay.dev.types.system.v3.OIDCProvider
-	0, // 6: rafay.dev.rpc.v3.OIDCProvider.GetOIDCProvider:output_type -> rafay.dev.types.system.v3.OIDCProvider
-	2, // 7: rafay.dev.rpc.v3.OIDCProvider.ListOIDCProvider:output_type -> rafay.dev.types.system.v3.OIDCProviderList
-	0, // 8: rafay.dev.rpc.v3.OIDCProvider.UpdateOIDCProvider:output_type -> rafay.dev.types.system.v3.OIDCProvider
-	1, // 9: rafay.dev.rpc.v3.OIDCProvider.DeleteOIDCProvider:output_type -> google.protobuf.Empty
+	0, // 0: paralus.dev.rpc.v3.OIDCProvider.CreateOIDCProvider:input_type -> paralus.dev.types.system.v3.OIDCProvider
+	0, // 1: paralus.dev.rpc.v3.OIDCProvider.GetOIDCProvider:input_type -> paralus.dev.types.system.v3.OIDCProvider
+	1, // 2: paralus.dev.rpc.v3.OIDCProvider.ListOIDCProvider:input_type -> google.protobuf.Empty
+	0, // 3: paralus.dev.rpc.v3.OIDCProvider.UpdateOIDCProvider:input_type -> paralus.dev.types.system.v3.OIDCProvider
+	0, // 4: paralus.dev.rpc.v3.OIDCProvider.DeleteOIDCProvider:input_type -> paralus.dev.types.system.v3.OIDCProvider
+	0, // 5: paralus.dev.rpc.v3.OIDCProvider.CreateOIDCProvider:output_type -> paralus.dev.types.system.v3.OIDCProvider
+	0, // 6: paralus.dev.rpc.v3.OIDCProvider.GetOIDCProvider:output_type -> paralus.dev.types.system.v3.OIDCProvider
+	2, // 7: paralus.dev.rpc.v3.OIDCProvider.ListOIDCProvider:output_type -> paralus.dev.types.system.v3.OIDCProviderList
+	0, // 8: paralus.dev.rpc.v3.OIDCProvider.UpdateOIDCProvider:output_type -> paralus.dev.types.system.v3.OIDCProvider
+	1, // 9: paralus.dev.rpc.v3.OIDCProvider.DeleteOIDCProvider:output_type -> google.protobuf.Empty
 	5, // [5:10] is the sub-list for method output_type
 	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

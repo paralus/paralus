@@ -6,8 +6,8 @@ import (
 	clusterv2 "github.com/paralus/paralus/proto/types/controller"
 	apixv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 
-	"github.com/paralus/paralus/pkg/controller/scheme"
 	jp "github.com/evanphx/json-patch"
+	"github.com/paralus/paralus/pkg/controller/scheme"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	jmp "k8s.io/apimachinery/pkg/util/jsonmergepatch"
 	mp "k8s.io/apimachinery/pkg/util/mergepatch"

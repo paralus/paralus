@@ -7,9 +7,9 @@
 package userv3
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	_ "github.com/paralus/paralus/proto/types/rolepb/v3"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -795,29 +795,29 @@ func file_proto_types_userpb_v3_user_proto_rawDescGZIP() []byte {
 
 var file_proto_types_userpb_v3_user_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_proto_types_userpb_v3_user_proto_goTypes = []interface{}{
-	(*UserInfo)(nil),             // 0: rafay.dev.types.user.v3.UserInfo
-	(*UserInfoSpec)(nil),         // 1: rafay.dev.types.user.v3.UserInfoSpec
-	(*User)(nil),                 // 2: rafay.dev.types.user.v3.User
-	(*UserSpec)(nil),             // 3: rafay.dev.types.user.v3.UserSpec
-	(*UserList)(nil),             // 4: rafay.dev.types.user.v3.UserList
-	(*UserRole)(nil),             // 5: rafay.dev.types.user.v3.UserRole
-	(*v3.Metadata)(nil),          // 6: rafay.dev.types.common.v3.Metadata
-	(*v3.Status)(nil),            // 7: rafay.dev.types.common.v3.Status
-	(*Permission)(nil),           // 8: rafay.dev.types.user.v3.Permission
-	(*ProjectNamespaceRole)(nil), // 9: rafay.dev.types.user.v3.ProjectNamespaceRole
-	(*v3.ListMetadata)(nil),      // 10: rafay.dev.types.common.v3.ListMetadata
+	(*UserInfo)(nil),             // 0: paralus.dev.types.user.v3.UserInfo
+	(*UserInfoSpec)(nil),         // 1: paralus.dev.types.user.v3.UserInfoSpec
+	(*User)(nil),                 // 2: paralus.dev.types.user.v3.User
+	(*UserSpec)(nil),             // 3: paralus.dev.types.user.v3.UserSpec
+	(*UserList)(nil),             // 4: paralus.dev.types.user.v3.UserList
+	(*UserRole)(nil),             // 5: paralus.dev.types.user.v3.UserRole
+	(*v3.Metadata)(nil),          // 6: paralus.dev.types.common.v3.Metadata
+	(*v3.Status)(nil),            // 7: paralus.dev.types.common.v3.Status
+	(*Permission)(nil),           // 8: paralus.dev.types.user.v3.Permission
+	(*ProjectNamespaceRole)(nil), // 9: paralus.dev.types.user.v3.ProjectNamespaceRole
+	(*v3.ListMetadata)(nil),      // 10: paralus.dev.types.common.v3.ListMetadata
 }
 var file_proto_types_userpb_v3_user_proto_depIdxs = []int32{
-	6,  // 0: rafay.dev.types.user.v3.UserInfo.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	1,  // 1: rafay.dev.types.user.v3.UserInfo.spec:type_name -> rafay.dev.types.user.v3.UserInfoSpec
-	7,  // 2: rafay.dev.types.user.v3.UserInfo.status:type_name -> rafay.dev.types.common.v3.Status
-	8,  // 3: rafay.dev.types.user.v3.UserInfoSpec.permissions:type_name -> rafay.dev.types.user.v3.Permission
-	6,  // 4: rafay.dev.types.user.v3.User.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	3,  // 5: rafay.dev.types.user.v3.User.spec:type_name -> rafay.dev.types.user.v3.UserSpec
-	7,  // 6: rafay.dev.types.user.v3.User.status:type_name -> rafay.dev.types.common.v3.Status
-	9,  // 7: rafay.dev.types.user.v3.UserSpec.projectNamespaceRoles:type_name -> rafay.dev.types.user.v3.ProjectNamespaceRole
-	10, // 8: rafay.dev.types.user.v3.UserList.metadata:type_name -> rafay.dev.types.common.v3.ListMetadata
-	2,  // 9: rafay.dev.types.user.v3.UserList.items:type_name -> rafay.dev.types.user.v3.User
+	6,  // 0: paralus.dev.types.user.v3.UserInfo.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	1,  // 1: paralus.dev.types.user.v3.UserInfo.spec:type_name -> paralus.dev.types.user.v3.UserInfoSpec
+	7,  // 2: paralus.dev.types.user.v3.UserInfo.status:type_name -> paralus.dev.types.common.v3.Status
+	8,  // 3: paralus.dev.types.user.v3.UserInfoSpec.permissions:type_name -> paralus.dev.types.user.v3.Permission
+	6,  // 4: paralus.dev.types.user.v3.User.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	3,  // 5: paralus.dev.types.user.v3.User.spec:type_name -> paralus.dev.types.user.v3.UserSpec
+	7,  // 6: paralus.dev.types.user.v3.User.status:type_name -> paralus.dev.types.common.v3.Status
+	9,  // 7: paralus.dev.types.user.v3.UserSpec.projectNamespaceRoles:type_name -> paralus.dev.types.user.v3.ProjectNamespaceRole
+	10, // 8: paralus.dev.types.user.v3.UserList.metadata:type_name -> paralus.dev.types.common.v3.ListMetadata
+	2,  // 9: paralus.dev.types.user.v3.UserList.items:type_name -> paralus.dev.types.user.v3.User
 	10, // [10:10] is the sub-list for method output_type
 	10, // [10:10] is the sub-list for method input_type
 	10, // [10:10] is the sub-list for extension type_name

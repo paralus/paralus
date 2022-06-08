@@ -7,8 +7,8 @@
 package rpcv3
 
 import (
-	v3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	v3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -174,20 +174,20 @@ func file_proto_rpc_system_partner_proto_rawDescGZIP() []byte {
 
 var file_proto_rpc_system_partner_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_proto_rpc_system_partner_proto_goTypes = []interface{}{
-	(*EmptyRequest)(nil), // 0: rafay.dev.rpc.v3.EmptyRequest
-	(*v3.Partner)(nil),   // 1: rafay.dev.types.system.v3.Partner
+	(*EmptyRequest)(nil), // 0: paralus.dev.rpc.v3.EmptyRequest
+	(*v3.Partner)(nil),   // 1: paralus.dev.types.system.v3.Partner
 }
 var file_proto_rpc_system_partner_proto_depIdxs = []int32{
-	1, // 0: rafay.dev.rpc.v3.Partner.CreatePartner:input_type -> rafay.dev.types.system.v3.Partner
-	1, // 1: rafay.dev.rpc.v3.Partner.GetPartner:input_type -> rafay.dev.types.system.v3.Partner
-	0, // 2: rafay.dev.rpc.v3.Partner.GetInitPartner:input_type -> rafay.dev.rpc.v3.EmptyRequest
-	1, // 3: rafay.dev.rpc.v3.Partner.UpdatePartner:input_type -> rafay.dev.types.system.v3.Partner
-	1, // 4: rafay.dev.rpc.v3.Partner.DeletePartner:input_type -> rafay.dev.types.system.v3.Partner
-	1, // 5: rafay.dev.rpc.v3.Partner.CreatePartner:output_type -> rafay.dev.types.system.v3.Partner
-	1, // 6: rafay.dev.rpc.v3.Partner.GetPartner:output_type -> rafay.dev.types.system.v3.Partner
-	1, // 7: rafay.dev.rpc.v3.Partner.GetInitPartner:output_type -> rafay.dev.types.system.v3.Partner
-	1, // 8: rafay.dev.rpc.v3.Partner.UpdatePartner:output_type -> rafay.dev.types.system.v3.Partner
-	1, // 9: rafay.dev.rpc.v3.Partner.DeletePartner:output_type -> rafay.dev.types.system.v3.Partner
+	1, // 0: paralus.dev.rpc.v3.Partner.CreatePartner:input_type -> paralus.dev.types.system.v3.Partner
+	1, // 1: paralus.dev.rpc.v3.Partner.GetPartner:input_type -> paralus.dev.types.system.v3.Partner
+	0, // 2: paralus.dev.rpc.v3.Partner.GetInitPartner:input_type -> paralus.dev.rpc.v3.EmptyRequest
+	1, // 3: paralus.dev.rpc.v3.Partner.UpdatePartner:input_type -> paralus.dev.types.system.v3.Partner
+	1, // 4: paralus.dev.rpc.v3.Partner.DeletePartner:input_type -> paralus.dev.types.system.v3.Partner
+	1, // 5: paralus.dev.rpc.v3.Partner.CreatePartner:output_type -> paralus.dev.types.system.v3.Partner
+	1, // 6: paralus.dev.rpc.v3.Partner.GetPartner:output_type -> paralus.dev.types.system.v3.Partner
+	1, // 7: paralus.dev.rpc.v3.Partner.GetInitPartner:output_type -> paralus.dev.types.system.v3.Partner
+	1, // 8: paralus.dev.rpc.v3.Partner.UpdatePartner:output_type -> paralus.dev.types.system.v3.Partner
+	1, // 9: paralus.dev.rpc.v3.Partner.DeletePartner:output_type -> paralus.dev.types.system.v3.Partner
 	5, // [5:10] is the sub-list for method output_type
 	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

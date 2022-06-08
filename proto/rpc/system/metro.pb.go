@@ -7,8 +7,8 @@
 package rpcv3
 
 import (
-	v3 "github.com/paralus/paralus/proto/types/infrapb/v3"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	v3 "github.com/paralus/paralus/proto/types/infrapb/v3"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -131,20 +131,20 @@ var file_proto_rpc_system_metro_proto_rawDesc = []byte{
 }
 
 var file_proto_rpc_system_metro_proto_goTypes = []interface{}{
-	(*v3.Location)(nil),     // 0: rafay.dev.types.infra.v3.Location
-	(*v3.LocationList)(nil), // 1: rafay.dev.types.infra.v3.LocationList
+	(*v3.Location)(nil),     // 0: paralus.dev.types.infra.v3.Location
+	(*v3.LocationList)(nil), // 1: paralus.dev.types.infra.v3.LocationList
 }
 var file_proto_rpc_system_metro_proto_depIdxs = []int32{
-	0, // 0: rafay.dev.rpc.v3.Location.CreateLocation:input_type -> rafay.dev.types.infra.v3.Location
-	0, // 1: rafay.dev.rpc.v3.Location.GetLocations:input_type -> rafay.dev.types.infra.v3.Location
-	0, // 2: rafay.dev.rpc.v3.Location.GetLocation:input_type -> rafay.dev.types.infra.v3.Location
-	0, // 3: rafay.dev.rpc.v3.Location.UpdateLocation:input_type -> rafay.dev.types.infra.v3.Location
-	0, // 4: rafay.dev.rpc.v3.Location.DeleteLocation:input_type -> rafay.dev.types.infra.v3.Location
-	0, // 5: rafay.dev.rpc.v3.Location.CreateLocation:output_type -> rafay.dev.types.infra.v3.Location
-	1, // 6: rafay.dev.rpc.v3.Location.GetLocations:output_type -> rafay.dev.types.infra.v3.LocationList
-	0, // 7: rafay.dev.rpc.v3.Location.GetLocation:output_type -> rafay.dev.types.infra.v3.Location
-	0, // 8: rafay.dev.rpc.v3.Location.UpdateLocation:output_type -> rafay.dev.types.infra.v3.Location
-	0, // 9: rafay.dev.rpc.v3.Location.DeleteLocation:output_type -> rafay.dev.types.infra.v3.Location
+	0, // 0: paralus.dev.rpc.v3.Location.CreateLocation:input_type -> paralus.dev.types.infra.v3.Location
+	0, // 1: paralus.dev.rpc.v3.Location.GetLocations:input_type -> paralus.dev.types.infra.v3.Location
+	0, // 2: paralus.dev.rpc.v3.Location.GetLocation:input_type -> paralus.dev.types.infra.v3.Location
+	0, // 3: paralus.dev.rpc.v3.Location.UpdateLocation:input_type -> paralus.dev.types.infra.v3.Location
+	0, // 4: paralus.dev.rpc.v3.Location.DeleteLocation:input_type -> paralus.dev.types.infra.v3.Location
+	0, // 5: paralus.dev.rpc.v3.Location.CreateLocation:output_type -> paralus.dev.types.infra.v3.Location
+	1, // 6: paralus.dev.rpc.v3.Location.GetLocations:output_type -> paralus.dev.types.infra.v3.LocationList
+	0, // 7: paralus.dev.rpc.v3.Location.GetLocation:output_type -> paralus.dev.types.infra.v3.Location
+	0, // 8: paralus.dev.rpc.v3.Location.UpdateLocation:output_type -> paralus.dev.types.infra.v3.Location
+	0, // 9: paralus.dev.rpc.v3.Location.DeleteLocation:output_type -> paralus.dev.types.infra.v3.Location
 	5, // [5:10] is the sub-list for method output_type
 	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

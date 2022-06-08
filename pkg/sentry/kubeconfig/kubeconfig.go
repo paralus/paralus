@@ -9,13 +9,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/paralus/paralus/pkg/log"
 	"github.com/paralus/paralus/pkg/query"
 	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
 	rpcv3 "github.com/paralus/paralus/proto/rpc/user"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	sentry "github.com/paralus/paralus/proto/types/sentry"
-	"github.com/google/uuid"
 
 	clientcmdapiv1 "k8s.io/client-go/tools/clientcmd/api/v1"
 	"sigs.k8s.io/yaml"
@@ -28,7 +28,7 @@ import (
 
 const (
 	kubeconfigPermission = sentry.KubeconfigReadPermission
-	systemUsername       = "admin@rafay.co"
+	systemUsername       = "admin@paralus.co"
 )
 
 var _log = log.GetLogger()
@@ -114,11 +114,11 @@ func getProjectsForAccount(ctx context.Context, accountID, orgID, partnerID stri
 func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, req *sentryrpc.GetForUserRequest, pf cryptoutil.PasswordFunc, kss service.KubeconfigSettingService, ksvc service.ApiKeyService, os service.OrganizationService, ps service.PartnerService) ([]byte, error) {
 	opts := req.Opts
 	if opts.Selector != "" {
-		opts.Selector = fmt.Sprintf("%s,!rafay.dev/cdRelayAgent", opts.Selector)
+		opts.Selector = fmt.Sprintf("%s,!paralus.dev/cdRelayAgent", opts.Selector)
 	} else {
-		opts.Selector = "!rafay.dev/cdRelayAgent"
+		opts.Selector = "!paralus.dev/cdRelayAgent"
 	}
-	batl, err := bs.SelectBootstrapAgentTemplates(ctx, query.WithSelector("rafay.dev/defaultUser=true"), query.WithGlobalScope())
+	batl, err := bs.SelectBootstrapAgentTemplates(ctx, query.WithSelector("paralus.dev/defaultUser=true"), query.WithGlobalScope())
 	if err != nil {
 		_log.Errorw("error getting default user bootstrap agent templates", "error", err.Error())
 		return nil, err
@@ -462,12 +462,12 @@ func getConfig(username, namespace, certCN, serverHost string, bootstrapInfra *s
 func GetConfigForCluster(ctx context.Context, bs service.BootstrapService, req *sentryrpc.GetForClusterRequest, pf cryptoutil.PasswordFunc, kss service.KubeconfigSettingService, sessionType string) ([]byte, error) {
 	opts := req.Opts
 	if opts.Selector != "" {
-		opts.Selector = fmt.Sprintf("%s,!rafay.dev/cdRelayAgent", opts.Selector)
+		opts.Selector = fmt.Sprintf("%s,!paralus.dev/cdRelayAgent", opts.Selector)
 	} else {
-		opts.Selector = fmt.Sprintf("!rafay.dev/cdRelayAgent")
+		opts.Selector = fmt.Sprintf("!paralus.dev/cdRelayAgent")
 	}
 	_log.Infow("get config for cluster ", "opts", opts, "namespace", req.Namespace, "systemUser", req.SystemUser)
-	batl, err := bs.SelectBootstrapAgentTemplates(ctx, query.WithSelector("rafay.dev/defaultUser=true"), query.WithGlobalScope())
+	batl, err := bs.SelectBootstrapAgentTemplates(ctx, query.WithSelector("paralus.dev/defaultUser=true"), query.WithGlobalScope())
 	if err != nil {
 		return nil, err
 	}
@@ -506,8 +506,8 @@ func GetConfigForCluster(ctx context.Context, bs service.BootstrapService, req *
 	if req.SystemUser {
 		username = systemUsername
 	}
-	if sessionType == RafaySystem {
-		username = RafaySystem + "-" + username
+	if sessionType == ParalusSystem {
+		username = ParalusSystem + "-" + username
 	}
 	enforceSession := false
 

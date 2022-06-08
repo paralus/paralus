@@ -3,10 +3,10 @@ package server
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/paralus/paralus/pkg/service"
 	systemrpc "github.com/paralus/paralus/proto/rpc/system"
 	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
-	"github.com/google/uuid"
 )
 
 type locationServer struct {

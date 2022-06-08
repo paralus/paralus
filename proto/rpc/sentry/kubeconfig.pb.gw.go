@@ -737,7 +737,7 @@ func RegisterKubeConfigHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/GetForClusterWebSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clusterwebsession"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterWebSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clusterwebsession"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -760,7 +760,7 @@ func RegisterKubeConfigHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/GetForClusterSystemSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clustersystemsession"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterSystemSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clustersystemsession"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -783,7 +783,7 @@ func RegisterKubeConfigHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/user"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/user"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -806,7 +806,7 @@ func RegisterKubeConfigHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/download"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/download"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -829,7 +829,7 @@ func RegisterKubeConfigHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/revoke"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -852,7 +852,7 @@ func RegisterKubeConfigHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/revoke"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -875,7 +875,7 @@ func RegisterKubeConfigHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/GetOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -898,7 +898,7 @@ func RegisterKubeConfigHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/GetUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -921,7 +921,7 @@ func RegisterKubeConfigHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/GetSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -944,7 +944,7 @@ func RegisterKubeConfigHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/UpdateOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/UpdateOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -967,7 +967,7 @@ func RegisterKubeConfigHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/UpdateUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/UpdateUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -990,7 +990,7 @@ func RegisterKubeConfigHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/UpdateSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/UpdateSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1052,7 +1052,7 @@ func RegisterKubeConfigHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/GetForClusterWebSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clusterwebsession"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterWebSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clusterwebsession"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1072,7 +1072,7 @@ func RegisterKubeConfigHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/GetForClusterSystemSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clustersystemsession"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterSystemSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clustersystemsession"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1092,7 +1092,7 @@ func RegisterKubeConfigHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/user"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/user"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1112,7 +1112,7 @@ func RegisterKubeConfigHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/download"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/download"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1132,7 +1132,7 @@ func RegisterKubeConfigHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/revoke"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1152,7 +1152,7 @@ func RegisterKubeConfigHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/revoke"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1172,7 +1172,7 @@ func RegisterKubeConfigHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/GetOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1192,7 +1192,7 @@ func RegisterKubeConfigHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/GetUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1212,7 +1212,7 @@ func RegisterKubeConfigHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/GetSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1232,7 +1232,7 @@ func RegisterKubeConfigHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/UpdateOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/UpdateOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1252,7 +1252,7 @@ func RegisterKubeConfigHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/UpdateUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/UpdateUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1272,7 +1272,7 @@ func RegisterKubeConfigHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.KubeConfig/UpdateSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/UpdateSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

@@ -40,7 +40,7 @@ func NewPartnerClient(cc grpc.ClientConnInterface) PartnerClient {
 
 func (c *partnerClient) CreatePartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error) {
 	out := new(v3.Partner)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Partner/CreatePartner", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Partner/CreatePartner", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func (c *partnerClient) CreatePartner(ctx context.Context, in *v3.Partner, opts 
 
 func (c *partnerClient) GetPartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error) {
 	out := new(v3.Partner)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Partner/GetPartner", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Partner/GetPartner", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func (c *partnerClient) GetPartner(ctx context.Context, in *v3.Partner, opts ...
 
 func (c *partnerClient) GetInitPartner(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*v3.Partner, error) {
 	out := new(v3.Partner)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Partner/GetInitPartner", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Partner/GetInitPartner", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (c *partnerClient) GetInitPartner(ctx context.Context, in *EmptyRequest, op
 
 func (c *partnerClient) UpdatePartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error) {
 	out := new(v3.Partner)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Partner/UpdatePartner", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Partner/UpdatePartner", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func (c *partnerClient) UpdatePartner(ctx context.Context, in *v3.Partner, opts 
 
 func (c *partnerClient) DeletePartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error) {
 	out := new(v3.Partner)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Partner/DeletePartner", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Partner/DeletePartner", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +135,7 @@ func _Partner_CreatePartner_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Partner/CreatePartner",
+		FullMethod: "/paralus.dev.rpc.v3.Partner/CreatePartner",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PartnerServer).CreatePartner(ctx, req.(*v3.Partner))
@@ -153,7 +153,7 @@ func _Partner_GetPartner_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Partner/GetPartner",
+		FullMethod: "/paralus.dev.rpc.v3.Partner/GetPartner",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PartnerServer).GetPartner(ctx, req.(*v3.Partner))
@@ -171,7 +171,7 @@ func _Partner_GetInitPartner_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Partner/GetInitPartner",
+		FullMethod: "/paralus.dev.rpc.v3.Partner/GetInitPartner",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PartnerServer).GetInitPartner(ctx, req.(*EmptyRequest))
@@ -189,7 +189,7 @@ func _Partner_UpdatePartner_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Partner/UpdatePartner",
+		FullMethod: "/paralus.dev.rpc.v3.Partner/UpdatePartner",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PartnerServer).UpdatePartner(ctx, req.(*v3.Partner))
@@ -207,7 +207,7 @@ func _Partner_DeletePartner_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Partner/DeletePartner",
+		FullMethod: "/paralus.dev.rpc.v3.Partner/DeletePartner",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PartnerServer).DeletePartner(ctx, req.(*v3.Partner))
@@ -219,7 +219,7 @@ func _Partner_DeletePartner_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Partner_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.rpc.v3.Partner",
+	ServiceName: "paralus.dev.rpc.v3.Partner",
 	HandlerType: (*PartnerServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

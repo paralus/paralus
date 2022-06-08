@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.rpc.v3;
+package paralus.dev.rpc.v3;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -22,7 +22,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {
     title : "Cluster Service"
     version : "3.0"
-    contact : {name : "Rafay Dev"}
+    contact : {name : "Paralus Dev"}
   }
   schemes : HTTPS
   consumes : "application/json"
@@ -36,7 +36,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     }
     security : {
       key : "ApiKeyAuth"
-      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-RAFAY-API-KEYID"}
+      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-PARALUS-API-KEYID"}
     }
   }
   security : {
@@ -66,8 +66,8 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service Cluster {
-    rpc CreateCluster(rafay.dev.types.infra.v3.Cluster)
-        returns (rafay.dev.types.infra.v3.Cluster) {
+    rpc CreateCluster(paralus.dev.types.infra.v3.Cluster)
+        returns (paralus.dev.types.infra.v3.Cluster) {
       option (google.api.http) = {
         post : "/infra/v3/project/{metadata.project}/cluster"
         body : "*"
@@ -83,29 +83,29 @@ service Cluster {
       };
     };
   
-    rpc GetClusters(rafay.dev.types.common.v3.QueryOptions)
-        returns (rafay.dev.types.infra.v3.ClusterList) {
+    rpc GetClusters(paralus.dev.types.common.v3.QueryOptions)
+        returns (paralus.dev.types.infra.v3.ClusterList) {
       option (google.api.http) = {
         get : "/infra/v3/project/{project}/cluster"
       };
     };
   
-    rpc GetCluster(rafay.dev.types.infra.v3.Cluster)
-        returns (rafay.dev.types.infra.v3.Cluster) {
+    rpc GetCluster(paralus.dev.types.infra.v3.Cluster)
+        returns (paralus.dev.types.infra.v3.Cluster) {
       option (google.api.http) = {
         get : "/infra/v3/project/{metadata.project}/cluster/{metadata.name}"
       };
     };
 
-    rpc UpdateCluster(rafay.dev.types.infra.v3.Cluster)
-        returns (rafay.dev.types.infra.v3.Cluster) {
+    rpc UpdateCluster(paralus.dev.types.infra.v3.Cluster)
+        returns (paralus.dev.types.infra.v3.Cluster) {
         option (google.api.http) = {
             put : "/infra/v3/project/{metadata.project}/cluster/{metadata.name}"
             body : "*"
         };
     };
     
-    rpc DeleteCluster(rafay.dev.types.infra.v3.Cluster)
+    rpc DeleteCluster(paralus.dev.types.infra.v3.Cluster)
         returns (DeleteClusterResponse) {
       option (google.api.http) = {
         delete : "/infra/v3/project/{metadata.project}/cluster/{metadata.name}"
@@ -121,8 +121,8 @@ service Cluster {
       };
     };
 
-    rpc DownloadCluster(rafay.dev.types.infra.v3.Cluster)
-        returns (rafay.dev.types.common.v3.HttpBody) {
+    rpc DownloadCluster(paralus.dev.types.infra.v3.Cluster)
+        returns (paralus.dev.types.common.v3.HttpBody) {
         option (google.api.http) = {
         get : "/infra/v3/project/{metadata.project}/cluster/{metadata.name}/download"
         };

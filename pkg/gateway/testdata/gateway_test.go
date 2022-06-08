@@ -9,9 +9,9 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/paralus/paralus/pkg/gateway"
 	"github.com/paralus/paralus/pkg/grpc"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 )
 
 type testServer struct {

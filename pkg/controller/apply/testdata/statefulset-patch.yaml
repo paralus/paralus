@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   annotations:
-    rafay.dev/overridedBy: global/global-override
+    paralus.dev/overridedBy: global/global-override
   name: rafay-connector
   namespace: default
 spec:

@@ -8,7 +8,7 @@ import (
 )
 
 // SystemClient is the interface for accessing all the RPCs
-// exposed by Rafay Base
+// exposed by Paralus Base
 type SystemClient interface {
 	Unhealthy()
 	Close() error

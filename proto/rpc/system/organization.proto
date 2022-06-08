@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.rpc.v3;
+package paralus.dev.rpc.v3;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -9,7 +9,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
     title: "Organization Service"
     version: "3.0"
-    contact: { name: "Rafay Dev" }
+    contact: { name: "Paralus Dev" }
   }
   schemes: HTTPS
   consumes: "application/json"
@@ -23,7 +23,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     }
     security: {
       key: "ApiKeyAuth"
-      value: { type: TYPE_API_KEY in: IN_HEADER name: "X-RAFAY-API-KEYID" }
+      value: { type: TYPE_API_KEY in: IN_HEADER name: "X-PARALUS-API-KEYID" }
     }
   }
   security: {
@@ -52,8 +52,8 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service Organization {
-  rpc CreateOrganization(rafay.dev.types.system.v3.Organization)
-      returns (rafay.dev.types.system.v3.Organization) {
+  rpc CreateOrganization(paralus.dev.types.system.v3.Organization)
+      returns (paralus.dev.types.system.v3.Organization) {
     option (google.api.http) = {
       post : "/auth/v3/partner/{metadata.partner}/organization"
       body : "*"
@@ -69,23 +69,23 @@ service Organization {
     };
   };
 
-  rpc GetOrganizations(rafay.dev.types.system.v3.Organization)
-      returns (rafay.dev.types.system.v3.OrganizationList) {
+  rpc GetOrganizations(paralus.dev.types.system.v3.Organization)
+      returns (paralus.dev.types.system.v3.OrganizationList) {
     option (google.api.http) = {
       get : "/auth/v3/partner/{metadata.partner}/organizations"
     };
   };
 
-  rpc GetOrganization(rafay.dev.types.system.v3.Organization)
-      returns (rafay.dev.types.system.v3.Organization) {
+  rpc GetOrganization(paralus.dev.types.system.v3.Organization)
+      returns (paralus.dev.types.system.v3.Organization) {
     option (google.api.http) = {
       get : "/auth/v3/partner/{metadata.partner}/organization/"
             "{metadata.name}"
     };
   };
 
-  rpc UpdateOrganization(rafay.dev.types.system.v3.Organization)
-      returns (rafay.dev.types.system.v3.Organization) {
+  rpc UpdateOrganization(paralus.dev.types.system.v3.Organization)
+      returns (paralus.dev.types.system.v3.Organization) {
     option (google.api.http) = {
       put : "/auth/v3/partner/{metadata.partner}/organization/"
             "{metadata.name}"
@@ -93,8 +93,8 @@ service Organization {
     };
   };
 
-  rpc DeleteOrganization(rafay.dev.types.system.v3.Organization)
-      returns (rafay.dev.types.system.v3.Organization) {
+  rpc DeleteOrganization(paralus.dev.types.system.v3.Organization)
+      returns (paralus.dev.types.system.v3.Organization) {
     option (google.api.http) = {
       delete : "/auth/v3/partner/{metadata.partner}/organization/"
                "{metadata.name}"

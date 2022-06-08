@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/paralus/paralus/pkg/audit"
 	"github.com/google/uuid"
+	"github.com/paralus/paralus/pkg/audit"
 	"go.uber.org/zap"
 )
 

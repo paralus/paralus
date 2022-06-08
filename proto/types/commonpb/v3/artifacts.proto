@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package rafay.dev.types.common.v3;
+package paralus.dev.types.common.v3;
 
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "google/api/field_behavior.proto";

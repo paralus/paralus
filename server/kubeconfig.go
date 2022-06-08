@@ -33,7 +33,7 @@ type kubeConfigServer struct {
 var _ sentryrpc.KubeConfigServer = (*kubeConfigServer)(nil)
 
 func (s *kubeConfigServer) GetForClusterSystemSession(ctx context.Context, in *sentryrpc.GetForClusterRequest) (*commonv3.HttpBody, error) {
-	config, err := kubeconfig.GetConfigForCluster(ctx, s.bs, in, s.pf, s.kss, kubeconfig.RafaySystem)
+	config, err := kubeconfig.GetConfigForCluster(ctx, s.bs, in, s.pf, s.kss, kubeconfig.ParalusSystem)
 	if err != nil {
 		return nil, err
 	}

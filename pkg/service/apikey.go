@@ -5,11 +5,11 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/paralus/paralus/internal/dao"
 	"github.com/paralus/paralus/internal/models"
 	"github.com/paralus/paralus/pkg/crypto"
 	rpcv3 "github.com/paralus/paralus/proto/rpc/user"
-	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"

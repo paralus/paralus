@@ -127,7 +127,7 @@ type ClusterNamespaceSpec struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Type      ClusterNamespaceType `protobuf:"varint,1,opt,name=type,proto3,enum=rafay.dev.types.scheduler.ClusterNamespaceType" json:"type,omitempty"`
+	Type      ClusterNamespaceType `protobuf:"varint,1,opt,name=type,proto3,enum=paralus.dev.types.scheduler.ClusterNamespaceType" json:"type,omitempty"`
 	Namespace *NamespaceTemplate   `protobuf:"bytes,2,opt,name=namespace,proto3" json:"namespace,omitempty"`
 	ClusterID string               `protobuf:"bytes,3,opt,name=clusterID,proto3" json:"clusterID,omitempty"`
 }
@@ -190,8 +190,8 @@ type ClusterNamespaceCondition struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Type        ClusterNamespaceConditionType `protobuf:"varint,1,opt,name=type,proto3,enum=rafay.dev.types.scheduler.ClusterNamespaceConditionType" json:"type,omitempty"`
-	Status      v3.RafayConditionStatus       `protobuf:"varint,2,opt,name=status,proto3,enum=rafay.dev.types.common.v3.RafayConditionStatus" json:"status,omitempty"`
+	Type        ClusterNamespaceConditionType `protobuf:"varint,1,opt,name=type,proto3,enum=paralus.dev.types.scheduler.ClusterNamespaceConditionType" json:"type,omitempty"`
+	Status      v3.ParalusConditionStatus     `protobuf:"varint,2,opt,name=status,proto3,enum=paralus.dev.types.common.v3.ParalusConditionStatus" json:"status,omitempty"`
 	LastUpdated *timestamppb.Timestamp        `protobuf:"bytes,3,opt,name=lastUpdated,proto3" json:"lastUpdated,omitempty"`
 	Reason      string                        `protobuf:"bytes,4,opt,name=reason,proto3" json:"reason,omitempty"`
 }
@@ -235,11 +235,11 @@ func (x *ClusterNamespaceCondition) GetType() ClusterNamespaceConditionType {
 	return ClusterNamespaceConditionType_ClusterNamespaceAssigned
 }
 
-func (x *ClusterNamespaceCondition) GetStatus() v3.RafayConditionStatus {
+func (x *ClusterNamespaceCondition) GetStatus() v3.ParalusConditionStatus {
 	if x != nil {
 		return x.Status
 	}
-	return v3.RafayConditionStatus(0)
+	return v3.ParalusConditionStatus(0)
 }
 
 func (x *ClusterNamespaceCondition) GetLastUpdated() *timestamppb.Timestamp {
@@ -1022,44 +1022,44 @@ func file_proto_types_scheduler_namespace_proto_rawDescGZIP() []byte {
 var file_proto_types_scheduler_namespace_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_proto_types_scheduler_namespace_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_proto_types_scheduler_namespace_proto_goTypes = []interface{}{
-	(ClusterNamespaceConditionType)(0), // 0: rafay.dev.types.scheduler.ClusterNamespaceConditionType
-	(ClusterNamespaceType)(0),          // 1: rafay.dev.types.scheduler.ClusterNamespaceType
-	(*ClusterNamespaceSpec)(nil),       // 2: rafay.dev.types.scheduler.ClusterNamespaceSpec
-	(*ClusterNamespaceCondition)(nil),  // 3: rafay.dev.types.scheduler.ClusterNamespaceCondition
-	(*ClusterNamespaceStatus)(nil),     // 4: rafay.dev.types.scheduler.ClusterNamespaceStatus
-	(*ClusterNamespace)(nil),           // 5: rafay.dev.types.scheduler.ClusterNamespace
-	(*ClusterNamespaceList)(nil),       // 6: rafay.dev.types.scheduler.ClusterNamespaceList
-	(*NamespaceTemplate)(nil),          // 7: rafay.dev.types.scheduler.NamespaceTemplate
-	(*LimitRange)(nil),                 // 8: rafay.dev.types.scheduler.LimitRange
-	(*ResourceQuota)(nil),              // 9: rafay.dev.types.scheduler.ResourceQuota
-	(*LimitRangeItem)(nil),             // 10: rafay.dev.types.scheduler.LimitRangeItem
-	(v3.RafayConditionStatus)(0),       // 11: rafay.dev.types.common.v3.RafayConditionStatus
+	(ClusterNamespaceConditionType)(0), // 0: paralus.dev.types.scheduler.ClusterNamespaceConditionType
+	(ClusterNamespaceType)(0),          // 1: paralus.dev.types.scheduler.ClusterNamespaceType
+	(*ClusterNamespaceSpec)(nil),       // 2: paralus.dev.types.scheduler.ClusterNamespaceSpec
+	(*ClusterNamespaceCondition)(nil),  // 3: paralus.dev.types.scheduler.ClusterNamespaceCondition
+	(*ClusterNamespaceStatus)(nil),     // 4: paralus.dev.types.scheduler.ClusterNamespaceStatus
+	(*ClusterNamespace)(nil),           // 5: paralus.dev.types.scheduler.ClusterNamespace
+	(*ClusterNamespaceList)(nil),       // 6: paralus.dev.types.scheduler.ClusterNamespaceList
+	(*NamespaceTemplate)(nil),          // 7: paralus.dev.types.scheduler.NamespaceTemplate
+	(*LimitRange)(nil),                 // 8: paralus.dev.types.scheduler.LimitRange
+	(*ResourceQuota)(nil),              // 9: paralus.dev.types.scheduler.ResourceQuota
+	(*LimitRangeItem)(nil),             // 10: paralus.dev.types.scheduler.LimitRangeItem
+	(v3.ParalusConditionStatus)(0),     // 11: paralus.dev.types.common.v3.ParalusConditionStatus
 	(*timestamppb.Timestamp)(nil),      // 12: google.protobuf.Timestamp
-	(*controller.NamespaceStatus)(nil), // 13: rafay.dev.types.controller.NamespaceStatus
-	(*v3.Metadata)(nil),                // 14: rafay.dev.types.common.v3.Metadata
-	(*v3.ListMetadata)(nil),            // 15: rafay.dev.types.common.v3.ListMetadata
+	(*controller.NamespaceStatus)(nil), // 13: paralus.dev.types.controller.NamespaceStatus
+	(*v3.Metadata)(nil),                // 14: paralus.dev.types.common.v3.Metadata
+	(*v3.ListMetadata)(nil),            // 15: paralus.dev.types.common.v3.ListMetadata
 	(*v1.ObjectMeta)(nil),              // 16: k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
-	(*controller.NamespaceSpec)(nil),   // 17: rafay.dev.types.controller.NamespaceSpec
+	(*controller.NamespaceSpec)(nil),   // 17: paralus.dev.types.controller.NamespaceSpec
 }
 var file_proto_types_scheduler_namespace_proto_depIdxs = []int32{
-	1,  // 0: rafay.dev.types.scheduler.ClusterNamespaceSpec.type:type_name -> rafay.dev.types.scheduler.ClusterNamespaceType
-	7,  // 1: rafay.dev.types.scheduler.ClusterNamespaceSpec.namespace:type_name -> rafay.dev.types.scheduler.NamespaceTemplate
-	0,  // 2: rafay.dev.types.scheduler.ClusterNamespaceCondition.type:type_name -> rafay.dev.types.scheduler.ClusterNamespaceConditionType
-	11, // 3: rafay.dev.types.scheduler.ClusterNamespaceCondition.status:type_name -> rafay.dev.types.common.v3.RafayConditionStatus
-	12, // 4: rafay.dev.types.scheduler.ClusterNamespaceCondition.lastUpdated:type_name -> google.protobuf.Timestamp
-	3,  // 5: rafay.dev.types.scheduler.ClusterNamespaceStatus.conditions:type_name -> rafay.dev.types.scheduler.ClusterNamespaceCondition
-	13, // 6: rafay.dev.types.scheduler.ClusterNamespaceStatus.status:type_name -> rafay.dev.types.controller.NamespaceStatus
-	14, // 7: rafay.dev.types.scheduler.ClusterNamespace.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	2,  // 8: rafay.dev.types.scheduler.ClusterNamespace.spec:type_name -> rafay.dev.types.scheduler.ClusterNamespaceSpec
-	4,  // 9: rafay.dev.types.scheduler.ClusterNamespace.status:type_name -> rafay.dev.types.scheduler.ClusterNamespaceStatus
-	15, // 10: rafay.dev.types.scheduler.ClusterNamespaceList.metadata:type_name -> rafay.dev.types.common.v3.ListMetadata
-	5,  // 11: rafay.dev.types.scheduler.ClusterNamespaceList.items:type_name -> rafay.dev.types.scheduler.ClusterNamespace
-	16, // 12: rafay.dev.types.scheduler.NamespaceTemplate.objectMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
-	17, // 13: rafay.dev.types.scheduler.NamespaceTemplate.spec:type_name -> rafay.dev.types.controller.NamespaceSpec
-	9,  // 14: rafay.dev.types.scheduler.NamespaceTemplate.resourceQuota:type_name -> rafay.dev.types.scheduler.ResourceQuota
-	8,  // 15: rafay.dev.types.scheduler.NamespaceTemplate.limitRange:type_name -> rafay.dev.types.scheduler.LimitRange
-	10, // 16: rafay.dev.types.scheduler.LimitRange.podLimits:type_name -> rafay.dev.types.scheduler.LimitRangeItem
-	10, // 17: rafay.dev.types.scheduler.LimitRange.containerLimits:type_name -> rafay.dev.types.scheduler.LimitRangeItem
+	1,  // 0: paralus.dev.types.scheduler.ClusterNamespaceSpec.type:type_name -> paralus.dev.types.scheduler.ClusterNamespaceType
+	7,  // 1: paralus.dev.types.scheduler.ClusterNamespaceSpec.namespace:type_name -> paralus.dev.types.scheduler.NamespaceTemplate
+	0,  // 2: paralus.dev.types.scheduler.ClusterNamespaceCondition.type:type_name -> paralus.dev.types.scheduler.ClusterNamespaceConditionType
+	11, // 3: paralus.dev.types.scheduler.ClusterNamespaceCondition.status:type_name -> paralus.dev.types.common.v3.ParalusConditionStatus
+	12, // 4: paralus.dev.types.scheduler.ClusterNamespaceCondition.lastUpdated:type_name -> google.protobuf.Timestamp
+	3,  // 5: paralus.dev.types.scheduler.ClusterNamespaceStatus.conditions:type_name -> paralus.dev.types.scheduler.ClusterNamespaceCondition
+	13, // 6: paralus.dev.types.scheduler.ClusterNamespaceStatus.status:type_name -> paralus.dev.types.controller.NamespaceStatus
+	14, // 7: paralus.dev.types.scheduler.ClusterNamespace.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	2,  // 8: paralus.dev.types.scheduler.ClusterNamespace.spec:type_name -> paralus.dev.types.scheduler.ClusterNamespaceSpec
+	4,  // 9: paralus.dev.types.scheduler.ClusterNamespace.status:type_name -> paralus.dev.types.scheduler.ClusterNamespaceStatus
+	15, // 10: paralus.dev.types.scheduler.ClusterNamespaceList.metadata:type_name -> paralus.dev.types.common.v3.ListMetadata
+	5,  // 11: paralus.dev.types.scheduler.ClusterNamespaceList.items:type_name -> paralus.dev.types.scheduler.ClusterNamespace
+	16, // 12: paralus.dev.types.scheduler.NamespaceTemplate.objectMeta:type_name -> k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta
+	17, // 13: paralus.dev.types.scheduler.NamespaceTemplate.spec:type_name -> paralus.dev.types.controller.NamespaceSpec
+	9,  // 14: paralus.dev.types.scheduler.NamespaceTemplate.resourceQuota:type_name -> paralus.dev.types.scheduler.ResourceQuota
+	8,  // 15: paralus.dev.types.scheduler.NamespaceTemplate.limitRange:type_name -> paralus.dev.types.scheduler.LimitRange
+	10, // 16: paralus.dev.types.scheduler.LimitRange.podLimits:type_name -> paralus.dev.types.scheduler.LimitRangeItem
+	10, // 17: paralus.dev.types.scheduler.LimitRange.containerLimits:type_name -> paralus.dev.types.scheduler.LimitRangeItem
 	18, // [18:18] is the sub-list for method output_type
 	18, // [18:18] is the sub-list for method input_type
 	18, // [18:18] is the sub-list for extension type_name

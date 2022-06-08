@@ -36,7 +36,7 @@ func NewAuditInformationClient(cc grpc.ClientConnInterface) AuditInformationClie
 
 func (c *auditInformationClient) LookupUser(ctx context.Context, in *LookupUserRequest, opts ...grpc.CallOption) (*LookupUserResponse, error) {
 	out := new(LookupUserResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.AuditInformation/LookupUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.AuditInformation/LookupUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (c *auditInformationClient) LookupUser(ctx context.Context, in *LookupUserR
 
 func (c *auditInformationClient) LookupCluster(ctx context.Context, in *LookupClusterRequest, opts ...grpc.CallOption) (*LookupClusterResponse, error) {
 	out := new(LookupClusterResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.AuditInformation/LookupCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.AuditInformation/LookupCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func _AuditInformation_LookupUser_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.AuditInformation/LookupUser",
+		FullMethod: "/paralus.dev.sentry.rpc.AuditInformation/LookupUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuditInformationServer).LookupUser(ctx, req.(*LookupUserRequest))
@@ -110,7 +110,7 @@ func _AuditInformation_LookupCluster_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.AuditInformation/LookupCluster",
+		FullMethod: "/paralus.dev.sentry.rpc.AuditInformation/LookupCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuditInformationServer).LookupCluster(ctx, req.(*LookupClusterRequest))
@@ -122,7 +122,7 @@ func _AuditInformation_LookupCluster_Handler(srv interface{}, ctx context.Contex
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AuditInformation_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.sentry.rpc.AuditInformation",
+	ServiceName: "paralus.dev.sentry.rpc.AuditInformation",
 	HandlerType: (*AuditInformationServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

@@ -575,20 +575,20 @@ func file_proto_types_authz_authz_proto_rawDescGZIP() []byte {
 
 var file_proto_types_authz_authz_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_proto_types_authz_authz_proto_goTypes = []interface{}{
-	(*EnforceRequest)(nil),                // 0: rafay.dev.types.authz.v1.EnforceRequest
-	(*Policy)(nil),                        // 1: rafay.dev.types.authz.v1.Policy
-	(*Policies)(nil),                      // 2: rafay.dev.types.authz.v1.Policies
-	(*UserGroup)(nil),                     // 3: rafay.dev.types.authz.v1.UserGroup
-	(*UserGroups)(nil),                    // 4: rafay.dev.types.authz.v1.UserGroups
-	(*RolePermissionMapping)(nil),         // 5: rafay.dev.types.authz.v1.RolePermissionMapping
-	(*RolePermissionMappingList)(nil),     // 6: rafay.dev.types.authz.v1.RolePermissionMappingList
-	(*FilteredRolePermissionMapping)(nil), // 7: rafay.dev.types.authz.v1.FilteredRolePermissionMapping
-	(*BoolReply)(nil),                     // 8: rafay.dev.types.authz.v1.BoolReply
+	(*EnforceRequest)(nil),                // 0: paralus.dev.types.authz.v1.EnforceRequest
+	(*Policy)(nil),                        // 1: paralus.dev.types.authz.v1.Policy
+	(*Policies)(nil),                      // 2: paralus.dev.types.authz.v1.Policies
+	(*UserGroup)(nil),                     // 3: paralus.dev.types.authz.v1.UserGroup
+	(*UserGroups)(nil),                    // 4: paralus.dev.types.authz.v1.UserGroups
+	(*RolePermissionMapping)(nil),         // 5: paralus.dev.types.authz.v1.RolePermissionMapping
+	(*RolePermissionMappingList)(nil),     // 6: paralus.dev.types.authz.v1.RolePermissionMappingList
+	(*FilteredRolePermissionMapping)(nil), // 7: paralus.dev.types.authz.v1.FilteredRolePermissionMapping
+	(*BoolReply)(nil),                     // 8: paralus.dev.types.authz.v1.BoolReply
 }
 var file_proto_types_authz_authz_proto_depIdxs = []int32{
-	1, // 0: rafay.dev.types.authz.v1.Policies.policies:type_name -> rafay.dev.types.authz.v1.Policy
-	3, // 1: rafay.dev.types.authz.v1.UserGroups.user_groups:type_name -> rafay.dev.types.authz.v1.UserGroup
-	5, // 2: rafay.dev.types.authz.v1.RolePermissionMappingList.role_permission_mapping_list:type_name -> rafay.dev.types.authz.v1.RolePermissionMapping
+	1, // 0: paralus.dev.types.authz.v1.Policies.policies:type_name -> paralus.dev.types.authz.v1.Policy
+	3, // 1: paralus.dev.types.authz.v1.UserGroups.user_groups:type_name -> paralus.dev.types.authz.v1.UserGroup
+	5, // 2: paralus.dev.types.authz.v1.RolePermissionMappingList.role_permission_mapping_list:type_name -> paralus.dev.types.authz.v1.RolePermissionMapping
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name

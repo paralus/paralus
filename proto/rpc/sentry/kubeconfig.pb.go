@@ -7,9 +7,9 @@
 package sentry
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	_ "github.com/paralus/paralus/proto/types/sentry"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -759,43 +759,43 @@ func file_proto_rpc_sentry_kubeconfig_proto_rawDescGZIP() []byte {
 
 var file_proto_rpc_sentry_kubeconfig_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_proto_rpc_sentry_kubeconfig_proto_goTypes = []interface{}{
-	(*GetForClusterRequest)(nil),            // 0: rafay.dev.sentry.rpc.GetForClusterRequest
-	(*GetForUserRequest)(nil),               // 1: rafay.dev.sentry.rpc.GetForUserRequest
-	(*RevokeKubeconfigRequest)(nil),         // 2: rafay.dev.sentry.rpc.RevokeKubeconfigRequest
-	(*RevokeKubeconfigResponse)(nil),        // 3: rafay.dev.sentry.rpc.RevokeKubeconfigResponse
-	(*UpdateKubeconfigSettingRequest)(nil),  // 4: rafay.dev.sentry.rpc.UpdateKubeconfigSettingRequest
-	(*UpdateKubeconfigSettingResponse)(nil), // 5: rafay.dev.sentry.rpc.UpdateKubeconfigSettingResponse
-	(*GetKubeconfigSettingRequest)(nil),     // 6: rafay.dev.sentry.rpc.GetKubeconfigSettingRequest
-	(*GetKubeconfigSettingResponse)(nil),    // 7: rafay.dev.sentry.rpc.GetKubeconfigSettingResponse
-	(*v3.QueryOptions)(nil),                 // 8: rafay.dev.types.common.v3.QueryOptions
-	(*v3.HttpBody)(nil),                     // 9: rafay.dev.types.common.v3.HttpBody
+	(*GetForClusterRequest)(nil),            // 0: paralus.dev.sentry.rpc.GetForClusterRequest
+	(*GetForUserRequest)(nil),               // 1: paralus.dev.sentry.rpc.GetForUserRequest
+	(*RevokeKubeconfigRequest)(nil),         // 2: paralus.dev.sentry.rpc.RevokeKubeconfigRequest
+	(*RevokeKubeconfigResponse)(nil),        // 3: paralus.dev.sentry.rpc.RevokeKubeconfigResponse
+	(*UpdateKubeconfigSettingRequest)(nil),  // 4: paralus.dev.sentry.rpc.UpdateKubeconfigSettingRequest
+	(*UpdateKubeconfigSettingResponse)(nil), // 5: paralus.dev.sentry.rpc.UpdateKubeconfigSettingResponse
+	(*GetKubeconfigSettingRequest)(nil),     // 6: paralus.dev.sentry.rpc.GetKubeconfigSettingRequest
+	(*GetKubeconfigSettingResponse)(nil),    // 7: paralus.dev.sentry.rpc.GetKubeconfigSettingResponse
+	(*v3.QueryOptions)(nil),                 // 8: paralus.dev.types.common.v3.QueryOptions
+	(*v3.HttpBody)(nil),                     // 9: paralus.dev.types.common.v3.HttpBody
 }
 var file_proto_rpc_sentry_kubeconfig_proto_depIdxs = []int32{
-	8,  // 0: rafay.dev.sentry.rpc.GetForClusterRequest.opts:type_name -> rafay.dev.types.common.v3.QueryOptions
-	8,  // 1: rafay.dev.sentry.rpc.GetForUserRequest.opts:type_name -> rafay.dev.types.common.v3.QueryOptions
-	8,  // 2: rafay.dev.sentry.rpc.RevokeKubeconfigRequest.opts:type_name -> rafay.dev.types.common.v3.QueryOptions
-	8,  // 3: rafay.dev.sentry.rpc.UpdateKubeconfigSettingRequest.opts:type_name -> rafay.dev.types.common.v3.QueryOptions
-	8,  // 4: rafay.dev.sentry.rpc.GetKubeconfigSettingRequest.opts:type_name -> rafay.dev.types.common.v3.QueryOptions
-	0,  // 5: rafay.dev.sentry.rpc.KubeConfig.GetForClusterWebSession:input_type -> rafay.dev.sentry.rpc.GetForClusterRequest
-	0,  // 6: rafay.dev.sentry.rpc.KubeConfig.GetForClusterSystemSession:input_type -> rafay.dev.sentry.rpc.GetForClusterRequest
-	1,  // 7: rafay.dev.sentry.rpc.KubeConfig.GetForUser:input_type -> rafay.dev.sentry.rpc.GetForUserRequest
-	2,  // 8: rafay.dev.sentry.rpc.KubeConfig.RevokeKubeconfig:input_type -> rafay.dev.sentry.rpc.RevokeKubeconfigRequest
-	6,  // 9: rafay.dev.sentry.rpc.KubeConfig.GetOrganizationSetting:input_type -> rafay.dev.sentry.rpc.GetKubeconfigSettingRequest
-	6,  // 10: rafay.dev.sentry.rpc.KubeConfig.GetUserSetting:input_type -> rafay.dev.sentry.rpc.GetKubeconfigSettingRequest
-	6,  // 11: rafay.dev.sentry.rpc.KubeConfig.GetSSOUserSetting:input_type -> rafay.dev.sentry.rpc.GetKubeconfigSettingRequest
-	4,  // 12: rafay.dev.sentry.rpc.KubeConfig.UpdateOrganizationSetting:input_type -> rafay.dev.sentry.rpc.UpdateKubeconfigSettingRequest
-	4,  // 13: rafay.dev.sentry.rpc.KubeConfig.UpdateUserSetting:input_type -> rafay.dev.sentry.rpc.UpdateKubeconfigSettingRequest
-	4,  // 14: rafay.dev.sentry.rpc.KubeConfig.UpdateSSOUserSetting:input_type -> rafay.dev.sentry.rpc.UpdateKubeconfigSettingRequest
-	9,  // 15: rafay.dev.sentry.rpc.KubeConfig.GetForClusterWebSession:output_type -> rafay.dev.types.common.v3.HttpBody
-	9,  // 16: rafay.dev.sentry.rpc.KubeConfig.GetForClusterSystemSession:output_type -> rafay.dev.types.common.v3.HttpBody
-	9,  // 17: rafay.dev.sentry.rpc.KubeConfig.GetForUser:output_type -> rafay.dev.types.common.v3.HttpBody
-	3,  // 18: rafay.dev.sentry.rpc.KubeConfig.RevokeKubeconfig:output_type -> rafay.dev.sentry.rpc.RevokeKubeconfigResponse
-	7,  // 19: rafay.dev.sentry.rpc.KubeConfig.GetOrganizationSetting:output_type -> rafay.dev.sentry.rpc.GetKubeconfigSettingResponse
-	7,  // 20: rafay.dev.sentry.rpc.KubeConfig.GetUserSetting:output_type -> rafay.dev.sentry.rpc.GetKubeconfigSettingResponse
-	7,  // 21: rafay.dev.sentry.rpc.KubeConfig.GetSSOUserSetting:output_type -> rafay.dev.sentry.rpc.GetKubeconfigSettingResponse
-	5,  // 22: rafay.dev.sentry.rpc.KubeConfig.UpdateOrganizationSetting:output_type -> rafay.dev.sentry.rpc.UpdateKubeconfigSettingResponse
-	5,  // 23: rafay.dev.sentry.rpc.KubeConfig.UpdateUserSetting:output_type -> rafay.dev.sentry.rpc.UpdateKubeconfigSettingResponse
-	5,  // 24: rafay.dev.sentry.rpc.KubeConfig.UpdateSSOUserSetting:output_type -> rafay.dev.sentry.rpc.UpdateKubeconfigSettingResponse
+	8,  // 0: paralus.dev.sentry.rpc.GetForClusterRequest.opts:type_name -> paralus.dev.types.common.v3.QueryOptions
+	8,  // 1: paralus.dev.sentry.rpc.GetForUserRequest.opts:type_name -> paralus.dev.types.common.v3.QueryOptions
+	8,  // 2: paralus.dev.sentry.rpc.RevokeKubeconfigRequest.opts:type_name -> paralus.dev.types.common.v3.QueryOptions
+	8,  // 3: paralus.dev.sentry.rpc.UpdateKubeconfigSettingRequest.opts:type_name -> paralus.dev.types.common.v3.QueryOptions
+	8,  // 4: paralus.dev.sentry.rpc.GetKubeconfigSettingRequest.opts:type_name -> paralus.dev.types.common.v3.QueryOptions
+	0,  // 5: paralus.dev.sentry.rpc.KubeConfig.GetForClusterWebSession:input_type -> paralus.dev.sentry.rpc.GetForClusterRequest
+	0,  // 6: paralus.dev.sentry.rpc.KubeConfig.GetForClusterSystemSession:input_type -> paralus.dev.sentry.rpc.GetForClusterRequest
+	1,  // 7: paralus.dev.sentry.rpc.KubeConfig.GetForUser:input_type -> paralus.dev.sentry.rpc.GetForUserRequest
+	2,  // 8: paralus.dev.sentry.rpc.KubeConfig.RevokeKubeconfig:input_type -> paralus.dev.sentry.rpc.RevokeKubeconfigRequest
+	6,  // 9: paralus.dev.sentry.rpc.KubeConfig.GetOrganizationSetting:input_type -> paralus.dev.sentry.rpc.GetKubeconfigSettingRequest
+	6,  // 10: paralus.dev.sentry.rpc.KubeConfig.GetUserSetting:input_type -> paralus.dev.sentry.rpc.GetKubeconfigSettingRequest
+	6,  // 11: paralus.dev.sentry.rpc.KubeConfig.GetSSOUserSetting:input_type -> paralus.dev.sentry.rpc.GetKubeconfigSettingRequest
+	4,  // 12: paralus.dev.sentry.rpc.KubeConfig.UpdateOrganizationSetting:input_type -> paralus.dev.sentry.rpc.UpdateKubeconfigSettingRequest
+	4,  // 13: paralus.dev.sentry.rpc.KubeConfig.UpdateUserSetting:input_type -> paralus.dev.sentry.rpc.UpdateKubeconfigSettingRequest
+	4,  // 14: paralus.dev.sentry.rpc.KubeConfig.UpdateSSOUserSetting:input_type -> paralus.dev.sentry.rpc.UpdateKubeconfigSettingRequest
+	9,  // 15: paralus.dev.sentry.rpc.KubeConfig.GetForClusterWebSession:output_type -> paralus.dev.types.common.v3.HttpBody
+	9,  // 16: paralus.dev.sentry.rpc.KubeConfig.GetForClusterSystemSession:output_type -> paralus.dev.types.common.v3.HttpBody
+	9,  // 17: paralus.dev.sentry.rpc.KubeConfig.GetForUser:output_type -> paralus.dev.types.common.v3.HttpBody
+	3,  // 18: paralus.dev.sentry.rpc.KubeConfig.RevokeKubeconfig:output_type -> paralus.dev.sentry.rpc.RevokeKubeconfigResponse
+	7,  // 19: paralus.dev.sentry.rpc.KubeConfig.GetOrganizationSetting:output_type -> paralus.dev.sentry.rpc.GetKubeconfigSettingResponse
+	7,  // 20: paralus.dev.sentry.rpc.KubeConfig.GetUserSetting:output_type -> paralus.dev.sentry.rpc.GetKubeconfigSettingResponse
+	7,  // 21: paralus.dev.sentry.rpc.KubeConfig.GetSSOUserSetting:output_type -> paralus.dev.sentry.rpc.GetKubeconfigSettingResponse
+	5,  // 22: paralus.dev.sentry.rpc.KubeConfig.UpdateOrganizationSetting:output_type -> paralus.dev.sentry.rpc.UpdateKubeconfigSettingResponse
+	5,  // 23: paralus.dev.sentry.rpc.KubeConfig.UpdateUserSetting:output_type -> paralus.dev.sentry.rpc.UpdateKubeconfigSettingResponse
+	5,  // 24: paralus.dev.sentry.rpc.KubeConfig.UpdateSSOUserSetting:output_type -> paralus.dev.sentry.rpc.UpdateKubeconfigSettingResponse
 	15, // [15:25] is the sub-list for method output_type
 	5,  // [5:15] is the sub-list for method input_type
 	5,  // [5:5] is the sub-list for extension type_name

@@ -3,9 +3,9 @@ package dao
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/paralus/paralus/internal/models"
 	userv3 "github.com/paralus/paralus/proto/types/userpb/v3"
-	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 

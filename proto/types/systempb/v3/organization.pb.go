@@ -7,8 +7,8 @@
 package systemv3
 
 import (
-	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -661,23 +661,23 @@ func file_proto_types_systempb_v3_organization_proto_rawDescGZIP() []byte {
 
 var file_proto_types_systempb_v3_organization_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_proto_types_systempb_v3_organization_proto_goTypes = []interface{}{
-	(*Lockout)(nil),              // 0: rafay.dev.types.system.v3.Lockout
-	(*OrganizationSettings)(nil), // 1: rafay.dev.types.system.v3.OrganizationSettings
-	(*OrganizationSpec)(nil),     // 2: rafay.dev.types.system.v3.OrganizationSpec
-	(*Organization)(nil),         // 3: rafay.dev.types.system.v3.Organization
-	(*OrganizationList)(nil),     // 4: rafay.dev.types.system.v3.OrganizationList
-	(*v3.Metadata)(nil),          // 5: rafay.dev.types.common.v3.Metadata
-	(*v3.Status)(nil),            // 6: rafay.dev.types.common.v3.Status
-	(*v3.ListMetadata)(nil),      // 7: rafay.dev.types.common.v3.ListMetadata
+	(*Lockout)(nil),              // 0: paralus.dev.types.system.v3.Lockout
+	(*OrganizationSettings)(nil), // 1: paralus.dev.types.system.v3.OrganizationSettings
+	(*OrganizationSpec)(nil),     // 2: paralus.dev.types.system.v3.OrganizationSpec
+	(*Organization)(nil),         // 3: paralus.dev.types.system.v3.Organization
+	(*OrganizationList)(nil),     // 4: paralus.dev.types.system.v3.OrganizationList
+	(*v3.Metadata)(nil),          // 5: paralus.dev.types.common.v3.Metadata
+	(*v3.Status)(nil),            // 6: paralus.dev.types.common.v3.Status
+	(*v3.ListMetadata)(nil),      // 7: paralus.dev.types.common.v3.ListMetadata
 }
 var file_proto_types_systempb_v3_organization_proto_depIdxs = []int32{
-	0, // 0: rafay.dev.types.system.v3.OrganizationSettings.lockout:type_name -> rafay.dev.types.system.v3.Lockout
-	1, // 1: rafay.dev.types.system.v3.OrganizationSpec.settings:type_name -> rafay.dev.types.system.v3.OrganizationSettings
-	5, // 2: rafay.dev.types.system.v3.Organization.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	2, // 3: rafay.dev.types.system.v3.Organization.spec:type_name -> rafay.dev.types.system.v3.OrganizationSpec
-	6, // 4: rafay.dev.types.system.v3.Organization.status:type_name -> rafay.dev.types.common.v3.Status
-	7, // 5: rafay.dev.types.system.v3.OrganizationList.metadata:type_name -> rafay.dev.types.common.v3.ListMetadata
-	3, // 6: rafay.dev.types.system.v3.OrganizationList.items:type_name -> rafay.dev.types.system.v3.Organization
+	0, // 0: paralus.dev.types.system.v3.OrganizationSettings.lockout:type_name -> paralus.dev.types.system.v3.Lockout
+	1, // 1: paralus.dev.types.system.v3.OrganizationSpec.settings:type_name -> paralus.dev.types.system.v3.OrganizationSettings
+	5, // 2: paralus.dev.types.system.v3.Organization.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	2, // 3: paralus.dev.types.system.v3.Organization.spec:type_name -> paralus.dev.types.system.v3.OrganizationSpec
+	6, // 4: paralus.dev.types.system.v3.Organization.status:type_name -> paralus.dev.types.common.v3.Status
+	7, // 5: paralus.dev.types.system.v3.OrganizationList.metadata:type_name -> paralus.dev.types.common.v3.ListMetadata
+	3, // 6: paralus.dev.types.system.v3.OrganizationList.items:type_name -> paralus.dev.types.system.v3.Organization
 	7, // [7:7] is the sub-list for method output_type
 	7, // [7:7] is the sub-list for method input_type
 	7, // [7:7] is the sub-list for extension type_name

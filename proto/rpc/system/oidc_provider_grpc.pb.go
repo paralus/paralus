@@ -41,7 +41,7 @@ func NewOIDCProviderClient(cc grpc.ClientConnInterface) OIDCProviderClient {
 
 func (c *oIDCProviderClient) CreateOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v3.OIDCProvider, error) {
 	out := new(v3.OIDCProvider)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.OIDCProvider/CreateOIDCProvider", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.OIDCProvider/CreateOIDCProvider", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (c *oIDCProviderClient) CreateOIDCProvider(ctx context.Context, in *v3.OIDC
 
 func (c *oIDCProviderClient) GetOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v3.OIDCProvider, error) {
 	out := new(v3.OIDCProvider)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.OIDCProvider/GetOIDCProvider", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.OIDCProvider/GetOIDCProvider", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (c *oIDCProviderClient) GetOIDCProvider(ctx context.Context, in *v3.OIDCPro
 
 func (c *oIDCProviderClient) ListOIDCProvider(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v3.OIDCProviderList, error) {
 	out := new(v3.OIDCProviderList)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.OIDCProvider/ListOIDCProvider", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.OIDCProvider/ListOIDCProvider", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (c *oIDCProviderClient) ListOIDCProvider(ctx context.Context, in *emptypb.E
 
 func (c *oIDCProviderClient) UpdateOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v3.OIDCProvider, error) {
 	out := new(v3.OIDCProvider)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (c *oIDCProviderClient) UpdateOIDCProvider(ctx context.Context, in *v3.OIDC
 
 func (c *oIDCProviderClient) DeleteOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +136,7 @@ func _OIDCProvider_CreateOIDCProvider_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.OIDCProvider/CreateOIDCProvider",
+		FullMethod: "/paralus.dev.rpc.v3.OIDCProvider/CreateOIDCProvider",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OIDCProviderServer).CreateOIDCProvider(ctx, req.(*v3.OIDCProvider))
@@ -154,7 +154,7 @@ func _OIDCProvider_GetOIDCProvider_Handler(srv interface{}, ctx context.Context,
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.OIDCProvider/GetOIDCProvider",
+		FullMethod: "/paralus.dev.rpc.v3.OIDCProvider/GetOIDCProvider",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OIDCProviderServer).GetOIDCProvider(ctx, req.(*v3.OIDCProvider))
@@ -172,7 +172,7 @@ func _OIDCProvider_ListOIDCProvider_Handler(srv interface{}, ctx context.Context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.OIDCProvider/ListOIDCProvider",
+		FullMethod: "/paralus.dev.rpc.v3.OIDCProvider/ListOIDCProvider",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OIDCProviderServer).ListOIDCProvider(ctx, req.(*emptypb.Empty))
@@ -190,7 +190,7 @@ func _OIDCProvider_UpdateOIDCProvider_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider",
+		FullMethod: "/paralus.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OIDCProviderServer).UpdateOIDCProvider(ctx, req.(*v3.OIDCProvider))
@@ -208,7 +208,7 @@ func _OIDCProvider_DeleteOIDCProvider_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider",
+		FullMethod: "/paralus.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OIDCProviderServer).DeleteOIDCProvider(ctx, req.(*v3.OIDCProvider))
@@ -220,7 +220,7 @@ func _OIDCProvider_DeleteOIDCProvider_Handler(srv interface{}, ctx context.Conte
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var OIDCProvider_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.rpc.v3.OIDCProvider",
+	ServiceName: "paralus.dev.rpc.v3.OIDCProvider",
 	HandlerType: (*OIDCProviderServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

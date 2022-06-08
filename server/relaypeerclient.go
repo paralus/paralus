@@ -10,8 +10,8 @@ import (
 	"regexp"
 	"time"
 
-	relayrpc "github.com/paralus/paralus/proto/rpc/sentry"
 	"github.com/dgraph-io/ristretto"
+	relayrpc "github.com/paralus/paralus/proto/rpc/sentry"
 )
 
 //RelayClusterConnectionInfo relay conn info

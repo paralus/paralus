@@ -3,11 +3,11 @@ package dao
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/paralus/paralus/internal/dao"
 	"github.com/paralus/paralus/internal/models"
 	"github.com/paralus/paralus/pkg/query"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
-	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 

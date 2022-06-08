@@ -7,9 +7,9 @@
 package rpcv3
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	v31 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/userpb/v3"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -559,44 +559,44 @@ func file_proto_rpc_user_user_proto_rawDescGZIP() []byte {
 
 var file_proto_rpc_user_user_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_proto_rpc_user_user_proto_goTypes = []interface{}{
-	(*ApiKeyRequest)(nil),          // 0: rafay.dev.rpc.v3.ApiKeyRequest
-	(*ApiKeyResponse)(nil),         // 1: rafay.dev.rpc.v3.ApiKeyResponse
-	(*ApiKeyResponseList)(nil),     // 2: rafay.dev.rpc.v3.ApiKeyResponseList
-	(*ForgotPasswordRequest)(nil),  // 3: rafay.dev.rpc.v3.ForgotPasswordRequest
-	(*ForgotPasswordResponse)(nil), // 4: rafay.dev.rpc.v3.ForgotPasswordResponse
-	(*DeleteUserResponse)(nil),     // 5: rafay.dev.rpc.v3.DeleteUserResponse
-	(*CliConfigRequest)(nil),       // 6: rafay.dev.rpc.v3.CliConfigRequest
+	(*ApiKeyRequest)(nil),          // 0: paralus.dev.rpc.v3.ApiKeyRequest
+	(*ApiKeyResponse)(nil),         // 1: paralus.dev.rpc.v3.ApiKeyResponse
+	(*ApiKeyResponseList)(nil),     // 2: paralus.dev.rpc.v3.ApiKeyResponseList
+	(*ForgotPasswordRequest)(nil),  // 3: paralus.dev.rpc.v3.ForgotPasswordRequest
+	(*ForgotPasswordResponse)(nil), // 4: paralus.dev.rpc.v3.ForgotPasswordResponse
+	(*DeleteUserResponse)(nil),     // 5: paralus.dev.rpc.v3.DeleteUserResponse
+	(*CliConfigRequest)(nil),       // 6: paralus.dev.rpc.v3.CliConfigRequest
 	(*timestamppb.Timestamp)(nil),  // 7: google.protobuf.Timestamp
-	(*v3.User)(nil),                // 8: rafay.dev.types.user.v3.User
-	(*v31.QueryOptions)(nil),       // 9: rafay.dev.types.common.v3.QueryOptions
-	(*v3.UserList)(nil),            // 10: rafay.dev.types.user.v3.UserList
-	(*v3.UserInfo)(nil),            // 11: rafay.dev.types.user.v3.UserInfo
-	(*v31.HttpBody)(nil),           // 12: rafay.dev.types.common.v3.HttpBody
+	(*v3.User)(nil),                // 8: paralus.dev.types.user.v3.User
+	(*v31.QueryOptions)(nil),       // 9: paralus.dev.types.common.v3.QueryOptions
+	(*v3.UserList)(nil),            // 10: paralus.dev.types.user.v3.UserList
+	(*v3.UserInfo)(nil),            // 11: paralus.dev.types.user.v3.UserInfo
+	(*v31.HttpBody)(nil),           // 12: paralus.dev.types.common.v3.HttpBody
 }
 var file_proto_rpc_user_user_proto_depIdxs = []int32{
-	7,  // 0: rafay.dev.rpc.v3.ApiKeyResponse.modifiedAt:type_name -> google.protobuf.Timestamp
-	7,  // 1: rafay.dev.rpc.v3.ApiKeyResponse.createdAt:type_name -> google.protobuf.Timestamp
-	1,  // 2: rafay.dev.rpc.v3.ApiKeyResponseList.items:type_name -> rafay.dev.rpc.v3.ApiKeyResponse
-	8,  // 3: rafay.dev.rpc.v3.User.CreateUser:input_type -> rafay.dev.types.user.v3.User
-	9,  // 4: rafay.dev.rpc.v3.User.GetUsers:input_type -> rafay.dev.types.common.v3.QueryOptions
-	8,  // 5: rafay.dev.rpc.v3.User.GetUser:input_type -> rafay.dev.types.user.v3.User
-	8,  // 6: rafay.dev.rpc.v3.User.GetUserInfo:input_type -> rafay.dev.types.user.v3.User
-	8,  // 7: rafay.dev.rpc.v3.User.UpdateUser:input_type -> rafay.dev.types.user.v3.User
-	8,  // 8: rafay.dev.rpc.v3.User.DeleteUser:input_type -> rafay.dev.types.user.v3.User
-	6,  // 9: rafay.dev.rpc.v3.User.DownloadCliConfig:input_type -> rafay.dev.rpc.v3.CliConfigRequest
-	0,  // 10: rafay.dev.rpc.v3.User.UserListApiKeys:input_type -> rafay.dev.rpc.v3.ApiKeyRequest
-	0,  // 11: rafay.dev.rpc.v3.User.UserDeleteApiKeys:input_type -> rafay.dev.rpc.v3.ApiKeyRequest
-	3,  // 12: rafay.dev.rpc.v3.User.UserForgotPassword:input_type -> rafay.dev.rpc.v3.ForgotPasswordRequest
-	8,  // 13: rafay.dev.rpc.v3.User.CreateUser:output_type -> rafay.dev.types.user.v3.User
-	10, // 14: rafay.dev.rpc.v3.User.GetUsers:output_type -> rafay.dev.types.user.v3.UserList
-	8,  // 15: rafay.dev.rpc.v3.User.GetUser:output_type -> rafay.dev.types.user.v3.User
-	11, // 16: rafay.dev.rpc.v3.User.GetUserInfo:output_type -> rafay.dev.types.user.v3.UserInfo
-	8,  // 17: rafay.dev.rpc.v3.User.UpdateUser:output_type -> rafay.dev.types.user.v3.User
-	5,  // 18: rafay.dev.rpc.v3.User.DeleteUser:output_type -> rafay.dev.rpc.v3.DeleteUserResponse
-	12, // 19: rafay.dev.rpc.v3.User.DownloadCliConfig:output_type -> rafay.dev.types.common.v3.HttpBody
-	2,  // 20: rafay.dev.rpc.v3.User.UserListApiKeys:output_type -> rafay.dev.rpc.v3.ApiKeyResponseList
-	5,  // 21: rafay.dev.rpc.v3.User.UserDeleteApiKeys:output_type -> rafay.dev.rpc.v3.DeleteUserResponse
-	4,  // 22: rafay.dev.rpc.v3.User.UserForgotPassword:output_type -> rafay.dev.rpc.v3.ForgotPasswordResponse
+	7,  // 0: paralus.dev.rpc.v3.ApiKeyResponse.modifiedAt:type_name -> google.protobuf.Timestamp
+	7,  // 1: paralus.dev.rpc.v3.ApiKeyResponse.createdAt:type_name -> google.protobuf.Timestamp
+	1,  // 2: paralus.dev.rpc.v3.ApiKeyResponseList.items:type_name -> paralus.dev.rpc.v3.ApiKeyResponse
+	8,  // 3: paralus.dev.rpc.v3.User.CreateUser:input_type -> paralus.dev.types.user.v3.User
+	9,  // 4: paralus.dev.rpc.v3.User.GetUsers:input_type -> paralus.dev.types.common.v3.QueryOptions
+	8,  // 5: paralus.dev.rpc.v3.User.GetUser:input_type -> paralus.dev.types.user.v3.User
+	8,  // 6: paralus.dev.rpc.v3.User.GetUserInfo:input_type -> paralus.dev.types.user.v3.User
+	8,  // 7: paralus.dev.rpc.v3.User.UpdateUser:input_type -> paralus.dev.types.user.v3.User
+	8,  // 8: paralus.dev.rpc.v3.User.DeleteUser:input_type -> paralus.dev.types.user.v3.User
+	6,  // 9: paralus.dev.rpc.v3.User.DownloadCliConfig:input_type -> paralus.dev.rpc.v3.CliConfigRequest
+	0,  // 10: paralus.dev.rpc.v3.User.UserListApiKeys:input_type -> paralus.dev.rpc.v3.ApiKeyRequest
+	0,  // 11: paralus.dev.rpc.v3.User.UserDeleteApiKeys:input_type -> paralus.dev.rpc.v3.ApiKeyRequest
+	3,  // 12: paralus.dev.rpc.v3.User.UserForgotPassword:input_type -> paralus.dev.rpc.v3.ForgotPasswordRequest
+	8,  // 13: paralus.dev.rpc.v3.User.CreateUser:output_type -> paralus.dev.types.user.v3.User
+	10, // 14: paralus.dev.rpc.v3.User.GetUsers:output_type -> paralus.dev.types.user.v3.UserList
+	8,  // 15: paralus.dev.rpc.v3.User.GetUser:output_type -> paralus.dev.types.user.v3.User
+	11, // 16: paralus.dev.rpc.v3.User.GetUserInfo:output_type -> paralus.dev.types.user.v3.UserInfo
+	8,  // 17: paralus.dev.rpc.v3.User.UpdateUser:output_type -> paralus.dev.types.user.v3.User
+	5,  // 18: paralus.dev.rpc.v3.User.DeleteUser:output_type -> paralus.dev.rpc.v3.DeleteUserResponse
+	12, // 19: paralus.dev.rpc.v3.User.DownloadCliConfig:output_type -> paralus.dev.types.common.v3.HttpBody
+	2,  // 20: paralus.dev.rpc.v3.User.UserListApiKeys:output_type -> paralus.dev.rpc.v3.ApiKeyResponseList
+	5,  // 21: paralus.dev.rpc.v3.User.UserDeleteApiKeys:output_type -> paralus.dev.rpc.v3.DeleteUserResponse
+	4,  // 22: paralus.dev.rpc.v3.User.UserForgotPassword:output_type -> paralus.dev.rpc.v3.ForgotPasswordResponse
 	13, // [13:23] is the sub-list for method output_type
 	3,  // [3:13] is the sub-list for method input_type
 	3,  // [3:3] is the sub-list for extension type_name

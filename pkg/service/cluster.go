@@ -11,6 +11,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/google/uuid"
 	clstrutil "github.com/paralus/paralus/internal/cluster"
 	"github.com/paralus/paralus/internal/cluster/constants"
 	cdao "github.com/paralus/paralus/internal/cluster/dao"
@@ -26,7 +27,6 @@ import (
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
 	"github.com/paralus/paralus/proto/types/sentry"
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/rs/xid"
 	"github.com/spf13/viper"
@@ -214,7 +214,7 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 			Conditions: clstrutil.DefaultClusterConditions,
 		},
 	}
-	clstrutil.SetClusterCondition(cluster, clstrutil.NewClusterBootstrapAgent(commonv3.RafayConditionStatus_Pending, "created"))
+	clstrutil.SetClusterCondition(cluster, clstrutil.NewClusterBootstrapAgent(commonv3.ParalusConditionStatus_Pending, "created"))
 	cnds, _ := json.Marshal(clstrutil.DefaultClusterConditions)
 	edb.Conditions = json.RawMessage(cnds)
 
@@ -864,7 +864,7 @@ func (s *clusterService) deleteBootstrapAgentForCluster(ctx context.Context, clu
 
 	resp, err := s.bs.SelectBootstrapAgentTemplates(ctx, query.WithOptions(&commonv3.QueryOptions{
 		GlobalScope: true,
-		Selector:    "rafay.dev/defaultRelay=true",
+		Selector:    "paralus.dev/defaultRelay=true",
 	}))
 	if err != nil {
 		return err
@@ -905,7 +905,7 @@ func (s *clusterService) CreateBootstrapAgentForCluster(ctx context.Context, clu
 
 	resp, err := s.bs.SelectBootstrapAgentTemplates(ctx, query.WithOptions(&commonv3.QueryOptions{
 		GlobalScope: true,
-		Selector:    "rafay.dev/defaultRelay=true",
+		Selector:    "paralus.dev/defaultRelay=true",
 	}))
 	if err != nil {
 		err = errors.Wrap(err, "unable to get bootstrap agent template")
@@ -935,7 +935,7 @@ func (s *clusterService) CreateBootstrapAgentForCluster(ctx context.Context, clu
 					DisplayName: cluster.Metadata.Name,
 					Description: cluster.Metadata.Name,
 					Labels: map[string]string{
-						"rafay.dev/clusterName": cluster.Metadata.Name,
+						"paralus.dev/clusterName": cluster.Metadata.Name,
 					},
 					Partner:      cluster.Metadata.Partner,
 					Organization: cluster.Metadata.Organization,
@@ -993,7 +993,7 @@ func (s *clusterService) GetRelaysConfigForCluster(ctx context.Context, cluster 
 
 	resp, err := s.bs.SelectBootstrapAgentTemplates(ctx, query.WithOptions(&commonv3.QueryOptions{
 		GlobalScope: true,
-		Selector:    "rafay.dev/defaultRelay=true",
+		Selector:    "paralus.dev/defaultRelay=true",
 	}))
 	if err != nil {
 		err = errors.Wrap(err, "unable to get bootstrap agent template")
@@ -1041,7 +1041,7 @@ func (s *clusterService) UpdateProjectsForBootstrapAgentForCluster(ctx context.C
 
 	resp, err := s.bs.SelectBootstrapAgentTemplates(ctx, query.WithOptions(&commonv3.QueryOptions{
 		GlobalScope: true,
-		Selector:    "rafay.dev/defaultRelay=true",
+		Selector:    "paralus.dev/defaultRelay=true",
 	}))
 	if err != nil {
 		return err
@@ -1058,7 +1058,7 @@ func (s *clusterService) UpdateProjectsForBootstrapAgentForCluster(ctx context.C
 				Organization: cluster.Metadata.Organization,
 				Project:      cluster.Metadata.Project,
 				Labels: map[string]string{
-					"rafay.dev/clusterName": cluster.Metadata.Name,
+					"paralus.dev/clusterName": cluster.Metadata.Name,
 				},
 			},
 			Spec: &sentry.BootstrapAgentSpec{

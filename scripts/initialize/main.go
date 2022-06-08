@@ -12,6 +12,7 @@ import (
 	"path"
 	"time"
 
+	kclient "github.com/ory/kratos-client-go"
 	"github.com/paralus/paralus/internal/dao"
 	"github.com/paralus/paralus/internal/models"
 	providers "github.com/paralus/paralus/internal/provider/kratos"
@@ -23,7 +24,6 @@ import (
 	rolev3 "github.com/paralus/paralus/proto/types/rolepb/v3"
 	systemv3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	userv3 "github.com/paralus/paralus/proto/types/userpb/v3"
-	kclient "github.com/ory/kratos-client-go"
 	"github.com/spf13/viper"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"

@@ -46,7 +46,7 @@ func NewUserClient(cc grpc.ClientConnInterface) UserClient {
 
 func (c *userClient) CreateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error) {
 	out := new(v3.User)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/CreateUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/CreateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func (c *userClient) CreateUser(ctx context.Context, in *v3.User, opts ...grpc.C
 
 func (c *userClient) GetUsers(ctx context.Context, in *v31.QueryOptions, opts ...grpc.CallOption) (*v3.UserList, error) {
 	out := new(v3.UserList)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/GetUsers", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/GetUsers", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (c *userClient) GetUsers(ctx context.Context, in *v31.QueryOptions, opts ..
 
 func (c *userClient) GetUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error) {
 	out := new(v3.User)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/GetUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/GetUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func (c *userClient) GetUser(ctx context.Context, in *v3.User, opts ...grpc.Call
 
 func (c *userClient) GetUserInfo(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.UserInfo, error) {
 	out := new(v3.UserInfo)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/GetUserInfo", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/GetUserInfo", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +82,7 @@ func (c *userClient) GetUserInfo(ctx context.Context, in *v3.User, opts ...grpc.
 
 func (c *userClient) UpdateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error) {
 	out := new(v3.User)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/UpdateUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/UpdateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +91,7 @@ func (c *userClient) UpdateUser(ctx context.Context, in *v3.User, opts ...grpc.C
 
 func (c *userClient) DeleteUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*DeleteUserResponse, error) {
 	out := new(DeleteUserResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/DeleteUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/DeleteUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +100,7 @@ func (c *userClient) DeleteUser(ctx context.Context, in *v3.User, opts ...grpc.C
 
 func (c *userClient) DownloadCliConfig(ctx context.Context, in *CliConfigRequest, opts ...grpc.CallOption) (*v31.HttpBody, error) {
 	out := new(v31.HttpBody)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/DownloadCliConfig", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/DownloadCliConfig", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +109,7 @@ func (c *userClient) DownloadCliConfig(ctx context.Context, in *CliConfigRequest
 
 func (c *userClient) UserListApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*ApiKeyResponseList, error) {
 	out := new(ApiKeyResponseList)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/UserListApiKeys", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/UserListApiKeys", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -118,7 +118,7 @@ func (c *userClient) UserListApiKeys(ctx context.Context, in *ApiKeyRequest, opt
 
 func (c *userClient) UserDeleteApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error) {
 	out := new(DeleteUserResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/UserDeleteApiKeys", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/UserDeleteApiKeys", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +127,7 @@ func (c *userClient) UserDeleteApiKeys(ctx context.Context, in *ApiKeyRequest, o
 
 func (c *userClient) UserForgotPassword(ctx context.Context, in *ForgotPasswordRequest, opts ...grpc.CallOption) (*ForgotPasswordResponse, error) {
 	out := new(ForgotPasswordResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.User/UserForgotPassword", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/UserForgotPassword", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -206,7 +206,7 @@ func _User_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.User/CreateUser",
+		FullMethod: "/paralus.dev.rpc.v3.User/CreateUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).CreateUser(ctx, req.(*v3.User))
@@ -224,7 +224,7 @@ func _User_GetUsers_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.User/GetUsers",
+		FullMethod: "/paralus.dev.rpc.v3.User/GetUsers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).GetUsers(ctx, req.(*v31.QueryOptions))
@@ -242,7 +242,7 @@ func _User_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.User/GetUser",
+		FullMethod: "/paralus.dev.rpc.v3.User/GetUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).GetUser(ctx, req.(*v3.User))
@@ -260,7 +260,7 @@ func _User_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.User/GetUserInfo",
+		FullMethod: "/paralus.dev.rpc.v3.User/GetUserInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).GetUserInfo(ctx, req.(*v3.User))
@@ -278,7 +278,7 @@ func _User_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.User/UpdateUser",
+		FullMethod: "/paralus.dev.rpc.v3.User/UpdateUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).UpdateUser(ctx, req.(*v3.User))
@@ -296,7 +296,7 @@ func _User_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.User/DeleteUser",
+		FullMethod: "/paralus.dev.rpc.v3.User/DeleteUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).DeleteUser(ctx, req.(*v3.User))
@@ -314,7 +314,7 @@ func _User_DownloadCliConfig_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.User/DownloadCliConfig",
+		FullMethod: "/paralus.dev.rpc.v3.User/DownloadCliConfig",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).DownloadCliConfig(ctx, req.(*CliConfigRequest))
@@ -332,7 +332,7 @@ func _User_UserListApiKeys_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.User/UserListApiKeys",
+		FullMethod: "/paralus.dev.rpc.v3.User/UserListApiKeys",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).UserListApiKeys(ctx, req.(*ApiKeyRequest))
@@ -350,7 +350,7 @@ func _User_UserDeleteApiKeys_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.User/UserDeleteApiKeys",
+		FullMethod: "/paralus.dev.rpc.v3.User/UserDeleteApiKeys",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).UserDeleteApiKeys(ctx, req.(*ApiKeyRequest))
@@ -368,7 +368,7 @@ func _User_UserForgotPassword_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.User/UserForgotPassword",
+		FullMethod: "/paralus.dev.rpc.v3.User/UserForgotPassword",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).UserForgotPassword(ctx, req.(*ForgotPasswordRequest))
@@ -380,7 +380,7 @@ func _User_UserForgotPassword_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var User_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.rpc.v3.User",
+	ServiceName: "paralus.dev.rpc.v3.User",
 	HandlerType: (*UserServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

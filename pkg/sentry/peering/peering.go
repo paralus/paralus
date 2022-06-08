@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/dgraph-io/ristretto"
 	"github.com/paralus/paralus/pkg/log"
 	"github.com/paralus/paralus/pkg/query"
 	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
@@ -17,7 +18,6 @@ import (
 	"github.com/paralus/paralus/pkg/service"
 	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
 	"github.com/paralus/paralus/proto/types/sentry"
-	"github.com/dgraph-io/ristretto"
 	"github.com/rs/xid"
 )
 
@@ -370,8 +370,8 @@ func GetPeeringServerCreds(ctx context.Context, bs service.BootstrapService, rpc
 	csr, err = cryptoutil.CreateCSR(pkix.Name{
 		CommonName:         host,
 		Country:            []string{"USA"},
-		Organization:       []string{"Rafay Systems Inc"},
-		OrganizationalUnit: []string{"Rafay Sentry Peering Server"},
+		Organization:       []string{"Paralus"},
+		OrganizationalUnit: []string{"Paralus Sentry Peering Server"},
 		Province:           []string{"California"},
 		Locality:           []string{"Sunnyvale"},
 	}, privKey)

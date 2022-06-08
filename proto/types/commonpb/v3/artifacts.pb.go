@@ -1306,37 +1306,37 @@ func file_proto_types_commonpb_v3_artifacts_proto_rawDescGZIP() []byte {
 
 var file_proto_types_commonpb_v3_artifacts_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_proto_types_commonpb_v3_artifacts_proto_goTypes = []interface{}{
-	(*File)(nil),                 // 0: rafay.dev.types.common.v3.File
-	(*UploadedYAMLArtifact)(nil), // 1: rafay.dev.types.common.v3.UploadedYAMLArtifact
-	(*UploadedHelmArtifact)(nil), // 2: rafay.dev.types.common.v3.UploadedHelmArtifact
-	(*YAMLInGitRepo)(nil),        // 3: rafay.dev.types.common.v3.YAMLInGitRepo
-	(*HelmInGitRepo)(nil),        // 4: rafay.dev.types.common.v3.HelmInGitRepo
-	(*HelmInHelmRepo)(nil),       // 5: rafay.dev.types.common.v3.HelmInHelmRepo
-	(*ManagedAlertManager)(nil),  // 6: rafay.dev.types.common.v3.ManagedAlertManager
-	(*ArtifactSpec)(nil),         // 7: rafay.dev.types.common.v3.ArtifactSpec
-	(*HelmOptions)(nil),          // 8: rafay.dev.types.common.v3.HelmOptions
-	(*YAMLOptions)(nil),          // 9: rafay.dev.types.common.v3.YAMLOptions
+	(*File)(nil),                 // 0: paralus.dev.types.common.v3.File
+	(*UploadedYAMLArtifact)(nil), // 1: paralus.dev.types.common.v3.UploadedYAMLArtifact
+	(*UploadedHelmArtifact)(nil), // 2: paralus.dev.types.common.v3.UploadedHelmArtifact
+	(*YAMLInGitRepo)(nil),        // 3: paralus.dev.types.common.v3.YAMLInGitRepo
+	(*HelmInGitRepo)(nil),        // 4: paralus.dev.types.common.v3.HelmInGitRepo
+	(*HelmInHelmRepo)(nil),       // 5: paralus.dev.types.common.v3.HelmInHelmRepo
+	(*ManagedAlertManager)(nil),  // 6: paralus.dev.types.common.v3.ManagedAlertManager
+	(*ArtifactSpec)(nil),         // 7: paralus.dev.types.common.v3.ArtifactSpec
+	(*HelmOptions)(nil),          // 8: paralus.dev.types.common.v3.HelmOptions
+	(*YAMLOptions)(nil),          // 9: paralus.dev.types.common.v3.YAMLOptions
 }
 var file_proto_types_commonpb_v3_artifacts_proto_depIdxs = []int32{
-	0,  // 0: rafay.dev.types.common.v3.UploadedYAMLArtifact.paths:type_name -> rafay.dev.types.common.v3.File
-	0,  // 1: rafay.dev.types.common.v3.UploadedHelmArtifact.chartPath:type_name -> rafay.dev.types.common.v3.File
-	0,  // 2: rafay.dev.types.common.v3.UploadedHelmArtifact.valuesPaths:type_name -> rafay.dev.types.common.v3.File
-	0,  // 3: rafay.dev.types.common.v3.YAMLInGitRepo.paths:type_name -> rafay.dev.types.common.v3.File
-	0,  // 4: rafay.dev.types.common.v3.HelmInGitRepo.chartPath:type_name -> rafay.dev.types.common.v3.File
-	0,  // 5: rafay.dev.types.common.v3.HelmInGitRepo.valuesPaths:type_name -> rafay.dev.types.common.v3.File
-	0,  // 6: rafay.dev.types.common.v3.HelmInHelmRepo.valuesPaths:type_name -> rafay.dev.types.common.v3.File
-	0,  // 7: rafay.dev.types.common.v3.ManagedAlertManager.configmap:type_name -> rafay.dev.types.common.v3.File
-	0,  // 8: rafay.dev.types.common.v3.ManagedAlertManager.secret:type_name -> rafay.dev.types.common.v3.File
-	0,  // 9: rafay.dev.types.common.v3.ManagedAlertManager.configuration:type_name -> rafay.dev.types.common.v3.File
-	0,  // 10: rafay.dev.types.common.v3.ManagedAlertManager.statefulset:type_name -> rafay.dev.types.common.v3.File
-	1,  // 11: rafay.dev.types.common.v3.ArtifactSpec.uploadedYAML:type_name -> rafay.dev.types.common.v3.UploadedYAMLArtifact
-	2,  // 12: rafay.dev.types.common.v3.ArtifactSpec.uploadedHelm:type_name -> rafay.dev.types.common.v3.UploadedHelmArtifact
-	3,  // 13: rafay.dev.types.common.v3.ArtifactSpec.yamlInGitRepo:type_name -> rafay.dev.types.common.v3.YAMLInGitRepo
-	4,  // 14: rafay.dev.types.common.v3.ArtifactSpec.helmInGitRepo:type_name -> rafay.dev.types.common.v3.HelmInGitRepo
-	5,  // 15: rafay.dev.types.common.v3.ArtifactSpec.helmInHelmRepo:type_name -> rafay.dev.types.common.v3.HelmInHelmRepo
-	6,  // 16: rafay.dev.types.common.v3.ArtifactSpec.managedAlertManger:type_name -> rafay.dev.types.common.v3.ManagedAlertManager
-	8,  // 17: rafay.dev.types.common.v3.ArtifactSpec.helmOptions:type_name -> rafay.dev.types.common.v3.HelmOptions
-	9,  // 18: rafay.dev.types.common.v3.ArtifactSpec.yamlOptions:type_name -> rafay.dev.types.common.v3.YAMLOptions
+	0,  // 0: paralus.dev.types.common.v3.UploadedYAMLArtifact.paths:type_name -> paralus.dev.types.common.v3.File
+	0,  // 1: paralus.dev.types.common.v3.UploadedHelmArtifact.chartPath:type_name -> paralus.dev.types.common.v3.File
+	0,  // 2: paralus.dev.types.common.v3.UploadedHelmArtifact.valuesPaths:type_name -> paralus.dev.types.common.v3.File
+	0,  // 3: paralus.dev.types.common.v3.YAMLInGitRepo.paths:type_name -> paralus.dev.types.common.v3.File
+	0,  // 4: paralus.dev.types.common.v3.HelmInGitRepo.chartPath:type_name -> paralus.dev.types.common.v3.File
+	0,  // 5: paralus.dev.types.common.v3.HelmInGitRepo.valuesPaths:type_name -> paralus.dev.types.common.v3.File
+	0,  // 6: paralus.dev.types.common.v3.HelmInHelmRepo.valuesPaths:type_name -> paralus.dev.types.common.v3.File
+	0,  // 7: paralus.dev.types.common.v3.ManagedAlertManager.configmap:type_name -> paralus.dev.types.common.v3.File
+	0,  // 8: paralus.dev.types.common.v3.ManagedAlertManager.secret:type_name -> paralus.dev.types.common.v3.File
+	0,  // 9: paralus.dev.types.common.v3.ManagedAlertManager.configuration:type_name -> paralus.dev.types.common.v3.File
+	0,  // 10: paralus.dev.types.common.v3.ManagedAlertManager.statefulset:type_name -> paralus.dev.types.common.v3.File
+	1,  // 11: paralus.dev.types.common.v3.ArtifactSpec.uploadedYAML:type_name -> paralus.dev.types.common.v3.UploadedYAMLArtifact
+	2,  // 12: paralus.dev.types.common.v3.ArtifactSpec.uploadedHelm:type_name -> paralus.dev.types.common.v3.UploadedHelmArtifact
+	3,  // 13: paralus.dev.types.common.v3.ArtifactSpec.yamlInGitRepo:type_name -> paralus.dev.types.common.v3.YAMLInGitRepo
+	4,  // 14: paralus.dev.types.common.v3.ArtifactSpec.helmInGitRepo:type_name -> paralus.dev.types.common.v3.HelmInGitRepo
+	5,  // 15: paralus.dev.types.common.v3.ArtifactSpec.helmInHelmRepo:type_name -> paralus.dev.types.common.v3.HelmInHelmRepo
+	6,  // 16: paralus.dev.types.common.v3.ArtifactSpec.managedAlertManger:type_name -> paralus.dev.types.common.v3.ManagedAlertManager
+	8,  // 17: paralus.dev.types.common.v3.ArtifactSpec.helmOptions:type_name -> paralus.dev.types.common.v3.HelmOptions
+	9,  // 18: paralus.dev.types.common.v3.ArtifactSpec.yamlOptions:type_name -> paralus.dev.types.common.v3.YAMLOptions
 	19, // [19:19] is the sub-list for method output_type
 	19, // [19:19] is the sub-list for method input_type
 	19, // [19:19] is the sub-list for extension type_name

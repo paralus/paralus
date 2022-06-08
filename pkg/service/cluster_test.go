@@ -6,12 +6,12 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/google/uuid"
 	"github.com/paralus/paralus/pkg/common"
 	"github.com/paralus/paralus/pkg/query"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
-	"github.com/google/uuid"
 )
 
 func performClusterBasicChecks(t *testing.T, cluster *infrav3.Cluster, puuid string) {

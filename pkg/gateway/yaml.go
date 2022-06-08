@@ -17,8 +17,8 @@ const (
 type rafayYAML struct {
 }
 
-// NewRafayYAML returns new grpc gateway yaml marshaller
-func NewRafayYAML() runtime.Marshaler {
+// NewParalusYAML returns new grpc gateway yaml marshaller
+func NewParalusYAML() runtime.Marshaler {
 	return &rafayYAML{}
 }
 

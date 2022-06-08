@@ -7,9 +7,9 @@
 package sentry
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	_ "github.com/paralus/paralus/proto/types/sentry"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -354,19 +354,19 @@ func file_proto_rpc_sentry_kubectl_cluster_proto_rawDescGZIP() []byte {
 
 var file_proto_rpc_sentry_kubectl_cluster_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_proto_rpc_sentry_kubectl_cluster_proto_goTypes = []interface{}{
-	(*UpdateKubectlClusterSettingsRequest)(nil),  // 0: rafay.dev.sentry.rpc.UpdateKubectlClusterSettingsRequest
-	(*UpdateKubectlClusterSettingsResponse)(nil), // 1: rafay.dev.sentry.rpc.UpdateKubectlClusterSettingsResponse
-	(*GetKubectlClusterSettingsRequest)(nil),     // 2: rafay.dev.sentry.rpc.GetKubectlClusterSettingsRequest
-	(*GetKubectlClusterSettingsResponse)(nil),    // 3: rafay.dev.sentry.rpc.GetKubectlClusterSettingsResponse
-	(*v3.QueryOptions)(nil),                      // 4: rafay.dev.types.common.v3.QueryOptions
+	(*UpdateKubectlClusterSettingsRequest)(nil),  // 0: paralus.dev.sentry.rpc.UpdateKubectlClusterSettingsRequest
+	(*UpdateKubectlClusterSettingsResponse)(nil), // 1: paralus.dev.sentry.rpc.UpdateKubectlClusterSettingsResponse
+	(*GetKubectlClusterSettingsRequest)(nil),     // 2: paralus.dev.sentry.rpc.GetKubectlClusterSettingsRequest
+	(*GetKubectlClusterSettingsResponse)(nil),    // 3: paralus.dev.sentry.rpc.GetKubectlClusterSettingsResponse
+	(*v3.QueryOptions)(nil),                      // 4: paralus.dev.types.common.v3.QueryOptions
 }
 var file_proto_rpc_sentry_kubectl_cluster_proto_depIdxs = []int32{
-	4, // 0: rafay.dev.sentry.rpc.UpdateKubectlClusterSettingsRequest.opts:type_name -> rafay.dev.types.common.v3.QueryOptions
-	4, // 1: rafay.dev.sentry.rpc.GetKubectlClusterSettingsRequest.opts:type_name -> rafay.dev.types.common.v3.QueryOptions
-	0, // 2: rafay.dev.sentry.rpc.KubectlClusterSettings.UpdateKubectlClusterSettings:input_type -> rafay.dev.sentry.rpc.UpdateKubectlClusterSettingsRequest
-	2, // 3: rafay.dev.sentry.rpc.KubectlClusterSettings.GetKubectlClusterSettings:input_type -> rafay.dev.sentry.rpc.GetKubectlClusterSettingsRequest
-	1, // 4: rafay.dev.sentry.rpc.KubectlClusterSettings.UpdateKubectlClusterSettings:output_type -> rafay.dev.sentry.rpc.UpdateKubectlClusterSettingsResponse
-	3, // 5: rafay.dev.sentry.rpc.KubectlClusterSettings.GetKubectlClusterSettings:output_type -> rafay.dev.sentry.rpc.GetKubectlClusterSettingsResponse
+	4, // 0: paralus.dev.sentry.rpc.UpdateKubectlClusterSettingsRequest.opts:type_name -> paralus.dev.types.common.v3.QueryOptions
+	4, // 1: paralus.dev.sentry.rpc.GetKubectlClusterSettingsRequest.opts:type_name -> paralus.dev.types.common.v3.QueryOptions
+	0, // 2: paralus.dev.sentry.rpc.KubectlClusterSettings.UpdateKubectlClusterSettings:input_type -> paralus.dev.sentry.rpc.UpdateKubectlClusterSettingsRequest
+	2, // 3: paralus.dev.sentry.rpc.KubectlClusterSettings.GetKubectlClusterSettings:input_type -> paralus.dev.sentry.rpc.GetKubectlClusterSettingsRequest
+	1, // 4: paralus.dev.sentry.rpc.KubectlClusterSettings.UpdateKubectlClusterSettings:output_type -> paralus.dev.sentry.rpc.UpdateKubectlClusterSettingsResponse
+	3, // 5: paralus.dev.sentry.rpc.KubectlClusterSettings.GetKubectlClusterSettings:output_type -> paralus.dev.sentry.rpc.GetKubectlClusterSettingsResponse
 	4, // [4:6] is the sub-list for method output_type
 	2, // [2:4] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name

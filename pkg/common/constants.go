@@ -20,7 +20,7 @@ const (
 	NamespacePrefix = "ns"
 )
 
-// rcloud constant
+// paralus constant
 const (
 	HeartBeatInterval = time.Second * 30
 	SessionID         = "sessionid"

@@ -7,9 +7,9 @@
 package systemv3
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	v31 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/userpb/v3"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -380,23 +380,23 @@ func file_proto_types_systempb_v3_project_proto_rawDescGZIP() []byte {
 
 var file_proto_types_systempb_v3_project_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_proto_types_systempb_v3_project_proto_goTypes = []interface{}{
-	(*ProjectSpec)(nil),             // 0: rafay.dev.types.system.v3.ProjectSpec
-	(*Project)(nil),                 // 1: rafay.dev.types.system.v3.Project
-	(*ProjectList)(nil),             // 2: rafay.dev.types.system.v3.ProjectList
-	(*v3.ProjectNamespaceRole)(nil), // 3: rafay.dev.types.user.v3.ProjectNamespaceRole
-	(*v3.UserRole)(nil),             // 4: rafay.dev.types.user.v3.UserRole
-	(*v31.Metadata)(nil),            // 5: rafay.dev.types.common.v3.Metadata
-	(*v31.Status)(nil),              // 6: rafay.dev.types.common.v3.Status
-	(*v31.ListMetadata)(nil),        // 7: rafay.dev.types.common.v3.ListMetadata
+	(*ProjectSpec)(nil),             // 0: paralus.dev.types.system.v3.ProjectSpec
+	(*Project)(nil),                 // 1: paralus.dev.types.system.v3.Project
+	(*ProjectList)(nil),             // 2: paralus.dev.types.system.v3.ProjectList
+	(*v3.ProjectNamespaceRole)(nil), // 3: paralus.dev.types.user.v3.ProjectNamespaceRole
+	(*v3.UserRole)(nil),             // 4: paralus.dev.types.user.v3.UserRole
+	(*v31.Metadata)(nil),            // 5: paralus.dev.types.common.v3.Metadata
+	(*v31.Status)(nil),              // 6: paralus.dev.types.common.v3.Status
+	(*v31.ListMetadata)(nil),        // 7: paralus.dev.types.common.v3.ListMetadata
 }
 var file_proto_types_systempb_v3_project_proto_depIdxs = []int32{
-	3, // 0: rafay.dev.types.system.v3.ProjectSpec.projectNamespaceRoles:type_name -> rafay.dev.types.user.v3.ProjectNamespaceRole
-	4, // 1: rafay.dev.types.system.v3.ProjectSpec.userRoles:type_name -> rafay.dev.types.user.v3.UserRole
-	5, // 2: rafay.dev.types.system.v3.Project.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	0, // 3: rafay.dev.types.system.v3.Project.spec:type_name -> rafay.dev.types.system.v3.ProjectSpec
-	6, // 4: rafay.dev.types.system.v3.Project.status:type_name -> rafay.dev.types.common.v3.Status
-	7, // 5: rafay.dev.types.system.v3.ProjectList.metadata:type_name -> rafay.dev.types.common.v3.ListMetadata
-	1, // 6: rafay.dev.types.system.v3.ProjectList.items:type_name -> rafay.dev.types.system.v3.Project
+	3, // 0: paralus.dev.types.system.v3.ProjectSpec.projectNamespaceRoles:type_name -> paralus.dev.types.user.v3.ProjectNamespaceRole
+	4, // 1: paralus.dev.types.system.v3.ProjectSpec.userRoles:type_name -> paralus.dev.types.user.v3.UserRole
+	5, // 2: paralus.dev.types.system.v3.Project.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	0, // 3: paralus.dev.types.system.v3.Project.spec:type_name -> paralus.dev.types.system.v3.ProjectSpec
+	6, // 4: paralus.dev.types.system.v3.Project.status:type_name -> paralus.dev.types.common.v3.Status
+	7, // 5: paralus.dev.types.system.v3.ProjectList.metadata:type_name -> paralus.dev.types.common.v3.ListMetadata
+	1, // 6: paralus.dev.types.system.v3.ProjectList.items:type_name -> paralus.dev.types.system.v3.Project
 	7, // [7:7] is the sub-list for method output_type
 	7, // [7:7] is the sub-list for method input_type
 	7, // [7:7] is the sub-list for extension type_name

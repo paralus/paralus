@@ -381,16 +381,16 @@ func file_proto_types_sentry_kubeconfig_setting_proto_rawDescGZIP() []byte {
 
 var file_proto_types_sentry_kubeconfig_setting_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_types_sentry_kubeconfig_setting_proto_goTypes = []interface{}{
-	(*KubeconfigRevocation)(nil),  // 0: rafay.dev.types.sentry.KubeconfigRevocation
-	(*KubeconfigSetting)(nil),     // 1: rafay.dev.types.sentry.KubeconfigSetting
+	(*KubeconfigRevocation)(nil),  // 0: paralus.dev.types.sentry.KubeconfigRevocation
+	(*KubeconfigSetting)(nil),     // 1: paralus.dev.types.sentry.KubeconfigSetting
 	(*timestamppb.Timestamp)(nil), // 2: google.protobuf.Timestamp
 }
 var file_proto_types_sentry_kubeconfig_setting_proto_depIdxs = []int32{
-	2, // 0: rafay.dev.types.sentry.KubeconfigRevocation.revokedAt:type_name -> google.protobuf.Timestamp
-	2, // 1: rafay.dev.types.sentry.KubeconfigRevocation.createdAt:type_name -> google.protobuf.Timestamp
-	2, // 2: rafay.dev.types.sentry.KubeconfigSetting.createdAt:type_name -> google.protobuf.Timestamp
-	2, // 3: rafay.dev.types.sentry.KubeconfigSetting.modifiedAt:type_name -> google.protobuf.Timestamp
-	2, // 4: rafay.dev.types.sentry.KubeconfigSetting.deletedAt:type_name -> google.protobuf.Timestamp
+	2, // 0: paralus.dev.types.sentry.KubeconfigRevocation.revokedAt:type_name -> google.protobuf.Timestamp
+	2, // 1: paralus.dev.types.sentry.KubeconfigRevocation.createdAt:type_name -> google.protobuf.Timestamp
+	2, // 2: paralus.dev.types.sentry.KubeconfigSetting.createdAt:type_name -> google.protobuf.Timestamp
+	2, // 3: paralus.dev.types.sentry.KubeconfigSetting.modifiedAt:type_name -> google.protobuf.Timestamp
+	2, // 4: paralus.dev.types.sentry.KubeconfigSetting.deletedAt:type_name -> google.protobuf.Timestamp
 	5, // [5:5] is the sub-list for method output_type
 	5, // [5:5] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name

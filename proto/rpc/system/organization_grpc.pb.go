@@ -40,7 +40,7 @@ func NewOrganizationClient(cc grpc.ClientConnInterface) OrganizationClient {
 
 func (c *organizationClient) CreateOrganization(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.Organization, error) {
 	out := new(v3.Organization)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Organization/CreateOrganization", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Organization/CreateOrganization", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func (c *organizationClient) CreateOrganization(ctx context.Context, in *v3.Orga
 
 func (c *organizationClient) GetOrganizations(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.OrganizationList, error) {
 	out := new(v3.OrganizationList)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Organization/GetOrganizations", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Organization/GetOrganizations", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func (c *organizationClient) GetOrganizations(ctx context.Context, in *v3.Organi
 
 func (c *organizationClient) GetOrganization(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.Organization, error) {
 	out := new(v3.Organization)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Organization/GetOrganization", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Organization/GetOrganization", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (c *organizationClient) GetOrganization(ctx context.Context, in *v3.Organiz
 
 func (c *organizationClient) UpdateOrganization(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.Organization, error) {
 	out := new(v3.Organization)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Organization/UpdateOrganization", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Organization/UpdateOrganization", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func (c *organizationClient) UpdateOrganization(ctx context.Context, in *v3.Orga
 
 func (c *organizationClient) DeleteOrganization(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.Organization, error) {
 	out := new(v3.Organization)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Organization/DeleteOrganization", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Organization/DeleteOrganization", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +135,7 @@ func _Organization_CreateOrganization_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Organization/CreateOrganization",
+		FullMethod: "/paralus.dev.rpc.v3.Organization/CreateOrganization",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OrganizationServer).CreateOrganization(ctx, req.(*v3.Organization))
@@ -153,7 +153,7 @@ func _Organization_GetOrganizations_Handler(srv interface{}, ctx context.Context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Organization/GetOrganizations",
+		FullMethod: "/paralus.dev.rpc.v3.Organization/GetOrganizations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OrganizationServer).GetOrganizations(ctx, req.(*v3.Organization))
@@ -171,7 +171,7 @@ func _Organization_GetOrganization_Handler(srv interface{}, ctx context.Context,
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Organization/GetOrganization",
+		FullMethod: "/paralus.dev.rpc.v3.Organization/GetOrganization",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OrganizationServer).GetOrganization(ctx, req.(*v3.Organization))
@@ -189,7 +189,7 @@ func _Organization_UpdateOrganization_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Organization/UpdateOrganization",
+		FullMethod: "/paralus.dev.rpc.v3.Organization/UpdateOrganization",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OrganizationServer).UpdateOrganization(ctx, req.(*v3.Organization))
@@ -207,7 +207,7 @@ func _Organization_DeleteOrganization_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Organization/DeleteOrganization",
+		FullMethod: "/paralus.dev.rpc.v3.Organization/DeleteOrganization",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OrganizationServer).DeleteOrganization(ctx, req.(*v3.Organization))
@@ -219,7 +219,7 @@ func _Organization_DeleteOrganization_Handler(srv interface{}, ctx context.Conte
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Organization_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.rpc.v3.Organization",
+	ServiceName: "paralus.dev.rpc.v3.Organization",
 	HandlerType: (*OrganizationServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

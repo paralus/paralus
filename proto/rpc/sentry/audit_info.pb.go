@@ -7,9 +7,9 @@
 package sentry
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "github.com/paralus/paralus/proto/types/commonpb/v3"
 	_ "github.com/paralus/paralus/proto/types/sentry"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -372,16 +372,16 @@ func file_proto_rpc_sentry_audit_info_proto_rawDescGZIP() []byte {
 
 var file_proto_rpc_sentry_audit_info_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_proto_rpc_sentry_audit_info_proto_goTypes = []interface{}{
-	(*LookupUserRequest)(nil),     // 0: rafay.dev.sentry.rpc.LookupUserRequest
-	(*LookupUserResponse)(nil),    // 1: rafay.dev.sentry.rpc.LookupUserResponse
-	(*LookupClusterRequest)(nil),  // 2: rafay.dev.sentry.rpc.LookupClusterRequest
-	(*LookupClusterResponse)(nil), // 3: rafay.dev.sentry.rpc.LookupClusterResponse
+	(*LookupUserRequest)(nil),     // 0: paralus.dev.sentry.rpc.LookupUserRequest
+	(*LookupUserResponse)(nil),    // 1: paralus.dev.sentry.rpc.LookupUserResponse
+	(*LookupClusterRequest)(nil),  // 2: paralus.dev.sentry.rpc.LookupClusterRequest
+	(*LookupClusterResponse)(nil), // 3: paralus.dev.sentry.rpc.LookupClusterResponse
 }
 var file_proto_rpc_sentry_audit_info_proto_depIdxs = []int32{
-	0, // 0: rafay.dev.sentry.rpc.AuditInformation.LookupUser:input_type -> rafay.dev.sentry.rpc.LookupUserRequest
-	2, // 1: rafay.dev.sentry.rpc.AuditInformation.LookupCluster:input_type -> rafay.dev.sentry.rpc.LookupClusterRequest
-	1, // 2: rafay.dev.sentry.rpc.AuditInformation.LookupUser:output_type -> rafay.dev.sentry.rpc.LookupUserResponse
-	3, // 3: rafay.dev.sentry.rpc.AuditInformation.LookupCluster:output_type -> rafay.dev.sentry.rpc.LookupClusterResponse
+	0, // 0: paralus.dev.sentry.rpc.AuditInformation.LookupUser:input_type -> paralus.dev.sentry.rpc.LookupUserRequest
+	2, // 1: paralus.dev.sentry.rpc.AuditInformation.LookupCluster:input_type -> paralus.dev.sentry.rpc.LookupClusterRequest
+	1, // 2: paralus.dev.sentry.rpc.AuditInformation.LookupUser:output_type -> paralus.dev.sentry.rpc.LookupUserResponse
+	3, // 3: paralus.dev.sentry.rpc.AuditInformation.LookupCluster:output_type -> paralus.dev.sentry.rpc.LookupClusterResponse
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

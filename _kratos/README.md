@@ -1,6 +1,6 @@
 # Ory Kratos
 
-This directory holds Ory Kratos configurations and scripts required for rcloud-base.
+This directory holds Ory Kratos configurations and scripts required for paralus.
 
 ## Get Session token for development
 
@@ -19,7 +19,7 @@ go run development/session_main.go
 
 How to use token for authentication?
 
-Start rcloud-base server with `DEV=false` and add token to
+Start paralus server with `DEV=false` and add token to
 `X-Session-Token` header while making request to access resources, for example:
 
 ```

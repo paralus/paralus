@@ -1,7 +1,7 @@
 items:
   - metadata:
       name: rafay-sentry-peering-server
-      displayName: "Rafay Sentry Peering Server"
+      displayName: "Paralus Sentry Peering Server"
     spec:
       infraRef: rafay-sentry-peering
       autoRegister: true
@@ -31,9 +31,9 @@ items:
       outOfClusterTemplate: ""
   - metadata:
       name: rafay-core-relay-server
-      displayName: "Rafay Core Relay Server"
+      displayName: "Paralus Core Relay Server"
       labels:
-        rafay.dev/connectorTemplate: "true"
+        paralus.dev/connectorTemplate: "true"
     spec:
       infraRef: rafay-core-relay
       autoRegister: true
@@ -48,7 +48,7 @@ items:
   - metadata:
       name: rafay-core-relay-agent
       labels:
-        rafay.dev/defaultRelay: "true"
+        paralus.dev/defaultRelay: "true"
     spec:
       infraRef: rafay-core-relay
       autoRegister: false
@@ -62,11 +62,11 @@ items:
       outOfClusterTemplate: ""
   - metadata:
       name: rafay-core-relay-user
-      displayName: "Rafay Core User Server"
+      displayName: "Paralus Core User Server"
       labels:
-        rafay.dev/defaultUser: "true"
-        rafay.dev/userTemplate: "true"
-        rafay.dev/connectorAgentTemplate: "rafay-core-relay-agent"
+        paralus.dev/defaultUser: "true"
+        paralus.dev/userTemplate: "true"
+        paralus.dev/connectorAgentTemplate: "rafay-core-relay-agent"
     spec:
       infraRef: rafay-core-relay-user
       autoRegister: true
@@ -80,9 +80,9 @@ items:
       outOfClusterTemplate: ""
   - metadata:
       name: rafay-core-cd-relay-user
-      displayName: "Rafay Core CD Relay User"
+      displayName: "Paralus Core CD Relay User"
       labels:
-        rafay.dev/defaultCDUser: "true"
+        paralus.dev/defaultCDUser: "true"
     spec: 
       infraRef: rafay-core-cd-relay-user
       autoRegister: true
@@ -102,7 +102,7 @@ items:
       outOfClusterTemplate: ""
   - metadata:
       name: rafay-core-cd-relay-server
-      displayName: "Rafay Core CD Relay Server"
+      displayName: "Paralus Core CD Relay Server"
     spec: 
       infraRef: rafay-core-cd-relay
       autoRegister: true
@@ -116,9 +116,9 @@ items:
       outOfClusterTemplate: ""
   - metadata:
       name: rafay-core-cd-relay-agent
-      displayName: "Rafay Core CD Relay Agent"
+      displayName: "Paralus Core CD Relay Agent"
       labels:
-        rafay.dev/defaultCDRelay: "true"
+        paralus.dev/defaultCDRelay: "true"
     spec: 
       infraRef: rafay-core-cd-relay
       autoRegister: false

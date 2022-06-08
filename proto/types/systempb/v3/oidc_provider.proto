@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.types.system.v3;
+package paralus.dev.types.system.v3;
 
 import "proto/types/commonpb/v3/common.proto";
 import "google/protobuf/struct.proto";
@@ -26,7 +26,7 @@ message OIDCProvider {
         description : "Kind of the OIDCProvider resource"
         default : "OIDCProvider"
       } ];
-  rafay.dev.types.common.v3.Metadata metadata = 3
+  paralus.dev.types.common.v3.Metadata metadata = 3
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Metadata",
         description : "Metadata of the OIDCProvider resource"
@@ -37,7 +37,7 @@ message OIDCProvider {
         description : "Spec of the OIDCProvider resource"
       } ];
 
-  rafay.dev.types.common.v3.Status status = 5
+  paralus.dev.types.common.v3.Status status = 5
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Status",
         description : "Status of the resource"
@@ -88,7 +88,7 @@ message OIDCProviderList {
         default : "OIDCProviderList"
         read_only : true
       } ];
-  rafay.dev.types.common.v3.ListMetadata metadata = 3
+  paralus.dev.types.common.v3.ListMetadata metadata = 3
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Metadata",
         description : "Metadata of the OIDCProvider list resource"

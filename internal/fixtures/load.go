@@ -81,8 +81,8 @@ func loadAgentTemplates(ctx context.Context, bs service.BootstrapService, d map[
 			cert, key, err := cryptoutil.GenerateCA(pkix.Name{
 				CommonName:         item.Spec.InfraRef,
 				Country:            []string{"USA"},
-				Organization:       []string{"Rafay Systems Inc"},
-				OrganizationalUnit: []string{"Rafay Sentry"},
+				Organization:       []string{"Paralus"},
+				OrganizationalUnit: []string{"Paralus Sentry"},
 				Province:           []string{"California"},
 				Locality:           []string{"Sunnyvale"},
 			}, pf)

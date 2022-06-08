@@ -7,10 +7,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/paralus/paralus/pkg/grpc"
-	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
 	"github.com/dgraph-io/ristretto"
 	"github.com/google/uuid"
+	"github.com/paralus/paralus/pkg/grpc"
+	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
 )
 
 // The peering service operate a s follows.

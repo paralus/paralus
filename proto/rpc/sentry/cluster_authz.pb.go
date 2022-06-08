@@ -7,10 +7,10 @@
 package sentry
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "github.com/paralus/paralus/proto/types/commonpb/v3"
 	controller "github.com/paralus/paralus/proto/types/controller"
 	_ "github.com/paralus/paralus/proto/types/sentry"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -378,21 +378,21 @@ func file_proto_rpc_sentry_cluster_authz_proto_rawDescGZIP() []byte {
 
 var file_proto_rpc_sentry_cluster_authz_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_rpc_sentry_cluster_authz_proto_goTypes = []interface{}{
-	(*GetUserAuthorizationResponse)(nil), // 0: rafay.dev.sentry.rpc.GetUserAuthorizationResponse
-	(*GetUserAuthorizationRequest)(nil),  // 1: rafay.dev.sentry.rpc.GetUserAuthorizationRequest
-	(*controller.StepObject)(nil),        // 2: rafay.dev.types.controller.StepObject
+	(*GetUserAuthorizationResponse)(nil), // 0: paralus.dev.sentry.rpc.GetUserAuthorizationResponse
+	(*GetUserAuthorizationRequest)(nil),  // 1: paralus.dev.sentry.rpc.GetUserAuthorizationRequest
+	(*controller.StepObject)(nil),        // 2: paralus.dev.types.controller.StepObject
 }
 var file_proto_rpc_sentry_cluster_authz_proto_depIdxs = []int32{
-	2, // 0: rafay.dev.sentry.rpc.GetUserAuthorizationResponse.serviceAccount:type_name -> rafay.dev.types.controller.StepObject
-	2, // 1: rafay.dev.sentry.rpc.GetUserAuthorizationResponse.clusterRoles:type_name -> rafay.dev.types.controller.StepObject
-	2, // 2: rafay.dev.sentry.rpc.GetUserAuthorizationResponse.clusterRoleBindings:type_name -> rafay.dev.types.controller.StepObject
-	2, // 3: rafay.dev.sentry.rpc.GetUserAuthorizationResponse.roles:type_name -> rafay.dev.types.controller.StepObject
-	2, // 4: rafay.dev.sentry.rpc.GetUserAuthorizationResponse.roleBindings:type_name -> rafay.dev.types.controller.StepObject
-	2, // 5: rafay.dev.sentry.rpc.GetUserAuthorizationResponse.deleteClusterRoleBindings:type_name -> rafay.dev.types.controller.StepObject
-	2, // 6: rafay.dev.sentry.rpc.GetUserAuthorizationResponse.deleteRoleBindings:type_name -> rafay.dev.types.controller.StepObject
-	2, // 7: rafay.dev.sentry.rpc.GetUserAuthorizationResponse.namespaces:type_name -> rafay.dev.types.controller.StepObject
-	1, // 8: rafay.dev.sentry.rpc.ClusterAuthorization.GetUserAuthorization:input_type -> rafay.dev.sentry.rpc.GetUserAuthorizationRequest
-	0, // 9: rafay.dev.sentry.rpc.ClusterAuthorization.GetUserAuthorization:output_type -> rafay.dev.sentry.rpc.GetUserAuthorizationResponse
+	2, // 0: paralus.dev.sentry.rpc.GetUserAuthorizationResponse.serviceAccount:type_name -> paralus.dev.types.controller.StepObject
+	2, // 1: paralus.dev.sentry.rpc.GetUserAuthorizationResponse.clusterRoles:type_name -> paralus.dev.types.controller.StepObject
+	2, // 2: paralus.dev.sentry.rpc.GetUserAuthorizationResponse.clusterRoleBindings:type_name -> paralus.dev.types.controller.StepObject
+	2, // 3: paralus.dev.sentry.rpc.GetUserAuthorizationResponse.roles:type_name -> paralus.dev.types.controller.StepObject
+	2, // 4: paralus.dev.sentry.rpc.GetUserAuthorizationResponse.roleBindings:type_name -> paralus.dev.types.controller.StepObject
+	2, // 5: paralus.dev.sentry.rpc.GetUserAuthorizationResponse.deleteClusterRoleBindings:type_name -> paralus.dev.types.controller.StepObject
+	2, // 6: paralus.dev.sentry.rpc.GetUserAuthorizationResponse.deleteRoleBindings:type_name -> paralus.dev.types.controller.StepObject
+	2, // 7: paralus.dev.sentry.rpc.GetUserAuthorizationResponse.namespaces:type_name -> paralus.dev.types.controller.StepObject
+	1, // 8: paralus.dev.sentry.rpc.ClusterAuthorization.GetUserAuthorization:input_type -> paralus.dev.sentry.rpc.GetUserAuthorizationRequest
+	0, // 9: paralus.dev.sentry.rpc.ClusterAuthorization.GetUserAuthorization:output_type -> paralus.dev.sentry.rpc.GetUserAuthorizationResponse
 	9, // [9:10] is the sub-list for method output_type
 	8, // [8:9] is the sub-list for method input_type
 	8, // [8:8] is the sub-list for extension type_name

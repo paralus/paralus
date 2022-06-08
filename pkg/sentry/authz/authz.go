@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/paralus/paralus/internal/constants"
 	"github.com/paralus/paralus/pkg/controller/runtime"
 	"github.com/paralus/paralus/pkg/log"
@@ -17,7 +18,6 @@ import (
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	"github.com/paralus/paralus/proto/types/controller"
 	"github.com/paralus/paralus/proto/types/sentry"
-	"github.com/google/uuid"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 )
@@ -47,7 +47,7 @@ const (
 	rafayRelayLabel     = "rafay-relay"
 	relayUserLabel      = "relay-user"
 	authzRefreshedLabel = "authz-refreshed"
-	systemUsername      = "admin@rafay.co"
+	systemUsername      = "admin@paralus.co"
 )
 
 type roleBindExclusionList struct {
@@ -745,7 +745,7 @@ func isNamespaceScopePermission(permission string) bool {
 }
 
 func verifyClusterKubectlSettings(ctx context.Context, bs service.BootstrapService, kcs service.KubectlClusterSettingsService, cnAttr kubeconfig.CNAttributes, clusterID string, orgID string) error {
-	if cnAttr.SessionType == kubeconfig.RafaySystem {
+	if cnAttr.SessionType == kubeconfig.ParalusSystem {
 		// internal system sessions are always allowed
 		return nil
 	}
@@ -787,7 +787,7 @@ func verifyClusterKubectlSettings(ctx context.Context, bs service.BootstrapServi
 }
 
 func verifyKubectlSettings(cnAttr kubeconfig.CNAttributes, ks *sentry.KubeconfigSetting, level string) error {
-	if cnAttr.SessionType == kubeconfig.RafaySystem {
+	if cnAttr.SessionType == kubeconfig.ParalusSystem {
 		// internal system sessions are always allowed
 		return nil
 	}

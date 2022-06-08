@@ -7,8 +7,8 @@
 package systemv3
 
 import (
-	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -447,19 +447,19 @@ func file_proto_types_systempb_v3_idp_proto_rawDescGZIP() []byte {
 
 var file_proto_types_systempb_v3_idp_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_proto_types_systempb_v3_idp_proto_goTypes = []interface{}{
-	(*Idp)(nil),             // 0: rafay.dev.types.system.v3.Idp
-	(*IdpSpec)(nil),         // 1: rafay.dev.types.system.v3.IdpSpec
-	(*IdpList)(nil),         // 2: rafay.dev.types.system.v3.IdpList
-	(*v3.Metadata)(nil),     // 3: rafay.dev.types.common.v3.Metadata
-	(*v3.Status)(nil),       // 4: rafay.dev.types.common.v3.Status
-	(*v3.ListMetadata)(nil), // 5: rafay.dev.types.common.v3.ListMetadata
+	(*Idp)(nil),             // 0: paralus.dev.types.system.v3.Idp
+	(*IdpSpec)(nil),         // 1: paralus.dev.types.system.v3.IdpSpec
+	(*IdpList)(nil),         // 2: paralus.dev.types.system.v3.IdpList
+	(*v3.Metadata)(nil),     // 3: paralus.dev.types.common.v3.Metadata
+	(*v3.Status)(nil),       // 4: paralus.dev.types.common.v3.Status
+	(*v3.ListMetadata)(nil), // 5: paralus.dev.types.common.v3.ListMetadata
 }
 var file_proto_types_systempb_v3_idp_proto_depIdxs = []int32{
-	3, // 0: rafay.dev.types.system.v3.Idp.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	1, // 1: rafay.dev.types.system.v3.Idp.spec:type_name -> rafay.dev.types.system.v3.IdpSpec
-	4, // 2: rafay.dev.types.system.v3.Idp.status:type_name -> rafay.dev.types.common.v3.Status
-	5, // 3: rafay.dev.types.system.v3.IdpList.metadata:type_name -> rafay.dev.types.common.v3.ListMetadata
-	0, // 4: rafay.dev.types.system.v3.IdpList.items:type_name -> rafay.dev.types.system.v3.Idp
+	3, // 0: paralus.dev.types.system.v3.Idp.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	1, // 1: paralus.dev.types.system.v3.Idp.spec:type_name -> paralus.dev.types.system.v3.IdpSpec
+	4, // 2: paralus.dev.types.system.v3.Idp.status:type_name -> paralus.dev.types.common.v3.Status
+	5, // 3: paralus.dev.types.system.v3.IdpList.metadata:type_name -> paralus.dev.types.common.v3.ListMetadata
+	0, // 4: paralus.dev.types.system.v3.IdpList.items:type_name -> paralus.dev.types.system.v3.Idp
 	5, // [5:5] is the sub-list for method output_type
 	5, // [5:5] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name

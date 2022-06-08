@@ -7,9 +7,9 @@
 package userv3
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	_ "github.com/paralus/paralus/proto/types/rolepb/v3"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -547,22 +547,22 @@ func file_proto_types_userpb_v3_group_proto_rawDescGZIP() []byte {
 
 var file_proto_types_userpb_v3_group_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_proto_types_userpb_v3_group_proto_goTypes = []interface{}{
-	(*Group)(nil),                // 0: rafay.dev.types.user.v3.Group
-	(*ProjectNamespaceRole)(nil), // 1: rafay.dev.types.user.v3.ProjectNamespaceRole
-	(*Permission)(nil),           // 2: rafay.dev.types.user.v3.Permission
-	(*GroupSpec)(nil),            // 3: rafay.dev.types.user.v3.GroupSpec
-	(*GroupList)(nil),            // 4: rafay.dev.types.user.v3.GroupList
-	(*v3.Metadata)(nil),          // 5: rafay.dev.types.common.v3.Metadata
-	(*v3.Status)(nil),            // 6: rafay.dev.types.common.v3.Status
-	(*v3.ListMetadata)(nil),      // 7: rafay.dev.types.common.v3.ListMetadata
+	(*Group)(nil),                // 0: paralus.dev.types.user.v3.Group
+	(*ProjectNamespaceRole)(nil), // 1: paralus.dev.types.user.v3.ProjectNamespaceRole
+	(*Permission)(nil),           // 2: paralus.dev.types.user.v3.Permission
+	(*GroupSpec)(nil),            // 3: paralus.dev.types.user.v3.GroupSpec
+	(*GroupList)(nil),            // 4: paralus.dev.types.user.v3.GroupList
+	(*v3.Metadata)(nil),          // 5: paralus.dev.types.common.v3.Metadata
+	(*v3.Status)(nil),            // 6: paralus.dev.types.common.v3.Status
+	(*v3.ListMetadata)(nil),      // 7: paralus.dev.types.common.v3.ListMetadata
 }
 var file_proto_types_userpb_v3_group_proto_depIdxs = []int32{
-	5, // 0: rafay.dev.types.user.v3.Group.metadata:type_name -> rafay.dev.types.common.v3.Metadata
-	3, // 1: rafay.dev.types.user.v3.Group.spec:type_name -> rafay.dev.types.user.v3.GroupSpec
-	6, // 2: rafay.dev.types.user.v3.Group.status:type_name -> rafay.dev.types.common.v3.Status
-	1, // 3: rafay.dev.types.user.v3.GroupSpec.projectNamespaceRoles:type_name -> rafay.dev.types.user.v3.ProjectNamespaceRole
-	7, // 4: rafay.dev.types.user.v3.GroupList.metadata:type_name -> rafay.dev.types.common.v3.ListMetadata
-	0, // 5: rafay.dev.types.user.v3.GroupList.items:type_name -> rafay.dev.types.user.v3.Group
+	5, // 0: paralus.dev.types.user.v3.Group.metadata:type_name -> paralus.dev.types.common.v3.Metadata
+	3, // 1: paralus.dev.types.user.v3.Group.spec:type_name -> paralus.dev.types.user.v3.GroupSpec
+	6, // 2: paralus.dev.types.user.v3.Group.status:type_name -> paralus.dev.types.common.v3.Status
+	1, // 3: paralus.dev.types.user.v3.GroupSpec.projectNamespaceRoles:type_name -> paralus.dev.types.user.v3.ProjectNamespaceRole
+	7, // 4: paralus.dev.types.user.v3.GroupList.metadata:type_name -> paralus.dev.types.common.v3.ListMetadata
+	0, // 5: paralus.dev.types.user.v3.GroupList.items:type_name -> paralus.dev.types.user.v3.Group
 	6, // [6:6] is the sub-list for method output_type
 	6, // [6:6] is the sub-list for method input_type
 	6, // [6:6] is the sub-list for extension type_name
