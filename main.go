@@ -581,8 +581,6 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	}
 
 	var opts []_grpc.ServerOption
-	// var asv authv3.AuthService
-	_log.Infow("adding auth interceptor")
 	ac := authv3.NewAuthContext(db, kc, ks, as)
 	asv := authv3.NewAuthService(ac)
 	o := authv3.Option{
