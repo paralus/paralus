@@ -344,7 +344,7 @@ func setup() {
 
 	//sentry related services
 	bs = service.NewBootstrapService(db)
-	krs = service.NewKubeconfigRevocationService(db)
+	krs = service.NewKubeconfigRevocationService(db, auditLogger)
 	kss = service.NewKubeconfigSettingService(db)
 	ns = service.NewNamespaceService(db)
 	kcs = service.NewkubectlClusterSettingsService(db)

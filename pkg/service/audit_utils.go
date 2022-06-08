@@ -389,6 +389,24 @@ func CreateApiKeyAuditEvent(ctx context.Context, al *zap.Logger, action string, 
 	}
 }
 
+func RevokeKubeconfigAuditEvent(ctx context.Context, al *zap.Logger, user string) {
+	sd, ok := GetSessionDataFromContext(ctx)
+	if !ok {
+		_log.Warn("unable to create audit event: could not fetch info from context")
+		return
+	}
+
+	detail := &audit.EventDetail{
+		Message: fmt.Sprintf("User %s kubeconfig revoked", user),
+		Meta: map[string]string{
+			"user": user,
+		},
+	}
+	if err := audit.CreateV1Event(al, sd, detail, "user.kubeconfig.revoke", ""); err != nil {
+		_log.Warn("unable to create audit event", err)
+	}
+}
+
 func CreateClusterAuditEvent(ctx context.Context, al *zap.Logger, action string, name string, id uuid.UUID) {
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {
