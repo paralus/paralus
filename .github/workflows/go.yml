@@ -29,7 +29,22 @@ jobs:
         uses: helm/kind-action@v1.2.0
 
       - name: Test all
-        run: go test -v ./...
+        run: go test -coverprofile=coverage.out -v ./...
+
+      - name: Prepare coverage report
+        run: |
+          go install github.com/axw/gocov/gocov@latest
+          gocov convert coverage.out> coverage.json
+          echo "Coverage report (go)" > coverage.report
+          echo "" >> coverage.report
+          echo "|File|Percentage|Lines|" >> coverage.report
+          echo "|---|:---:|:---:|" >> coverage.report
+          gocov report coverage.json|grep -E '\-\-\-'|sed 's/---*//'|awk '{print "|"$1"|"$2"|"$3"|"}' >> coverage.report
+
+      - name: Comment coverage report
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          path: coverage.report
 
   # golangci:
   #   strategy:
