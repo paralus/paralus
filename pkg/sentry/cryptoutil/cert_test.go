@@ -14,9 +14,9 @@ func TestVerifyCertHostname(t *testing.T) {
 		DNSNames: []string{
 			"peering.sentry.paralus.local",
 			"peering.sentry.paralus.local",
-			"rafay-sentry",
-			"rafay-sentry.rafay-system",
-			"rafay-sentry.rafay-system.cluster.local",
+			"paralus-sentry",
+			"paralus-sentry.paralus-system",
+			"paralus-sentry.paralus-system.cluster.local",
 		},
 	}
 	err := cert.VerifyHostname("peering.sentry.paralus.local")
@@ -24,17 +24,17 @@ func TestVerifyCertHostname(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	err = cert.VerifyHostname("rafay-sentry.rafay-system")
+	err = cert.VerifyHostname("paralus-sentry.paralus-system")
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	err = cert.VerifyHostname("rafay-sentry")
+	err = cert.VerifyHostname("paralus-sentry")
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	err = cert.VerifyHostname("rafay-sentry.rafay-system.cluster.local")
+	err = cert.VerifyHostname("paralus-sentry.paralus-system.cluster.local")
 	if err != nil {
 		t.Error(err)
 		return

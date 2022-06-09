@@ -5,7 +5,7 @@ import "google/protobuf/timestamp.proto";
 import "google/api/field_behavior.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-// ParalusTypeMeta is the type meta for rafay resources
+// ParalusTypeMeta is the type meta for paralus resources
 message ParalusTypeMeta {
   string apiVersion = 1;
   string kind = 2;

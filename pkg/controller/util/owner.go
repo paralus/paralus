@@ -75,7 +75,7 @@ func newOwnerRef(owner metav1.Object) (*metav1.OwnerReference, error) {
 }
 
 // SetOwnerReference sets owner reference for objects controlled
-// by rafay cluster controllers
+// by paralus cluster controllers
 func SetOwnerReference(owner, object metav1.Object) error {
 
 	// Create a new ref

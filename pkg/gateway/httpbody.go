@@ -16,7 +16,7 @@ type httpBodyMarshaler struct {
 // NewHTTPBodyMarshaler returns new http body marshaler
 func NewHTTPBodyMarshaler() runtime.Marshaler {
 	return &httpBodyMarshaler{
-		Marshaler: &rafayJSON{},
+		Marshaler: &paralusJSON{},
 	}
 }
 

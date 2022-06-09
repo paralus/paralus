@@ -340,15 +340,15 @@ func GetPeeringServerCreds(ctx context.Context, bs service.BootstrapService, rpc
 	defer cancel()
 	var template *sentry.BootstrapAgentTemplate
 
-	template, err = bs.GetBootstrapAgentTemplate(nctx, "rafay-sentry-peering-server")
+	template, err = bs.GetBootstrapAgentTemplate(nctx, "paralus-sentry-peering-server")
 	if err != nil {
 		return
 	}
 
 	config := &register.Config{
-		TemplateName: "rafay-sentry-peering-server",
+		TemplateName: "paralus-sentry-peering-server",
 		Addr:         fmt.Sprintf("localhost:%d", rpcPort),
-		Name:         "rafay-sentry-peering-server",
+		Name:         "paralus-sentry-peering-server",
 		Scheme:       "grpc",
 		Mode:         "server",
 	}
@@ -383,7 +383,7 @@ func GetPeeringServerCreds(ctx context.Context, bs service.BootstrapService, rpc
 
 	var agent *sentry.BootstrapAgent
 
-	agent, err = bs.GetBootstrapAgent(nctx, template.Metadata.Name, query.WithName("rafay-sentry-peering-server"), query.WithGlobalScope())
+	agent, err = bs.GetBootstrapAgent(nctx, template.Metadata.Name, query.WithName("paralus-sentry-peering-server"), query.WithGlobalScope())
 
 	if err != nil {
 		if err != sql.ErrNoRows {

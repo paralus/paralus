@@ -13,17 +13,17 @@ const (
 	yamlContentType string = "application/yaml"
 )
 
-// rafayJSON is the rafay object to YAML marshaller
-type rafayYAML struct {
+// paralusJSON is the paralus object to YAML marshaller
+type paralusYAML struct {
 }
 
 // NewParalusYAML returns new grpc gateway yaml marshaller
 func NewParalusYAML() runtime.Marshaler {
-	return &rafayYAML{}
+	return &paralusYAML{}
 }
 
 // Marshal marshals "v" into byte sequence.
-func (m *rafayYAML) Marshal(v interface{}) ([]byte, error) {
+func (m *paralusYAML) Marshal(v interface{}) ([]byte, error) {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func (m *rafayYAML) Marshal(v interface{}) ([]byte, error) {
 
 // Unmarshal unmarshals "data" into "v".
 // "v" must be a pointer value.
-func (m *rafayYAML) Unmarshal(yb []byte, v interface{}) error {
+func (m *paralusYAML) Unmarshal(yb []byte, v interface{}) error {
 	jb, err := yaml.YAMLToJSON(yb)
 	if err != nil {
 		return err
@@ -49,7 +49,7 @@ func (m *rafayYAML) Unmarshal(yb []byte, v interface{}) error {
 }
 
 // NewDecoder returns a Decoder which reads byte sequence from "r".
-func (m *rafayYAML) NewDecoder(r io.Reader) runtime.Decoder {
+func (m *paralusYAML) NewDecoder(r io.Reader) runtime.Decoder {
 	return runtime.DecoderFunc(func(v interface{}) error {
 		yb, err := ioutil.ReadAll(r)
 		if err != nil {
@@ -60,7 +60,7 @@ func (m *rafayYAML) NewDecoder(r io.Reader) runtime.Decoder {
 }
 
 // NewEncoder returns an Encoder which writes bytes sequence into "w".
-func (m *rafayYAML) NewEncoder(w io.Writer) runtime.Encoder {
+func (m *paralusYAML) NewEncoder(w io.Writer) runtime.Encoder {
 	return runtime.EncoderFunc(func(v interface{}) error {
 		yb, err := m.Marshal(v)
 		if err != nil {
@@ -73,6 +73,6 @@ func (m *rafayYAML) NewEncoder(w io.Writer) runtime.Encoder {
 }
 
 // ContentType returns the Content-Type which this marshaler is responsible for.
-func (m *rafayYAML) ContentType(v interface{}) string {
+func (m *paralusYAML) ContentType(v interface{}) string {
 	return yamlContentType
 }

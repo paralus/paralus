@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS sentry_bootstrap_agent (
     project_id uuid,
     template_ref character varying(256) NOT NULL,
     agent_mode character varying(512) NOT NULL,
-    -- rafay meta fields
+    -- paralus meta fields
     display_name character varying(256) NOT NULL,
     created_at timestamp WITH time zone NOT NULL,
     modified_at timestamp WITH time zone,

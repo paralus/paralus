@@ -11,7 +11,7 @@ import (
 const (
 	BEGIN_PROXY_DATA      = "-----BEGIN PROXY DATA-----"
 	END_PROXY_DATA        = "-----END PROXY DATA-----"
-	NO_PROXY_PARALUS_DATA = "localhost,127.0.0.1,127.0.0.2,k8master.service.consul,ingress-nginx-controller-admission.rafay-system.svc,rafay-drift.rafay-system.svc,secretstore-webhook.rafay-system.svc"
+	NO_PROXY_PARALUS_DATA = "localhost,127.0.0.1,127.0.0.2,k8master.service.consul,ingress-nginx-controller-admission.paralus-system.svc,paralus-drift.paralus-system.svc,secretstore-webhook.paralus-system.svc"
 )
 
 func UpdateProxyData(cert string, proxyConfig infrav3.ProxyConfig, clusterCidr map[string]string) string {

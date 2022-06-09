@@ -57,7 +57,7 @@ spec:
         - mountPath: /etcd0.etcd
           name: etcd-storage
       hostname: etcd0
-      priorityClassName: rafay-cluster-critical
+      priorityClassName: paralus-cluster-critical
       volumes:
       - name: etcd-storage
         persistentVolumeClaim:

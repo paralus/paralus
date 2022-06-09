@@ -247,7 +247,7 @@ func (s *bootstrapServer) RegisterBootstrapAgent(ctx context.Context, in *sentry
 	resp.Certificate = signed
 	resp.CaCertificate = []byte(infra.Spec.CaCert)
 
-	if template.Metadata.Name == "rafay-core-relay-agent" {
+	if template.Metadata.Name == "paralus-core-relay-agent" {
 		_log.Info("updating cluster status for :: ", agent.Metadata.Name)
 		err = s.updateClusterStatus(ctx, agent.Metadata.Name)
 	}

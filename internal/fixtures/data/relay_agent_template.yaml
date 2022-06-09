@@ -5,7 +5,7 @@ metadata:
     rep-addon: v2-relay-agent
     rep-cluster: "{{ .DownloadData.ClusterID }}"
   name: "kube-proxy-agent-{{ .DownloadData.ClusterID }}"
-  namespace: rafay-system
+  namespace: paralus-system
 spec:
   progressDeadlineSeconds: 1800
   replicas: 1
@@ -98,7 +98,7 @@ spec:
           privileged: true
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
-      priorityClassName: rafay-cluster-critical
+      priorityClassName: paralus-cluster-critical
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
@@ -121,4 +121,4 @@ metadata:
     rep-addon: v2-relay-agent
     rep-cluster: "{{ .DownloadData.ClusterID }}"
   name: "kube-proxy-agent-config-{{ .DownloadData.ClusterID }}"
-  namespace: rafay-system
+  namespace: paralus-system

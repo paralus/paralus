@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: rafay-connector
+  name: paralus-connector
 spec:
   template:
     spec:
       containers:
       - name: connector
-        image: rafaysystems/rafay-connector:latest-1
+        image: paralussystems/paralus-connector:latest-1
         imagePullSecrets:
-        - name: rcloud-registry-creds
+        - name: paralus-registry-creds
         command:
         - test1
         - ""

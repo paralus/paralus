@@ -44,7 +44,7 @@ var namespaceScopePermissions = []string{
 }
 
 const (
-	rafayRelayLabel     = "rafay-relay"
+	paralusRelayLabel   = "paralus-relay"
 	relayUserLabel      = "relay-user"
 	authzRefreshedLabel = "authz-refreshed"
 	systemUsername      = "admin@paralus.co"
@@ -61,7 +61,7 @@ func getCurrentEpoch() string {
 
 func getAuthzLabels(userName string) map[string]string {
 	return map[string]string{
-		rafayRelayLabel:     "true",
+		paralusRelayLabel:   "true",
 		relayUserLabel:      userName,
 		authzRefreshedLabel: getCurrentEpoch(),
 	}
@@ -187,9 +187,9 @@ func getRole(permission string) (r *rbacv1.Role, err error) {
 func getRoleName(nsName, permission string) string {
 	switch permission {
 	case sentry.KubectlNamespaceWritePermission:
-		return "rafay-ns-role-write-" + nsName
+		return "paralus-ns-role-write-" + nsName
 	case sentry.KubectlNamespaceReadPermission:
-		return "rafay-ns-role-read-" + nsName
+		return "paralus-ns-role-read-" + nsName
 	default:
 		_log.Infow("getRoleName invalid namespace", "permission", permission)
 	}
@@ -211,7 +211,7 @@ func getClusterRoleBinding(sa *corev1.ServiceAccount, clusterRole string) *rbacv
 	crb.Kind = "ClusterRoleBinding"
 	crb.Name = getClusterRoleBindingName(sa.Name, clusterRole)
 	// crb.Labels = map[string]string{
-	// 	"rafay-relay": "true",
+	// 	"paralus-relay": "true",
 	// 	"relay-user":  sa.Name,
 	// }
 	subject := rbacv1.Subject{}
@@ -246,7 +246,7 @@ func getRoleBinding(sa *corev1.ServiceAccount, roleName, namespace string) *rbac
 	rb.Name = getRoleBindingName(sa.Name, roleName)
 	rb.Namespace = namespace
 	// rb.Labels = map[string]string{
-	// 	"rafay-relay": "true",
+	// 	"paralus-relay": "true",
 	// 	"relay-user":  sa.Name,
 	// }
 	subject := rbacv1.Subject{}
@@ -459,7 +459,7 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 	sa.APIVersion = "v1"
 	sa.Kind = "ServiceAccount"
 	sa.Name = cnAttr.Username
-	sa.Namespace = "rafay-system"
+	sa.Namespace = "paralus-system"
 
 	crMap := make(map[string]*rbacv1.ClusterRole)
 	crbMap := make(map[string]*rbacv1.ClusterRoleBinding)
@@ -693,7 +693,7 @@ func getSystemUserAuthz(cnAttrs kubeconfig.CNAttributes) (resp *sentryrpc.GetUse
 	sa.APIVersion = "v1"
 	sa.Kind = "ServiceAccount"
 	sa.Name = cnAttrs.Username
-	sa.Namespace = "rafay-system"
+	sa.Namespace = "paralus-system"
 	sa.Labels = authzLabels
 
 	cr, err := getClusterRole(sentry.KubectlFullAccessPermission)

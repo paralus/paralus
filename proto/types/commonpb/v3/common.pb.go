@@ -151,7 +151,7 @@ func (ParalusConditionStatus) EnumDescriptor() ([]byte, []int) {
 	return file_proto_types_commonpb_v3_common_proto_rawDescGZIP(), []int{1}
 }
 
-// ParalusTypeMeta is the type meta for rafay resources
+// ParalusTypeMeta is the type meta for paralus resources
 type ParalusTypeMeta struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

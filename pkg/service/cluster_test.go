@@ -27,7 +27,7 @@ func TestCreateCluster(t *testing.T) {
 	downloadData := &common.DownloadData{
 		ControlAddr:     "localhost:5002",
 		APIAddr:         "localhost:8000",
-		RelayAgentImage: "rafaysystems/relay:latest",
+		RelayAgentImage: "paralus/relay:latest",
 	}
 
 	ps := NewClusterService(db, downloadData, NewBootstrapService(db), getLogger())
@@ -71,7 +71,7 @@ func TestUpdateCluster(t *testing.T) {
 	downloadData := &common.DownloadData{
 		ControlAddr:     "localhost:5002",
 		APIAddr:         "localhost:8000",
-		RelayAgentImage: "rafaysystems/relay:latest",
+		RelayAgentImage: "paralus/relay:latest",
 	}
 
 	ps := NewClusterService(db, downloadData, NewBootstrapService(db), getLogger())
@@ -105,7 +105,7 @@ func TestSelectCluster(t *testing.T) {
 	downloadData := &common.DownloadData{
 		ControlAddr:     "localhost:5002",
 		APIAddr:         "localhost:8000",
-		RelayAgentImage: "rafaysystems/relay:latest",
+		RelayAgentImage: "paralus/relay:latest",
 	}
 
 	ps := NewClusterService(db, downloadData, NewBootstrapService(db), getLogger())
@@ -139,7 +139,7 @@ func TestGetCluster(t *testing.T) {
 	downloadData := &common.DownloadData{
 		ControlAddr:     "localhost:5002",
 		APIAddr:         "localhost:8000",
-		RelayAgentImage: "rafaysystems/relay:latest",
+		RelayAgentImage: "paralus/relay:latest",
 	}
 
 	ps := NewClusterService(db, downloadData, NewBootstrapService(db), getLogger())
@@ -172,7 +172,7 @@ func TestListCluster(t *testing.T) {
 	downloadData := &common.DownloadData{
 		ControlAddr:     "localhost:5002",
 		APIAddr:         "localhost:8000",
-		RelayAgentImage: "rafaysystems/relay:latest",
+		RelayAgentImage: "paralus/relay:latest",
 	}
 
 	ps := NewClusterService(db, downloadData, NewBootstrapService(db), getLogger())

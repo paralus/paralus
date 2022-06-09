@@ -232,7 +232,7 @@ func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps serv
 	if !isSSOAcc {
 		projects, isOrgScope, err = getProjectsForAccount(ctx, opts.Account, opts.Organization, opts.Partner, aps)
 		if err != nil {
-			_log.Errorw("error getting project for rafay ", "account", opts.Account, "error", err.Error())
+			_log.Errorw("error getting project for paralus ", "account", opts.Account, "error", err.Error())
 			return nil, err
 		}
 	} else {
@@ -276,7 +276,7 @@ func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps serv
 				return nil, err
 			}
 			for _, ba := range bal.Items {
-				if ba.Spec.TemplateRef != "rafay-core-relay-agent" && ba.Spec.TemplateRef != "rafay-core-cd-relay-agent" {
+				if ba.Spec.TemplateRef != "paralus-core-relay-agent" && ba.Spec.TemplateRef != "paralus-core-cd-relay-agent" {
 					if vi, ok := set[ba.Metadata.Name]; ok {
 						v := vi.(sentry.BootstrapAgent)
 						if v.Spec.TemplateRef == ba.Spec.TemplateRef {
@@ -418,7 +418,7 @@ func getConfig(username, namespace, certCN, serverHost string, bootstrapInfra *s
 	var contexts []clientcmdapiv1.NamedContext
 
 	for _, ba := range bootstrapAgents {
-		if ba.Spec.TemplateRef != "rafay-core-relay-agent" && ba.Spec.TemplateRef != "rafay-core-cd-relay-agent" {
+		if ba.Spec.TemplateRef != "paralus-core-relay-agent" && ba.Spec.TemplateRef != "paralus-core-cd-relay-agent" {
 			// skip non default agents from system kubeconfiog
 			continue
 		}
@@ -633,7 +633,7 @@ func getUserConfig(ctx context.Context, opts commonv3.QueryOptions, username, na
 	// prune agent list
 	// if a cluster is added to custom relay then exlude it from default
 	for _, ba := range bootstrapAgents {
-		if ba.Spec.TemplateRef != "rafay-core-relay-agent" && ba.Spec.TemplateRef != "rafay-core-cd-relay-agent" {
+		if ba.Spec.TemplateRef != "paralus-core-relay-agent" && ba.Spec.TemplateRef != "paralus-core-cd-relay-agent" {
 			baMaps[ba.Metadata.Name] = *ba
 		} else {
 			if _, ok := baMaps[ba.Metadata.Name]; !ok {
@@ -643,7 +643,7 @@ func getUserConfig(ctx context.Context, opts commonv3.QueryOptions, username, na
 	}
 
 	for _, ba := range baMaps {
-		if ba.Spec.TemplateRef != "rafay-core-relay-agent" && ba.Spec.TemplateRef != "rafay-core-cd-relay-agent" {
+		if ba.Spec.TemplateRef != "paralus-core-relay-agent" && ba.Spec.TemplateRef != "paralus-core-cd-relay-agent" {
 			// handle custome relay network
 		} else {
 

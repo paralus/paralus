@@ -4,15 +4,15 @@ kind: Namespace
 metadata:
   labels:
     control-plane: controller-manager
-  name: rafay-system
+  name: paralus-system
 
 ---
 
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: rafay-kube-proxy-audit
-  namespace: rafay-system
+  name: paralus-kube-proxy-audit
+  namespace: paralus-system
 spec:
   accessModes:
   - ReadWriteOnce
@@ -26,19 +26,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: rafay-kube-proxy
-  name: rafay-kube-proxy
-  namespace: rafay-system
+    app: paralus-kube-proxy
+  name: paralus-kube-proxy
+  namespace: paralus-system
 spec:
   replicas: 1
   progressDeadlineSeconds: 1800
   selector:
     matchLabels:
-      app: rafay-kube-proxy
+      app: paralus-kube-proxy
   template:
     metadata:
       labels:
-        app: rafay-kube-proxy
+        app: paralus-kube-proxy
     spec:
       containers:
       - args:
@@ -59,60 +59,60 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: sentry.peering.host
-              name: rafay-kube-proxy-config
+              name: paralus-kube-proxy-config
         - name: SENTRY_ADDR
           valueFrom:
             configMapKeyRef:
               key: sentry.addr
-              name: rafay-kube-proxy-config
+              name: paralus-kube-proxy-config
         - name: BOOTSTRAP_ADDR
           valueFrom:
             configMapKeyRef:
               key: sentry.addr
-              name: rafay-kube-proxy-config
+              name: paralus-kube-proxy-config
         - name: RELAY_PEERING_TOKEN
           valueFrom:
             configMapKeyRef:
               key: peer.token
-              name: rafay-kube-proxy-config
+              name: paralus-kube-proxy-config
         - name: RELAY_USER_TOKEN
           valueFrom:
             configMapKeyRef:
               key: user.token
-              name: rafay-kube-proxy-config
+              name: paralus-kube-proxy-config
         - name: RELAY_USER_HOST_PORT
           valueFrom:
             configMapKeyRef:
               key: user.host.port
-              name: rafay-kube-proxy-config
+              name: paralus-kube-proxy-config
         - name: RELAY_CONNECTOR_TOKEN
           valueFrom:
             configMapKeyRef:
               key: connector.token
-              name: rafay-kube-proxy-config
+              name: paralus-kube-proxy-config
         - name: RELAY_CONNECTOR_HOST_PORT
           valueFrom:
             configMapKeyRef:
               key: connector.host.port
-              name: rafay-kube-proxy-config
+              name: paralus-kube-proxy-config
         - name: RELAY_NETWORK_ID
           valueFrom:
             configMapKeyRef:
               key: relaynetwork.id
-              name: rafay-kube-proxy-config
+              name: paralus-kube-proxy-config
               
         - name: AUDIT_PATH
           valueFrom:
             configMapKeyRef:
               key: audit.path
-              name: rafay-kube-proxy-config
+              name: paralus-kube-proxy-config
         image: "{{ .DownloadData.RelayImage }}"
         imagePullPolicy: IfNotPresent
-        name: rafay-kube-proxy
+        name: paralus-kube-proxy
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
-        - mountPath: /opt/rafay/audit
+        - mountPath: /opt/paralus/audit
           name: audit
       dnsPolicy: ClusterFirst
       restartPolicy: Always
@@ -120,16 +120,16 @@ spec:
       volumes:
       - name: audit
         persistentVolumeClaim:
-          claimName: rafay-kube-proxy-audit
+          claimName: paralus-kube-proxy-audit
 
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: rafay-kube-proxy-config
-  namespace: rafay-system
+  name: paralus-kube-proxy-config
+  namespace: paralus-system
 data:
-  audit.path: "/opt/rafay/audit"
+  audit.path: "/opt/paralus/audit"
   sentry.addr: "{{ .DownloadData.SentryAddr }}"
   sentry.peering.host: "{{ .DownloadData.PeerHost }}"
   peer.token: "{{ .DownloadData.PeerToken }}"
@@ -143,8 +143,8 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: rafay-kube-proxy
-  namespace: rafay-system
+  name: paralus-kube-proxy
+  namespace: paralus-system
 spec:
   ports:
   - name: tcp-relay
@@ -156,7 +156,7 @@ spec:
     protocol: TCP
     targetPort: 8003
   selector:
-    app: rafay-kube-proxy
+    app: paralus-kube-proxy
 
 ---
 apiVersion: apps/v1
@@ -164,19 +164,19 @@ kind: Deployment
 metadata:
   annotations:
   labels:
-    app: rafay-kube-proxy-tail
-  name: rafay-kube-proxy-tail
-  namespace: rafay-system
+    app: paralus-kube-proxy-tail
+  name: paralus-kube-proxy-tail
+  namespace: paralus-system
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   selector:
     matchLabels:
-      app: rafay-kube-proxy-tail
+      app: paralus-kube-proxy-tail
   template:
     metadata:
       labels:
-        app: rafay-kube-proxy-tail
+        app: paralus-kube-proxy-tail
     spec:
       containers:
       - args:
@@ -196,36 +196,36 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: sentry.peering.host
-              name: rafay-kube-proxy-config
+              name: paralus-kube-proxy-config
         - name: SENTRY_ADDR
           valueFrom:
             configMapKeyRef:
               key: sentry.addr
-              name: rafay-kube-proxy-config
+              name: paralus-kube-proxy-config
         - name: BOOTSTRAP_ADDR
           valueFrom:
             configMapKeyRef:
               key: sentry.addr
-              name: rafay-kube-proxy-config
+              name: paralus-kube-proxy-config
         - name: RELAY_PEERING_TOKEN
           valueFrom:
             configMapKeyRef:
               key: peer.token
-              name: rafay-kube-proxy-config
+              name: paralus-kube-proxy-config
         - name: AUDIT_PATH
           valueFrom:
             configMapKeyRef:
               key: audit.path
-              name: rafay-kube-proxy-config
+              name: paralus-kube-proxy-config
         image: "{{ .DownloadData.RelayImage }}"
         imagePullPolicy: IfNotPresent
-        name: rafay-kube-proxy-tail
+        name: paralus-kube-proxy-tail
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
-        - mountPath: /opt/rafay/audit
+        - mountPath: /opt/paralus/audit
           name: audit
       volumes:
       - name: audit
         persistentVolumeClaim:
-          claimName: rafay-kube-proxy-audit
+          claimName: paralus-kube-proxy-audit

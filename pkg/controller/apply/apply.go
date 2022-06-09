@@ -72,7 +72,7 @@ func WithUseUpdate(o runtime.Object) Option {
 }
 
 // WithForceUseUpdate sets if update should be used instead of patch for apply
-// operation, irrespective of whether the object is of rafay domain or not
+// operation, irrespective of whether the object is of paralus domain or not
 func WithForceUseUpdate() Option {
 	return func(opts *Options) {
 		opts.UseUpdate = true

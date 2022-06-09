@@ -3,8 +3,8 @@ kind: StatefulSet
 metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"apps/v1","kind":"StatefulSet","metadata":{"annotations":{},"name":"rafay-connector","namespace":"rafay-system"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"rafay-connector"}},"serviceName":"connector","template":{"metadata":{"labels":{"app":"rafay-connector"}},"spec":{"containers":[{"image":"rafaysystems/rafay-connector:latest","name":"connector","volumeMounts":[{"mountPath":"/etc/config","name":"connector-config"}]}],"priorityClassName":"rafay-cluster-critical","terminationGracePeriodSeconds":10,"volumes":[{"configMap":{"name":"connector-config"},"name":"connector-config"}]}}}}
-  name: rafay-connector
+      {"apiVersion":"apps/v1","kind":"StatefulSet","metadata":{"annotations":{},"name":"paralus-connector","namespace":"paralus-system"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"paralus-connector"}},"serviceName":"connector","template":{"metadata":{"labels":{"app":"paralus-connector"}},"spec":{"containers":[{"image":"paralussystems/paralus-connector:latest","name":"connector","volumeMounts":[{"mountPath":"/etc/config","name":"connector-config"}]}],"priorityClassName":"paralus-cluster-critical","terminationGracePeriodSeconds":10,"volumes":[{"configMap":{"name":"connector-config"},"name":"connector-config"}]}}}}
+  name: paralus-connector
   namespace: default
 spec:
   podManagementPolicy: OrderedReady
@@ -12,16 +12,16 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: rafay-connector
+      app: paralus-connector
   serviceName: connector
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: rafay-connector
+        app: paralus-connector
     spec:
       containers:
-      - image: rafaysystems/rafay-connector:latest
+      - image: paralussystems/paralus-connector:latest
         imagePullPolicy: Always
         name: connector
         resources: {}
@@ -31,7 +31,7 @@ spec:
         - mountPath: /etc/config
           name: connector-config
       dnsPolicy: ClusterFirst
-      priorityClassName: rafay-cluster-critical
+      priorityClassName: paralus-cluster-critical
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
@@ -48,9 +48,9 @@ spec:
 status:
   collisionCount: 0
   currentReplicas: 1
-  currentRevision: rafay-connector-568bcd85cb
+  currentRevision: paralus-connector-568bcd85cb
   observedGeneration: 1
   readyReplicas: 1
   replicas: 1
-  updateRevision: rafay-connector-568bcd85cb
+  updateRevision: paralus-connector-568bcd85cb
   updatedReplicas: 1

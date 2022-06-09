@@ -3,7 +3,7 @@ kind: ClusterRole
 metadata:
   name: cluster-scope-read-cluster-role
   labels:
-    rafay-relay: "true"
+    paralus-relay: "true"
 rules:
 - apiGroups: ["*"]
   resources: ["*"]

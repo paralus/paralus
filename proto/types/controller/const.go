@@ -3,7 +3,7 @@ package controller
 const (
 	// PreDeleteFinalizer is the finalizer for all cluster CRD pre delete
 	PreDeleteFinalizer = "cluster.paralus.dev.v2.predelete"
-	// OwnerRef is set if a kubernetes resource is owned by rafay cluster controllers
+	// OwnerRef is set if a kubernetes resource is owned by paralus cluster controllers
 	// this is used in place of k8s owner ref to enable managing namespaced/non namespaced
 	// resources across namespaces
 	OwnerRef = "paralus.dev/ownerRef"

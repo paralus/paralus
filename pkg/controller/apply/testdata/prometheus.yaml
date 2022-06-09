@@ -6177,7 +6177,7 @@ spec:
       kind: ServiceAccount
       metadata:
         name: prometheus-k8s
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: prometheus-k8s-clusterrole
     object:
       apiVersion: rbac.authorization.k8s.io/v1
@@ -6208,14 +6208,14 @@ spec:
       subjects:
       - kind: ServiceAccount
         name: prometheus-k8s
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: prometheus-k8s-roleconfig
     object:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: Role
       metadata:
         name: prometheus-k8s-config
-        namespace: rafay-infra
+        namespace: paralus-infra
       rules:
       - apiGroups:
         - ""
@@ -6261,13 +6261,13 @@ spec:
         - get
         - list
         - watch
-  - name: prometheus-k8s-role-rafay-infra
+  - name: prometheus-k8s-role-paralus-infra
     object:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: Role
       metadata:
         name: prometheus-k8s
-        namespace: rafay-infra
+        namespace: paralus-infra
       rules:
       - apiGroups:
         - ""
@@ -6286,7 +6286,7 @@ spec:
       kind: RoleBinding
       metadata:
         name: prometheus-k8s-config
-        namespace: rafay-infra
+        namespace: paralus-infra
       roleRef:
         apiGroup: rbac.authorization.k8s.io
         kind: Role
@@ -6294,7 +6294,7 @@ spec:
       subjects:
       - kind: ServiceAccount
         name: prometheus-k8s
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: prometheus-k8s-rolebinding-default
     object:
       apiVersion: rbac.authorization.k8s.io/v1
@@ -6309,7 +6309,7 @@ spec:
       subjects:
       - kind: ServiceAccount
         name: prometheus-k8s
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: prometheus-k8s-rolebinding-kube-system
     object:
       apiVersion: rbac.authorization.k8s.io/v1
@@ -6324,14 +6324,14 @@ spec:
       subjects:
       - kind: ServiceAccount
         name: prometheus-k8s
-        namespace: rafay-infra
-  - name: prometheus-k8s-rolebinding-rafay-infra
+        namespace: paralus-infra
+  - name: prometheus-k8s-rolebinding-paralus-infra
     object:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: RoleBinding
       metadata:
         name: prometheus-k8s
-        namespace: rafay-infra
+        namespace: paralus-infra
       roleRef:
         apiGroup: rbac.authorization.k8s.io
         kind: Role
@@ -6339,14 +6339,14 @@ spec:
       subjects:
       - kind: ServiceAccount
         name: prometheus-k8s
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: prometheus-operator-serviceaccount
     object:
       apiVersion: v1
       kind: ServiceAccount
       metadata:
         name: prometheus-operator
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: prometheus-operator-clusterrole
     object:
       apiVersion: rbac.authorization.k8s.io/v1
@@ -6428,7 +6428,7 @@ spec:
       subjects:
       - kind: ServiceAccount
         name: prometheus-operator
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: prometheus-operator-servicemonitor
     object:
       apiVersion: monitoring.coreos.com/v1
@@ -6437,7 +6437,7 @@ spec:
         labels:
           k8s-app: prometheus-operator
         name: prometheus-operator
-        namespace: rafay-infra
+        namespace: paralus-infra
       spec:
         endpoints:
         - honorLabels: true
@@ -6451,7 +6451,7 @@ spec:
       kind: ServiceAccount
       metadata:
         name: alertmanager-main
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: alertmanager-main-secret
     object:
       apiVersion: v1
@@ -6462,7 +6462,7 @@ spec:
         annotations:
           paralus.dev/overridedBy: cluster/default-override-eks-london-1118
         name: alertmanager-main
-        namespace: rafay-infra
+        namespace: paralus-infra
       type: Opaque
   - name: kube-state-metrics-service-account
     object:
@@ -6470,7 +6470,7 @@ spec:
       kind: ServiceAccount
       metadata:
         name: kube-state-metrics
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: kube-state-metrics-cluster-role
     object:
       apiVersion: rbac.authorization.k8s.io/v1
@@ -6555,14 +6555,14 @@ spec:
       subjects:
       - kind: ServiceAccount
         name: kube-state-metrics
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: kube-state-metrics-role
     object:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: Role
       metadata:
         name: kube-state-metrics
-        namespace: rafay-infra
+        namespace: paralus-infra
       rules:
       - apiGroups:
         - ""
@@ -6594,7 +6594,7 @@ spec:
       kind: RoleBinding
       metadata:
         name: kube-state-metrics
-        namespace: rafay-infra
+        namespace: paralus-infra
       roleRef:
         apiGroup: rbac.authorization.k8s.io
         kind: Role
@@ -6602,14 +6602,14 @@ spec:
       subjects:
       - kind: ServiceAccount
         name: kube-state-metrics
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: node-exporter-serviceaccount
     object:
       apiVersion: v1
       kind: ServiceAccount
       metadata:
         name: node-exporter
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: node-exporter-cluster-role
     object:
       apiVersion: rbac.authorization.k8s.io/v1
@@ -6642,14 +6642,14 @@ spec:
       subjects:
       - kind: ServiceAccount
         name: node-exporter
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: prometheus-adapter-service-account
     object:
       apiVersion: v1
       kind: ServiceAccount
       metadata:
         name: prometheus-adapter
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: prometheus-adapter-cluster-role
     object:
       apiVersion: rbac.authorization.k8s.io/v1
@@ -6674,7 +6674,7 @@ spec:
       kind: ClusterRoleBinding
       metadata:
         name: prometheus-adapter
-        namespace: rafay-infra
+        namespace: paralus-infra
       roleRef:
         apiGroup: rbac.authorization.k8s.io
         kind: ClusterRole
@@ -6682,7 +6682,7 @@ spec:
       subjects:
       - kind: ServiceAccount
         name: prometheus-adapter
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: prometheus-adapter-cluster-role-binding-delegator
     object:
       apiVersion: rbac.authorization.k8s.io/v1
@@ -6696,7 +6696,7 @@ spec:
       subjects:
       - kind: ServiceAccount
         name: prometheus-adapter
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: prometheus-adapter-cluster-role-server-resources
     object:
       apiVersion: rbac.authorization.k8s.io/v1
@@ -6744,7 +6744,7 @@ spec:
       kind: ConfigMap
       metadata:
         name: adapter-config
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: prometheus-adapter-role-binding-auth-reader
     object:
       apiVersion: rbac.authorization.k8s.io/v1
@@ -6759,7 +6759,7 @@ spec:
       subjects:
       - kind: ServiceAccount
         name: prometheus-adapter
-        namespace: rafay-infra
+        namespace: paralus-infra
   - name: prometheus-k8s-edge-creds-configmap
     object:
       apiVersion: v1
@@ -6772,7 +6772,7 @@ spec:
         annotations:
           paralus.dev/overridedBy: cluster/default-override-eks-london-1118
         name: edge-creds
-        namespace: rafay-infra
+        namespace: paralus-infra
       type: Opaque
   tasklet:
     metadata:
@@ -6780,7 +6780,7 @@ spec:
       finalizers:
       - cluster.paralus.dev.v2.predelete
       name: v1-prometheus
-      namespace: rafay-infra
+      namespace: paralus-infra
     spec:
       init:
       - name: prometheus-k8s-prometheus
@@ -6793,22 +6793,22 @@ spec:
             labels:
               prometheus: k8s
             name: k8s
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             alerting:
               alertmanagers:
               - name: alertmanager-main
-                namespace: rafay-infra
+                namespace: paralus-infra
                 port: web
             baseImage: quay.io/prometheus/prometheus
             evaluationInterval: 1m
             externalLabels:
               deployment_env: staging
-              rc_edgeid: g29loe2.private.pkvwv2n.edge.stage.rafay-edge.net
-            externalUrl: https://prometheusrelay.ops.stage.rafay-edge.net
+              rc_edgeid: g29loe2.private.pkvwv2n.edge.stage.paralus-edge.net
+            externalUrl: https://prometheusrelay.ops.stage.paralus-edge.net
             nodeSelector:
               beta.kubernetes.io/os: linux
-            priorityClassName: rafay-cluster-critical
+            priorityClassName: paralus-cluster-critical
             remoteWrite:
             - queueConfig:
                 batchSendDeadline: 10s
@@ -6824,8 +6824,8 @@ spec:
                 caFile: /etc/prometheus/secrets/edge-creds/ca.crt
                 certFile: /etc/prometheus/secrets/edge-creds/client.crt
                 keyFile: /etc/prometheus/secrets/edge-creds/client.key
-                serverName: influxdb01.core.stage.rafay-edge.net
-              url: https://influxdb01.core.stage.rafay-edge.net/api/v1/prom/write?db=monitoringdb&rp=shortterm&u=prometheus_svc&p=Paralus!98
+                serverName: influxdb01.core.stage.paralus-edge.net
+              url: https://influxdb01.core.stage.paralus-edge.net/api/v1/prom/write?db=monitoringdb&rp=shortterm&u=prometheus_svc&p=Paralus!98
               writeRelabelConfigs:
               - action: keep
                 regex: rcloud.*|kube_daemonset_metadata_generation|kube_deployment_metadata_generation|node_cpu_seconds_total|kube_pod_container_status_running|kube_pod_container_resource_requests_cpu_cores|kube_pod_container_resource_limits_cpu_cores|node:node_num_cpu:sum|:node_memory_MemFreeCachedBuffers_bytes:sum|:node_memory_MemTotal_bytes:sum|node_memory_MemTotal_bytes|kube_pod_container_resource_requests_memory_bytes|kube_pod_container_resource_limits_memory_bytes|amespace_pod_name_container_name:container_cpu_usage_seconds_total:sum_rate|namespace_pod_name_container_name:container_cpu_usage_seconds_total:sum_rate|container_memory_rss|namespace_pod_name_container_name:container_cpu_usage_seconds_total:sum_rate|node:node_cpu_utilisation:avg1m|node:node_cpu_saturation_load1:|kube_pod_info|node:node_memory_utilisation:|node:node_memory_utilisation:ratio|node:node_memory_swap_io_bytes:sum_rate|node:node_disk_utilisation:avg_irate|:kube_pod_info_node_count:|node:node_disk_saturation:avg_irate|node:node_net_utilisation:sum_irate|node:node_net_saturation:sum_irate|node_filesystem_size_bytes|node_filesystem_avail_bytes|node_namespace_pod:kube_pod_info:|node_load1|node_load5|node_load15|node_memory_MemFree_bytes|node_memory_Buffers_bytes|node_memory_Cached_bytes|node_disk_read_bytes_total|node_disk_written_bytes_total|node_disk_io_time_seconds_total|node:node_filesystem_usage:|node_network_receive_bytes_total|node_network_transmit_bytes_total|container_memory_usage_bytes|kube_pod_container_resource_requests_memory_bytes|container_cpu_usage_seconds_total|container_network_receive_bytes_total|container_network_transmit_bytes_total|kube_statefulset_replicas|kube_statefulset_status_replicas|kube_statefulset_status_replicas_ready|kube_statefulset_status_replicas_current|kube_statefulset_status_replicas_updated|node_boot_time_seconds|kube_node_info|kube_pod_container_info|kube_statefulset_metadata_generation|kube_statefulset_status_observed_generation|kubelet_volume_stats_capacity_bytes|kubelet_volume_stats_available_bytes|kubelet_volume_stats_used_bytes|kube_node_status_condition|fluentd_input_status_num_records_total|fluentd_output_status_buffer_queue_length|fluentd_output_status_num_errors|fluentd_output_status_emit_count|fluentd_output_status_buffer_queue_length|fluentd_output_status_retry_count|fluentd_output_status_rollback_count|fluentd_output_status_buffer_total_bytes|fluentd_output_status_num_records_total
@@ -6853,7 +6853,7 @@ spec:
             serviceAccountName: prometheus-k8s
             serviceMonitorNamespaceSelector:
               matchNames:
-              - rafay-infra
+              - paralus-infra
             serviceMonitorSelector:
               matchExpressions:
               - key: k8s-app
@@ -6877,7 +6877,7 @@ spec:
             labels:
               k8s-app: prometheus
             name: prometheus
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             endpoints:
             - interval: 30s
@@ -6893,7 +6893,7 @@ spec:
             labels:
               k8s-app: alertmanager
             name: alertmanager
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             endpoints:
             - interval: 30s
@@ -6914,7 +6914,7 @@ spec:
             labels:
               alertmanager: main
             name: main
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             baseImage: quay.io/prometheus/alertmanager
             nodeSelector:
@@ -6934,7 +6934,7 @@ spec:
             labels:
               k8s-app: kube-state-metrics
             name: kube-state-metrics
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             endpoints:
             - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -6963,7 +6963,7 @@ spec:
             labels:
               k8s-app: node-exporter
             name: node-exporter
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             endpoints:
             - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -6982,14 +6982,14 @@ spec:
           kind: APIService
           metadata:
             name: v1beta1.custom.metrics.k8s.io
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             group: custom.metrics.k8s.io
             groupPriorityMinimum: 100
             insecureSkipTLSVerify: true
             service:
               name: prometheus-adapter
-              namespace: rafay-infra
+              namespace: paralus-infra
             version: v1beta1
             versionPriority: 5
       - name: kube-control-manager-service
@@ -7019,7 +7019,7 @@ spec:
             labels:
               prometheus: k8s
             name: prometheus-k8s
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             ports:
             - name: web
@@ -7036,7 +7036,7 @@ spec:
             labels:
               k8s-app: prometheus-operator
             name: prometheus-operator
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             clusterIP: None
             ports:
@@ -7053,7 +7053,7 @@ spec:
             labels:
               alertmanager: main
             name: alertmanager-main
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             ports:
             - name: web
@@ -7072,7 +7072,7 @@ spec:
             labels:
               k8s-app: kube-state-metrics
             name: kube-state-metrics
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             clusterIP: None
             ports:
@@ -7092,7 +7092,7 @@ spec:
             labels:
               k8s-app: node-exporter
             name: node-exporter
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             clusterIP: None
             ports:
@@ -7109,7 +7109,7 @@ spec:
             labels:
               name: prometheus-adapter
             name: prometheus-adapter
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             ports:
             - name: https
@@ -7125,7 +7125,7 @@ spec:
             labels:
               k8s-app: kubelet
             name: kubelet
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             endpoints:
             - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -7170,7 +7170,7 @@ spec:
             labels:
               k8s-app: fluentd
             name: fluentd
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             endpoints:
             - interval: 1m
@@ -7200,7 +7200,7 @@ spec:
             labels:
               k8s-app: apiserver
             name: kube-apiserver
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             endpoints:
             - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -7231,7 +7231,7 @@ spec:
             labels:
               k8s-app: coredns
             name: coredns
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             endpoints:
             - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -7251,7 +7251,7 @@ spec:
             labels:
               k8s-app: kube-controller-manager
             name: kube-controller-manager
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             endpoints:
             - interval: 30s
@@ -7276,7 +7276,7 @@ spec:
             labels:
               k8s-app: kube-scheduler
             name: kube-scheduler
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             endpoints:
             - interval: 30s
@@ -7297,7 +7297,7 @@ spec:
             labels:
               k8s-app: prometheus-operator
             name: prometheus-operator
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             replicas: 1
             selector:
@@ -7342,7 +7342,7 @@ spec:
             labels:
               app: kube-state-metrics
             name: kube-state-metrics
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             replicas: 1
             selector:
@@ -7441,7 +7441,7 @@ spec:
             labels:
               app: node-exporter
             name: node-exporter
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             selector:
               matchLabels:
@@ -7524,7 +7524,7 @@ spec:
           kind: Deployment
           metadata:
             name: prometheus-adapter
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             replicas: 1
             selector:
@@ -7544,7 +7544,7 @@ spec:
                   - --prometheus-url=http://prometheus-k8s.monitoring.svc:9090/
                   - --secure-port=6443
                   - --v=4
-                  image: registry.dev.rafay-edge.net:5000/rafay/k8s-prometheus-adapter-amd64:v1.0.4
+                  image: registry.dev.paralus-edge.net:5000/paralus/k8s-prometheus-adapter-amd64:v1.0.4
                   name: prometheus-adapter
                   ports:
                   - containerPort: 6443
@@ -7572,7 +7572,7 @@ spec:
               prometheus: k8s
               role: alert-rules
             name: prometheus-k8s-rules
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             groups:
             - name: k8s.rules
@@ -8503,7 +8503,7 @@ spec:
               prometheus: k8s
               role: alert-rules
             name: custom-prometheus-k8s-rules
-            namespace: rafay-infra
+            namespace: paralus-infra
           spec:
             groups:
             - name: custom.rules
@@ -8679,7 +8679,7 @@ status:
       apiVersion: v1
       kind: ServiceAccount
       name: prometheus-k8s
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4345"
       uid: bfca15e3-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -8719,7 +8719,7 @@ status:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: Role
       name: prometheus-k8s-config
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4351"
       uid: bfd1918a-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -8755,13 +8755,13 @@ status:
     state: StepComplete
   - jobReason: not configured
     jobState: StepJobComplete
-    name: prometheus-k8s-role-rafay-infra
+    name: prometheus-k8s-role-paralus-infra
     objectReason: object type *v1.Role not handled
     objectRef:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: Role
       name: prometheus-k8s
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4354"
       uid: bfe3792f-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -8775,7 +8775,7 @@ status:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: RoleBinding
       name: prometheus-k8s-config
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4355"
       uid: bfe4dbec-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -8811,13 +8811,13 @@ status:
     state: StepComplete
   - jobReason: not configured
     jobState: StepJobComplete
-    name: prometheus-k8s-rolebinding-rafay-infra
+    name: prometheus-k8s-rolebinding-paralus-infra
     objectReason: object type *v1.RoleBinding not handled
     objectRef:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: RoleBinding
       name: prometheus-k8s
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4359"
       uid: bff0fd0d-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -8831,7 +8831,7 @@ status:
       apiVersion: v1
       kind: ServiceAccount
       name: prometheus-operator
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4360"
       uid: bff248c3-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -8871,7 +8871,7 @@ status:
       apiVersion: monitoring.coreos.com/v1
       kind: ServiceMonitor
       name: prometheus-operator
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4365"
       uid: bff65354-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -8885,7 +8885,7 @@ status:
       apiVersion: v1
       kind: ServiceAccount
       name: alertmanager-main
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4366"
       uid: bff799f4-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -8899,7 +8899,7 @@ status:
       apiVersion: v1
       kind: Secret
       name: alertmanager-main
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4367"
       uid: bff8f244-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -8913,7 +8913,7 @@ status:
       apiVersion: v1
       kind: ServiceAccount
       name: kube-state-metrics
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4370"
       uid: bffeb3cb-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -8953,7 +8953,7 @@ status:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: Role
       name: kube-state-metrics
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4375"
       uid: c0027a33-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -8967,7 +8967,7 @@ status:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: RoleBinding
       name: kube-state-metrics
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4376"
       uid: c00399d7-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -8981,7 +8981,7 @@ status:
       apiVersion: v1
       kind: ServiceAccount
       name: node-exporter
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4377"
       uid: c0050866-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -9021,7 +9021,7 @@ status:
       apiVersion: v1
       kind: ServiceAccount
       name: prometheus-adapter
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4382"
       uid: c00f3ed8-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -9048,7 +9048,7 @@ status:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: ClusterRoleBinding
       name: prometheus-adapter
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4386"
       uid: c011c005-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -9088,7 +9088,7 @@ status:
       apiVersion: v1
       kind: ConfigMap
       name: adapter-config
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4389"
       uid: c01581ce-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -9116,7 +9116,7 @@ status:
       apiVersion: v1
       kind: Secret
       name: edge-creds
-      namespace: rafay-infra
+      namespace: paralus-infra
       resourceVersion: "4391"
       uid: c01ebd57-0a47-11ea-8c3a-0219fcc74e7c
     objectState: StepObjectComplete
@@ -9127,6 +9127,6 @@ status:
     apiVersion: cluster.paralus.dev/v2
     kind: Tasklet
     name: v1-prometheus
-    namespace: rafay-infra
+    namespace: paralus-infra
     resourceVersion: "4456"
     uid: c3930f90-0a47-11ea-8c3a-0219fcc74e7c

@@ -94,7 +94,7 @@ func (s *clusterServer) DownloadCluster(ctx context.Context, cluster *infrapbv3.
 	}
 
 	return &commonv3.HttpBody{
-		ContentType: "application/x-rafay-yaml",
+		ContentType: "application/x-paralus-yaml",
 		Data:        bb.Bytes(),
 	}, nil
 }

@@ -27,8 +27,9 @@ type GRPCPool struct {
 
 // NewGRPCPool returns new auth pool
 func NewGRPCPool(addr string, maxConnections int, creds credentials.TransportCredentials) *GRPCPool {
-	// as per https://rafaysystems.atlassian.net/browse/RC-9291 min number of connections for grpc
-	// across all services is set to 20; any service creating a connection pool size < 20 is now defaulted to 20
+	// min number of connections for grpc across all services is
+	// set to 20; any service creating a connection pool size < 20
+	// is now defaulted to 20
 	if maxConnections < DefaultMaxPoolConn {
 		maxConnections = DefaultMaxPoolConn
 	}

@@ -1,6 +1,6 @@
 package sentry
 
-// rafay specific annotations/labels keys
+// paralus specific annotations/labels keys
 const (
 	ConfigV2Group = "config.paralus.dev/v2"
 )
