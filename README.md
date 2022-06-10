@@ -1,116 +1,53 @@
-# Rcloud Base
+# Paralus
 
-This repository contains all the rcloud-system components that are the backbone for ztka and gitops.
+Paralus is a free, open source tool that enables controlled, audited access for developers & SREs to your Kubernetes infrastructure. It comes with just-in-time service account creation and user-level credentials management that integrates with your RBAC/SSO solution.
 
-## Prerequisites
+It eliminates the burden of having to configure and manage Kubernetes Role Based Access Control cluster by cluster. Streamline and consolidate access control for your fleet of clusters spanning different operating environments, different clouds (EKS, AKS, etc.), and on-premises data centers operating behind firewalls. A single login gives authorized users (e.g., developers, operations, contractors, etc.) seamless and secure access to all clusters with a native and familiar kubectl experience.
 
-- [Postgres](https://github.com/postgres/postgres): Primary database
-- [Ory Kratos](https://www.ory.sh/kratos): API for user management
-- [Elasticsearch](https://www.elastic.co/elasticsearch/): Storage for audit logs
+<br>
 
-> You can use the
-> [bitnami/charts](https://github.com/bitnami/charts/tree/master/bitnami/postgresql/#installing-the-chart)
-> for postgres and
-> [elastic/helm-charts](https://github.com/elastic/helm-charts) for
-> elasticsearch.
+<img src="paralus.gif" alt="Paralus in action"/>
 
-## Development setup
+<hr>
 
-### Using `docker-compose`
+## Getting Started
 
-Run following Docker Compose command to setup all requirements like
-Postgres db, Kratos etc. for the rcloud-base.
+Our engineers have put together a set of documents to help you get started quickly:
 
-_This will start up postgres and elasticsearch as well as kratos and
-run the kratos migrations. It will also run all the necessary
-migrations. It also starts up a mail slurper for you to use Kratos._
+- [Quickstart Guide](https://www.paralus.io/docs/quickstart/)
+- [Installation](https://www.paralus.io/docs/installation)
 
-```bash
-docker-compose --env-file ./env.example up -d
-```
+## Features
 
-Start rcloud-base:
+- Zero Trust Kubernetes with zero friction
+- Manage access to all your clusters from one centralized, free, platform
+  - Keep your existing SSO or RBAC solution
+  - Create permissions with sensible defaults and powerful customization
+  - Manage resources from cluster-level to user-level
+- Zero-trust security by default
+  - Keep your existing kubectl scripts and workflows
+  - Control access with pre-configured roles
+  - Dynamically change permissions and their duration
+- Batteries-included auditing tools
+  - Quickly answer queries about who accessed what
+  - View cluster-level history
+  - Leverage Kubernetes-aware filtering by cluster, namespace, access method, etc.
+- Access through the web or CLI
+  - pctl tool to manage kubeconfigs directly from terminal
+  - Well-documented REST API
+  - A modern web interface
 
-```bash
-go run github.com/RafayLabs/rcloud-base
-```
+## Community & Support
 
-### Manual
+- Visit [Paralus website](https://paralus.io) for the complete documentation and helpful links.
+- Join our [Slack channel](https://join.slack.com/t/paralus/shared_invite/zt-1a9x6y729-ySmAq~I3tjclEG7nDoXB0A) to post your queries and discuss features.
+- Tweet to [@paralus_](https://twitter.com/paralus_/) on Twitter.
+- Create [GitHub Issues](https://github.com/paralus/paralus/issues) to report bugs or request features.
 
-#### Start databases
+## Contributing
 
-##### Postgres
+The easiest way to start is to look at existing issues and see if there’s something there that you’d like to work on. You can filter issues with the label “Good first issue” which are relatively self sufficient issues and great for first time contributors.
 
-```bash
-docker run --network host \
-    --env POSTGRES_HOST_AUTH_METHOD=trust \
-    -v pgdata:/var/lib/postgresql/data \
-    -it postgres
-```
+Once you decide on an issue, please comment on it so that all of us know that you’re on it.
 
-##### Elasticsearch
-
-```bash
-docker run --network host \
-    -v elastic-data:/usr/share/elasticsearch/data \
-    -e "discovery.type=single-node" \
-    -e "xpack.security.enabled=false" \
-    -it docker.elastic.co/elasticsearch/elasticsearch:8.0.0
-```
-
-#### Create the initial db and user
-
-```sql
-create database admindb;
-CREATE ROLE admindbuser WITH LOGIN PASSWORD '<your_password>';
-GRANT ALL PRIVILEGES ON DATABASE admindb to admindbuser;
-```
-
-#### Ory Kratos
-
-Install Ory Kratos using the [installation
-guide](https://www.ory.sh/docs/kratos/install) from Kratos
-documentation.
-
-Perform the Kratos migrations:
-
-```bash
-export DSN='postgres://<user>:<pass>@<host>:<port>/admindb?sslmode=disable'
-kratos -c <kratos-config> migrate sql -e --yes
-```
-
-Start the Ory Kratos server using kratos config provided in
-[_kratos](./_kratos) directory.
-
-#### Run application migrations
-
-We use [`golang-migrate`](https://github.com/golang-migrate/migrate) to perform migrations.
-
-##### Install [`golang-migrate`](https://github.com/golang-migrate/migrate)
-
-```shell
-go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
-```
-
-_`-tags 'postgres'` is important as otherwise it compiles without postgres support_
-
-You can refer to the [guide](https://github.com/golang-migrate/migrate/tree/master/cmd/migrate) for full details.
-
-##### Run migrations
-
-_It is required to perform Kratos migrations before this step._
-
-```shell
-export POSTGRESQL_URL='postgres://<user>:<pass>@<host>:<port>/admindb?sslmode=disable'
-migrate -path ./persistence/migrations/admindb -database "$POSTGRESQL_URL" up
-```
-
-See [cli-usage](https://github.com/golang-migrate/migrate#cli-usage) for more info.
-
-#### Start application
-
-Start rcloud-base:
-
-```bash
-go run github.com/RafayLabs/rcloud-base
-```
+If you’re looking to add a new feature, raise a [new issue](https://github.com/paralus/paralus/issues) and start a discussion with the community. Engage with the maintainers of the project and work your way through.
