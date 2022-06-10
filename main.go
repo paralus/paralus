@@ -344,7 +344,7 @@ func setup() {
 
 	//sentry related services
 	bs = service.NewBootstrapService(db)
-	krs = service.NewKubeconfigRevocationService(db)
+	krs = service.NewKubeconfigRevocationService(db, auditLogger)
 	kss = service.NewKubeconfigSettingService(db)
 	ns = service.NewNamespaceService(db)
 	kcs = service.NewkubectlClusterSettingsService(db)
@@ -581,8 +581,6 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	}
 
 	var opts []_grpc.ServerOption
-	// var asv authv3.AuthService
-	_log.Infow("adding auth interceptor")
 	ac := authv3.NewAuthContext(db, kc, ks, as)
 	asv := authv3.NewAuthService(ac)
 	o := authv3.Option{

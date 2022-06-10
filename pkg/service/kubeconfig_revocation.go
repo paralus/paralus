@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/RafayLabs/rcloud-base/internal/constants"
@@ -11,6 +12,7 @@ import (
 	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -23,11 +25,12 @@ type KubeconfigRevocationService interface {
 // bootstrapService implements BootstrapService
 type kubeconfigRevocationService struct {
 	db *bun.DB
+	al *zap.Logger
 }
 
 // NewKubeconfigRevocation return new kubeconfig revocation service
-func NewKubeconfigRevocationService(db *bun.DB) KubeconfigRevocationService {
-	return &kubeconfigRevocationService{db}
+func NewKubeconfigRevocationService(db *bun.DB, al *zap.Logger) KubeconfigRevocationService {
+	return &kubeconfigRevocationService{db, al}
 }
 
 func (krs *kubeconfigRevocationService) Get(ctx context.Context, orgID string, accountID string, isSSOUser bool) (*sentry.KubeconfigRevocation, error) {
@@ -52,15 +55,30 @@ func prepareKubeCfgRevocationResponse(kr *models.KubeconfigRevocation) *sentry.K
 }
 
 func (krs *kubeconfigRevocationService) Patch(ctx context.Context, kr *sentry.KubeconfigRevocation) error {
-	return krs.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
-		_, err := dao.GetKubeconfigRevocation(ctx, tx, uuid.MustParse(kr.OrganizationID), uuid.MustParse(kr.AccountID), kr.IsSSOUser)
-		if err != nil && err == sql.ErrNoRows {
-			kcr := convertToModel(kr)
-			kcr.CreatedAt = time.Now()
-			return dao.CreateKubeconfigRevocation(ctx, tx, kcr)
+	accId := uuid.MustParse(kr.AccountID)
+	entity, err := dao.GetM(ctx, krs.db, map[string]interface{}{"id": accId}, &models.KratosIdentities{})
+	if err != nil {
+		return err
+	}
+	if usr, ok := entity.(*models.KratosIdentities); ok {
+		// We need user info inorder to add the audit log
+		err = krs.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
+			_, err := dao.GetKubeconfigRevocation(ctx, tx, uuid.MustParse(kr.OrganizationID), accId, kr.IsSSOUser)
+			if err != nil && err == sql.ErrNoRows {
+				kcr := convertToModel(kr)
+				kcr.CreatedAt = time.Now()
+				return dao.CreateKubeconfigRevocation(ctx, tx, kcr)
+			}
+			return dao.UpdateKubeconfigRevocation(ctx, tx, convertToModel(kr))
+		})
+		if err != nil {
+			return err
 		}
-		return dao.UpdateKubeconfigRevocation(ctx, tx, convertToModel(kr))
-	})
+		RevokeKubeconfigAuditEvent(ctx, krs.al, getUserTraits(usr.Traits).Email)
+		return nil
+	}
+
+	return fmt.Errorf("unable to fetch user")
 }
 
 func convertToModel(kr *sentry.KubeconfigRevocation) *models.KubeconfigRevocation {
