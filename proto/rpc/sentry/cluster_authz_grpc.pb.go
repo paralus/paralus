@@ -35,7 +35,7 @@ func NewClusterAuthorizationClient(cc grpc.ClientConnInterface) ClusterAuthoriza
 
 func (c *clusterAuthorizationClient) GetUserAuthorization(ctx context.Context, in *GetUserAuthorizationRequest, opts ...grpc.CallOption) (*GetUserAuthorizationResponse, error) {
 	out := new(GetUserAuthorizationResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.ClusterAuthorization/GetUserAuthorization", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.ClusterAuthorization/GetUserAuthorization", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func _ClusterAuthorization_GetUserAuthorization_Handler(srv interface{}, ctx con
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.ClusterAuthorization/GetUserAuthorization",
+		FullMethod: "/paralus.dev.sentry.rpc.ClusterAuthorization/GetUserAuthorization",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClusterAuthorizationServer).GetUserAuthorization(ctx, req.(*GetUserAuthorizationRequest))
@@ -90,7 +90,7 @@ func _ClusterAuthorization_GetUserAuthorization_Handler(srv interface{}, ctx con
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ClusterAuthorization_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.sentry.rpc.ClusterAuthorization",
+	ServiceName: "paralus.dev.sentry.rpc.ClusterAuthorization",
 	HandlerType: (*ClusterAuthorizationServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

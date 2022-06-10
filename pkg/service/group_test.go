@@ -6,11 +6,11 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	userv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 	"github.com/google/uuid"
+	"github.com/paralus/paralus/pkg/query"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	userv3 "github.com/paralus/paralus/proto/types/userpb/v3"
 )
 
 func performGroupBasicChecks(t *testing.T, group *userv3.Group, guuid string) {

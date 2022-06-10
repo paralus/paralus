@@ -6,15 +6,15 @@ import (
 	"sort"
 	"time"
 
-	"github.com/RafayLabs/rcloud-base/internal/constants"
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/cryptoutil"
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/kubeconfig"
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/util"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
-	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	sentry "github.com/RafayLabs/rcloud-base/proto/types/sentry"
+	"github.com/paralus/paralus/internal/constants"
+	"github.com/paralus/paralus/pkg/query"
+	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
+	"github.com/paralus/paralus/pkg/sentry/kubeconfig"
+	"github.com/paralus/paralus/pkg/sentry/util"
+	"github.com/paralus/paralus/pkg/service"
+	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	sentry "github.com/paralus/paralus/proto/types/sentry"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -33,7 +33,7 @@ type kubeConfigServer struct {
 var _ sentryrpc.KubeConfigServer = (*kubeConfigServer)(nil)
 
 func (s *kubeConfigServer) GetForClusterSystemSession(ctx context.Context, in *sentryrpc.GetForClusterRequest) (*commonv3.HttpBody, error) {
-	config, err := kubeconfig.GetConfigForCluster(ctx, s.bs, in, s.pf, s.kss, kubeconfig.RafaySystem)
+	config, err := kubeconfig.GetConfigForCluster(ctx, s.bs, in, s.pf, s.kss, kubeconfig.ParalusSystem)
 	if err != nil {
 		return nil, err
 	}

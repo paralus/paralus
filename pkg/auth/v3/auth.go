@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/RafayLabs/rcloud-base/pkg/enforcer"
-	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
 	kclient "github.com/ory/kratos-client-go"
+	"github.com/paralus/paralus/pkg/enforcer"
+	logv2 "github.com/paralus/paralus/pkg/log"
+	"github.com/paralus/paralus/pkg/service"
 	"github.com/uptrace/bun"
 	"go.uber.org/zap"
 
@@ -23,7 +23,7 @@ var _log = logv2.GetLogger()
 type Option struct {
 	// ExcludeRPCMethods is a list of full RPC method string in
 	// format /package.service/method (for example,
-	// /rafay.dev.rpc.v3.Idp/ListIdps). These RPC methods are to
+	// /paralus.dev.rpc.v3.Idp/ListIdps). These RPC methods are to
 	// be excluded from the auth interceptor.
 	ExcludeRPCMethods []string
 

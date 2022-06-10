@@ -3,21 +3,21 @@ package cluster
 import (
 	"time"
 
-	"github.com/RafayLabs/rcloud-base/internal/cluster/constants"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
-	"github.com/RafayLabs/rcloud-base/proto/types/scheduler"
+	"github.com/paralus/paralus/internal/cluster/constants"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
+	"github.com/paralus/paralus/proto/types/scheduler"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // ClusterConditionFunc is the function signature for creating new cluster condition
-type ClusterConditionFunc func(status commonv3.RafayConditionStatus, reason string) *infrav3.ClusterCondition
+type ClusterConditionFunc func(status commonv3.ParalusConditionStatus, reason string) *infrav3.ClusterCondition
 
 // ClusterConditionReadyFunc checks if condition type is ready
 type ClusterConditionReadyFunc func(c *infrav3.Cluster) bool
 
 // NamespaceConditionFunc is the function signature for creating new cluster namespace condition
-type NamespaceConditionFunc func(status commonv3.RafayConditionStatus, reason string) *scheduler.ClusterNamespaceCondition
+type NamespaceConditionFunc func(status commonv3.ParalusConditionStatus, reason string) *scheduler.ClusterNamespaceCondition
 
 // NamespaceConditionReadyFunc checks if condition type is ready
 type NamespaceConditionReadyFunc func(n *scheduler.ClusterNamespace) bool
@@ -81,7 +81,7 @@ var DefaultClusterConditions = func() []*infrav3.ClusterCondition {
 		if _, ok := infrav3.ClusterConditionType_name[i]; !ok {
 			break
 		}
-		clstrCnd := newClusterCondition(infrav3.ClusterConditionType(i))(commonv3.RafayConditionStatus_NotSet, "pending")
+		clstrCnd := newClusterCondition(infrav3.ClusterConditionType(i))(commonv3.ParalusConditionStatus_NotSet, "pending")
 		conditions = append(conditions, clstrCnd)
 		i++
 	}
@@ -89,8 +89,8 @@ var DefaultClusterConditions = func() []*infrav3.ClusterCondition {
 	return conditions
 }()
 
-func newClusterCondition(conditionType infrav3.ClusterConditionType) func(status commonv3.RafayConditionStatus, reason string) *infrav3.ClusterCondition {
-	return func(status commonv3.RafayConditionStatus, reason string) *infrav3.ClusterCondition {
+func newClusterCondition(conditionType infrav3.ClusterConditionType) func(status commonv3.ParalusConditionStatus, reason string) *infrav3.ClusterCondition {
+	return func(status commonv3.ParalusConditionStatus, reason string) *infrav3.ClusterCondition {
 		return &infrav3.ClusterCondition{
 			Type:        conditionType,
 			Status:      status,
@@ -111,7 +111,7 @@ var SetClusterCondition = func(c *infrav3.Cluster, condtition *infrav3.ClusterCo
 
 }
 
-func isClusterCondition(conditionStatus commonv3.RafayConditionStatus, conditionTypes ...infrav3.ClusterConditionType) func(c *infrav3.Cluster) bool {
+func isClusterCondition(conditionStatus commonv3.ParalusConditionStatus, conditionTypes ...infrav3.ClusterConditionType) func(c *infrav3.Cluster) bool {
 	return func(c *infrav3.Cluster) bool {
 		for _, condition := range c.Spec.ClusterData.ClusterStatus.Conditions {
 			for _, conditionType := range conditionTypes {
@@ -139,8 +139,8 @@ func isClusterConditionSuccess(conditionType infrav3.ClusterConditionType) func(
 	}
 }
 
-func newNamespaceCondition(conditionType scheduler.ClusterNamespaceConditionType) func(status commonv3.RafayConditionStatus, reason string) *scheduler.ClusterNamespaceCondition {
-	return func(status commonv3.RafayConditionStatus, reason string) *scheduler.ClusterNamespaceCondition {
+func newNamespaceCondition(conditionType scheduler.ClusterNamespaceConditionType) func(status commonv3.ParalusConditionStatus, reason string) *scheduler.ClusterNamespaceCondition {
+	return func(status commonv3.ParalusConditionStatus, reason string) *scheduler.ClusterNamespaceCondition {
 		return &scheduler.ClusterNamespaceCondition{
 			Type:        conditionType,
 			Status:      status,
@@ -150,7 +150,7 @@ func newNamespaceCondition(conditionType scheduler.ClusterNamespaceConditionType
 	}
 }
 
-func isNamespaceCondition(conditionType scheduler.ClusterNamespaceConditionType, conditionStatus commonv3.RafayConditionStatus) func(n *scheduler.ClusterNamespace) bool {
+func isNamespaceCondition(conditionType scheduler.ClusterNamespaceConditionType, conditionStatus commonv3.ParalusConditionStatus) func(n *scheduler.ClusterNamespace) bool {
 	return func(n *scheduler.ClusterNamespace) bool {
 		for _, condition := range n.Status.Conditions {
 			if condition.Type == conditionType {
@@ -163,7 +163,7 @@ func isNamespaceCondition(conditionType scheduler.ClusterNamespaceConditionType,
 	}
 }
 
-func namespaceConditionReason(conditionType scheduler.ClusterNamespaceConditionType, conditionStatus commonv3.RafayConditionStatus) func(n *scheduler.ClusterNamespace) string {
+func namespaceConditionReason(conditionType scheduler.ClusterNamespaceConditionType, conditionStatus commonv3.ParalusConditionStatus) func(n *scheduler.ClusterNamespace) string {
 	return func(n *scheduler.ClusterNamespace) string {
 		for _, condition := range n.Status.Conditions {
 			if condition.Type == conditionType {

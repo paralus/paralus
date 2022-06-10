@@ -3,10 +3,10 @@ package server
 import (
 	"context"
 
-	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
+	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
 
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/authz"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
+	"github.com/paralus/paralus/pkg/sentry/authz"
+	"github.com/paralus/paralus/pkg/service"
 )
 
 type clusterAuthzServer struct {

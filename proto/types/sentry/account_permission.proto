@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.types.sentry;
+package paralus.dev.types.sentry;
 
 import "google/protobuf/timestamp.proto";
 

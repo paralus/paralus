@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	// ObjectHash is the hash of the object processed by Rafay
-	ObjectHash = "rafay.dev/object-hash"
+	// ObjectHash is the hash of the object processed by Paralus
+	ObjectHash = "paralus.dev/object-hash"
 )
 
 var json = k8sapijson.CaseSensitiveJsonIterator()

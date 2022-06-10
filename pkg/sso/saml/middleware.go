@@ -11,10 +11,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/RafayLabs/rcloud-base/internal/dao"
-	"github.com/RafayLabs/rcloud-base/internal/models"
 	"github.com/crewjam/saml"
 	"github.com/crewjam/saml/samlsp"
+	"github.com/paralus/paralus/internal/dao"
+	"github.com/paralus/paralus/internal/models"
 )
 
 func newSAMLMiddlewareFromIDP(idp models.Idp) (*SAMLMiddleware, error) {

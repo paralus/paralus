@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"strings"
 
-	runtimeutil "github.com/RafayLabs/rcloud-base/pkg/controller/runtime"
+	runtimeutil "github.com/paralus/paralus/pkg/controller/runtime"
 
-	"github.com/RafayLabs/rcloud-base/pkg/log"
-	controllerv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
+	"github.com/paralus/paralus/pkg/log"
+	controllerv2 "github.com/paralus/paralus/proto/types/controller"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"

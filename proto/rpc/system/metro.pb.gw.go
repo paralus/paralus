@@ -13,9 +13,9 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
+	"github.com/paralus/paralus/proto/types/infrapb/v3"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
@@ -450,7 +450,7 @@ func RegisterLocationHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Location/CreateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/CreateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -473,7 +473,7 @@ func RegisterLocationHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Location/GetLocations", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/GetLocations", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -496,7 +496,7 @@ func RegisterLocationHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Location/GetLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/GetLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -519,7 +519,7 @@ func RegisterLocationHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Location/UpdateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/UpdateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -542,7 +542,7 @@ func RegisterLocationHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.rpc.v3.Location/DeleteLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/DeleteLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -604,7 +604,7 @@ func RegisterLocationHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Location/CreateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/CreateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -624,7 +624,7 @@ func RegisterLocationHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Location/GetLocations", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/GetLocations", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -644,7 +644,7 @@ func RegisterLocationHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Location/GetLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/GetLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -664,7 +664,7 @@ func RegisterLocationHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Location/UpdateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/UpdateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -684,7 +684,7 @@ func RegisterLocationHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.rpc.v3.Location/DeleteLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/DeleteLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

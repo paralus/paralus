@@ -3,9 +3,9 @@ package server
 import (
 	"context"
 
-	"github.com/RafayLabs/rcloud-base/pkg/service"
-	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/system"
-	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
+	"github.com/paralus/paralus/pkg/service"
+	rpcv3 "github.com/paralus/paralus/proto/rpc/system"
+	systemv3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 

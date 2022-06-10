@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.types.infra.v3;
+package paralus.dev.types.infra.v3;
 
 import "google/protobuf/timestamp.proto";
 import "proto/types/commonpb/v3/common.proto";
@@ -28,7 +28,7 @@ message Cluster {
             default : "Cluster"
             read_only : true
         } ];
-  rafay.dev.types.common.v3.Metadata metadata = 3
+  paralus.dev.types.common.v3.Metadata metadata = 3
         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
             title : "Metadata",
             description : "Metadata of the resource"
@@ -38,7 +38,7 @@ message Cluster {
             title : "Spec",
             description : "Spec of the resource"
         } ];
-  rafay.dev.types.common.v3.Status status = 5
+  paralus.dev.types.common.v3.Status status = 5
         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
           title : "Status",
           description : "Status of the resource"
@@ -61,7 +61,7 @@ message ClusterList {
             default : "ClusterList"
             read_only : true
         } ];
-  rafay.dev.types.common.v3.ListMetadata metadata = 3
+  paralus.dev.types.common.v3.ListMetadata metadata = 3
         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
             title : "ListMetadata",
             description : "Metadata of the list resource"
@@ -237,7 +237,7 @@ message ProjectCluster {
 }
 
 message ClusterNode {
-    rafay.dev.types.common.v3.Metadata metadata = 1;
+    paralus.dev.types.common.v3.Metadata metadata = 1;
     ClusterNodeSpec spec = 2;
     ClusterNodeStatus status = 3;
 }
@@ -274,7 +274,7 @@ message ClusterCondition {
             title : "Cluster Information"
             description : "Override selector of the cluster"
         } ];
-    rafay.dev.types.common.v3.RafayConditionStatus status = 2
+    paralus.dev.types.common.v3.ParalusConditionStatus status = 2
         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
             title : "Cluster Condition Status"
             description : "Current status of the cluster"
@@ -339,7 +339,7 @@ message Location {
           default : "Location"
           read_only : true
         } ];
-    rafay.dev.types.common.v3.Metadata metadata = 3
+    paralus.dev.types.common.v3.Metadata metadata = 3
         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
           title : "Metadata",
           description : "Metadata of the resource"
@@ -349,7 +349,7 @@ message Location {
           title : "Spec",
           description : "Spec of the resource"
         } ];
-    rafay.dev.types.common.v3.Status status = 5
+    paralus.dev.types.common.v3.Status status = 5
         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
           title : "Status",
           description : "Status of the resource"
@@ -433,7 +433,7 @@ message LocationList {
               default : "LocationList"
               read_only : true
           } ];
-    rafay.dev.types.common.v3.ListMetadata metadata = 3
+    paralus.dev.types.common.v3.ListMetadata metadata = 3
           [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
               title : "ListMetadata",
               description : "Metadata of the list resource"
@@ -557,7 +557,7 @@ message ClusterToken {
             default : "Cluster"
             read_only : true
         } ];
-  rafay.dev.types.common.v3.Metadata metadata = 3
+  paralus.dev.types.common.v3.Metadata metadata = 3
         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
             title : "Metadata",
             description : "Metadata of the resource"

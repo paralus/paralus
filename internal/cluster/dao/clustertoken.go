@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"github.com/RafayLabs/rcloud-base/internal/dao"
-	"github.com/RafayLabs/rcloud-base/internal/models"
-	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
+	"github.com/paralus/paralus/internal/dao"
+	"github.com/paralus/paralus/internal/models"
+	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
 	"github.com/rs/xid"
 	"github.com/uptrace/bun"
 )

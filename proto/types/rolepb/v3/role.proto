@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.types.role.v3;
+package paralus.dev.types.role.v3;
 
 import "proto/types/commonpb/v3/common.proto";
 import "proto/types/rolepb/v3/rolepermission.proto";
@@ -26,7 +26,7 @@ message Role {
         description : "Kind of the role resource"
         default : "Role"
       } ];
-  rafay.dev.types.common.v3.Metadata metadata = 3
+  paralus.dev.types.common.v3.Metadata metadata = 3
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Metadata",
         description : "Metadata of the role resource"
@@ -36,7 +36,7 @@ message Role {
         title : "Spec",
         description : "Spec of the role resource"
       } ];
-  rafay.dev.types.common.v3.Status status = 5
+  paralus.dev.types.common.v3.Status status = 5
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Status",
         description : "Status of the resource"
@@ -94,7 +94,7 @@ message RoleList {
         description : "Kind of the role list resource"
         read_only : true
       } ];
-  rafay.dev.types.common.v3.ListMetadata metadata = 3
+  paralus.dev.types.common.v3.ListMetadata metadata = 3
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Metadata",
         description : "Metadata of the role list resource"

@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-// Rafay Gateway annotations
+// Paralus Gateway annotations
 const (
 	GatewayRequest       = "x-gateway-request"
 	GatewayURL           = "x-gateway-url"
@@ -21,8 +21,8 @@ const (
 	RemoteAddr           = "x-gateway-remote-addr"
 )
 
-// rafayGatewayAnnotator adds rafay gateway specific annotations
-var rafayGatewayAnnotator = func(ctx context.Context, r *http.Request) metadata.MD {
+// paralusGatewayAnnotator adds paralus gateway specific annotations
+var paralusGatewayAnnotator = func(ctx context.Context, r *http.Request) metadata.MD {
 	return metadata.New(map[string]string{
 		GatewayRequest: "true",
 		GatewayURL:     r.URL.EscapedPath(),

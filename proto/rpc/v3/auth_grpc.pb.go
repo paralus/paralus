@@ -8,7 +8,7 @@ package rpcv3
 
 import (
 	context "context"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -36,7 +36,7 @@ func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 
 func (c *authClient) IsRequestAllowed(ctx context.Context, in *v3.IsRequestAllowedRequest, opts ...grpc.CallOption) (*v3.IsRequestAllowedResponse, error) {
 	out := new(v3.IsRequestAllowedResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Auth/IsRequestAllowed", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Auth/IsRequestAllowed", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func _Auth_IsRequestAllowed_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Auth/IsRequestAllowed",
+		FullMethod: "/paralus.dev.rpc.v3.Auth/IsRequestAllowed",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServer).IsRequestAllowed(ctx, req.(*v3.IsRequestAllowedRequest))
@@ -91,7 +91,7 @@ func _Auth_IsRequestAllowed_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Auth_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.rpc.v3.Auth",
+	ServiceName: "paralus.dev.rpc.v3.Auth",
 	HandlerType: (*AuthServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

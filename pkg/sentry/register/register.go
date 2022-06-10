@@ -10,18 +10,18 @@ import (
 	"os"
 	"strings"
 
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/cryptoutil"
-	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
+	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
+	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	"github.com/paralus/paralus/proto/types/sentry"
 	"github.com/pkg/errors"
 	"github.com/rs/xid"
 
-	bootstrapclientv2 "github.com/RafayLabs/rcloud-base/api/def/clients/sentry/client"
-	bootstrapapiv2 "github.com/RafayLabs/rcloud-base/api/def/clients/sentry/client/bootstrap"
+	bootstrapclientv2 "github.com/paralus/paralus/api/def/clients/sentry/client"
+	bootstrapapiv2 "github.com/paralus/paralus/api/def/clients/sentry/client/bootstrap"
 
-	"github.com/RafayLabs/rcloud-base/pkg/log"
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/util"
+	"github.com/paralus/paralus/pkg/log"
+	"github.com/paralus/paralus/pkg/sentry/util"
 )
 
 var (
@@ -187,7 +187,7 @@ func registerGRPC(ctx context.Context, config *Config) error {
 		csr, err := cryptoutil.CreateCSR(pkix.Name{
 			CommonName:         template.Metadata.Description,
 			Country:            []string{"USA"},
-			Organization:       []string{"Rafay Systems Inc"},
+			Organization:       []string{"Paralus"},
 			OrganizationalUnit: []string{template.Metadata.Description},
 			Province:           []string{"California"},
 			Locality:           []string{"Sunnyvale"},

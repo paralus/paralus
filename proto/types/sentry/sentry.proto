@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.types.sentry;
+package paralus.dev.types.sentry;
 
 import "google/protobuf/timestamp.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -10,7 +10,7 @@ enum BootstrapInfraType {
 }
 
 enum BootstrapAgentType {
-  RafayConnector = 0;
+  ParalusConnector = 0;
   RelayAgent = 1;
   PipelineAgent = 2;
 }
@@ -50,7 +50,7 @@ message BootstrapInfra {
             default : "BootstrapInfra"
             read_only : true
         } ];
-  rafay.dev.types.common.v3.Metadata metadata = 3
+  paralus.dev.types.common.v3.Metadata metadata = 3
         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
             title : "Metadata",
             description : "Metadata of the resource"
@@ -74,7 +74,7 @@ message BootstrapInfraList {
             default : "BootstrapInfraList"
             read_only : true
         } ];
-  rafay.dev.types.common.v3.ListMetadata metadata = 3
+  paralus.dev.types.common.v3.ListMetadata metadata = 3
         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
             title : "ListMetadata",
             description : "Metadata of the list resource"
@@ -130,7 +130,7 @@ message BootstrapAgentTemplate {
             default : "BootstrapAgentTemplate"
             read_only : true
         } ];
-  rafay.dev.types.common.v3.Metadata metadata = 3
+  paralus.dev.types.common.v3.Metadata metadata = 3
         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
             title : "Metadata",
             description : "Metadata of the resource"
@@ -154,7 +154,7 @@ message BootstrapAgentTemplateList {
             default : "BootstrapAgentTemplateList"
             read_only : true
         } ];
-  rafay.dev.types.common.v3.ListMetadata metadata = 3
+  paralus.dev.types.common.v3.ListMetadata metadata = 3
         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
             title : "ListMetadata",
             description : "Metadata of the list resource"
@@ -191,7 +191,7 @@ message BootstrapAgent {
             default : "BootstrapAgent"
             read_only : true
         } ];
-  rafay.dev.types.common.v3.Metadata metadata = 3
+  paralus.dev.types.common.v3.Metadata metadata = 3
         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
             title : "Metadata",
             description : "Metadata of the resource"
@@ -216,7 +216,7 @@ message BootstrapAgentList {
             default : "BootstrapAgentList"
             read_only : true
         } ];
-  rafay.dev.types.common.v3.ListMetadata metadata = 3
+  paralus.dev.types.common.v3.ListMetadata metadata = 3
         [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
             title : "ListMetadata",
             description : "Metadata of the list resource"

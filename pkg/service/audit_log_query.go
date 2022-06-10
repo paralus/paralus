@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	v1 "github.com/RafayLabs/rcloud-base/proto/rpc/audit"
+	v1 "github.com/paralus/paralus/proto/rpc/audit"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 

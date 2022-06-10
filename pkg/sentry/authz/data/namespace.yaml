@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: namespace-name
   labels:
-    rafay-relay: "true"
+    paralus-relay: "true"

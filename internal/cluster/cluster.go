@@ -8,12 +8,12 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/RafayLabs/rcloud-base/internal/cluster/constants"
-	"github.com/RafayLabs/rcloud-base/internal/cluster/fixtures"
-	"github.com/RafayLabs/rcloud-base/internal/cluster/util"
-	"github.com/RafayLabs/rcloud-base/pkg/common"
-	"github.com/RafayLabs/rcloud-base/pkg/log"
-	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
+	"github.com/paralus/paralus/internal/cluster/constants"
+	"github.com/paralus/paralus/internal/cluster/fixtures"
+	"github.com/paralus/paralus/internal/cluster/util"
+	"github.com/paralus/paralus/pkg/common"
+	"github.com/paralus/paralus/pkg/log"
+	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
 )
 
 var _log = log.GetLogger()
@@ -65,7 +65,7 @@ func ExtractV2ClusterLabels(edgeDataLabels, clusterV2Labels map[string]string, e
 	}
 	// Copy over the labels inserted by platform
 	for key, value := range clusterV2Labels {
-		if strings.HasPrefix(key, constants.RafayDomainLabel+"/") {
+		if strings.HasPrefix(key, constants.ParalusDomainLabel+"/") {
 			switch key {
 			case constants.ClusterGPU, constants.ClusterGPUVendor, constants.ClusterLabelKey, constants.ClusterTypeKey, constants.ClusterLocationKey:
 				// Ignore the labels that infra adds so that we don't overwrite newer values

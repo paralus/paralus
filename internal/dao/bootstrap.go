@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/RafayLabs/rcloud-base/internal/models"
-	"github.com/RafayLabs/rcloud-base/internal/random"
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
+	"github.com/paralus/paralus/internal/models"
+	"github.com/paralus/paralus/internal/random"
+	"github.com/paralus/paralus/pkg/query"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	"github.com/paralus/paralus/proto/types/sentry"
 	"github.com/uptrace/bun"
 )
 

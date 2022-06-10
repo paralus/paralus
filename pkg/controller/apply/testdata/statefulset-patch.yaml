@@ -2,29 +2,29 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   annotations:
-    rafay.dev/overridedBy: global/global-override
-  name: rafay-connector
+    paralus.dev/overridedBy: global/global-override
+  name: paralus-connector
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: rafay-connector
+      app: paralus-connector
   serviceName: "connector"
   template:
     metadata:
       labels:
-        app: rafay-connector
+        app: paralus-connector
     spec:
       containers:
-      - image: rafaysystems/rafay-connector:latest
+      - image: paralussystems/paralus-connector:latest
         imagePullPolicy: Always
         name: connector
         resources: {}
         volumeMounts:
         - mountPath: /etc/config
           name: connector-config
-      priorityClassName: rafay-cluster-critical
+      priorityClassName: paralus-cluster-critical
       terminationGracePeriodSeconds: 10
       volumes:
       - configMap:

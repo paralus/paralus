@@ -3,7 +3,7 @@ package step
 import (
 	"fmt"
 
-	clusterv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
+	clusterv2 "github.com/paralus/paralus/proto/types/controller"
 	appsv1 "k8s.io/api/apps/v1"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"

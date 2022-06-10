@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    rafay.dev/original: |
+    paralus.dev/original: |
       {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{"service.beta.kubernetes.io/aws-load-balancer-internal":"0.0.0.0/0"},"name":"device-manager-service","namespace":"default"},"spec":{"ports":[{"name":"grpc","port":55050}],"selector":{"app":"device-manager-service"},"type":"LoadBalancer"}}
     service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
   creationTimestamp: "2020-02-12T23:52:46Z"

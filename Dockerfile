@@ -8,15 +8,15 @@ COPY go.sum .
 RUN go mod download
 
 COPY . .
-RUN go build github.com/RafayLabs/rcloud-base
+RUN go build github.com/paralus/paralus
 
 FROM alpine:latest as runtime
 LABEL description="Run container"
 
-COPY --from=build /build/rcloud-base /usr/bin/rcloud-base
+COPY --from=build /build/paralus /usr/bin/paralus
 WORKDIR /usr/bin
 # Copying data for running migrations
-# TODO: Support rcloud-base binary to run migrations
+# TODO: Support paralus binary to run migrations
 COPY ./persistence/migrations/admindb /data/migrations/admindb
 
 EXPOSE 10000

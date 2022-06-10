@@ -3,7 +3,7 @@ package scheme
 import (
 	"sync"
 
-	apiv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
+	apiv2 "github.com/paralus/paralus/proto/types/controller"
 	// DO NOT UPDATE
 	// API Extensions v1 is not available in k8s v1.14.x
 	apixv1beta1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"

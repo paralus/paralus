@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/RafayLabs/rcloud-base/internal/dao"
-	"github.com/RafayLabs/rcloud-base/internal/models"
-	authzpbv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
 	"github.com/casbin/casbin/v2"
+	"github.com/paralus/paralus/internal/dao"
+	"github.com/paralus/paralus/internal/models"
+	authzpbv1 "github.com/paralus/paralus/proto/types/authz"
 	"github.com/uptrace/bun"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

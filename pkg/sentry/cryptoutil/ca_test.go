@@ -7,8 +7,8 @@ import (
 
 func TestGenerateCA(t *testing.T) {
 	cert, key, err := GenerateCA(pkix.Name{
-		CommonName:   "Rafay Sentry Bootstrap CA",
-		Organization: []string{"Rafay Systems"},
+		CommonName:   "Paralus Sentry Bootstrap CA",
+		Organization: []string{"Paralus"},
 		Country:      []string{"USA"},
 		Province:     []string{"California"},
 		Locality:     []string{"Sunnyvale"},

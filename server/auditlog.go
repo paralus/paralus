@@ -3,8 +3,8 @@ package server
 import (
 	"context"
 
-	q "github.com/RafayLabs/rcloud-base/pkg/service"
-	v1 "github.com/RafayLabs/rcloud-base/proto/rpc/audit"
+	q "github.com/paralus/paralus/pkg/service"
+	v1 "github.com/paralus/paralus/proto/rpc/audit"
 )
 
 type auditLogServer struct {

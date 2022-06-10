@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.types.system.v3;
+package paralus.dev.types.system.v3;
 
 import "google/protobuf/struct.proto";
 import "proto/types/commonpb/v3/common.proto";
@@ -96,7 +96,7 @@ message Partner {
         default : "Partner"
         read_only : true
       } ];
-  rafay.dev.types.common.v3.Metadata metadata = 3
+  paralus.dev.types.common.v3.Metadata metadata = 3
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Metadata",
         description : "Metadata of the resource"
@@ -106,7 +106,7 @@ message Partner {
         title : "Spec",
         description : "Spec of the resource"
       } ];
-  rafay.dev.types.common.v3.Status status = 5
+  paralus.dev.types.common.v3.Status status = 5
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Status",
         description : "Status of the resource"

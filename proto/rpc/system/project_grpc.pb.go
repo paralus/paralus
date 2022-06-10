@@ -8,7 +8,7 @@ package rpcv3
 
 import (
 	context "context"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
+	v3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -40,7 +40,7 @@ func NewProjectClient(cc grpc.ClientConnInterface) ProjectClient {
 
 func (c *projectClient) CreateProject(ctx context.Context, in *v3.Project, opts ...grpc.CallOption) (*v3.Project, error) {
 	out := new(v3.Project)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Project/CreateProject", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Project/CreateProject", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func (c *projectClient) CreateProject(ctx context.Context, in *v3.Project, opts 
 
 func (c *projectClient) GetProjects(ctx context.Context, in *v3.Project, opts ...grpc.CallOption) (*v3.ProjectList, error) {
 	out := new(v3.ProjectList)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Project/GetProjects", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Project/GetProjects", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func (c *projectClient) GetProjects(ctx context.Context, in *v3.Project, opts ..
 
 func (c *projectClient) GetProject(ctx context.Context, in *v3.Project, opts ...grpc.CallOption) (*v3.Project, error) {
 	out := new(v3.Project)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Project/GetProject", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Project/GetProject", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (c *projectClient) GetProject(ctx context.Context, in *v3.Project, opts ...
 
 func (c *projectClient) UpdateProject(ctx context.Context, in *v3.Project, opts ...grpc.CallOption) (*v3.Project, error) {
 	out := new(v3.Project)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Project/UpdateProject", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Project/UpdateProject", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func (c *projectClient) UpdateProject(ctx context.Context, in *v3.Project, opts 
 
 func (c *projectClient) DeleteProject(ctx context.Context, in *v3.Project, opts ...grpc.CallOption) (*v3.Project, error) {
 	out := new(v3.Project)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Project/DeleteProject", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Project/DeleteProject", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +135,7 @@ func _Project_CreateProject_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Project/CreateProject",
+		FullMethod: "/paralus.dev.rpc.v3.Project/CreateProject",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ProjectServer).CreateProject(ctx, req.(*v3.Project))
@@ -153,7 +153,7 @@ func _Project_GetProjects_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Project/GetProjects",
+		FullMethod: "/paralus.dev.rpc.v3.Project/GetProjects",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ProjectServer).GetProjects(ctx, req.(*v3.Project))
@@ -171,7 +171,7 @@ func _Project_GetProject_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Project/GetProject",
+		FullMethod: "/paralus.dev.rpc.v3.Project/GetProject",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ProjectServer).GetProject(ctx, req.(*v3.Project))
@@ -189,7 +189,7 @@ func _Project_UpdateProject_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Project/UpdateProject",
+		FullMethod: "/paralus.dev.rpc.v3.Project/UpdateProject",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ProjectServer).UpdateProject(ctx, req.(*v3.Project))
@@ -207,7 +207,7 @@ func _Project_DeleteProject_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Project/DeleteProject",
+		FullMethod: "/paralus.dev.rpc.v3.Project/DeleteProject",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ProjectServer).DeleteProject(ctx, req.(*v3.Project))
@@ -219,7 +219,7 @@ func _Project_DeleteProject_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Project_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.rpc.v3.Project",
+	ServiceName: "paralus.dev.rpc.v3.Project",
 	HandlerType: (*ProjectServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

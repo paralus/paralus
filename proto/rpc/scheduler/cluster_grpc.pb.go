@@ -8,8 +8,8 @@ package rpcv3
 
 import (
 	context "context"
-	v31 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
+	v31 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	v3 "github.com/paralus/paralus/proto/types/infrapb/v3"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -42,7 +42,7 @@ func NewClusterClient(cc grpc.ClientConnInterface) ClusterClient {
 
 func (c *clusterClient) CreateCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error) {
 	out := new(v3.Cluster)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Cluster/CreateCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Cluster/CreateCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (c *clusterClient) CreateCluster(ctx context.Context, in *v3.Cluster, opts 
 
 func (c *clusterClient) GetClusters(ctx context.Context, in *v31.QueryOptions, opts ...grpc.CallOption) (*v3.ClusterList, error) {
 	out := new(v3.ClusterList)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Cluster/GetClusters", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Cluster/GetClusters", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func (c *clusterClient) GetClusters(ctx context.Context, in *v31.QueryOptions, o
 
 func (c *clusterClient) GetCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error) {
 	out := new(v3.Cluster)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Cluster/GetCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Cluster/GetCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func (c *clusterClient) GetCluster(ctx context.Context, in *v3.Cluster, opts ...
 
 func (c *clusterClient) UpdateCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error) {
 	out := new(v3.Cluster)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Cluster/UpdateCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Cluster/UpdateCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (c *clusterClient) UpdateCluster(ctx context.Context, in *v3.Cluster, opts 
 
 func (c *clusterClient) DeleteCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*DeleteClusterResponse, error) {
 	out := new(DeleteClusterResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Cluster/DeleteCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Cluster/DeleteCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func (c *clusterClient) DeleteCluster(ctx context.Context, in *v3.Cluster, opts 
 
 func (c *clusterClient) DownloadCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v31.HttpBody, error) {
 	out := new(v31.HttpBody)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Cluster/DownloadCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Cluster/DownloadCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -150,7 +150,7 @@ func _Cluster_CreateCluster_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Cluster/CreateCluster",
+		FullMethod: "/paralus.dev.rpc.v3.Cluster/CreateCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClusterServer).CreateCluster(ctx, req.(*v3.Cluster))
@@ -168,7 +168,7 @@ func _Cluster_GetClusters_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Cluster/GetClusters",
+		FullMethod: "/paralus.dev.rpc.v3.Cluster/GetClusters",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClusterServer).GetClusters(ctx, req.(*v31.QueryOptions))
@@ -186,7 +186,7 @@ func _Cluster_GetCluster_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Cluster/GetCluster",
+		FullMethod: "/paralus.dev.rpc.v3.Cluster/GetCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClusterServer).GetCluster(ctx, req.(*v3.Cluster))
@@ -204,7 +204,7 @@ func _Cluster_UpdateCluster_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Cluster/UpdateCluster",
+		FullMethod: "/paralus.dev.rpc.v3.Cluster/UpdateCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClusterServer).UpdateCluster(ctx, req.(*v3.Cluster))
@@ -222,7 +222,7 @@ func _Cluster_DeleteCluster_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Cluster/DeleteCluster",
+		FullMethod: "/paralus.dev.rpc.v3.Cluster/DeleteCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClusterServer).DeleteCluster(ctx, req.(*v3.Cluster))
@@ -240,7 +240,7 @@ func _Cluster_DownloadCluster_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Cluster/DownloadCluster",
+		FullMethod: "/paralus.dev.rpc.v3.Cluster/DownloadCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ClusterServer).DownloadCluster(ctx, req.(*v3.Cluster))
@@ -252,7 +252,7 @@ func _Cluster_DownloadCluster_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Cluster_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.rpc.v3.Cluster",
+	ServiceName: "paralus.dev.rpc.v3.Cluster",
 	HandlerType: (*ClusterServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

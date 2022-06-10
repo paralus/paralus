@@ -36,7 +36,7 @@ func NewRelayPeerServiceClient(cc grpc.ClientConnInterface) RelayPeerServiceClie
 }
 
 func (c *relayPeerServiceClient) RelayPeerHelloRPC(ctx context.Context, opts ...grpc.CallOption) (RelayPeerService_RelayPeerHelloRPCClient, error) {
-	stream, err := c.cc.NewStream(ctx, &RelayPeerService_ServiceDesc.Streams[0], "/rafay.dev.sentry.rpc.RelayPeerService/RelayPeerHelloRPC", opts...)
+	stream, err := c.cc.NewStream(ctx, &RelayPeerService_ServiceDesc.Streams[0], "/paralus.dev.sentry.rpc.RelayPeerService/RelayPeerHelloRPC", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (x *relayPeerServiceRelayPeerHelloRPCClient) Recv() (*PeerHelloResponse, er
 }
 
 func (c *relayPeerServiceClient) RelayPeerProbeRPC(ctx context.Context, opts ...grpc.CallOption) (RelayPeerService_RelayPeerProbeRPCClient, error) {
-	stream, err := c.cc.NewStream(ctx, &RelayPeerService_ServiceDesc.Streams[1], "/rafay.dev.sentry.rpc.RelayPeerService/RelayPeerProbeRPC", opts...)
+	stream, err := c.cc.NewStream(ctx, &RelayPeerService_ServiceDesc.Streams[1], "/paralus.dev.sentry.rpc.RelayPeerService/RelayPeerProbeRPC", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ func (x *relayPeerServiceRelayPeerProbeRPCClient) Recv() (*PeerProbeResponse, er
 }
 
 func (c *relayPeerServiceClient) RelayPeerSurveyRPC(ctx context.Context, opts ...grpc.CallOption) (RelayPeerService_RelayPeerSurveyRPCClient, error) {
-	stream, err := c.cc.NewStream(ctx, &RelayPeerService_ServiceDesc.Streams[2], "/rafay.dev.sentry.rpc.RelayPeerService/RelayPeerSurveyRPC", opts...)
+	stream, err := c.cc.NewStream(ctx, &RelayPeerService_ServiceDesc.Streams[2], "/paralus.dev.sentry.rpc.RelayPeerService/RelayPeerSurveyRPC", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -244,7 +244,7 @@ func (x *relayPeerServiceRelayPeerSurveyRPCServer) Recv() (*PeerSurveyResponse, 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var RelayPeerService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.sentry.rpc.RelayPeerService",
+	ServiceName: "paralus.dev.sentry.rpc.RelayPeerService",
 	HandlerType: (*RelayPeerServiceServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{

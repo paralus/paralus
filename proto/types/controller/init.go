@@ -1,7 +1,7 @@
 package controller
 
 /*
-Copyright 2019 Rafay Systems Inc..
+Copyright 2019 Paralus..
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

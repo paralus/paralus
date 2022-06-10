@@ -4,13 +4,13 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/RafayLabs/rcloud-base/pkg/gateway"
-	"github.com/RafayLabs/rcloud-base/pkg/gateway/testdata"
+	"github.com/paralus/paralus/pkg/gateway"
+	"github.com/paralus/paralus/pkg/gateway/testdata"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func TestYamlMarshaller(t *testing.T) {
-	m := gateway.NewRafayYAML()
+	m := gateway.NewParalusYAML()
 
 	t1 := testdata.TestYAML{
 		Name:   "test",

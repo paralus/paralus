@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/RafayLabs/rcloud-base/internal/cluster/constants"
+	"github.com/paralus/paralus/internal/cluster/constants"
 )
 
 func IsValidKubernetesLabelNameValueRegex(input string) bool {
@@ -42,8 +42,8 @@ func validateCustomLabelKeyPrefix(prefix string) error {
 	if len(prefix) > 253 {
 		return fmt.Errorf("invalid custom label key; label key prefix should be less than or equal to 253 characters (%s)", prefix)
 	}
-	if prefix == constants.RafayDomainLabel {
-		return fmt.Errorf("invalid custom label key; rafay.dev is a reserved domain for Rafay and custom labels shouldn't use this domain: %s", prefix)
+	if prefix == constants.ParalusDomainLabel {
+		return fmt.Errorf("invalid custom label key; paralus.dev is a reserved domain for Paralus and custom labels shouldn't use this domain: %s", prefix)
 	}
 	if !IsValidKubernetesLabelNameValueRegex(prefix) {
 		return fmt.Errorf("invalid custom label key prefix (%s); prefix should start and end with alpha numerical value and can have dashes (-), underscores (_) and dots (.)", prefix)
@@ -146,8 +146,8 @@ func ValidatePrefix(prefix string) error {
 	if len(prefix) > 253 {
 		return fmt.Errorf("invalid custom label key; label key prefix should be less than or equal to 253 characters (%s)", prefix)
 	}
-	if prefix == constants.RafayDomainLabel {
-		return fmt.Errorf("invalid custom label key; rafay.dev is a reserved domain for Rafay and custom labels shouldn't use this domain: %s", prefix)
+	if prefix == constants.ParalusDomainLabel {
+		return fmt.Errorf("invalid custom label key; paralus.dev is a reserved domain for Paralus and custom labels shouldn't use this domain: %s", prefix)
 	}
 	if !IsValidKubernetesLabelNameValueRegex(prefix) {
 		return fmt.Errorf("invalid custom label key prefix (%s); prefix should start and end with alpha numerical value and can have dashes (-), underscores (_) and dots (.)", prefix)

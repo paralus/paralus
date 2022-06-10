@@ -8,7 +8,7 @@ package rpcv3
 
 import (
 	context "context"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
+	v3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -41,7 +41,7 @@ func NewIdpClient(cc grpc.ClientConnInterface) IdpClient {
 
 func (c *idpClient) CreateIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v3.Idp, error) {
 	out := new(v3.Idp)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Idp/CreateIdp", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Idp/CreateIdp", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (c *idpClient) CreateIdp(ctx context.Context, in *v3.Idp, opts ...grpc.Call
 
 func (c *idpClient) GetIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v3.Idp, error) {
 	out := new(v3.Idp)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Idp/GetIdp", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Idp/GetIdp", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (c *idpClient) GetIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOpt
 
 func (c *idpClient) ListIdps(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v3.IdpList, error) {
 	out := new(v3.IdpList)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Idp/ListIdps", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Idp/ListIdps", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (c *idpClient) ListIdps(ctx context.Context, in *emptypb.Empty, opts ...grp
 
 func (c *idpClient) UpdateIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v3.Idp, error) {
 	out := new(v3.Idp)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Idp/UpdateIdp", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Idp/UpdateIdp", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (c *idpClient) UpdateIdp(ctx context.Context, in *v3.Idp, opts ...grpc.Call
 
 func (c *idpClient) DeleteIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Idp/DeleteIdp", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Idp/DeleteIdp", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +136,7 @@ func _Idp_CreateIdp_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Idp/CreateIdp",
+		FullMethod: "/paralus.dev.rpc.v3.Idp/CreateIdp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(IdpServer).CreateIdp(ctx, req.(*v3.Idp))
@@ -154,7 +154,7 @@ func _Idp_GetIdp_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Idp/GetIdp",
+		FullMethod: "/paralus.dev.rpc.v3.Idp/GetIdp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(IdpServer).GetIdp(ctx, req.(*v3.Idp))
@@ -172,7 +172,7 @@ func _Idp_ListIdps_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Idp/ListIdps",
+		FullMethod: "/paralus.dev.rpc.v3.Idp/ListIdps",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(IdpServer).ListIdps(ctx, req.(*emptypb.Empty))
@@ -190,7 +190,7 @@ func _Idp_UpdateIdp_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Idp/UpdateIdp",
+		FullMethod: "/paralus.dev.rpc.v3.Idp/UpdateIdp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(IdpServer).UpdateIdp(ctx, req.(*v3.Idp))
@@ -208,7 +208,7 @@ func _Idp_DeleteIdp_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Idp/DeleteIdp",
+		FullMethod: "/paralus.dev.rpc.v3.Idp/DeleteIdp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(IdpServer).DeleteIdp(ctx, req.(*v3.Idp))
@@ -220,7 +220,7 @@ func _Idp_DeleteIdp_Handler(srv interface{}, ctx context.Context, dec func(inter
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Idp_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.rpc.v3.Idp",
+	ServiceName: "paralus.dev.rpc.v3.Idp",
 	HandlerType: (*IdpServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

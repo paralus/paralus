@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	types "github.com/RafayLabs/rcloud-base/proto/types/authz"
+	types "github.com/paralus/paralus/proto/types/authz"
 )
 
 type ApUpdate struct {

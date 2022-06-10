@@ -1,8 +1,8 @@
 package match
 
 import (
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	"github.com/paralus/paralus/pkg/query"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	"k8s.io/apimachinery/pkg/labels"
 )
 

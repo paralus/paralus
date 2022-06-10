@@ -4,7 +4,7 @@
     "title": "Sentry Bootstrap Service",
     "version": "2.0",
     "contact": {
-      "name": "Rafay Dev"
+      "name": "Paralus Dev"
     }
   },
   "tags": [
@@ -2149,7 +2149,7 @@
   "securityDefinitions": {
     "ApiKeyAuth": {
       "type": "apiKey",
-      "name": "X-RAFAY-API-KEYID",
+      "name": "X-PARALUS-API-KEYID",
       "in": "header"
     },
     "BasicAuth": {

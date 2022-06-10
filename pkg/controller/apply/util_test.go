@@ -3,7 +3,7 @@ package apply
 import (
 	"testing"
 
-	clusterv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
+	clusterv2 "github.com/paralus/paralus/proto/types/controller"
 )
 
 func TestGetGVK(t *testing.T) {

@@ -1,7 +1,7 @@
 package query
 
 import (
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	"github.com/uptrace/bun"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/selection"

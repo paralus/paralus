@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: rafay-connector
-  namespace: rafay-system
+  name: paralus-connector
+  namespace: paralus-system
 spec:
   selector:
     matchLabels:
-      app: rafay-connector
+      app: paralus-connector
   serviceName: "connector"
   replicas: 1
   template:
     metadata:
       labels:
-        app: rafay-connector
+        app: paralus-connector
     spec:
-      priorityClassName: rafay-cluster-critical
+      priorityClassName: paralus-cluster-critical
       terminationGracePeriodSeconds: 10
       containers:
       - name: connector
-        image: rafaysystems/rafay-connector:latest
+        image: paralussystems/paralus-connector:latest
         imagePullPolicy: Always
         volumeMounts:
         - name: connector-config

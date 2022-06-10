@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.types.scheduler;
+package paralus.dev.types.scheduler;
 
 import "google/protobuf/timestamp.proto";
 import "proto/types/commonpb/v3/common.proto";
@@ -21,14 +21,14 @@ enum ClusterNamespaceConditionType {
 
 message ClusterNamespaceCondition {
   ClusterNamespaceConditionType type = 1;
-  rafay.dev.types.common.v3.RafayConditionStatus status = 2;
+  paralus.dev.types.common.v3.ParalusConditionStatus status = 2;
   google.protobuf.Timestamp lastUpdated = 3;
   string reason = 4;
 }
 
 message ClusterNamespaceStatus {
   repeated ClusterNamespaceCondition conditions = 1;
-  rafay.dev.types.controller.NamespaceStatus status = 2;
+  paralus.dev.types.controller.NamespaceStatus status = 2;
 }
 
 enum ClusterNamespaceType {
@@ -39,7 +39,7 @@ enum ClusterNamespaceType {
 message ClusterNamespace {
   string apiVersion = 1;
   string kind = 2;
-  rafay.dev.types.common.v3.Metadata metadata = 3;
+  paralus.dev.types.common.v3.Metadata metadata = 3;
   ClusterNamespaceSpec spec = 4;
   ClusterNamespaceStatus status = 5;
 }
@@ -47,14 +47,14 @@ message ClusterNamespace {
 message ClusterNamespaceList {
   string apiVersion = 1;
   string kind = 2;
-  rafay.dev.types.common.v3.ListMetadata metadata = 3;
+  paralus.dev.types.common.v3.ListMetadata metadata = 3;
   repeated ClusterNamespace items = 4;
 }
 
 // NamespaceTemplate is the template for creating namespace
 message NamespaceTemplate {
   k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta objectMeta = 1;
-  rafay.dev.types.controller.NamespaceSpec spec = 2;
+  paralus.dev.types.controller.NamespaceSpec spec = 2;
 
   ResourceQuota resourceQuota = 3;
   LimitRange limitRange = 4;

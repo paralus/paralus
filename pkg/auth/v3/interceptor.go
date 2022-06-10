@@ -4,10 +4,10 @@ import (
 	context "context"
 	"strings"
 
-	"github.com/RafayLabs/rcloud-base/pkg/common"
-	"github.com/RafayLabs/rcloud-base/pkg/gateway"
-	"github.com/RafayLabs/rcloud-base/pkg/utils"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	"github.com/paralus/paralus/pkg/common"
+	"github.com/paralus/paralus/pkg/gateway"
+	"github.com/paralus/paralus/pkg/utils"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -46,9 +46,9 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 			// XXX: This requires any new items which does not follow
 			// metadata convention to be added here
 			switch strings.Split(info.FullMethod, "/")[1] {
-			case "rafay.dev.rpc.v3.Project":
+			case "paralus.dev.rpc.v3.Project":
 				project = meta.Name
-			case "rafay.dev.rpc.v3.Organization":
+			case "paralus.dev.rpc.v3.Organization":
 				org = meta.Name
 			}
 		}

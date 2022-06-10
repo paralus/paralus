@@ -5,14 +5,14 @@ import (
 	"context"
 	"encoding/base64"
 
-	"github.com/RafayLabs/rcloud-base/internal/cluster/fixtures"
-	"github.com/RafayLabs/rcloud-base/pkg/common"
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
-	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/scheduler"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	infrapbv3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
+	"github.com/paralus/paralus/internal/cluster/fixtures"
+	"github.com/paralus/paralus/pkg/common"
+	"github.com/paralus/paralus/pkg/query"
+	"github.com/paralus/paralus/pkg/service"
+	rpcv3 "github.com/paralus/paralus/proto/rpc/scheduler"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	infrapbv3 "github.com/paralus/paralus/proto/types/infrapb/v3"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -94,7 +94,7 @@ func (s *clusterServer) DownloadCluster(ctx context.Context, cluster *infrapbv3.
 	}
 
 	return &commonv3.HttpBody{
-		ContentType: "application/x-rafay-yaml",
+		ContentType: "application/x-paralus-yaml",
 		Data:        bb.Bytes(),
 	}, nil
 }

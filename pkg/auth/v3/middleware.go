@@ -7,10 +7,10 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/RafayLabs/rcloud-base/internal/dao"
-	"github.com/RafayLabs/rcloud-base/pkg/common"
-	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/v3"
-	commonpbv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	"github.com/paralus/paralus/internal/dao"
+	"github.com/paralus/paralus/pkg/common"
+	rpcv3 "github.com/paralus/paralus/proto/rpc/v3"
+	commonpbv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
@@ -44,7 +44,7 @@ type remoteAuthMiddleware struct {
 
 // NewRemoteAuthMiddleware creates a middleware for the HTTP server
 // which does auth and authz by talking to the auth service exposed by
-// rcloud-base via grpc.
+// paralus via grpc.
 func NewRemoteAuthMiddleware(al *zap.Logger, as string, opt Option) negroni.Handler {
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(getDSN())))
 	conn, err := grpc.Dial(as, grpc.WithInsecure())

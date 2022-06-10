@@ -5,21 +5,21 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/RafayLabs/rcloud-base/pkg/service"
+	"github.com/paralus/paralus/pkg/service"
 
-	"github.com/RafayLabs/rcloud-base/pkg/gateway"
-	"github.com/RafayLabs/rcloud-base/pkg/log"
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
-	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
+	"github.com/paralus/paralus/pkg/gateway"
+	"github.com/paralus/paralus/pkg/log"
+	"github.com/paralus/paralus/pkg/query"
+	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
+	"github.com/paralus/paralus/proto/types/sentry"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/cryptoutil"
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/util"
+	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
+	"github.com/paralus/paralus/pkg/sentry/util"
 )
 
 var _log = log.GetLogger()
@@ -247,7 +247,7 @@ func (s *bootstrapServer) RegisterBootstrapAgent(ctx context.Context, in *sentry
 	resp.Certificate = signed
 	resp.CaCertificate = []byte(infra.Spec.CaCert)
 
-	if template.Metadata.Name == "rafay-core-relay-agent" {
+	if template.Metadata.Name == "paralus-core-relay-agent" {
 		_log.Info("updating cluster status for :: ", agent.Metadata.Name)
 		err = s.updateClusterStatus(ctx, agent.Metadata.Name)
 	}
@@ -266,19 +266,19 @@ func (s *bootstrapServer) updateClusterStatus(ctx context.Context, clusterID str
 					Conditions: []*infrav3.ClusterCondition{
 						{
 							Type:        infrav3.ClusterConditionType_ClusterCheckIn,
-							Status:      commonv3.RafayConditionStatus_Success,
+							Status:      commonv3.ParalusConditionStatus_Success,
 							LastUpdated: timestamppb.Now(),
 							Reason:      "Relay agent established connection.",
 						},
 						{
 							Type:        infrav3.ClusterConditionType_ClusterRegister,
-							Status:      commonv3.RafayConditionStatus_Success,
+							Status:      commonv3.ParalusConditionStatus_Success,
 							LastUpdated: timestamppb.Now(),
 							Reason:      "Relay agent established connection.",
 						},
 						{
 							Type:        infrav3.ClusterConditionType_ClusterReady,
-							Status:      commonv3.RafayConditionStatus_Success,
+							Status:      commonv3.ParalusConditionStatus_Success,
 							LastUpdated: timestamppb.Now(),
 							Reason:      "Relay agent established connection.",
 						},

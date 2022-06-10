@@ -3,11 +3,11 @@ package server
 import (
 	"context"
 
-	"github.com/RafayLabs/rcloud-base/internal/constants"
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/util"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
-	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
-	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
+	"github.com/paralus/paralus/internal/constants"
+	"github.com/paralus/paralus/pkg/sentry/util"
+	"github.com/paralus/paralus/pkg/service"
+	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
+	"github.com/paralus/paralus/proto/types/sentry"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -49,14 +49,14 @@ func (s *kubectlClusterSettingsServer) UpdateKubectlClusterSettings(ctx context.
 	opts := in.Opts
 
 	if md, ok := metadata.FromIncomingContext(ctx); ok {
-		ua := md.Get("rafay-gateway-user-agent")
+		ua := md.Get("paralus-gateway-user-agent")
 		if len(ua) > 0 {
 			userAgent = ua[0]
 		}
 	}
 
 	if md, ok := metadata.FromIncomingContext(ctx); ok {
-		h := md.Get("rafay-gateway-host")
+		h := md.Get("paralus-gateway-host")
 		if len(h) > 0 {
 			host = h[0]
 		}
@@ -64,7 +64,7 @@ func (s *kubectlClusterSettingsServer) UpdateKubectlClusterSettings(ctx context.
 
 	remoteAddr = "127.0.0.1" //default
 	if md, ok := metadata.FromIncomingContext(ctx); ok {
-		ra := md.Get("rafay-gateway-remote-addr")
+		ra := md.Get("paralus-gateway-remote-addr")
 		if len(ra) > 0 {
 			remoteAddr = ra[0]
 		}
@@ -87,7 +87,7 @@ func (s *kubectlClusterSettingsServer) UpdateKubectlClusterSettings(ctx context.
 	clusterName = ""
 	ba, _ := s.bs.GetBootstrapAgentForClusterID(ctx, clusterID, opts.Organization)
 	if ba != nil {
-		clusterName = ba.Metadata.Labels["rafay.dev/clusterName"]
+		clusterName = ba.Metadata.Labels["paralus.dev/clusterName"]
 	}
 
 	err = s.kcs.Patch(ctx, &sentry.KubectlClusterSettings{

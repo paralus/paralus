@@ -7,17 +7,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/RafayLabs/rcloud-base/internal/constants"
-	"github.com/RafayLabs/rcloud-base/pkg/controller/runtime"
-	"github.com/RafayLabs/rcloud-base/pkg/log"
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/kubeconfig"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
-	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	"github.com/RafayLabs/rcloud-base/proto/types/controller"
-	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
+	"github.com/paralus/paralus/internal/constants"
+	"github.com/paralus/paralus/pkg/controller/runtime"
+	"github.com/paralus/paralus/pkg/log"
+	"github.com/paralus/paralus/pkg/query"
+	"github.com/paralus/paralus/pkg/sentry/kubeconfig"
+	"github.com/paralus/paralus/pkg/service"
+	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	"github.com/paralus/paralus/proto/types/controller"
+	"github.com/paralus/paralus/proto/types/sentry"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 )
@@ -44,10 +44,10 @@ var namespaceScopePermissions = []string{
 }
 
 const (
-	rafayRelayLabel     = "rafay-relay"
+	paralusRelayLabel   = "paralus-relay"
 	relayUserLabel      = "relay-user"
 	authzRefreshedLabel = "authz-refreshed"
-	systemUsername      = "admin@rafay.co"
+	systemUsername      = "admin@paralus.co"
 )
 
 type roleBindExclusionList struct {
@@ -61,7 +61,7 @@ func getCurrentEpoch() string {
 
 func getAuthzLabels(userName string) map[string]string {
 	return map[string]string{
-		rafayRelayLabel:     "true",
+		paralusRelayLabel:   "true",
 		relayUserLabel:      userName,
 		authzRefreshedLabel: getCurrentEpoch(),
 	}
@@ -187,9 +187,9 @@ func getRole(permission string) (r *rbacv1.Role, err error) {
 func getRoleName(nsName, permission string) string {
 	switch permission {
 	case sentry.KubectlNamespaceWritePermission:
-		return "rafay-ns-role-write-" + nsName
+		return "paralus-ns-role-write-" + nsName
 	case sentry.KubectlNamespaceReadPermission:
-		return "rafay-ns-role-read-" + nsName
+		return "paralus-ns-role-read-" + nsName
 	default:
 		_log.Infow("getRoleName invalid namespace", "permission", permission)
 	}
@@ -211,7 +211,7 @@ func getClusterRoleBinding(sa *corev1.ServiceAccount, clusterRole string) *rbacv
 	crb.Kind = "ClusterRoleBinding"
 	crb.Name = getClusterRoleBindingName(sa.Name, clusterRole)
 	// crb.Labels = map[string]string{
-	// 	"rafay-relay": "true",
+	// 	"paralus-relay": "true",
 	// 	"relay-user":  sa.Name,
 	// }
 	subject := rbacv1.Subject{}
@@ -246,7 +246,7 @@ func getRoleBinding(sa *corev1.ServiceAccount, roleName, namespace string) *rbac
 	rb.Name = getRoleBindingName(sa.Name, roleName)
 	rb.Namespace = namespace
 	// rb.Labels = map[string]string{
-	// 	"rafay-relay": "true",
+	// 	"paralus-relay": "true",
 	// 	"relay-user":  sa.Name,
 	// }
 	subject := rbacv1.Subject{}
@@ -459,7 +459,7 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 	sa.APIVersion = "v1"
 	sa.Kind = "ServiceAccount"
 	sa.Name = cnAttr.Username
-	sa.Namespace = "rafay-system"
+	sa.Namespace = "paralus-system"
 
 	crMap := make(map[string]*rbacv1.ClusterRole)
 	crbMap := make(map[string]*rbacv1.ClusterRoleBinding)
@@ -693,7 +693,7 @@ func getSystemUserAuthz(cnAttrs kubeconfig.CNAttributes) (resp *sentryrpc.GetUse
 	sa.APIVersion = "v1"
 	sa.Kind = "ServiceAccount"
 	sa.Name = cnAttrs.Username
-	sa.Namespace = "rafay-system"
+	sa.Namespace = "paralus-system"
 	sa.Labels = authzLabels
 
 	cr, err := getClusterRole(sentry.KubectlFullAccessPermission)
@@ -745,7 +745,7 @@ func isNamespaceScopePermission(permission string) bool {
 }
 
 func verifyClusterKubectlSettings(ctx context.Context, bs service.BootstrapService, kcs service.KubectlClusterSettingsService, cnAttr kubeconfig.CNAttributes, clusterID string, orgID string) error {
-	if cnAttr.SessionType == kubeconfig.RafaySystem {
+	if cnAttr.SessionType == kubeconfig.ParalusSystem {
 		// internal system sessions are always allowed
 		return nil
 	}
@@ -787,7 +787,7 @@ func verifyClusterKubectlSettings(ctx context.Context, bs service.BootstrapServi
 }
 
 func verifyKubectlSettings(cnAttr kubeconfig.CNAttributes, ks *sentry.KubeconfigSetting, level string) error {
-	if cnAttr.SessionType == kubeconfig.RafaySystem {
+	if cnAttr.SessionType == kubeconfig.ParalusSystem {
 		// internal system sessions are always allowed
 		return nil
 	}

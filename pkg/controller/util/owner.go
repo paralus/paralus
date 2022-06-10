@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/RafayLabs/rcloud-base/pkg/controller/scheme"
+	"github.com/paralus/paralus/pkg/controller/scheme"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/client/apiutil"
 
-	clusterv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
+	clusterv2 "github.com/paralus/paralus/proto/types/controller"
 	ctrlutil "sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
@@ -75,7 +75,7 @@ func newOwnerRef(owner metav1.Object) (*metav1.OwnerReference, error) {
 }
 
 // SetOwnerReference sets owner reference for objects controlled
-// by rafay cluster controllers
+// by paralus cluster controllers
 func SetOwnerReference(owner, object metav1.Object) error {
 
 	// Create a new ref

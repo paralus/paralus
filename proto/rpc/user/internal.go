@@ -3,12 +3,12 @@ package rpcv3
 import (
 	"context"
 
-	"github.com/RafayLabs/rcloud-base/pkg/pool"
+	"github.com/paralus/paralus/pkg/pool"
 	grpcpool "github.com/processout/grpc-go-pool"
 )
 
 // UserClient is the interface for accessing all User & Group RPCs
-// exposed by Rafay Base
+// exposed by Paralus Base
 type UGClient interface {
 	Unhealthy()
 	Close() error

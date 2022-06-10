@@ -4,7 +4,7 @@
     "title": "Cluster Service",
     "version": "3.0",
     "contact": {
-      "name": "Rafay Dev"
+      "name": "Paralus Dev"
     }
   },
   "tags": [
@@ -1922,7 +1922,7 @@
           "title": "Cluster Information"
         },
         "status": {
-          "$ref": "#/definitions/v3RafayConditionStatus",
+          "$ref": "#/definitions/v3ParalusConditionStatus",
           "description": "Current status of the cluster",
           "title": "Cluster Condition Status"
         },
@@ -2435,6 +2435,24 @@
         }
       }
     },
+    "v3ParalusConditionStatus": {
+      "type": "string",
+      "enum": [
+        "NotSet",
+        "Pending",
+        "InProgress",
+        "Success",
+        "Failed",
+        "Retry",
+        "Skipped",
+        "Stopped",
+        "Expired",
+        "Stopping",
+        "Submitted"
+      ],
+      "default": "NotSet",
+      "title": "ParalusConditionStatus is the status of the status condition"
+    },
     "v3ProjectCluster": {
       "type": "object",
       "properties": {
@@ -2525,24 +2543,6 @@
         }
       }
     },
-    "v3RafayConditionStatus": {
-      "type": "string",
-      "enum": [
-        "NotSet",
-        "Pending",
-        "InProgress",
-        "Success",
-        "Failed",
-        "Retry",
-        "Skipped",
-        "Stopped",
-        "Expired",
-        "Stopping",
-        "Submitted"
-      ],
-      "default": "NotSet",
-      "title": "RafayConditionStatus is the status of the status condition"
-    },
     "v3Resources": {
       "type": "object",
       "properties": {
@@ -2572,7 +2572,7 @@
   "securityDefinitions": {
     "ApiKeyAuth": {
       "type": "apiKey",
-      "name": "X-RAFAY-API-KEYID",
+      "name": "X-PARALUS-API-KEYID",
       "in": "header"
     },
     "BasicAuth": {

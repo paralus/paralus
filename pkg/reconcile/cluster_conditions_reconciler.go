@@ -3,9 +3,9 @@ package reconcile
 import (
 	"context"
 
-	"github.com/RafayLabs/rcloud-base/pkg/log"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
-	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
+	"github.com/paralus/paralus/pkg/log"
+	"github.com/paralus/paralus/pkg/service"
+	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
 )
 
 var _log = log.GetLogger()

@@ -12,7 +12,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {
     title : "Relay Audit Service"
     version : "2.0"
-    contact : {name : "Rafay Dev"}
+    contact : {name : "Paralus Dev"}
   }
   schemes : HTTPS
   consumes : "application/json"
@@ -26,7 +26,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     }
     security : {
       key : "ApiKeyAuth"
-      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-RAFAY-API-KEYID"}
+      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-PARALUS-API-KEYID"}
     }
   }
   security : {
@@ -72,8 +72,8 @@ message relayAuditQueryFilter {
 }
 
 message relayAuditSearchRequest {
-  // TODO: this was rafay.dev.common.types.v2.RafayMeta
-  rafay.dev.types.common.v3.Metadata metadata = 1;
+  // TODO: this was paralus.dev.common.types.v2.ParalusMeta
+  paralus.dev.types.common.v3.Metadata metadata = 1;
   relayAuditQueryFilter filter = 2;
   string auditType = 3;
 }

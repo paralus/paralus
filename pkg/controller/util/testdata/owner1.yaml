@@ -1,14 +1,14 @@
-apiVersion: cluster.rafay.dev/v2
+apiVersion: cluster.paralus.dev/v2
 kind: Tasklet
 metadata:
   annotations:
-    rafay.dev/ownerRef: '{"apiVersion":"cluster.rafay.dev/v2","kind":"Task","name":"wordpress-demo","uid":"b0e6d87f-4d21-11ea-b8ec-0ec508a9a2df","controller":true,"blockOwnerDeletion":true}'
+    paralus.dev/ownerRef: '{"apiVersion":"cluster.paralus.dev/v2","kind":"Task","name":"wordpress-demo","uid":"b0e6d87f-4d21-11ea-b8ec-0ec508a9a2df","controller":true,"blockOwnerDeletion":true}'
   creationTimestamp: "2020-02-11T22:56:08Z"
   generation: 1
   name: wordpress-demo
   namespace: wordpress
   resourceVersion: "11710944"
-  selfLink: /apis/cluster.rafay.dev/v2/namespaces/wordpress/tasklets/wordpress-demo
+  selfLink: /apis/cluster.paralus.dev/v2/namespaces/wordpress/tasklets/wordpress-demo
   uid: b0e210f3-4d21-11ea-b8ec-0ec508a9a2df
 spec:
   init:
@@ -387,7 +387,7 @@ spec:
               - name: WORDPRESS_EMAIL
                 value: user@example.com
               - name: WORDPRESS_FIRST_NAME
-                value: Rafay
+                value: Paralus
               - name: WORDPRESS_LAST_NAME
                 value: Demo
               - name: WORDPRESS_HTACCESS_OVERRIDE_NONE
@@ -504,7 +504,7 @@ spec:
         namespace: wordpress
       spec:
         rules:
-        - host: wordpress.stage.rafay.dev
+        - host: wordpress.stage.paralus.dev
           http:
             paths:
             - backend:
@@ -513,7 +513,7 @@ spec:
               path: /
         tls:
         - hosts:
-          - wordpress.stage.rafay.dev
+          - wordpress.stage.paralus.dev
           secretName: wordpress-stage-tls
 status:
   conditions:

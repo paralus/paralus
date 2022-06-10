@@ -8,8 +8,8 @@ package sentry
 
 import (
 	context "context"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	sentry "github.com/RafayLabs/rcloud-base/proto/types/sentry"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	sentry "github.com/paralus/paralus/proto/types/sentry"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -48,7 +48,7 @@ func NewBootstrapClient(cc grpc.ClientConnInterface) BootstrapClient {
 
 func (c *bootstrapClient) PatchBootstrapInfra(ctx context.Context, in *sentry.BootstrapInfra, opts ...grpc.CallOption) (*sentry.BootstrapInfra, error) {
 	out := new(sentry.BootstrapInfra)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.Bootstrap/PatchBootstrapInfra", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.Bootstrap/PatchBootstrapInfra", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (c *bootstrapClient) PatchBootstrapInfra(ctx context.Context, in *sentry.Bo
 
 func (c *bootstrapClient) GetBootstrapInfra(ctx context.Context, in *sentry.BootstrapInfra, opts ...grpc.CallOption) (*sentry.BootstrapInfra, error) {
 	out := new(sentry.BootstrapInfra)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapInfra", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapInfra", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ func (c *bootstrapClient) GetBootstrapInfra(ctx context.Context, in *sentry.Boot
 
 func (c *bootstrapClient) PatchBootstrapAgentTemplate(ctx context.Context, in *sentry.BootstrapAgentTemplate, opts ...grpc.CallOption) (*sentry.BootstrapAgentTemplate, error) {
 	out := new(sentry.BootstrapAgentTemplate)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.Bootstrap/PatchBootstrapAgentTemplate", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.Bootstrap/PatchBootstrapAgentTemplate", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (c *bootstrapClient) PatchBootstrapAgentTemplate(ctx context.Context, in *s
 
 func (c *bootstrapClient) GetBootstrapAgentTemplate(ctx context.Context, in *sentry.BootstrapAgentTemplate, opts ...grpc.CallOption) (*sentry.BootstrapAgentTemplate, error) {
 	out := new(sentry.BootstrapAgentTemplate)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +84,7 @@ func (c *bootstrapClient) GetBootstrapAgentTemplate(ctx context.Context, in *sen
 
 func (c *bootstrapClient) GetBootstrapAgentTemplates(ctx context.Context, in *v3.QueryOptions, opts ...grpc.CallOption) (*sentry.BootstrapAgentTemplateList, error) {
 	out := new(sentry.BootstrapAgentTemplateList)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplates", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplates", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +93,7 @@ func (c *bootstrapClient) GetBootstrapAgentTemplates(ctx context.Context, in *v3
 
 func (c *bootstrapClient) RegisterBootstrapAgent(ctx context.Context, in *RegisterAgentRequest, opts ...grpc.CallOption) (*RegisterAgentResponse, error) {
 	out := new(RegisterAgentResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +102,7 @@ func (c *bootstrapClient) RegisterBootstrapAgent(ctx context.Context, in *Regist
 
 func (c *bootstrapClient) GetBootstrapAgentConfig(ctx context.Context, in *sentry.BootstrapAgent, opts ...grpc.CallOption) (*v3.HttpBody, error) {
 	out := new(v3.HttpBody)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentConfig", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentConfig", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func (c *bootstrapClient) GetBootstrapAgentConfig(ctx context.Context, in *sentr
 
 func (c *bootstrapClient) CreateBootstrapAgent(ctx context.Context, in *sentry.BootstrapAgent, opts ...grpc.CallOption) (*sentry.BootstrapAgent, error) {
 	out := new(sentry.BootstrapAgent)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.Bootstrap/CreateBootstrapAgent", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.Bootstrap/CreateBootstrapAgent", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +120,7 @@ func (c *bootstrapClient) CreateBootstrapAgent(ctx context.Context, in *sentry.B
 
 func (c *bootstrapClient) GetBootstrapAgent(ctx context.Context, in *sentry.BootstrapAgent, opts ...grpc.CallOption) (*sentry.BootstrapAgent, error) {
 	out := new(sentry.BootstrapAgent)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgent", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgent", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -129,7 +129,7 @@ func (c *bootstrapClient) GetBootstrapAgent(ctx context.Context, in *sentry.Boot
 
 func (c *bootstrapClient) GetBootstrapAgents(ctx context.Context, in *GetBootstrapAgentsRequest, opts ...grpc.CallOption) (*sentry.BootstrapAgentList, error) {
 	out := new(sentry.BootstrapAgentList)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgents", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgents", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -138,7 +138,7 @@ func (c *bootstrapClient) GetBootstrapAgents(ctx context.Context, in *GetBootstr
 
 func (c *bootstrapClient) DeleteBootstrapAgent(ctx context.Context, in *sentry.BootstrapAgent, opts ...grpc.CallOption) (*DeleteBootstrapAgentResponse, error) {
 	out := new(DeleteBootstrapAgentResponse)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.Bootstrap/DeleteBootstrapAgent", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.Bootstrap/DeleteBootstrapAgent", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -147,7 +147,7 @@ func (c *bootstrapClient) DeleteBootstrapAgent(ctx context.Context, in *sentry.B
 
 func (c *bootstrapClient) UpdateBootstrapAgent(ctx context.Context, in *sentry.BootstrapAgent, opts ...grpc.CallOption) (*sentry.BootstrapAgent, error) {
 	out := new(sentry.BootstrapAgent)
-	err := c.cc.Invoke(ctx, "/rafay.dev.sentry.rpc.Bootstrap/UpdateBootstrapAgent", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.Bootstrap/UpdateBootstrapAgent", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -234,7 +234,7 @@ func _Bootstrap_PatchBootstrapInfra_Handler(srv interface{}, ctx context.Context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.Bootstrap/PatchBootstrapInfra",
+		FullMethod: "/paralus.dev.sentry.rpc.Bootstrap/PatchBootstrapInfra",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BootstrapServer).PatchBootstrapInfra(ctx, req.(*sentry.BootstrapInfra))
@@ -252,7 +252,7 @@ func _Bootstrap_GetBootstrapInfra_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapInfra",
+		FullMethod: "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapInfra",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BootstrapServer).GetBootstrapInfra(ctx, req.(*sentry.BootstrapInfra))
@@ -270,7 +270,7 @@ func _Bootstrap_PatchBootstrapAgentTemplate_Handler(srv interface{}, ctx context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.Bootstrap/PatchBootstrapAgentTemplate",
+		FullMethod: "/paralus.dev.sentry.rpc.Bootstrap/PatchBootstrapAgentTemplate",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BootstrapServer).PatchBootstrapAgentTemplate(ctx, req.(*sentry.BootstrapAgentTemplate))
@@ -288,7 +288,7 @@ func _Bootstrap_GetBootstrapAgentTemplate_Handler(srv interface{}, ctx context.C
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate",
+		FullMethod: "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BootstrapServer).GetBootstrapAgentTemplate(ctx, req.(*sentry.BootstrapAgentTemplate))
@@ -306,7 +306,7 @@ func _Bootstrap_GetBootstrapAgentTemplates_Handler(srv interface{}, ctx context.
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplates",
+		FullMethod: "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplates",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BootstrapServer).GetBootstrapAgentTemplates(ctx, req.(*v3.QueryOptions))
@@ -324,7 +324,7 @@ func _Bootstrap_RegisterBootstrapAgent_Handler(srv interface{}, ctx context.Cont
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent",
+		FullMethod: "/paralus.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BootstrapServer).RegisterBootstrapAgent(ctx, req.(*RegisterAgentRequest))
@@ -342,7 +342,7 @@ func _Bootstrap_GetBootstrapAgentConfig_Handler(srv interface{}, ctx context.Con
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgentConfig",
+		FullMethod: "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentConfig",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BootstrapServer).GetBootstrapAgentConfig(ctx, req.(*sentry.BootstrapAgent))
@@ -360,7 +360,7 @@ func _Bootstrap_CreateBootstrapAgent_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.Bootstrap/CreateBootstrapAgent",
+		FullMethod: "/paralus.dev.sentry.rpc.Bootstrap/CreateBootstrapAgent",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BootstrapServer).CreateBootstrapAgent(ctx, req.(*sentry.BootstrapAgent))
@@ -378,7 +378,7 @@ func _Bootstrap_GetBootstrapAgent_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgent",
+		FullMethod: "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgent",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BootstrapServer).GetBootstrapAgent(ctx, req.(*sentry.BootstrapAgent))
@@ -396,7 +396,7 @@ func _Bootstrap_GetBootstrapAgents_Handler(srv interface{}, ctx context.Context,
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.Bootstrap/GetBootstrapAgents",
+		FullMethod: "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgents",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BootstrapServer).GetBootstrapAgents(ctx, req.(*GetBootstrapAgentsRequest))
@@ -414,7 +414,7 @@ func _Bootstrap_DeleteBootstrapAgent_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.Bootstrap/DeleteBootstrapAgent",
+		FullMethod: "/paralus.dev.sentry.rpc.Bootstrap/DeleteBootstrapAgent",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BootstrapServer).DeleteBootstrapAgent(ctx, req.(*sentry.BootstrapAgent))
@@ -432,7 +432,7 @@ func _Bootstrap_UpdateBootstrapAgent_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.sentry.rpc.Bootstrap/UpdateBootstrapAgent",
+		FullMethod: "/paralus.dev.sentry.rpc.Bootstrap/UpdateBootstrapAgent",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BootstrapServer).UpdateBootstrapAgent(ctx, req.(*sentry.BootstrapAgent))
@@ -444,7 +444,7 @@ func _Bootstrap_UpdateBootstrapAgent_Handler(srv interface{}, ctx context.Contex
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Bootstrap_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.sentry.rpc.Bootstrap",
+	ServiceName: "paralus.dev.sentry.rpc.Bootstrap",
 	HandlerType: (*BootstrapServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

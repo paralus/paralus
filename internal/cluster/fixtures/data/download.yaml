@@ -4,19 +4,19 @@ kind: Namespace
 metadata:
   labels:
     control-plane: controller-manager
-  name: rafay-system
+  name: paralus-system
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: system-sa
-  namespace: rafay-system
+  namespace: paralus-system
 ---
-{{- if and .Cluster.Metadata.Labels (eq (index .Cluster.Metadata.Labels "rafay.dev/kubernetesProvider") "OPENSHIFT") }}
+{{- if and .Cluster.Metadata.Labels (eq (index .Cluster.Metadata.Labels "paralus.dev/kubernetesProvider") "OPENSHIFT") }}
 apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints
 metadata:
-  name: rafay-privileged-scc
+  name: paralus-privileged-scc
   annotations:
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
@@ -27,7 +27,7 @@ metadata:
       only for cluster administration. Grant with caution.'
     release.openshift.io/create-only: "true"
   labels:
-    rep-workload: "rafay-privileged-scc"
+    rep-workload: "paralus-privileged-scc"
 allowHostDirVolumePlugin: true
 allowHostIPC: true
 allowHostNetwork: true
@@ -58,12 +58,12 @@ seccompProfiles:
 supplementalGroups:
   type: RunAsAny
 users:
-- system:serviceaccount:rafay-system:default
-- system:serviceaccount:rafay-system:system-sa
-- system:serviceaccount:rafay-system:ingress-nginx
-- system:serviceaccount:rafay-system:ingress-nginx-admission
-- system:serviceaccount:rafay-system:gatekeeper-admin
-- system:serviceaccount:rafay-system:gatekeeper-update-namespace-label
+- system:serviceaccount:paralus-system:default
+- system:serviceaccount:paralus-system:system-sa
+- system:serviceaccount:paralus-system:ingress-nginx
+- system:serviceaccount:paralus-system:ingress-nginx-admission
+- system:serviceaccount:paralus-system:gatekeeper-admin
+- system:serviceaccount:paralus-system:gatekeeper-update-namespace-label
 volumes:
 - '*'
 ---
@@ -71,7 +71,7 @@ volumes:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: rafay:manager
+  name: paralus:manager
 rules:
 - apiGroups:
   - '*'
@@ -84,7 +84,7 @@ rules:
   verbs:
   - '*'
 - apiGroups:
-  - cluster.rafay.dev
+  - cluster.paralus.dev
   resources:
   - namespaces
   verbs:
@@ -96,7 +96,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - cluster.rafay.dev
+  - cluster.paralus.dev
   resources:
   - namespaces/status
   verbs:
@@ -104,7 +104,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - cluster.rafay.dev
+  - cluster.paralus.dev
   resources:
   - tasklets
   verbs:
@@ -116,7 +116,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - cluster.rafay.dev
+  - cluster.paralus.dev
   resources:
   - tasklets/status
   verbs:
@@ -124,7 +124,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - cluster.rafay.dev
+  - cluster.paralus.dev
   resources:
   - tasks
   verbs:
@@ -136,7 +136,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - cluster.rafay.dev
+  - cluster.paralus.dev
   resources:
   - tasks/status
   verbs:
@@ -147,23 +147,23 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: rafay:rafay-system:manager-rolebinding
+  name: paralus:paralus-system:manager-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: rafay:manager
+  name: paralus:manager
 subjects:
 - kind: ServiceAccount
   name: system-sa
-  namespace: rafay-system
+  namespace: paralus-system
 - kind: ServiceAccount
   name: default
-  namespace: rafay-system
+  namespace: paralus-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: rafay:proxy-role
+  name: paralus:proxy-role
 rules:
 - apiGroups:
   - authentication.k8s.io
@@ -181,32 +181,32 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: rafay:rafay-system:proxy-rolebinding
-  namespace: rafay-system
+  name: paralus:paralus-system:proxy-rolebinding
+  namespace: paralus-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: rafay:proxy-role
+  name: paralus:proxy-role
 subjects:
 - kind: ServiceAccount
   name: system-sa
-  namespace: rafay-system
+  namespace: paralus-system
 - kind: ServiceAccount
   name: default
-  namespace: rafay-system
+  namespace: paralus-system
 ---
 apiVersion: scheduling.k8s.io/v1
-description: This priority class should be used for rafay service pods only.
+description: This priority class should be used for paralus service pods only.
 kind: PriorityClass
 metadata:
-  name: rafay-cluster-critical
+  name: paralus-cluster-critical
 value: 1000000000
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: rafay:leader-election-role
-  namespace: rafay-system
+  name: paralus:leader-election-role
+  namespace: paralus-system
 rules:
 - apiGroups:
   - ""
@@ -238,30 +238,30 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: rafay:leader-election-rolebinding
-  namespace: rafay-system
+  name: paralus:leader-election-rolebinding
+  namespace: paralus-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: rafay:leader-election-role
+  name: paralus:leader-election-role
 subjects:
 - kind: ServiceAccount
   name: system-sa
-  namespace: rafay-system
+  namespace: paralus-system
 - kind: ServiceAccount
   name: default
-  namespace: rafay-system
+  namespace: paralus-system
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: proxy-config
-  namespace: rafay-system
+  namespace: paralus-system
   labels:
     app.kubernetes.io/managed-by: Helm
   annotations:
     meta.helm.sh/release-name: v2-infra
-    meta.helm.sh/release-namespace: rafay-system
+    meta.helm.sh/release-namespace: paralus-system
 data:
   httpProxy: "{{if .Cluster.Spec.ProxyConfig}}{{ if .Cluster.Spec.ProxyConfig.Enabled }}{{- .Cluster.Spec.ProxyConfig.HttpProxy -}}{{end}}{{end}}"
   httpsProxy: "{{if .Cluster.Spec.ProxyConfig}}{{ if .Cluster.Spec.ProxyConfig.Enabled }}{{- .Cluster.Spec.ProxyConfig.HttpsProxy -}}{{end}}{{end}}"
@@ -274,26 +274,26 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: relay-agent-config
-  namespace: rafay-system
+  namespace: paralus-system
   labels:
     app.kubernetes.io/managed-by: Helm
   annotations:
     meta.helm.sh/release-name: v2-infra
-    meta.helm.sh/release-namespace: rafay-system
+    meta.helm.sh/release-namespace: paralus-system
 data:
-  clusterID: {{if .Cluster.Metadata.Labels}}{{ index .Cluster.Metadata.Labels "rafay.dev/clusterID" }}{{end}}
+  clusterID: {{if .Cluster.Metadata.Labels}}{{ index .Cluster.Metadata.Labels "paralus.dev/clusterID" }}{{end}}
   relays: '{{if .Cluster.Metadata.Annotations}}{{- index .Cluster.Metadata.Annotations "relays" -}}{{end}}'
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: relay-agent
-  namespace: rafay-system
+  namespace: paralus-system
   labels:
     app.kubernetes.io/managed-by: Helm
   annotations:
     meta.helm.sh/release-name: v2-infra
-    meta.helm.sh/release-namespace: rafay-system
+    meta.helm.sh/release-namespace: paralus-system
 spec:
   selector:
     matchLabels:
@@ -319,11 +319,11 @@ spec:
                     values:
                       - amd64
       terminationGracePeriodSeconds: 10
-      priorityClassName: rafay-cluster-critical
+      priorityClassName: paralus-cluster-critical
       serviceAccountName: system-sa
       initContainers:
       - name: set-limits
-        image: "registry.rafay-edge.net/rafay/busybox:1.33"
+        image: "registry.paralus-edge.net/paralus/busybox:1.33"
         command: ["sh", "-c", "ulimit -n 65536"]
         securityContext:
           privileged: true

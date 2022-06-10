@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/RafayLabs/rcloud-base/internal/dao"
-	"github.com/RafayLabs/rcloud-base/internal/models"
-	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
+	"github.com/paralus/paralus/internal/dao"
+	"github.com/paralus/paralus/internal/models"
+	"github.com/paralus/paralus/proto/types/sentry"
 	"github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -104,7 +104,7 @@ func (a *accountPermissionService) GetAccountGroups(ctx context.Context, account
 }
 
 /*TODO: to revisit if we end up using sso with crewjam
-func (a *accountPermissionService) GetSSOAccount(ctx context.Context, accountID, orgID ctypesv2.RafayID) (*typesv2.SSOAccountData, error) {
+func (a *accountPermissionService) GetSSOAccount(ctx context.Context, accountID, orgID ctypesv2.ParalusID) (*typesv2.SSOAccountData, error) {
 	var sso ssoAccountData
 
 	err := a.db.WithContext(ctx).Model(&sso).

@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.types.authz.v1;
+package paralus.dev.types.authz.v1;
 
 message EnforceRequest {
   repeated string params = 1;

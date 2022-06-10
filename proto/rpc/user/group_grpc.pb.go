@@ -8,8 +8,8 @@ package rpcv3
 
 import (
 	context "context"
-	v31 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
+	v31 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	v3 "github.com/paralus/paralus/proto/types/userpb/v3"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -41,7 +41,7 @@ func NewGroupClient(cc grpc.ClientConnInterface) GroupClient {
 
 func (c *groupClient) CreateGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error) {
 	out := new(v3.Group)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Group/CreateGroup", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Group/CreateGroup", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (c *groupClient) CreateGroup(ctx context.Context, in *v3.Group, opts ...grp
 
 func (c *groupClient) GetGroups(ctx context.Context, in *v31.QueryOptions, opts ...grpc.CallOption) (*v3.GroupList, error) {
 	out := new(v3.GroupList)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Group/GetGroups", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Group/GetGroups", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (c *groupClient) GetGroups(ctx context.Context, in *v31.QueryOptions, opts 
 
 func (c *groupClient) GetGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error) {
 	out := new(v3.Group)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Group/GetGroup", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Group/GetGroup", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (c *groupClient) GetGroup(ctx context.Context, in *v3.Group, opts ...grpc.C
 
 func (c *groupClient) UpdateGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error) {
 	out := new(v3.Group)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Group/UpdateGroup", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Group/UpdateGroup", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (c *groupClient) UpdateGroup(ctx context.Context, in *v3.Group, opts ...grp
 
 func (c *groupClient) DeleteGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error) {
 	out := new(v3.Group)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Group/DeleteGroup", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Group/DeleteGroup", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +136,7 @@ func _Group_CreateGroup_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Group/CreateGroup",
+		FullMethod: "/paralus.dev.rpc.v3.Group/CreateGroup",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GroupServer).CreateGroup(ctx, req.(*v3.Group))
@@ -154,7 +154,7 @@ func _Group_GetGroups_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Group/GetGroups",
+		FullMethod: "/paralus.dev.rpc.v3.Group/GetGroups",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GroupServer).GetGroups(ctx, req.(*v31.QueryOptions))
@@ -172,7 +172,7 @@ func _Group_GetGroup_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Group/GetGroup",
+		FullMethod: "/paralus.dev.rpc.v3.Group/GetGroup",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GroupServer).GetGroup(ctx, req.(*v3.Group))
@@ -190,7 +190,7 @@ func _Group_UpdateGroup_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Group/UpdateGroup",
+		FullMethod: "/paralus.dev.rpc.v3.Group/UpdateGroup",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GroupServer).UpdateGroup(ctx, req.(*v3.Group))
@@ -208,7 +208,7 @@ func _Group_DeleteGroup_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Group/DeleteGroup",
+		FullMethod: "/paralus.dev.rpc.v3.Group/DeleteGroup",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GroupServer).DeleteGroup(ctx, req.(*v3.Group))
@@ -220,7 +220,7 @@ func _Group_DeleteGroup_Handler(srv interface{}, ctx context.Context, dec func(i
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Group_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.rpc.v3.Group",
+	ServiceName: "paralus.dev.rpc.v3.Group",
 	HandlerType: (*GroupServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

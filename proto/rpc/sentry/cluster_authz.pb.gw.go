@@ -79,7 +79,7 @@ func RegisterClusterAuthorizationHandlerServer(ctx context.Context, mux *runtime
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rafay.dev.sentry.rpc.ClusterAuthorization/GetUserAuthorization", runtime.WithHTTPPathPattern("/v2/sentry/authorization/user"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.ClusterAuthorization/GetUserAuthorization", runtime.WithHTTPPathPattern("/v2/sentry/authorization/user"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -141,7 +141,7 @@ func RegisterClusterAuthorizationHandlerClient(ctx context.Context, mux *runtime
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rafay.dev.sentry.rpc.ClusterAuthorization/GetUserAuthorization", runtime.WithHTTPPathPattern("/v2/sentry/authorization/user"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.ClusterAuthorization/GetUserAuthorization", runtime.WithHTTPPathPattern("/v2/sentry/authorization/user"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

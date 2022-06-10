@@ -9,26 +9,26 @@ import (
 	"strings"
 	"time"
 
-	"github.com/RafayLabs/rcloud-base/pkg/log"
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
-	rpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	sentry "github.com/RafayLabs/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
+	"github.com/paralus/paralus/pkg/log"
+	"github.com/paralus/paralus/pkg/query"
+	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
+	rpcv3 "github.com/paralus/paralus/proto/rpc/user"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	sentry "github.com/paralus/paralus/proto/types/sentry"
 
 	clientcmdapiv1 "k8s.io/client-go/tools/clientcmd/api/v1"
 	"sigs.k8s.io/yaml"
 
-	"github.com/RafayLabs/rcloud-base/internal/constants"
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/cryptoutil"
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/util"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
+	"github.com/paralus/paralus/internal/constants"
+	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
+	"github.com/paralus/paralus/pkg/sentry/util"
+	"github.com/paralus/paralus/pkg/service"
 )
 
 const (
 	kubeconfigPermission = sentry.KubeconfigReadPermission
-	systemUsername       = "admin@rafay.co"
+	systemUsername       = "admin@paralus.co"
 )
 
 var _log = log.GetLogger()
@@ -114,11 +114,11 @@ func getProjectsForAccount(ctx context.Context, accountID, orgID, partnerID stri
 func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, req *sentryrpc.GetForUserRequest, pf cryptoutil.PasswordFunc, kss service.KubeconfigSettingService, ksvc service.ApiKeyService, os service.OrganizationService, ps service.PartnerService) ([]byte, error) {
 	opts := req.Opts
 	if opts.Selector != "" {
-		opts.Selector = fmt.Sprintf("%s,!rafay.dev/cdRelayAgent", opts.Selector)
+		opts.Selector = fmt.Sprintf("%s,!paralus.dev/cdRelayAgent", opts.Selector)
 	} else {
-		opts.Selector = "!rafay.dev/cdRelayAgent"
+		opts.Selector = "!paralus.dev/cdRelayAgent"
 	}
-	batl, err := bs.SelectBootstrapAgentTemplates(ctx, query.WithSelector("rafay.dev/defaultUser=true"), query.WithGlobalScope())
+	batl, err := bs.SelectBootstrapAgentTemplates(ctx, query.WithSelector("paralus.dev/defaultUser=true"), query.WithGlobalScope())
 	if err != nil {
 		_log.Errorw("error getting default user bootstrap agent templates", "error", err.Error())
 		return nil, err
@@ -232,7 +232,7 @@ func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps serv
 	if !isSSOAcc {
 		projects, isOrgScope, err = getProjectsForAccount(ctx, opts.Account, opts.Organization, opts.Partner, aps)
 		if err != nil {
-			_log.Errorw("error getting project for rafay ", "account", opts.Account, "error", err.Error())
+			_log.Errorw("error getting project for paralus ", "account", opts.Account, "error", err.Error())
 			return nil, err
 		}
 	} else {
@@ -276,7 +276,7 @@ func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps serv
 				return nil, err
 			}
 			for _, ba := range bal.Items {
-				if ba.Spec.TemplateRef != "rafay-core-relay-agent" && ba.Spec.TemplateRef != "rafay-core-cd-relay-agent" {
+				if ba.Spec.TemplateRef != "paralus-core-relay-agent" && ba.Spec.TemplateRef != "paralus-core-cd-relay-agent" {
 					if vi, ok := set[ba.Metadata.Name]; ok {
 						v := vi.(sentry.BootstrapAgent)
 						if v.Spec.TemplateRef == ba.Spec.TemplateRef {
@@ -418,7 +418,7 @@ func getConfig(username, namespace, certCN, serverHost string, bootstrapInfra *s
 	var contexts []clientcmdapiv1.NamedContext
 
 	for _, ba := range bootstrapAgents {
-		if ba.Spec.TemplateRef != "rafay-core-relay-agent" && ba.Spec.TemplateRef != "rafay-core-cd-relay-agent" {
+		if ba.Spec.TemplateRef != "paralus-core-relay-agent" && ba.Spec.TemplateRef != "paralus-core-cd-relay-agent" {
 			// skip non default agents from system kubeconfiog
 			continue
 		}
@@ -462,12 +462,12 @@ func getConfig(username, namespace, certCN, serverHost string, bootstrapInfra *s
 func GetConfigForCluster(ctx context.Context, bs service.BootstrapService, req *sentryrpc.GetForClusterRequest, pf cryptoutil.PasswordFunc, kss service.KubeconfigSettingService, sessionType string) ([]byte, error) {
 	opts := req.Opts
 	if opts.Selector != "" {
-		opts.Selector = fmt.Sprintf("%s,!rafay.dev/cdRelayAgent", opts.Selector)
+		opts.Selector = fmt.Sprintf("%s,!paralus.dev/cdRelayAgent", opts.Selector)
 	} else {
-		opts.Selector = fmt.Sprintf("!rafay.dev/cdRelayAgent")
+		opts.Selector = fmt.Sprintf("!paralus.dev/cdRelayAgent")
 	}
 	_log.Infow("get config for cluster ", "opts", opts, "namespace", req.Namespace, "systemUser", req.SystemUser)
-	batl, err := bs.SelectBootstrapAgentTemplates(ctx, query.WithSelector("rafay.dev/defaultUser=true"), query.WithGlobalScope())
+	batl, err := bs.SelectBootstrapAgentTemplates(ctx, query.WithSelector("paralus.dev/defaultUser=true"), query.WithGlobalScope())
 	if err != nil {
 		return nil, err
 	}
@@ -506,8 +506,8 @@ func GetConfigForCluster(ctx context.Context, bs service.BootstrapService, req *
 	if req.SystemUser {
 		username = systemUsername
 	}
-	if sessionType == RafaySystem {
-		username = RafaySystem + "-" + username
+	if sessionType == ParalusSystem {
+		username = ParalusSystem + "-" + username
 	}
 	enforceSession := false
 
@@ -633,7 +633,7 @@ func getUserConfig(ctx context.Context, opts commonv3.QueryOptions, username, na
 	// prune agent list
 	// if a cluster is added to custom relay then exlude it from default
 	for _, ba := range bootstrapAgents {
-		if ba.Spec.TemplateRef != "rafay-core-relay-agent" && ba.Spec.TemplateRef != "rafay-core-cd-relay-agent" {
+		if ba.Spec.TemplateRef != "paralus-core-relay-agent" && ba.Spec.TemplateRef != "paralus-core-cd-relay-agent" {
 			baMaps[ba.Metadata.Name] = *ba
 		} else {
 			if _, ok := baMaps[ba.Metadata.Name]; !ok {
@@ -643,7 +643,7 @@ func getUserConfig(ctx context.Context, opts commonv3.QueryOptions, username, na
 	}
 
 	for _, ba := range baMaps {
-		if ba.Spec.TemplateRef != "rafay-core-relay-agent" && ba.Spec.TemplateRef != "rafay-core-cd-relay-agent" {
+		if ba.Spec.TemplateRef != "paralus-core-relay-agent" && ba.Spec.TemplateRef != "paralus-core-cd-relay-agent" {
 			// handle custome relay network
 		} else {
 

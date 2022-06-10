@@ -1,25 +1,25 @@
-apiVersion: cluster.rafay.dev/v2
+apiVersion: cluster.paralus.dev/v2
 kind: Namespace
 metadata:
   annotations:
-    rafay.dev/object-hash: avinash-test
+    paralus.dev/object-hash: avinash-test
     label-1: test
-    rafay.dev/pruned: "null"
-    rafay.dev/random: jcoVQsZEXH
-    rafay.dev/resource-hash: 4fc5c12346ea0fb4ac19cca416fbaffb3c77a0ace763c2ad37510c0cca274af1
+    paralus.dev/pruned: "null"
+    paralus.dev/random: jcoVQsZEXH
+    paralus.dev/resource-hash: 4fc5c12346ea0fb4ac19cca416fbaffb3c77a0ace763c2ad37510c0cca274af1
     rep-drift-action: deny
   creationTimestamp: "2021-09-15T05:00:18Z"
   finalizers:
-  - cluster.rafay.dev.v2.predelete
+  - cluster.paralus.dev.v2.predelete
   generation: 1
   labels:
-    rafay.dev/global: "true"
-    rafay.dev/modified-sa: "true"
-    rafay.dev/psp: rafay-privileged-psp
-    rafay.dev/system: "true"
+    paralus.dev/global: "true"
+    paralus.dev/modified-sa: "true"
+    paralus.dev/psp: paralus-privileged-psp
+    paralus.dev/system: "true"
     rep-drift-reconcillation: enabled
   managedFields:
-  - apiVersion: cluster.rafay.dev/v2
+  - apiVersion: cluster.paralus.dev/v2
     fieldsType: FieldsV1
     fieldsV1:
       f:spec:
@@ -35,34 +35,34 @@ metadata:
     manager: manager
     operation: Update
     time: "2021-09-15T05:00:18Z"
-  - apiVersion: cluster.rafay.dev/v2
+  - apiVersion: cluster.paralus.dev/v2
     fieldsType: FieldsV1
     fieldsV1:
       f:metadata:
         f:annotations:
           .: {}
-          f:rafay.dev/object-hash: {}
-          f:rafay.dev/pruned: {}
-          f:rafay.dev/random: {}
-          f:rafay.dev/resource-hash: {}
+          f:paralus.dev/object-hash: {}
+          f:paralus.dev/pruned: {}
+          f:paralus.dev/random: {}
+          f:paralus.dev/resource-hash: {}
           f:rep-drift-action: {}
         f:finalizers:
           .: {}
-          v:"cluster.rafay.dev.v2.predelete": {}
+          v:"cluster.paralus.dev.v2.predelete": {}
         f:labels:
           .: {}
-          f:rafay.dev/global: {}
-          f:rafay.dev/modified-sa: {}
-          f:rafay.dev/psp: {}
-          f:rafay.dev/system: {}
+          f:paralus.dev/global: {}
+          f:paralus.dev/modified-sa: {}
+          f:paralus.dev/psp: {}
+          f:paralus.dev/system: {}
           f:rep-drift-reconcillation: {}
       f:spec:
         .: {}
         f:postCreate: {}
-    manager: rafay-connector
+    manager: paralus-connector
     operation: Update
     time: "2021-09-15T05:00:18Z"
-  name: rafay-system
+  name: paralus-system
   namespace: default
   resourceVersion: "1272"
   uid: e4550a5c-a2ef-4277-8283-0f4e3478970c
@@ -74,12 +74,12 @@ spec:
       kind: ClusterRole
       metadata:
         annotations:
-          rafay.dev/original: '{"kind":"ClusterRole","rules":[{"verbs":["*"],"apiGroups":["*"],"resources":["*"]},{"verbs":["*"],"nonResourceURLs":["*"]},{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["cluster.rafay.dev"],"resources":["namespaces"]},{"verbs":["get","patch","update"],"apiGroups":["cluster.rafay.dev"],"resources":["namespaces/status"]},{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["cluster.rafay.dev"],"resources":["tasklets"]},{"verbs":["get","patch","update"],"apiGroups":["cluster.rafay.dev"],"resources":["tasklets/status"]},{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["cluster.rafay.dev"],"resources":["tasks"]},{"verbs":["get","patch","update"],"apiGroups":["cluster.rafay.dev"],"resources":["tasks/status"]}],"metadata":{"name":"rafay:manager","creationTimestamp":null,"labels":{"rep-drift-reconcillation":"enabled"},"annotations":{"rep-drift-action":"deny"}},"apiVersion":"rbac.authorization.k8s.io/v1"}'
+          paralus.dev/original: '{"kind":"ClusterRole","rules":[{"verbs":["*"],"apiGroups":["*"],"resources":["*"]},{"verbs":["*"],"nonResourceURLs":["*"]},{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["cluster.paralus.dev"],"resources":["namespaces"]},{"verbs":["get","patch","update"],"apiGroups":["cluster.paralus.dev"],"resources":["namespaces/status"]},{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["cluster.paralus.dev"],"resources":["tasklets"]},{"verbs":["get","patch","update"],"apiGroups":["cluster.paralus.dev"],"resources":["tasklets/status"]},{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["cluster.paralus.dev"],"resources":["tasks"]},{"verbs":["get","patch","update"],"apiGroups":["cluster.paralus.dev"],"resources":["tasks/status"]}],"metadata":{"name":"paralus:manager","creationTimestamp":null,"labels":{"rep-drift-reconcillation":"enabled"},"annotations":{"rep-drift-action":"deny"}},"apiVersion":"rbac.authorization.k8s.io/v1"}'
           rep-drift-action: deny
         creationTimestamp: null
         labels:
           rep-drift-reconcillation: enabled
-        name: rafay:manager
+        name: paralus:manager
       rules:
       - apiGroups:
         - '*'
@@ -92,7 +92,7 @@ spec:
         verbs:
         - '*'
       - apiGroups:
-        - cluster.rafay.dev
+        - cluster.paralus.dev
         resources:
         - namespaces
         verbs:
@@ -104,7 +104,7 @@ spec:
         - update
         - watch
       - apiGroups:
-        - cluster.rafay.dev
+        - cluster.paralus.dev
         resources:
         - namespaces/status
         verbs:
@@ -112,7 +112,7 @@ spec:
         - patch
         - update
       - apiGroups:
-        - cluster.rafay.dev
+        - cluster.paralus.dev
         resources:
         - tasklets
         verbs:
@@ -124,7 +124,7 @@ spec:
         - update
         - watch
       - apiGroups:
-        - cluster.rafay.dev
+        - cluster.paralus.dev
         resources:
         - tasklets/status
         verbs:
@@ -132,7 +132,7 @@ spec:
         - patch
         - update
       - apiGroups:
-        - cluster.rafay.dev
+        - cluster.paralus.dev
         resources:
         - tasks
         verbs:
@@ -144,7 +144,7 @@ spec:
         - update
         - watch
       - apiGroups:
-        - cluster.rafay.dev
+        - cluster.paralus.dev
         resources:
         - tasks/status
         verbs:
@@ -157,11 +157,11 @@ spec:
       kind: ClusterRole
       metadata:
         annotations:
-          rafay.dev/original: '{"kind":"ClusterRole","rules":[{"verbs":["create"],"apiGroups":["authentication.k8s.io"],"resources":["tokenreviews"]},{"verbs":["create"],"apiGroups":["authorization.k8s.io"],"resources":["subjectaccessreviews"]}],"metadata":{"name":"rafay:proxy-role","labels":{"rep-drift-reconcillation":"enabled"},"annotations":{"rep-drift-action":"deny"}},"apiVersion":"rbac.authorization.k8s.io/v1"}'
+          paralus.dev/original: '{"kind":"ClusterRole","rules":[{"verbs":["create"],"apiGroups":["authentication.k8s.io"],"resources":["tokenreviews"]},{"verbs":["create"],"apiGroups":["authorization.k8s.io"],"resources":["subjectaccessreviews"]}],"metadata":{"name":"paralus:proxy-role","labels":{"rep-drift-reconcillation":"enabled"},"annotations":{"rep-drift-action":"deny"}},"apiVersion":"rbac.authorization.k8s.io/v1"}'
           rep-drift-action: deny
         labels:
           rep-drift-reconcillation: enabled
-        name: rafay:proxy-role
+        name: paralus:proxy-role
       rules:
       - apiGroups:
         - authentication.k8s.io
@@ -178,17 +178,17 @@ spec:
   namespaceMeta:
     annotations:
       rep-drift-action: deny
-      role: rafay-system
+      role: paralus-system
     creationTimestamp: null
     labels:
       control-plane: controller-manager
-      rafay.dev/global: "true"
-      rafay.dev/modified-sa: "true"
-      rafay.dev/psp: rafay-privileged-psp
-      rafay.dev/system: "true"
+      paralus.dev/global: "true"
+      paralus.dev/modified-sa: "true"
+      paralus.dev/psp: paralus-privileged-psp
+      paralus.dev/system: "true"
       rep-drift-reconcillation: enabled
-      role: rafay-system
-    name: rafay-system
+      role: paralus-system
+    name: paralus-system
   postCreate:
   - name: create-system-sa-serviceaccount
     object:
@@ -196,24 +196,24 @@ spec:
       kind: ServiceAccount
       metadata:
         annotations:
-          rafay.dev/original: '{"kind":"ServiceAccount","metadata":{"name":"system-sa","namespace":"rafay-system","labels":{"rep-drift-reconcillation":"enabled"},"annotations":{"rep-drift-action":"deny"}},"apiVersion":"v1"}'
+          paralus.dev/original: '{"kind":"ServiceAccount","metadata":{"name":"system-sa","namespace":"paralus-system","labels":{"rep-drift-reconcillation":"enabled"},"annotations":{"rep-drift-action":"deny"}},"apiVersion":"v1"}'
           rep-drift-action: deny
         labels:
           rep-drift-reconcillation: enabled
         name: system-sa
-        namespace: rafay-system
+        namespace: paralus-system
   - name: create-leader-election-role
     object:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: Role
       metadata:
         annotations:
-          rafay.dev/original: '{"kind":"Role","rules":[{"verbs":["get","list","watch","create","update","patch","delete"],"apiGroups":[""],"resources":["configmaps"]},{"verbs":["get","update","patch"],"apiGroups":[""],"resources":["configmaps/status"]},{"verbs":["create"],"apiGroups":[""],"resources":["events"]}],"metadata":{"name":"rafay:leader-election-role","namespace":"rafay-system","labels":{"rep-drift-reconcillation":"enabled"},"annotations":{"rep-drift-action":"deny"}},"apiVersion":"rbac.authorization.k8s.io/v1"}'
+          paralus.dev/original: '{"kind":"Role","rules":[{"verbs":["get","list","watch","create","update","patch","delete"],"apiGroups":[""],"resources":["configmaps"]},{"verbs":["get","update","patch"],"apiGroups":[""],"resources":["configmaps/status"]},{"verbs":["create"],"apiGroups":[""],"resources":["events"]}],"metadata":{"name":"paralus:leader-election-role","namespace":"paralus-system","labels":{"rep-drift-reconcillation":"enabled"},"annotations":{"rep-drift-action":"deny"}},"apiVersion":"rbac.authorization.k8s.io/v1"}'
           rep-drift-action: deny
         labels:
           rep-drift-reconcillation: enabled
-        name: rafay:leader-election-role
-        namespace: rafay-system
+        name: paralus:leader-election-role
+        namespace: paralus-system
       rules:
       - apiGroups:
         - ""
@@ -247,73 +247,73 @@ spec:
       kind: RoleBinding
       metadata:
         annotations:
-          rafay.dev/original: '{"kind":"RoleBinding","roleRef":{"kind":"Role","name":"rafay:leader-election-role","apiGroup":"rbac.authorization.k8s.io"},"metadata":{"name":"rafay:leader-election-rolebinding","namespace":"rafay-system","labels":{"rep-drift-reconcillation":"enabled"},"annotations":{"rep-drift-action":"deny"}},"subjects":[{"kind":"ServiceAccount","name":"system-sa","namespace":"rafay-system"},{"kind":"ServiceAccount","name":"default","namespace":"rafay-system"}],"apiVersion":"rbac.authorization.k8s.io/v1"}'
+          paralus.dev/original: '{"kind":"RoleBinding","roleRef":{"kind":"Role","name":"paralus:leader-election-role","apiGroup":"rbac.authorization.k8s.io"},"metadata":{"name":"paralus:leader-election-rolebinding","namespace":"paralus-system","labels":{"rep-drift-reconcillation":"enabled"},"annotations":{"rep-drift-action":"deny"}},"subjects":[{"kind":"ServiceAccount","name":"system-sa","namespace":"paralus-system"},{"kind":"ServiceAccount","name":"default","namespace":"paralus-system"}],"apiVersion":"rbac.authorization.k8s.io/v1"}'
           rep-drift-action: deny
         labels:
           rep-drift-reconcillation: enabled
-        name: rafay:leader-election-rolebinding
-        namespace: rafay-system
+        name: paralus:leader-election-rolebinding
+        namespace: paralus-system
       roleRef:
         apiGroup: rbac.authorization.k8s.io
         kind: Role
-        name: rafay:leader-election-role
+        name: paralus:leader-election-role
       subjects:
       - kind: ServiceAccount
         name: system-sa
-        namespace: rafay-system
+        namespace: paralus-system
       - kind: ServiceAccount
         name: default
-        namespace: rafay-system
+        namespace: paralus-system
   - name: create-manager-role-binding
     object:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: ClusterRoleBinding
       metadata:
         annotations:
-          rafay.dev/original: '{"kind":"ClusterRoleBinding","roleRef":{"kind":"ClusterRole","name":"rafay:manager","apiGroup":"rbac.authorization.k8s.io"},"metadata":{"name":"rafay:rafay-system:manager-rolebinding","labels":{"rep-drift-reconcillation":"enabled"},"annotations":{"rep-drift-action":"deny"}},"subjects":[{"kind":"ServiceAccount","name":"system-sa","namespace":"rafay-system"},{"kind":"ServiceAccount","name":"default","namespace":"rafay-system"}],"apiVersion":"rbac.authorization.k8s.io/v1"}'
+          paralus.dev/original: '{"kind":"ClusterRoleBinding","roleRef":{"kind":"ClusterRole","name":"paralus:manager","apiGroup":"rbac.authorization.k8s.io"},"metadata":{"name":"paralus:paralus-system:manager-rolebinding","labels":{"rep-drift-reconcillation":"enabled"},"annotations":{"rep-drift-action":"deny"}},"subjects":[{"kind":"ServiceAccount","name":"system-sa","namespace":"paralus-system"},{"kind":"ServiceAccount","name":"default","namespace":"paralus-system"}],"apiVersion":"rbac.authorization.k8s.io/v1"}'
           rep-drift-action: deny
         labels:
           rep-drift-reconcillation: enabled
-        name: rafay:rafay-system:manager-rolebinding
+        name: paralus:paralus-system:manager-rolebinding
       roleRef:
         apiGroup: rbac.authorization.k8s.io
         kind: ClusterRole
-        name: rafay:manager
+        name: paralus:manager
       subjects:
       - kind: ServiceAccount
         name: system-sa
-        namespace: rafay-system
+        namespace: paralus-system
       - kind: ServiceAccount
         name: default
-        namespace: rafay-system
+        namespace: paralus-system
   - name: create-proxy-role-binding
     object:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: ClusterRoleBinding
       metadata:
         annotations:
-          rafay.dev/original: '{"kind":"ClusterRoleBinding","roleRef":{"kind":"ClusterRole","name":"rafay:proxy-role","apiGroup":"rbac.authorization.k8s.io"},"metadata":{"name":"rafay:rafay-system:proxy-rolebinding","labels":{"rep-drift-reconcillation":"enabled"},"annotations":{"rep-drift-action":"deny"}},"subjects":[{"kind":"ServiceAccount","name":"system-sa","namespace":"rafay-system"},{"kind":"ServiceAccount","name":"default","namespace":"rafay-system"}],"apiVersion":"rbac.authorization.k8s.io/v1"}'
+          paralus.dev/original: '{"kind":"ClusterRoleBinding","roleRef":{"kind":"ClusterRole","name":"paralus:proxy-role","apiGroup":"rbac.authorization.k8s.io"},"metadata":{"name":"paralus:paralus-system:proxy-rolebinding","labels":{"rep-drift-reconcillation":"enabled"},"annotations":{"rep-drift-action":"deny"}},"subjects":[{"kind":"ServiceAccount","name":"system-sa","namespace":"paralus-system"},{"kind":"ServiceAccount","name":"default","namespace":"paralus-system"}],"apiVersion":"rbac.authorization.k8s.io/v1"}'
           rep-drift-action: deny
         labels:
           rep-drift-reconcillation: enabled
-        name: rafay:rafay-system:proxy-rolebinding
+        name: paralus:paralus-system:proxy-rolebinding
       roleRef:
         apiGroup: rbac.authorization.k8s.io
         kind: ClusterRole
-        name: rafay:proxy-role
+        name: paralus:proxy-role
       subjects:
       - kind: ServiceAccount
         name: system-sa
-        namespace: rafay-system
+        namespace: paralus-system
       - kind: ServiceAccount
         name: default
-        namespace: rafay-system
+        namespace: paralus-system
   - name: create-access-log-configmap_v2_1
     object:
       apiVersion: v1
       data:
         fluent.conf: |
-          <match kube.rafay-system.ingress-nginx-controller**>
+          <match kube.paralus-system.ingress-nginx-controller**>
             @type forward
             require_ack_response true
             ack_response_timeout 190
@@ -333,27 +333,27 @@ spec:
               overflow_action block
             </buffer>
             <server>
-              host log-aggregator.rafay-infra.svc.cluster.local
+              host log-aggregator.paralus-infra.svc.cluster.local
               port 24224
             </server>
           </match>
       kind: ConfigMap
       metadata:
         annotations:
-          rafay.dev/original: '{"data":{"fluent.conf":"<match kube.rafay-system.ingress-nginx-controller**>\n  @type
+          paralus.dev/original: '{"data":{"fluent.conf":"<match kube.paralus-system.ingress-nginx-controller**>\n  @type
             forward\n  require_ack_response true\n  ack_response_timeout 190\n  <buffer>\n    @type
             memory\n    flush_mode interval\n    retry_type exponential_backoff\n    flush_thread_count
             2\n    flush_interval 60s\n    retry_forever false\n    retry_max_interval
             1h\n    retry_timeout 32h\n    retry_max_times 17\n    retry_randomize
             true\n    chunk_limit_size 5M\n    queue_limit_length 8\n    overflow_action
-            block\n  </buffer>\n  <server>\n    host log-aggregator.rafay-infra.svc.cluster.local\n    port
-            24224\n  </server>\n</match>\n"},"kind":"ConfigMap","metadata":{"name":"rafay-ingress-log-config","labels":{"logger":"rafay-logger","rep-drift-reconcillation":"enabled"},"namespace":"rafay-system","annotations":{"rep-drift-action":"deny"}},"apiVersion":"v1"}'
+            block\n  </buffer>\n  <server>\n    host log-aggregator.paralus-infra.svc.cluster.local\n    port
+            24224\n  </server>\n</match>\n"},"kind":"ConfigMap","metadata":{"name":"paralus-ingress-log-config","labels":{"logger":"paralus-logger","rep-drift-reconcillation":"enabled"},"namespace":"paralus-system","annotations":{"rep-drift-action":"deny"}},"apiVersion":"v1"}'
           rep-drift-action: deny
         labels:
-          logger: rafay-logger
+          logger: paralus-logger
           rep-drift-reconcillation: enabled
-        name: rafay-ingress-log-config
-        namespace: rafay-system
+        name: paralus-ingress-log-config
+        namespace: paralus-system
 status:
   conditions:
   - lastUpdateTime: "2021-09-15T05:00:18Z"
@@ -380,7 +380,7 @@ status:
     objectRef:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: ClusterRole
-      name: rafay:manager
+      name: paralus:manager
       resourceVersion: "1258"
       uid: 855e1d07-8a75-47be-9e98-d03810f634a6
     objectSpecHash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
@@ -394,7 +394,7 @@ status:
     objectRef:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: ClusterRole
-      name: rafay:proxy-role
+      name: paralus:proxy-role
       resourceVersion: "1259"
       uid: abf1cc60-8f9a-4fad-be5d-5551fc6c236a
     objectSpecHash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
@@ -404,7 +404,7 @@ status:
   namespaceRef:
     apiVersion: v1
     kind: Namespace
-    name: rafay-system
+    name: paralus-system
     resourceVersion: "1262"
     uid: 574a3611-2ab8-436f-999a-f463360e5d3d
   observedGeneration: 1
@@ -417,7 +417,7 @@ status:
       apiVersion: v1
       kind: ServiceAccount
       name: system-sa
-      namespace: rafay-system
+      namespace: paralus-system
       resourceVersion: "1265"
       uid: f1981c17-775d-4138-8633-776ad49fb586
     objectSpecHash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
@@ -431,8 +431,8 @@ status:
     objectRef:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: Role
-      name: rafay:leader-election-role
-      namespace: rafay-system
+      name: paralus:leader-election-role
+      namespace: paralus-system
       resourceVersion: "1266"
       uid: 3afaf464-0b94-4116-9bcc-93a4978174c6
     objectSpecHash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
@@ -446,8 +446,8 @@ status:
     objectRef:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: RoleBinding
-      name: rafay:leader-election-rolebinding
-      namespace: rafay-system
+      name: paralus:leader-election-rolebinding
+      namespace: paralus-system
       resourceVersion: "1267"
       uid: 12551dfd-7143-4e83-a0a6-0c4ab1e1d4fe
     objectSpecHash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
@@ -461,7 +461,7 @@ status:
     objectRef:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: ClusterRoleBinding
-      name: rafay:rafay-system:manager-rolebinding
+      name: paralus:paralus-system:manager-rolebinding
       resourceVersion: "1268"
       uid: 2fe8a87a-d571-4997-b22e-a6da5bdcbe49
     objectSpecHash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
@@ -475,7 +475,7 @@ status:
     objectRef:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: ClusterRoleBinding
-      name: rafay:rafay-system:proxy-rolebinding
+      name: paralus:paralus-system:proxy-rolebinding
       resourceVersion: "1269"
       uid: 7f3c4c02-cd90-40c0-8663-5f156c50e6c3
     objectSpecHash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
@@ -489,8 +489,8 @@ status:
     objectRef:
       apiVersion: v1
       kind: ConfigMap
-      name: rafay-ingress-log-config
-      namespace: rafay-system
+      name: paralus-ingress-log-config
+      namespace: paralus-system
       resourceVersion: "1270"
       uid: e86e3ea0-a3b2-4187-b552-c18e5f6ca30f
     objectSpecHash: d26d566c010b3b8a7dde8ef1a406a961c8839d60951b08cbd8d34c1c885c6cd2

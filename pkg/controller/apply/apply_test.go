@@ -12,8 +12,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
 
-	cruntime "github.com/RafayLabs/rcloud-base/pkg/controller/runtime"
-	clusterv2 "github.com/RafayLabs/rcloud-base/proto/types/controller"
+	cruntime "github.com/paralus/paralus/pkg/controller/runtime"
+	clusterv2 "github.com/paralus/paralus/proto/types/controller"
 
 	"sigs.k8s.io/yaml"
 )

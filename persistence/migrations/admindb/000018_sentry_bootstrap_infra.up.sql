@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS sentry_bootstrap_infra (
     organization_id uuid,
     partner_id uuid,
     project_id uuid,
-    -- rafay meta fields
+    -- paralus meta fields
     display_name character varying(256) NOT NULL,
     created_at timestamp WITH time zone NOT NULL,
     modified_at timestamp WITH time zone,

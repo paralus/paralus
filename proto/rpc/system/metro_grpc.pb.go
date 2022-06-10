@@ -8,7 +8,7 @@ package rpcv3
 
 import (
 	context "context"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
+	v3 "github.com/paralus/paralus/proto/types/infrapb/v3"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -40,7 +40,7 @@ func NewLocationClient(cc grpc.ClientConnInterface) LocationClient {
 
 func (c *locationClient) CreateLocation(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.Location, error) {
 	out := new(v3.Location)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Location/CreateLocation", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Location/CreateLocation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func (c *locationClient) CreateLocation(ctx context.Context, in *v3.Location, op
 
 func (c *locationClient) GetLocations(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.LocationList, error) {
 	out := new(v3.LocationList)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Location/GetLocations", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Location/GetLocations", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func (c *locationClient) GetLocations(ctx context.Context, in *v3.Location, opts
 
 func (c *locationClient) GetLocation(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.Location, error) {
 	out := new(v3.Location)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Location/GetLocation", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Location/GetLocation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (c *locationClient) GetLocation(ctx context.Context, in *v3.Location, opts 
 
 func (c *locationClient) UpdateLocation(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.Location, error) {
 	out := new(v3.Location)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Location/UpdateLocation", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Location/UpdateLocation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func (c *locationClient) UpdateLocation(ctx context.Context, in *v3.Location, op
 
 func (c *locationClient) DeleteLocation(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.Location, error) {
 	out := new(v3.Location)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Location/DeleteLocation", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Location/DeleteLocation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +135,7 @@ func _Location_CreateLocation_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Location/CreateLocation",
+		FullMethod: "/paralus.dev.rpc.v3.Location/CreateLocation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(LocationServer).CreateLocation(ctx, req.(*v3.Location))
@@ -153,7 +153,7 @@ func _Location_GetLocations_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Location/GetLocations",
+		FullMethod: "/paralus.dev.rpc.v3.Location/GetLocations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(LocationServer).GetLocations(ctx, req.(*v3.Location))
@@ -171,7 +171,7 @@ func _Location_GetLocation_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Location/GetLocation",
+		FullMethod: "/paralus.dev.rpc.v3.Location/GetLocation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(LocationServer).GetLocation(ctx, req.(*v3.Location))
@@ -189,7 +189,7 @@ func _Location_UpdateLocation_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Location/UpdateLocation",
+		FullMethod: "/paralus.dev.rpc.v3.Location/UpdateLocation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(LocationServer).UpdateLocation(ctx, req.(*v3.Location))
@@ -207,7 +207,7 @@ func _Location_DeleteLocation_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Location/DeleteLocation",
+		FullMethod: "/paralus.dev.rpc.v3.Location/DeleteLocation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(LocationServer).DeleteLocation(ctx, req.(*v3.Location))
@@ -219,7 +219,7 @@ func _Location_DeleteLocation_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Location_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.rpc.v3.Location",
+	ServiceName: "paralus.dev.rpc.v3.Location",
 	HandlerType: (*LocationServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

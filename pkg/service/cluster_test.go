@@ -6,12 +6,12 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/RafayLabs/rcloud-base/pkg/common"
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	infrav3 "github.com/RafayLabs/rcloud-base/proto/types/infrapb/v3"
 	"github.com/google/uuid"
+	"github.com/paralus/paralus/pkg/common"
+	"github.com/paralus/paralus/pkg/query"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
 )
 
 func performClusterBasicChecks(t *testing.T, cluster *infrav3.Cluster, puuid string) {
@@ -27,7 +27,7 @@ func TestCreateCluster(t *testing.T) {
 	downloadData := &common.DownloadData{
 		ControlAddr:     "localhost:5002",
 		APIAddr:         "localhost:8000",
-		RelayAgentImage: "rafaysystems/relay:latest",
+		RelayAgentImage: "paralus/relay:latest",
 	}
 
 	ps := NewClusterService(db, downloadData, NewBootstrapService(db), getLogger())
@@ -71,7 +71,7 @@ func TestUpdateCluster(t *testing.T) {
 	downloadData := &common.DownloadData{
 		ControlAddr:     "localhost:5002",
 		APIAddr:         "localhost:8000",
-		RelayAgentImage: "rafaysystems/relay:latest",
+		RelayAgentImage: "paralus/relay:latest",
 	}
 
 	ps := NewClusterService(db, downloadData, NewBootstrapService(db), getLogger())
@@ -105,7 +105,7 @@ func TestSelectCluster(t *testing.T) {
 	downloadData := &common.DownloadData{
 		ControlAddr:     "localhost:5002",
 		APIAddr:         "localhost:8000",
-		RelayAgentImage: "rafaysystems/relay:latest",
+		RelayAgentImage: "paralus/relay:latest",
 	}
 
 	ps := NewClusterService(db, downloadData, NewBootstrapService(db), getLogger())
@@ -139,7 +139,7 @@ func TestGetCluster(t *testing.T) {
 	downloadData := &common.DownloadData{
 		ControlAddr:     "localhost:5002",
 		APIAddr:         "localhost:8000",
-		RelayAgentImage: "rafaysystems/relay:latest",
+		RelayAgentImage: "paralus/relay:latest",
 	}
 
 	ps := NewClusterService(db, downloadData, NewBootstrapService(db), getLogger())
@@ -172,7 +172,7 @@ func TestListCluster(t *testing.T) {
 	downloadData := &common.DownloadData{
 		ControlAddr:     "localhost:5002",
 		APIAddr:         "localhost:8000",
-		RelayAgentImage: "rafaysystems/relay:latest",
+		RelayAgentImage: "paralus/relay:latest",
 	}
 
 	ps := NewClusterService(db, downloadData, NewBootstrapService(db), getLogger())

@@ -4,13 +4,13 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/RafayLabs/rcloud-base/pkg/gateway"
-	"github.com/RafayLabs/rcloud-base/pkg/gateway/testdata"
+	"github.com/paralus/paralus/pkg/gateway"
+	"github.com/paralus/paralus/pkg/gateway/testdata"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func TestRafayJSONMarshaller(t *testing.T) {
-	m := gateway.NewRafayJSON()
+func TestParalusJSONMarshaller(t *testing.T) {
+	m := gateway.NewParalusJSON()
 
 	t1 := testdata.TestYAML{
 		Name:   "test",

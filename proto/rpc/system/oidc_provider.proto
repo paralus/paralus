@@ -1,5 +1,5 @@
 syntax = "proto3";
-package rafay.dev.rpc.v3;
+package paralus.dev.rpc.v3;
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
@@ -10,7 +10,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {
     title : "OIdC Provider Service"
     version : "3.0"
-    contact : {name : "Rafay Dev"}
+    contact : {name : "Paralus Dev"}
   }
   schemes : HTTPS
   consumes : "application/json"
@@ -24,7 +24,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     }
     security : {
       key : "ApiKeyAuth"
-      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-RAFAY-API-KEYID"}
+      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-PARALUS-API-KEYID"}
     }
   }
   security : {
@@ -54,7 +54,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service OIDCProvider {
-  rpc CreateOIDCProvider(rafay.dev.types.system.v3.OIDCProvider) returns (rafay.dev.types.system.v3.OIDCProvider) {
+  rpc CreateOIDCProvider(paralus.dev.types.system.v3.OIDCProvider) returns (paralus.dev.types.system.v3.OIDCProvider) {
     option (google.api.http) = {
       post : "/auth/v3/sso/oidc/provider"
       body : "*"
@@ -68,26 +68,26 @@ service OIDCProvider {
     };
   }
 
-  rpc GetOIDCProvider(rafay.dev.types.system.v3.OIDCProvider) returns (rafay.dev.types.system.v3.OIDCProvider) {
+  rpc GetOIDCProvider(paralus.dev.types.system.v3.OIDCProvider) returns (paralus.dev.types.system.v3.OIDCProvider) {
     option (google.api.http) = {
       get : "/auth/v3/sso/oidc/provider/{metadata.name}" // TODO: Handle the case when there is / in name
     };
   };
 
-  rpc ListOIDCProvider(google.protobuf.Empty) returns (rafay.dev.types.system.v3.OIDCProviderList) {
+  rpc ListOIDCProvider(google.protobuf.Empty) returns (paralus.dev.types.system.v3.OIDCProviderList) {
     option (google.api.http) = {
       get : "/auth/v3/sso/oidc/provider"
     };
   };
 
-  rpc UpdateOIDCProvider(rafay.dev.types.system.v3.OIDCProvider) returns (rafay.dev.types.system.v3.OIDCProvider) {
+  rpc UpdateOIDCProvider(paralus.dev.types.system.v3.OIDCProvider) returns (paralus.dev.types.system.v3.OIDCProvider) {
     option (google.api.http) = {
       put : "/auth/v3/sso/oidc/provider/{metadata.name}"
       body : "*"
     };
   };
 
-  rpc DeleteOIDCProvider(rafay.dev.types.system.v3.OIDCProvider) returns (google.protobuf.Empty) {
+  rpc DeleteOIDCProvider(paralus.dev.types.system.v3.OIDCProvider) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       delete : "/auth/v3/sso/oidc/provider/{metadata.name}"
     };

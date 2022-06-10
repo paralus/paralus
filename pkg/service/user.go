@@ -13,16 +13,16 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"github.com/RafayLabs/rcloud-base/internal/dao"
-	"github.com/RafayLabs/rcloud-base/internal/models"
-	providers "github.com/RafayLabs/rcloud-base/internal/provider/kratos"
-	"github.com/RafayLabs/rcloud-base/pkg/common"
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	"github.com/RafayLabs/rcloud-base/pkg/utils"
-	userrpcv3 "github.com/RafayLabs/rcloud-base/proto/rpc/user"
-	authzv1 "github.com/RafayLabs/rcloud-base/proto/types/authz"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	userv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
+	"github.com/paralus/paralus/internal/dao"
+	"github.com/paralus/paralus/internal/models"
+	providers "github.com/paralus/paralus/internal/provider/kratos"
+	"github.com/paralus/paralus/pkg/common"
+	"github.com/paralus/paralus/pkg/query"
+	"github.com/paralus/paralus/pkg/utils"
+	userrpcv3 "github.com/paralus/paralus/proto/rpc/user"
+	authzv1 "github.com/paralus/paralus/proto/types/authz"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	userv3 "github.com/paralus/paralus/proto/types/userpb/v3"
 )
 
 const (

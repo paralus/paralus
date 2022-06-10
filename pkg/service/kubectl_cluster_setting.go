@@ -5,11 +5,11 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/RafayLabs/rcloud-base/internal/constants"
-	"github.com/RafayLabs/rcloud-base/internal/dao"
-	"github.com/RafayLabs/rcloud-base/internal/models"
-	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
 	"github.com/google/uuid"
+	"github.com/paralus/paralus/internal/constants"
+	"github.com/paralus/paralus/internal/dao"
+	"github.com/paralus/paralus/internal/models"
+	"github.com/paralus/paralus/proto/types/sentry"
 	"github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

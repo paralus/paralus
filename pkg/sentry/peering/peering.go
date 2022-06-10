@@ -10,14 +10,14 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/RafayLabs/rcloud-base/pkg/log"
-	"github.com/RafayLabs/rcloud-base/pkg/query"
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/cryptoutil"
-	"github.com/RafayLabs/rcloud-base/pkg/sentry/register"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
-	sentryrpc "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
-	"github.com/RafayLabs/rcloud-base/proto/types/sentry"
 	"github.com/dgraph-io/ristretto"
+	"github.com/paralus/paralus/pkg/log"
+	"github.com/paralus/paralus/pkg/query"
+	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
+	"github.com/paralus/paralus/pkg/sentry/register"
+	"github.com/paralus/paralus/pkg/service"
+	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
+	"github.com/paralus/paralus/proto/types/sentry"
 	"github.com/rs/xid"
 )
 
@@ -340,15 +340,15 @@ func GetPeeringServerCreds(ctx context.Context, bs service.BootstrapService, rpc
 	defer cancel()
 	var template *sentry.BootstrapAgentTemplate
 
-	template, err = bs.GetBootstrapAgentTemplate(nctx, "rafay-sentry-peering-server")
+	template, err = bs.GetBootstrapAgentTemplate(nctx, "paralus-sentry-peering-server")
 	if err != nil {
 		return
 	}
 
 	config := &register.Config{
-		TemplateName: "rafay-sentry-peering-server",
+		TemplateName: "paralus-sentry-peering-server",
 		Addr:         fmt.Sprintf("localhost:%d", rpcPort),
-		Name:         "rafay-sentry-peering-server",
+		Name:         "paralus-sentry-peering-server",
 		Scheme:       "grpc",
 		Mode:         "server",
 	}
@@ -370,8 +370,8 @@ func GetPeeringServerCreds(ctx context.Context, bs service.BootstrapService, rpc
 	csr, err = cryptoutil.CreateCSR(pkix.Name{
 		CommonName:         host,
 		Country:            []string{"USA"},
-		Organization:       []string{"Rafay Systems Inc"},
-		OrganizationalUnit: []string{"Rafay Sentry Peering Server"},
+		Organization:       []string{"Paralus"},
+		OrganizationalUnit: []string{"Paralus Sentry Peering Server"},
 		Province:           []string{"California"},
 		Locality:           []string{"Sunnyvale"},
 	}, privKey)
@@ -383,7 +383,7 @@ func GetPeeringServerCreds(ctx context.Context, bs service.BootstrapService, rpc
 
 	var agent *sentry.BootstrapAgent
 
-	agent, err = bs.GetBootstrapAgent(nctx, template.Metadata.Name, query.WithName("rafay-sentry-peering-server"), query.WithGlobalScope())
+	agent, err = bs.GetBootstrapAgent(nctx, template.Metadata.Name, query.WithName("paralus-sentry-peering-server"), query.WithGlobalScope())
 
 	if err != nil {
 		if err != sql.ErrNoRows {

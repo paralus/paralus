@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
 	"github.com/google/uuid"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	systemv3 "github.com/paralus/paralus/proto/types/systempb/v3"
 )
 
 func performProjectBasicChecks(t *testing.T, project *systemv3.Project, puuid string) {

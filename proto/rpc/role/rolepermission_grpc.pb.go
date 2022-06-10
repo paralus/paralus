@@ -8,8 +8,8 @@ package rpcv3
 
 import (
 	context "context"
-	v3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	v31 "github.com/RafayLabs/rcloud-base/proto/types/rolepb/v3"
+	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	v31 "github.com/paralus/paralus/proto/types/rolepb/v3"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -37,7 +37,7 @@ func NewRolepermissionClient(cc grpc.ClientConnInterface) RolepermissionClient {
 
 func (c *rolepermissionClient) GetRolepermissions(ctx context.Context, in *v3.QueryOptions, opts ...grpc.CallOption) (*v31.RolePermissionList, error) {
 	out := new(v31.RolePermissionList)
-	err := c.cc.Invoke(ctx, "/rafay.dev.rpc.v3.Rolepermission/GetRolepermissions", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Rolepermission/GetRolepermissions", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func _Rolepermission_GetRolepermissions_Handler(srv interface{}, ctx context.Con
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rafay.dev.rpc.v3.Rolepermission/GetRolepermissions",
+		FullMethod: "/paralus.dev.rpc.v3.Rolepermission/GetRolepermissions",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RolepermissionServer).GetRolepermissions(ctx, req.(*v3.QueryOptions))
@@ -92,7 +92,7 @@ func _Rolepermission_GetRolepermissions_Handler(srv interface{}, ctx context.Con
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Rolepermission_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rafay.dev.rpc.v3.Rolepermission",
+	ServiceName: "paralus.dev.rpc.v3.Rolepermission",
 	HandlerType: (*RolepermissionServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
