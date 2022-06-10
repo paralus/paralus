@@ -445,6 +445,7 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 	if err != nil {
 		tx.Rollback()
 		_log.Warn("unable to commit changes", err)
+		return &userv3.User{}, err
 	}
 
 	rl, err := s.ap.GetRecoveryLink(ctx, id)
@@ -727,6 +728,7 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 		if err != nil {
 			tx.Rollback()
 			_log.Warn("unable to commit changes", err)
+			return &userv3.User{}, fmt.Errorf("unable to update user '%v'", name)
 		}
 
 		CreateUserAuditEvent(ctx, s.al, s.db, AuditActionUpdate, user.GetMetadata().GetName(), usr.ID, rolesBefore, rolesAfter, groupsBefore, groupsAfter)
