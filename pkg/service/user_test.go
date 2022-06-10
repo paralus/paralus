@@ -556,6 +556,9 @@ func TestUserList(t *testing.T) {
 		{"simple list", "", 50, 20, "", "", "", "", []string{}, ""},
 		{"simple list with type", "", 50, 20, "", "", "", "", []string{}, "password"},
 		{"sorted list", "", 50, 20, "email", "asc", "", "", []string{}, ""},
+		{"sorted list with ALL projects", "", 50, 20, "email", "asc", "", "", []string{"ALL"}, ""},
+		{"sorted list with single project", "", 50, 20, "email", "asc", "", "", []string{"project1"}, ""},
+		{"sorted list with projects", "", 50, 20, "email", "asc", "", "", []string{"project1", "project2"}, ""},
 		{"sorted list without dir", "", 50, 20, "email", "", "", "", []string{}, ""},
 		{"sorted list with q", "filter-query", 50, 20, "email", "asc", "", "", []string{}, ""},
 		{"sorted list with role", "", 50, 20, "email", "asc", "role-name", "", []string{}, ""},
@@ -592,6 +595,12 @@ func TestUserList(t *testing.T) {
 			}
 			if tc.group != "" {
 				addFetchExpectation(mock, "group")
+			}
+			for _, p := range tc.projects {
+				if p == "ALL" {
+					continue
+				}
+				addFetchIdByNameExpectation(mock, "project", p)
 			}
 			if tc.role != "" || tc.group != "" || len(tc.projects) != 0 {
 				addSentryLookupExpectation(mock, []string{uuuid1, uuuid2}, puuid, ouuid)
@@ -632,6 +641,7 @@ func TestUserList(t *testing.T) {
 				Role:         tc.role,
 				Group:        tc.group,
 				Type:         tc.utype,
+				Project:      strings.Join(tc.projects, ","),
 			}
 
 			userlist, err := us.List(context.Background(), query.WithOptions(qo))
