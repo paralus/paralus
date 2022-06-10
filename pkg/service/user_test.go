@@ -731,3 +731,23 @@ func TestUserDeleteSelf(t *testing.T) {
 		t.Fatal("user able to delete their own account")
 	}
 }
+
+func TestUserForgotPassword(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
+	ap := &mockAuthProvider{}
+	mazc := mockAuthzClient{}
+	us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
+
+	uuuid := addUserFetchExpectation(mock)
+
+	fpreq := &userrpcv3.ForgotPasswordRequest{Username: "user-"+uuuid}
+	fpresp, err := us.ForgotPassword(context.Background(), fpreq)
+	if err != nil {
+		t.Fatal("could not fetch password recovery link:", err)
+	}
+	if !strings.HasPrefix(fpresp.RecoveryLink, "https://recoverme.testing/") {
+		t.Error("invalid recovery url generated")
+	}
+}
