@@ -2435,6 +2435,24 @@
         }
       }
     },
+    "v3ParalusConditionStatus": {
+      "type": "string",
+      "enum": [
+        "NotSet",
+        "Pending",
+        "InProgress",
+        "Success",
+        "Failed",
+        "Retry",
+        "Skipped",
+        "Stopped",
+        "Expired",
+        "Stopping",
+        "Submitted"
+      ],
+      "default": "NotSet",
+      "title": "ParalusConditionStatus is the status of the status condition"
+    },
     "v3ProjectCluster": {
       "type": "object",
       "properties": {
@@ -2524,24 +2542,6 @@
           "title": "BootstrapCA"
         }
       }
-    },
-    "v3ParalusConditionStatus": {
-      "type": "string",
-      "enum": [
-        "NotSet",
-        "Pending",
-        "InProgress",
-        "Success",
-        "Failed",
-        "Retry",
-        "Skipped",
-        "Stopped",
-        "Expired",
-        "Stopping",
-        "Submitted"
-      ],
-      "default": "NotSet",
-      "title": "ParalusConditionStatus is the status of the status condition"
     },
     "v3Resources": {
       "type": "object",
