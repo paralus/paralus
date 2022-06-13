@@ -10,10 +10,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/paralus/paralus/pkg/common"
 	"github.com/paralus/paralus/pkg/query"
+	userrpcv3 "github.com/paralus/paralus/proto/rpc/user"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	userv3 "github.com/paralus/paralus/proto/types/userpb/v3"
-	userrpcv3 "github.com/paralus/paralus/proto/rpc/user"
 )
 
 func performUserBasicChecks(t *testing.T, user *userv3.User, uuuid string) {
@@ -742,12 +742,99 @@ func TestUserForgotPassword(t *testing.T) {
 
 	uuuid := addUserFetchExpectation(mock)
 
-	fpreq := &userrpcv3.ForgotPasswordRequest{Username: "user-"+uuuid}
+	fpreq := &userrpcv3.ForgotPasswordRequest{Username: "user-" + uuuid}
 	fpresp, err := us.ForgotPassword(context.Background(), fpreq)
 	if err != nil {
 		t.Fatal("could not fetch password recovery link:", err)
 	}
 	if !strings.HasPrefix(fpresp.RecoveryLink, "https://recoverme.testing/") {
 		t.Error("invalid recovery url generated")
+	}
+}
+
+func TestUserRetrieveCliConfigGet(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
+	ap := &mockAuthProvider{}
+	mazc := mockAuthzClient{}
+	ks := NewApiKeyService(db, getLogger())
+	us := NewUserService(ap, db, &mazc, ks, common.CliConfigDownloadData{}, getLogger(), true)
+
+	uuuid := uuid.NewString()
+	auuid := uuid.NewString()
+	mock.ExpectQuery(`SELECT sap.* FROM "sentry_account_permission" AS "sap" JOIN authsrv_project as proj ON \(proj.id = sap.project_id\) AND \(proj.default = TRUE\) WHERE \(account_id = '` + uuuid + `'\) LIMIT 1`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"account_id"}).AddRow(uuuid))
+	_ = addFetchExpectation(mock, "project")
+	_ = addFetchExpectation(mock, "organization")
+	_ = addFetchExpectation(mock, "partner")
+
+	mock.ExpectQuery(`SELECT "apikey"."id", "apikey"."name",.* FROM "authsrv_apikey" AS "apikey" WHERE \(name = 'user-` + uuuid + `'\) AND \(trash = FALSE\)`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"key", "secret"}).AddRow(auuid, "apikey-"+auuid))
+
+	req := &userrpcv3.ApiKeyRequest{Username: "user-" + uuuid, Id: uuuid}
+	resp, err := us.RetrieveCliConfig(context.Background(), req)
+	if err != nil {
+		t.Fatal("could not fetch cli config:", err)
+	}
+	if resp.ApiKey != auuid {
+		t.Error("incorrect apikey generated")
+	}
+	if resp.ApiSecret != "apikey-"+auuid {
+		t.Error("incorrect apisecret generated")
+	}
+	if resp.Project != "project-name" {
+		t.Error("invalid project name")
+	}
+	if resp.Organization != "organization-name" {
+		t.Error("invalid organization name")
+	}
+	if resp.Partner != "partner-name" {
+		t.Error("invalid partner name")
+	}
+}
+
+func TestUserRetrieveCliConfigCreate(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
+	ap := &mockAuthProvider{}
+	mazc := mockAuthzClient{}
+	ks := NewApiKeyService(db, getLogger())
+	us := NewUserService(ap, db, &mazc, ks, common.CliConfigDownloadData{}, getLogger(), true)
+
+	uuuid := uuid.NewString()
+	auuid := uuid.NewString()
+	mock.ExpectQuery(`SELECT sap.* FROM "sentry_account_permission" AS "sap" JOIN authsrv_project as proj ON \(proj.id = sap.project_id\) AND \(proj.default = TRUE\) WHERE \(account_id = '` + uuuid + `'\) LIMIT 1`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"account_id"}).AddRow(uuuid))
+	_ = addFetchExpectation(mock, "project")
+	_ = addFetchExpectation(mock, "organization")
+	_ = addFetchExpectation(mock, "partner")
+
+	mock.ExpectQuery(`SELECT "apikey"."id", "apikey"."name",.* FROM "authsrv_apikey" AS "apikey" WHERE \(name = 'user-` + uuuid + `'\) AND \(trash = FALSE\)`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}))
+
+	mock.ExpectQuery(`INSERT INTO "authsrv_apikey"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(auuid))
+
+	req := &userrpcv3.ApiKeyRequest{Username: "user-" + uuuid, Id: uuuid}
+	resp, err := us.RetrieveCliConfig(context.Background(), req)
+	if err != nil {
+		t.Fatal("could not fetch cli config:", err)
+	}
+	if len(resp.ApiKey) == 0 {
+		t.Error("no apikey generated")
+	}
+	if len(resp.ApiSecret) == 0 {
+		t.Error("no apisecret generated")
+	}
+	if resp.Project != "project-name" {
+		t.Error("invalid project name")
+	}
+	if resp.Organization != "organization-name" {
+		t.Error("invalid organization name")
+	}
+	if resp.Partner != "partner-name" {
+		t.Error("invalid partner name")
 	}
 }
