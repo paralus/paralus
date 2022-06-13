@@ -4,9 +4,9 @@ LABEL description="Build container"
 ENV CGO_ENABLED 0
 COPY . /build
 WORKDIR /build
-RUN go build -o paralus-init scripts/initialize/main.go
+RUN go build -ldflags "-s" -o paralus-init scripts/initialize/main.go
 
-FROM alpine:latest as runtime
+FROM scratch as runtime
 LABEL description="Run container"
 
 WORKDIR /usr/bin
