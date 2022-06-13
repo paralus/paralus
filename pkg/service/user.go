@@ -125,6 +125,9 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 			continue
 		}
 		role := pnr.GetRole()
+		if role == "" {
+			return &userv3.User{}, nil, fmt.Errorf("cannot use empty role")
+		}
 		entity, err := dao.GetByName(ctx, db, role, &models.Role{})
 		if err != nil {
 			return &userv3.User{}, nil, fmt.Errorf("unable to find role '%v'", role)
