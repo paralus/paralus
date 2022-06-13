@@ -189,7 +189,7 @@ func setup() {
 	viper.SetDefault(coreRelayUserHostEnv, "*.user.relay.paralus.local:10002")
 	viper.SetDefault(sentryBootstrapEnv, "console.paralus.dev:443")
 	viper.SetDefault(bootstrapKEKEnv, "paralus")
-	viper.SetDefault(relayImageEnv, "paralus/paralus-relay-agent:r1.10.0-24")
+	viper.SetDefault(relayImageEnv, "paralusio/relay:v1.0.0-beta")
 
 	// audit
 	viper.SetDefault(esEndPointEnv, "http://127.0.0.1:9200")

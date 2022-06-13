@@ -90,7 +90,7 @@ spec:
         - sh
         - -c
         - ulimit -n 65536
-        image: registry.rafay-edge.net/rafay/busybox:1.33
+        image: paralusio/busybox:1.33
         imagePullPolicy: IfNotPresent
         name: set-limits
         resources: {}
