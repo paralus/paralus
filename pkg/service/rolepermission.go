@@ -49,21 +49,6 @@ func (s *rolepermissionService) toV3Rolepermission(rolepermission *rolev3.RolePe
 	return rolepermission
 }
 
-func (s *rolepermissionService) getPartnerOrganization(ctx context.Context, rolepermission *rolev3.RolePermission) (uuid.UUID, uuid.UUID, error) {
-	partner := rolepermission.GetMetadata().GetPartner()
-	org := rolepermission.GetMetadata().GetOrganization()
-	partnerId, err := dao.GetPartnerId(ctx, s.db, partner)
-	if err != nil {
-		return uuid.Nil, uuid.Nil, err
-	}
-	organizationId, err := dao.GetOrganizationId(ctx, s.db, org)
-	if err != nil {
-		return partnerId, uuid.Nil, err
-	}
-	return partnerId, organizationId, nil
-
-}
-
 func (s *rolepermissionService) GetByName(ctx context.Context, rolepermission *rolev3.RolePermission) (*rolev3.RolePermission, error) {
 	name := rolepermission.GetMetadata().GetName()
 	entity, err := dao.GetByName(ctx, s.db, name, &models.ResourcePermission{})
