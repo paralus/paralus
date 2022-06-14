@@ -8,8 +8,8 @@ on:
     branches: [ main ]
 
 env:
-  REGISTRY: registry.dev.rafay-edge.net
-  IMAGE_NAME: ${{ github.repository }}
+  REGISTRY: docker.io
+  IMAGE_NAME: paralusio/paralus
 
 jobs:
 
@@ -86,7 +86,7 @@ jobs:
         id: meta-sync
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ env.REGISTRY }}/kratos-synchronizer
+          images: ${{ env.REGISTRY }}/paralusio/kratos-synchronizer
           tags: |
             type=ref,event=branch
             type=ref,event=tag
