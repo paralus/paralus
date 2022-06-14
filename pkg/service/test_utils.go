@@ -65,11 +65,26 @@ func idnamea(uid string, resource string) *string {
 	return &name
 }
 
+func addFetchEmptyExpecteation(mock sqlmock.Sqlmock, resource string) {
+	mock.ExpectQuery(`SELECT "` + resource + `"."id" FROM "authsrv_` + resource + `" AS "` + resource + `"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}))
+}
+
+func addFailingFetchExpecteation(mock sqlmock.Sqlmock, resource string) {
+	mock.ExpectQuery(`SELECT "` + resource + `"."id" FROM "authsrv_` + resource + `" AS "` + resource + `"`).
+		WithArgs().WillReturnError(fmt.Errorf("no data available"))
+}
+
 func addFetchIdExpectation(mock sqlmock.Sqlmock, resource string) string {
 	uid := uuid.New().String()
 	mock.ExpectQuery(`SELECT "` + resource + `"."id" FROM "authsrv_` + resource + `" AS "` + resource + `"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uid))
 	return uid
+}
+
+func addFetchByIdExpectation(mock sqlmock.Sqlmock, resource, uid string) {
+	mock.ExpectQuery(`SELECT "` + resource + `"."id".* FROM "authsrv_` + resource + `" AS "` + resource + `" WHERE .id = '` + uid + `'.`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(uid, resource+"-"+uid))
 }
 
 func addFetchIdByNameExpectation(mock sqlmock.Sqlmock, resource, name string) string {

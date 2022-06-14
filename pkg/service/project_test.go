@@ -25,10 +25,8 @@ func TestCreateProject(t *testing.T) {
 	ps := NewProjectService(db, &mazc, getLogger(), true)
 
 	puuid := uuid.New().String()
-	ouuid := uuid.New().String()
 
-	mock.ExpectQuery(`SELECT "organization"."id", "organization"."name"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
+	addFetchExpectation(mock, "organization")
 	mock.ExpectBegin()
 	mock.ExpectQuery(`INSERT INTO "authsrv_project"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
@@ -109,8 +107,7 @@ func TestProjectDeleteNonExist(t *testing.T) {
 
 	puuid := uuid.New().String()
 
-	mock.ExpectQuery(`SELECT "project"."id", "project"."name", .* FROM "authsrv_project" AS "project" WHERE`).
-		WithArgs().WillReturnError(fmt.Errorf("no data available"))
+	addFailingFetchExpecteation(mock, "project")
 
 	project := &systemv3.Project{
 		Metadata: &v3.Metadata{Id: puuid, Name: "project-" + puuid},
@@ -128,18 +125,10 @@ func TestProjectGetByName(t *testing.T) {
 	mazc := mockAuthzClient{}
 	ps := NewProjectService(db, &mazc, getLogger(), true)
 
-	partuuid := uuid.New().String()
-	ouuid := uuid.New().String()
 	puuid := uuid.New().String()
-
-	mock.ExpectQuery(`SELECT "project"."id", "project"."name"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "organization_id", "partner_id"}).AddRow(puuid, ouuid, partuuid))
-
-	mock.ExpectQuery(`SELECT "organization"."id", "organization"."name"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ouuid))
-
-	mock.ExpectQuery(`SELECT "partner"."id", "partner"."name"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(partuuid))
+	addFetchExpectation(mock, "project")
+	addFetchExpectation(mock, "organization")
+	addFetchExpectation(mock, "partner")
 
 	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group 
 		FROM "authsrv_projectgrouprole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id 
@@ -176,10 +165,9 @@ func TestProjectGetById(t *testing.T) {
 	mazc := mockAuthzClient{}
 	ps := NewProjectService(db, &mazc, getLogger(), true)
 
-	puuid := uuid.New().String()
+	puuid := uuid.NewString()
 
-	mock.ExpectQuery(`SELECT "project"."id", "project"."name", .* FROM "authsrv_project" AS "project" WHERE .*id = '` + puuid + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(puuid, "project-"+puuid))
+	addFetchByIdExpectation(mock, "project", puuid)
 
 	project := &systemv3.Project{
 		Metadata: &v3.Metadata{Id: puuid, Name: "project-" + puuid},
@@ -198,10 +186,7 @@ func TestProjectUpdate(t *testing.T) {
 	mazc := mockAuthzClient{}
 	ps := NewProjectService(db, &mazc, getLogger(), true)
 
-	puuid := uuid.New().String()
-
-	mock.ExpectQuery(`SELECT "project"."id", "project"."name", .* FROM "authsrv_project" AS "project" WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(puuid, "project-"+puuid))
+	puuid := addFetchExpectation(mock, "project")
 	mock.ExpectBegin()
 	mock.ExpectExec(`UPDATE "authsrv_projectgrouprole" AS "projectgrouprole" SET trash = TRUE WHERE`).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectQuery(`UPDATE "authsrv_projectgroupnamespacerole" AS "projectgroupnamespacerole" SET trash = TRUE WHERE ."project_id" = '` + puuid + `'. AND .trash = false. RETURNING *`).
