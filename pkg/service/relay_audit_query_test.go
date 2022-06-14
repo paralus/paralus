@@ -92,9 +92,13 @@ func TestGetRelayAuditLogByProjectsSimple(t *testing.T) {
 			QueryString:   "query-string",
 			Projects:      []string{"project-one", "project-two"},
 			Timefrom:      "now-1h",
-			Type:          "fake-type",
-			User:          "fake-user",
-			Client:        "fake-client",
+			Type:          "test-type",
+			User:          "test-user",
+			Client:        "test-client",
+			Cluster:       "test-cluster",
+			Namespace:     "test-namespace",
+			Kind:          "test-kind",
+			Method:        "test-method",
 			DashboardData: true,
 		},
 	}
@@ -110,7 +114,7 @@ func TestGetRelayAuditLogByProjectsSimple(t *testing.T) {
 	if err != nil {
 		t.Fatal("unable to unmarshall es request")
 	}
-	expected := `{"_source":["json"],"aggs":{"group_by_cluster":{"aggs":{"group_by_namespace":{"terms":{"field":"json.ns","size":1000}},"group_by_username":{"terms":{"field":"json.un","size":1000}}},"terms":{"field":"json.cn","size":1000}},"group_by_kind":{"terms":{"field":"json.k"}},"group_by_method":{"terms":{"field":"json.m"}},"group_by_namespace":{"terms":{"field":"json.ns"}},"group_by_username":{"terms":{"field":"json.un"}}},"query":{"bool":{"filter":{"range":{"json.ts":{"gte":"now-1h","lt":"now"}}},"must":[{"term":{"json.un":"fake-user"}},{"terms":{"json.project":["project-one","project-two"]}},{"query_string":{"query":"query-string"}}]}},"size":0,"sort":{"json.ts":{"order":"desc"}}}`
+	expected := `{"_source":["json"],"aggs":{"group_by_cluster":{"aggs":{"group_by_namespace":{"terms":{"field":"json.ns","size":1000}},"group_by_username":{"terms":{"field":"json.un","size":1000}}},"terms":{"field":"json.cn","size":1000}},"group_by_kind":{"terms":{"field":"json.k"}},"group_by_method":{"terms":{"field":"json.m"}},"group_by_namespace":{"terms":{"field":"json.ns"}},"group_by_username":{"terms":{"field":"json.un"}}},"query":{"bool":{"filter":{"range":{"json.ts":{"gte":"now-1h","lt":"now"}}},"must":[{"term":{"json.un":"test-user"}},{"term":{"json.cn":"test-cluster"}},{"term":{"json.ns":"test-namespace"}},{"term":{"json.k":"test-kind"}},{"term":{"json.m":"test-method"}},{"terms":{"json.project":["project-one","project-two"]}},{"query_string":{"query":"query-string"}}]}},"size":0,"sort":{"json.ts":{"order":"desc"}}}`
 	if strings.TrimSpace(esq.msg[0].String()) != expected {
 		t.Errorf("incorrect es query; expected '%v', got '%v'", expected, strings.TrimSpace(esq.msg[0].String()))
 	}
