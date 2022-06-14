@@ -88,7 +88,7 @@ func addFetchByIdExpectation(mock sqlmock.Sqlmock, resource, uid string) {
 }
 
 func addFetchIdByNameExpectation(mock sqlmock.Sqlmock, resource, name string) string {
-	uid := uuid.New().String()
+	uid := uuid.NewString()
 	mock.ExpectQuery(`SELECT "` + resource + `"."id" FROM "authsrv_` + resource + `" AS "` + resource + `" WHERE .name = '` + name + `'.`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uid))
 	return uid
