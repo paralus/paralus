@@ -14,7 +14,7 @@ func GetProjectNamespaces(ctx context.Context, db bun.IDB, projectID uuid.UUID) 
 
 	var panr []models.ProjectAccountNamespaceRole
 	err := db.NewSelect().Model(&panr).Where("project_id = ?", projectID).Where("trash = ?", false).Scan(ctx)
-	if err != sql.ErrNoRows {
+	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
 	for _, nr := range panr {
@@ -23,7 +23,7 @@ func GetProjectNamespaces(ctx context.Context, db bun.IDB, projectID uuid.UUID) 
 
 	var pgnr []models.ProjectGroupNamespaceRole
 	err = db.NewSelect().Model(&pgnr).Where("project_id = ?", projectID).Where("trash = ?", false).Scan(ctx)
-	if err != sql.ErrNoRows {
+	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
 	for _, nr := range pgnr {
