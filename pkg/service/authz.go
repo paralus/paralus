@@ -33,7 +33,7 @@ type authzService struct {
 }
 
 func NewAuthzService(db *bun.DB, en *casbin.CachedEnforcer) AuthzService {
-	// en.EnableCache(false) // disables caching in casbin
+	en.EnableCache(false) // disables caching in casbin
 	return &authzService{
 		db:           db,
 		enforcer:     en,
@@ -258,7 +258,7 @@ func (s *authzService) CreatePolicies(ctx context.Context, p *authzpbv1.Policies
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
-	s.enforcer.InvalidateCache()
+	// s.enforcer.InvalidateCache()
 	return &authzpbv1.BoolReply{Res: res}, nil
 }
 
@@ -268,7 +268,7 @@ func (s *authzService) DeletePolicies(ctx context.Context, p *authzpbv1.Policy) 
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
-	s.enforcer.InvalidateCache()
+	// s.enforcer.InvalidateCache()
 	return &authzpbv1.BoolReply{Res: res}, nil
 }
 
@@ -292,7 +292,7 @@ func (s *authzService) CreateUserGroups(ctx context.Context, p *authzpbv1.UserGr
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	s.enforcer.InvalidateCache()
+	// s.enforcer.InvalidateCache()
 	return &authzpbv1.BoolReply{Res: res}, nil
 }
 
@@ -303,7 +303,7 @@ func (s *authzService) DeleteUserGroups(ctx context.Context, p *authzpbv1.UserGr
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	s.enforcer.InvalidateCache()
+	// s.enforcer.InvalidateCache()
 	return &authzpbv1.BoolReply{Res: res}, nil
 }
 
@@ -328,7 +328,7 @@ func (s *authzService) CreateRolePermissionMappings(ctx context.Context, p *auth
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	s.enforcer.InvalidateCache()
+	// s.enforcer.InvalidateCache()
 	return &authzpbv1.BoolReply{Res: res}, nil
 }
 
@@ -338,6 +338,6 @@ func (s *authzService) DeleteRolePermissionMappings(ctx context.Context, p *auth
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
-	s.enforcer.InvalidateCache()
+	// s.enforcer.InvalidateCache()
 	return &authzpbv1.BoolReply{Res: res}, nil
 }
