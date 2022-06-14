@@ -323,7 +323,7 @@ spec:
       serviceAccountName: system-sa
       initContainers:
       - name: set-limits
-        image: "paralusio/busybox:1.33"
+        image: "busybox:1.33"
         command: ["sh", "-c", "ulimit -n 65536"]
         securityContext:
           privileged: true

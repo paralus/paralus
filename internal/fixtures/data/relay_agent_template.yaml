@@ -90,7 +90,7 @@ spec:
         - sh
         - -c
         - ulimit -n 65536
-        image: paralusio/busybox:1.33
+        image: busybox:1.33
         imagePullPolicy: IfNotPresent
         name: set-limits
         resources: {}
