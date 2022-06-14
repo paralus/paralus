@@ -957,9 +957,14 @@
           "type": "string",
           "description": "Role",
           "title": "Role"
+        },
+        "namespace": {
+          "type": "string",
+          "description": "Namespace",
+          "title": "Namespace"
         }
       },
-      "description": "User, role pairing for permission",
+      "description": "User, role, namespace pairing for permission",
       "title": "UserRole"
     }
   },

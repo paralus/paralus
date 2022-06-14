@@ -81,6 +81,7 @@ func GetProjectGroupRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*use
 		Join(`JOIN authsrv_group ON authsrv_group.id=authsrv_projectgrouprole.group_id`).
 		Join(`JOIN authsrv_project ON authsrv_project.id=authsrv_projectgrouprole.project_id`).
 		Where("authsrv_projectgrouprole.project_id = ?", id).
+		Where("authsrv_projectgrouprole.trash = ?", false).
 		Scan(ctx, &pr)
 	if err != nil {
 		return nil, err
@@ -91,8 +92,9 @@ func GetProjectGroupRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*use
 		ColumnExpr("distinct authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group, namespace").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgroupnamespacerole.role_id`).
 		Join(`JOIN authsrv_project ON authsrv_project.id=authsrv_projectgroupnamespacerole.project_id`).
-		Join(`JOIN authsrv_group ON authsrv_group.id=authsrv_projectgroupnamespacerole.group_id`). // also need a namespace join
+		Join(`JOIN authsrv_group ON authsrv_group.id=authsrv_projectgroupnamespacerole.group_id`).
 		Where("authsrv_projectgroupnamespacerole.project_id = ?", id).
+		Where("authsrv_projectgroupnamespacerole.trash = ?", false).
 		Scan(ctx, &pnr)
 	if err != nil {
 		return nil, err
@@ -103,16 +105,29 @@ func GetProjectGroupRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*use
 
 func GetProjectUserRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.UserRole, error) {
 
-	var pr = []*userv3.UserRole{}
+	var ur = []*userv3.UserRole{}
 	err := db.NewSelect().Table("authsrv_projectaccountresourcerole").
 		ColumnExpr("distinct authsrv_resourcerole.name as role, identities.traits ->> 'email' as user").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id`).
 		Join(`JOIN identities ON identities.id=authsrv_projectaccountresourcerole.account_id`).
 		Where("authsrv_projectaccountresourcerole.project_id = ?", id).
-		Scan(ctx, &pr)
+		Where("authsrv_projectaccountresourcerole.trash = ?", false).
+		Scan(ctx, &ur)
 	if err != nil {
 		return nil, err
 	}
 
-	return pr, err
+	var unr = []*userv3.UserRole{}
+	err = db.NewSelect().Table("authsrv_projectaccountnamespacerole").
+		ColumnExpr("distinct authsrv_resourcerole.name as role, identities.traits ->> 'email' as user, namespace").
+		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id`).
+		Join(`JOIN identities ON identities.id=authsrv_projectaccountnamespacerole.account_id`).
+		Where("authsrv_projectaccountnamespacerole.project_id = ?", id).
+		Where("authsrv_projectaccountnamespacerole.trash = ?", false).
+		Scan(ctx, &unr)
+	if err != nil {
+		return nil, err
+	}
+
+	return append(ur, unr...), err
 }

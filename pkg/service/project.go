@@ -445,16 +445,21 @@ func (s *projectService) createGroupRoleRelations(ctx context.Context, db bun.ID
 	projectNamespaceRoles := project.GetSpec().GetProjectNamespaceRoles()
 
 	var pgrs []models.ProjectGroupRole
+	var pgnr []models.ProjectGroupNamespaceRole
 	var ps []*authzv1.Policy
 	for _, pnr := range projectNamespaceRoles {
 		role := pnr.GetRole()
-		entity, err := dao.GetIdByName(ctx, db, role, &models.Role{})
+		entity, err := dao.GetByName(ctx, db, role, &models.Role{})
 		if err != nil {
 			return &systemv3.Project{}, fmt.Errorf("unable to find role '%v'", role)
 		}
 		var roleId uuid.UUID
+		var scope string
+		var roleName string
 		if rle, ok := entity.(*models.Role); ok {
 			roleId = rle.ID
+			scope = rle.Scope
+			roleName = rle.Name
 		} else {
 			return &systemv3.Project{}, fmt.Errorf("unable to find role '%v'", role)
 		}
@@ -474,27 +479,72 @@ func (s *projectService) createGroupRoleRelations(ctx context.Context, db bun.ID
 		}
 
 		org := project.Metadata.Organization
-		pgr := models.ProjectGroupRole{
-			Trash:          false,
-			RoleId:         roleId,
-			PartnerId:      ids.Partner,
-			OrganizationId: ids.Organization,
-			GroupId:        grpId,
-			ProjectId:      ids.Id,
-			Active:         true,
-		}
-		pgrs = append(pgrs, pgr)
+		switch scope {
+		case "project":
+			if org == "" {
+				return &systemv3.Project{}, fmt.Errorf("no org name provided for role '%v'", roleName)
+			}
 
-		ps = append(ps, &authzv1.Policy{
-			Sub:  "g:" + grpName,
-			Ns:   "*",
-			Proj: project.Metadata.Name,
-			Org:  org,
-			Obj:  role,
-		})
+			pgr := models.ProjectGroupRole{
+				Trash:          false,
+				RoleId:         roleId,
+				PartnerId:      ids.Partner,
+				OrganizationId: ids.Organization,
+				GroupId:        grpId,
+				ProjectId:      ids.Id,
+				Active:         true,
+			}
+			pgrs = append(pgrs, pgr)
+
+			ps = append(ps, &authzv1.Policy{
+				Sub:  "g:" + grpName,
+				Ns:   "*",
+				Proj: project.Metadata.Name,
+				Org:  org,
+				Obj:  role,
+			})
+		case "namespace":
+			if org == "" {
+				return &systemv3.Project{}, fmt.Errorf("no org name provided for role '%v'", roleName)
+			}
+
+			namespace := pnr.GetNamespace()
+			pgnrObj := models.ProjectGroupNamespaceRole{
+				CreatedAt:      time.Now(),
+				ModifiedAt:     time.Now(),
+				Trash:          false,
+				PartnerId:      ids.Partner,
+				OrganizationId: ids.Organization,
+				RoleId:         roleId,
+				GroupId:        grpId,
+				ProjectId:      ids.Id,
+				Namespace:      namespace,
+				Active:         true,
+			}
+			pgnr = append(pgnr, pgnrObj)
+
+			ps = append(ps, &authzv1.Policy{
+				Sub:  "g:" + grpName,
+				Ns:   namespace,
+				Proj: project.Metadata.Name,
+				Org:  org,
+				Obj:  role,
+			})
+		default:
+			if err != nil {
+				return project, fmt.Errorf("other scoped roles are not handled")
+			}
+		}
+
 	}
 	if len(pgrs) > 0 {
 		_, err := dao.Create(ctx, db, &pgrs)
+		if err != nil {
+			return &systemv3.Project{}, err
+		}
+	}
+	if len(pgnr) > 0 {
+		_, err := dao.Create(ctx, db, &pgnr)
 		if err != nil {
 			return &systemv3.Project{}, err
 		}
@@ -517,6 +567,12 @@ func (s *projectService) deleteGroupRoleRelations(ctx context.Context, db bun.ID
 		return &systemv3.Project{}, err
 	}
 
+	pgnr := []models.ProjectGroupNamespaceRole{}
+	err = dao.DeleteXR(ctx, db, "project_id", projectId, &pgnr)
+	if err != nil {
+		return &systemv3.Project{}, err
+	}
+
 	_, err = s.azc.DeletePolicies(ctx, &authzv1.Policy{Proj: project.GetMetadata().GetName()})
 	if err != nil {
 		return &systemv3.Project{}, fmt.Errorf("unable to delete project group-role relations from authz; %v", err)
@@ -530,6 +586,12 @@ func (s *projectService) deleteProjectAccountRelations(ctx context.Context, db b
 		return &systemv3.Project{}, fmt.Errorf("unable to delete project; %v", err)
 	}
 
+	pgnr := []models.ProjectAccountNamespaceRole{}
+	err = dao.DeleteXR(ctx, db, "project_id", projectId, &pgnr)
+	if err != nil {
+		return &systemv3.Project{}, err
+	}
+
 	_, err = s.azc.DeletePolicies(ctx, &authzv1.Policy{Proj: project.GetMetadata().GetName()})
 	if err != nil {
 		return &systemv3.Project{}, fmt.Errorf("unable to delete project user-role relations from authz; %v", err)
@@ -540,6 +602,7 @@ func (s *projectService) deleteProjectAccountRelations(ctx context.Context, db b
 // Update the users(account) mapped to each project
 func (s *projectService) createProjectAccountRelations(ctx context.Context, db bun.IDB, projectId uuid.UUID, project *systemv3.Project) (*systemv3.Project, error) {
 	var parrs []models.ProjectAccountResourcerole
+	var panrs []models.ProjectAccountNamespaceRole
 	var ugs []*authzv1.Policy
 
 	for _, ur := range project.GetSpec().GetUserRoles() {
@@ -555,39 +618,76 @@ func (s *projectService) createProjectAccountRelations(ctx context.Context, db b
 
 		if acc, ok := entity.(*models.KratosIdentities); ok {
 			if role, ok := rentity.(*models.Role); ok {
-				parr := models.ProjectAccountResourcerole{
-					CreatedAt:      time.Now(),
-					ModifiedAt:     time.Now(),
-					Trash:          false,
-					AccountId:      acc.ID,
-					ProjectId:      projectId,
-					RoleId:         role.ID,
-					OrganizationId: role.OrganizationId,
-					PartnerId:      role.PartnerId,
-					Active:         true,
+				switch role.Scope {
+				case "project":
+					parr := models.ProjectAccountResourcerole{
+						CreatedAt:      time.Now(),
+						ModifiedAt:     time.Now(),
+						Trash:          false,
+						AccountId:      acc.ID,
+						ProjectId:      projectId,
+						RoleId:         role.ID,
+						OrganizationId: role.OrganizationId,
+						PartnerId:      role.PartnerId,
+						Active:         true,
+					}
+					parrs = append(parrs, parr)
+					ugs = append(ugs, &authzv1.Policy{
+						Sub:  "u:" + ur.User,
+						Proj: project.Metadata.Name,
+						Org:  project.Metadata.Organization,
+						Ns:   "*",
+						Obj:  role.Name,
+					})
+				case "namespace":
+					panrObj := models.ProjectAccountNamespaceRole{
+						CreatedAt:      time.Now(),
+						ModifiedAt:     time.Now(),
+						Trash:          false,
+						AccountId:      acc.ID,
+						PartnerId:      role.PartnerId,
+						OrganizationId: role.OrganizationId,
+						RoleId:         role.ID,
+						ProjectId:      projectId,
+						Namespace:      ur.GetNamespace(),
+						Active:         true,
+					}
+					panrs = append(panrs, panrObj)
+
+					ugs = append(ugs, &authzv1.Policy{
+						Sub:  "u:" + ur.User,
+						Proj: project.Metadata.Name,
+						Org:  project.Metadata.Organization,
+						Ns:   ur.GetNamespace(),
+						Obj:  role.Name,
+					})
+				default:
+					if err != nil {
+						return project, fmt.Errorf("other scoped roles are not handled")
+					}
 				}
-				parrs = append(parrs, parr)
-				ugs = append(ugs, &authzv1.Policy{
-					Sub:  "u:" + ur.User,
-					Proj: project.Metadata.Name,
-					Org:  project.Metadata.Organization,
-					Ns:   "*",
-					Obj:  role.Name,
-				})
 			}
 		}
 	}
-	if len(parrs) == 0 {
+	if len(parrs) == 0 && len(panrs) == 0 {
 		return project, nil
 	}
-	_, err := dao.Create(ctx, db, &parrs)
-	if err != nil {
-		return &systemv3.Project{}, err
+	if len(parrs) > 0 {
+		_, err := dao.Create(ctx, db, &parrs)
+		if err != nil {
+			return &systemv3.Project{}, err
+		}
+	}
+	if len(panrs) > 0 {
+		_, err := dao.Create(ctx, db, &panrs)
+		if err != nil {
+			return &systemv3.Project{}, err
+		}
 	}
 
 	// TODO: revert our db inserts if this fails
 	// Just FYI, the succcess can be false if we delete the db directly but casbin has it available internally
-	_, err = s.azc.CreatePolicies(ctx, &authzv1.Policies{Policies: ugs})
+	_, err := s.azc.CreatePolicies(ctx, &authzv1.Policies{Policies: ugs})
 	if err != nil {
 		return &systemv3.Project{}, fmt.Errorf("unable to create mapping in authz; %v", err)
 	}
