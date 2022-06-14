@@ -3,6 +3,7 @@ package service
 import (
 	"bytes"
 	"encoding/json"
+	"strings"
 	"testing"
 
 	v1 "github.com/paralus/paralus/proto/rpc/audit"
@@ -109,42 +110,9 @@ func TestGetAuditLogByProjectsSimple(t *testing.T) {
 	if err != nil {
 		t.Fatal("unable to unmarshall es request")
 	}
-
-	if m.Source[0] != "json" {
-		t.Errorf("incorrect source; expected '%v', got '%v'", "json", m.Source[0])
-	}
-
-	if m.Aggs.GroupByType.Terms.Field != "json.type" {
-		t.Errorf("incorrect group_by_type field; expected '%v', got '%v'", "json.type", m.Aggs.GroupByType.Terms.Field)
-	}
-
-	if m.Aggs.GroupByUsername.Terms.Field != "json.actor.account.username" {
-		t.Errorf("incorrect group_by_type field; expected '%v', got '%v'", "json.actor.account.username", m.Aggs.GroupByUsername.Terms.Field)
-	}
-
-	// FIXME: will this cause issues as json has no ordering?
-	if m.Query.Bool.Must[0].Term.JSONCategory != "AUDIT" {
-		t.Errorf("incorrect category; expected '%v', got '%v'", "AUDIT", m.Query.Bool.Must[0].Term.JSONCategory)
-	}
-
-	// TODO: add checks for user, client and type
-	if m.Query.Bool.Must[5].QueryString.Query != "query-string" {
-		t.Errorf("incorrect category; expected '%v', got '%v'", "query-string", m.Query.Bool.Must[5].QueryString.Query)
-	}
-
-	if len(m.Query.Bool.Must[4].Terms.JSONProject) != 2 {
-		t.Errorf("incorrect number of project filters; expected '%v', got '%v'", 2, len(m.Query.Bool.Must[4].Terms.JSONProject))
-	}
-
-	if m.Query.Bool.Must[4].Terms.JSONProject[0] != "project-one" {
-		t.Errorf("incorrect number of project filters; expected '%v', got '%v'", "project-one", m.Query.Bool.Must[4].Terms.JSONProject[0])
-	}
-
-	if m.Query.Bool.Filter.Range.JSONTimestamp.Gte != "now-1h" {
-		t.Errorf("incorrect time range; expected '%v', got '%v'", "now-1h", m.Query.Bool.Filter.Range.JSONTimestamp.Gte)
-	}
-	if m.Query.Bool.Filter.Range.JSONTimestamp.Lt != "now" {
-		t.Errorf("incorrect time range; expected '%v', got '%v'", "now", m.Query.Bool.Filter.Range.JSONTimestamp.Lt)
+	expected := `{"_source":["json"],"aggs":{"group_by_project":{"aggs":{"group_by_type":{"terms":{"field":"json.type","size":1000}},"group_by_username":{"terms":{"field":"json.actor.account.username","size":1000}}},"terms":{"field":"json.project","size":1000}},"group_by_type":{"terms":{"field":"json.type"}},"group_by_username":{"terms":{"field":"json.actor.account.username"}}},"query":{"bool":{"filter":{"range":{"json.timestamp":{"gte":"now-1h","lt":"now"}}},"must":[{"term":{"json.category":"AUDIT"}},{"term":{"json.type":"fake-type"}},{"term":{"json.actor.account.username":"fake-user"}},{"term":{"json.client.type":"fake-client"}},{"terms":{"json.project":["project-one","project-two"]}},{"query_string":{"query":"query-string"}}]}},"size":0,"sort":{"json.timestamp":{"order":"desc"}}}`
+	if strings.TrimSpace(esq.msg[0].String()) != expected {
+		t.Errorf("incorrect es query; expected '%v', got '%v'", expected, strings.TrimSpace(esq.msg[0].String()))
 	}
 }
 
@@ -170,32 +138,8 @@ func TestGetAuditLogByProjectsNoProject(t *testing.T) {
 		t.Fatal("unable to unmarshall es request")
 	}
 
-	if m.Source[0] != "json" {
-		t.Errorf("incorrect source; expected '%v', got '%v'", "json", m.Source[0])
-	}
-
-	if m.Aggs.GroupByType.Terms.Field != "json.type" {
-		t.Errorf("incorrect group_by_type field; expected '%v', got '%v'", "json.type", m.Aggs.GroupByType.Terms.Field)
-	}
-
-	if m.Aggs.GroupByUsername.Terms.Field != "json.actor.account.username" {
-		t.Errorf("incorrect group_by_type field; expected '%v', got '%v'", "json.actor.account.username", m.Aggs.GroupByUsername.Terms.Field)
-	}
-
-	// FIXME: will this cause issues as json has no ordering?
-	if m.Query.Bool.Must[0].Term.JSONCategory != "AUDIT" {
-		t.Errorf("incorrect category; expected '%v', got '%v'", "AUDIT", m.Query.Bool.Must[0].Term.JSONCategory)
-	}
-
-	if m.Query.Bool.Must[2].QueryString.Query != "query-string" {
-		t.Errorf("incorrect category; expected '%v', got '%v'", "query-string", m.Query.Bool.Must[2].QueryString.Query)
-	}
-
-	if len(m.Query.Bool.Must[1].Terms.JSONProject) != 1 {
-		t.Errorf("incorrect number of project filters; expected '%v', got '%v'", 1, len(m.Query.Bool.Must[1].Terms.JSONProject))
-	}
-
-	if m.Query.Bool.Must[1].Terms.JSONProject[0] != "project" {
-		t.Errorf("incorrect number of project filters; expected '%v', got '%v'", "project", m.Query.Bool.Must[1].Terms.JSONProject[0])
+	expected := `{"_source":["json"],"aggs":{"group_by_type":{"terms":{"field":"json.type"}},"group_by_username":{"terms":{"field":"json.actor.account.username"}}},"query":{"bool":{"must":[{"term":{"json.category":"AUDIT"}},{"terms":{"json.project":["project"]}},{"query_string":{"query":"query-string"}}]}},"size":500,"sort":{"json.timestamp":{"order":"desc"}}}`
+	if strings.TrimSpace(esq.msg[0].String()) != expected {
+		t.Errorf("incorrect es query; expected '%v', got '%v'", expected, strings.TrimSpace(esq.msg[0].String()))
 	}
 }
