@@ -9,7 +9,7 @@ vendor:
 build:
 	# Omit the symbol table and debug information to reduce the
 	# size of binary.
-	go build -ldflags "-s" -o rcloud-base .
+	go build -ldflags "-s" -o paralus .
 
 .PHONY: build-proto
 build-proto:
