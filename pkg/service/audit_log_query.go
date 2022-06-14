@@ -11,7 +11,7 @@ import (
 )
 
 type AuditLogService struct {
-	auditQuery *ElasticSearchQuery
+	auditQuery ElasticSearchQuery
 }
 
 func NewAuditLogService(url string, auditPattern string, logPrefix string) (*AuditLogService, error) {
