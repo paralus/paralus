@@ -9,7 +9,7 @@ RUN go mod download
 COPY . .
 RUN make build
 
-FROM scratch as runtime
+FROM alpine:latest as runtime
 LABEL description="Run container"
 
 WORKDIR /usr/bin

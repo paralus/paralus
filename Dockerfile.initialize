@@ -8,7 +8,7 @@ RUN go build -ldflags "-s" -o paralus-init scripts/initialize/main.go
 RUN wget -O kratos.tar.gz -q https://github.com/ory/kratos/releases/download/v0.8.0-alpha.3/kratos_0.8.0-alpha.3_linux_64bit.tar.gz && tar -xf kratos.tar.gz
 RUN wget -O migrate.tar.gz -q https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz && tar -xf migrate.tar.gz
 
-FROM scratch as runtime
+FROM alpine:latest as runtime
 LABEL description="Run container"
 
 WORKDIR /usr/bin

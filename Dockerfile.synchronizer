@@ -6,7 +6,7 @@ COPY . /build
 WORKDIR /build
 RUN go build -ldflags "-s" -o start-sync scripts/kratos/providers_sync.go
 
-FROM scratch as runtime
+FROM alpine:latest as runtime
 LABEL description="Run container"
 
 WORKDIR /usr/bin
