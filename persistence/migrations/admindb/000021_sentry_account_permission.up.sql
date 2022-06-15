@@ -28,6 +28,22 @@ FROM (
         AND gr.trash = FALSE
     UNION
     SELECT
+        ga.account_id,
+        gr.group_id,
+	p.id,
+        gr.role_id,
+        gr.organization_id,
+        gr.partner_id
+    FROM
+        authsrv_groupaccount ga
+        INNER JOIN authsrv_grouprole gr ON ga.group_id = gr.group_id
+        INNER JOIN authsrv_resourcerole rr ON rr.id = gr.role_id AND rr.scope = 'organization'
+        INNER JOIN authsrv_project p ON p.organization_id = gr.organization_id AND p.partner_id = gr.partner_id
+    WHERE
+        ga.trash = FALSE
+        AND gr.trash = FALSE
+    UNION
+    SELECT
         account_id,
         uuid_nil() as group_id,
         uuid_nil() project_id,

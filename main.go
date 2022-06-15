@@ -326,8 +326,8 @@ func setup() {
 
 	// users and role management services
 	cc := common.CliConfigDownloadData{
-		RestEndpoint: apiAddr,
-		OpsEndpoint:  apiAddr,
+		RestEndpoint: sentryBootstrapAddr,
+		OpsEndpoint:  sentryBootstrapAddr,
 	}
 	if dev {
 		cc.Profile = "staging"
