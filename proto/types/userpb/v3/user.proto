@@ -244,7 +244,7 @@ message UserRole {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema : {
       title : "UserRole"
-      description : "User, role pairing for permission"
+      description : "User, role, namespace pairing for permission"
     }
   };
   string user = 1
@@ -256,5 +256,10 @@ message UserRole {
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Role"
         description : "Role"
+      } ];
+  string namespace = 3
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "Namespace"
+        description : "Namespace"
       } ];
 }

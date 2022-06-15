@@ -81,7 +81,11 @@ func TestProjectDelete(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(puuid, "project-"+puuid))
 	mock.ExpectBegin()
 	mock.ExpectExec(`UPDATE "authsrv_projectgrouprole" AS "projectgrouprole" SET trash = TRUE WHERE`).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectQuery(`UPDATE "authsrv_projectgroupnamespacerole" AS "projectgroupnamespacerole" SET trash = TRUE WHERE ."project_id" = '` + puuid + `'. AND .trash = false. RETURNING *`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 	mock.ExpectExec(`UPDATE "authsrv_projectaccountresourcerole" AS "projectaccountresourcerole" SET trash = TRUE WHERE`).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectQuery(`UPDATE "authsrv_projectaccountnamespacerole" AS "projectaccountnamespacerole" SET trash = TRUE WHERE ."project_id" = '` + puuid + `'. AND .trash = false. RETURNING *`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 
 	mock.ExpectExec(`UPDATE "authsrv_project"`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
@@ -152,6 +156,10 @@ func TestProjectGetByName(t *testing.T) {
 		FROM "authsrv_projectaccountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id 
 		JOIN identities ON identities.id=authsrv_projectaccountresourcerole.account_id WHERE`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("ADMIN"))
 
+	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, identities.traits ->> 'email' as user, namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole 
+		ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN identities 
+		ON identities.id=authsrv_projectaccountnamespacerole.account_id WHERE`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("ADMIN"))
+
 	project := &systemv3.Project{
 		Metadata: &v3.Metadata{Id: puuid, Name: "project-" + puuid},
 	}
@@ -196,7 +204,11 @@ func TestProjectUpdate(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(puuid, "project-"+puuid))
 	mock.ExpectBegin()
 	mock.ExpectExec(`UPDATE "authsrv_projectgrouprole" AS "projectgrouprole" SET trash = TRUE WHERE`).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectQuery(`UPDATE "authsrv_projectgroupnamespacerole" AS "projectgroupnamespacerole" SET trash = TRUE WHERE ."project_id" = '` + puuid + `'. AND .trash = false. RETURNING *`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 	mock.ExpectExec(`UPDATE "authsrv_projectaccountresourcerole" AS "projectaccountresourcerole" SET trash = TRUE WHERE`).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectQuery(`UPDATE "authsrv_projectaccountnamespacerole" AS "projectaccountnamespacerole" SET trash = TRUE WHERE ."project_id" = '` + puuid + `'. AND .trash = false. RETURNING *`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 	mock.ExpectExec(`UPDATE "authsrv_project"`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group 
@@ -211,6 +223,9 @@ func TestProjectUpdate(t *testing.T) {
 	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, identities.traits ->> 'email' as user 
 		FROM "authsrv_projectaccountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id 
 		JOIN identities ON identities.id=authsrv_projectaccountresourcerole.account_id WHERE`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "user"}).AddRow("ADMIN", "user@email.com"))
+	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, identities.traits ->> 'email' as user, namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole 
+		ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN identities 
+		ON identities.id=authsrv_projectaccountnamespacerole.account_id WHERE`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role"}).AddRow("ADMIN"))
 	mock.ExpectCommit()
 
 	project := &systemv3.Project{
