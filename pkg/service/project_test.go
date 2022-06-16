@@ -82,14 +82,16 @@ func TestCreateProjectFull(t *testing.T) {
 	mock.ExpectBegin()
 	mock.ExpectQuery(`INSERT INTO "authsrv_project"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
-	addFetchExpectation(mock, "resourcerole")
+	mock.ExpectQuery(`SELECT "resourcerole"."id", "resourcerole"."name", "resourcerole"."description", "resourcerole"."created_at", "resourcerole"."modified_at", "resourcerole"."trash", "resourcerole"."organization_id", "resourcerole"."partner_id", "resourcerole"."is_global", "resourcerole"."builtin", "resourcerole"."scope" FROM "authsrv_resourcerole" AS "resourcerole" WHERE \(name = 'test-role'\) AND \(trash = FALSE\)`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name", "scope"}).AddRow(puuid, "resourcerole-"+puuid, "namespace"))
 	addFetchExpectation(mock, "group")
-	mock.ExpectQuery(`INSERT INTO "authsrv_projectgrouprole"`).
+	mock.ExpectQuery(`INSERT INTO "authsrv_projectgroupnamespacerole"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.NewString()))
 	mock.ExpectQuery(`SELECT "identities"."id".* FROM "identities" WHERE .*traits ->> 'email' = 'test-user'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).AddRow(uuid.NewString(), []byte(`{"email":"test-user", "first_name": "John", "last_name": "Doe", "description": "The OG user."}`)))
-	addFetchExpectation(mock, "resourcerole")
-	mock.ExpectQuery(`INSERT INTO "authsrv_projectaccountresourcerole"`).
+	mock.ExpectQuery(`SELECT "resourcerole"."id", "resourcerole"."name", "resourcerole"."description", "resourcerole"."created_at", "resourcerole"."modified_at", "resourcerole"."trash", "resourcerole"."organization_id", "resourcerole"."partner_id", "resourcerole"."is_global", "resourcerole"."builtin", "resourcerole"."scope" FROM "authsrv_resourcerole" AS "resourcerole" WHERE \(name = 'test-role'\) AND \(trash = FALSE\)`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name", "scope"}).AddRow(puuid, "resourcerole-"+puuid, "namespace"))
+	mock.ExpectQuery(`INSERT INTO "authsrv_projectaccountnamespacerole"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.NewString()))
 	mock.ExpectCommit()
 
@@ -287,6 +289,8 @@ func TestProjectList(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "group", "namespace"}).AddRow("test-role2", "test-project2", "test-group2", "test-namespace2"))
 	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, identities.traits ->> 'email' as user FROM "authsrv_projectaccountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id JOIN identities ON identities.id=authsrv_projectaccountresourcerole.account_id WHERE \(authsrv_projectaccountresourcerole.project_id = '` + uid + `'\)`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "user"}).AddRow("test-role3", "test-user3"))
+	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, identities.traits ->> 'email' as user, namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN identities ON identities.id=authsrv_projectaccountnamespacerole.account_id WHERE \(authsrv_projectaccountnamespacerole.project_id = '` + uid + `'\) AND \(authsrv_projectaccountnamespacerole.trash = FALSE\)`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "user", "namespace"}).AddRow("test-role4", "test-user4", "test-namespace4"))
 
 	project := &systemv3.Project{
 		Metadata: &v3.Metadata{
@@ -312,6 +316,9 @@ func TestProjectList(t *testing.T) {
 	if pl.Items[0].Spec.UserRoles[0].User != "test-user3" {
 		t.Errorf("incorrect userrole; expected '%v', got '%v'", "test-user3", pl.Items[0].Spec.UserRoles[0].User)
 	}
+	if pl.Items[0].Spec.UserRoles[1].Namespace != "test-namespace4" {
+		t.Errorf("incorrect userrole; expected '%v', got '%v'", "test-namespace4", pl.Items[0].Spec.UserRoles[1].Namespace)
+	}
 }
 
 func TestProjectListNonDev(t *testing.T) {
@@ -335,6 +342,8 @@ func TestProjectListNonDev(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "group", "namespace"}).AddRow("test-role2", "test-project2", "test-group2", "test-namespace2"))
 	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, identities.traits ->> 'email' as user FROM "authsrv_projectaccountresourcerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id JOIN identities ON identities.id=authsrv_projectaccountresourcerole.account_id WHERE \(authsrv_projectaccountresourcerole.project_id = '` + uid + `'\)`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "user"}).AddRow("test-role3", "test-user3"))
+	mock.ExpectQuery(`SELECT distinct authsrv_resourcerole.name as role, identities.traits ->> 'email' as user, namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN identities ON identities.id=authsrv_projectaccountnamespacerole.account_id WHERE \(authsrv_projectaccountnamespacerole.project_id = '` + uid + `'\) AND \(authsrv_projectaccountnamespacerole.trash = FALSE\)`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "user", "namespace"}).AddRow("test-role4", "test-user4", "test-namespace4"))
 
 	project := &systemv3.Project{
 		Metadata: &v3.Metadata{
@@ -367,5 +376,9 @@ func TestProjectListNonDev(t *testing.T) {
 
 	if pl.Items[0].Spec.UserRoles[0].User != "test-user3" {
 		t.Errorf("incorrect userrole; expected '%v', got '%v'", "test-user3", pl.Items[0].Spec.UserRoles[0].User)
+	}
+
+	if pl.Items[0].Spec.UserRoles[1].Namespace != "test-namespace4" {
+		t.Errorf("incorrect userrole; expected '%v', got '%v'", "test-namespace4", pl.Items[0].Spec.UserRoles[1].Namespace)
 	}
 }
