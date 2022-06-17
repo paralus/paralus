@@ -12,7 +12,7 @@ import (
 
 func getLogger() *zap.Logger {
 	ao := audit.AuditOptions{
-		LogPath:    "stdout",
+		LogPath:    "/dev/stdout",
 		MaxSizeMB:  1,
 		MaxBackups: 10, // Should we let sidecar do rotation?
 		MaxAgeDays: 10, // Make these configurable via env
