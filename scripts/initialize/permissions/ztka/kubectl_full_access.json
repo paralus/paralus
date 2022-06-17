@@ -1,5 +1,6 @@
 {
   "name": "kubectl.fullaccess",
+  "description": "full access to kubectl",
   "base_url": "",
   "resource_urls": [],
   "resource_action_urls": [],

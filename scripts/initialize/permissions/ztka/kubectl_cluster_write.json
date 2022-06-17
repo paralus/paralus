@@ -1,5 +1,6 @@
 {
   "name": "kubectl.cluster.write",
+  "description": "update kubectl at cluster level.",
   "base_url": "",
   "resource_urls": [],
   "resource_action_urls": [],

@@ -1,5 +1,6 @@
 {
   "name": "kubectl.namespace.read",
+  "description": "view kubectl namespace information",
   "base_url": "",
   "resource_urls": [],
   "resource_action_urls": [],
