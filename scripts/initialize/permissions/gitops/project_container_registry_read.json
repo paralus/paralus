@@ -16,7 +16,7 @@
   ],
   "resource_action_urls": [],
   "base_url": "/v2/config/project/:project_id/containerRegistry",
-  "description": "view container registry information.",
+  "description": "View container registry information",
   "authenticated": true,
   "scope": "PROJECT"
 }

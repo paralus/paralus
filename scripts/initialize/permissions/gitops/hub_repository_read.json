@@ -16,7 +16,7 @@
   ],
   "resource_action_urls": [],
   "base_url": "/apis/integrations.k8smgmt.io/v3/projects/:project_name/repositories",
-  "description": "view repository information.",
+  "description": "View repository information",
   "authenticated": true,
   "scope": "PROJECT"
 }

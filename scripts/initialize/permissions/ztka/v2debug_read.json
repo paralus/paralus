@@ -10,7 +10,7 @@
   ],
   "resource_action_urls": [],
   "base_url": "/v2/debug",
-  "description": "read web kubectl.",
+  "description": "Read web kubectl",
   "authenticated": true,
   "scope": "PROJECT"
 }

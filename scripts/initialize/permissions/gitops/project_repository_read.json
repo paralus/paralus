@@ -1,7 +1,7 @@
 {
   "name": "project.repository.read",
   "base_url": "/v2/config/project/:project_id/repository",
-  "description": "view project repository information.",
+  "description": "View project repository information",
   "resource_urls": [
     {
       "url": "",

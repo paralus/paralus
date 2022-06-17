@@ -16,7 +16,7 @@
   ],
   "resource_action_urls": [],
   "base_url": "/auth/v3/partner/:metadata.partner",
-  "description": "view organization information.",
+  "description": "View organization information",
   "authenticated": true,
   "scope": "ORGANIZATION"
 }

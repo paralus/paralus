@@ -16,7 +16,7 @@
   ],
   "resource_action_urls": [],
   "base_url": "/apis/gitops.k8smgmt.io/v3/projects/:project_name/pipelines",
-  "description": "view pipeline information.",
+  "description": "View pipeline information",
   "authenticated": true,
   "scope": "PROJECT"
 }

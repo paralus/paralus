@@ -17,7 +17,7 @@
   ],
   "resource_action_urls": [],
   "base_url": "/v2/config/project/:project_id/overrides/workloads",
-  "description": "update workload overrides.",
+  "description": "Update workload overrides",
   "authenticated": true,
   "scope": "PROJECT"
 }

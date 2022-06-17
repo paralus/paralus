@@ -1,7 +1,7 @@
 {
   "name": "oidc.read",
   "base_url": "/auth/v3/sso/oidc/provider",
-  "description": "view oidc configuration.",
+  "description": "View oidc configuration",
   "resource_urls": [
     {
       "url": "",

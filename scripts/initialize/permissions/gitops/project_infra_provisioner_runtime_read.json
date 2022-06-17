@@ -35,7 +35,7 @@
     }
   ],
   "base_url": "/v2/infraProvisioner/project/:project_id/infraProvisionerRuntime",
-  "description": "view project infra provisioner runtime information.",
+  "description": "View project infra provisioner runtime information",
   "authenticated": true,
   "scope": "PROJECT"
 }

@@ -1,7 +1,7 @@
 {
   "name": "group.read",
   "base_url": "/auth/v3/partner/:metadata.partner/organization/:metadata.organization",
-  "description": "view group info and association",
+  "description": "View group info and association",
   "resource_urls": [
     {
       "url": "/groups",

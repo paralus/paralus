@@ -21,7 +21,7 @@
     }
   ],
   "base_url": "/auth/v3",
-  "description": "view users information.",
+  "description": "View users information",
   "authenticated": true,
   "scope": "ORGANIZATION"
 }

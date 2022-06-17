@@ -35,7 +35,7 @@
     }
   ],
   "base_url": "/config/v1/registries",
-  "description": "view registry and repository.",
+  "description": "View registry and repository",
   "authenticated": true,
   "scope": "PROJECT"
 }

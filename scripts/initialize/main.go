@@ -129,13 +129,22 @@ func main() {
 
 	content, err := ioutil.ReadFile(path.Join("scripts", "initialize", "roles", "ztka", "roles.json"))
 	if err != nil {
-		log.Fatal("unable to read file: ", err)
+		log.Fatal("unable to read roles file: ", err)
 	}
-
 	var data map[string]map[string][]string
 	err = json.Unmarshal(content, &data)
 	if err != nil {
-		log.Fatal("unable to parse data file", err)
+		log.Fatal("unable to parse roles file", err)
+	}
+
+	content, err = ioutil.ReadFile(path.Join("scripts", "initialize", "roles", "desc.json"))
+	if err != nil {
+		log.Fatal("unable to read role descriptions file: ", err)
+	}
+	var roleDesc map[string]string
+	err = json.Unmarshal(content, &roleDesc)
+	if err != nil {
+		log.Fatal("unable to parse role descriptions file", err)
 	}
 
 	dsn := "postgres://" + dbUser + ":" + dbPassword + "@" + dbAddr + "/" + dbName + "?sslmode=disable"
@@ -223,7 +232,7 @@ func main() {
 			perms := data[scope][name]
 			fmt.Println(scope, name, len(perms))
 			_, err := rs.Create(internalCtx, &rolev3.Role{
-				Metadata: &commonv3.Metadata{Name: name, Partner: *partner, Organization: *org, Description: "..."},
+				Metadata: &commonv3.Metadata{Name: name, Partner: *partner, Organization: *org, Description: roleDesc[name]},
 				Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: scope, Rolepermissions: perms, Builtin: true},
 			})
 			if err != nil {
@@ -238,14 +247,13 @@ func main() {
 			Name:         "All Local Users",
 			Partner:      *partner,
 			Organization: *org,
-			Description:  "Default group..",
+			Description:  "Default group for all local users",
 		},
 		Spec: &userv3.GroupSpec{
 			Type: "DEFAULT_USERS",
 		},
 	})
 	if err != nil {
-		fmt.Println("err:", err)
 		log.Fatal("unable to create default group", err)
 	}
 
@@ -255,7 +263,7 @@ func main() {
 			Name:         "Organization Admins",
 			Partner:      *partner,
 			Organization: *org,
-			Description:  "Default organization admin group..",
+			Description:  "Default organization admin group",
 		},
 		Spec: &userv3.GroupSpec{
 			Type: "DEFAULT_ADMINS",
@@ -267,7 +275,6 @@ func main() {
 		},
 	})
 	if err != nil {
-		fmt.Println("err:", err)
 		log.Fatal("unable to create default group", err)
 	}
 
@@ -275,7 +282,7 @@ func main() {
 	prs.Create(context.Background(), &systemv3.Project{
 		Metadata: &commonv3.Metadata{
 			Name:         "default",
-			Description:  "Default project ..",
+			Description:  "Default project",
 			Partner:      *partner,
 			Organization: *org,
 		},
@@ -302,8 +309,8 @@ retry:
 		if numOfRetries > 20 {
 			log.Fatal("unable to bind user to role", err)
 		}
+		fmt.Println("retrying in 10s, waiting for kratos to be up ... ")
 		time.Sleep(10 * time.Second)
-		fmt.Println("retrying ... ")
 		goto retry
 	}
 

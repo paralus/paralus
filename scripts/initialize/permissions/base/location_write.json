@@ -1,7 +1,7 @@
 {
     "name": "location.write",
     "base_url": "/infra/v3/partner/:metadata.partner",
-    "description": "manage locations",
+    "description": "Manage locations",
     "resource_urls": [
       {
         "url": "/location/:metadata.name",

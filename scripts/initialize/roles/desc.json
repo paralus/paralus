@@ -1,0 +1,11 @@
+{
+  "SUPER_ADMIN": "User has super user access to all resources",
+  "PARTNER_ADMIN": "User can view and manage everything for a specific partner",
+  "NAMESPACE_ADMIN": "User can only can publish workloads in assigned namespaces.",
+  "NAMESPACE_READ_ONLY": "User can only view workloads in assigned namespaces.",
+  "ADMIN_READ_ONLY": "User can view all your application and infrastructure resources across all projects.",
+  "ADMIN": "User can view and manage all your application and infrastructure resources across all projects.",
+  "PROJECT_ADMIN": "User can view and manage all your application resources.",
+  "PROJECT_READ_ONLY": "User can only view your application resources.",
+  "CLUSTER_ADMIN": "User can view and manage all your cluster resources."
+}

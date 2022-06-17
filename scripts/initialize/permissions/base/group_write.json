@@ -1,7 +1,7 @@
 {
   "name": "group.write",
   "base_url": "/auth/v3/partner/:metadata.partner/organization/:metadata.organization",
-  "description": "manage group and its associations",
+  "description": "Manage group and its associations",
   "resource_urls": [
     {
       "url": "/groups",

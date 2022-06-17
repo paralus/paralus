@@ -23,7 +23,7 @@
     }
   ],
   "base_url": "/config/v1/projects/:project_id/namespaces",
-  "description": "view project namespaces.",
+  "description": "View project namespaces",
   "authenticated": true,
   "scope": "PROJECT"
 }

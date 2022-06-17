@@ -29,7 +29,7 @@
     }
   ],
   "base_url": "/apis/apps.k8smgmt.io/v3/projects/:project_name/workloads",
-  "description": "view workload information.",
+  "description": "View workload information",
   "authenticated": true,
   "scope": "PROJECT"
 }

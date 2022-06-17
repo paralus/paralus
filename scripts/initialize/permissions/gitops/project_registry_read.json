@@ -53,7 +53,7 @@
     }
   ],
   "base_url": "/config/v1/projects/:project_id",
-  "description": "view project registry information.",
+  "description": "View project registry information",
   "authenticated": true,
   "scope": "PROJECT"
 }

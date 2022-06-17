@@ -23,7 +23,7 @@
     }
   ],
   "base_url": "/v2/config/project/:project_id/workloadtemplate",
-  "description": "view workload templates.",
+  "description": "View workload templates",
   "authenticated": true,
   "scope": "PROJECT"
 }
