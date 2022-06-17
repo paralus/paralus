@@ -16,7 +16,7 @@
   ],
   "resource_action_urls": [],
   "base_url": "/v2/pipeline/project/:project_id/systemsync",
-  "description": "view system sync information.",
+  "description": "View system sync information",
   "authenticated": true,
   "scope": "PROJECT"
 }

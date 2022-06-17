@@ -16,7 +16,7 @@
   ],
   "resource_action_urls": [],
   "base_url": "/v2/pipeline/project/:project_id/variable",
-  "description": "view pipeline variables.",
+  "description": "View pipeline variables",
   "authenticated": true,
   "scope": "PROJECT"
 }

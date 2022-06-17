@@ -16,7 +16,7 @@
   ],
   "resource_action_urls": [],
   "base_url": "/auth/v3/registryauthkeys",
-  "description": "view registry auth keys.",
+  "description": "View registry auth keys",
   "authenticated": true,
   "scope": "PROJECT"
 }

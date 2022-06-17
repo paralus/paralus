@@ -35,7 +35,7 @@
     }
   ],
   "base_url": "/v2/config/project/:project_id/workload",
-  "description": "view workloads.",
+  "description": "View workloads",
   "authenticated": true,
   "scope": "PROJECT"
 }

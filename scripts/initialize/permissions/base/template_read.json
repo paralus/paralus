@@ -16,7 +16,7 @@
   ],
   "resource_action_urls": [],
   "base_url": "/config/v1/templates",
-  "description": "view templates.",
+  "description": "View templates",
   "authenticated": true,
   "scope": "ORGANIZATION"
 }

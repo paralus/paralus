@@ -23,7 +23,7 @@
     }
   ],
   "base_url": "/config/v1/projects/:project_id/workloads",
-  "description": "view project workload dashboard information.",
+  "description": "View project workload dashboard information",
   "authenticated": true,
   "scope": "PROJECT"
 }

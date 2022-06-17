@@ -16,7 +16,7 @@
   ],
   "resource_action_urls": [],
   "base_url": "/v2/pipeline/project/:project_id/trigger",
-  "description": "view pipeline trigger information.",
+  "description": "View pipeline trigger information",
   "authenticated": true,
   "scope": "PROJECT"
 }

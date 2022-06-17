@@ -1,6 +1,6 @@
 {
   "name": "kubectl.cluster.read",
-  "description": "view kube cluster information.",
+  "description": "View kube cluster information",
   "base_url": "",
   "resource_urls": [],
   "resource_action_urls": [],

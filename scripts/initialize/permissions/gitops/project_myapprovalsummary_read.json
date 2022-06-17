@@ -10,7 +10,7 @@
   ],
   "resource_action_urls": [],
   "base_url": "/v2/pipeline/project/:project_id/myapprovalsummary",
-  "description": "view project pipeline my approval summary information.",
+  "description": "View project pipeline my approval summary information",
   "authenticated": true,
   "scope": "PROJECT"
 }

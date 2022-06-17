@@ -47,7 +47,7 @@
     }
   ],
   "base_url": "/v2/pipeline/project/:project_id/pipeline",
-  "description": "view project pipeline information.",
+  "description": "View project pipeline information",
   "authenticated": true,
   "scope": "PROJECT"
 }

@@ -23,7 +23,7 @@
     }
   ],
   "base_url": "/apis/apps.k8smgmt.io/v3/projects/:project_name/workloadtemplates",
-  "description": "view workload template information.",
+  "description": "View workload template information",
   "authenticated": true,
   "scope": "PROJECT"
 }

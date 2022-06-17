@@ -16,7 +16,7 @@
   ],
   "resource_action_urls": [],
   "base_url": "/v1/config/projects/:project_id/namespaces",
-  "description": "view project namespace information.",
+  "description": "View project namespace information",
   "authenticated": true,
   "scope": "PROJECT"
 }

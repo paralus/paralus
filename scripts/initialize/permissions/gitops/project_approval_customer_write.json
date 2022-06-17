@@ -16,7 +16,7 @@
     }
   ],
   "base_url": "/v2/pipeline/projects/:project_id/approvals",
-  "description": "update project pipeline approvals.",
+  "description": "Update project pipeline approvals",
   "authenticated": true,
   "scope": "PROJECT"
 }

@@ -29,7 +29,7 @@
     }
   ],
   "base_url": "/apis/infra.k8smgmt.io/v3/projects/:project_name/namespaces",
-  "description": "read namespaces",
+  "description": "Read namespaces",
   "authenticated": true,
   "scope": "PROJECT"
 }

@@ -47,7 +47,7 @@
     }
   ],
   "base_url": "/v2/scheduler/project/:project_id/placement",
-  "description": "view cluster placement configuration.",
+  "description": "View cluster placement configuration",
   "authenticated": true,
   "scope": "PROJECT"
 }

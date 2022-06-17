@@ -10,7 +10,7 @@
       }
     ],
     "resource_action_urls": [],
-    "description": "view locations.",
+    "description": "View locations",
     "authenticated": true,
     "scope": "ORGANIZATION"
   }

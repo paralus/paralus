@@ -1,7 +1,7 @@
 {
   "name": "project.taskset.read",
   "base_url": "/v2/config/project/:project_id/taskset",
-  "description": "view taskset information.",
+  "description": "View taskset information",
   "resource_urls": [
     {
       "url": "",

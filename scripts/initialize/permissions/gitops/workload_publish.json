@@ -22,7 +22,7 @@
     }
   ],
   "base_url": "/config/v1/workloads",
-  "description": "publish workloads.",
+  "description": "Publish workloads",
   "authenticated": true,
   "scope": "PROJECT"
 }

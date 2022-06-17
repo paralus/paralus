@@ -16,7 +16,7 @@
   ],
   "resource_action_urls": [],
   "base_url": "/v2/pipeline/projects/:project_id/pipelinesummaries",
-  "description": "view project pipeline summary.",
+  "description": "View project pipeline summary",
   "authenticated": true,
   "scope": "PROJECT"
 }

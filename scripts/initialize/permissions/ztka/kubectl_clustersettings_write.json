@@ -1,7 +1,7 @@
 {
   "name": "kubectl.clustersettings.write",
   "base_url": "/v2/sentry/kubectl",
-  "description": "update kubectl settings at cluster level.",
+  "description": "Update kubectl settings at cluster level",
   "resource_urls": [],
   "resource_action_urls": [
     {
