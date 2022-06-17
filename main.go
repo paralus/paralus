@@ -204,8 +204,8 @@ func setup() {
 	viper.SetDefault(schedulerNamespaceEnv, "default")
 
 	// kratos
-	viper.SetDefault(kratosAddrEnv, "http://localhost:4433")
-	viper.SetDefault(kratosPublicAddrEnv, "http://localhost:4434")
+	viper.SetDefault(kratosAddrEnv, "http://localhost:4434")
+	viper.SetDefault(kratosPublicAddrEnv, "http://localhost:4433")
 
 	viper.BindEnv(rpcPortEnv)
 	viper.BindEnv(apiPortEnv)
