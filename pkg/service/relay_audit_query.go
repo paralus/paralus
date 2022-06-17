@@ -9,7 +9,7 @@ import (
 )
 
 type RelayAuditService struct {
-	relayQuery *ElasticSearchQuery
+	relayQuery ElasticSearchQuery
 }
 
 func NewRelayAuditService(url string, auditPattern string, logPrefix string) (*RelayAuditService, error) {

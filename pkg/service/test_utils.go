@@ -12,7 +12,7 @@ import (
 
 func getLogger() *zap.Logger {
 	ao := audit.AuditOptions{
-		LogPath:    "stdout",
+		LogPath:    "/dev/stdout",
 		MaxSizeMB:  1,
 		MaxBackups: 10, // Should we let sidecar do rotation?
 		MaxAgeDays: 10, // Make these configurable via env
@@ -65,6 +65,16 @@ func idnamea(uid string, resource string) *string {
 	return &name
 }
 
+func addFetchEmptyExpecteation(mock sqlmock.Sqlmock, resource string) {
+	mock.ExpectQuery(`SELECT "` + resource + `"."id" FROM "authsrv_` + resource + `" AS "` + resource + `"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}))
+}
+
+func addFailingFetchExpecteation(mock sqlmock.Sqlmock, resource string) {
+	mock.ExpectQuery(`SELECT "` + resource + `"."id" FROM "authsrv_` + resource + `" AS "` + resource + `"`).
+		WithArgs().WillReturnError(fmt.Errorf("no data available"))
+}
+
 func addFetchIdExpectation(mock sqlmock.Sqlmock, resource string) string {
 	uid := uuid.New().String()
 	mock.ExpectQuery(`SELECT "` + resource + `"."id" FROM "authsrv_` + resource + `" AS "` + resource + `"`).
@@ -72,10 +82,22 @@ func addFetchIdExpectation(mock sqlmock.Sqlmock, resource string) string {
 	return uid
 }
 
+func addFetchByIdExpectation(mock sqlmock.Sqlmock, resource, uid string) {
+	mock.ExpectQuery(`SELECT "` + resource + `"."id".* FROM "authsrv_` + resource + `" AS "` + resource + `" WHERE .id = '` + uid + `'.`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(uid, resource+"-"+uid))
+}
+
+func addFetchIdByNameExpectation(mock sqlmock.Sqlmock, resource, name string) string {
+	uid := uuid.NewString()
+	mock.ExpectQuery(`SELECT "` + resource + `"."id" FROM "authsrv_` + resource + `" AS "` + resource + `" WHERE .name = '` + name + `'.`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uid))
+	return uid
+}
+
 func addFetchExpectation(mock sqlmock.Sqlmock, resource string) string {
 	uid := uuid.New().String()
 	mock.ExpectQuery(`SELECT "` + resource + `"."id".* FROM "authsrv_` + resource + `" AS "` + resource + `"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(uid, "role-name"))
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(uid, resource+"-name"))
 	return uid
 }
 
@@ -149,6 +171,13 @@ func addUserFullFetchExpectation(mock sqlmock.Sqlmock) string {
 	uid := uuid.New().String()
 	mock.ExpectQuery(`SELECT "identities"."id", "identities"."schema_id", "identities"."traits", "identities"."created_at", "identities"."updated_at", "identities"."state", "identities"."state_changed_at", "identities"."nid", "identity_credential"."id" AS "identity_credential__id", "identity_credential"."identity_id" AS "identity_credential__identity_id", "identity_credential"."identity_credential_type_id" AS "identity_credential__identity_credential_type_id", "identity_credential__identity_credential_type"."id" AS "identity_credential__identity_credential_type__id", "identity_credential__identity_credential_type"."name" AS "identity_credential__identity_credential_type__name" FROM "identities" LEFT JOIN "identity_credentials" AS "identity_credential" ON ."identity_credential"."identity_id" = "identities"."id". LEFT JOIN "identity_credential_types" AS "identity_credential__identity_credential_type" ON ."identity_credential__identity_credential_type"."id" = "identity_credential"."identity_credential_type_id". WHERE .traits ->> 'email' = 'user-` + uid + `'.`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits", "identity_credential__identity_credential_type__name"}).AddRow(uid, []byte(`{"email":"user-`+uid+`", "first_name": "John", "last_name": "Doe", "description": "The OG user."}`), "password"))
+	return uid
+}
+
+func addUserFullFetchExpectationWithIdpGroups(mock sqlmock.Sqlmock) string {
+	uid := uuid.New().String()
+	mock.ExpectQuery(`SELECT "identities"."id", "identities"."schema_id", "identities"."traits", "identities"."created_at", "identities"."updated_at", "identities"."state", "identities"."state_changed_at", "identities"."nid", "identity_credential"."id" AS "identity_credential__id", "identity_credential"."identity_id" AS "identity_credential__identity_id", "identity_credential"."identity_credential_type_id" AS "identity_credential__identity_credential_type_id", "identity_credential__identity_credential_type"."id" AS "identity_credential__identity_credential_type__id", "identity_credential__identity_credential_type"."name" AS "identity_credential__identity_credential_type__name" FROM "identities" LEFT JOIN "identity_credentials" AS "identity_credential" ON ."identity_credential"."identity_id" = "identities"."id". LEFT JOIN "identity_credential_types" AS "identity_credential__identity_credential_type" ON ."identity_credential__identity_credential_type"."id" = "identity_credential"."identity_credential_type_id". WHERE .traits ->> 'email' = 'user-` + uid + `'.`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits", "identity_credential__identity_credential_type__name"}).AddRow(uid, []byte(`{"email":"user-`+uid+`", "first_name": "John", "last_name": "Doe", "description": "The OG user.", "idp_group": "BigShot"}`), "password"))
 	return uid
 }
 

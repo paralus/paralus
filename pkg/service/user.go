@@ -125,6 +125,9 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 			continue
 		}
 		role := pnr.GetRole()
+		if role == "" {
+			return &userv3.User{}, nil, fmt.Errorf("cannot use empty role")
+		}
 		entity, err := dao.GetByName(ctx, db, role, &models.Role{})
 		if err != nil {
 			return &userv3.User{}, nil, fmt.Errorf("unable to find role '%v'", role)
@@ -445,6 +448,7 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 	if err != nil {
 		tx.Rollback()
 		_log.Warn("unable to commit changes", err)
+		return &userv3.User{}, err
 	}
 
 	rl, err := s.ap.GetRecoveryLink(ctx, id)
@@ -727,6 +731,7 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 		if err != nil {
 			tx.Rollback()
 			_log.Warn("unable to commit changes", err)
+			return &userv3.User{}, fmt.Errorf("unable to update user '%v'", name)
 		}
 
 		CreateUserAuditEvent(ctx, s.al, s.db, AuditActionUpdate, user.GetMetadata().GetName(), usr.ID, rolesBefore, rolesAfter, groupsBefore, groupsAfter)

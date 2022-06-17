@@ -9,14 +9,18 @@ import (
 	v6Client "github.com/elastic/go-elasticsearch"
 )
 
-type ElasticSearchQuery struct {
+type elasticSearchQuery struct {
 	url          string
 	indexPattern string
 	logPrefix    string
 	esClient     *v6Client.Client
 }
 
-func NewElasticSearchQuery(url string, indexPattern string, logPrefix string) (*ElasticSearchQuery, error) {
+type ElasticSearchQuery interface {
+	Handle(bytes.Buffer) (map[string]interface{}, error)
+}
+
+func NewElasticSearchQuery(url string, indexPattern string, logPrefix string) (ElasticSearchQuery, error) {
 	cfg := v6Client.Config{
 		Addresses: []string{
 			url,
@@ -33,7 +37,7 @@ func NewElasticSearchQuery(url string, indexPattern string, logPrefix string) (*
 	// 	return nil, err
 	// }
 	// _log.Infow(logPrefix+":Connected to elastic search ", "cluster", res, "index", indexPattern)
-	esQuery := &ElasticSearchQuery{
+	esQuery := &elasticSearchQuery{
 		url:          url,
 		indexPattern: indexPattern,
 		logPrefix:    logPrefix,
@@ -43,7 +47,7 @@ func NewElasticSearchQuery(url string, indexPattern string, logPrefix string) (*
 }
 
 //Handle Fires the search query
-func (q *ElasticSearchQuery) Handle(msg bytes.Buffer) (map[string]interface{}, error) {
+func (q *elasticSearchQuery) Handle(msg bytes.Buffer) (map[string]interface{}, error) {
 	_log.Debugw("Searching elastic search: ", "index", q.indexPattern, "url", q.url, "q", q)
 	res, err := q.esClient.Search(
 		q.esClient.Search.WithContext(context.Background()),
