@@ -1,7 +1,7 @@
 # Code of Conduct
 
 This is Code of Conduct is based on the [CNCF Code of
-Conduct](https://github.com/cncf/foundation/edit/master/code-of-conduct.md).
+Conduct](https://github.com/cncf/foundation/blob/main/code-of-conduct.md).
 See the referred document for translated versions into different languages.
 
 As contributors and maintainers of this project, and in the interest of fostering
