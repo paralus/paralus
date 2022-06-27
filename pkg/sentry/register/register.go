@@ -92,7 +92,7 @@ type Config struct {
 
 	// ServerPort is port the registered server should listen on
 	// it is returned after registration
-	ServerPort int
+	ServerPort int32
 }
 
 func registerHTTP(ctx context.Context, config *Config) error {

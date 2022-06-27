@@ -418,11 +418,13 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 		ModifiedAt:   timestamppb.New(c.ModifiedAt),
 	}
 
-	smv, _ := strconv.ParseInt(c.ShareMode, 10, 32)
+	sm := int32(infrav3.ClusterShareMode_ClusterShareModeNotSet)
+	smv, err := strconv.ParseInt(c.ShareMode, 10, 32)
 	if err != nil {
 		_log.Infow("unable to convert value, ", err.Error())
+	} else {
+		sm = int32(smv)
 	}
-	sm := int32(smv)
 	var proxy infrav3.ProxyConfig
 	if c.ProxyConfig != nil {
 		json.Unmarshal(c.ProxyConfig, &proxy)
