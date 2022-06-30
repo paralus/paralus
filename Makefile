@@ -1,6 +1,6 @@
 .PHONY: tidy
 tidy:
-	GOPRIVATE=github.com/paralus/* go mod tidy
+	go mod tidy
 .PHONY: vendor
 vendor:
 	go mod vendor
