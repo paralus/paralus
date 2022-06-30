@@ -11,12 +11,14 @@ build:
 	# size of binary.
 	go build -ldflags "-s" -o paralus .
 
-.PHONY: build-proto
-build-proto:
-	buf build
+.PHONY: clean-proto
+clean-proto:
+	rm -rf ./gen
+	find . -name "*.pb*" -type f -delete
 
-.PHONY: gen-proto
-gen-proto:
+.PHONY: build-proto
+build-proto: clean-proto
+	buf build
 	buf generate
 
 .PHONY: test
@@ -31,5 +33,4 @@ check:
 
 .PHONY: clean
 clean:
-	rm -rf ./**/gen
-	find . -name "*.pb*" -type f -delete
+	rm paralus
