@@ -202,7 +202,7 @@ func setRoleValues(r *rbacv1.Role, nsName, permission string) {
 }
 
 func getClusterRoleBindingName(saName, clusterRole string) string {
-	return clusterRole + "-" + saName + "-cr-binding"
+	return clusterRole + "-ps-" + saName + "-cr-binding"
 }
 
 func getClusterRoleBinding(sa *corev1.ServiceAccount, clusterRole string) *rbacv1.ClusterRoleBinding {
