@@ -142,9 +142,11 @@ go run github.com/paralus/paralus
 
 If you're making changes to any of the proto files, you'll have to perform the following steps:
 
-- `make clean` - would clean all the *.pb files
-- `make build-proto` - would ensure changes to proto are valid
-- `make gen-proto` - to generate *.pb files with the latest changes to proto files.
+- `make build` - build binary artifacts.
+- `make test` - run all tests.
+- `make check` - perform check like fmt and vet.
+- `make clean` - clean all binary artifacts.
+- `make build-proto` - rebuild all proto files.
 
 ## Need Help?
 
