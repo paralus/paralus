@@ -4,13 +4,20 @@ Yes, because we feel that it’s the best way to build and improve a product. It
 
 We are always on the lookout for anything that can improve the product. Be it feature requests, issues/bugs, code or content, we’d love to see what you’ve got to make this better. If you’ve got anything exciting and would love to contribute, this is the right place to begin your journey as a contributor to Paralus and the larger open source community.
 
-**How to get started?**
+## How to get started?
 
 The easiest way to start is to look at existing issues and see if there’s something there that you’d like to work on. You can filter issues with the label “[Good first issue](https://github.com/paralus/paralus/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)” which are relatively self sufficient issues and great for first time contributors.
 
 Once you decide on an issue, please comment on it so that all of us know that you’re on it.
 
 If you’re looking to add a new feature, [raise a new issue](https://github.com/paralus/paralus/issues/new) and start a discussion with the community. Engage with the maintainers of the project and work your way through.
+
+You'll need to perform the following tasks in order to submit your changes:
+
+- Fork the Paralus repository.
+- Create a branch for your changes.
+- Add commits to that branch.
+- Open a PR to share your contribution.
 
 Below are all the details you need to know about the `Paralus` repo and get started with the development.
 
@@ -130,6 +137,16 @@ Start Paralus:
 ```bash
 go run github.com/paralus/paralus
 ```
+
+#### Updating Proto Files?
+
+If you're making changes to any of the proto files, you'll have to perform the following steps:
+
+- `make build` - build binary artifacts.
+- `make test` - run all tests.
+- `make check` - perform check like fmt and vet.
+- `make clean` - clean all binary artifacts.
+- `make build-proto` - rebuild all proto files.
 
 ## Need Help?
 
