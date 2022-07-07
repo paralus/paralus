@@ -17,7 +17,7 @@ Ships as a GUI, API, and CLI.
 Paralus can be easily integrated with your pre-existing RBAC configuration and your SSO providers, or Identity Providers (IdP) that support OIDC (OpenID Connect). Through just-in-time service account creation and fine-grained user credential management, Paralus provides teams with an adaptable system for guaranteeing secure access to resources when necessary, along with the ability to rapidly identify and respond to threats through dynamic permission revocation and real time audit logs.
 
 <p align="">
-  <a href="paralus.io">
+  <a href="https://paralus.io">
     <img alt="Kubernetes Goat" src="https://www.paralus.io/img/hero.svg" width="600" />
   </a>
 </p>
