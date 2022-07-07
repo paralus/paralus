@@ -140,13 +140,15 @@ go run github.com/paralus/paralus
 
 #### Updating Proto Files?
 
-If you're making changes to any of the proto files, you'll have to perform the following steps:
-
-- `make build` - build binary artifacts.
-- `make test` - run all tests.
-- `make check` - perform check like fmt and vet.
-- `make clean` - clean all binary artifacts.
-- `make build-proto` - rebuild all proto files.
+- Make sure you have `[buf](https://github.com/bufbuild/buf)` installed
+- Install dependencies:
+```
+go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+```
+- Run `make build-proto` to regenerate proto artifacts
 
 ## Need Help?
 
