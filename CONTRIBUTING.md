@@ -140,7 +140,7 @@ go run github.com/paralus/paralus
 
 #### Updating Proto Files?
 
-- Make sure you have `[buf](https://github.com/bufbuild/buf)` installed
+- Make sure you have [`buf`](https://github.com/bufbuild/buf) installed
 - Install dependencies:
 ```
 go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
