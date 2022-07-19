@@ -155,7 +155,11 @@ func TestCreateRoleWithPermissions(t *testing.T) {
 	mock.ExpectBegin()
 	mock.ExpectQuery(`INSERT INTO "authsrv_resourcerole"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ruuid))
-	mock.ExpectQuery(`SELECT "resourcepermission"."id" FROM "authsrv_resourcepermission" AS "resourcepermission" WHERE .name = 'ops_star.all'.`).
+	mock.ExpectQuery(`SELECT "resourcepermission"."id" FROM "authsrv_resourcepermission" AS "resourcepermission" WHERE .name = 'partner.read'.`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
+	mock.ExpectQuery(`SELECT "resourcepermission"."id" FROM "authsrv_resourcepermission" AS "resourcepermission" WHERE .name = 'organization.read'.`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
+	mock.ExpectQuery(`SELECT "resourcepermission"."id" FROM "authsrv_resourcepermission" AS "resourcepermission" WHERE .name = 'project.read'.`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
 	mock.ExpectQuery(`INSERT INTO "authsrv_resourcerolepermission"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
@@ -163,7 +167,7 @@ func TestCreateRoleWithPermissions(t *testing.T) {
 
 	role := &rolev3.Role{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
-		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system", Rolepermissions: []string{"ops_star.all"}},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system", Rolepermissions: []string{"partner.read", "organization.read", "project.read"}},
 	}
 	role, err := rs.Create(context.Background(), role)
 	if err != nil {
@@ -221,7 +225,11 @@ func TestUpdateRole(t *testing.T) {
 	mock.ExpectExec(`UPDATE "authsrv_resourcerolepermission" AS "resourcerolepermission" SET trash = TRUE WHERE ."resource_role_id" = '` + ruuid + `'.`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
-	mock.ExpectQuery(`SELECT "resourcepermission"."id" FROM "authsrv_resourcepermission" AS "resourcepermission" WHERE .name = 'ops_star.all'.`).
+	mock.ExpectQuery(`SELECT "resourcepermission"."id" FROM "authsrv_resourcepermission" AS "resourcepermission" WHERE .name = 'partner.read'.`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"name"}).AddRow("ops_star.all"))
+	mock.ExpectQuery(`SELECT "resourcepermission"."id" FROM "authsrv_resourcepermission" AS "resourcepermission" WHERE .name = 'organization.read'.`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"name"}).AddRow("ops_star.all"))
+	mock.ExpectQuery(`SELECT "resourcepermission"."id" FROM "authsrv_resourcepermission" AS "resourcepermission" WHERE .name = 'project.read'.`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"name"}).AddRow("ops_star.all"))
 	mock.ExpectQuery(`INSERT INTO "authsrv_resourcerolepermission"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ruuid))
@@ -229,7 +237,7 @@ func TestUpdateRole(t *testing.T) {
 
 	role := &rolev3.Role{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "role-" + ruuid},
-		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system", Rolepermissions: []string{"ops_star.all"}},
+		Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: "system", Rolepermissions: []string{"partner.read", "organization.read", "project.read"}},
 	}
 	role, err := rs.Update(context.Background(), role)
 	if err != nil {
