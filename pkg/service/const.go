@@ -12,5 +12,4 @@ const (
 	namespaceW     = "kubectl.namespace.write"
 	partnerR       = "partner.read"
 	organizationR  = "organization.read"
-	projectR       = "project.read"
 )
