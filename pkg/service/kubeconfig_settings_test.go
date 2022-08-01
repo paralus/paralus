@@ -6,6 +6,7 @@ import (
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/google/uuid"
+	"github.com/paralus/paralus/proto/types/sentry"
 )
 
 func TestGetKubeconfigSetting(t *testing.T) {
@@ -16,13 +17,39 @@ func TestGetKubeconfigSetting(t *testing.T) {
 
 	uuuid := uuid.New().String()
 	ouuid := uuid.New().String()
-	cuuid := uuid.New().String()
+	acuuid := uuid.UUID.String(uuid.New())
+	validity_seconds := 300
+	disable_web_kubectl := true
+	disable_cli_kubectl := true
 
-	mock.ExpectQuery(`SELECT "ks"."id", "ks"."organization_id"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuuid))
+	mock.ExpectQuery(`SELECT "ks"."id", "ks"."organization_id", "ks"."partner_id", "ks"."account_id", "ks"."scope", "ks"."validity_seconds", "ks"."created_at", "ks"."modified_at", "ks"."deleted_at", "ks"."enforce_rsid", "ks"."disable_all_audit", "ks"."disable_cmd_audit", "ks"."is_sso_user", "ks"."disable_web_kubectl", "ks"."disable_cli_kubectl", "ks"."enable_privaterelay", "ks"."enforce_orgadmin_secret_access" FROM "sentry_kubeconfig_setting" AS "ks" WHERE \(organization_id = '` + ouuid + `'\) AND \(account_id = '` + acuuid + `'\)`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "organization_id", "account_id", "validity_seconds", "disable_web_kubectl", "disable_cli_kubectl"}).AddRow(uuuid, ouuid, acuuid, validity_seconds, disable_web_kubectl, disable_cli_kubectl))
 
-	_, err := ps.Get(context.Background(), ouuid, cuuid, true)
+	kss := &sentry.KubeconfigSetting{Id: uuuid, OrganizationID: ouuid, AccountID: acuuid, ValiditySeconds: int64(validity_seconds), DisableWebKubectl: disable_web_kubectl, DisableCLIKubectl: disable_cli_kubectl}
+
+	kss, err := ps.Get(context.Background(), ouuid, acuuid, false)
 	if err != nil {
 		t.Fatal("could not get Kubeconfig Setting:", err)
+	}
+	if kss.Id != uuuid {
+		t.Fatal("Incorrect kubeconfig settings ID :", uuuid)
+	}
+	if kss.AccountID != acuuid {
+		t.Fatal("Incorrect Account ID :", acuuid)
+	}
+	if kss.OrganizationID != ouuid {
+		t.Fatal("Incorrect Organization ID :", ouuid)
+	}
+	if kss.IsSSOUser != false {
+		t.Fatal("IncorrectIsSSOUser :", kss.IsSSOUser)
+	}
+	if kss.ValiditySeconds != int64(validity_seconds) {
+		t.Fatal("Incorrect Validity Seconds : ", kss.ValiditySeconds)
+	}
+	if kss.DisableWebKubectl != disable_web_kubectl {
+		t.Fatal("Incorrect KubeconfigSetting(disable_web_kubectl) : ", kss.DisableWebKubectl)
+	}
+	if kss.DisableCLIKubectl != disable_cli_kubectl {
+		t.Fatal("Incorrect KubeconfigSetting(disable_cli_kubectl) : ", kss.DisableCLIKubectl)
 	}
 }
