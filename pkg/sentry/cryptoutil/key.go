@@ -106,8 +106,6 @@ func DecodePrivateKey(privKey []byte, f PasswordFunc) (crypto.PrivateKey, error)
 		b = p.Bytes
 	}
 
-	fmt.Print("p.Type", p.Type)
-
 	switch p.Type {
 	case ecKeyType:
 		return x509.ParseECPrivateKey(b)
