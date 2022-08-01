@@ -10,4 +10,6 @@ const (
 	projectScope   = "project"
 	namespaceR     = "kubectl.namespace.read"
 	namespaceW     = "kubectl.namespace.write"
+	partnerR       = "partner.read"
+	organizationR  = "organization.read"
 )
