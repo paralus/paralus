@@ -48,7 +48,7 @@ func TestOidcCreateProviderDuplicate(t *testing.T) {
 
 	provider, err := OP.Create(context.Background(), provider)
 	if err == nil {
-		t.Fatal("expected create provider fail, but was created")
+		t.Fatal("expected create provider fail on duplicate issuer url, but was created")
 	}
 }
 
@@ -61,6 +61,9 @@ func TestOidcCreateProvider(t *testing.T) {
 	uuuid := uuid.New().String()
 	pruuid := uuid.New().String()
 	puuid, ouuid := addParterOrgFetchExpectation(mock)
+	sampleUrl := "https://token.example.com/callback"
+	callbackUrl := "http:///self-service/methods/oidc/callback/user-" + uuuid
+	issuerUrl := "https://token.actions.githubusercontent.com"
 
 	mock.ExpectQuery(`SELECT "oidcprovider"."id" FROM "authsrv_oidc_provider" AS "oidcprovider" WHERE .organization_id = '` + ouuid + `'. AND .partner_id = '` + puuid + `'. AND .name = 'user-` + uuuid + `'.`).
 		WillReturnError(fmt.Errorf("no data available"))
@@ -70,17 +73,23 @@ func TestOidcCreateProvider(t *testing.T) {
 	mock.ExpectQuery(`SELECT "oidcprovider"."id", "oidcprovider"."name", "oidcprovider"."description", "oidcprovider"."organization_id", "oidcprovider"."partner_id", "oidcprovider"."created_at", "oidcprovider"."modified_at", "oidcprovider"."provider_name", "oidcprovider"."mapper_url", "oidcprovider"."mapper_filename", "oidcprovider"."client_id", "oidcprovider"."client_secret", "oidcprovider"."scopes", "oidcprovider"."issuer_url", "oidcprovider"."auth_url", "oidcprovider"."token_url", "oidcprovider"."requested_claims", "oidcprovider"."predefined", "oidcprovider"."trash" FROM "authsrv_oidc_provider" AS "oidcprovider" WHERE  \(issuer_url = 'https://token.actions.githubusercontent.com'\) AND \(partner_id = '` + puuid + `'\) AND \(organization_id = '` + ouuid + `'\) .*`).
 		WillReturnError(fmt.Errorf("no data available"))
 
-	mock.ExpectQuery(`INSERT INTO "authsrv_oidc_provider"`).
+	mock.ExpectQuery(`INSERT INTO "authsrv_oidc_provider" \("id", "name", "description", "organization_id", "partner_id", "created_at", "modified_at", "provider_name", "mapper_url", "mapper_filename", "client_id", "client_secret", "scopes", "issuer_url", "auth_url", "token_url", "requested_claims", "predefined", "trash"\) VALUES \(DEFAULT, 'user-` + uuuid + `', '', '` + ouuid + `', '` + puuid + `', .*, 'provider-` + pruuid + `', '', '', '', '', '\{"email"\}', 'https://token.actions.githubusercontent.com', '', '', '\{\}', FALSE, FALSE\)`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 
 	provider := &systemv3.OIDCProvider{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
-		Spec:     &systemv3.OIDCProviderSpec{Scopes: scope, IssuerUrl: "https://token.actions.githubusercontent.com", ProviderName: "provider-" + pruuid},
+		Spec:     &systemv3.OIDCProviderSpec{Scopes: scope, IssuerUrl: issuerUrl, ProviderName: "provider-" + pruuid, CallbackUrl: sampleUrl},
 	}
 
 	provider, err := OP.Create(context.Background(), provider)
 	if err != nil {
 		t.Error("err:", err)
+	}
+	if provider.Spec.GetCallbackUrl() != callbackUrl {
+		t.Fatal("Incorrect callbackUrl")
+	}
+	if provider.Spec.GetIssuerUrl() != issuerUrl {
+		t.Fatal("Incorrect IssuerUrl")
 	}
 	performOidcProviderBasicChecks(t, provider, uuuid, pruuid)
 }
