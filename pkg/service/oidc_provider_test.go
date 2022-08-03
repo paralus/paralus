@@ -48,7 +48,7 @@ func TestOidcCreateProviderDuplicate(t *testing.T) {
 
 	provider, err := OP.Create(context.Background(), provider)
 	if err == nil {
-		t.Fatal("Duplicate issuer url")
+		t.Fatal("expected create provider fail, but was created")
 	}
 }
 
@@ -167,33 +167,56 @@ func TestOidcProviderUpdate(t *testing.T) {
 }
 
 func TestOidcProviderUpdateInvalidUrl(t *testing.T) {
-	db, mock := getDB(t)
-	defer db.Close()
 
-	OP := NewOIDCProviderService(db, "", getLogger())
-
-	uuuid := uuid.New().String()
-	uuuuid := uuid.New().String()
-	pruuid := uuid.New().String()
-
-	scope := []string{"email"}
-
-	puuid, ouuid := addParterOrgFetchExpectation(mock)
-
-	mock.ExpectQuery(`SELECT "oidcprovider"."id", "oidcprovider"."name", .* FROM "authsrv_oidc_provider" AS "oidcprovider" WHERE`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuuuid))
-
-	mock.ExpectExec(`UPDATE "authsrv_oidc_provider" AS "oidcprovider" SET "name" = 'user-` + uuuid + `', .*"organization_id" = '` + ouuid + `', "partner_id" = '` + puuid + `.* WHERE \(id = '` + uuuuid + `'\)`).
-		WillReturnResult(sqlmock.NewResult(1, 1))
-
-	provider := &systemv3.OIDCProvider{
-		Metadata: &v3.Metadata{Id: uuuuid, Name: "user-" + uuuid, Partner: "partner-" + puuid, Organization: "org-" + ouuid},
-		Spec:     &systemv3.OIDCProviderSpec{Scopes: scope, IssuerUrl: "test.url", ProviderName: "provider-" + pruuid, MapperUrl: "test.url"},
+	tt := []struct {
+		name       string
+		IssuerUrl  string
+		MapperUrl  string
+		shouldfail bool
+	}{
+		{"Invalid mapperurl", "https://token.actions.githubusercontent.com", "test.url", true},
+		{"Invalid issururl", "test.url", "https://www.example.com", true},
+		{"Valid Urls", "https://token.actions.githubusercontent.com", "https://www.example.com", false},
 	}
 
-	_, err := OP.Update(context.Background(), provider)
-	if err == nil {
-		t.Fatal("Invalid issuer and mapper url")
+	for _, tc := range tt {
+		t.Run(tc.name, func(t *testing.T) {
+			db, mock := getDB(t)
+			defer db.Close()
+
+			OP := NewOIDCProviderService(db, "", getLogger())
+
+			uuuid := uuid.New().String()
+			uuuuid := uuid.New().String()
+			pruuid := uuid.New().String()
+
+			scope := []string{"email"}
+
+			puuid, ouuid := addParterOrgFetchExpectation(mock)
+
+			mock.ExpectQuery(`SELECT "oidcprovider"."id", "oidcprovider"."name", .* FROM "authsrv_oidc_provider" AS "oidcprovider" WHERE`).
+				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuuuid))
+
+			mock.ExpectExec(`UPDATE "authsrv_oidc_provider" AS "oidcprovider" SET "name" = 'user-` + uuuid + `', .*"organization_id" = '` + ouuid + `', "partner_id" = '` + puuid + `.* WHERE \(id = '` + uuuuid + `'\)`).
+				WillReturnResult(sqlmock.NewResult(1, 1))
+
+			provider := &systemv3.OIDCProvider{
+				Metadata: &v3.Metadata{Id: uuuuid, Name: "user-" + uuuid, Partner: "partner-" + puuid, Organization: "org-" + ouuid},
+				Spec:     &systemv3.OIDCProviderSpec{Scopes: scope, IssuerUrl: tc.IssuerUrl, ProviderName: "provider-" + pruuid, MapperUrl: tc.MapperUrl},
+			}
+
+			_, err := OP.Update(context.Background(), provider)
+			if tc.shouldfail {
+				if err == nil {
+					t.Fatal("expected update provider fail, but was updated")
+				} else {
+					return
+				}
+			}
+			if err != nil {
+				t.Fatal("could not update provider:", err)
+			}
+		})
 	}
 }
 
@@ -209,7 +232,7 @@ func TestOidcProviderDelete(t *testing.T) {
 	mock.ExpectQuery(`SELECT "oidcprovider"."id", "oidcprovider"."name"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuuid))
 
-	mock.ExpectExec(`UPDATE "authsrv_oidc_provider"`).
+	mock.ExpectExec(`UPDATE "authsrv_oidc_provider" AS "oidcprovider" SET trash = TRUE WHERE \(id = '` + uuuid + `'\) AND \(trash = false\)`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	provider := &systemv3.OIDCProvider{
@@ -231,14 +254,17 @@ func TestOidcProviderList(t *testing.T) {
 	pruuid := uuid.New().String()
 	pruuid1 := uuid.New().String()
 	pruuid2 := uuid.New().String()
+	issuerUrl := "https://www.example" + pruuid + ".com"
+	issuerUrl1 := "https://www.example" + pruuid1 + ".com"
+	issuerUrl2 := "https://www.example" + pruuid2 + ".com"
 
 	OP := NewOIDCProviderService(db, "", getLogger())
 
-	mock.ExpectQuery(`SELECT "oidcprovider"."id", "oidcprovider"."name".* FROM "authsrv_oidc_provider" AS "oidcprovider"`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).
-		AddRow(pruuid, "provider_name-"+pruuid).
-		AddRow(pruuid1, "provider_name-"+pruuid1).
-		AddRow(pruuid2, "provider_name-"+pruuid2))
+	mock.ExpectQuery(`SELECT "oidcprovider"."id", "oidcprovider"."name", "oidcprovider"."description", "oidcprovider"."organization_id", "oidcprovider"."partner_id", "oidcprovider"."created_at", "oidcprovider"."modified_at", "oidcprovider"."provider_name", "oidcprovider"."mapper_url", "oidcprovider"."mapper_filename", "oidcprovider"."client_id", "oidcprovider"."client_secret", "oidcprovider"."scopes", "oidcprovider"."issuer_url", "oidcprovider"."auth_url", "oidcprovider"."token_url", "oidcprovider"."requested_claims", "oidcprovider"."predefined", "oidcprovider"."trash" FROM "authsrv_oidc_provider" AS "oidcprovider" WHERE \(trash = false\)`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name", "issuer_url"}).
+		AddRow(pruuid, "provider_name-"+pruuid, issuerUrl).
+		AddRow(pruuid1, "provider_name-"+pruuid1, issuerUrl1).
+		AddRow(pruuid2, "provider_name-"+pruuid2, issuerUrl2))
 
 	providerList, err := OP.List(context.Background())
 
@@ -250,5 +276,8 @@ func TestOidcProviderList(t *testing.T) {
 	}
 	if providerList.Items[0].Metadata.Name != "provider_name-"+pruuid || providerList.Items[1].Metadata.Name != "provider_name-"+pruuid1 {
 		t.Errorf("incorrect provider ids returned when listing")
+	}
+	if providerList.Items[0].Spec.IssuerUrl != "https://www.example"+pruuid+".com" || providerList.Items[1].Spec.IssuerUrl != "https://www.example"+pruuid1+".com" {
+		t.Errorf("incorrect IssuerUrl returned when listing")
 	}
 }
