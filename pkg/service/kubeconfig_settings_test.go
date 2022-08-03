@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -150,7 +149,7 @@ func TestUpdateKubeconfigSetting(t *testing.T) {
 	mock.ExpectBegin()
 
 	mock.ExpectQuery(`SELECT "ks"."id", "ks"."organization_id", "ks"."partner_id", "ks"."account_id", "ks"."scope", "ks"."validity_seconds", "ks"."created_at", "ks"."modified_at", "ks"."deleted_at", "ks"."enforce_rsid", "ks"."disable_all_audit", "ks"."disable_cmd_audit", "ks"."is_sso_user", "ks"."disable_web_kubectl", "ks"."disable_cli_kubectl", "ks"."enable_privaterelay", "ks"."enforce_orgadmin_secret_access" FROM "sentry_kubeconfig_setting" AS "ks" WHERE \(organization_id = '` + ouuid + `'\) AND \(account_id = '` + acuuid + `'\)`).
-		WillReturnError(fmt.Errorf("no data available"))
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "organization_id", "account_id"}).AddRow(uuuid, ouuid, acuuid))
 
 	mock.ExpectExec(`UPDATE "sentry_kubeconfig_setting" AS "ks" SET .*, validity_seconds = 300, enforce_rsid = FALSE, is_sso_user = FALSE, disable_web_kubectl = TRUE, disable_cli_kubectl = TRUE, enable_privaterelay = FALSE, enforce_orgadmin_secret_access = FALSE WHERE \(organization_id = '` + ouuid + `'\) AND \(account_id = '` + acuuid + `'\) AND \(is_sso_user= FALSE\)`).
 		WillReturnResult(sqlmock.NewResult(1, 1))
