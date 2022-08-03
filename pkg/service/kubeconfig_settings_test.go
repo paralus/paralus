@@ -9,6 +9,30 @@ import (
 	"github.com/paralus/paralus/proto/types/sentry"
 )
 
+func performkubeconfigSettingBasicChecks(t *testing.T, kss *sentry.KubeconfigSetting, uuuid string, ouuid string, acuuid string, validity_seconds int, disable_web_kubectl bool, disable_cli_kubectl bool) {
+	if kss.Id != uuuid {
+		t.Fatal("Incorrect kubeconfig settings ID :", uuuid)
+	}
+	if kss.AccountID != acuuid {
+		t.Fatal("Incorrect Account ID :", acuuid)
+	}
+	if kss.OrganizationID != ouuid {
+		t.Fatal("Incorrect Organization ID :", ouuid)
+	}
+	if kss.IsSSOUser != false {
+		t.Fatal("IncorrectIsSSOUser :", kss.IsSSOUser)
+	}
+	if kss.ValiditySeconds != int64(validity_seconds) {
+		t.Fatal("Incorrect Validity Seconds : ", kss.ValiditySeconds)
+	}
+	if kss.DisableWebKubectl != disable_web_kubectl {
+		t.Fatal("Incorrect KubeconfigSetting(disable_web_kubectl) : ", kss.DisableWebKubectl)
+	}
+	if kss.DisableCLIKubectl != disable_cli_kubectl {
+		t.Fatal("Incorrect KubeconfigSetting(disable_cli_kubectl) : ", kss.DisableCLIKubectl)
+	}
+}
+
 func TestGetKubeconfigSetting(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
@@ -31,27 +55,8 @@ func TestGetKubeconfigSetting(t *testing.T) {
 	if err != nil {
 		t.Fatal("could not get Kubeconfig Setting:", err)
 	}
-	if kss.Id != uuuid {
-		t.Fatal("Incorrect kubeconfig settings ID :", uuuid)
-	}
-	if kss.AccountID != acuuid {
-		t.Fatal("Incorrect Account ID :", acuuid)
-	}
-	if kss.OrganizationID != ouuid {
-		t.Fatal("Incorrect Organization ID :", ouuid)
-	}
-	if kss.IsSSOUser != false {
-		t.Fatal("IncorrectIsSSOUser :", kss.IsSSOUser)
-	}
-	if kss.ValiditySeconds != int64(validity_seconds) {
-		t.Fatal("Incorrect Validity Seconds : ", kss.ValiditySeconds)
-	}
-	if kss.DisableWebKubectl != disable_web_kubectl {
-		t.Fatal("Incorrect KubeconfigSetting(disable_web_kubectl) : ", kss.DisableWebKubectl)
-	}
-	if kss.DisableCLIKubectl != disable_cli_kubectl {
-		t.Fatal("Incorrect KubeconfigSetting(disable_cli_kubectl) : ", kss.DisableCLIKubectl)
-	}
+	performkubeconfigSettingBasicChecks(t, kss, uuuid, ouuid, acuuid, validity_seconds, true, true)
+
 }
 
 func TestUpdateKubeconfigSetting(t *testing.T) {
@@ -83,5 +88,5 @@ func TestUpdateKubeconfigSetting(t *testing.T) {
 	if errr != nil {
 		t.Fatal("could not PATCH Kubeconfig Setting:", errr)
 	}
-
+	performkubeconfigSettingBasicChecks(t, kss, uuuid, ouuid, acuuid, validity_seconds, true, true)
 }
