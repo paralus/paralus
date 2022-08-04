@@ -104,7 +104,7 @@ func TestOidcProviderGetById(t *testing.T) {
 	callbackUrl := "http:///self-service/methods/oidc/callback/oidc-" + uuuid
 	issuerUrl := "https://www.example" + uuuid + ".com"
 
-	mock.ExpectQuery(`"oidcprovider"."id", "oidcprovider"."name", "oidcprovider"."description", "oidcprovider"."organization_id", "oidcprovider"."partner_id", "oidcprovider"."created_at", "oidcprovider"."modified_at", "oidcprovider"."provider_name", "oidcprovider"."mapper_url", "oidcprovider"."mapper_filename", "oidcprovider"."client_id", "oidcprovider"."client_secret", "oidcprovider"."scopes", "oidcprovider"."issuer_url", "oidcprovider"."auth_url", "oidcprovider"."token_url", "oidcprovider"."requested_claims", "oidcprovider"."predefined", "oidcprovider"."trash" FROM "authsrv_oidc_provider" AS "oidcprovider" WHERE \(id = '` + uuuid + `'\) AND \(trash = FALSE\)`).
+	mock.ExpectQuery(`SELECT "oidcprovider"."id", "oidcprovider"."name", "oidcprovider"."description", "oidcprovider"."organization_id", "oidcprovider"."partner_id", "oidcprovider"."created_at", "oidcprovider"."modified_at", "oidcprovider"."provider_name", "oidcprovider"."mapper_url", "oidcprovider"."mapper_filename", "oidcprovider"."client_id", "oidcprovider"."client_secret", "oidcprovider"."scopes", "oidcprovider"."issuer_url", "oidcprovider"."auth_url", "oidcprovider"."token_url", "oidcprovider"."requested_claims", "oidcprovider"."predefined", "oidcprovider"."trash" FROM "authsrv_oidc_provider" AS "oidcprovider" WHERE \(id = '` + uuuid + `'\) AND \(trash = FALSE\)`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name", "provider_name", "issuer_url"}).AddRow(uuuid, "oidc-"+uuuid, "provider-"+pruuid, issuerUrl))
 
 	provider := &systemv3.OIDCProvider{
