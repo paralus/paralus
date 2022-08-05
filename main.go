@@ -58,11 +58,11 @@ const (
 	devEnv       = "DEV"
 
 	// db
+	dbDSNEnv      = "DB_DSN"
 	dbAddrEnv     = "DB_ADDR"
 	dbNameEnv     = "DB_NAME"
 	dbUserEnv     = "DB_USER"
 	dbPasswordEnv = "DB_PASSWORD"
-	dbDSNEnv      = "DSN"
 
 	// relay
 	sentryPeeringHostEnv      = "SENTRY_PEERING_HOST"
