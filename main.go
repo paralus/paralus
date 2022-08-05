@@ -58,7 +58,7 @@ const (
 	devEnv       = "DEV"
 
 	// db
-	dbDSNEnv      = "DB_DSN"
+	dbDSNEnv      = "DSN"
 	dbAddrEnv     = "DB_ADDR"
 	dbNameEnv     = "DB_NAME"
 	dbUserEnv     = "DB_USER"
