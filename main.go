@@ -62,6 +62,7 @@ const (
 	dbNameEnv     = "DB_NAME"
 	dbUserEnv     = "DB_USER"
 	dbPasswordEnv = "DB_PASSWORD"
+	dbDSNEnv      = "DSN"
 
 	// relay
 	sentryPeeringHostEnv      = "SENTRY_PEERING_HOST"
@@ -99,6 +100,7 @@ var (
 	_log                = log.GetLogger()
 
 	// db
+	dbDSN      string
 	dbAddr     string
 	dbName     string
 	dbUser     string
@@ -213,6 +215,7 @@ func setup() {
 	viper.BindEnv(apiAddrEnv)
 	viper.BindEnv(devEnv)
 
+	viper.BindEnv(dbDSNEnv)
 	viper.BindEnv(dbAddrEnv)
 	viper.BindEnv(dbNameEnv)
 	viper.BindEnv(dbUserEnv)
@@ -243,6 +246,7 @@ func setup() {
 	apiAddr = viper.GetString(apiAddrEnv)
 	dev = viper.GetBool(devEnv)
 
+	dbDSN := viper.GetString(dbDSNEnv)
 	dbAddr = viper.GetString(dbAddrEnv)
 	dbName = viper.GetString(dbNameEnv)
 	dbUser = viper.GetString(dbUserEnv)
@@ -280,8 +284,10 @@ func setup() {
 	akc = kclient.NewAPIClient(kratosAdminConfig)
 
 	// db setup
-	dsn := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", dbUser, dbPassword, dbAddr, dbName)
-	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	if dbDSN == "" {
+		dbDSN = fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", dbUser, dbPassword, dbAddr, dbName)
+	}
+	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dbDSN)))
 	db = bun.NewDB(sqldb, pgdialect.New())
 
 	if dev {
