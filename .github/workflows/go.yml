@@ -28,23 +28,17 @@ jobs:
       - name: Create k8s Kind Cluster
         uses: helm/kind-action@v1.2.0
 
-      - name: Test all
-        run: go test -coverprofile=coverage.out -v ./...
-
-      - name: Prepare coverage report
-        run: |
-          go install github.com/axw/gocov/gocov@latest
-          gocov convert coverage.out> coverage.json
-          echo "Coverage report (go)" > coverage.report
-          echo "" >> coverage.report
-          echo "|File|Percentage|Lines|" >> coverage.report
-          echo "|---|:---:|:---:|" >> coverage.report
-          gocov report coverage.json|grep -E '\-\-\-'|sed 's/---*//'|awk '{print "|"$1"|"$2"|"$3"|"}' >> coverage.report
-
-      - name: Comment coverage report
-        uses: marocchino/sticky-pull-request-comment@v2
+      - uses: gwatts/go-coverage-action@v1
+        id: coverage
         with:
-          path: coverage.report
+          # Optional coverage threshold
+          # use fail-coverage to determine what should happen below this threshold
+          coverage-threshold: 80
+
+          # A url that the html report will be accessible at, once your
+          # workflow uploads it.
+          # used in the pull request comment.
+          report-url: https://artifacts.example.com/go-coverage/${{ github.ref_name}}.html
 
   # golangci:
   #   strategy:
