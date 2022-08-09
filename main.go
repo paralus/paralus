@@ -246,7 +246,7 @@ func setup() {
 	apiAddr = viper.GetString(apiAddrEnv)
 	dev = viper.GetBool(devEnv)
 
-	dbDSN := viper.GetString(dbDSNEnv)
+	dbDSN = viper.GetString(dbDSNEnv)
 	dbAddr = viper.GetString(dbAddrEnv)
 	dbName = viper.GetString(dbNameEnv)
 	dbUser = viper.GetString(dbUserEnv)

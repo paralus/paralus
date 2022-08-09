@@ -47,6 +47,7 @@ import (
 // truncate table casbin_rule;
 
 const (
+	dbDSNEnv      = "DSN"
 	dbAddrEnv     = "DB_ADDR"
 	dbNameEnv     = "DB_NAME"
 	dbUserEnv     = "DB_USER"
@@ -114,12 +115,14 @@ func main() {
 	viper.SetDefault(auditFileEnv, "audit.log")
 
 	viper.BindEnv(auditFileEnv)
+	viper.BindEnv(dbDSNEnv)
 	viper.BindEnv(dbAddrEnv)
 	viper.BindEnv(dbNameEnv)
 	viper.BindEnv(dbUserEnv)
 	viper.BindEnv(dbPasswordEnv)
 	viper.BindEnv(kratosAddrEnv)
 
+	dbDSN := viper.GetString(dbDSNEnv)
 	dbAddr := viper.GetString(dbAddrEnv)
 	dbName := viper.GetString(dbNameEnv)
 	dbUser := viper.GetString(dbUserEnv)
@@ -147,8 +150,10 @@ func main() {
 		log.Fatal("unable to parse role descriptions file", err)
 	}
 
-	dsn := "postgres://" + dbUser + ":" + dbPassword + "@" + dbAddr + "/" + dbName + "?sslmode=disable"
-	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	if dbDSN == "" {
+		dbDSN = fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", dbUser, dbPassword, dbAddr, dbName)
+	}
+	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dbDSN)))
 	db := bun.NewDB(sqldb, pgdialect.New())
 
 	if *debug {
@@ -171,7 +176,7 @@ func main() {
 	auditLogger := audit.GetAuditLogger(&ao)
 
 	// authz services
-	gormDb, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	gormDb, err := gorm.Open(postgres.Open(dbDSN), &gorm.Config{})
 	if err != nil {
 		log.Fatal("unable to create db connection", "error", err)
 	}
