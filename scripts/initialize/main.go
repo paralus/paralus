@@ -86,11 +86,11 @@ func addResourcePermissions(db *bun.DB, basePath string) error {
 }
 
 func main() {
-	partner := flag.String("partner", "finman", "Name of partner")
+	partner := flag.String("partner", "DefaultPartner", "Name of partner")
 	partnerDesc := flag.String("partner-desc", "", "Description of partner")
 	partnerHost := flag.String("partner-host", "", "Host of partner")
 
-	org := flag.String("org", "finmanorg", "Name of org")
+	org := flag.String("org", "DefaultOrg", "Name of org")
 	orgDesc := flag.String("org-desc", "", "Description of org")
 
 	oae := flag.String("admin-email", "", "Email of org admin")
