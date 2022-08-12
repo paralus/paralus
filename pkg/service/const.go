@@ -12,4 +12,5 @@ const (
 	namespaceW     = "kubectl.namespace.write"
 	partnerR       = "partner.read"
 	organizationR  = "organization.read"
+	opsAll         = "ops_star.all"
 )

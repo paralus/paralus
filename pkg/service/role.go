@@ -147,8 +147,9 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 
 	//validate basic mandatory permissions that should be part of all custom roles
 	if len(role.Spec.Rolepermissions) > 0 &&
-		!(utils.Contains(role.Spec.Rolepermissions, partnerR) &&
-			utils.Contains(role.Spec.Rolepermissions, organizationR)) {
+		!utils.Contains(role.Spec.Rolepermissions, opsAll) &&
+		(!utils.Contains(role.Spec.Rolepermissions, partnerR) ||
+			!utils.Contains(role.Spec.Rolepermissions, organizationR)) {
 		return nil, fmt.Errorf("invalid role permissions, '%v', '%v' should be present ", partnerR, organizationR)
 	}
 
@@ -272,8 +273,9 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 	}
 
 	//validate basic mandatory permissions that should be part of all custom roles
-	if !(utils.Contains(role.Spec.Rolepermissions, partnerR) &&
-		utils.Contains(role.Spec.Rolepermissions, organizationR)) {
+	if !utils.Contains(role.Spec.Rolepermissions, opsAll) &&
+		(!utils.Contains(role.Spec.Rolepermissions, partnerR) ||
+			!utils.Contains(role.Spec.Rolepermissions, organizationR)) {
 		return nil, fmt.Errorf("invalid role permissions, '%v', '%v' should be present ", partnerR, organizationR)
 	}
 
