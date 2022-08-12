@@ -3,11 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 ## Unreleased
+## Fixed
+- Fixed init failing with db validation error from [meain](https://github.com/meain)
 
 ## [0.1.1] - 2022-08-09
 
 ### Fixed
- - Fix to validate bare minimum role permissions for custom roles from [niravparikh05](https://github.com/niravparikh05)
+- Fix to validate bare minimum role permissions for custom roles from [niravparikh05](https://github.com/niravparikh05)
 
 ## [0.1.0] - 2022-06-22
 ### Added
