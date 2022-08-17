@@ -19,6 +19,6 @@ All notable changes to this project will be documented in this file.
 - Initial release
 
 [Unreleased]: https://github.com/paralus/paralus/compare/v0.1.2...HEAD
-[0.1.1]: https://github.com/paralus/paralus/compare/v0.1.1...v0.1.2
+[0.1.2]: https://github.com/paralus/paralus/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/paralus/paralus/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/paralus/paralus/releases/tag/v0.1.0
