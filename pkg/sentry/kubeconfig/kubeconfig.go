@@ -17,6 +17,7 @@ import (
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	sentry "github.com/paralus/paralus/proto/types/sentry"
 
+	//"go.uber.org/zap"
 	clientcmdapiv1 "k8s.io/client-go/tools/clientcmd/api/v1"
 	"sigs.k8s.io/yaml"
 
@@ -342,6 +343,7 @@ func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps serv
 		message, groups)
 	*/
 
+	//service.DownloadKubeconfigAuditEvent(ctx, zap.L(), username)
 	return yaml.JSONToYAML(jb)
 }
 

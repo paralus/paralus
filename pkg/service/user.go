@@ -954,6 +954,7 @@ func (s *userService) RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiK
 		Partner:      part.Name,
 	}
 
+	DownloadCliConfigAuditEvent(ctx, s.al, AuditActionCreate, req.Username)
 	return cliConfig, nil
 
 }

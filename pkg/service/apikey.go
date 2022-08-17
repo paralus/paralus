@@ -105,6 +105,7 @@ func (s *apiKeyService) Get(ctx context.Context, req *rpcv3.ApiKeyRequest) (*mod
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
+	GenerateApiKeyAuditEvent(ctx, s.al, AuditActionGenerate, req.Username)
 	return &apikey, err
 }
 
@@ -114,5 +115,6 @@ func (s *apiKeyService) GetByKey(ctx context.Context, req *rpcv3.ApiKeyRequest) 
 	if err != nil {
 		return nil, err
 	}
+	GenerateApiKeyAuditEvent(ctx, s.al, AuditActionGenerate, req.Username)
 	return &apikey, err
 }
