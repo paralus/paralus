@@ -263,9 +263,9 @@ message ClusterNodeIP {
 }
 
 enum ClusterNodeState {
-    ClusterNodeCreated = 0;
-    ClusterNodeNotReady = 1;
-    ClusterNodeReady = 2;
+    CLUSTER_NODE_STATE_CLUSTER_NODE_CREATED_UNSPECIFIED = 0;
+    CLUSTER_NODE_STATE_CLUSTER_NODE_NOT_READY = 1;
+    CLUSTER_NODE_STATE_CLUSTER_NODE_READY = 2;
 }
   
 message ClusterCondition {
@@ -292,29 +292,29 @@ message ClusterCondition {
 }
 
 enum ClusterConditionType {
-    ClusterBlueprintSync = 0;
-    ClusterApprove = 1;
-    ClusterCheckIn = 2;
-    ClusterNodeSync = 3;
-    ClusterRegister = 4;
-    ClusterNamespaceSync = 5;
-    ClusterReady = 6;
-    ClusterAuxiliaryTaskSync = 7;
-    ClusterBootstrapAgent = 8;
-    ClusterDelete = 9;
+    CLUSTER_CONDITION_TYPE_CLUSTER_BLUE_PRINT_SYNC_UNSPECIFIED = 0;
+    CLUSTER_CONDITION_TYPE_CLUSTER_APPROVE = 1;
+    CLUSTER_CONDITION_TYPE_CLUSTER_CHECK_IN = 2;
+    CLUSTER_CONDITION_TYPE_CLUSTER_NODE_SYNC = 3;
+    CLUSTER_CONDITION_TYPE_CLUSTER_REGISTER = 4;
+    CLUSTER_CONDITION_TYPE_CLUSTER_NAMESPACE_SYNC = 5;
+    CLUSTER_CONDITION_TYPE_CLUSTER_READY = 6;
+    CLUSTER_CONDITION_TYPE_CLUSTER_AUXILIARY_TASK_SYNC = 7;
+    CLUSTER_CONDITION_TYPE_CLUSTER_BOOTSTRAP_AGENT = 8;
+    CLUSTER_CONDITION_TYPE_CLUSTER_DELETE = 9;
 }
 
 enum ClusterShareMode {
-    ClusterShareModeNotSet = 0;
-    ALL = 1;
-    CUSTOM = 2;
+    CLUSTER_SHARE_MODE_CLUSTER_SHARE_MODE_NOT_SET_UNSPECIFIED = 0;
+    CLUSTER_SHARE_MODE_ALL = 1;
+    CLUSTER_SHARE_MODE_CUSTOM = 2;
 }
 
 enum Health {
-    EDGE_IGNORE = 0;
-    EDGE_HEALTHY = 1;
-    EDGE_UNHEALTHY = 2;
-    EDGE_DISCONNECTED = 3;
+    HEALTH_EDGE_IGNORE_UNSPECIFIED = 0;
+    HEALTH_EDGE_HEALTHY = 1;
+    HEALTH_EDGE_UNHEALTHY = 2;
+    HEALTH_EDGE_DISCONNECTED = 3;
 }
 
 message Location {
@@ -519,12 +519,12 @@ message ProxyConfig {
 }
 
 enum ClusterTokenType {
-  ClusterBootstrapToken = 0;
+  CLUSTER_TOKEN_TYPE_CLUSTER_BOOTSTRAP_TOKEN_UNSPECIFIED = 0;
 }
 
 enum ClusterTokenState {
-  TokenNotUsed = 0;
-  TokenUsed = 1;
+  CLUSTER_TOKEN_STATE_TOKEN_NOT_USED_UNSPECIFIED = 0;
+  CLUSTER_TOKEN_STATE_TOKEN_USED = 1;
 }
 
 message ClusterTokenSpec {

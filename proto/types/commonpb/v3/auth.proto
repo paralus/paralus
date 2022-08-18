@@ -15,10 +15,10 @@ message IsRequestAllowedRequest {
 }
 
 enum RequestStatus {
-    Unknown = 0;
-    RequestNotAuthenticated = 1;
-    RequestMethodOrURLNotAllowed = 2;
-    RequestAllowed = 3;
+    REQUEST_STATUS_UNKNOWN_UNSPECIFIED = 0;
+    REQUEST_STATUS_REQUEST_NOT_AUTHENTICATED = 1;
+    REQUEST_STATUS_REQUEST_METHOD_OR_URL_NOT_ALLOWED = 2;
+    REQUEST_STATUS_REQUEST_ALLOWED = 3;
 }
 
 // Remove unnecessary fields
@@ -27,15 +27,15 @@ message ResourceURLMethods {
 }
 
 enum AuthType {
-    AuthTypeNotSet = 0;
-    SessionLogin = 1;
-    APIKey = 2;
+    AUTH_TYPE_AUTH_TYPE_NOT_SET = 0;
+    AUTH_TYPE_SESSION_LOGIN = 1;
+    AUTH_TYPE_API_KEY = 2;
 }
 
 enum ClientType {
-    ClientTypeNotSet = 0;
-    BROWSER = 1;
-    CLI = 2;
+    CLIENT_TYPE_CLIENT_TYPE_NOT_SET_UNSPECIFIED = 0;
+    CLIENT_TYPE_BROWSER = 1;
+    CLIENT_TYPE_CLI = 2;
 }
 
 message NamespaceData {

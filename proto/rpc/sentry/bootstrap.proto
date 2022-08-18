@@ -88,7 +88,7 @@ message RelayAgentDownloadRequest {
   string clusterScope = 2;
 }
 
-service Bootstrap {
+service ServiceBootstrap {
   rpc PatchBootstrapInfra(paralus.dev.types.sentry.BootstrapInfra)
       returns (paralus.dev.types.sentry.BootstrapInfra) {
     option (google.api.http) = {

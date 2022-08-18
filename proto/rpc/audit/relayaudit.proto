@@ -71,42 +71,42 @@ message relayAuditQueryFilter {
   repeated string clusterNames = 13;
 }
 
-message relayAuditSearchRequest {
+message RelayAuditSearchRequest {
   // TODO: this was paralus.dev.common.types.v2.ParalusMeta
   paralus.dev.types.common.v3.Metadata metadata = 1;
   relayAuditQueryFilter filter = 2;
   string auditType = 3;
 }
 
-message relayAuditSearchResponse {
+message RelayAuditSearchResponse {
   google.protobuf.Struct result = 1;
   string auditType = 2;
 }
 
-service RelayAudit {
-  rpc getRelayAPIAudit(relayAuditSearchRequest)
-      returns (relayAuditSearchResponse) {
+service ServiceRelayAudit {
+  rpc GetRelayAPIAudit(GetRelayAPIAuditRequest)
+      returns (GetRelayAPIAuditResponse) {
     option (google.api.http) = {
       get : "/event/v1/{metadata.urlScope=project/*}/relayaudit"
     };
   };
 
-  rpc getRelayAPIAuditByProjects(relayAuditSearchRequest)
-      returns (relayAuditSearchResponse) {
+  rpc GetRelayAPIAuditByProjects(GetRelayAPIAuditByProjectsRequest)
+      returns (GetRelayAPIAuditByProjectsResponse) {
     option (google.api.http) = {
       get : "/event/v1/relayaudit"
     };
   };
 
-  rpc getRelayAudit(relayAuditSearchRequest)
-      returns (relayAuditSearchResponse) {
+  rpc GetRelayAudit(GetRelayAuditRequest)
+      returns (GetRelayAuditResponse) {
     option (google.api.http) = {
       get : "/event/v1/{metadata.urlScope=project/*}/audit/relay"
     };
   };
 
-  rpc getRelayAuditByProjects(relayAuditSearchRequest)
-      returns (relayAuditSearchResponse) {
+  rpc GetRelayAuditByProjects(GetRelayAuditByProjectsRequest)
+      returns (GetRelayAuditByProjectsResponse) {
     option (google.api.http) = {
       get : "/event/v1/audit/relay"
     };

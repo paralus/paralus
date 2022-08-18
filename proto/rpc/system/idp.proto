@@ -54,7 +54,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 
-service Idp {
+service ServiceIdp {
   rpc CreateIdp(paralus.dev.types.system.v3.Idp) returns (paralus.dev.types.system.v3.Idp) {
     option (google.api.http) = {
       post : "/auth/v3/sso/idp"

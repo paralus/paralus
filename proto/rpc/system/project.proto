@@ -52,7 +52,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-service Project {
+service ServiceProject {
     rpc CreateProject(paralus.dev.types.system.v3.Project)
         returns (paralus.dev.types.system.v3.Project) {
       option (google.api.http) = {

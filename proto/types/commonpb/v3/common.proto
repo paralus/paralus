@@ -198,10 +198,10 @@ message PlacementSpec {
 // $title: ConditionStatus
 // $description: status of a condition for a resource
 enum ConditionStatus {
-  StatusNotSet = 0;
-  StatusSubmitted = 1;
-  StatusOK = 2;
-  StatusFailed = 3;
+  CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED = 0;
+  CONDITION_STATUS_STATUS_SUBMITTED = 1;
+  CONDITION_STATUS_STATUS_OK = 2;
+  CONDITION_STATUS_STATUS_FAILED = 3;
 }
 
 message Status {
@@ -289,17 +289,17 @@ message QueryOptions {
 
 // ParalusConditionStatus is the status of the status condition
 enum ParalusConditionStatus {
-  NotSet = 0;
-  Pending = 1;
-  InProgress = 2;
-  Success = 3;
-  Failed = 4;
-  Retry = 5;
-  Skipped = 6;
-  Stopped = 7;
-  Expired = 8;
-  Stopping = 9;
-  Submitted = 10;
+  PARALUS_CONDITION_STATUS_NOT_SET_UNSPECIFIED = 0;
+  PARALUS_CONDITION_STATUS_PENDING = 1;
+  PARALUS_CONDITION_STATUS_IN_PROGRESS = 2;
+  PARALUS_CONDITION_STATUS_SUCCESS = 3;
+  PARALUS_CONDITION_STATUS_FAILED = 4;
+  PARALUS_CONDITION_STATUS_RETRY = 5;
+  PARALUS_CONDITION_STATUS_SKIPPED = 6;
+  PARALUS_CONDITION_STATUS_STOPPED = 7;
+  PARALUS_CONDITION_STATUS_EXPIRED = 8;
+  PARALUS_CONDITION_STATUS_STOPPING = 9;
+  PARALUS_CONDITION_STATUS_SUBMITTED = 10;
 }
 
 // HttpBody represents arbitrary HTTP Body. It should only be used for

@@ -76,7 +76,7 @@ message ForgotPasswordResponse { string recoveryLink = 1; }
 message DeleteUserResponse {}
 message CliConfigRequest {}
 
-service User {
+service ServiceUser {
   rpc CreateUser(paralus.dev.types.user.v3.User)
       returns (paralus.dev.types.user.v3.User) {
     option (google.api.http) = {

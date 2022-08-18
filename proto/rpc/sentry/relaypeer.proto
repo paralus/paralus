@@ -24,7 +24,7 @@ message PeerProbeRequest {
   string clustersni = 2;
 }
 
-message relayClusterConnectionInfo {
+message RelayClusterConnectionInfo {
   string relayuuid = 1; // the uuid of the relay
 	string relayip  = 2;  // the ip address of the relay
 }

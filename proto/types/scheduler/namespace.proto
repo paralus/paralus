@@ -13,10 +13,10 @@ message ClusterNamespaceSpec {
 }
 
 enum ClusterNamespaceConditionType {
-  ClusterNamespaceAssigned = 0;
-  ClusterNamespaceConverged = 1;
-  ClusterNamespaceReady = 2;
-  ClusterNamespaceDelete = 3;
+  CLUSTER_NAMESPACE_CONDITION_TYPE_CLUSTER_NAMESPACE_ASSIGNED_UNSPECIFIED = 0;
+  CLUSTER_NAMESPACE_CONDITION_TYPE_CLUSTER_NAMESPACE_CONVERGED = 1;
+  CLUSTER_NAMESPACE_CONDITION_TYPE_CLUSTER_NAMESPACE_READY = 2;
+  CLUSTER_NAMESPACE_CONDITION_TYPE_CLUSTER_NAMESPACE_DELETE = 3;
 }
 
 message ClusterNamespaceCondition {
@@ -32,8 +32,8 @@ message ClusterNamespaceStatus {
 }
 
 enum ClusterNamespaceType {
-  ClusterNamespaceSystem = 0;
-  ClusterNamespaceCustom = 1;
+  CLUSTER_NAMESPACE_TYPE_CLUSTER_NAMESPACE_SYSTEM_UNSPECIFIED = 0;
+  CLUSTER_NAMESPACE_TYPE_CLUSTER_NAMESPACE_CUSTOM = 1;
 }
 
 message ClusterNamespace {

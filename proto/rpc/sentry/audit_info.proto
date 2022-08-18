@@ -3,8 +3,6 @@ package paralus.dev.sentry.rpc;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
-import "proto/types/commonpb/v3/common.proto";
-import "proto/types/sentry/sentry.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {
@@ -75,7 +73,7 @@ message LookupClusterResponse {
     string displayName = 2;
 }
 
-service AuditInformation {
+service ServiceAuditInformation {
     
     rpc LookupUser(LookupUserRequest)
         returns (LookupUserResponse) {

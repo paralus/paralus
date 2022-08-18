@@ -53,7 +53,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 
 message EmptyRequest {}
 
-service Partner {
+service ServicePartner {
   rpc CreatePartner(paralus.dev.types.system.v3.Partner)
       returns (paralus.dev.types.system.v3.Partner) {
     option (google.api.http) = {

@@ -53,7 +53,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-message auditLogQueryFilter {
+message AuditLogQueryFilter {
   string type = 1;
   string user = 2;
   string client = 3;
@@ -68,24 +68,24 @@ message auditLogQueryFilter {
   bool dashboardData = 12;
 }
 
-message auditLogSearchRequest {
+message AuditLogSearchRequest {
   paralus.dev.types.common.v3.Metadata metadata = 1;
-  auditLogQueryFilter filter = 2;
+  AuditLogQueryFilter filter = 2;
 }
 
-message auditLogSearchResponse {
+message AuditLogSearchResponse {
   google.protobuf.Struct result = 1;
 }
 
-service AuditLog {
-  rpc getAuditLog(auditLogSearchRequest) returns (auditLogSearchResponse) {
+service ServiceAuditLog {
+  rpc GetAuditLog(GetAuditLogRequest) returns (GetAuditLogResponse) {
     option (google.api.http) = {
       get : "/event/v1/{metadata.urlScope=project/*}/auditlog"
     };
   };
 
-  rpc getAuditLogByProjects(auditLogSearchRequest)
-      returns (auditLogSearchResponse) {
+  rpc GetAuditLogByProjects(GetAuditLogByProjectsRequest)
+      returns (GetAuditLogByProjectsResponse) {
     option (google.api.http) = {
       get : "/event/v1/auditlog"
     };

@@ -2,8 +2,6 @@ syntax = "proto3";
 package paralus.dev.types.user.v3;
 
 import "proto/types/commonpb/v3/common.proto";
-import "proto/types/rolepb/v3/role.proto";
-import "proto/types/rolepb/v3/rolepermission.proto";
 import "proto/types/userpb/v3/group.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 

@@ -30,8 +30,8 @@ message TestObject {
   TestObjectStatus status = 3;
 }
 
-service Test {
-  rpc Get(TestObject) returns (TestObject) {
+service ServiceTest {
+  rpc Get(TestGetRequest) returns (TestGetResponse) {
     option (google.api.http) = {
       get : "/v3/test/{metadata.name}/test/{metadata.name}"
     };

@@ -6,25 +6,25 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 import "proto/types/commonpb/v3/common.proto";
 
 enum BootstrapInfraType {
-  ClusterBootstrapInfra = 0;
+  BOOTSTRAP_INFRA_TYPE_CLUSTER_BOOTSTRAP_INFRA_UNSPECIFIED = 0;
 }
 
 enum BootstrapAgentType {
-  ParalusConnector = 0;
-  RelayAgent = 1;
-  PipelineAgent = 2;
+  BOOTSTRAP_AGENT_TYPE_PARALUS_CONNECTOR_UNSPECIFIED = 0;
+  BOOTSTRAP_AGENT_TYPE_RELAY_AGENT = 1;
+  BOOTSTRAP_AGENT_TYPE_PIPELINE_AGENT = 2;
 }
 
 enum BootstrapAgentMode {
-  InCluster = 0;
-  OutOfCluster = 1;
+  BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED = 0;
+  BOOTSTRAP_AGENT_MODE_OUT_OF_CLUSTER = 1;
 }
 
 enum BootstrapAgentState {
-  NotSet = 0;
-  NotRegistered = 1;
-  NotApproved = 2;
-  Approved = 3;
+  BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED = 0;
+  BOOTSTRAP_AGENT_STATE_NOT_REGISTERED = 1;
+  BOOTSTRAP_AGENT_STATE_NOT_APPROVED = 2;
+  BOOTSTRAP_AGENT_STATE_APPROVED = 3;
 }
 
 message BootstrapInfraSpec {
@@ -84,16 +84,16 @@ message BootstrapInfraList {
 }
 
 enum BootstrapAgentTemplateType {
-  TemplateTypeNotSet = 0;
-  Client = 1;
-  Server = 2;
-  Mixed = 3;
+  BOOTSTRAP_AGENT_TEMPLATE_TYPE_TEMPLATE_TYPE_NOT_SET_UNSPECIFIED = 0;
+  BOOTSTRAP_AGENT_TEMPLATE_TYPE_CLIENT = 1;
+  BOOTSTRAP_AGENT_TEMPLATE_TYPE_SERVER = 2;
+  BOOTSTRAP_AGENT_TEMPLATE_TYPE_MIXED = 3;
 }
 
 enum BootstrapTemplateHostType {
-  HostTypeNotSet = 0;
-  HostTypeInternal = 1;
-  HostTypeExternal = 2;
+  BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_NOT_SET_UNSPECIFIED = 0;
+  BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_INTERNAL = 1;
+  BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_EXTERNAL = 2;
 }
 
 message BootstrapTemplateHost {
