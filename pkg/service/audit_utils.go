@@ -19,7 +19,6 @@ const (
 	AuditActionCreate   = "create"
 	AuditActionDelete   = "delete"
 	AuditActionUpdate   = "update"
-	AuditActionGenerate = "generate"
 	AuditActionDownload = "download"
 )
 
@@ -386,44 +385,12 @@ func CreateApiKeyAuditEvent(ctx context.Context, al *zap.Logger, action string, 
 			"apikey": id,
 		},
 	}
-	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("apikey.%s.success", action), ""); err != nil {
-		_log.Warn("unable to create audit event", err)
-	}
-}
-
-func GenerateApiKeyAuditEvent(ctx context.Context, al *zap.Logger, action string, id string) {
-	sd, ok := GetSessionDataFromContext(ctx)
-	if !ok {
-		_log.Warn("unable to create audit event: could not fetch info from context")
-		return
-	}
-
-	detail := &audit.EventDetail{
-		Message: fmt.Sprintf("ApiKey %sd for user %s", action, id),
-		Meta: map[string]string{
-			"apikey": id,
-		},
+	if action == AuditActionDownload {
+		detail.Message = fmt.Sprintf("ApiKey %sed for %s", action, id)
 	}
 	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("apikey.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
-}
-
-func DownloadKubeconfigAuditEvent(ctx context.Context, al *zap.Logger, user string) {
-	sd, ok := GetSessionDataFromContext(ctx)
-	if !ok {
-		_log.Warn("unable to create audit event: could not fetch info from context")
-		return
-	}
-
-	detail := &audit.EventDetail{
-		Message: fmt.Sprintf("Kubeconfig Downloaded for user %s", user),
-	}
-	_log.Infow(fmt.Sprintf("Kubeconfig Downloaded for user %s", user))
-	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("Kubeconfig Download success %s", user), ""); err != nil {
-		_log.Warn("unable to create audit event", err)
-	}
-	_log.Infow("Audit event created")
 }
 
 func DownloadCliConfigAuditEvent(ctx context.Context, al *zap.Logger, action string, user string) {
@@ -434,10 +401,12 @@ func DownloadCliConfigAuditEvent(ctx context.Context, al *zap.Logger, action str
 	}
 
 	detail := &audit.EventDetail{
-		Message: fmt.Sprintf("CLI config Downloaded for %s", user),
+		Message: fmt.Sprintf("CLI config %sed for %s", action, user),
+		Meta: map[string]string{
+			"username": user,
+		},
 	}
-	_log.Infow(fmt.Sprintf("CLI config Downloaded for %s", user))
-	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("CLI Config.%s.success", action), ""); err != nil {
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("cliconfig.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
 }

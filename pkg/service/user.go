@@ -943,6 +943,8 @@ func (s *userService) RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiK
 		}
 	}
 
+	CreateApiKeyAuditEvent(ctx, s.al, AuditActionDownload, req.Username)
+
 	cliConfig := &common.CliConfigDownloadData{
 		Profile:      s.cc.Profile,
 		RestEndpoint: s.cc.RestEndpoint,
@@ -954,7 +956,7 @@ func (s *userService) RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiK
 		Partner:      part.Name,
 	}
 
-	DownloadCliConfigAuditEvent(ctx, s.al, AuditActionCreate, req.Username)
+	DownloadCliConfigAuditEvent(ctx, s.al, AuditActionDownload, req.Username)
 	return cliConfig, nil
 
 }
