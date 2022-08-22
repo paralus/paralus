@@ -16,9 +16,10 @@ import (
 )
 
 const (
-	AuditActionCreate = "create"
-	AuditActionDelete = "delete"
-	AuditActionUpdate = "update"
+	AuditActionCreate   = "create"
+	AuditActionDelete   = "delete"
+	AuditActionUpdate   = "update"
+	AuditActionDownload = "download"
 )
 
 func CreateUserAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, action string, name string, id uuid.UUID, rolesBefore, rolesAfter, groupsBefore, groupsAfter []uuid.UUID) {
@@ -385,6 +386,24 @@ func CreateApiKeyAuditEvent(ctx context.Context, al *zap.Logger, action string, 
 		},
 	}
 	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("apikey.%s.success", action), ""); err != nil {
+		_log.Warn("unable to create audit event", err)
+	}
+}
+
+func DownloadCliConfigAuditEvent(ctx context.Context, al *zap.Logger, action string, user string) {
+	sd, ok := GetSessionDataFromContext(ctx)
+	if !ok {
+		_log.Warn("unable to create audit event: could not fetch info from context")
+		return
+	}
+
+	detail := &audit.EventDetail{
+		Message: fmt.Sprintf("CLI config %sed for %s", action, user),
+		Meta: map[string]string{
+			"username": user,
+		},
+	}
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("cliconfig.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
 }
