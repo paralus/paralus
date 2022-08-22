@@ -385,9 +385,6 @@ func CreateApiKeyAuditEvent(ctx context.Context, al *zap.Logger, action string, 
 			"apikey": id,
 		},
 	}
-	if action == AuditActionDownload {
-		detail.Message = fmt.Sprintf("ApiKey %sed for %s", action, id)
-	}
 	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("apikey.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}

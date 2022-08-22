@@ -3,8 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 ## Unreleased
+
 ## Fixed
 - Fixed init failing with db validation error from [meain](https://github.com/meain)
+
+## Added
+
+- Adding more audit points for better visibility from [vivekhiwarkar](https://github.com/vivekhiwarkar)
 
 ## [0.1.1] - 2022-08-09
 
