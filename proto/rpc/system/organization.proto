@@ -51,7 +51,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-service ServiceOrganization {
+service OrganizationService {
   rpc CreateOrganization(paralus.dev.types.system.v3.Organization)
       returns (paralus.dev.types.system.v3.Organization) {
     option (google.api.http) = {

@@ -76,7 +76,7 @@ message GetUserAuthorizationRequest {
   int64 certIssueSeconds  = 3;
 }
 
-service ServiceClusterAuthorization {
+service ClusterAuthorizationService {
   rpc GetUserAuthorization(GetUserAuthorizationRequest)
       returns (GetUserAuthorizationResponse) {
     option (google.api.http) = {

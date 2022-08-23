@@ -55,7 +55,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-message relayAuditQueryFilter {
+message RelayAuditQueryFilter {
   string type = 1;
   string user = 2;
   string client = 3;
@@ -71,42 +71,42 @@ message relayAuditQueryFilter {
   repeated string clusterNames = 13;
 }
 
-message RelayAuditSearchRequest {
+message RelayAuditRequest {
   // TODO: this was paralus.dev.common.types.v2.ParalusMeta
   paralus.dev.types.common.v3.Metadata metadata = 1;
-  relayAuditQueryFilter filter = 2;
+  RelayAuditQueryFilter filter = 2;
   string auditType = 3;
 }
 
-message RelayAuditSearchResponse {
+message RelayAuditResponse {
   google.protobuf.Struct result = 1;
   string auditType = 2;
 }
 
-service ServiceRelayAudit {
-  rpc GetRelayAPIAudit(GetRelayAPIAuditRequest)
-      returns (GetRelayAPIAuditResponse) {
+service RelayAuditService {
+  rpc GetRelayAPIAudit(RelayAuditRequest)
+      returns (RelayAuditResponse) {
     option (google.api.http) = {
       get : "/event/v1/{metadata.urlScope=project/*}/relayaudit"
     };
   };
 
-  rpc GetRelayAPIAuditByProjects(GetRelayAPIAuditByProjectsRequest)
-      returns (GetRelayAPIAuditByProjectsResponse) {
+  rpc GetRelayAPIAuditByProjects(RelayAuditRequest)
+      returns (RelayAuditResponse) {
     option (google.api.http) = {
       get : "/event/v1/relayaudit"
     };
   };
 
-  rpc GetRelayAudit(GetRelayAuditRequest)
-      returns (GetRelayAuditResponse) {
+  rpc GetRelayAudit(RelayAuditRequest)
+      returns (RelayAuditResponse) {
     option (google.api.http) = {
       get : "/event/v1/{metadata.urlScope=project/*}/audit/relay"
     };
   };
 
-  rpc GetRelayAuditByProjects(GetRelayAuditByProjectsRequest)
-      returns (GetRelayAuditByProjectsResponse) {
+  rpc GetRelayAuditByProjects(RelayAuditRequest)
+      returns (RelayAuditResponse) {
     option (google.api.http) = {
       get : "/event/v1/audit/relay"
     };

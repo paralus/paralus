@@ -54,7 +54,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-service ServiceRolepermission {
+service RolepermissionService {
   rpc GetRolepermissions(paralus.dev.types.common.v3.QueryOptions)
       returns (paralus.dev.types.role.v3.RolePermissionList) {
     option (google.api.http) = {

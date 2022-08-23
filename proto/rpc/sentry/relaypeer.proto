@@ -32,7 +32,7 @@ message RelayClusterConnectionInfo {
 // Probe Response from service to relay
 message PeerProbeResponse {
   string clustersni = 1;
-	repeated relayClusterConnectionInfo items = 2;
+	repeated RelayClusterConnectionInfo items = 2;
 }
 
 // Survey request sent from the service to all relays

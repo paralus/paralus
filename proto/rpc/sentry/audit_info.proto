@@ -73,7 +73,7 @@ message LookupClusterResponse {
     string displayName = 2;
 }
 
-service ServiceAuditInformation {
+service AuditInformationService {
     
     rpc LookupUser(LookupUserRequest)
         returns (LookupUserResponse) {

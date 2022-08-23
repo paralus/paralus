@@ -65,7 +65,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-service ServiceCluster {
+service ClusterService {
     rpc CreateCluster(paralus.dev.types.infra.v3.Cluster)
         returns (paralus.dev.types.infra.v3.Cluster) {
       option (google.api.http) = {

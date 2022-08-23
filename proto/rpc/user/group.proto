@@ -54,7 +54,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-service Serviceroup {
+service GroupService {
   rpc CreateGroup(paralus.dev.types.user.v3.Group)
       returns (paralus.dev.types.user.v3.Group) {
     option (google.api.http) = {

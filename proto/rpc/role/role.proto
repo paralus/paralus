@@ -52,7 +52,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-service ServiceRole {
+service RoleService {
   rpc CreateRole(paralus.dev.types.role.v3.Role)
       returns (paralus.dev.types.role.v3.Role) {
     option (google.api.http) = {

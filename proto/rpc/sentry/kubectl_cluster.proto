@@ -70,7 +70,7 @@ message GetKubectlClusterSettingsResponse {
   bool disableCLIKubectl = 2;
 }
 
-service ServiceKubectlClusterSettings {
+service KubectlClusterSettingsService {
   rpc UpdateKubectlClusterSettings(UpdateKubectlClusterSettingsRequest) returns (UpdateKubectlClusterSettingsResponse) {
     option (google.api.http) = {
 		put : "/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"

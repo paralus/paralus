@@ -51,7 +51,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     }
   };
   
-  service ServiceLocation {
+  service LocationService {
     rpc CreateLocation(paralus.dev.types.infra.v3.Location)
         returns (paralus.dev.types.infra.v3.Location) {
       option (google.api.http) = {

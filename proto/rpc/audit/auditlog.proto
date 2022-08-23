@@ -68,24 +68,24 @@ message AuditLogQueryFilter {
   bool dashboardData = 12;
 }
 
-message AuditLogSearchRequest {
+message GetAuditLogSearchRequest {
   paralus.dev.types.common.v3.Metadata metadata = 1;
   AuditLogQueryFilter filter = 2;
 }
 
-message AuditLogSearchResponse {
+message GetAuditLogSearchResponse {
   google.protobuf.Struct result = 1;
 }
 
-service ServiceAuditLog {
-  rpc GetAuditLog(GetAuditLogRequest) returns (GetAuditLogResponse) {
+service AuditLogService {
+  rpc GetAuditLog(GetAuditLogSearchRequest) returns (GetAuditLogSearchResponse) {
     option (google.api.http) = {
       get : "/event/v1/{metadata.urlScope=project/*}/auditlog"
     };
   };
 
-  rpc GetAuditLogByProjects(GetAuditLogByProjectsRequest)
-      returns (GetAuditLogByProjectsResponse) {
+  rpc GetAuditLogByProjects(GetAuditLogSearchRequest)
+      returns (GetAuditLogSearchResponse) {
     option (google.api.http) = {
       get : "/event/v1/auditlog"
     };

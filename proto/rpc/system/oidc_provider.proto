@@ -53,7 +53,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-service ServiceOIDCProvider {
+service OIDCProviderService {
   rpc CreateOIDCProvider(paralus.dev.types.system.v3.OIDCProvider) returns (paralus.dev.types.system.v3.OIDCProvider) {
     option (google.api.http) = {
       post : "/auth/v3/sso/oidc/provider"

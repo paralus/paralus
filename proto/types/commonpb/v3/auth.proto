@@ -27,7 +27,7 @@ message ResourceURLMethods {
 }
 
 enum AuthType {
-    AUTH_TYPE_AUTH_TYPE_NOT_SET = 0;
+    AUTH_TYPE_AUTH_TYPE_NOT_SET_UNSPECIFIED = 0;
     AUTH_TYPE_SESSION_LOGIN = 1;
     AUTH_TYPE_API_KEY = 2;
 }
