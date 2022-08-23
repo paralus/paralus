@@ -29,38 +29,7 @@ jobs:
         uses: helm/kind-action@v1.2.0
 
       - name: Test all
-        run: go test -coverprofile=coverage.out -v ./...
+        run: go test -coverprofile=coverage.txt -covermode=atomic ./...
 
-      - name: Prepare coverage report
-        run: |
-          go install github.com/axw/gocov/gocov@latest
-          gocov convert coverage.out> coverage.json
-          echo "Coverage report (go)" > coverage.report
-          echo "" >> coverage.report
-          echo "|File|Percentage|Lines|" >> coverage.report
-          echo "|---|:---:|:---:|" >> coverage.report
-          gocov report coverage.json|grep -E '\-\-\-'|sed 's/---*//'|awk '{print "|"$1"|"$2"|"$3"|"}' >> coverage.report
-
-      - name: Comment coverage report
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          path: coverage.report
-
-  # golangci:
-  #   strategy:
-  #     matrix:
-  #       go-version: [1.17.x]
-  #       os: [ubuntu-latest]
-  #   runs-on: ${{ matrix.os }}
-  #   steps:
-  #     - uses: actions/checkout@v2
-
-  #     - name: Set up Go
-  #       uses: actions/setup-go@v2
-  #       with:
-  #         go-version: ${{ matrix.go-version }}
-
-  #     - name: golangci-lint
-  #       uses: golangci/golangci-lint-action@v2
-  #       with:
-  #         version: v1.44.2
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
