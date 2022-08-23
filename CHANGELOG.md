@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## Added
+
+- Adding more audit points for better visibility from [vivekhiwarkar](https://github.com/vivekhiwarkar)
+
 ## [0.1.2] - 2022-08-12
 
 ## Fixed
