@@ -32,11 +32,11 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 var (
-	filter_RelayAudit_GetRelayAPIAudit_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_RelayAuditService_GetRelayAPIAudit_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_RelayAudit_GetRelayAPIAudit_0(ctx context.Context, marshaler runtime.Marshaler, client RelayAuditClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq RelayAuditSearchRequest
+func request_RelayAuditService_GetRelayAPIAudit_0(ctx context.Context, marshaler runtime.Marshaler, client RelayAuditServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RelayAuditRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -59,7 +59,7 @@ func request_RelayAudit_GetRelayAPIAudit_0(ctx context.Context, marshaler runtim
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAudit_GetRelayAPIAudit_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAuditService_GetRelayAPIAudit_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -68,8 +68,8 @@ func request_RelayAudit_GetRelayAPIAudit_0(ctx context.Context, marshaler runtim
 
 }
 
-func local_request_RelayAudit_GetRelayAPIAudit_0(ctx context.Context, marshaler runtime.Marshaler, server RelayAuditServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq RelayAuditSearchRequest
+func local_request_RelayAuditService_GetRelayAPIAudit_0(ctx context.Context, marshaler runtime.Marshaler, server RelayAuditServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RelayAuditRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -92,7 +92,7 @@ func local_request_RelayAudit_GetRelayAPIAudit_0(ctx context.Context, marshaler 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAudit_GetRelayAPIAudit_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAuditService_GetRelayAPIAudit_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -102,17 +102,17 @@ func local_request_RelayAudit_GetRelayAPIAudit_0(ctx context.Context, marshaler 
 }
 
 var (
-	filter_RelayAudit_GetRelayAPIAuditByProjects_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+	filter_RelayAuditService_GetRelayAPIAuditByProjects_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
-func request_RelayAudit_GetRelayAPIAuditByProjects_0(ctx context.Context, marshaler runtime.Marshaler, client RelayAuditClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq RelayAuditSearchRequest
+func request_RelayAuditService_GetRelayAPIAuditByProjects_0(ctx context.Context, marshaler runtime.Marshaler, client RelayAuditServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RelayAuditRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAudit_GetRelayAPIAuditByProjects_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAuditService_GetRelayAPIAuditByProjects_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -121,14 +121,14 @@ func request_RelayAudit_GetRelayAPIAuditByProjects_0(ctx context.Context, marsha
 
 }
 
-func local_request_RelayAudit_GetRelayAPIAuditByProjects_0(ctx context.Context, marshaler runtime.Marshaler, server RelayAuditServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq RelayAuditSearchRequest
+func local_request_RelayAuditService_GetRelayAPIAuditByProjects_0(ctx context.Context, marshaler runtime.Marshaler, server RelayAuditServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RelayAuditRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAudit_GetRelayAPIAuditByProjects_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAuditService_GetRelayAPIAuditByProjects_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -138,11 +138,11 @@ func local_request_RelayAudit_GetRelayAPIAuditByProjects_0(ctx context.Context, 
 }
 
 var (
-	filter_RelayAudit_GetRelayAudit_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_RelayAuditService_GetRelayAudit_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_RelayAudit_GetRelayAudit_0(ctx context.Context, marshaler runtime.Marshaler, client RelayAuditClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq RelayAuditSearchRequest
+func request_RelayAuditService_GetRelayAudit_0(ctx context.Context, marshaler runtime.Marshaler, client RelayAuditServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RelayAuditRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -165,7 +165,7 @@ func request_RelayAudit_GetRelayAudit_0(ctx context.Context, marshaler runtime.M
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAudit_GetRelayAudit_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAuditService_GetRelayAudit_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -174,8 +174,8 @@ func request_RelayAudit_GetRelayAudit_0(ctx context.Context, marshaler runtime.M
 
 }
 
-func local_request_RelayAudit_GetRelayAudit_0(ctx context.Context, marshaler runtime.Marshaler, server RelayAuditServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq RelayAuditSearchRequest
+func local_request_RelayAuditService_GetRelayAudit_0(ctx context.Context, marshaler runtime.Marshaler, server RelayAuditServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RelayAuditRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -198,7 +198,7 @@ func local_request_RelayAudit_GetRelayAudit_0(ctx context.Context, marshaler run
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAudit_GetRelayAudit_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAuditService_GetRelayAudit_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -208,17 +208,17 @@ func local_request_RelayAudit_GetRelayAudit_0(ctx context.Context, marshaler run
 }
 
 var (
-	filter_RelayAudit_GetRelayAuditByProjects_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+	filter_RelayAuditService_GetRelayAuditByProjects_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
-func request_RelayAudit_GetRelayAuditByProjects_0(ctx context.Context, marshaler runtime.Marshaler, client RelayAuditClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq RelayAuditSearchRequest
+func request_RelayAuditService_GetRelayAuditByProjects_0(ctx context.Context, marshaler runtime.Marshaler, client RelayAuditServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RelayAuditRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAudit_GetRelayAuditByProjects_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAuditService_GetRelayAuditByProjects_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -227,14 +227,14 @@ func request_RelayAudit_GetRelayAuditByProjects_0(ctx context.Context, marshaler
 
 }
 
-func local_request_RelayAudit_GetRelayAuditByProjects_0(ctx context.Context, marshaler runtime.Marshaler, server RelayAuditServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq RelayAuditSearchRequest
+func local_request_RelayAuditService_GetRelayAuditByProjects_0(ctx context.Context, marshaler runtime.Marshaler, server RelayAuditServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RelayAuditRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAudit_GetRelayAuditByProjects_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RelayAuditService_GetRelayAuditByProjects_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -243,110 +243,118 @@ func local_request_RelayAudit_GetRelayAuditByProjects_0(ctx context.Context, mar
 
 }
 
-// RegisterRelayAuditHandlerServer registers the http handlers for service RelayAudit to "mux".
-// UnaryRPC     :call RelayAuditServer directly.
+// RegisterRelayAuditServiceHandlerServer registers the http handlers for service RelayAuditService to "mux".
+// UnaryRPC     :call RelayAuditServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterRelayAuditHandlerFromEndpoint instead.
-func RegisterRelayAuditHandlerServer(ctx context.Context, mux *runtime.ServeMux, server RelayAuditServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterRelayAuditServiceHandlerFromEndpoint instead.
+func RegisterRelayAuditServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server RelayAuditServiceServer) error {
 
-	mux.Handle("GET", pattern_RelayAudit_GetRelayAPIAudit_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RelayAuditService_GetRelayAPIAudit_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rep.framework.event.v1.RelayAudit/GetRelayAPIAudit", runtime.WithHTTPPathPattern("/event/v1/{metadata.urlScope=project/*}/relayaudit"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/rep.framework.event.v1.RelayAuditService/GetRelayAPIAudit", runtime.WithHTTPPathPattern("/event/v1/{metadata.urlScope=project/*}/relayaudit"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_RelayAudit_GetRelayAPIAudit_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_RelayAuditService_GetRelayAPIAudit_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_RelayAudit_GetRelayAPIAudit_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RelayAuditService_GetRelayAPIAudit_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_RelayAudit_GetRelayAPIAuditByProjects_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RelayAuditService_GetRelayAPIAuditByProjects_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rep.framework.event.v1.RelayAudit/GetRelayAPIAuditByProjects", runtime.WithHTTPPathPattern("/event/v1/relayaudit"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/rep.framework.event.v1.RelayAuditService/GetRelayAPIAuditByProjects", runtime.WithHTTPPathPattern("/event/v1/relayaudit"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_RelayAudit_GetRelayAPIAuditByProjects_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_RelayAuditService_GetRelayAPIAuditByProjects_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_RelayAudit_GetRelayAPIAuditByProjects_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RelayAuditService_GetRelayAPIAuditByProjects_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_RelayAudit_GetRelayAudit_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RelayAuditService_GetRelayAudit_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rep.framework.event.v1.RelayAudit/GetRelayAudit", runtime.WithHTTPPathPattern("/event/v1/{metadata.urlScope=project/*}/audit/relay"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/rep.framework.event.v1.RelayAuditService/GetRelayAudit", runtime.WithHTTPPathPattern("/event/v1/{metadata.urlScope=project/*}/audit/relay"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_RelayAudit_GetRelayAudit_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_RelayAuditService_GetRelayAudit_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_RelayAudit_GetRelayAudit_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RelayAuditService_GetRelayAudit_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_RelayAudit_GetRelayAuditByProjects_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RelayAuditService_GetRelayAuditByProjects_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/rep.framework.event.v1.RelayAudit/GetRelayAuditByProjects", runtime.WithHTTPPathPattern("/event/v1/audit/relay"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/rep.framework.event.v1.RelayAuditService/GetRelayAuditByProjects", runtime.WithHTTPPathPattern("/event/v1/audit/relay"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_RelayAudit_GetRelayAuditByProjects_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_RelayAuditService_GetRelayAuditByProjects_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_RelayAudit_GetRelayAuditByProjects_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RelayAuditService_GetRelayAuditByProjects_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterRelayAuditHandlerFromEndpoint is same as RegisterRelayAuditHandler but
+// RegisterRelayAuditServiceHandlerFromEndpoint is same as RegisterRelayAuditServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterRelayAuditHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterRelayAuditServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -366,99 +374,107 @@ func RegisterRelayAuditHandlerFromEndpoint(ctx context.Context, mux *runtime.Ser
 		}()
 	}()
 
-	return RegisterRelayAuditHandler(ctx, mux, conn)
+	return RegisterRelayAuditServiceHandler(ctx, mux, conn)
 }
 
-// RegisterRelayAuditHandler registers the http handlers for service RelayAudit to "mux".
+// RegisterRelayAuditServiceHandler registers the http handlers for service RelayAuditService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterRelayAuditHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterRelayAuditHandlerClient(ctx, mux, NewRelayAuditClient(conn))
+func RegisterRelayAuditServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterRelayAuditServiceHandlerClient(ctx, mux, NewRelayAuditServiceClient(conn))
 }
 
-// RegisterRelayAuditHandlerClient registers the http handlers for service RelayAudit
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "RelayAuditClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "RelayAuditClient"
+// RegisterRelayAuditServiceHandlerClient registers the http handlers for service RelayAuditService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "RelayAuditServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "RelayAuditServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "RelayAuditClient" to call the correct interceptors.
-func RegisterRelayAuditHandlerClient(ctx context.Context, mux *runtime.ServeMux, client RelayAuditClient) error {
+// "RelayAuditServiceClient" to call the correct interceptors.
+func RegisterRelayAuditServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client RelayAuditServiceClient) error {
 
-	mux.Handle("GET", pattern_RelayAudit_GetRelayAPIAudit_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RelayAuditService_GetRelayAPIAudit_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rep.framework.event.v1.RelayAudit/GetRelayAPIAudit", runtime.WithHTTPPathPattern("/event/v1/{metadata.urlScope=project/*}/relayaudit"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/rep.framework.event.v1.RelayAuditService/GetRelayAPIAudit", runtime.WithHTTPPathPattern("/event/v1/{metadata.urlScope=project/*}/relayaudit"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_RelayAudit_GetRelayAPIAudit_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_RelayAuditService_GetRelayAPIAudit_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_RelayAudit_GetRelayAPIAudit_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RelayAuditService_GetRelayAPIAudit_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_RelayAudit_GetRelayAPIAuditByProjects_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RelayAuditService_GetRelayAPIAuditByProjects_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rep.framework.event.v1.RelayAudit/GetRelayAPIAuditByProjects", runtime.WithHTTPPathPattern("/event/v1/relayaudit"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/rep.framework.event.v1.RelayAuditService/GetRelayAPIAuditByProjects", runtime.WithHTTPPathPattern("/event/v1/relayaudit"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_RelayAudit_GetRelayAPIAuditByProjects_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_RelayAuditService_GetRelayAPIAuditByProjects_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_RelayAudit_GetRelayAPIAuditByProjects_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RelayAuditService_GetRelayAPIAuditByProjects_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_RelayAudit_GetRelayAudit_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RelayAuditService_GetRelayAudit_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rep.framework.event.v1.RelayAudit/GetRelayAudit", runtime.WithHTTPPathPattern("/event/v1/{metadata.urlScope=project/*}/audit/relay"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/rep.framework.event.v1.RelayAuditService/GetRelayAudit", runtime.WithHTTPPathPattern("/event/v1/{metadata.urlScope=project/*}/audit/relay"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_RelayAudit_GetRelayAudit_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_RelayAuditService_GetRelayAudit_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_RelayAudit_GetRelayAudit_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RelayAuditService_GetRelayAudit_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_RelayAudit_GetRelayAuditByProjects_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RelayAuditService_GetRelayAuditByProjects_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/rep.framework.event.v1.RelayAudit/GetRelayAuditByProjects", runtime.WithHTTPPathPattern("/event/v1/audit/relay"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/rep.framework.event.v1.RelayAuditService/GetRelayAuditByProjects", runtime.WithHTTPPathPattern("/event/v1/audit/relay"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_RelayAudit_GetRelayAuditByProjects_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_RelayAuditService_GetRelayAuditByProjects_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_RelayAudit_GetRelayAuditByProjects_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RelayAuditService_GetRelayAuditByProjects_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -466,21 +482,21 @@ func RegisterRelayAuditHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 }
 
 var (
-	pattern_RelayAudit_GetRelayAPIAudit_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 2, 5, 3, 2, 4}, []string{"event", "v1", "project", "metadata.urlScope", "relayaudit"}, ""))
+	pattern_RelayAuditService_GetRelayAPIAudit_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 2, 5, 3, 2, 4}, []string{"event", "v1", "project", "metadata.urlScope", "relayaudit"}, ""))
 
-	pattern_RelayAudit_GetRelayAPIAuditByProjects_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"event", "v1", "relayaudit"}, ""))
+	pattern_RelayAuditService_GetRelayAPIAuditByProjects_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"event", "v1", "relayaudit"}, ""))
 
-	pattern_RelayAudit_GetRelayAudit_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 2, 5, 3, 2, 4, 2, 5}, []string{"event", "v1", "project", "metadata.urlScope", "audit", "relay"}, ""))
+	pattern_RelayAuditService_GetRelayAudit_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 2, 5, 3, 2, 4, 2, 5}, []string{"event", "v1", "project", "metadata.urlScope", "audit", "relay"}, ""))
 
-	pattern_RelayAudit_GetRelayAuditByProjects_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"event", "v1", "audit", "relay"}, ""))
+	pattern_RelayAuditService_GetRelayAuditByProjects_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"event", "v1", "audit", "relay"}, ""))
 )
 
 var (
-	forward_RelayAudit_GetRelayAPIAudit_0 = runtime.ForwardResponseMessage
+	forward_RelayAuditService_GetRelayAPIAudit_0 = runtime.ForwardResponseMessage
 
-	forward_RelayAudit_GetRelayAPIAuditByProjects_0 = runtime.ForwardResponseMessage
+	forward_RelayAuditService_GetRelayAPIAuditByProjects_0 = runtime.ForwardResponseMessage
 
-	forward_RelayAudit_GetRelayAudit_0 = runtime.ForwardResponseMessage
+	forward_RelayAuditService_GetRelayAudit_0 = runtime.ForwardResponseMessage
 
-	forward_RelayAudit_GetRelayAuditByProjects_0 = runtime.ForwardResponseMessage
+	forward_RelayAuditService_GetRelayAuditByProjects_0 = runtime.ForwardResponseMessage
 )

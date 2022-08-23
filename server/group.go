@@ -17,20 +17,20 @@ type groupServer struct {
 }
 
 // NewGroupServer returns new group server implementation
-func NewGroupServer(ps service.GroupService) rpcv3.GroupServer {
+func NewGroupServer(ps service.GroupService) rpcv3.GroupServiceServer {
 	return &groupServer{ps}
 }
 
 func updateGroupStatus(req *userpbv3.Group, resp *userpbv3.Group, err error) *userpbv3.Group {
 	if err != nil {
 		req.Status = &v3.Status{
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
+			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
 		return req
 	}
-	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_StatusOK}
+	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_OK}
 	return resp
 }
 

@@ -9,7 +9,7 @@
   },
   "tags": [
     {
-      "name": "OIDCProvider"
+      "name": "OIDCProviderService"
     }
   ],
   "schemes": [
@@ -26,7 +26,7 @@
   "paths": {
     "/auth/v3/sso/oidc/provider": {
       "get": {
-        "operationId": "OIDCProvider_ListOIDCProvider",
+        "operationId": "OIDCProviderService_ListOIDCProvider",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -53,11 +53,11 @@
           }
         },
         "tags": [
-          "OIDCProvider"
+          "OIDCProviderService"
         ]
       },
       "post": {
-        "operationId": "OIDCProvider_CreateOIDCProvider",
+        "operationId": "OIDCProviderService_CreateOIDCProvider",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -90,6 +90,7 @@
         "parameters": [
           {
             "name": "body",
+            "description": "Open Id Connect Provider",
             "in": "body",
             "required": true,
             "schema": {
@@ -98,13 +99,13 @@
           }
         ],
         "tags": [
-          "OIDCProvider"
+          "OIDCProviderService"
         ]
       }
     },
     "/auth/v3/sso/oidc/provider/{metadata.name}": {
       "get": {
-        "operationId": "OIDCProvider_GetOIDCProvider",
+        "operationId": "OIDCProviderService_GetOIDCProvider",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -140,7 +141,7 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the OIDCProvider resource",
+            "description": "API Version\n\nAPI Version of the OIDCProvider resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -148,7 +149,7 @@
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the OIDCProvider resource",
+            "description": "Kind\n\nKind of the OIDCProvider resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -156,35 +157,35 @@
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -287,28 +288,28 @@
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
             "enum": [
-              "StatusNotSet",
-              "StatusSubmitted",
-              "StatusOK",
-              "StatusFailed"
+              "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED",
+              "CONDITION_STATUS_STATUS_SUBMITTED",
+              "CONDITION_STATUS_STATUS_OK",
+              "CONDITION_STATUS_STATUS_FAILED"
             ],
-            "default": "StatusNotSet"
+            "default": "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED"
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -316,22 +317,23 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "OIDCProvider"
+          "OIDCProviderService"
         ]
       },
       "delete": {
-        "operationId": "OIDCProvider_DeleteOIDCProvider",
+        "operationId": "OIDCProviderService_DeleteOIDCProvider",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
+              "type": "object",
               "properties": {}
             }
           },
@@ -367,7 +369,7 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the OIDCProvider resource",
+            "description": "API Version\n\nAPI Version of the OIDCProvider resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -375,7 +377,7 @@
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the OIDCProvider resource",
+            "description": "Kind\n\nKind of the OIDCProvider resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -383,35 +385,35 @@
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -514,28 +516,28 @@
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
             "enum": [
-              "StatusNotSet",
-              "StatusSubmitted",
-              "StatusOK",
-              "StatusFailed"
+              "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED",
+              "CONDITION_STATUS_STATUS_SUBMITTED",
+              "CONDITION_STATUS_STATUS_OK",
+              "CONDITION_STATUS_STATUS_FAILED"
             ],
-            "default": "StatusNotSet"
+            "default": "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED"
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -543,18 +545,18 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "OIDCProvider"
+          "OIDCProviderService"
         ]
       },
       "put": {
-        "operationId": "OIDCProvider_UpdateOIDCProvider",
+        "operationId": "OIDCProviderService_UpdateOIDCProvider",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -593,12 +595,119 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v3OIDCProvider"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "system.k8smgmt.io/v3",
+                  "description": "API Version of the OIDCProvider resource",
+                  "title": "API Version"
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "OIDCProvider",
+                  "description": "Kind of the OIDCProvider resource",
+                  "title": "Kind"
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata",
+                  "required": [
+                    "project"
+                  ]
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3OIDCProviderSpec",
+                  "description": "Spec of the OIDCProvider resource",
+                  "title": "Spec"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Open Id Connect Provider",
+              "title": "OIDCProvider",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec",
+                "project"
+              ]
             }
           }
         ],
         "tags": [
-          "OIDCProvider"
+          "OIDCProviderService"
         ]
       }
     }
@@ -681,12 +790,12 @@
     "v3ConditionStatus": {
       "type": "string",
       "enum": [
-        "StatusNotSet",
-        "StatusSubmitted",
-        "StatusOK",
-        "StatusFailed"
+        "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED",
+        "CONDITION_STATUS_STATUS_SUBMITTED",
+        "CONDITION_STATUS_STATUS_OK",
+        "CONDITION_STATUS_STATUS_FAILED"
       ],
-      "default": "StatusNotSet",
+      "default": "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED",
       "title": "$title: ConditionStatus\n$description: status of a condition for a resource"
     },
     "v3ListMetadata": {
@@ -853,11 +962,11 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v3OIDCProvider"
+            "$ref": "#/definitions/v3OIDCProvider",
+            "readOnly": true
           },
           "description": "List of the OIDCProvider resources",
-          "title": "Items",
-          "readOnly": true
+          "title": "Items"
         }
       },
       "description": "OIDC providers list",

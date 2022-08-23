@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: proto/rpc/v3/auth.proto
 
-package rpcv3
+package authv3
 
 import (
 	context "context"
@@ -19,84 +19,84 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// AuthClient is the client API for Auth service.
+// AuthServiceClient is the client API for AuthService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type AuthClient interface {
+type AuthServiceClient interface {
 	IsRequestAllowed(ctx context.Context, in *v3.IsRequestAllowedRequest, opts ...grpc.CallOption) (*v3.IsRequestAllowedResponse, error)
 }
 
-type authClient struct {
+type authServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
-	return &authClient{cc}
+func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
+	return &authServiceClient{cc}
 }
 
-func (c *authClient) IsRequestAllowed(ctx context.Context, in *v3.IsRequestAllowedRequest, opts ...grpc.CallOption) (*v3.IsRequestAllowedResponse, error) {
+func (c *authServiceClient) IsRequestAllowed(ctx context.Context, in *v3.IsRequestAllowedRequest, opts ...grpc.CallOption) (*v3.IsRequestAllowedResponse, error) {
 	out := new(v3.IsRequestAllowedResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Auth/IsRequestAllowed", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.auth.v3.AuthService/IsRequestAllowed", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// AuthServer is the server API for Auth service.
-// All implementations should embed UnimplementedAuthServer
+// AuthServiceServer is the server API for AuthService service.
+// All implementations should embed UnimplementedAuthServiceServer
 // for forward compatibility
-type AuthServer interface {
+type AuthServiceServer interface {
 	IsRequestAllowed(context.Context, *v3.IsRequestAllowedRequest) (*v3.IsRequestAllowedResponse, error)
 }
 
-// UnimplementedAuthServer should be embedded to have forward compatible implementations.
-type UnimplementedAuthServer struct {
+// UnimplementedAuthServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedAuthServiceServer struct {
 }
 
-func (UnimplementedAuthServer) IsRequestAllowed(context.Context, *v3.IsRequestAllowedRequest) (*v3.IsRequestAllowedResponse, error) {
+func (UnimplementedAuthServiceServer) IsRequestAllowed(context.Context, *v3.IsRequestAllowedRequest) (*v3.IsRequestAllowedResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsRequestAllowed not implemented")
 }
 
-// UnsafeAuthServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to AuthServer will
+// UnsafeAuthServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AuthServiceServer will
 // result in compilation errors.
-type UnsafeAuthServer interface {
-	mustEmbedUnimplementedAuthServer()
+type UnsafeAuthServiceServer interface {
+	mustEmbedUnimplementedAuthServiceServer()
 }
 
-func RegisterAuthServer(s grpc.ServiceRegistrar, srv AuthServer) {
-	s.RegisterService(&Auth_ServiceDesc, srv)
+func RegisterAuthServiceServer(s grpc.ServiceRegistrar, srv AuthServiceServer) {
+	s.RegisterService(&AuthService_ServiceDesc, srv)
 }
 
-func _Auth_IsRequestAllowed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AuthService_IsRequestAllowed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.IsRequestAllowedRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).IsRequestAllowed(ctx, in)
+		return srv.(AuthServiceServer).IsRequestAllowed(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Auth/IsRequestAllowed",
+		FullMethod: "/paralus.dev.rpc.auth.v3.AuthService/IsRequestAllowed",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).IsRequestAllowed(ctx, req.(*v3.IsRequestAllowedRequest))
+		return srv.(AuthServiceServer).IsRequestAllowed(ctx, req.(*v3.IsRequestAllowedRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Auth_ServiceDesc is the grpc.ServiceDesc for Auth service.
+// AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Auth_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "paralus.dev.rpc.v3.Auth",
-	HandlerType: (*AuthServer)(nil),
+var AuthService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "paralus.dev.rpc.auth.v3.AuthService",
+	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "IsRequestAllowed",
-			Handler:    _Auth_IsRequestAllowed_Handler,
+			Handler:    _AuthService_IsRequestAllowed_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

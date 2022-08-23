@@ -299,7 +299,7 @@ func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps serv
 
 	serverHost := ""
 	for _, host := range batl.Items[0].Spec.Hosts {
-		if host.Type == sentry.BootstrapTemplateHostType_HostTypeExternal {
+		if host.Type == sentry.BootstrapTemplateHostType_BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_EXTERNAL {
 			serverHost = host.Host
 		}
 	}
@@ -483,7 +483,7 @@ func GetConfigForCluster(ctx context.Context, bs service.BootstrapService, req *
 
 	serverHost := ""
 	for _, host := range batl.Items[0].Spec.Hosts {
-		if host.Type == sentry.BootstrapTemplateHostType_HostTypeExternal {
+		if host.Type == sentry.BootstrapTemplateHostType_BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_EXTERNAL {
 			serverHost = host.Host
 		}
 	}

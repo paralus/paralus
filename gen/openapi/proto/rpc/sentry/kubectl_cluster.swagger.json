@@ -9,7 +9,7 @@
   },
   "tags": [
     {
-      "name": "KubectlClusterSettings"
+      "name": "KubectlClusterSettingsService"
     }
   ],
   "schemes": [
@@ -26,7 +26,7 @@
   "paths": {
     "/v2/sentry/kubectl/{opts.urlScope}/settings": {
       "get": {
-        "operationId": "KubectlClusterSettings_GetKubectlClusterSettings",
+        "operationId": "KubectlClusterSettingsService_GetKubectlClusterSettings",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -63,21 +63,21 @@
           },
           {
             "name": "opts.q",
-            "description": "query for filtering.",
+            "description": "query for filtering",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "opts.name",
-            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID).",
+            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "opts.selector",
-            "description": "selector is used to filter the labels of a resource.",
+            "description": "selector is used to filter the labels of a resource",
             "in": "query",
             "required": false,
             "type": "string"
@@ -114,7 +114,7 @@
           },
           {
             "name": "opts.displayName",
-            "description": "displayName only used for update queries to set displayName (READONLY).",
+            "description": "displayName only used for update queries to set displayName (READONLY)",
             "in": "query",
             "required": false,
             "type": "string"
@@ -142,14 +142,14 @@
           },
           {
             "name": "opts.ignoreScopeDefault",
-            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID.",
+            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "opts.globalScope",
-            "description": "globalScope sets partnerID,organizationID,projectID = 0.",
+            "description": "globalScope sets partnerID,organizationID,projectID = 0",
             "in": "query",
             "required": false,
             "type": "boolean"
@@ -232,18 +232,18 @@
           },
           {
             "name": "opts.type",
-            "description": "generic way to specify a type of resource, mainly for use in users endpoint.",
+            "description": "generic way to specify a type of resource, mainly for use in users endpoint",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "KubectlClusterSettings"
+          "KubectlClusterSettingsService"
         ]
       },
       "put": {
-        "operationId": "KubectlClusterSettings_UpdateKubectlClusterSettings",
+        "operationId": "KubectlClusterSettingsService_UpdateKubectlClusterSettings",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -283,12 +283,134 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/rpcUpdateKubectlClusterSettingsRequest"
+              "type": "object",
+              "properties": {
+                "opts": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string",
+                      "title": "query for filtering"
+                    },
+                    "name": {
+                      "type": "string",
+                      "title": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)"
+                    },
+                    "selector": {
+                      "type": "string",
+                      "title": "selector is used to filter the labels of a resource"
+                    },
+                    "partner": {
+                      "type": "string"
+                    },
+                    "organization": {
+                      "type": "string"
+                    },
+                    "project": {
+                      "type": "string"
+                    },
+                    "group": {
+                      "type": "string"
+                    },
+                    "role": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string",
+                      "title": "displayName only used for update queries to set displayName (READONLY)"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "title": "labels only used for update queries to set labels (READONLY)"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "title": "annotations only used for update queries to set annotations (READONLY)"
+                    },
+                    "count": {
+                      "type": "string",
+                      "format": "int64"
+                    },
+                    "offset": {
+                      "type": "string",
+                      "format": "int64"
+                    },
+                    "limit": {
+                      "type": "string",
+                      "format": "int64"
+                    },
+                    "ignoreScopeDefault": {
+                      "type": "boolean",
+                      "title": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID"
+                    },
+                    "globalScope": {
+                      "type": "boolean",
+                      "title": "globalScope sets partnerID,organizationID,projectID = 0"
+                    },
+                    "orderBy": {
+                      "type": "string"
+                    },
+                    "order": {
+                      "type": "string"
+                    },
+                    "deleted": {
+                      "type": "boolean"
+                    },
+                    "extended": {
+                      "type": "boolean"
+                    },
+                    "isSSOUser": {
+                      "type": "boolean"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "groups": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "blueprintRef": {
+                      "type": "string"
+                    },
+                    "publishedVersion": {
+                      "type": "string"
+                    },
+                    "clusterID": {
+                      "type": "string"
+                    },
+                    "ID": {
+                      "type": "string"
+                    },
+                    "account": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "title": "generic way to specify a type of resource, mainly for use in users endpoint"
+                    }
+                  },
+                  "title": "QueryOptions is the options for performing queries on resources"
+                },
+                "disableWebKubectl": {
+                  "type": "boolean"
+                },
+                "disableCLIKubectl": {
+                  "type": "boolean"
+                }
+              }
             }
           }
         ],
         "tags": [
-          "KubectlClusterSettings"
+          "KubectlClusterSettingsService"
         ]
       }
     }
@@ -324,20 +446,6 @@
     "rpcGetKubectlClusterSettingsResponse": {
       "type": "object",
       "properties": {
-        "disableWebKubectl": {
-          "type": "boolean"
-        },
-        "disableCLIKubectl": {
-          "type": "boolean"
-        }
-      }
-    },
-    "rpcUpdateKubectlClusterSettingsRequest": {
-      "type": "object",
-      "properties": {
-        "opts": {
-          "$ref": "#/definitions/v3QueryOptions"
-        },
         "disableWebKubectl": {
           "type": "boolean"
         },

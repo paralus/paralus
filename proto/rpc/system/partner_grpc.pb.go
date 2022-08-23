@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: proto/rpc/system/partner.proto
 
-package rpcv3
+package systemv3
 
 import (
 	context "context"
@@ -19,10 +19,10 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// PartnerClient is the client API for Partner service.
+// PartnerServiceClient is the client API for PartnerService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type PartnerClient interface {
+type PartnerServiceClient interface {
 	CreatePartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error)
 	GetPartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error)
 	GetInitPartner(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*v3.Partner, error)
@@ -30,63 +30,63 @@ type PartnerClient interface {
 	DeletePartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error)
 }
 
-type partnerClient struct {
+type partnerServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewPartnerClient(cc grpc.ClientConnInterface) PartnerClient {
-	return &partnerClient{cc}
+func NewPartnerServiceClient(cc grpc.ClientConnInterface) PartnerServiceClient {
+	return &partnerServiceClient{cc}
 }
 
-func (c *partnerClient) CreatePartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error) {
+func (c *partnerServiceClient) CreatePartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error) {
 	out := new(v3.Partner)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Partner/CreatePartner", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.PartnerService/CreatePartner", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *partnerClient) GetPartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error) {
+func (c *partnerServiceClient) GetPartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error) {
 	out := new(v3.Partner)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Partner/GetPartner", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.PartnerService/GetPartner", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *partnerClient) GetInitPartner(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*v3.Partner, error) {
+func (c *partnerServiceClient) GetInitPartner(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*v3.Partner, error) {
 	out := new(v3.Partner)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Partner/GetInitPartner", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.PartnerService/GetInitPartner", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *partnerClient) UpdatePartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error) {
+func (c *partnerServiceClient) UpdatePartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error) {
 	out := new(v3.Partner)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Partner/UpdatePartner", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.PartnerService/UpdatePartner", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *partnerClient) DeletePartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error) {
+func (c *partnerServiceClient) DeletePartner(ctx context.Context, in *v3.Partner, opts ...grpc.CallOption) (*v3.Partner, error) {
 	out := new(v3.Partner)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Partner/DeletePartner", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.PartnerService/DeletePartner", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// PartnerServer is the server API for Partner service.
-// All implementations should embed UnimplementedPartnerServer
+// PartnerServiceServer is the server API for PartnerService service.
+// All implementations should embed UnimplementedPartnerServiceServer
 // for forward compatibility
-type PartnerServer interface {
+type PartnerServiceServer interface {
 	CreatePartner(context.Context, *v3.Partner) (*v3.Partner, error)
 	GetPartner(context.Context, *v3.Partner) (*v3.Partner, error)
 	GetInitPartner(context.Context, *EmptyRequest) (*v3.Partner, error)
@@ -94,153 +94,153 @@ type PartnerServer interface {
 	DeletePartner(context.Context, *v3.Partner) (*v3.Partner, error)
 }
 
-// UnimplementedPartnerServer should be embedded to have forward compatible implementations.
-type UnimplementedPartnerServer struct {
+// UnimplementedPartnerServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedPartnerServiceServer struct {
 }
 
-func (UnimplementedPartnerServer) CreatePartner(context.Context, *v3.Partner) (*v3.Partner, error) {
+func (UnimplementedPartnerServiceServer) CreatePartner(context.Context, *v3.Partner) (*v3.Partner, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePartner not implemented")
 }
-func (UnimplementedPartnerServer) GetPartner(context.Context, *v3.Partner) (*v3.Partner, error) {
+func (UnimplementedPartnerServiceServer) GetPartner(context.Context, *v3.Partner) (*v3.Partner, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPartner not implemented")
 }
-func (UnimplementedPartnerServer) GetInitPartner(context.Context, *EmptyRequest) (*v3.Partner, error) {
+func (UnimplementedPartnerServiceServer) GetInitPartner(context.Context, *EmptyRequest) (*v3.Partner, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInitPartner not implemented")
 }
-func (UnimplementedPartnerServer) UpdatePartner(context.Context, *v3.Partner) (*v3.Partner, error) {
+func (UnimplementedPartnerServiceServer) UpdatePartner(context.Context, *v3.Partner) (*v3.Partner, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePartner not implemented")
 }
-func (UnimplementedPartnerServer) DeletePartner(context.Context, *v3.Partner) (*v3.Partner, error) {
+func (UnimplementedPartnerServiceServer) DeletePartner(context.Context, *v3.Partner) (*v3.Partner, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeletePartner not implemented")
 }
 
-// UnsafePartnerServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to PartnerServer will
+// UnsafePartnerServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PartnerServiceServer will
 // result in compilation errors.
-type UnsafePartnerServer interface {
-	mustEmbedUnimplementedPartnerServer()
+type UnsafePartnerServiceServer interface {
+	mustEmbedUnimplementedPartnerServiceServer()
 }
 
-func RegisterPartnerServer(s grpc.ServiceRegistrar, srv PartnerServer) {
-	s.RegisterService(&Partner_ServiceDesc, srv)
+func RegisterPartnerServiceServer(s grpc.ServiceRegistrar, srv PartnerServiceServer) {
+	s.RegisterService(&PartnerService_ServiceDesc, srv)
 }
 
-func _Partner_CreatePartner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PartnerService_CreatePartner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Partner)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PartnerServer).CreatePartner(ctx, in)
+		return srv.(PartnerServiceServer).CreatePartner(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Partner/CreatePartner",
+		FullMethod: "/paralus.dev.rpc.system.v3.PartnerService/CreatePartner",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PartnerServer).CreatePartner(ctx, req.(*v3.Partner))
+		return srv.(PartnerServiceServer).CreatePartner(ctx, req.(*v3.Partner))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Partner_GetPartner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PartnerService_GetPartner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Partner)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PartnerServer).GetPartner(ctx, in)
+		return srv.(PartnerServiceServer).GetPartner(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Partner/GetPartner",
+		FullMethod: "/paralus.dev.rpc.system.v3.PartnerService/GetPartner",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PartnerServer).GetPartner(ctx, req.(*v3.Partner))
+		return srv.(PartnerServiceServer).GetPartner(ctx, req.(*v3.Partner))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Partner_GetInitPartner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PartnerService_GetInitPartner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(EmptyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PartnerServer).GetInitPartner(ctx, in)
+		return srv.(PartnerServiceServer).GetInitPartner(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Partner/GetInitPartner",
+		FullMethod: "/paralus.dev.rpc.system.v3.PartnerService/GetInitPartner",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PartnerServer).GetInitPartner(ctx, req.(*EmptyRequest))
+		return srv.(PartnerServiceServer).GetInitPartner(ctx, req.(*EmptyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Partner_UpdatePartner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PartnerService_UpdatePartner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Partner)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PartnerServer).UpdatePartner(ctx, in)
+		return srv.(PartnerServiceServer).UpdatePartner(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Partner/UpdatePartner",
+		FullMethod: "/paralus.dev.rpc.system.v3.PartnerService/UpdatePartner",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PartnerServer).UpdatePartner(ctx, req.(*v3.Partner))
+		return srv.(PartnerServiceServer).UpdatePartner(ctx, req.(*v3.Partner))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Partner_DeletePartner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PartnerService_DeletePartner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Partner)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PartnerServer).DeletePartner(ctx, in)
+		return srv.(PartnerServiceServer).DeletePartner(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Partner/DeletePartner",
+		FullMethod: "/paralus.dev.rpc.system.v3.PartnerService/DeletePartner",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PartnerServer).DeletePartner(ctx, req.(*v3.Partner))
+		return srv.(PartnerServiceServer).DeletePartner(ctx, req.(*v3.Partner))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Partner_ServiceDesc is the grpc.ServiceDesc for Partner service.
+// PartnerService_ServiceDesc is the grpc.ServiceDesc for PartnerService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Partner_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "paralus.dev.rpc.v3.Partner",
-	HandlerType: (*PartnerServer)(nil),
+var PartnerService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "paralus.dev.rpc.system.v3.PartnerService",
+	HandlerType: (*PartnerServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreatePartner",
-			Handler:    _Partner_CreatePartner_Handler,
+			Handler:    _PartnerService_CreatePartner_Handler,
 		},
 		{
 			MethodName: "GetPartner",
-			Handler:    _Partner_GetPartner_Handler,
+			Handler:    _PartnerService_GetPartner_Handler,
 		},
 		{
 			MethodName: "GetInitPartner",
-			Handler:    _Partner_GetInitPartner_Handler,
+			Handler:    _PartnerService_GetInitPartner_Handler,
 		},
 		{
 			MethodName: "UpdatePartner",
-			Handler:    _Partner_UpdatePartner_Handler,
+			Handler:    _PartnerService_UpdatePartner_Handler,
 		},
 		{
 			MethodName: "DeletePartner",
-			Handler:    _Partner_DeletePartner_Handler,
+			Handler:    _PartnerService_DeletePartner_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

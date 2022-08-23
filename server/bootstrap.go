@@ -52,7 +52,7 @@ type bootstrapServer struct {
 	cs       service.ClusterService
 }
 
-var _ sentryrpc.BootstrapServer = (*bootstrapServer)(nil)
+var _ sentryrpc.BootstrapServiceServer = (*bootstrapServer)(nil)
 
 func (s *bootstrapServer) GetBootstrapInfra(ctx context.Context, in *sentry.BootstrapInfra) (*sentry.BootstrapInfra, error) {
 	return s.bs.GetBootstrapInfra(ctx, in.Metadata.Name)
@@ -179,18 +179,18 @@ func (s *bootstrapServer) RegisterBootstrapAgent(ctx context.Context, in *sentry
 	opts = append(opts, cryptoutil.WithCAKeyDecrypt(s.passFunc))
 
 	// only add altname for server or mixed templates
-	if template.Spec.TemplateType == sentry.BootstrapAgentTemplateType_Server || template.Spec.TemplateType == sentry.BootstrapAgentTemplateType_Mixed {
+	if template.Spec.TemplateType == sentry.BootstrapAgentTemplateType_BOOTSTRAP_AGENT_TEMPLATE_TYPE_SERVER || template.Spec.TemplateType == sentry.BootstrapAgentTemplateType_BOOTSTRAP_AGENT_TEMPLATE_TYPE_MIXED {
 		for _, host := range template.Spec.Hosts {
 			h, _ := util.ParseAddr(host.Host)
 			opts = append(opts, cryptoutil.WithAltName(h))
 		}
 	}
 
-	if template.Spec.TemplateType == sentry.BootstrapAgentTemplateType_Client {
+	if template.Spec.TemplateType == sentry.BootstrapAgentTemplateType_BOOTSTRAP_AGENT_TEMPLATE_TYPE_CLIENT {
 		opts = append(opts, cryptoutil.WithClient(), cryptoutil.WithCSRSubjectValidate(cryptoutil.CNShouldBe(in.Token)))
-	} else if template.Spec.TemplateType == sentry.BootstrapAgentTemplateType_Server {
+	} else if template.Spec.TemplateType == sentry.BootstrapAgentTemplateType_BOOTSTRAP_AGENT_TEMPLATE_TYPE_SERVER {
 		opts = append(opts, cryptoutil.WithServer())
-	} else if template.Spec.TemplateType == sentry.BootstrapAgentTemplateType_Mixed {
+	} else if template.Spec.TemplateType == sentry.BootstrapAgentTemplateType_BOOTSTRAP_AGENT_TEMPLATE_TYPE_MIXED {
 		opts = append(opts, cryptoutil.WithServer(), cryptoutil.WithClient())
 	}
 
@@ -265,20 +265,20 @@ func (s *bootstrapServer) updateClusterStatus(ctx context.Context, clusterID str
 				ClusterStatus: &infrav3.ClusterStatus{
 					Conditions: []*infrav3.ClusterCondition{
 						{
-							Type:        infrav3.ClusterConditionType_ClusterCheckIn,
-							Status:      commonv3.ParalusConditionStatus_Success,
+							Type:        infrav3.ClusterConditionType_CLUSTER_CONDITION_TYPE_CLUSTER_CHECK_IN,
+							Status:      commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_SUCCESS,
 							LastUpdated: timestamppb.Now(),
 							Reason:      "Relay agent established connection.",
 						},
 						{
-							Type:        infrav3.ClusterConditionType_ClusterRegister,
-							Status:      commonv3.ParalusConditionStatus_Success,
+							Type:        infrav3.ClusterConditionType_CLUSTER_CONDITION_TYPE_CLUSTER_REGISTER,
+							Status:      commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_SUCCESS,
 							LastUpdated: timestamppb.Now(),
 							Reason:      "Relay agent established connection.",
 						},
 						{
-							Type:        infrav3.ClusterConditionType_ClusterReady,
-							Status:      commonv3.ParalusConditionStatus_Success,
+							Type:        infrav3.ClusterConditionType_CLUSTER_CONDITION_TYPE_CLUSTER_READY,
+							Status:      commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_SUCCESS,
 							LastUpdated: timestamppb.Now(),
 							Reason:      "Relay agent established connection.",
 						},
@@ -295,6 +295,6 @@ func (s *bootstrapServer) GetBootstrapAgentConfig(ctx context.Context, in *sentr
 }
 
 // NewBootstrapServer return new bootstrap server
-func NewBootstrapServer(bs service.BootstrapService, f cryptoutil.PasswordFunc, cs service.ClusterService) sentryrpc.BootstrapServer {
+func NewBootstrapServer(bs service.BootstrapService, f cryptoutil.PasswordFunc, cs service.ClusterService) sentryrpc.BootstrapServiceServer {
 	return &bootstrapServer{bs, f, cs}
 }

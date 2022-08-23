@@ -122,7 +122,7 @@ func SelectBootstrapAgents(ctx context.Context, db bun.IDB, templateRef string, 
 }
 
 func CreateBootstrapAgent(ctx context.Context, db bun.IDB, ba *models.BootstrapAgent) error {
-	ba.TokenState = sentry.BootstrapAgentState_NotRegistered.String()
+	ba.TokenState = sentry.BootstrapAgentState_BOOTSTRAP_AGENT_STATE_NOT_REGISTERED.String()
 	_, err := Create(ctx, db, ba)
 	return err
 }
@@ -138,15 +138,15 @@ func RegisterBootstrapAgent(ctx context.Context, db bun.Tx, token string) error 
 		return err
 	}
 
-	state := sentry.BootstrapAgentState_NotApproved
+	state := sentry.BootstrapAgentState_BOOTSTRAP_AGENT_STATE_NOT_APPROVED
 	if bat.AutoApprove {
-		state = sentry.BootstrapAgentState_Approved
+		state = sentry.BootstrapAgentState_BOOTSTRAP_AGENT_STATE_APPROVED
 	}
 
 	switch ba.TokenState {
-	case sentry.BootstrapAgentState_NotRegistered.String():
-		ba.TokenState = sentry.BootstrapAgentState_Approved.String()
-	case sentry.BootstrapAgentState_NotApproved.String(), sentry.BootstrapAgentState_Approved.String():
+	case sentry.BootstrapAgentState_BOOTSTRAP_AGENT_STATE_NOT_REGISTERED.String():
+		ba.TokenState = sentry.BootstrapAgentState_BOOTSTRAP_AGENT_STATE_APPROVED.String()
+	case sentry.BootstrapAgentState_BOOTSTRAP_AGENT_STATE_NOT_APPROVED.String(), sentry.BootstrapAgentState_BOOTSTRAP_AGENT_STATE_APPROVED.String():
 		if !bat.IgnoreMultipleRegister {
 			return fmt.Errorf("cannot register token %s state is %s", token, ba.TokenState)
 		}

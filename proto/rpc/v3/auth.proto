@@ -1,5 +1,5 @@
 syntax = "proto3";
-package paralus.dev.rpc.v3;
+package paralus.dev.rpc.auth.v3;
 
 import "proto/types/commonpb/v3/auth.proto";
 

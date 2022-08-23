@@ -32,17 +32,17 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 var (
-	filter_KubeConfig_GetForClusterWebSession_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+	filter_KubeConfigService_GetForClusterWebSession_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
-func request_KubeConfig_GetForClusterWebSession_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_KubeConfigService_GetForClusterWebSession_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetForClusterRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfig_GetForClusterWebSession_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfigService_GetForClusterWebSession_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -51,14 +51,14 @@ func request_KubeConfig_GetForClusterWebSession_0(ctx context.Context, marshaler
 
 }
 
-func local_request_KubeConfig_GetForClusterWebSession_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_KubeConfigService_GetForClusterWebSession_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetForClusterRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfig_GetForClusterWebSession_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfigService_GetForClusterWebSession_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -68,17 +68,17 @@ func local_request_KubeConfig_GetForClusterWebSession_0(ctx context.Context, mar
 }
 
 var (
-	filter_KubeConfig_GetForClusterSystemSession_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+	filter_KubeConfigService_GetForClusterSystemSession_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
-func request_KubeConfig_GetForClusterSystemSession_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_KubeConfigService_GetForClusterSystemSession_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetForClusterRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfig_GetForClusterSystemSession_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfigService_GetForClusterSystemSession_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -87,14 +87,14 @@ func request_KubeConfig_GetForClusterSystemSession_0(ctx context.Context, marsha
 
 }
 
-func local_request_KubeConfig_GetForClusterSystemSession_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_KubeConfigService_GetForClusterSystemSession_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetForClusterRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfig_GetForClusterSystemSession_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfigService_GetForClusterSystemSession_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -104,17 +104,17 @@ func local_request_KubeConfig_GetForClusterSystemSession_0(ctx context.Context, 
 }
 
 var (
-	filter_KubeConfig_GetForUser_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+	filter_KubeConfigService_GetForUser_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
-func request_KubeConfig_GetForUser_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_KubeConfigService_GetForUser_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetForUserRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfig_GetForUser_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfigService_GetForUser_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -123,14 +123,14 @@ func request_KubeConfig_GetForUser_0(ctx context.Context, marshaler runtime.Mars
 
 }
 
-func local_request_KubeConfig_GetForUser_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_KubeConfigService_GetForUser_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetForUserRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfig_GetForUser_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfigService_GetForUser_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -140,10 +140,10 @@ func local_request_KubeConfig_GetForUser_0(ctx context.Context, marshaler runtim
 }
 
 var (
-	filter_KubeConfig_GetForUser_1 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_KubeConfigService_GetForUser_1 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_KubeConfig_GetForUser_1(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_KubeConfigService_GetForUser_1(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetForUserRequest
 	var metadata runtime.ServerMetadata
 
@@ -167,7 +167,7 @@ func request_KubeConfig_GetForUser_1(ctx context.Context, marshaler runtime.Mars
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfig_GetForUser_1); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfigService_GetForUser_1); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -176,7 +176,7 @@ func request_KubeConfig_GetForUser_1(ctx context.Context, marshaler runtime.Mars
 
 }
 
-func local_request_KubeConfig_GetForUser_1(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_KubeConfigService_GetForUser_1(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetForUserRequest
 	var metadata runtime.ServerMetadata
 
@@ -200,7 +200,7 @@ func local_request_KubeConfig_GetForUser_1(ctx context.Context, marshaler runtim
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfig_GetForUser_1); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfigService_GetForUser_1); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -209,7 +209,7 @@ func local_request_KubeConfig_GetForUser_1(ctx context.Context, marshaler runtim
 
 }
 
-func request_KubeConfig_RevokeKubeconfig_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_KubeConfigService_RevokeKubeconfig_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq RevokeKubeconfigRequest
 	var metadata runtime.ServerMetadata
 
@@ -226,7 +226,7 @@ func request_KubeConfig_RevokeKubeconfig_0(ctx context.Context, marshaler runtim
 
 }
 
-func local_request_KubeConfig_RevokeKubeconfig_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_KubeConfigService_RevokeKubeconfig_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq RevokeKubeconfigRequest
 	var metadata runtime.ServerMetadata
 
@@ -243,7 +243,7 @@ func local_request_KubeConfig_RevokeKubeconfig_0(ctx context.Context, marshaler 
 
 }
 
-func request_KubeConfig_RevokeKubeconfig_1(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_KubeConfigService_RevokeKubeconfig_1(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq RevokeKubeconfigRequest
 	var metadata runtime.ServerMetadata
 
@@ -277,7 +277,7 @@ func request_KubeConfig_RevokeKubeconfig_1(ctx context.Context, marshaler runtim
 
 }
 
-func local_request_KubeConfig_RevokeKubeconfig_1(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_KubeConfigService_RevokeKubeconfig_1(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq RevokeKubeconfigRequest
 	var metadata runtime.ServerMetadata
 
@@ -312,10 +312,10 @@ func local_request_KubeConfig_RevokeKubeconfig_1(ctx context.Context, marshaler 
 }
 
 var (
-	filter_KubeConfig_GetOrganizationSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_KubeConfigService_GetOrganizationSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_KubeConfig_GetOrganizationSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_KubeConfigService_GetOrganizationSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
@@ -339,7 +339,7 @@ func request_KubeConfig_GetOrganizationSetting_0(ctx context.Context, marshaler 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfig_GetOrganizationSetting_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfigService_GetOrganizationSetting_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -348,7 +348,7 @@ func request_KubeConfig_GetOrganizationSetting_0(ctx context.Context, marshaler 
 
 }
 
-func local_request_KubeConfig_GetOrganizationSetting_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_KubeConfigService_GetOrganizationSetting_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
@@ -372,7 +372,7 @@ func local_request_KubeConfig_GetOrganizationSetting_0(ctx context.Context, mars
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfig_GetOrganizationSetting_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfigService_GetOrganizationSetting_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -382,10 +382,10 @@ func local_request_KubeConfig_GetOrganizationSetting_0(ctx context.Context, mars
 }
 
 var (
-	filter_KubeConfig_GetUserSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_KubeConfigService_GetUserSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_KubeConfig_GetUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_KubeConfigService_GetUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
@@ -409,7 +409,7 @@ func request_KubeConfig_GetUserSetting_0(ctx context.Context, marshaler runtime.
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfig_GetUserSetting_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfigService_GetUserSetting_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -418,7 +418,7 @@ func request_KubeConfig_GetUserSetting_0(ctx context.Context, marshaler runtime.
 
 }
 
-func local_request_KubeConfig_GetUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_KubeConfigService_GetUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
@@ -442,7 +442,7 @@ func local_request_KubeConfig_GetUserSetting_0(ctx context.Context, marshaler ru
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfig_GetUserSetting_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfigService_GetUserSetting_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -452,10 +452,10 @@ func local_request_KubeConfig_GetUserSetting_0(ctx context.Context, marshaler ru
 }
 
 var (
-	filter_KubeConfig_GetSSOUserSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_KubeConfigService_GetSSOUserSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_KubeConfig_GetSSOUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_KubeConfigService_GetSSOUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
@@ -479,7 +479,7 @@ func request_KubeConfig_GetSSOUserSetting_0(ctx context.Context, marshaler runti
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfig_GetSSOUserSetting_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfigService_GetSSOUserSetting_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -488,7 +488,7 @@ func request_KubeConfig_GetSSOUserSetting_0(ctx context.Context, marshaler runti
 
 }
 
-func local_request_KubeConfig_GetSSOUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_KubeConfigService_GetSSOUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
@@ -512,7 +512,7 @@ func local_request_KubeConfig_GetSSOUserSetting_0(ctx context.Context, marshaler
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfig_GetSSOUserSetting_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubeConfigService_GetSSOUserSetting_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -521,7 +521,7 @@ func local_request_KubeConfig_GetSSOUserSetting_0(ctx context.Context, marshaler
 
 }
 
-func request_KubeConfig_UpdateOrganizationSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_KubeConfigService_UpdateOrganizationSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq UpdateKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
@@ -555,7 +555,7 @@ func request_KubeConfig_UpdateOrganizationSetting_0(ctx context.Context, marshal
 
 }
 
-func local_request_KubeConfig_UpdateOrganizationSetting_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_KubeConfigService_UpdateOrganizationSetting_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq UpdateKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
@@ -589,7 +589,7 @@ func local_request_KubeConfig_UpdateOrganizationSetting_0(ctx context.Context, m
 
 }
 
-func request_KubeConfig_UpdateUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_KubeConfigService_UpdateUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq UpdateKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
@@ -623,7 +623,7 @@ func request_KubeConfig_UpdateUserSetting_0(ctx context.Context, marshaler runti
 
 }
 
-func local_request_KubeConfig_UpdateUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_KubeConfigService_UpdateUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq UpdateKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
@@ -657,7 +657,7 @@ func local_request_KubeConfig_UpdateUserSetting_0(ctx context.Context, marshaler
 
 }
 
-func request_KubeConfig_UpdateSSOUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_KubeConfigService_UpdateSSOUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq UpdateKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
@@ -691,7 +691,7 @@ func request_KubeConfig_UpdateSSOUserSetting_0(ctx context.Context, marshaler ru
 
 }
 
-func local_request_KubeConfig_UpdateSSOUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_KubeConfigService_UpdateSSOUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, server KubeConfigServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq UpdateKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
@@ -725,294 +725,318 @@ func local_request_KubeConfig_UpdateSSOUserSetting_0(ctx context.Context, marsha
 
 }
 
-// RegisterKubeConfigHandlerServer registers the http handlers for service KubeConfig to "mux".
-// UnaryRPC     :call KubeConfigServer directly.
+// RegisterKubeConfigServiceHandlerServer registers the http handlers for service KubeConfigService to "mux".
+// UnaryRPC     :call KubeConfigServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterKubeConfigHandlerFromEndpoint instead.
-func RegisterKubeConfigHandlerServer(ctx context.Context, mux *runtime.ServeMux, server KubeConfigServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterKubeConfigServiceHandlerFromEndpoint instead.
+func RegisterKubeConfigServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server KubeConfigServiceServer) error {
 
-	mux.Handle("GET", pattern_KubeConfig_GetForClusterWebSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubeConfigService_GetForClusterWebSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterWebSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clusterwebsession"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/GetForClusterWebSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clusterwebsession"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_KubeConfig_GetForClusterWebSession_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_KubeConfigService_GetForClusterWebSession_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_GetForClusterWebSession_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_GetForClusterWebSession_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_KubeConfig_GetForClusterSystemSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubeConfigService_GetForClusterSystemSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterSystemSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clustersystemsession"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/GetForClusterSystemSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clustersystemsession"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_KubeConfig_GetForClusterSystemSession_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_KubeConfigService_GetForClusterSystemSession_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_GetForClusterSystemSession_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_GetForClusterSystemSession_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_KubeConfig_GetForUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubeConfigService_GetForUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/user"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/user"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_KubeConfig_GetForUser_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_KubeConfigService_GetForUser_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_GetForUser_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_GetForUser_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_KubeConfig_GetForUser_1, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubeConfigService_GetForUser_1, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/download"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/download"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_KubeConfig_GetForUser_1(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_KubeConfigService_GetForUser_1(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_GetForUser_1(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_GetForUser_1(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_KubeConfig_RevokeKubeconfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_KubeConfigService_RevokeKubeconfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/revoke"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_KubeConfig_RevokeKubeconfig_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_KubeConfigService_RevokeKubeconfig_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_RevokeKubeconfig_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_RevokeKubeconfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_KubeConfig_RevokeKubeconfig_1, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_KubeConfigService_RevokeKubeconfig_1, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/revoke"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_KubeConfig_RevokeKubeconfig_1(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_KubeConfigService_RevokeKubeconfig_1(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_RevokeKubeconfig_1(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_RevokeKubeconfig_1(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_KubeConfig_GetOrganizationSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubeConfigService_GetOrganizationSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/GetOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_KubeConfig_GetOrganizationSetting_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_KubeConfigService_GetOrganizationSetting_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_GetOrganizationSetting_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_GetOrganizationSetting_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_KubeConfig_GetUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubeConfigService_GetUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/GetUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_KubeConfig_GetUserSetting_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_KubeConfigService_GetUserSetting_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_GetUserSetting_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_GetUserSetting_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_KubeConfig_GetSSOUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubeConfigService_GetSSOUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/GetSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_KubeConfig_GetSSOUserSetting_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_KubeConfigService_GetSSOUserSetting_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_GetSSOUserSetting_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_GetSSOUserSetting_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_KubeConfig_UpdateOrganizationSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_KubeConfigService_UpdateOrganizationSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/UpdateOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/UpdateOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_KubeConfig_UpdateOrganizationSetting_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_KubeConfigService_UpdateOrganizationSetting_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_UpdateOrganizationSetting_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_UpdateOrganizationSetting_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_KubeConfig_UpdateUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_KubeConfigService_UpdateUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/UpdateUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/UpdateUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_KubeConfig_UpdateUserSetting_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_KubeConfigService_UpdateUserSetting_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_UpdateUserSetting_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_UpdateUserSetting_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_KubeConfig_UpdateSSOUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_KubeConfigService_UpdateSSOUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/UpdateSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/UpdateSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_KubeConfig_UpdateSSOUserSetting_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_KubeConfigService_UpdateSSOUserSetting_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_UpdateSSOUserSetting_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_UpdateSSOUserSetting_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterKubeConfigHandlerFromEndpoint is same as RegisterKubeConfigHandler but
+// RegisterKubeConfigServiceHandlerFromEndpoint is same as RegisterKubeConfigServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterKubeConfigHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterKubeConfigServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -1032,259 +1056,283 @@ func RegisterKubeConfigHandlerFromEndpoint(ctx context.Context, mux *runtime.Ser
 		}()
 	}()
 
-	return RegisterKubeConfigHandler(ctx, mux, conn)
+	return RegisterKubeConfigServiceHandler(ctx, mux, conn)
 }
 
-// RegisterKubeConfigHandler registers the http handlers for service KubeConfig to "mux".
+// RegisterKubeConfigServiceHandler registers the http handlers for service KubeConfigService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterKubeConfigHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterKubeConfigHandlerClient(ctx, mux, NewKubeConfigClient(conn))
+func RegisterKubeConfigServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterKubeConfigServiceHandlerClient(ctx, mux, NewKubeConfigServiceClient(conn))
 }
 
-// RegisterKubeConfigHandlerClient registers the http handlers for service KubeConfig
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "KubeConfigClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "KubeConfigClient"
+// RegisterKubeConfigServiceHandlerClient registers the http handlers for service KubeConfigService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "KubeConfigServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "KubeConfigServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "KubeConfigClient" to call the correct interceptors.
-func RegisterKubeConfigHandlerClient(ctx context.Context, mux *runtime.ServeMux, client KubeConfigClient) error {
+// "KubeConfigServiceClient" to call the correct interceptors.
+func RegisterKubeConfigServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client KubeConfigServiceClient) error {
 
-	mux.Handle("GET", pattern_KubeConfig_GetForClusterWebSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubeConfigService_GetForClusterWebSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterWebSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clusterwebsession"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/GetForClusterWebSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clusterwebsession"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_KubeConfig_GetForClusterWebSession_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_KubeConfigService_GetForClusterWebSession_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_GetForClusterWebSession_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_GetForClusterWebSession_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_KubeConfig_GetForClusterSystemSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubeConfigService_GetForClusterSystemSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterSystemSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clustersystemsession"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/GetForClusterSystemSession", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/clustersystemsession"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_KubeConfig_GetForClusterSystemSession_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_KubeConfigService_GetForClusterSystemSession_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_GetForClusterSystemSession_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_GetForClusterSystemSession_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_KubeConfig_GetForUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubeConfigService_GetForUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/user"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/user"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_KubeConfig_GetForUser_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_KubeConfigService_GetForUser_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_GetForUser_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_GetForUser_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_KubeConfig_GetForUser_1, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubeConfigService_GetForUser_1, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/download"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/GetForUser", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/download"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_KubeConfig_GetForUser_1(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_KubeConfigService_GetForUser_1(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_GetForUser_1(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_GetForUser_1(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_KubeConfig_RevokeKubeconfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_KubeConfigService_RevokeKubeconfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/revoke"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_KubeConfig_RevokeKubeconfig_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_KubeConfigService_RevokeKubeconfig_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_RevokeKubeconfig_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_RevokeKubeconfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_KubeConfig_RevokeKubeconfig_1, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_KubeConfigService_RevokeKubeconfig_1, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/revoke"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/RevokeKubeconfig", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_KubeConfig_RevokeKubeconfig_1(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_KubeConfigService_RevokeKubeconfig_1(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_RevokeKubeconfig_1(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_RevokeKubeconfig_1(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_KubeConfig_GetOrganizationSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubeConfigService_GetOrganizationSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/GetOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_KubeConfig_GetOrganizationSetting_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_KubeConfigService_GetOrganizationSetting_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_GetOrganizationSetting_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_GetOrganizationSetting_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_KubeConfig_GetUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubeConfigService_GetUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/GetUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_KubeConfig_GetUserSetting_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_KubeConfigService_GetUserSetting_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_GetUserSetting_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_GetUserSetting_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_KubeConfig_GetSSOUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubeConfigService_GetSSOUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/GetSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/GetSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_KubeConfig_GetSSOUserSetting_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_KubeConfigService_GetSSOUserSetting_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_GetSSOUserSetting_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_GetSSOUserSetting_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_KubeConfig_UpdateOrganizationSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_KubeConfigService_UpdateOrganizationSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/UpdateOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/UpdateOrganizationSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=organization/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_KubeConfig_UpdateOrganizationSetting_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_KubeConfigService_UpdateOrganizationSetting_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_UpdateOrganizationSetting_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_UpdateOrganizationSetting_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_KubeConfig_UpdateUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_KubeConfigService_UpdateUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/UpdateUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/UpdateUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=user/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_KubeConfig_UpdateUserSetting_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_KubeConfigService_UpdateUserSetting_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_UpdateUserSetting_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_UpdateUserSetting_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_KubeConfig_UpdateSSOUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_KubeConfigService_UpdateSSOUserSetting_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfig/UpdateSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubeConfigService/UpdateSSOUserSetting", runtime.WithHTTPPathPattern("/v2/sentry/kubeconfig/{opts.urlScope=ssouser/*}/setting"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_KubeConfig_UpdateSSOUserSetting_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_KubeConfigService_UpdateSSOUserSetting_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubeConfig_UpdateSSOUserSetting_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubeConfigService_UpdateSSOUserSetting_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -1292,53 +1340,53 @@ func RegisterKubeConfigHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 }
 
 var (
-	pattern_KubeConfig_GetForClusterWebSession_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v2", "sentry", "kubeconfig", "clusterwebsession"}, ""))
+	pattern_KubeConfigService_GetForClusterWebSession_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v2", "sentry", "kubeconfig", "clusterwebsession"}, ""))
 
-	pattern_KubeConfig_GetForClusterSystemSession_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v2", "sentry", "kubeconfig", "clustersystemsession"}, ""))
+	pattern_KubeConfigService_GetForClusterSystemSession_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v2", "sentry", "kubeconfig", "clustersystemsession"}, ""))
 
-	pattern_KubeConfig_GetForUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v2", "sentry", "kubeconfig", "user"}, ""))
+	pattern_KubeConfigService_GetForUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v2", "sentry", "kubeconfig", "user"}, ""))
 
-	pattern_KubeConfig_GetForUser_1 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "user", "opts.urlScope", "download"}, ""))
+	pattern_KubeConfigService_GetForUser_1 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "user", "opts.urlScope", "download"}, ""))
 
-	pattern_KubeConfig_RevokeKubeconfig_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v2", "sentry", "kubeconfig", "revoke"}, ""))
+	pattern_KubeConfigService_RevokeKubeconfig_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v2", "sentry", "kubeconfig", "revoke"}, ""))
 
-	pattern_KubeConfig_RevokeKubeconfig_1 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "user", "opts.urlScope", "revoke"}, ""))
+	pattern_KubeConfigService_RevokeKubeconfig_1 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "user", "opts.urlScope", "revoke"}, ""))
 
-	pattern_KubeConfig_GetOrganizationSetting_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "organization", "opts.urlScope", "setting"}, ""))
+	pattern_KubeConfigService_GetOrganizationSetting_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "organization", "opts.urlScope", "setting"}, ""))
 
-	pattern_KubeConfig_GetUserSetting_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "user", "opts.urlScope", "setting"}, ""))
+	pattern_KubeConfigService_GetUserSetting_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "user", "opts.urlScope", "setting"}, ""))
 
-	pattern_KubeConfig_GetSSOUserSetting_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "ssouser", "opts.urlScope", "setting"}, ""))
+	pattern_KubeConfigService_GetSSOUserSetting_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "ssouser", "opts.urlScope", "setting"}, ""))
 
-	pattern_KubeConfig_UpdateOrganizationSetting_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "organization", "opts.urlScope", "setting"}, ""))
+	pattern_KubeConfigService_UpdateOrganizationSetting_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "organization", "opts.urlScope", "setting"}, ""))
 
-	pattern_KubeConfig_UpdateUserSetting_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "user", "opts.urlScope", "setting"}, ""))
+	pattern_KubeConfigService_UpdateUserSetting_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "user", "opts.urlScope", "setting"}, ""))
 
-	pattern_KubeConfig_UpdateSSOUserSetting_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "ssouser", "opts.urlScope", "setting"}, ""))
+	pattern_KubeConfigService_UpdateSSOUserSetting_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubeconfig", "ssouser", "opts.urlScope", "setting"}, ""))
 )
 
 var (
-	forward_KubeConfig_GetForClusterWebSession_0 = runtime.ForwardResponseMessage
+	forward_KubeConfigService_GetForClusterWebSession_0 = runtime.ForwardResponseMessage
 
-	forward_KubeConfig_GetForClusterSystemSession_0 = runtime.ForwardResponseMessage
+	forward_KubeConfigService_GetForClusterSystemSession_0 = runtime.ForwardResponseMessage
 
-	forward_KubeConfig_GetForUser_0 = runtime.ForwardResponseMessage
+	forward_KubeConfigService_GetForUser_0 = runtime.ForwardResponseMessage
 
-	forward_KubeConfig_GetForUser_1 = runtime.ForwardResponseMessage
+	forward_KubeConfigService_GetForUser_1 = runtime.ForwardResponseMessage
 
-	forward_KubeConfig_RevokeKubeconfig_0 = runtime.ForwardResponseMessage
+	forward_KubeConfigService_RevokeKubeconfig_0 = runtime.ForwardResponseMessage
 
-	forward_KubeConfig_RevokeKubeconfig_1 = runtime.ForwardResponseMessage
+	forward_KubeConfigService_RevokeKubeconfig_1 = runtime.ForwardResponseMessage
 
-	forward_KubeConfig_GetOrganizationSetting_0 = runtime.ForwardResponseMessage
+	forward_KubeConfigService_GetOrganizationSetting_0 = runtime.ForwardResponseMessage
 
-	forward_KubeConfig_GetUserSetting_0 = runtime.ForwardResponseMessage
+	forward_KubeConfigService_GetUserSetting_0 = runtime.ForwardResponseMessage
 
-	forward_KubeConfig_GetSSOUserSetting_0 = runtime.ForwardResponseMessage
+	forward_KubeConfigService_GetSSOUserSetting_0 = runtime.ForwardResponseMessage
 
-	forward_KubeConfig_UpdateOrganizationSetting_0 = runtime.ForwardResponseMessage
+	forward_KubeConfigService_UpdateOrganizationSetting_0 = runtime.ForwardResponseMessage
 
-	forward_KubeConfig_UpdateUserSetting_0 = runtime.ForwardResponseMessage
+	forward_KubeConfigService_UpdateUserSetting_0 = runtime.ForwardResponseMessage
 
-	forward_KubeConfig_UpdateSSOUserSetting_0 = runtime.ForwardResponseMessage
+	forward_KubeConfigService_UpdateSSOUserSetting_0 = runtime.ForwardResponseMessage
 )

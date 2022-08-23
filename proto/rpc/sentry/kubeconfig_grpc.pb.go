@@ -19,10 +19,10 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// KubeConfigClient is the client API for KubeConfig service.
+// KubeConfigServiceClient is the client API for KubeConfigService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type KubeConfigClient interface {
+type KubeConfigServiceClient interface {
 	GetForClusterWebSession(ctx context.Context, in *GetForClusterRequest, opts ...grpc.CallOption) (*v3.HttpBody, error)
 	GetForClusterSystemSession(ctx context.Context, in *GetForClusterRequest, opts ...grpc.CallOption) (*v3.HttpBody, error)
 	GetForUser(ctx context.Context, in *GetForUserRequest, opts ...grpc.CallOption) (*v3.HttpBody, error)
@@ -35,108 +35,108 @@ type KubeConfigClient interface {
 	UpdateSSOUserSetting(ctx context.Context, in *UpdateKubeconfigSettingRequest, opts ...grpc.CallOption) (*UpdateKubeconfigSettingResponse, error)
 }
 
-type kubeConfigClient struct {
+type kubeConfigServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewKubeConfigClient(cc grpc.ClientConnInterface) KubeConfigClient {
-	return &kubeConfigClient{cc}
+func NewKubeConfigServiceClient(cc grpc.ClientConnInterface) KubeConfigServiceClient {
+	return &kubeConfigServiceClient{cc}
 }
 
-func (c *kubeConfigClient) GetForClusterWebSession(ctx context.Context, in *GetForClusterRequest, opts ...grpc.CallOption) (*v3.HttpBody, error) {
+func (c *kubeConfigServiceClient) GetForClusterWebSession(ctx context.Context, in *GetForClusterRequest, opts ...grpc.CallOption) (*v3.HttpBody, error) {
 	out := new(v3.HttpBody)
-	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterWebSession", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfigService/GetForClusterWebSession", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *kubeConfigClient) GetForClusterSystemSession(ctx context.Context, in *GetForClusterRequest, opts ...grpc.CallOption) (*v3.HttpBody, error) {
+func (c *kubeConfigServiceClient) GetForClusterSystemSession(ctx context.Context, in *GetForClusterRequest, opts ...grpc.CallOption) (*v3.HttpBody, error) {
 	out := new(v3.HttpBody)
-	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterSystemSession", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfigService/GetForClusterSystemSession", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *kubeConfigClient) GetForUser(ctx context.Context, in *GetForUserRequest, opts ...grpc.CallOption) (*v3.HttpBody, error) {
+func (c *kubeConfigServiceClient) GetForUser(ctx context.Context, in *GetForUserRequest, opts ...grpc.CallOption) (*v3.HttpBody, error) {
 	out := new(v3.HttpBody)
-	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/GetForUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfigService/GetForUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *kubeConfigClient) RevokeKubeconfig(ctx context.Context, in *RevokeKubeconfigRequest, opts ...grpc.CallOption) (*RevokeKubeconfigResponse, error) {
+func (c *kubeConfigServiceClient) RevokeKubeconfig(ctx context.Context, in *RevokeKubeconfigRequest, opts ...grpc.CallOption) (*RevokeKubeconfigResponse, error) {
 	out := new(RevokeKubeconfigResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/RevokeKubeconfig", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfigService/RevokeKubeconfig", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *kubeConfigClient) GetOrganizationSetting(ctx context.Context, in *GetKubeconfigSettingRequest, opts ...grpc.CallOption) (*GetKubeconfigSettingResponse, error) {
+func (c *kubeConfigServiceClient) GetOrganizationSetting(ctx context.Context, in *GetKubeconfigSettingRequest, opts ...grpc.CallOption) (*GetKubeconfigSettingResponse, error) {
 	out := new(GetKubeconfigSettingResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/GetOrganizationSetting", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfigService/GetOrganizationSetting", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *kubeConfigClient) GetUserSetting(ctx context.Context, in *GetKubeconfigSettingRequest, opts ...grpc.CallOption) (*GetKubeconfigSettingResponse, error) {
+func (c *kubeConfigServiceClient) GetUserSetting(ctx context.Context, in *GetKubeconfigSettingRequest, opts ...grpc.CallOption) (*GetKubeconfigSettingResponse, error) {
 	out := new(GetKubeconfigSettingResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/GetUserSetting", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfigService/GetUserSetting", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *kubeConfigClient) GetSSOUserSetting(ctx context.Context, in *GetKubeconfigSettingRequest, opts ...grpc.CallOption) (*GetKubeconfigSettingResponse, error) {
+func (c *kubeConfigServiceClient) GetSSOUserSetting(ctx context.Context, in *GetKubeconfigSettingRequest, opts ...grpc.CallOption) (*GetKubeconfigSettingResponse, error) {
 	out := new(GetKubeconfigSettingResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/GetSSOUserSetting", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfigService/GetSSOUserSetting", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *kubeConfigClient) UpdateOrganizationSetting(ctx context.Context, in *UpdateKubeconfigSettingRequest, opts ...grpc.CallOption) (*UpdateKubeconfigSettingResponse, error) {
+func (c *kubeConfigServiceClient) UpdateOrganizationSetting(ctx context.Context, in *UpdateKubeconfigSettingRequest, opts ...grpc.CallOption) (*UpdateKubeconfigSettingResponse, error) {
 	out := new(UpdateKubeconfigSettingResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/UpdateOrganizationSetting", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfigService/UpdateOrganizationSetting", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *kubeConfigClient) UpdateUserSetting(ctx context.Context, in *UpdateKubeconfigSettingRequest, opts ...grpc.CallOption) (*UpdateKubeconfigSettingResponse, error) {
+func (c *kubeConfigServiceClient) UpdateUserSetting(ctx context.Context, in *UpdateKubeconfigSettingRequest, opts ...grpc.CallOption) (*UpdateKubeconfigSettingResponse, error) {
 	out := new(UpdateKubeconfigSettingResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/UpdateUserSetting", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfigService/UpdateUserSetting", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *kubeConfigClient) UpdateSSOUserSetting(ctx context.Context, in *UpdateKubeconfigSettingRequest, opts ...grpc.CallOption) (*UpdateKubeconfigSettingResponse, error) {
+func (c *kubeConfigServiceClient) UpdateSSOUserSetting(ctx context.Context, in *UpdateKubeconfigSettingRequest, opts ...grpc.CallOption) (*UpdateKubeconfigSettingResponse, error) {
 	out := new(UpdateKubeconfigSettingResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfig/UpdateSSOUserSetting", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubeConfigService/UpdateSSOUserSetting", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// KubeConfigServer is the server API for KubeConfig service.
-// All implementations should embed UnimplementedKubeConfigServer
+// KubeConfigServiceServer is the server API for KubeConfigService service.
+// All implementations should embed UnimplementedKubeConfigServiceServer
 // for forward compatibility
-type KubeConfigServer interface {
+type KubeConfigServiceServer interface {
 	GetForClusterWebSession(context.Context, *GetForClusterRequest) (*v3.HttpBody, error)
 	GetForClusterSystemSession(context.Context, *GetForClusterRequest) (*v3.HttpBody, error)
 	GetForUser(context.Context, *GetForUserRequest) (*v3.HttpBody, error)
@@ -149,278 +149,278 @@ type KubeConfigServer interface {
 	UpdateSSOUserSetting(context.Context, *UpdateKubeconfigSettingRequest) (*UpdateKubeconfigSettingResponse, error)
 }
 
-// UnimplementedKubeConfigServer should be embedded to have forward compatible implementations.
-type UnimplementedKubeConfigServer struct {
+// UnimplementedKubeConfigServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedKubeConfigServiceServer struct {
 }
 
-func (UnimplementedKubeConfigServer) GetForClusterWebSession(context.Context, *GetForClusterRequest) (*v3.HttpBody, error) {
+func (UnimplementedKubeConfigServiceServer) GetForClusterWebSession(context.Context, *GetForClusterRequest) (*v3.HttpBody, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetForClusterWebSession not implemented")
 }
-func (UnimplementedKubeConfigServer) GetForClusterSystemSession(context.Context, *GetForClusterRequest) (*v3.HttpBody, error) {
+func (UnimplementedKubeConfigServiceServer) GetForClusterSystemSession(context.Context, *GetForClusterRequest) (*v3.HttpBody, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetForClusterSystemSession not implemented")
 }
-func (UnimplementedKubeConfigServer) GetForUser(context.Context, *GetForUserRequest) (*v3.HttpBody, error) {
+func (UnimplementedKubeConfigServiceServer) GetForUser(context.Context, *GetForUserRequest) (*v3.HttpBody, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetForUser not implemented")
 }
-func (UnimplementedKubeConfigServer) RevokeKubeconfig(context.Context, *RevokeKubeconfigRequest) (*RevokeKubeconfigResponse, error) {
+func (UnimplementedKubeConfigServiceServer) RevokeKubeconfig(context.Context, *RevokeKubeconfigRequest) (*RevokeKubeconfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RevokeKubeconfig not implemented")
 }
-func (UnimplementedKubeConfigServer) GetOrganizationSetting(context.Context, *GetKubeconfigSettingRequest) (*GetKubeconfigSettingResponse, error) {
+func (UnimplementedKubeConfigServiceServer) GetOrganizationSetting(context.Context, *GetKubeconfigSettingRequest) (*GetKubeconfigSettingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationSetting not implemented")
 }
-func (UnimplementedKubeConfigServer) GetUserSetting(context.Context, *GetKubeconfigSettingRequest) (*GetKubeconfigSettingResponse, error) {
+func (UnimplementedKubeConfigServiceServer) GetUserSetting(context.Context, *GetKubeconfigSettingRequest) (*GetKubeconfigSettingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserSetting not implemented")
 }
-func (UnimplementedKubeConfigServer) GetSSOUserSetting(context.Context, *GetKubeconfigSettingRequest) (*GetKubeconfigSettingResponse, error) {
+func (UnimplementedKubeConfigServiceServer) GetSSOUserSetting(context.Context, *GetKubeconfigSettingRequest) (*GetKubeconfigSettingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSSOUserSetting not implemented")
 }
-func (UnimplementedKubeConfigServer) UpdateOrganizationSetting(context.Context, *UpdateKubeconfigSettingRequest) (*UpdateKubeconfigSettingResponse, error) {
+func (UnimplementedKubeConfigServiceServer) UpdateOrganizationSetting(context.Context, *UpdateKubeconfigSettingRequest) (*UpdateKubeconfigSettingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrganizationSetting not implemented")
 }
-func (UnimplementedKubeConfigServer) UpdateUserSetting(context.Context, *UpdateKubeconfigSettingRequest) (*UpdateKubeconfigSettingResponse, error) {
+func (UnimplementedKubeConfigServiceServer) UpdateUserSetting(context.Context, *UpdateKubeconfigSettingRequest) (*UpdateKubeconfigSettingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserSetting not implemented")
 }
-func (UnimplementedKubeConfigServer) UpdateSSOUserSetting(context.Context, *UpdateKubeconfigSettingRequest) (*UpdateKubeconfigSettingResponse, error) {
+func (UnimplementedKubeConfigServiceServer) UpdateSSOUserSetting(context.Context, *UpdateKubeconfigSettingRequest) (*UpdateKubeconfigSettingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSSOUserSetting not implemented")
 }
 
-// UnsafeKubeConfigServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to KubeConfigServer will
+// UnsafeKubeConfigServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to KubeConfigServiceServer will
 // result in compilation errors.
-type UnsafeKubeConfigServer interface {
-	mustEmbedUnimplementedKubeConfigServer()
+type UnsafeKubeConfigServiceServer interface {
+	mustEmbedUnimplementedKubeConfigServiceServer()
 }
 
-func RegisterKubeConfigServer(s grpc.ServiceRegistrar, srv KubeConfigServer) {
-	s.RegisterService(&KubeConfig_ServiceDesc, srv)
+func RegisterKubeConfigServiceServer(s grpc.ServiceRegistrar, srv KubeConfigServiceServer) {
+	s.RegisterService(&KubeConfigService_ServiceDesc, srv)
 }
 
-func _KubeConfig_GetForClusterWebSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KubeConfigService_GetForClusterWebSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetForClusterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KubeConfigServer).GetForClusterWebSession(ctx, in)
+		return srv.(KubeConfigServiceServer).GetForClusterWebSession(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterWebSession",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfigService/GetForClusterWebSession",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KubeConfigServer).GetForClusterWebSession(ctx, req.(*GetForClusterRequest))
+		return srv.(KubeConfigServiceServer).GetForClusterWebSession(ctx, req.(*GetForClusterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KubeConfig_GetForClusterSystemSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KubeConfigService_GetForClusterSystemSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetForClusterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KubeConfigServer).GetForClusterSystemSession(ctx, in)
+		return srv.(KubeConfigServiceServer).GetForClusterSystemSession(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/GetForClusterSystemSession",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfigService/GetForClusterSystemSession",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KubeConfigServer).GetForClusterSystemSession(ctx, req.(*GetForClusterRequest))
+		return srv.(KubeConfigServiceServer).GetForClusterSystemSession(ctx, req.(*GetForClusterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KubeConfig_GetForUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KubeConfigService_GetForUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetForUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KubeConfigServer).GetForUser(ctx, in)
+		return srv.(KubeConfigServiceServer).GetForUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/GetForUser",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfigService/GetForUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KubeConfigServer).GetForUser(ctx, req.(*GetForUserRequest))
+		return srv.(KubeConfigServiceServer).GetForUser(ctx, req.(*GetForUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KubeConfig_RevokeKubeconfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KubeConfigService_RevokeKubeconfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RevokeKubeconfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KubeConfigServer).RevokeKubeconfig(ctx, in)
+		return srv.(KubeConfigServiceServer).RevokeKubeconfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/RevokeKubeconfig",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfigService/RevokeKubeconfig",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KubeConfigServer).RevokeKubeconfig(ctx, req.(*RevokeKubeconfigRequest))
+		return srv.(KubeConfigServiceServer).RevokeKubeconfig(ctx, req.(*RevokeKubeconfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KubeConfig_GetOrganizationSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KubeConfigService_GetOrganizationSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetKubeconfigSettingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KubeConfigServer).GetOrganizationSetting(ctx, in)
+		return srv.(KubeConfigServiceServer).GetOrganizationSetting(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/GetOrganizationSetting",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfigService/GetOrganizationSetting",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KubeConfigServer).GetOrganizationSetting(ctx, req.(*GetKubeconfigSettingRequest))
+		return srv.(KubeConfigServiceServer).GetOrganizationSetting(ctx, req.(*GetKubeconfigSettingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KubeConfig_GetUserSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KubeConfigService_GetUserSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetKubeconfigSettingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KubeConfigServer).GetUserSetting(ctx, in)
+		return srv.(KubeConfigServiceServer).GetUserSetting(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/GetUserSetting",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfigService/GetUserSetting",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KubeConfigServer).GetUserSetting(ctx, req.(*GetKubeconfigSettingRequest))
+		return srv.(KubeConfigServiceServer).GetUserSetting(ctx, req.(*GetKubeconfigSettingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KubeConfig_GetSSOUserSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KubeConfigService_GetSSOUserSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetKubeconfigSettingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KubeConfigServer).GetSSOUserSetting(ctx, in)
+		return srv.(KubeConfigServiceServer).GetSSOUserSetting(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/GetSSOUserSetting",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfigService/GetSSOUserSetting",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KubeConfigServer).GetSSOUserSetting(ctx, req.(*GetKubeconfigSettingRequest))
+		return srv.(KubeConfigServiceServer).GetSSOUserSetting(ctx, req.(*GetKubeconfigSettingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KubeConfig_UpdateOrganizationSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KubeConfigService_UpdateOrganizationSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateKubeconfigSettingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KubeConfigServer).UpdateOrganizationSetting(ctx, in)
+		return srv.(KubeConfigServiceServer).UpdateOrganizationSetting(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/UpdateOrganizationSetting",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfigService/UpdateOrganizationSetting",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KubeConfigServer).UpdateOrganizationSetting(ctx, req.(*UpdateKubeconfigSettingRequest))
+		return srv.(KubeConfigServiceServer).UpdateOrganizationSetting(ctx, req.(*UpdateKubeconfigSettingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KubeConfig_UpdateUserSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KubeConfigService_UpdateUserSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateKubeconfigSettingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KubeConfigServer).UpdateUserSetting(ctx, in)
+		return srv.(KubeConfigServiceServer).UpdateUserSetting(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/UpdateUserSetting",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfigService/UpdateUserSetting",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KubeConfigServer).UpdateUserSetting(ctx, req.(*UpdateKubeconfigSettingRequest))
+		return srv.(KubeConfigServiceServer).UpdateUserSetting(ctx, req.(*UpdateKubeconfigSettingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KubeConfig_UpdateSSOUserSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KubeConfigService_UpdateSSOUserSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateKubeconfigSettingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KubeConfigServer).UpdateSSOUserSetting(ctx, in)
+		return srv.(KubeConfigServiceServer).UpdateSSOUserSetting(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.sentry.rpc.KubeConfig/UpdateSSOUserSetting",
+		FullMethod: "/paralus.dev.sentry.rpc.KubeConfigService/UpdateSSOUserSetting",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KubeConfigServer).UpdateSSOUserSetting(ctx, req.(*UpdateKubeconfigSettingRequest))
+		return srv.(KubeConfigServiceServer).UpdateSSOUserSetting(ctx, req.(*UpdateKubeconfigSettingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// KubeConfig_ServiceDesc is the grpc.ServiceDesc for KubeConfig service.
+// KubeConfigService_ServiceDesc is the grpc.ServiceDesc for KubeConfigService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var KubeConfig_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "paralus.dev.sentry.rpc.KubeConfig",
-	HandlerType: (*KubeConfigServer)(nil),
+var KubeConfigService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "paralus.dev.sentry.rpc.KubeConfigService",
+	HandlerType: (*KubeConfigServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetForClusterWebSession",
-			Handler:    _KubeConfig_GetForClusterWebSession_Handler,
+			Handler:    _KubeConfigService_GetForClusterWebSession_Handler,
 		},
 		{
 			MethodName: "GetForClusterSystemSession",
-			Handler:    _KubeConfig_GetForClusterSystemSession_Handler,
+			Handler:    _KubeConfigService_GetForClusterSystemSession_Handler,
 		},
 		{
 			MethodName: "GetForUser",
-			Handler:    _KubeConfig_GetForUser_Handler,
+			Handler:    _KubeConfigService_GetForUser_Handler,
 		},
 		{
 			MethodName: "RevokeKubeconfig",
-			Handler:    _KubeConfig_RevokeKubeconfig_Handler,
+			Handler:    _KubeConfigService_RevokeKubeconfig_Handler,
 		},
 		{
 			MethodName: "GetOrganizationSetting",
-			Handler:    _KubeConfig_GetOrganizationSetting_Handler,
+			Handler:    _KubeConfigService_GetOrganizationSetting_Handler,
 		},
 		{
 			MethodName: "GetUserSetting",
-			Handler:    _KubeConfig_GetUserSetting_Handler,
+			Handler:    _KubeConfigService_GetUserSetting_Handler,
 		},
 		{
 			MethodName: "GetSSOUserSetting",
-			Handler:    _KubeConfig_GetSSOUserSetting_Handler,
+			Handler:    _KubeConfigService_GetSSOUserSetting_Handler,
 		},
 		{
 			MethodName: "UpdateOrganizationSetting",
-			Handler:    _KubeConfig_UpdateOrganizationSetting_Handler,
+			Handler:    _KubeConfigService_UpdateOrganizationSetting_Handler,
 		},
 		{
 			MethodName: "UpdateUserSetting",
-			Handler:    _KubeConfig_UpdateUserSetting_Handler,
+			Handler:    _KubeConfigService_UpdateUserSetting_Handler,
 		},
 		{
 			MethodName: "UpdateSSOUserSetting",
-			Handler:    _KubeConfig_UpdateSSOUserSetting_Handler,
+			Handler:    _KubeConfigService_UpdateSSOUserSetting_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -22,7 +22,7 @@ type clusterServer struct {
 }
 
 // NewClusterServer returns new cluster server implementation
-func NewClusterServer(es service.ClusterService, data *common.DownloadData) rpcv3.ClusterServer {
+func NewClusterServer(es service.ClusterService, data *common.DownloadData) rpcv3.ClusterServiceServer {
 	return &clusterServer{
 		ClusterService: es,
 		downloadData:   *data,
@@ -32,13 +32,13 @@ func NewClusterServer(es service.ClusterService, data *common.DownloadData) rpcv
 func updateClusterStatus(req *infrapbv3.Cluster, resp *infrapbv3.Cluster, err error) *infrapbv3.Cluster {
 	if err != nil {
 		req.Status = &v3.Status{
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
+			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
 		return req
 	}
-	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_StatusOK}
+	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_OK}
 	return resp
 }
 

@@ -33,7 +33,7 @@ func RegisterToken(ctx context.Context, db bun.IDB, token string) (*models.Clust
 		return nil, ErrInvalidToken
 	}
 	ct := entity.(*models.ClusterToken)
-	ct.State = infrav3.ClusterTokenState_TokenUsed.String()
+	ct.State = infrav3.ClusterTokenState_CLUSTER_TOKEN_STATE_TOKEN_USED.String()
 
 	dao.Update(ctx, db, ct.ID, ct)
 	if err != nil {

@@ -37,7 +37,7 @@ func NewAuthMiddleware(al *zap.Logger, opt Option) negroni.Handler {
 }
 
 type remoteAuthMiddleware struct {
-	as  rpcv3.AuthClient
+	as  rpcv3.AuthServiceClient
 	db  *bun.DB
 	opt Option
 }
@@ -51,7 +51,7 @@ func NewRemoteAuthMiddleware(al *zap.Logger, as string, opt Option) negroni.Hand
 	if err != nil {
 		_log.Fatal("Unable to connect to server", err)
 	}
-	client := rpcv3.NewAuthClient(conn)
+	client := rpcv3.NewAuthServiceClient(conn)
 
 	return &remoteAuthMiddleware{
 		as:  client,
@@ -125,7 +125,7 @@ func serveHTTP(opt Option,
 
 	s := res.GetStatus()
 	switch s {
-	case commonpbv3.RequestStatus_RequestAllowed:
+	case commonpbv3.RequestStatus_REQUEST_STATUS_REQUEST_ALLOWED:
 		// update the session data response to be used within prompt
 		res.SessionData.Organization = poResp.OrganizationId
 		res.SessionData.Partner = poResp.PartnerId
@@ -140,10 +140,10 @@ func serveHTTP(opt Option,
 		ctx := context.WithValue(r.Context(), common.SessionDataKey, res.SessionData)
 		next(rw, r.WithContext(ctx))
 		return
-	case commonpbv3.RequestStatus_RequestMethodOrURLNotAllowed:
+	case commonpbv3.RequestStatus_REQUEST_STATUS_REQUEST_METHOD_OR_URL_NOT_ALLOWED:
 		http.Error(rw, res.GetReason(), http.StatusForbidden)
 		return
-	case commonpbv3.RequestStatus_RequestNotAuthenticated:
+	case commonpbv3.RequestStatus_REQUEST_STATUS_REQUEST_NOT_AUTHENTICATED:
 		http.Error(rw, res.GetReason(), http.StatusUnauthorized)
 		return
 	}

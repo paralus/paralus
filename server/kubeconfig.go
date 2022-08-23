@@ -30,7 +30,7 @@ type kubeConfigServer struct {
 	ps  service.PartnerService
 }
 
-var _ sentryrpc.KubeConfigServer = (*kubeConfigServer)(nil)
+var _ sentryrpc.KubeConfigServiceServer = (*kubeConfigServer)(nil)
 
 func (s *kubeConfigServer) GetForClusterSystemSession(ctx context.Context, in *sentryrpc.GetForClusterRequest) (*commonv3.HttpBody, error) {
 	config, err := kubeconfig.GetConfigForCluster(ctx, s.bs, in, s.pf, s.kss, kubeconfig.ParalusSystem)
@@ -202,7 +202,7 @@ func (s *kubeConfigServer) UpdateUserSetting(ctx context.Context, req *sentryrpc
 
 // NewKubeConfigServer returns new kube config server
 func NewKubeConfigServer(bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, kss service.KubeconfigSettingService,
-	krs service.KubeconfigRevocationService, pf cryptoutil.PasswordFunc, ksvc service.ApiKeyService, os service.OrganizationService, ps service.PartnerService) sentryrpc.KubeConfigServer {
+	krs service.KubeconfigRevocationService, pf cryptoutil.PasswordFunc, ksvc service.ApiKeyService, os service.OrganizationService, ps service.PartnerService) sentryrpc.KubeConfigServiceServer {
 	return &kubeConfigServer{bs, aps, gps, kss, krs, pf, ksvc, os, ps}
 }
 

@@ -12,12 +12,12 @@ import (
 type SchedulerClient interface {
 	Unhealthy()
 	Close() error
-	ClusterClient
+	ClusterServiceClient
 }
 
 type schedulerClient struct {
 	*grpcpool.ClientConn
-	*clusterClient
+	*clusterServiceClient
 }
 
 var _ SchedulerClient = (*schedulerClient)(nil)
@@ -52,6 +52,6 @@ func (p *schedulerPool) NewClient(ctx context.Context) (SchedulerClient, error) 
 	}
 	return &schedulerClient{
 		cc,
-		&clusterClient{cc.ClientConn},
+		&clusterServiceClient{cc.ClientConn},
 	}, nil
 }

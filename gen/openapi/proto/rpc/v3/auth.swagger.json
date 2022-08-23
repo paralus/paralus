@@ -6,7 +6,7 @@
   },
   "tags": [
     {
-      "name": "Auth"
+      "name": "AuthService"
     }
   ],
   "consumes": [
@@ -47,20 +47,20 @@
     "v3AuthType": {
       "type": "string",
       "enum": [
-        "AuthTypeNotSet",
-        "SessionLogin",
-        "APIKey"
+        "AUTH_TYPE_AUTH_TYPE_NOT_SET_UNSPECIFIED",
+        "AUTH_TYPE_SESSION_LOGIN",
+        "AUTH_TYPE_API_KEY"
       ],
-      "default": "AuthTypeNotSet"
+      "default": "AUTH_TYPE_AUTH_TYPE_NOT_SET_UNSPECIFIED"
     },
     "v3ClientType": {
       "type": "string",
       "enum": [
-        "ClientTypeNotSet",
-        "BROWSER",
-        "CLI"
+        "CLIENT_TYPE_CLIENT_TYPE_NOT_SET_UNSPECIFIED",
+        "CLIENT_TYPE_BROWSER",
+        "CLIENT_TYPE_CLI"
       ],
-      "default": "ClientTypeNotSet"
+      "default": "CLIENT_TYPE_CLIENT_TYPE_NOT_SET_UNSPECIFIED"
     },
     "v3IsRequestAllowedResponse": {
       "type": "object",
@@ -121,12 +121,12 @@
     "v3RequestStatus": {
       "type": "string",
       "enum": [
-        "Unknown",
-        "RequestNotAuthenticated",
-        "RequestMethodOrURLNotAllowed",
-        "RequestAllowed"
+        "REQUEST_STATUS_UNKNOWN_UNSPECIFIED",
+        "REQUEST_STATUS_REQUEST_NOT_AUTHENTICATED",
+        "REQUEST_STATUS_REQUEST_METHOD_OR_URL_NOT_ALLOWED",
+        "REQUEST_STATUS_REQUEST_ALLOWED"
       ],
-      "default": "Unknown"
+      "default": "REQUEST_STATUS_UNKNOWN_UNSPECIFIED"
     },
     "v3ResourceURLMethods": {
       "type": "object",

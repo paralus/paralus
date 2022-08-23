@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: proto/rpc/role/rolepermission.proto
 
-package rpcv3
+package rolev3
 
 import (
 	context "context"
@@ -20,84 +20,84 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// RolepermissionClient is the client API for Rolepermission service.
+// RolepermissionServiceClient is the client API for RolepermissionService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type RolepermissionClient interface {
+type RolepermissionServiceClient interface {
 	GetRolepermissions(ctx context.Context, in *v3.QueryOptions, opts ...grpc.CallOption) (*v31.RolePermissionList, error)
 }
 
-type rolepermissionClient struct {
+type rolepermissionServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewRolepermissionClient(cc grpc.ClientConnInterface) RolepermissionClient {
-	return &rolepermissionClient{cc}
+func NewRolepermissionServiceClient(cc grpc.ClientConnInterface) RolepermissionServiceClient {
+	return &rolepermissionServiceClient{cc}
 }
 
-func (c *rolepermissionClient) GetRolepermissions(ctx context.Context, in *v3.QueryOptions, opts ...grpc.CallOption) (*v31.RolePermissionList, error) {
+func (c *rolepermissionServiceClient) GetRolepermissions(ctx context.Context, in *v3.QueryOptions, opts ...grpc.CallOption) (*v31.RolePermissionList, error) {
 	out := new(v31.RolePermissionList)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Rolepermission/GetRolepermissions", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.role.v3.RolepermissionService/GetRolepermissions", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// RolepermissionServer is the server API for Rolepermission service.
-// All implementations should embed UnimplementedRolepermissionServer
+// RolepermissionServiceServer is the server API for RolepermissionService service.
+// All implementations should embed UnimplementedRolepermissionServiceServer
 // for forward compatibility
-type RolepermissionServer interface {
+type RolepermissionServiceServer interface {
 	GetRolepermissions(context.Context, *v3.QueryOptions) (*v31.RolePermissionList, error)
 }
 
-// UnimplementedRolepermissionServer should be embedded to have forward compatible implementations.
-type UnimplementedRolepermissionServer struct {
+// UnimplementedRolepermissionServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedRolepermissionServiceServer struct {
 }
 
-func (UnimplementedRolepermissionServer) GetRolepermissions(context.Context, *v3.QueryOptions) (*v31.RolePermissionList, error) {
+func (UnimplementedRolepermissionServiceServer) GetRolepermissions(context.Context, *v3.QueryOptions) (*v31.RolePermissionList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRolepermissions not implemented")
 }
 
-// UnsafeRolepermissionServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to RolepermissionServer will
+// UnsafeRolepermissionServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to RolepermissionServiceServer will
 // result in compilation errors.
-type UnsafeRolepermissionServer interface {
-	mustEmbedUnimplementedRolepermissionServer()
+type UnsafeRolepermissionServiceServer interface {
+	mustEmbedUnimplementedRolepermissionServiceServer()
 }
 
-func RegisterRolepermissionServer(s grpc.ServiceRegistrar, srv RolepermissionServer) {
-	s.RegisterService(&Rolepermission_ServiceDesc, srv)
+func RegisterRolepermissionServiceServer(s grpc.ServiceRegistrar, srv RolepermissionServiceServer) {
+	s.RegisterService(&RolepermissionService_ServiceDesc, srv)
 }
 
-func _Rolepermission_GetRolepermissions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _RolepermissionService_GetRolepermissions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.QueryOptions)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RolepermissionServer).GetRolepermissions(ctx, in)
+		return srv.(RolepermissionServiceServer).GetRolepermissions(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Rolepermission/GetRolepermissions",
+		FullMethod: "/paralus.dev.rpc.role.v3.RolepermissionService/GetRolepermissions",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RolepermissionServer).GetRolepermissions(ctx, req.(*v3.QueryOptions))
+		return srv.(RolepermissionServiceServer).GetRolepermissions(ctx, req.(*v3.QueryOptions))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Rolepermission_ServiceDesc is the grpc.ServiceDesc for Rolepermission service.
+// RolepermissionService_ServiceDesc is the grpc.ServiceDesc for RolepermissionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Rolepermission_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "paralus.dev.rpc.v3.Rolepermission",
-	HandlerType: (*RolepermissionServer)(nil),
+var RolepermissionService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "paralus.dev.rpc.role.v3.RolepermissionService",
+	HandlerType: (*RolepermissionServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetRolepermissions",
-			Handler:    _Rolepermission_GetRolepermissions_Handler,
+			Handler:    _RolepermissionService_GetRolepermissions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

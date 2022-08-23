@@ -23,7 +23,7 @@ var (
 
 func (ac *authContext) IsRequestAllowed(ctx context.Context, req *commonv3.IsRequestAllowedRequest) (*commonv3.IsRequestAllowedResponse, error) {
 	res := &commonv3.IsRequestAllowedResponse{
-		Status:      commonv3.RequestStatus_Unknown,
+		Status:      commonv3.RequestStatus_REQUEST_STATUS_UNKNOWN_UNSPECIFIED,
 		SessionData: &commonv3.SessionData{},
 	}
 
@@ -71,7 +71,7 @@ func (ac *authContext) authenticate(ctx context.Context, req *commonv3.IsRequest
 			return false, ErrInvalidSignature
 		}
 		_log.Info("successfully validated api key ", req.XApiKey)
-		res.Status = commonv3.RequestStatus_RequestAllowed
+		res.Status = commonv3.RequestStatus_REQUEST_STATUS_REQUEST_ALLOWED
 		res.SessionData.Username = resp.Name
 		res.SessionData.Account = resp.AccountID.String()
 	} else {
@@ -82,7 +82,7 @@ func (ac *authContext) authenticate(ctx context.Context, req *commonv3.IsRequest
 		if err != nil {
 			// '401 Unauthorized' if the credentials are invalid or no credentials were sent.
 			if strings.Contains(err.Error(), "401 Unauthorized") {
-				res.Status = commonv3.RequestStatus_RequestNotAuthenticated
+				res.Status = commonv3.RequestStatus_REQUEST_STATUS_REQUEST_NOT_AUTHENTICATED
 				res.Reason = "no or invalid credentials"
 				return false, nil
 			} else {
@@ -90,20 +90,20 @@ func (ac *authContext) authenticate(ctx context.Context, req *commonv3.IsRequest
 			}
 		}
 		if session.GetActive() {
-			res.Status = commonv3.RequestStatus_RequestAllowed
+			res.Status = commonv3.RequestStatus_REQUEST_STATUS_REQUEST_ALLOWED
 			res.SessionData.Account = session.Identity.GetId()
 
 			t := session.Identity.Traits.(map[string]interface{})
 			res.SessionData.Username = t["email"].(string)
 			uid, err := uuid.Parse(session.Identity.Id)
 			if err != nil {
-				res.Status = commonv3.RequestStatus_RequestNotAuthenticated
+				res.Status = commonv3.RequestStatus_REQUEST_STATUS_REQUEST_NOT_AUTHENTICATED
 				res.Reason = "unable to find identity"
 				return false, err
 			}
 			groups, err := dao.GetGroups(ctx, ac.db, uid)
 			if err != nil {
-				res.Status = commonv3.RequestStatus_RequestNotAuthenticated
+				res.Status = commonv3.RequestStatus_REQUEST_STATUS_REQUEST_NOT_AUTHENTICATED
 				res.Reason = "unable to find identity"
 				return false, err
 			}
@@ -113,7 +113,7 @@ func (ac *authContext) authenticate(ctx context.Context, req *commonv3.IsRequest
 			}
 			res.SessionData.Groups = groupNames
 		} else {
-			res.Status = commonv3.RequestStatus_RequestNotAuthenticated
+			res.Status = commonv3.RequestStatus_REQUEST_STATUS_REQUEST_NOT_AUTHENTICATED
 			res.Reason = "no active session"
 		}
 	}
@@ -140,12 +140,12 @@ func (ac *authContext) authorize(ctx context.Context, req *commonv3.IsRequestAll
 		return err
 	}
 	if !authenticated.Res {
-		res.Status = commonv3.RequestStatus_RequestMethodOrURLNotAllowed
+		res.Status = commonv3.RequestStatus_REQUEST_STATUS_REQUEST_METHOD_OR_URL_NOT_ALLOWED
 		res.Reason = "not authorized to perform action"
 		return nil
 	}
 
 	// the following would already be set in auth, but just in case
-	res.Status = commonv3.RequestStatus_RequestAllowed
+	res.Status = commonv3.RequestStatus_REQUEST_STATUS_REQUEST_ALLOWED
 	return nil
 }

@@ -174,7 +174,7 @@ func registerGRPC(ctx context.Context, config *Config) error {
 
 		// Only for external services
 		for _, host := range template.Spec.Hosts {
-			if host.Type == sentry.BootstrapTemplateHostType_HostTypeExternal {
+			if host.Type == sentry.BootstrapTemplateHostType_BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_EXTERNAL {
 				config.ServerHost, config.ServerPort = util.ParseAddr(host.Host)
 			}
 		}

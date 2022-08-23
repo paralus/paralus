@@ -41,15 +41,15 @@ const (
 )
 
 const (
-	NotSet     = commonv3.ParalusConditionStatus_NotSet
-	Pending    = commonv3.ParalusConditionStatus_Pending
-	InProgress = commonv3.ParalusConditionStatus_InProgress
-	Success    = commonv3.ParalusConditionStatus_Success
-	Failed     = commonv3.ParalusConditionStatus_Failed
-	Retry      = commonv3.ParalusConditionStatus_Retry
-	Skipped    = commonv3.ParalusConditionStatus_Skipped
-	Stopped    = commonv3.ParalusConditionStatus_Stopped
-	Expired    = commonv3.ParalusConditionStatus_Expired
-	Stopping   = commonv3.ParalusConditionStatus_Stopping
-	Submitted  = commonv3.ParalusConditionStatus_Submitted
+	NotSet     = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_NOT_SET_UNSPECIFIED
+	Pending    = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_PENDING
+	InProgress = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_IN_PROGRESS
+	Success    = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_SUCCESS
+	Failed     = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_FAILED
+	Retry      = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_RETRY
+	Skipped    = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_SKIPPED
+	Stopped    = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_STOPPED
+	Expired    = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_EXPIRED
+	Stopping   = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_STOPPING
+	Submitted  = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_SUBMITTED
 )

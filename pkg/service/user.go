@@ -43,7 +43,7 @@ type UserService interface {
 	// create or update user
 	Update(context.Context, *userv3.User) (*userv3.User, error)
 	// delete user
-	Delete(context.Context, *userv3.User) (*userrpcv3.DeleteUserResponse, error)
+	Delete(context.Context, *userv3.User) (*userrpcv3.UserDeleteApiKeysResponse, error)
 	// list users
 	List(context.Context, ...query.Option) (*userv3.UserList, error)
 	// retrieve the cli config for the logged in user
@@ -51,7 +51,7 @@ type UserService interface {
 	// Update UserGroup casbin for OIdC/Idp users
 	UpdateIdpUserGroupPolicy(context.Context, string, string, string) error
 	// Generate recovery link for users
-	ForgotPassword(context.Context, *userrpcv3.ForgotPasswordRequest) (*userrpcv3.ForgotPasswordResponse, error)
+	ForgotPassword(context.Context, *userrpcv3.UserForgotPasswordRequest) (*userrpcv3.UserForgotPasswordResponse, error)
 }
 
 type userService struct {
@@ -743,46 +743,46 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 
 }
 
-func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3.DeleteUserResponse, error) {
+func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3.UserDeleteApiKeysResponse, error) {
 	name := user.GetMetadata().GetName()
 	entity, err := dao.GetUserIdByEmail(ctx, s.db, name, &models.KratosIdentities{})
 	if err != nil {
-		return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("no user founnd with username '%v'", name)
+		return &userrpcv3.UserDeleteApiKeysResponse{}, fmt.Errorf("no user founnd with username '%v'", name)
 	}
 
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {
 		if err != nil {
-			return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("unable to delete user without auth")
+			return &userrpcv3.UserDeleteApiKeysResponse{}, fmt.Errorf("unable to delete user without auth")
 		}
 	}
 	if sd.Username == name {
-		return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("you cannot delete your own account")
+		return &userrpcv3.UserDeleteApiKeysResponse{}, fmt.Errorf("you cannot delete your own account")
 	}
 
 	if usr, ok := entity.(*models.KratosIdentities); ok {
 
 		tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 		if err != nil {
-			return &userrpcv3.DeleteUserResponse{}, err
+			return &userrpcv3.UserDeleteApiKeysResponse{}, err
 		}
 
 		rolesBefore, err := s.deleteUserRoleRelations(ctx, tx, usr.ID, user)
 		if err != nil {
 			tx.Rollback()
-			return &userrpcv3.DeleteUserResponse{}, err
+			return &userrpcv3.UserDeleteApiKeysResponse{}, err
 		}
 
 		user, groupsBefore, err := s.deleteGroupAccountRelations(ctx, tx, usr.ID, user)
 		if err != nil {
 			tx.Rollback()
-			return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("unable to delete user; %v", err)
+			return &userrpcv3.UserDeleteApiKeysResponse{}, fmt.Errorf("unable to delete user; %v", err)
 		}
 
 		err = s.ap.Delete(ctx, usr.ID.String())
 		if err != nil {
 			tx.Rollback()
-			return &userrpcv3.DeleteUserResponse{}, err
+			return &userrpcv3.UserDeleteApiKeysResponse{}, err
 		}
 
 		err = tx.Commit()
@@ -792,9 +792,9 @@ func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3
 		}
 
 		CreateUserAuditEvent(ctx, s.al, s.db, AuditActionDelete, user.GetMetadata().GetName(), usr.ID, rolesBefore, []uuid.UUID{}, groupsBefore, []uuid.UUID{})
-		return &userrpcv3.DeleteUserResponse{}, nil
+		return &userrpcv3.UserDeleteApiKeysResponse{}, nil
 	}
-	return &userrpcv3.DeleteUserResponse{}, fmt.Errorf("unable to delete user '%v'", user.Metadata.Name)
+	return &userrpcv3.UserDeleteApiKeysResponse{}, fmt.Errorf("unable to delete user '%v'", user.Metadata.Name)
 
 }
 
@@ -1032,21 +1032,21 @@ func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, trai
 // ForgotPassword generates a recovery url and sends it back. This can
 // only be invoked by the admin. This is a way for admins to get a
 // recovery link even when we do not have an email setup.
-func (s *userService) ForgotPassword(ctx context.Context, req *userrpcv3.ForgotPasswordRequest) (*userrpcv3.ForgotPasswordResponse, error) {
+func (s *userService) ForgotPassword(ctx context.Context, req *userrpcv3.UserForgotPasswordRequest) (*userrpcv3.UserForgotPasswordResponse, error) {
 	name := req.GetUsername()
 	entity, err := dao.GetUserByEmail(ctx, s.db, name, &models.KratosIdentities{})
 	if err != nil {
-		return &userrpcv3.ForgotPasswordResponse{}, fmt.Errorf("unable to find user %s", name)
+		return &userrpcv3.UserForgotPasswordResponse{}, fmt.Errorf("unable to find user %s", name)
 	}
 
 	if usr, ok := entity.(*models.KratosIdentities); ok {
 		rl, err := s.ap.GetRecoveryLink(ctx, usr.ID.String())
 		if err != nil {
 			_log.Warn("unable to generate recovery url", err)
-			return &userrpcv3.ForgotPasswordResponse{}, fmt.Errorf("unable to generate recovery url")
+			return &userrpcv3.UserForgotPasswordResponse{}, fmt.Errorf("unable to generate recovery url")
 		}
-		return &userrpcv3.ForgotPasswordResponse{RecoveryLink: rl}, nil
+		return &userrpcv3.UserForgotPasswordResponse{RecoveryLink: rl}, nil
 	} else {
-		return &userrpcv3.ForgotPasswordResponse{}, fmt.Errorf("unable to generate recovery url")
+		return &userrpcv3.UserForgotPasswordResponse{}, fmt.Errorf("unable to generate recovery url")
 	}
 }

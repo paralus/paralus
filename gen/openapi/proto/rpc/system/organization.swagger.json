@@ -9,7 +9,7 @@
   },
   "tags": [
     {
-      "name": "Organization"
+      "name": "OrganizationService"
     }
   ],
   "schemes": [
@@ -26,7 +26,7 @@
   "paths": {
     "/auth/v3/partner/{metadata.partner}/organization": {
       "post": {
-        "operationId": "Organization_CreateOrganization",
+        "operationId": "OrganizationService_CreateOrganization",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -69,18 +69,129 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v3Organization"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "system.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Organization",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "name of the resource",
+                      "title": "Name"
+                    },
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata",
+                  "required": [
+                    "name",
+                    "project"
+                  ]
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3OrganizationSpec",
+                  "description": "Spec of the resource",
+                  "title": "Spec"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Organization",
+              "title": "Organization",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec",
+                "name",
+                "project"
+              ]
             }
           }
         ],
         "tags": [
-          "Organization"
+          "OrganizationService"
         ]
       }
     },
     "/auth/v3/partner/{metadata.partner}/organization/{metadata.name}": {
       "get": {
-        "operationId": "Organization_GetOrganization",
+        "operationId": "OrganizationService_GetOrganization",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -123,7 +234,7 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -131,7 +242,7 @@
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -139,28 +250,28 @@
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -193,112 +304,112 @@
           },
           {
             "name": "spec.billingAddress",
-            "description": "Billing Address. Billing address of the organization",
+            "description": "Billing Address\n\nBilling address of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.active",
-            "description": "Active. Represents if this organization is active",
+            "description": "Active\n\nRepresents if this organization is active",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.approved",
-            "description": "Approved. Is this organization active",
+            "description": "Approved\n\nIs this organization active",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.type",
-            "description": "Type. Type of organization",
+            "description": "Type\n\nType of organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.addressLine1",
-            "description": "Address Line 1. Address of the organization",
+            "description": "Address Line 1\n\nAddress of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.addressLine2",
-            "description": "Address Line 2. Address of the organization",
+            "description": "Address Line 2\n\nAddress of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.city",
-            "description": "City. City",
+            "description": "City\n\nCity",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.country",
-            "description": "Country. Country of the organization",
+            "description": "Country\n\nCountry of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.phone",
-            "description": "Phone. Phone number of the organization",
+            "description": "Phone\n\nPhone number of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.state",
-            "description": "State. State of the organization",
+            "description": "State\n\nState of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.zipcode",
-            "description": "Zipcode. Zipcode",
+            "description": "Zipcode\n\nZipcode",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.isPrivate",
-            "description": "Is Private. Is Private Organization",
+            "description": "Is Private\n\nIs Private Organization",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.isTotpEnabled",
-            "description": "Is TOTP Enabled. Is TOTP enabled at organization level",
+            "description": "Is TOTP Enabled\n\nIs TOTP enabled at organization level",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.areClustersShared",
-            "description": "Clusters Shared. Are clusters shared",
+            "description": "Clusters Shared\n\nAre clusters shared",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.settings.lockout.enabled",
-            "description": "Enabled. Is lockout settings enabled?",
+            "description": "Enabled\n\nIs lockout settings enabled?",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.settings.lockout.periodMin",
-            "description": "Period Minutes. Lockout period in Minutes",
+            "description": "Period Minutes\n\nLockout period in Minutes",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -306,7 +417,7 @@
           },
           {
             "name": "spec.settings.lockout.attempts",
-            "description": "Attempts. Max number of attempts before lockout",
+            "description": "Attempts\n\nMax number of attempts before lockout",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -314,7 +425,7 @@
           },
           {
             "name": "spec.settings.idleLogoutMin",
-            "description": "Idle Logout Minutes. Idle Logout time in minutes",
+            "description": "Idle Logout Minutes\n\nIdle Logout time in minutes",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -322,28 +433,28 @@
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
             "enum": [
-              "StatusNotSet",
-              "StatusSubmitted",
-              "StatusOK",
-              "StatusFailed"
+              "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED",
+              "CONDITION_STATUS_STATUS_SUBMITTED",
+              "CONDITION_STATUS_STATUS_OK",
+              "CONDITION_STATUS_STATUS_FAILED"
             ],
-            "default": "StatusNotSet"
+            "default": "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED"
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -351,18 +462,18 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Organization"
+          "OrganizationService"
         ]
       },
       "delete": {
-        "operationId": "Organization_DeleteOrganization",
+        "operationId": "OrganizationService_DeleteOrganization",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -409,7 +520,7 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -417,7 +528,7 @@
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -425,28 +536,28 @@
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -479,112 +590,112 @@
           },
           {
             "name": "spec.billingAddress",
-            "description": "Billing Address. Billing address of the organization",
+            "description": "Billing Address\n\nBilling address of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.active",
-            "description": "Active. Represents if this organization is active",
+            "description": "Active\n\nRepresents if this organization is active",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.approved",
-            "description": "Approved. Is this organization active",
+            "description": "Approved\n\nIs this organization active",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.type",
-            "description": "Type. Type of organization",
+            "description": "Type\n\nType of organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.addressLine1",
-            "description": "Address Line 1. Address of the organization",
+            "description": "Address Line 1\n\nAddress of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.addressLine2",
-            "description": "Address Line 2. Address of the organization",
+            "description": "Address Line 2\n\nAddress of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.city",
-            "description": "City. City",
+            "description": "City\n\nCity",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.country",
-            "description": "Country. Country of the organization",
+            "description": "Country\n\nCountry of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.phone",
-            "description": "Phone. Phone number of the organization",
+            "description": "Phone\n\nPhone number of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.state",
-            "description": "State. State of the organization",
+            "description": "State\n\nState of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.zipcode",
-            "description": "Zipcode. Zipcode",
+            "description": "Zipcode\n\nZipcode",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.isPrivate",
-            "description": "Is Private. Is Private Organization",
+            "description": "Is Private\n\nIs Private Organization",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.isTotpEnabled",
-            "description": "Is TOTP Enabled. Is TOTP enabled at organization level",
+            "description": "Is TOTP Enabled\n\nIs TOTP enabled at organization level",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.areClustersShared",
-            "description": "Clusters Shared. Are clusters shared",
+            "description": "Clusters Shared\n\nAre clusters shared",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.settings.lockout.enabled",
-            "description": "Enabled. Is lockout settings enabled?",
+            "description": "Enabled\n\nIs lockout settings enabled?",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.settings.lockout.periodMin",
-            "description": "Period Minutes. Lockout period in Minutes",
+            "description": "Period Minutes\n\nLockout period in Minutes",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -592,7 +703,7 @@
           },
           {
             "name": "spec.settings.lockout.attempts",
-            "description": "Attempts. Max number of attempts before lockout",
+            "description": "Attempts\n\nMax number of attempts before lockout",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -600,7 +711,7 @@
           },
           {
             "name": "spec.settings.idleLogoutMin",
-            "description": "Idle Logout Minutes. Idle Logout time in minutes",
+            "description": "Idle Logout Minutes\n\nIdle Logout time in minutes",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -608,28 +719,28 @@
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
             "enum": [
-              "StatusNotSet",
-              "StatusSubmitted",
-              "StatusOK",
-              "StatusFailed"
+              "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED",
+              "CONDITION_STATUS_STATUS_SUBMITTED",
+              "CONDITION_STATUS_STATUS_OK",
+              "CONDITION_STATUS_STATUS_FAILED"
             ],
-            "default": "StatusNotSet"
+            "default": "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED"
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -637,18 +748,18 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Organization"
+          "OrganizationService"
         ]
       },
       "put": {
-        "operationId": "Organization_UpdateOrganization",
+        "operationId": "OrganizationService_UpdateOrganization",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -694,18 +805,122 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v3Organization"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "system.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Organization",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata",
+                  "required": [
+                    "project"
+                  ]
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3OrganizationSpec",
+                  "description": "Spec of the resource",
+                  "title": "Spec"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Organization",
+              "title": "Organization",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec",
+                "project"
+              ]
             }
           }
         ],
         "tags": [
-          "Organization"
+          "OrganizationService"
         ]
       }
     },
     "/auth/v3/partner/{metadata.partner}/organizations": {
       "get": {
-        "operationId": "Organization_GetOrganizations",
+        "operationId": "OrganizationService_GetOrganizations",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -741,7 +956,7 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -749,7 +964,7 @@
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -757,35 +972,35 @@
           },
           {
             "name": "metadata.name",
-            "description": "Name. name of the resource",
+            "description": "Name\n\nname of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -818,112 +1033,112 @@
           },
           {
             "name": "spec.billingAddress",
-            "description": "Billing Address. Billing address of the organization",
+            "description": "Billing Address\n\nBilling address of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.active",
-            "description": "Active. Represents if this organization is active",
+            "description": "Active\n\nRepresents if this organization is active",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.approved",
-            "description": "Approved. Is this organization active",
+            "description": "Approved\n\nIs this organization active",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.type",
-            "description": "Type. Type of organization",
+            "description": "Type\n\nType of organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.addressLine1",
-            "description": "Address Line 1. Address of the organization",
+            "description": "Address Line 1\n\nAddress of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.addressLine2",
-            "description": "Address Line 2. Address of the organization",
+            "description": "Address Line 2\n\nAddress of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.city",
-            "description": "City. City",
+            "description": "City\n\nCity",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.country",
-            "description": "Country. Country of the organization",
+            "description": "Country\n\nCountry of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.phone",
-            "description": "Phone. Phone number of the organization",
+            "description": "Phone\n\nPhone number of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.state",
-            "description": "State. State of the organization",
+            "description": "State\n\nState of the organization",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.zipcode",
-            "description": "Zipcode. Zipcode",
+            "description": "Zipcode\n\nZipcode",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.isPrivate",
-            "description": "Is Private. Is Private Organization",
+            "description": "Is Private\n\nIs Private Organization",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.isTotpEnabled",
-            "description": "Is TOTP Enabled. Is TOTP enabled at organization level",
+            "description": "Is TOTP Enabled\n\nIs TOTP enabled at organization level",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.areClustersShared",
-            "description": "Clusters Shared. Are clusters shared",
+            "description": "Clusters Shared\n\nAre clusters shared",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.settings.lockout.enabled",
-            "description": "Enabled. Is lockout settings enabled?",
+            "description": "Enabled\n\nIs lockout settings enabled?",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.settings.lockout.periodMin",
-            "description": "Period Minutes. Lockout period in Minutes",
+            "description": "Period Minutes\n\nLockout period in Minutes",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -931,7 +1146,7 @@
           },
           {
             "name": "spec.settings.lockout.attempts",
-            "description": "Attempts. Max number of attempts before lockout",
+            "description": "Attempts\n\nMax number of attempts before lockout",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -939,7 +1154,7 @@
           },
           {
             "name": "spec.settings.idleLogoutMin",
-            "description": "Idle Logout Minutes. Idle Logout time in minutes",
+            "description": "Idle Logout Minutes\n\nIdle Logout time in minutes",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -947,28 +1162,28 @@
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
             "enum": [
-              "StatusNotSet",
-              "StatusSubmitted",
-              "StatusOK",
-              "StatusFailed"
+              "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED",
+              "CONDITION_STATUS_STATUS_SUBMITTED",
+              "CONDITION_STATUS_STATUS_OK",
+              "CONDITION_STATUS_STATUS_FAILED"
             ],
-            "default": "StatusNotSet"
+            "default": "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED"
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -976,14 +1191,14 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Organization"
+          "OrganizationService"
         ]
       }
     }
@@ -1058,12 +1273,12 @@
     "v3ConditionStatus": {
       "type": "string",
       "enum": [
-        "StatusNotSet",
-        "StatusSubmitted",
-        "StatusOK",
-        "StatusFailed"
+        "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED",
+        "CONDITION_STATUS_STATUS_SUBMITTED",
+        "CONDITION_STATUS_STATUS_OK",
+        "CONDITION_STATUS_STATUS_FAILED"
       ],
-      "default": "StatusNotSet",
+      "default": "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED",
       "title": "$title: ConditionStatus\n$description: status of a condition for a resource"
     },
     "v3ListMetadata": {
@@ -1254,11 +1469,11 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v3Organization"
+            "$ref": "#/definitions/v3Organization",
+            "readOnly": true
           },
           "description": "List of the resources",
-          "title": "Items",
-          "readOnly": true
+          "title": "Items"
         }
       }
     },

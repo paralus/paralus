@@ -458,23 +458,23 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 		ctx,
 		fmt.Sprintf(":%d", rpcPort),
 		make([]runtime.ServeMuxOption, 0),
-		systemrpc.RegisterPartnerHandlerFromEndpoint,
-		systemrpc.RegisterOrganizationHandlerFromEndpoint,
-		systemrpc.RegisterProjectHandlerFromEndpoint,
-		sentryrpc.RegisterBootstrapHandlerFromEndpoint,
-		sentryrpc.RegisterKubeConfigHandlerFromEndpoint,
-		sentryrpc.RegisterKubectlClusterSettingsHandlerFromEndpoint,
-		sentryrpc.RegisterClusterAuthorizationHandlerFromEndpoint,
-		schedulerrpc.RegisterClusterHandlerFromEndpoint,
-		systemrpc.RegisterLocationHandlerFromEndpoint,
-		userrpc.RegisterUserHandlerFromEndpoint,
-		userrpc.RegisterGroupHandlerFromEndpoint,
-		rolerpc.RegisterRoleHandlerFromEndpoint,
-		rolerpc.RegisterRolepermissionHandlerFromEndpoint,
-		systemrpc.RegisterIdpHandlerFromEndpoint,
-		systemrpc.RegisterOIDCProviderHandlerFromEndpoint,
-		auditrpc.RegisterAuditLogHandlerFromEndpoint,
-		auditrpc.RegisterRelayAuditHandlerFromEndpoint,
+		systemrpc.RegisterPartnerServiceHandlerFromEndpoint,
+		systemrpc.RegisterOrganizationServiceHandlerFromEndpoint,
+		systemrpc.RegisterProjectServiceHandlerFromEndpoint,
+		sentryrpc.RegisterBootstrapServiceHandlerFromEndpoint,
+		sentryrpc.RegisterKubeConfigServiceHandlerFromEndpoint,
+		sentryrpc.RegisterKubectlClusterSettingsServiceHandlerFromEndpoint,
+		sentryrpc.RegisterClusterAuthorizationServiceHandlerFromEndpoint,
+		schedulerrpc.RegisterClusterServiceHandlerFromEndpoint,
+		systemrpc.RegisterLocationServiceHandlerFromEndpoint,
+		userrpc.RegisterUserServiceHandlerFromEndpoint,
+		userrpc.RegisterGroupServiceHandlerFromEndpoint,
+		rolerpc.RegisterRoleServiceHandlerFromEndpoint,
+		rolerpc.RegisterRolepermissionServiceHandlerFromEndpoint,
+		systemrpc.RegisterIdpServiceHandlerFromEndpoint,
+		systemrpc.RegisterOIDCProviderServiceHandlerFromEndpoint,
+		auditrpc.RegisterAuditLogServiceHandlerFromEndpoint,
+		auditrpc.RegisterRelayAuditServiceHandlerFromEndpoint,
 	)
 	if err != nil {
 		_log.Fatalw("unable to create gateway", "error", err)
@@ -529,8 +529,8 @@ func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
 	}()
 
 	sentryrpc.RegisterRelayPeerServiceServer(s, relayPeerService)
-	sentryrpc.RegisterClusterAuthorizationServer(s, clusterAuthzServer)
-	sentryrpc.RegisterAuditInformationServer(s, auditInfoServer)
+	sentryrpc.RegisterClusterAuthorizationServiceServer(s, clusterAuthzServer)
+	sentryrpc.RegisterAuditInformationServiceServer(s, auditInfoServer)
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", rpcRelayPeeringPort))
 	if err != nil {
@@ -620,27 +620,27 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 		_log.Infow("context done")
 	}()
 
-	systemrpc.RegisterPartnerServer(s, partnerServer)
-	systemrpc.RegisterOrganizationServer(s, organizationServer)
-	systemrpc.RegisterProjectServer(s, projectServer)
-	sentryrpc.RegisterBootstrapServer(s, bootstrapServer)
-	sentryrpc.RegisterKubeConfigServer(s, kubeConfigServer)
-	sentryrpc.RegisterClusterAuthorizationServer(s, clusterAuthzServer)
-	sentryrpc.RegisterAuditInformationServer(s, auditInfoServer)
-	sentryrpc.RegisterKubectlClusterSettingsServer(s, kubectlClusterSettingsServer)
-	schedulerrpc.RegisterClusterServer(s, crpc)
-	systemrpc.RegisterLocationServer(s, mserver)
-	userrpc.RegisterUserServer(s, userServer)
-	userrpc.RegisterGroupServer(s, groupServer)
-	rolerpc.RegisterRoleServer(s, roleServer)
-	rolerpc.RegisterRolepermissionServer(s, rolepermissionServer)
-	systemrpc.RegisterIdpServer(s, idpServer)
-	systemrpc.RegisterOIDCProviderServer(s, oidcProviderServer)
-	auditrpc.RegisterAuditLogServer(s, auditLogServer)
-	auditrpc.RegisterRelayAuditServer(s, relayAuditServer)
+	systemrpc.RegisterPartnerServiceServer(s, partnerServer)
+	systemrpc.RegisterOrganizationServiceServer(s, organizationServer)
+	systemrpc.RegisterProjectServiceServer(s, projectServer)
+	sentryrpc.RegisterBootstrapServiceServer(s, bootstrapServer)
+	sentryrpc.RegisterKubeConfigServiceServer(s, kubeConfigServer)
+	sentryrpc.RegisterClusterAuthorizationServiceServer(s, clusterAuthzServer)
+	sentryrpc.RegisterAuditInformationServiceServer(s, auditInfoServer)
+	sentryrpc.RegisterKubectlClusterSettingsServiceServer(s, kubectlClusterSettingsServer)
+	schedulerrpc.RegisterClusterServiceServer(s, crpc)
+	systemrpc.RegisterLocationServiceServer(s, mserver)
+	userrpc.RegisterUserServiceServer(s, userServer)
+	userrpc.RegisterGroupServiceServer(s, groupServer)
+	rolerpc.RegisterRoleServiceServer(s, roleServer)
+	rolerpc.RegisterRolepermissionServiceServer(s, rolepermissionServer)
+	systemrpc.RegisterIdpServiceServer(s, idpServer)
+	systemrpc.RegisterOIDCProviderServiceServer(s, oidcProviderServer)
+	auditrpc.RegisterAuditLogServiceServer(s, auditLogServer)
+	auditrpc.RegisterRelayAuditServiceServer(s, relayAuditServer)
 
 	authServer := server.NewAuthServer(asv)
-	authrpc.RegisterAuthServer(s, authServer)
+	authrpc.RegisterAuthServiceServer(s, authServer)
 
 	_log.Infow("starting rpc server", "port", rpcPort)
 	err = s.Serve(l)

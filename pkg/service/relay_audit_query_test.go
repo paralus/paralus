@@ -87,7 +87,7 @@ type rmd struct {
 func TestGetRelayAuditLogByProjectsSimple(t *testing.T) {
 	esq := &mockElasticSearchQuery{}
 	al := &RelayAuditService{relayQuery: esq}
-	req := v1.RelayAuditSearchRequest{
+	req := v1.RelayAuditRequest{
 		Filter: &v1.RelayAuditQueryFilter{
 			QueryString:   "query-string",
 			Projects:      []string{"project-one", "project-two"},
@@ -123,7 +123,7 @@ func TestGetRelayAuditLogByProjectsSimple(t *testing.T) {
 func TestGetRelayAuditLogByProjectsNoProject(t *testing.T) {
 	esq := &mockElasticSearchQuery{}
 	al := &RelayAuditService{relayQuery: esq}
-	req := v1.RelayAuditSearchRequest{
+	req := v1.RelayAuditRequest{
 		Metadata: &v3.Metadata{UrlScope: "url/project"},
 		Filter: &v1.RelayAuditQueryFilter{
 			QueryString: "query-string",

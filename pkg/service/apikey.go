@@ -24,9 +24,9 @@ type ApiKeyService interface {
 	// get by key
 	GetByKey(ctx context.Context, req *rpcv3.ApiKeyRequest) (*models.ApiKey, error)
 	// delete api key
-	Delete(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.DeleteUserResponse, error)
+	Delete(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.UserDeleteApiKeysResponse, error)
 	// list api keys
-	List(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.ApiKeyResponseList, error)
+	List(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.UserListApiKeysResponse, error)
 }
 
 // apiKeyService implements ApiKeyService
@@ -62,20 +62,20 @@ func (s *apiKeyService) Create(ctx context.Context, req *rpcv3.ApiKeyRequest) (*
 	return apikey, nil
 }
 
-func (s *apiKeyService) Delete(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.DeleteUserResponse, error) {
+func (s *apiKeyService) Delete(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.UserDeleteApiKeysResponse, error) {
 	_, err := s.db.NewUpdate().Model(&models.ApiKey{}).
 		Set("trash = ?", true).
 		Where("account_id = ?", req.Username).
 		Where("key = ?", req.Id).Exec(ctx)
 	if err != nil {
-		return &rpcv3.DeleteUserResponse{}, err
+		return &rpcv3.UserDeleteApiKeysResponse{}, err
 	}
 
 	CreateApiKeyAuditEvent(ctx, s.al, AuditActionDelete, req.Id)
 	return nil, err
 }
 
-func (s *apiKeyService) List(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.ApiKeyResponseList, error) {
+func (s *apiKeyService) List(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.UserListApiKeysResponse, error) {
 	var apikeys []models.ApiKey
 	resp, err := dao.GetX(ctx, s.db, "account_id", req.Username, &apikeys)
 	if err == sql.ErrNoRows {
@@ -83,7 +83,7 @@ func (s *apiKeyService) List(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rp
 	}
 
 	if apikeys, ok := resp.(*[]models.ApiKey); ok {
-		apiKeyResp := &rpcv3.ApiKeyResponseList{
+		apiKeyResp := &rpcv3.UserListApiKeysResponse{
 			Items: make([]*rpcv3.ApiKeyResponse, 0),
 		}
 		for _, apikey := range *apikeys {

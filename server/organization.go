@@ -15,20 +15,20 @@ type organizationServer struct {
 }
 
 // NewOrganizationServer returns new organization server implementation
-func NewOrganizationServer(ps service.OrganizationService) systemrpc.OrganizationServer {
+func NewOrganizationServer(ps service.OrganizationService) systemrpc.OrganizationServiceServer {
 	return &organizationServer{ps}
 }
 
 func updateOrganizationStatus(req *systempbv3.Organization, resp *systempbv3.Organization, err error) *systempbv3.Organization {
 	if err != nil {
 		req.Status = &v3.Status{
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
+			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
 		return req
 	}
-	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_StatusOK}
+	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_OK}
 	return resp
 }
 

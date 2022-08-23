@@ -6,7 +6,7 @@
   },
   "tags": [
     {
-      "name": "Test"
+      "name": "TestService"
     }
   ],
   "consumes": [
@@ -18,7 +18,7 @@
   "paths": {
     "/v3/test/{metadata.name}/test/{metadata.name}": {
       "get": {
-        "operationId": "Test_Get",
+        "operationId": "TestService_Get",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -48,7 +48,7 @@
           }
         ],
         "tags": [
-          "Test"
+          "TestService"
         ]
       }
     }

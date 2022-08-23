@@ -15,20 +15,20 @@ type roleServer struct {
 }
 
 // NewRoleServer returns new role server implementation
-func NewRoleServer(ps service.RoleService) rpcv3.RoleServer {
+func NewRoleServer(ps service.RoleService) rpcv3.RoleServiceServer {
 	return &roleServer{ps}
 }
 
 func updateRoleStatus(req *rolepbv3.Role, resp *rolepbv3.Role, err error) *rolepbv3.Role {
 	if err != nil {
 		req.Status = &v3.Status{
-			ConditionStatus: v3.ConditionStatus_StatusFailed,
+			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
 		return req
 	}
-	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_StatusOK}
+	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_OK}
 	return resp
 }
 

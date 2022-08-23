@@ -1,6 +1,8 @@
 syntax = "proto3";
 package rep.framework.event.v1;
 
+option go_package = "v1";
+
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/struct.proto";

@@ -96,7 +96,7 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 	if cluster.Metadata.Project == "" {
 		cluster.Status = &commonv3.Status{
 			ConditionType:   "Create",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
+			ConditionStatus: commonv3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
 			Reason:          "Invalid project association, project is missing.",
 		}
 		return cluster, fmt.Errorf("invalid cluster data, project is missing")
@@ -125,7 +125,7 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 		errormsg = "cluster name contains invalid characters. valid characters are `[A-Z][a-z][0-9]-`"
 		cluster.Status = &commonv3.Status{
 			ConditionType:   "Create",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
+			ConditionStatus: commonv3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
 			Reason:          errormsg,
 		}
 		return cluster, fmt.Errorf(errormsg)
@@ -134,7 +134,7 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 		errormsg = "maximum characters allowed for cluster name is 63. please try another name"
 		cluster.Status = &commonv3.Status{
 			ConditionType:   "Create",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
+			ConditionStatus: commonv3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
 			Reason:          errormsg,
 		}
 		return cluster, fmt.Errorf(errormsg)
@@ -155,7 +155,7 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 			errormsg = "Invalid cluster location, provide a valid metro name"
 			cluster.Status = &commonv3.Status{
 				ConditionType:   "Create",
-				ConditionStatus: commonv3.ConditionStatus_StatusFailed,
+				ConditionStatus: commonv3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
 				Reason:          errormsg,
 			}
 			return cluster, err
@@ -171,7 +171,7 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 	if err := util.ValidateCustomLabels(cluster.Metadata.Labels); err != nil {
 		cluster.Status = &commonv3.Status{
 			ConditionType:   "Create",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
+			ConditionStatus: commonv3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
 			Reason:          err.Error(),
 		}
 		return cluster, err
@@ -191,7 +191,7 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 		Trash:          false,
 		DisplayName:    cluster.Metadata.Name,
 		ProjectId:      proj.ID,
-		ShareMode:      infrav3.ClusterShareMode_CUSTOM.String(),
+		ShareMode:      infrav3.ClusterShareMode_CLUSTER_SHARE_MODE_CUSTOM.String(),
 		OrganizationId: proj.OrganizationId,
 		PartnerId:      proj.PartnerId,
 		MetroId:        metro.ID,
@@ -214,11 +214,11 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 			Conditions: clstrutil.DefaultClusterConditions,
 		},
 	}
-	clstrutil.SetClusterCondition(cluster, clstrutil.NewClusterBootstrapAgent(commonv3.ParalusConditionStatus_Pending, "created"))
+	clstrutil.SetClusterCondition(cluster, clstrutil.NewClusterBootstrapAgent(commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_PENDING, "created"))
 	cnds, _ := json.Marshal(clstrutil.DefaultClusterConditions)
 	edb.Conditions = json.RawMessage(cnds)
 
-	cluster.Spec.ClusterData.Health = infrav3.Health_EDGE_IGNORE
+	cluster.Spec.ClusterData.Health = infrav3.Health_HEALTH_EDGE_IGNORE_UNSPECIFIED
 
 	if cluster.Spec.Params != nil {
 		prmssByts, _ := json.Marshal(cluster.Spec.Params)
@@ -273,7 +273,7 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 			tx.Rollback()
 			cluster.Status = &commonv3.Status{
 				ConditionType:   "Create",
-				ConditionStatus: commonv3.ConditionStatus_StatusFailed,
+				ConditionStatus: commonv3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
 				Reason:          err.Error(),
 			}
 			return cluster, err
@@ -418,7 +418,7 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 		ModifiedAt:   timestamppb.New(c.ModifiedAt),
 	}
 
-	sm := int32(infrav3.ClusterShareMode_ClusterShareModeNotSet)
+	sm := int32(infrav3.ClusterShareMode_CLUSTER_SHARE_MODE_CLUSTER_SHARE_MODE_NOT_SET_UNSPECIFIED)
 	smv, err := strconv.ParseInt(c.ShareMode, 10, 32)
 	if err != nil {
 		_log.Infow("unable to convert value, ", err.Error())
@@ -481,7 +481,7 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 	if cluster.Metadata.Name == "" {
 		cluster.Status = &commonv3.Status{
 			ConditionType:   "Update",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
+			ConditionStatus: commonv3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
 			Reason:          "Invalid cluster data, Name is missing.",
 		}
 		return cluster, fmt.Errorf("invalid cluster data, name is missing")
@@ -497,7 +497,7 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 	if cluster.Spec.ClusterType == "" {
 		cluster.Status = &commonv3.Status{
 			ConditionType:   "Update",
-			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
+			ConditionStatus: commonv3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
 			Reason:          "Invalid cluster data, Cluster type is missing.",
 		}
 		return cluster, fmt.Errorf("invalid cluster data, cluster type is missing")
@@ -538,7 +538,7 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 				errormsg = "Invalid cluster location, provide a valid metro name"
 				cluster.Status = &commonv3.Status{
 					ConditionType:   "Update",
-					ConditionStatus: commonv3.ConditionStatus_StatusFailed,
+					ConditionStatus: commonv3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
 					Reason:          errormsg,
 				}
 				return cluster, err
@@ -966,7 +966,7 @@ func (s *clusterService) CreateBootstrapAgentForCluster(ctx context.Context, clu
 		}
 		endpoint := ""
 		for _, host := range bat.Spec.Hosts {
-			if host.Type == sentry.BootstrapTemplateHostType_HostTypeExternal {
+			if host.Type == sentry.BootstrapTemplateHostType_BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_EXTERNAL {
 				endpoint = host.Host
 			}
 		}
@@ -1021,7 +1021,7 @@ func (s *clusterService) GetRelaysConfigForCluster(ctx context.Context, cluster 
 
 		endpoint := ""
 		for _, host := range bat.Spec.Hosts {
-			if host.Type == sentry.BootstrapTemplateHostType_HostTypeExternal {
+			if host.Type == sentry.BootstrapTemplateHostType_BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_EXTERNAL {
 				endpoint = host.Host
 			}
 		}

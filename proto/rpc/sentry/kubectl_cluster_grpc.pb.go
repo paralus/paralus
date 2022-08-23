@@ -18,120 +18,120 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// KubectlClusterSettingsClient is the client API for KubectlClusterSettings service.
+// KubectlClusterSettingsServiceClient is the client API for KubectlClusterSettingsService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type KubectlClusterSettingsClient interface {
+type KubectlClusterSettingsServiceClient interface {
 	UpdateKubectlClusterSettings(ctx context.Context, in *UpdateKubectlClusterSettingsRequest, opts ...grpc.CallOption) (*UpdateKubectlClusterSettingsResponse, error)
 	GetKubectlClusterSettings(ctx context.Context, in *GetKubectlClusterSettingsRequest, opts ...grpc.CallOption) (*GetKubectlClusterSettingsResponse, error)
 }
 
-type kubectlClusterSettingsClient struct {
+type kubectlClusterSettingsServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewKubectlClusterSettingsClient(cc grpc.ClientConnInterface) KubectlClusterSettingsClient {
-	return &kubectlClusterSettingsClient{cc}
+func NewKubectlClusterSettingsServiceClient(cc grpc.ClientConnInterface) KubectlClusterSettingsServiceClient {
+	return &kubectlClusterSettingsServiceClient{cc}
 }
 
-func (c *kubectlClusterSettingsClient) UpdateKubectlClusterSettings(ctx context.Context, in *UpdateKubectlClusterSettingsRequest, opts ...grpc.CallOption) (*UpdateKubectlClusterSettingsResponse, error) {
+func (c *kubectlClusterSettingsServiceClient) UpdateKubectlClusterSettings(ctx context.Context, in *UpdateKubectlClusterSettingsRequest, opts ...grpc.CallOption) (*UpdateKubectlClusterSettingsResponse, error) {
 	out := new(UpdateKubectlClusterSettingsResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubectlClusterSettings/UpdateKubectlClusterSettings", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubectlClusterSettingsService/UpdateKubectlClusterSettings", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *kubectlClusterSettingsClient) GetKubectlClusterSettings(ctx context.Context, in *GetKubectlClusterSettingsRequest, opts ...grpc.CallOption) (*GetKubectlClusterSettingsResponse, error) {
+func (c *kubectlClusterSettingsServiceClient) GetKubectlClusterSettings(ctx context.Context, in *GetKubectlClusterSettingsRequest, opts ...grpc.CallOption) (*GetKubectlClusterSettingsResponse, error) {
 	out := new(GetKubectlClusterSettingsResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubectlClusterSettings/GetKubectlClusterSettings", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.KubectlClusterSettingsService/GetKubectlClusterSettings", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// KubectlClusterSettingsServer is the server API for KubectlClusterSettings service.
-// All implementations should embed UnimplementedKubectlClusterSettingsServer
+// KubectlClusterSettingsServiceServer is the server API for KubectlClusterSettingsService service.
+// All implementations should embed UnimplementedKubectlClusterSettingsServiceServer
 // for forward compatibility
-type KubectlClusterSettingsServer interface {
+type KubectlClusterSettingsServiceServer interface {
 	UpdateKubectlClusterSettings(context.Context, *UpdateKubectlClusterSettingsRequest) (*UpdateKubectlClusterSettingsResponse, error)
 	GetKubectlClusterSettings(context.Context, *GetKubectlClusterSettingsRequest) (*GetKubectlClusterSettingsResponse, error)
 }
 
-// UnimplementedKubectlClusterSettingsServer should be embedded to have forward compatible implementations.
-type UnimplementedKubectlClusterSettingsServer struct {
+// UnimplementedKubectlClusterSettingsServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedKubectlClusterSettingsServiceServer struct {
 }
 
-func (UnimplementedKubectlClusterSettingsServer) UpdateKubectlClusterSettings(context.Context, *UpdateKubectlClusterSettingsRequest) (*UpdateKubectlClusterSettingsResponse, error) {
+func (UnimplementedKubectlClusterSettingsServiceServer) UpdateKubectlClusterSettings(context.Context, *UpdateKubectlClusterSettingsRequest) (*UpdateKubectlClusterSettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateKubectlClusterSettings not implemented")
 }
-func (UnimplementedKubectlClusterSettingsServer) GetKubectlClusterSettings(context.Context, *GetKubectlClusterSettingsRequest) (*GetKubectlClusterSettingsResponse, error) {
+func (UnimplementedKubectlClusterSettingsServiceServer) GetKubectlClusterSettings(context.Context, *GetKubectlClusterSettingsRequest) (*GetKubectlClusterSettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetKubectlClusterSettings not implemented")
 }
 
-// UnsafeKubectlClusterSettingsServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to KubectlClusterSettingsServer will
+// UnsafeKubectlClusterSettingsServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to KubectlClusterSettingsServiceServer will
 // result in compilation errors.
-type UnsafeKubectlClusterSettingsServer interface {
-	mustEmbedUnimplementedKubectlClusterSettingsServer()
+type UnsafeKubectlClusterSettingsServiceServer interface {
+	mustEmbedUnimplementedKubectlClusterSettingsServiceServer()
 }
 
-func RegisterKubectlClusterSettingsServer(s grpc.ServiceRegistrar, srv KubectlClusterSettingsServer) {
-	s.RegisterService(&KubectlClusterSettings_ServiceDesc, srv)
+func RegisterKubectlClusterSettingsServiceServer(s grpc.ServiceRegistrar, srv KubectlClusterSettingsServiceServer) {
+	s.RegisterService(&KubectlClusterSettingsService_ServiceDesc, srv)
 }
 
-func _KubectlClusterSettings_UpdateKubectlClusterSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KubectlClusterSettingsService_UpdateKubectlClusterSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateKubectlClusterSettingsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KubectlClusterSettingsServer).UpdateKubectlClusterSettings(ctx, in)
+		return srv.(KubectlClusterSettingsServiceServer).UpdateKubectlClusterSettings(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.sentry.rpc.KubectlClusterSettings/UpdateKubectlClusterSettings",
+		FullMethod: "/paralus.dev.sentry.rpc.KubectlClusterSettingsService/UpdateKubectlClusterSettings",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KubectlClusterSettingsServer).UpdateKubectlClusterSettings(ctx, req.(*UpdateKubectlClusterSettingsRequest))
+		return srv.(KubectlClusterSettingsServiceServer).UpdateKubectlClusterSettings(ctx, req.(*UpdateKubectlClusterSettingsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KubectlClusterSettings_GetKubectlClusterSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KubectlClusterSettingsService_GetKubectlClusterSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetKubectlClusterSettingsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KubectlClusterSettingsServer).GetKubectlClusterSettings(ctx, in)
+		return srv.(KubectlClusterSettingsServiceServer).GetKubectlClusterSettings(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.sentry.rpc.KubectlClusterSettings/GetKubectlClusterSettings",
+		FullMethod: "/paralus.dev.sentry.rpc.KubectlClusterSettingsService/GetKubectlClusterSettings",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KubectlClusterSettingsServer).GetKubectlClusterSettings(ctx, req.(*GetKubectlClusterSettingsRequest))
+		return srv.(KubectlClusterSettingsServiceServer).GetKubectlClusterSettings(ctx, req.(*GetKubectlClusterSettingsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// KubectlClusterSettings_ServiceDesc is the grpc.ServiceDesc for KubectlClusterSettings service.
+// KubectlClusterSettingsService_ServiceDesc is the grpc.ServiceDesc for KubectlClusterSettingsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var KubectlClusterSettings_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "paralus.dev.sentry.rpc.KubectlClusterSettings",
-	HandlerType: (*KubectlClusterSettingsServer)(nil),
+var KubectlClusterSettingsService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "paralus.dev.sentry.rpc.KubectlClusterSettingsService",
+	HandlerType: (*KubectlClusterSettingsServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "UpdateKubectlClusterSettings",
-			Handler:    _KubectlClusterSettings_UpdateKubectlClusterSettings_Handler,
+			Handler:    _KubectlClusterSettingsService_UpdateKubectlClusterSettings_Handler,
 		},
 		{
 			MethodName: "GetKubectlClusterSettings",
-			Handler:    _KubectlClusterSettings_GetKubectlClusterSettings_Handler,
+			Handler:    _KubectlClusterSettingsService_GetKubectlClusterSettings_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

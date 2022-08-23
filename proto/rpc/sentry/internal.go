@@ -15,9 +15,9 @@ import (
 type SentryClient interface {
 	Unhealthy()
 	Close() error
-	BootstrapClient
-	ClusterAuthorizationClient
-	KubeConfigClient
+	BootstrapServiceClient
+	ClusterAuthorizationServiceClient
+	KubeConfigServiceClient
 }
 
 // SentryAuthorizationClient is the interface for accessing all the RPCs
@@ -25,23 +25,23 @@ type SentryClient interface {
 type SentryAuthorizationClient interface {
 	Unhealthy()
 	Close() error
-	ClusterAuthorizationClient
-	AuditInformationClient
+	ClusterAuthorizationServiceClient
+	AuditInformationServiceClient
 }
 
 type sentryClient struct {
 	*grpcpool.ClientConn
-	*bootstrapClient
-	*clusterAuthorizationClient
-	*kubeConfigClient
+	*bootstrapServiceClient
+	*clusterAuthorizationServiceClient
+	*kubeConfigServiceClient
 }
 
 var _ SentryClient = (*sentryClient)(nil)
 
 type sentryAuthorizationClient struct {
 	*grpcpool.ClientConn
-	*clusterAuthorizationClient
-	*auditInformationClient
+	*clusterAuthorizationServiceClient
+	*auditInformationServiceClient
 }
 
 var _ SentryAuthorizationClient = (*sentryAuthorizationClient)(nil)
@@ -83,9 +83,9 @@ func (p *sentryPool) NewClient(ctx context.Context) (SentryClient, error) {
 	}
 	return &sentryClient{
 		cc,
-		&bootstrapClient{cc.ClientConn},
-		&clusterAuthorizationClient{cc.ClientConn},
-		&kubeConfigClient{cc.ClientConn},
+		&bootstrapServiceClient{cc.ClientConn},
+		&clusterAuthorizationServiceClient{cc.ClientConn},
+		&kubeConfigServiceClient{cc.ClientConn},
 	}, nil
 }
 
@@ -106,8 +106,8 @@ func (p *sentryAuthorizationPool) NewClient(ctx context.Context) (SentryAuthoriz
 	}
 	return &sentryAuthorizationClient{
 		cc,
-		&clusterAuthorizationClient{cc.ClientConn},
-		&auditInformationClient{cc.ClientConn},
+		&clusterAuthorizationServiceClient{cc.ClientConn},
+		&auditInformationServiceClient{cc.ClientConn},
 	}, nil
 }
 

@@ -1,5 +1,5 @@
 syntax = "proto3";
-package paralus.dev.rpc.v3;
+package paralus.dev.rpc.user.v3;
 
 import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
@@ -67,13 +67,13 @@ message ApiKeyResponse {
   string name = 5;
 }
 
-message ApiKeyResponseList { repeated ApiKeyResponse items = 1; }
+message UserListApiKeysResponse { repeated ApiKeyResponse items = 1; }
 
-message ForgotPasswordRequest { string username = 1; }
+message UserForgotPasswordRequest { string username = 1; }
 
-message ForgotPasswordResponse { string recoveryLink = 1; }
+message UserForgotPasswordResponse { string recoveryLink = 1; }
 
-message DeleteUserResponse {}
+message UserDeleteApiKeysResponse {}
 message CliConfigRequest {}
 
 service UserService {
@@ -121,7 +121,7 @@ service UserService {
     };
   };
 
-  rpc DeleteUser(paralus.dev.types.user.v3.User) returns (DeleteUserResponse) {
+  rpc DeleteUser(paralus.dev.types.user.v3.User) returns (UserDeleteApiKeysResponse) {
     option (google.api.http) = {
       delete : "/auth/v3/user/{metadata.name}"
     };
@@ -141,19 +141,19 @@ service UserService {
     };
   };
 
-  rpc UserListApiKeys(ApiKeyRequest) returns (ApiKeyResponseList) {
+  rpc UserListApiKeys(ApiKeyRequest) returns (UserListApiKeysResponse) {
     option (google.api.http) = {
       get : "/auth/v3/user/{username}/apikeys"
     };
   };
 
-  rpc UserDeleteApiKeys(ApiKeyRequest) returns (DeleteUserResponse) {
+  rpc UserDeleteApiKeys(ApiKeyRequest) returns (UserDeleteApiKeysResponse) {
     option (google.api.http) = {
       delete : "/auth/v3/user/{username}/apikeys/{id}"
     };
   };
 
-  rpc UserForgotPassword(ForgotPasswordRequest) returns (ForgotPasswordResponse) {
+  rpc UserForgotPassword(UserForgotPasswordRequest) returns (UserForgotPasswordResponse) {
     option (google.api.http) = {
       get : "/auth/v3/user/{username}/forgotpassword"
     };

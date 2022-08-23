@@ -9,7 +9,7 @@
   },
   "tags": [
     {
-      "name": "Bootstrap"
+      "name": "BootstrapService"
     }
   ],
   "schemes": [
@@ -26,7 +26,7 @@
   "paths": {
     "/v2/sentry/bootstrap/infra/{metadata.name}": {
       "get": {
-        "operationId": "Bootstrap_GetBootstrapInfra",
+        "operationId": "BootstrapService_GetBootstrapInfra",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -63,7 +63,7 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -71,7 +71,7 @@
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -79,35 +79,35 @@
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -158,11 +158,11 @@
           }
         ],
         "tags": [
-          "Bootstrap"
+          "BootstrapService"
         ]
       },
       "put": {
-        "operationId": "Bootstrap_PatchBootstrapInfra",
+        "operationId": "BootstrapService_PatchBootstrapInfra",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -202,18 +202,116 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/sentryBootstrapInfra"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "BootstrapInfra",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata",
+                  "required": [
+                    "project"
+                  ]
+                },
+                "spec": {
+                  "$ref": "#/definitions/sentryBootstrapInfraSpec"
+                },
+                "status": {
+                  "$ref": "#/definitions/sentryBootstrapInfraStatus"
+                }
+              },
+              "required": [
+                "project"
+              ]
             }
           }
         ],
         "tags": [
-          "Bootstrap"
+          "BootstrapService"
         ]
       }
     },
     "/v2/sentry/bootstrap/template": {
       "get": {
-        "operationId": "Bootstrap_GetBootstrapAgentTemplates",
+        "operationId": "BootstrapService_GetBootstrapAgentTemplates",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -243,21 +341,21 @@
         "parameters": [
           {
             "name": "q",
-            "description": "query for filtering.",
+            "description": "query for filtering",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "name",
-            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID).",
+            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "selector",
-            "description": "selector is used to filter the labels of a resource.",
+            "description": "selector is used to filter the labels of a resource",
             "in": "query",
             "required": false,
             "type": "string"
@@ -294,7 +392,7 @@
           },
           {
             "name": "displayName",
-            "description": "displayName only used for update queries to set displayName (READONLY).",
+            "description": "displayName only used for update queries to set displayName (READONLY)",
             "in": "query",
             "required": false,
             "type": "string"
@@ -322,14 +420,14 @@
           },
           {
             "name": "ignoreScopeDefault",
-            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID.",
+            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "globalScope",
-            "description": "globalScope sets partnerID,organizationID,projectID = 0.",
+            "description": "globalScope sets partnerID,organizationID,projectID = 0",
             "in": "query",
             "required": false,
             "type": "boolean"
@@ -360,7 +458,7 @@
           },
           {
             "name": "urlScope",
-            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value).",
+            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value)",
             "in": "query",
             "required": false,
             "type": "string"
@@ -419,20 +517,20 @@
           },
           {
             "name": "type",
-            "description": "generic way to specify a type of resource, mainly for use in users endpoint.",
+            "description": "generic way to specify a type of resource, mainly for use in users endpoint",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Bootstrap"
+          "BootstrapService"
         ]
       }
     },
     "/v2/sentry/bootstrap/template/{metadata.name}": {
       "get": {
-        "operationId": "Bootstrap_GetBootstrapAgentTemplate",
+        "operationId": "BootstrapService_GetBootstrapAgentTemplate",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -469,7 +567,7 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -477,7 +575,7 @@
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -485,35 +583,35 @@
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -574,12 +672,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "TemplateTypeNotSet",
-              "Client",
-              "Server",
-              "Mixed"
+              "BOOTSTRAP_AGENT_TEMPLATE_TYPE_TEMPLATE_TYPE_NOT_SET_UNSPECIFIED",
+              "BOOTSTRAP_AGENT_TEMPLATE_TYPE_CLIENT",
+              "BOOTSTRAP_AGENT_TEMPLATE_TYPE_SERVER",
+              "BOOTSTRAP_AGENT_TEMPLATE_TYPE_MIXED"
             ],
-            "default": "TemplateTypeNotSet"
+            "default": "BOOTSTRAP_AGENT_TEMPLATE_TYPE_TEMPLATE_TYPE_NOT_SET_UNSPECIFIED"
           },
           {
             "name": "spec.token",
@@ -601,11 +699,11 @@
           }
         ],
         "tags": [
-          "Bootstrap"
+          "BootstrapService"
         ]
       },
       "put": {
-        "operationId": "Bootstrap_PatchBootstrapAgentTemplate",
+        "operationId": "BootstrapService_PatchBootstrapAgentTemplate",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -645,18 +743,116 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/sentryBootstrapAgentTemplate"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "BootstrapAgentTemplate",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata",
+                  "required": [
+                    "project"
+                  ]
+                },
+                "spec": {
+                  "$ref": "#/definitions/sentryBootstrapAgentTemplateSpec"
+                },
+                "status": {
+                  "$ref": "#/definitions/sentryBootstrapAgentTemplateStatus"
+                }
+              },
+              "required": [
+                "project"
+              ]
             }
           }
         ],
         "tags": [
-          "Bootstrap"
+          "BootstrapService"
         ]
       }
     },
     "/v2/sentry/bootstrap/{spec.templateRef}/agent": {
       "post": {
-        "operationId": "Bootstrap_CreateBootstrapAgent",
+        "operationId": "BootstrapService_CreateBootstrapAgent",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -696,18 +892,53 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/sentryBootstrapAgent"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "BootstrapAgent",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "$ref": "#/definitions/v3Metadata",
+                  "description": "Metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "agentMode": {
+                      "$ref": "#/definitions/sentryBootstrapAgentMode"
+                    }
+                  }
+                },
+                "status": {
+                  "$ref": "#/definitions/sentryBootStrapAgentStatus"
+                }
+              }
             }
           }
         ],
         "tags": [
-          "Bootstrap"
+          "BootstrapService"
         ]
       }
     },
     "/v2/sentry/bootstrap/{spec.templateRef}/agent/{metadata.name}": {
       "get": {
-        "operationId": "Bootstrap_GetBootstrapAgent",
+        "operationId": "BootstrapService_GetBootstrapAgent",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -751,7 +982,7 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -759,7 +990,7 @@
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -767,35 +998,35 @@
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -838,10 +1069,10 @@
             "required": false,
             "type": "string",
             "enum": [
-              "InCluster",
-              "OutOfCluster"
+              "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED",
+              "BOOTSTRAP_AGENT_MODE_OUT_OF_CLUSTER"
             ],
-            "default": "InCluster"
+            "default": "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED"
           },
           {
             "name": "status.tokenState",
@@ -849,12 +1080,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "NotSet",
-              "NotRegistered",
-              "NotApproved",
-              "Approved"
+              "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED",
+              "BOOTSTRAP_AGENT_STATE_NOT_REGISTERED",
+              "BOOTSTRAP_AGENT_STATE_NOT_APPROVED",
+              "BOOTSTRAP_AGENT_STATE_APPROVED"
             ],
-            "default": "NotSet"
+            "default": "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED"
           },
           {
             "name": "status.ipAddress",
@@ -877,11 +1108,11 @@
           }
         ],
         "tags": [
-          "Bootstrap"
+          "BootstrapService"
         ]
       },
       "delete": {
-        "operationId": "Bootstrap_DeleteBootstrapAgent",
+        "operationId": "BootstrapService_DeleteBootstrapAgent",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -925,7 +1156,7 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -933,7 +1164,7 @@
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -941,35 +1172,35 @@
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1012,10 +1243,10 @@
             "required": false,
             "type": "string",
             "enum": [
-              "InCluster",
-              "OutOfCluster"
+              "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED",
+              "BOOTSTRAP_AGENT_MODE_OUT_OF_CLUSTER"
             ],
-            "default": "InCluster"
+            "default": "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED"
           },
           {
             "name": "status.tokenState",
@@ -1023,12 +1254,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "NotSet",
-              "NotRegistered",
-              "NotApproved",
-              "Approved"
+              "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED",
+              "BOOTSTRAP_AGENT_STATE_NOT_REGISTERED",
+              "BOOTSTRAP_AGENT_STATE_NOT_APPROVED",
+              "BOOTSTRAP_AGENT_STATE_APPROVED"
             ],
-            "default": "NotSet"
+            "default": "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED"
           },
           {
             "name": "status.ipAddress",
@@ -1051,11 +1282,11 @@
           }
         ],
         "tags": [
-          "Bootstrap"
+          "BootstrapService"
         ]
       },
       "put": {
-        "operationId": "Bootstrap_UpdateBootstrapAgent",
+        "operationId": "BootstrapService_UpdateBootstrapAgent",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -1102,18 +1333,124 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/sentryBootstrapAgent"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "BootstrapAgent",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata",
+                  "required": [
+                    "project"
+                  ]
+                },
+                "spec": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "agentMode": {
+                      "$ref": "#/definitions/sentryBootstrapAgentMode"
+                    }
+                  }
+                },
+                "status": {
+                  "$ref": "#/definitions/sentryBootStrapAgentStatus"
+                }
+              },
+              "required": [
+                "project"
+              ]
             }
           }
         ],
         "tags": [
-          "Bootstrap"
+          "BootstrapService"
         ]
       }
     },
     "/v2/sentry/bootstrap/{spec.templateRef}/agent/{metadata.name}/config": {
       "get": {
-        "operationId": "Bootstrap_GetBootstrapAgentConfig",
+        "operationId": "BootstrapService_GetBootstrapAgentConfig",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -1157,7 +1494,7 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -1165,7 +1502,7 @@
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -1173,35 +1510,35 @@
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1244,10 +1581,10 @@
             "required": false,
             "type": "string",
             "enum": [
-              "InCluster",
-              "OutOfCluster"
+              "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED",
+              "BOOTSTRAP_AGENT_MODE_OUT_OF_CLUSTER"
             ],
-            "default": "InCluster"
+            "default": "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED"
           },
           {
             "name": "status.tokenState",
@@ -1255,12 +1592,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "NotSet",
-              "NotRegistered",
-              "NotApproved",
-              "Approved"
+              "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED",
+              "BOOTSTRAP_AGENT_STATE_NOT_REGISTERED",
+              "BOOTSTRAP_AGENT_STATE_NOT_APPROVED",
+              "BOOTSTRAP_AGENT_STATE_APPROVED"
             ],
-            "default": "NotSet"
+            "default": "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED"
           },
           {
             "name": "status.ipAddress",
@@ -1283,13 +1620,13 @@
           }
         ],
         "tags": [
-          "Bootstrap"
+          "BootstrapService"
         ]
       }
     },
     "/v2/sentry/bootstrap/{templateScope}/agent": {
       "get": {
-        "operationId": "Bootstrap_GetBootstrapAgents",
+        "operationId": "BootstrapService_GetBootstrapAgents",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -1326,21 +1663,21 @@
           },
           {
             "name": "opts.q",
-            "description": "query for filtering.",
+            "description": "query for filtering",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "opts.name",
-            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID).",
+            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "opts.selector",
-            "description": "selector is used to filter the labels of a resource.",
+            "description": "selector is used to filter the labels of a resource",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1377,7 +1714,7 @@
           },
           {
             "name": "opts.displayName",
-            "description": "displayName only used for update queries to set displayName (READONLY).",
+            "description": "displayName only used for update queries to set displayName (READONLY)",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1405,14 +1742,14 @@
           },
           {
             "name": "opts.ignoreScopeDefault",
-            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID.",
+            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "opts.globalScope",
-            "description": "globalScope sets partnerID,organizationID,projectID = 0.",
+            "description": "globalScope sets partnerID,organizationID,projectID = 0",
             "in": "query",
             "required": false,
             "type": "boolean"
@@ -1443,7 +1780,7 @@
           },
           {
             "name": "opts.urlScope",
-            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value).",
+            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value)",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1502,20 +1839,20 @@
           },
           {
             "name": "opts.type",
-            "description": "generic way to specify a type of resource, mainly for use in users endpoint.",
+            "description": "generic way to specify a type of resource, mainly for use in users endpoint",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Bootstrap"
+          "BootstrapService"
         ]
       }
     },
     "/v2/sentry/bootstrap/{templateToken}/register": {
       "post": {
-        "operationId": "Bootstrap_RegisterBootstrapAgent",
+        "operationId": "BootstrapService_RegisterBootstrapAgent",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -1578,7 +1915,7 @@
           }
         ],
         "tags": [
-          "Bootstrap"
+          "BootstrapService"
         ]
       }
     }
@@ -1710,10 +2047,10 @@
     "sentryBootstrapAgentMode": {
       "type": "string",
       "enum": [
-        "InCluster",
-        "OutOfCluster"
+        "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED",
+        "BOOTSTRAP_AGENT_MODE_OUT_OF_CLUSTER"
       ],
-      "default": "InCluster"
+      "default": "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED"
     },
     "sentryBootstrapAgentSpec": {
       "type": "object",
@@ -1732,12 +2069,12 @@
     "sentryBootstrapAgentState": {
       "type": "string",
       "enum": [
-        "NotSet",
-        "NotRegistered",
-        "NotApproved",
-        "Approved"
+        "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED",
+        "BOOTSTRAP_AGENT_STATE_NOT_REGISTERED",
+        "BOOTSTRAP_AGENT_STATE_NOT_APPROVED",
+        "BOOTSTRAP_AGENT_STATE_APPROVED"
       ],
-      "default": "NotSet"
+      "default": "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED"
     },
     "sentryBootstrapAgentTemplate": {
       "type": "object",
@@ -1841,12 +2178,12 @@
     "sentryBootstrapAgentTemplateType": {
       "type": "string",
       "enum": [
-        "TemplateTypeNotSet",
-        "Client",
-        "Server",
-        "Mixed"
+        "BOOTSTRAP_AGENT_TEMPLATE_TYPE_TEMPLATE_TYPE_NOT_SET_UNSPECIFIED",
+        "BOOTSTRAP_AGENT_TEMPLATE_TYPE_CLIENT",
+        "BOOTSTRAP_AGENT_TEMPLATE_TYPE_SERVER",
+        "BOOTSTRAP_AGENT_TEMPLATE_TYPE_MIXED"
       ],
-      "default": "TemplateTypeNotSet"
+      "default": "BOOTSTRAP_AGENT_TEMPLATE_TYPE_TEMPLATE_TYPE_NOT_SET_UNSPECIFIED"
     },
     "sentryBootstrapInfra": {
       "type": "object",
@@ -1909,11 +2246,11 @@
     "sentryBootstrapTemplateHostType": {
       "type": "string",
       "enum": [
-        "HostTypeNotSet",
-        "HostTypeInternal",
-        "HostTypeExternal"
+        "BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_NOT_SET_UNSPECIFIED",
+        "BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_INTERNAL",
+        "BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_EXTERNAL"
       ],
-      "default": "HostTypeNotSet"
+      "default": "BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_NOT_SET_UNSPECIFIED"
     },
     "v3HttpBody": {
       "type": "object",
