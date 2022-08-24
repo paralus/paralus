@@ -24,13 +24,13 @@ func NewGroupServer(ps service.GroupService) rpcv3.GroupServiceServer {
 func updateGroupStatus(req *userpbv3.Group, resp *userpbv3.Group, err error) *userpbv3.Group {
 	if err != nil {
 		req.Status = &v3.Status{
-			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
+			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_FAILED,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
 		return req
 	}
-	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_OK}
+	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_OK}
 	return resp
 }
 

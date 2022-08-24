@@ -25,13 +25,13 @@ func NewUserServer(ps service.UserService, as service.ApiKeyService) rpcv3.UserS
 func updateUserStatus(req *userpbv3.User, resp *userpbv3.User, err error) *userpbv3.User {
 	if err != nil {
 		req.Status = &v3.Status{
-			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
+			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_FAILED,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
 		return req
 	}
-	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_OK}
+	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_OK}
 	return resp
 }
 
@@ -53,13 +53,13 @@ func (s *userServer) GetUserInfo(ctx context.Context, req *userpbv3.User) (*user
 	resp, err := s.us.GetUserInfo(ctx, req)
 	if err != nil {
 		req.Status = &v3.Status{
-			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
+			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_FAILED,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
 		return resp, err
 	}
-	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_OK}
+	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_OK}
 	return resp, nil
 }
 

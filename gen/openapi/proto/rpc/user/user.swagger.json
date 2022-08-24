@@ -257,12 +257,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "CONDITION_STATUS_STATUS_NOT_SET",
-              "CONDITION_STATUS_STATUS_SUBMITTED",
-              "CONDITION_STATUS_STATUS_OK",
-              "CONDITION_STATUS_STATUS_FAILED"
+              "CONDITION_STATUS_NOT_SET",
+              "CONDITION_STATUS_SUBMITTED",
+              "CONDITION_STATUS_OK",
+              "CONDITION_STATUS_FAILED"
             ],
-            "default": "CONDITION_STATUS_STATUS_NOT_SET"
+            "default": "CONDITION_STATUS_NOT_SET"
           },
           {
             "name": "status.lastUpdated",
@@ -487,12 +487,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "CONDITION_STATUS_STATUS_NOT_SET",
-              "CONDITION_STATUS_STATUS_SUBMITTED",
-              "CONDITION_STATUS_STATUS_OK",
-              "CONDITION_STATUS_STATUS_FAILED"
+              "CONDITION_STATUS_NOT_SET",
+              "CONDITION_STATUS_SUBMITTED",
+              "CONDITION_STATUS_OK",
+              "CONDITION_STATUS_FAILED"
             ],
-            "default": "CONDITION_STATUS_STATUS_NOT_SET"
+            "default": "CONDITION_STATUS_NOT_SET"
           },
           {
             "name": "status.lastUpdated",
@@ -1005,12 +1005,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "CONDITION_STATUS_STATUS_NOT_SET",
-              "CONDITION_STATUS_STATUS_SUBMITTED",
-              "CONDITION_STATUS_STATUS_OK",
-              "CONDITION_STATUS_STATUS_FAILED"
+              "CONDITION_STATUS_NOT_SET",
+              "CONDITION_STATUS_SUBMITTED",
+              "CONDITION_STATUS_OK",
+              "CONDITION_STATUS_FAILED"
             ],
-            "default": "CONDITION_STATUS_STATUS_NOT_SET"
+            "default": "CONDITION_STATUS_NOT_SET"
           },
           {
             "name": "status.lastUpdated",
@@ -1390,12 +1390,12 @@
     "v3ConditionStatus": {
       "type": "string",
       "enum": [
-        "CONDITION_STATUS_STATUS_NOT_SET",
-        "CONDITION_STATUS_STATUS_SUBMITTED",
-        "CONDITION_STATUS_STATUS_OK",
-        "CONDITION_STATUS_STATUS_FAILED"
+        "CONDITION_STATUS_NOT_SET",
+        "CONDITION_STATUS_SUBMITTED",
+        "CONDITION_STATUS_OK",
+        "CONDITION_STATUS_FAILED"
       ],
-      "default": "CONDITION_STATUS_STATUS_NOT_SET",
+      "default": "CONDITION_STATUS_NOT_SET",
       "title": "$title: ConditionStatus\n$description: status of a condition for a resource"
     },
     "v3HttpBody": {

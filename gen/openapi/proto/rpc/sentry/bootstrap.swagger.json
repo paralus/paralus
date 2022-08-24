@@ -1069,10 +1069,10 @@
             "required": false,
             "type": "string",
             "enum": [
-              "BOOTSTRAP_AGENT_MODE_NOT_SET",
+              "BOOTSTRAP_AGENT_MODE_IN_CLUSTER",
               "BOOTSTRAP_AGENT_MODE_OUT_OF_CLUSTER"
             ],
-            "default": "BOOTSTRAP_AGENT_MODE_NOT_SET"
+            "default": "BOOTSTRAP_AGENT_MODE_IN_CLUSTER"
           },
           {
             "name": "status.tokenState",
@@ -1243,10 +1243,10 @@
             "required": false,
             "type": "string",
             "enum": [
-              "BOOTSTRAP_AGENT_MODE_NOT_SET",
+              "BOOTSTRAP_AGENT_MODE_IN_CLUSTER",
               "BOOTSTRAP_AGENT_MODE_OUT_OF_CLUSTER"
             ],
-            "default": "BOOTSTRAP_AGENT_MODE_NOT_SET"
+            "default": "BOOTSTRAP_AGENT_MODE_IN_CLUSTER"
           },
           {
             "name": "status.tokenState",
@@ -1581,10 +1581,10 @@
             "required": false,
             "type": "string",
             "enum": [
-              "BOOTSTRAP_AGENT_MODE_NOT_SET",
+              "BOOTSTRAP_AGENT_MODE_IN_CLUSTER",
               "BOOTSTRAP_AGENT_MODE_OUT_OF_CLUSTER"
             ],
-            "default": "BOOTSTRAP_AGENT_MODE_NOT_SET"
+            "default": "BOOTSTRAP_AGENT_MODE_IN_CLUSTER"
           },
           {
             "name": "status.tokenState",
@@ -2047,10 +2047,10 @@
     "sentryBootstrapAgentMode": {
       "type": "string",
       "enum": [
-        "BOOTSTRAP_AGENT_MODE_NOT_SET",
+        "BOOTSTRAP_AGENT_MODE_IN_CLUSTER",
         "BOOTSTRAP_AGENT_MODE_OUT_OF_CLUSTER"
       ],
-      "default": "BOOTSTRAP_AGENT_MODE_NOT_SET"
+      "default": "BOOTSTRAP_AGENT_MODE_IN_CLUSTER"
     },
     "sentryBootstrapAgentSpec": {
       "type": "object",

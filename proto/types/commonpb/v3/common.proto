@@ -198,10 +198,10 @@ message PlacementSpec {
 // $title: ConditionStatus
 // $description: status of a condition for a resource
 enum ConditionStatus {
-  CONDITION_STATUS_STATUS_NOT_SET = 0;
-  CONDITION_STATUS_STATUS_SUBMITTED = 1;
-  CONDITION_STATUS_STATUS_OK = 2;
-  CONDITION_STATUS_STATUS_FAILED = 3;
+  CONDITION_STATUS_NOT_SET = 0;
+  CONDITION_STATUS_SUBMITTED = 1;
+  CONDITION_STATUS_OK = 2;
+  CONDITION_STATUS_FAILED = 3;
 }
 
 message Status {

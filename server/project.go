@@ -22,13 +22,13 @@ func NewProjectServer(ps service.ProjectService) systemrpc.ProjectServiceServer 
 func updateProjectStatus(req *systempbv3.Project, resp *systempbv3.Project, err error) *systempbv3.Project {
 	if err != nil {
 		req.Status = &v3.Status{
-			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
+			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_FAILED,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
 		return req
 	}
-	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_OK}
+	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_OK}
 	return resp
 }
 

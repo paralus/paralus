@@ -9,12 +9,12 @@ import (
 func getStatus(err error) *v3.Status {
 	if err != nil {
 		return &v3.Status{
-			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
+			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_FAILED,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
 	}
 	return &v3.Status{
-		ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_OK,
+		ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_OK,
 	}
 }

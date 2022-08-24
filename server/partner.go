@@ -22,13 +22,13 @@ func NewPartnerServer(ps service.PartnerService) systemrpc.PartnerServiceServer 
 func updatePartnerStatus(req *systempbv3.Partner, resp *systempbv3.Partner, err error) *systempbv3.Partner {
 	if err != nil {
 		req.Status = &v3.Status{
-			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_FAILED,
+			ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_FAILED,
 			LastUpdated:     timestamppb.Now(),
 			Reason:          err.Error(),
 		}
 		return req
 	}
-	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_OK}
+	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_OK}
 	return resp
 }
 

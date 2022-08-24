@@ -23,7 +23,7 @@ var (
 
 func (ac *authContext) IsRequestAllowed(ctx context.Context, req *commonv3.IsRequestAllowedRequest) (*commonv3.IsRequestAllowedResponse, error) {
 	res := &commonv3.IsRequestAllowedResponse{
-		Status:      commonv3.RequestStatus_REQUEST_STATUS_NOT_SET,
+		Status:      commonv3.RequestStatus_REQUEST_STATUS_UNKNOWN,
 		SessionData: &commonv3.SessionData{},
 	}
 
