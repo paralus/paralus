@@ -218,7 +218,7 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 	cnds, _ := json.Marshal(clstrutil.DefaultClusterConditions)
 	edb.Conditions = json.RawMessage(cnds)
 
-	cluster.Spec.ClusterData.Health = infrav3.Health_HEALTH_EDGE_IGNORE_UNSPECIFIED
+	cluster.Spec.ClusterData.Health = infrav3.Health_HEALTH_EDGE_NOT_SET
 
 	if cluster.Spec.Params != nil {
 		prmssByts, _ := json.Marshal(cluster.Spec.Params)
@@ -418,7 +418,7 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 		ModifiedAt:   timestamppb.New(c.ModifiedAt),
 	}
 
-	sm := int32(infrav3.ClusterShareMode_CLUSTER_SHARE_MODE_CLUSTER_SHARE_MODE_NOT_SET_UNSPECIFIED)
+	sm := int32(infrav3.ClusterShareMode_CLUSTER_SHARE_MODE_NOT_SET)
 	smv, err := strconv.ParseInt(c.ShareMode, 10, 32)
 	if err != nil {
 		_log.Infow("unable to convert value, ", err.Error())

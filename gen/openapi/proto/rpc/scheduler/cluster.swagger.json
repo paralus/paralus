@@ -434,11 +434,11 @@
             "required": false,
             "type": "string",
             "enum": [
-              "CLUSTER_SHARE_MODE_CLUSTER_SHARE_MODE_NOT_SET_UNSPECIFIED",
+              "CLUSTER_SHARE_MODE_NOT_SET",
               "CLUSTER_SHARE_MODE_ALL",
               "CLUSTER_SHARE_MODE_CUSTOM"
             ],
-            "default": "CLUSTER_SHARE_MODE_CLUSTER_SHARE_MODE_NOT_SET_UNSPECIFIED"
+            "default": "CLUSTER_SHARE_MODE_NOT_SET"
           },
           {
             "name": "spec.proxyConfig.httpProxy",
@@ -531,12 +531,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "HEALTH_EDGE_IGNORE_UNSPECIFIED",
+              "HEALTH_EDGE_NOT_SET",
               "HEALTH_EDGE_HEALTHY",
               "HEALTH_EDGE_UNHEALTHY",
               "HEALTH_EDGE_DISCONNECTED"
             ],
-            "default": "HEALTH_EDGE_IGNORE_UNSPECIFIED"
+            "default": "HEALTH_EDGE_NOT_SET"
           },
           {
             "name": "spec.clusterData.manufacturer",
@@ -604,12 +604,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED",
+              "CONDITION_STATUS_STATUS_NOT_SET",
               "CONDITION_STATUS_STATUS_SUBMITTED",
               "CONDITION_STATUS_STATUS_OK",
               "CONDITION_STATUS_STATUS_FAILED"
             ],
-            "default": "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED"
+            "default": "CONDITION_STATUS_STATUS_NOT_SET"
           },
           {
             "name": "status.lastUpdated",
@@ -881,11 +881,11 @@
             "required": false,
             "type": "string",
             "enum": [
-              "CLUSTER_SHARE_MODE_CLUSTER_SHARE_MODE_NOT_SET_UNSPECIFIED",
+              "CLUSTER_SHARE_MODE_NOT_SET",
               "CLUSTER_SHARE_MODE_ALL",
               "CLUSTER_SHARE_MODE_CUSTOM"
             ],
-            "default": "CLUSTER_SHARE_MODE_CLUSTER_SHARE_MODE_NOT_SET_UNSPECIFIED"
+            "default": "CLUSTER_SHARE_MODE_NOT_SET"
           },
           {
             "name": "spec.proxyConfig.httpProxy",
@@ -978,12 +978,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "HEALTH_EDGE_IGNORE_UNSPECIFIED",
+              "HEALTH_EDGE_NOT_SET",
               "HEALTH_EDGE_HEALTHY",
               "HEALTH_EDGE_UNHEALTHY",
               "HEALTH_EDGE_DISCONNECTED"
             ],
-            "default": "HEALTH_EDGE_IGNORE_UNSPECIFIED"
+            "default": "HEALTH_EDGE_NOT_SET"
           },
           {
             "name": "spec.clusterData.manufacturer",
@@ -1051,12 +1051,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED",
+              "CONDITION_STATUS_STATUS_NOT_SET",
               "CONDITION_STATUS_STATUS_SUBMITTED",
               "CONDITION_STATUS_STATUS_OK",
               "CONDITION_STATUS_STATUS_FAILED"
             ],
-            "default": "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED"
+            "default": "CONDITION_STATUS_STATUS_NOT_SET"
           },
           {
             "name": "status.lastUpdated",
@@ -1481,11 +1481,11 @@
             "required": false,
             "type": "string",
             "enum": [
-              "CLUSTER_SHARE_MODE_CLUSTER_SHARE_MODE_NOT_SET_UNSPECIFIED",
+              "CLUSTER_SHARE_MODE_NOT_SET",
               "CLUSTER_SHARE_MODE_ALL",
               "CLUSTER_SHARE_MODE_CUSTOM"
             ],
-            "default": "CLUSTER_SHARE_MODE_CLUSTER_SHARE_MODE_NOT_SET_UNSPECIFIED"
+            "default": "CLUSTER_SHARE_MODE_NOT_SET"
           },
           {
             "name": "spec.proxyConfig.httpProxy",
@@ -1578,12 +1578,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "HEALTH_EDGE_IGNORE_UNSPECIFIED",
+              "HEALTH_EDGE_NOT_SET",
               "HEALTH_EDGE_HEALTHY",
               "HEALTH_EDGE_UNHEALTHY",
               "HEALTH_EDGE_DISCONNECTED"
             ],
-            "default": "HEALTH_EDGE_IGNORE_UNSPECIFIED"
+            "default": "HEALTH_EDGE_NOT_SET"
           },
           {
             "name": "spec.clusterData.manufacturer",
@@ -1651,12 +1651,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED",
+              "CONDITION_STATUS_STATUS_NOT_SET",
               "CONDITION_STATUS_STATUS_SUBMITTED",
               "CONDITION_STATUS_STATUS_OK",
               "CONDITION_STATUS_STATUS_FAILED"
             ],
-            "default": "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED"
+            "default": "CONDITION_STATUS_STATUS_NOT_SET"
           },
           {
             "name": "status.lastUpdated",
@@ -2151,7 +2151,7 @@
     "v3ClusterConditionType": {
       "type": "string",
       "enum": [
-        "CLUSTER_CONDITION_TYPE_CLUSTER_BLUE_PRINT_SYNC_UNSPECIFIED",
+        "CLUSTER_CONDITION_TYPE_CLUSTER_NOT_SET",
         "CLUSTER_CONDITION_TYPE_CLUSTER_APPROVE",
         "CLUSTER_CONDITION_TYPE_CLUSTER_CHECK_IN",
         "CLUSTER_CONDITION_TYPE_CLUSTER_NODE_SYNC",
@@ -2162,7 +2162,7 @@
         "CLUSTER_CONDITION_TYPE_CLUSTER_BOOTSTRAP_AGENT",
         "CLUSTER_CONDITION_TYPE_CLUSTER_DELETE"
       ],
-      "default": "CLUSTER_CONDITION_TYPE_CLUSTER_BLUE_PRINT_SYNC_UNSPECIFIED"
+      "default": "CLUSTER_CONDITION_TYPE_CLUSTER_NOT_SET"
     },
     "v3ClusterData": {
       "type": "object",
@@ -2315,11 +2315,11 @@
     "v3ClusterNodeState": {
       "type": "string",
       "enum": [
-        "CLUSTER_NODE_STATE_CLUSTER_NODE_CREATED_UNSPECIFIED",
+        "CLUSTER_NODE_STATE_CLUSTER_NODE_NOT_SET",
         "CLUSTER_NODE_STATE_CLUSTER_NODE_NOT_READY",
         "CLUSTER_NODE_STATE_CLUSTER_NODE_READY"
       ],
-      "default": "CLUSTER_NODE_STATE_CLUSTER_NODE_CREATED_UNSPECIFIED"
+      "default": "CLUSTER_NODE_STATE_CLUSTER_NODE_NOT_SET"
     },
     "v3ClusterNodeStatus": {
       "type": "object",
@@ -2356,11 +2356,11 @@
     "v3ClusterShareMode": {
       "type": "string",
       "enum": [
-        "CLUSTER_SHARE_MODE_CLUSTER_SHARE_MODE_NOT_SET_UNSPECIFIED",
+        "CLUSTER_SHARE_MODE_NOT_SET",
         "CLUSTER_SHARE_MODE_ALL",
         "CLUSTER_SHARE_MODE_CUSTOM"
       ],
-      "default": "CLUSTER_SHARE_MODE_CLUSTER_SHARE_MODE_NOT_SET_UNSPECIFIED"
+      "default": "CLUSTER_SHARE_MODE_NOT_SET"
     },
     "v3ClusterSpec": {
       "type": "object",
@@ -2448,12 +2448,12 @@
     "v3ConditionStatus": {
       "type": "string",
       "enum": [
-        "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED",
+        "CONDITION_STATUS_STATUS_NOT_SET",
         "CONDITION_STATUS_STATUS_SUBMITTED",
         "CONDITION_STATUS_STATUS_OK",
         "CONDITION_STATUS_STATUS_FAILED"
       ],
-      "default": "CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED",
+      "default": "CONDITION_STATUS_STATUS_NOT_SET",
       "title": "$title: ConditionStatus\n$description: status of a condition for a resource"
     },
     "v3DeleteClusterResponse": {
@@ -2462,12 +2462,12 @@
     "v3Health": {
       "type": "string",
       "enum": [
-        "HEALTH_EDGE_IGNORE_UNSPECIFIED",
+        "HEALTH_EDGE_NOT_SET",
         "HEALTH_EDGE_HEALTHY",
         "HEALTH_EDGE_UNHEALTHY",
         "HEALTH_EDGE_DISCONNECTED"
       ],
-      "default": "HEALTH_EDGE_IGNORE_UNSPECIFIED"
+      "default": "HEALTH_EDGE_NOT_SET"
     },
     "v3HttpBody": {
       "type": "object",
@@ -2647,7 +2647,7 @@
     "v3ParalusConditionStatus": {
       "type": "string",
       "enum": [
-        "PARALUS_CONDITION_STATUS_NOT_SET_UNSPECIFIED",
+        "PARALUS_CONDITION_STATUS_NOT_SET",
         "PARALUS_CONDITION_STATUS_PENDING",
         "PARALUS_CONDITION_STATUS_IN_PROGRESS",
         "PARALUS_CONDITION_STATUS_SUCCESS",
@@ -2659,7 +2659,7 @@
         "PARALUS_CONDITION_STATUS_STOPPING",
         "PARALUS_CONDITION_STATUS_SUBMITTED"
       ],
-      "default": "PARALUS_CONDITION_STATUS_NOT_SET_UNSPECIFIED",
+      "default": "PARALUS_CONDITION_STATUS_NOT_SET",
       "title": "ParalusConditionStatus is the status of the status condition"
     },
     "v3ProjectCluster": {

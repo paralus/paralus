@@ -15,7 +15,7 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
-	systemv3_0 "github.com/paralus/paralus/proto/types/systempb/v3"
+	"github.com/paralus/paralus/proto/types/systempb/v3"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
@@ -33,7 +33,7 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 func request_OrganizationService_CreateOrganization_0(ctx context.Context, marshaler runtime.Marshaler, client OrganizationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Organization
+	var protoReq systemv3.Organization
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -67,7 +67,7 @@ func request_OrganizationService_CreateOrganization_0(ctx context.Context, marsh
 }
 
 func local_request_OrganizationService_CreateOrganization_0(ctx context.Context, marshaler runtime.Marshaler, server OrganizationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Organization
+	var protoReq systemv3.Organization
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -105,7 +105,7 @@ var (
 )
 
 func request_OrganizationService_GetOrganizations_0(ctx context.Context, marshaler runtime.Marshaler, client OrganizationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Organization
+	var protoReq systemv3.Organization
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -138,7 +138,7 @@ func request_OrganizationService_GetOrganizations_0(ctx context.Context, marshal
 }
 
 func local_request_OrganizationService_GetOrganizations_0(ctx context.Context, marshaler runtime.Marshaler, server OrganizationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Organization
+	var protoReq systemv3.Organization
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -175,7 +175,7 @@ var (
 )
 
 func request_OrganizationService_GetOrganization_0(ctx context.Context, marshaler runtime.Marshaler, client OrganizationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Organization
+	var protoReq systemv3.Organization
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -218,7 +218,7 @@ func request_OrganizationService_GetOrganization_0(ctx context.Context, marshale
 }
 
 func local_request_OrganizationService_GetOrganization_0(ctx context.Context, marshaler runtime.Marshaler, server OrganizationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Organization
+	var protoReq systemv3.Organization
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -261,7 +261,7 @@ func local_request_OrganizationService_GetOrganization_0(ctx context.Context, ma
 }
 
 func request_OrganizationService_UpdateOrganization_0(ctx context.Context, marshaler runtime.Marshaler, client OrganizationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Organization
+	var protoReq systemv3.Organization
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -305,7 +305,7 @@ func request_OrganizationService_UpdateOrganization_0(ctx context.Context, marsh
 }
 
 func local_request_OrganizationService_UpdateOrganization_0(ctx context.Context, marshaler runtime.Marshaler, server OrganizationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Organization
+	var protoReq systemv3.Organization
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -353,7 +353,7 @@ var (
 )
 
 func request_OrganizationService_DeleteOrganization_0(ctx context.Context, marshaler runtime.Marshaler, client OrganizationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Organization
+	var protoReq systemv3.Organization
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -396,7 +396,7 @@ func request_OrganizationService_DeleteOrganization_0(ctx context.Context, marsh
 }
 
 func local_request_OrganizationService_DeleteOrganization_0(ctx context.Context, marshaler runtime.Marshaler, server OrganizationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Organization
+	var protoReq systemv3.Organization
 	var metadata runtime.ServerMetadata
 
 	var (

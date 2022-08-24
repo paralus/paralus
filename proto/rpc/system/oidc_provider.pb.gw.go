@@ -15,7 +15,7 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
-	systemv3_0 "github.com/paralus/paralus/proto/types/systempb/v3"
+	"github.com/paralus/paralus/proto/types/systempb/v3"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
@@ -34,7 +34,7 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 func request_OIDCProviderService_CreateOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.OIDCProvider
+	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -51,7 +51,7 @@ func request_OIDCProviderService_CreateOIDCProvider_0(ctx context.Context, marsh
 }
 
 func local_request_OIDCProviderService_CreateOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, server OIDCProviderServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.OIDCProvider
+	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -72,7 +72,7 @@ var (
 )
 
 func request_OIDCProviderService_GetOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.OIDCProvider
+	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -105,7 +105,7 @@ func request_OIDCProviderService_GetOIDCProvider_0(ctx context.Context, marshale
 }
 
 func local_request_OIDCProviderService_GetOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, server OIDCProviderServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.OIDCProvider
+	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -156,7 +156,7 @@ func local_request_OIDCProviderService_ListOIDCProvider_0(ctx context.Context, m
 }
 
 func request_OIDCProviderService_UpdateOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.OIDCProvider
+	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -190,7 +190,7 @@ func request_OIDCProviderService_UpdateOIDCProvider_0(ctx context.Context, marsh
 }
 
 func local_request_OIDCProviderService_UpdateOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, server OIDCProviderServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.OIDCProvider
+	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -228,7 +228,7 @@ var (
 )
 
 func request_OIDCProviderService_DeleteOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.OIDCProvider
+	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -261,7 +261,7 @@ func request_OIDCProviderService_DeleteOIDCProvider_0(ctx context.Context, marsh
 }
 
 func local_request_OIDCProviderService_DeleteOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, server OIDCProviderServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.OIDCProvider
+	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
 	var (

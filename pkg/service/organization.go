@@ -149,7 +149,7 @@ func (s *organizationService) GetByID(ctx context.Context, id string) (*systemv3
 			Kind:       organizationKind,
 			Status: &v3.Status{
 				ConditionType:   "Describe",
-				ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED,
+				ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_NOT_SET,
 				Reason:          "Unable to fetch organization information",
 				LastUpdated:     timestamppb.Now(),
 			},

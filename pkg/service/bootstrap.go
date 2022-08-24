@@ -351,7 +351,7 @@ func (s *bootstrapService) PatchBootstrapAgent(ctx context.Context, ba *sentry.B
 		if err != nil {
 			return err
 		}
-		if bdb.TokenState > sentry.BootstrapAgentState_BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED.String() {
+		if bdb.TokenState > sentry.BootstrapAgentState_BOOTSTRAP_AGENT_STATE_NOT_SET.String() {
 			bdb.TokenState = ba.Status.TokenState.String()
 		}
 		if ba.Status != nil {

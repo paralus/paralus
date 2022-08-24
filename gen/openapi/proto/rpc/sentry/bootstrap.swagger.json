@@ -672,12 +672,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "BOOTSTRAP_AGENT_TEMPLATE_TYPE_TEMPLATE_TYPE_NOT_SET_UNSPECIFIED",
+              "BOOTSTRAP_AGENT_TEMPLATE_TYPE_NOT_SET",
               "BOOTSTRAP_AGENT_TEMPLATE_TYPE_CLIENT",
               "BOOTSTRAP_AGENT_TEMPLATE_TYPE_SERVER",
               "BOOTSTRAP_AGENT_TEMPLATE_TYPE_MIXED"
             ],
-            "default": "BOOTSTRAP_AGENT_TEMPLATE_TYPE_TEMPLATE_TYPE_NOT_SET_UNSPECIFIED"
+            "default": "BOOTSTRAP_AGENT_TEMPLATE_TYPE_NOT_SET"
           },
           {
             "name": "spec.token",
@@ -1069,10 +1069,10 @@
             "required": false,
             "type": "string",
             "enum": [
-              "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED",
+              "BOOTSTRAP_AGENT_MODE_NOT_SET",
               "BOOTSTRAP_AGENT_MODE_OUT_OF_CLUSTER"
             ],
-            "default": "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED"
+            "default": "BOOTSTRAP_AGENT_MODE_NOT_SET"
           },
           {
             "name": "status.tokenState",
@@ -1080,12 +1080,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED",
+              "BOOTSTRAP_AGENT_STATE_NOT_SET",
               "BOOTSTRAP_AGENT_STATE_NOT_REGISTERED",
               "BOOTSTRAP_AGENT_STATE_NOT_APPROVED",
               "BOOTSTRAP_AGENT_STATE_APPROVED"
             ],
-            "default": "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED"
+            "default": "BOOTSTRAP_AGENT_STATE_NOT_SET"
           },
           {
             "name": "status.ipAddress",
@@ -1243,10 +1243,10 @@
             "required": false,
             "type": "string",
             "enum": [
-              "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED",
+              "BOOTSTRAP_AGENT_MODE_NOT_SET",
               "BOOTSTRAP_AGENT_MODE_OUT_OF_CLUSTER"
             ],
-            "default": "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED"
+            "default": "BOOTSTRAP_AGENT_MODE_NOT_SET"
           },
           {
             "name": "status.tokenState",
@@ -1254,12 +1254,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED",
+              "BOOTSTRAP_AGENT_STATE_NOT_SET",
               "BOOTSTRAP_AGENT_STATE_NOT_REGISTERED",
               "BOOTSTRAP_AGENT_STATE_NOT_APPROVED",
               "BOOTSTRAP_AGENT_STATE_APPROVED"
             ],
-            "default": "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED"
+            "default": "BOOTSTRAP_AGENT_STATE_NOT_SET"
           },
           {
             "name": "status.ipAddress",
@@ -1581,10 +1581,10 @@
             "required": false,
             "type": "string",
             "enum": [
-              "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED",
+              "BOOTSTRAP_AGENT_MODE_NOT_SET",
               "BOOTSTRAP_AGENT_MODE_OUT_OF_CLUSTER"
             ],
-            "default": "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED"
+            "default": "BOOTSTRAP_AGENT_MODE_NOT_SET"
           },
           {
             "name": "status.tokenState",
@@ -1592,12 +1592,12 @@
             "required": false,
             "type": "string",
             "enum": [
-              "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED",
+              "BOOTSTRAP_AGENT_STATE_NOT_SET",
               "BOOTSTRAP_AGENT_STATE_NOT_REGISTERED",
               "BOOTSTRAP_AGENT_STATE_NOT_APPROVED",
               "BOOTSTRAP_AGENT_STATE_APPROVED"
             ],
-            "default": "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED"
+            "default": "BOOTSTRAP_AGENT_STATE_NOT_SET"
           },
           {
             "name": "status.ipAddress",
@@ -2047,10 +2047,10 @@
     "sentryBootstrapAgentMode": {
       "type": "string",
       "enum": [
-        "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED",
+        "BOOTSTRAP_AGENT_MODE_NOT_SET",
         "BOOTSTRAP_AGENT_MODE_OUT_OF_CLUSTER"
       ],
-      "default": "BOOTSTRAP_AGENT_MODE_IN_CLUSTER_UNSPECIFIED"
+      "default": "BOOTSTRAP_AGENT_MODE_NOT_SET"
     },
     "sentryBootstrapAgentSpec": {
       "type": "object",
@@ -2069,12 +2069,12 @@
     "sentryBootstrapAgentState": {
       "type": "string",
       "enum": [
-        "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED",
+        "BOOTSTRAP_AGENT_STATE_NOT_SET",
         "BOOTSTRAP_AGENT_STATE_NOT_REGISTERED",
         "BOOTSTRAP_AGENT_STATE_NOT_APPROVED",
         "BOOTSTRAP_AGENT_STATE_APPROVED"
       ],
-      "default": "BOOTSTRAP_AGENT_STATE_NOT_SET_UNSPECIFIED"
+      "default": "BOOTSTRAP_AGENT_STATE_NOT_SET"
     },
     "sentryBootstrapAgentTemplate": {
       "type": "object",
@@ -2178,12 +2178,12 @@
     "sentryBootstrapAgentTemplateType": {
       "type": "string",
       "enum": [
-        "BOOTSTRAP_AGENT_TEMPLATE_TYPE_TEMPLATE_TYPE_NOT_SET_UNSPECIFIED",
+        "BOOTSTRAP_AGENT_TEMPLATE_TYPE_NOT_SET",
         "BOOTSTRAP_AGENT_TEMPLATE_TYPE_CLIENT",
         "BOOTSTRAP_AGENT_TEMPLATE_TYPE_SERVER",
         "BOOTSTRAP_AGENT_TEMPLATE_TYPE_MIXED"
       ],
-      "default": "BOOTSTRAP_AGENT_TEMPLATE_TYPE_TEMPLATE_TYPE_NOT_SET_UNSPECIFIED"
+      "default": "BOOTSTRAP_AGENT_TEMPLATE_TYPE_NOT_SET"
     },
     "sentryBootstrapInfra": {
       "type": "object",
@@ -2246,11 +2246,11 @@
     "sentryBootstrapTemplateHostType": {
       "type": "string",
       "enum": [
-        "BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_NOT_SET_UNSPECIFIED",
+        "BOOTSTRAP_TEMPLATE_HOST_TYPE_NOT_SET",
         "BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_INTERNAL",
         "BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_EXTERNAL"
       ],
-      "default": "BOOTSTRAP_TEMPLATE_HOST_TYPE_HOST_TYPE_NOT_SET_UNSPECIFIED"
+      "default": "BOOTSTRAP_TEMPLATE_HOST_TYPE_NOT_SET"
     },
     "v3HttpBody": {
       "type": "object",

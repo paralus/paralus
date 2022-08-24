@@ -47,20 +47,20 @@
     "v3AuthType": {
       "type": "string",
       "enum": [
-        "AUTH_TYPE_AUTH_TYPE_NOT_SET_UNSPECIFIED",
+        "AUTH_TYPE_AUTH_TYPE_NOT_SET",
         "AUTH_TYPE_SESSION_LOGIN",
         "AUTH_TYPE_API_KEY"
       ],
-      "default": "AUTH_TYPE_AUTH_TYPE_NOT_SET_UNSPECIFIED"
+      "default": "AUTH_TYPE_AUTH_TYPE_NOT_SET"
     },
     "v3ClientType": {
       "type": "string",
       "enum": [
-        "CLIENT_TYPE_CLIENT_TYPE_NOT_SET_UNSPECIFIED",
+        "CLIENT_TYPE_CLIENT_TYPE_NOT_SET",
         "CLIENT_TYPE_BROWSER",
         "CLIENT_TYPE_CLI"
       ],
-      "default": "CLIENT_TYPE_CLIENT_TYPE_NOT_SET_UNSPECIFIED"
+      "default": "CLIENT_TYPE_CLIENT_TYPE_NOT_SET"
     },
     "v3IsRequestAllowedResponse": {
       "type": "object",
@@ -121,12 +121,12 @@
     "v3RequestStatus": {
       "type": "string",
       "enum": [
-        "REQUEST_STATUS_UNKNOWN_UNSPECIFIED",
+        "REQUEST_STATUS_NOT_SET",
         "REQUEST_STATUS_REQUEST_NOT_AUTHENTICATED",
         "REQUEST_STATUS_REQUEST_METHOD_OR_URL_NOT_ALLOWED",
         "REQUEST_STATUS_REQUEST_ALLOWED"
       ],
-      "default": "REQUEST_STATUS_UNKNOWN_UNSPECIFIED"
+      "default": "REQUEST_STATUS_NOT_SET"
     },
     "v3ResourceURLMethods": {
       "type": "object",

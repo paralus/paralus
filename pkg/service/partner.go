@@ -137,7 +137,7 @@ func (s *partnerService) GetByID(ctx context.Context, id string) (*systemv3.Part
 				Id: id,
 			},
 			Status: &v3.Status{
-				ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED,
+				ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_NOT_SET,
 				Reason:          "Unable to fetch partner information",
 				LastUpdated:     timestamppb.Now(),
 			},
@@ -196,7 +196,7 @@ func (s *partnerService) GetByName(ctx context.Context, name string) (*systemv3.
 			},
 			Status: &v3.Status{
 				ConditionType:   "Describe",
-				ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED,
+				ConditionStatus: v3.ConditionStatus_CONDITION_STATUS_STATUS_NOT_SET,
 				Reason:          "Unable to fetch partner information",
 				LastUpdated:     timestamppb.Now(),
 			},

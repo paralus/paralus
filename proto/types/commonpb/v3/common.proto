@@ -198,7 +198,7 @@ message PlacementSpec {
 // $title: ConditionStatus
 // $description: status of a condition for a resource
 enum ConditionStatus {
-  CONDITION_STATUS_STATUS_NOT_SET_UNSPECIFIED = 0;
+  CONDITION_STATUS_STATUS_NOT_SET = 0;
   CONDITION_STATUS_STATUS_SUBMITTED = 1;
   CONDITION_STATUS_STATUS_OK = 2;
   CONDITION_STATUS_STATUS_FAILED = 3;
@@ -289,7 +289,7 @@ message QueryOptions {
 
 // ParalusConditionStatus is the status of the status condition
 enum ParalusConditionStatus {
-  PARALUS_CONDITION_STATUS_NOT_SET_UNSPECIFIED = 0;
+  PARALUS_CONDITION_STATUS_NOT_SET = 0;
   PARALUS_CONDITION_STATUS_PENDING = 1;
   PARALUS_CONDITION_STATUS_IN_PROGRESS = 2;
   PARALUS_CONDITION_STATUS_SUCCESS = 3;

@@ -41,7 +41,7 @@ const (
 )
 
 const (
-	NotSet     = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_NOT_SET_UNSPECIFIED
+	NotSet     = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_NOT_SET
 	Pending    = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_PENDING
 	InProgress = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_IN_PROGRESS
 	Success    = commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_SUCCESS

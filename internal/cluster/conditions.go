@@ -54,12 +54,12 @@ var (
 	IsClusterDeleted               ClusterConditionReadyFunc = isClusterCondition(constants.Success, infrav3.ClusterConditionType_CLUSTER_CONDITION_TYPE_CLUSTER_DELETE)
 	IsClusterDeleteNotSet          ClusterConditionReadyFunc = isClusterCondition(constants.NotSet, infrav3.ClusterConditionType_CLUSTER_CONDITION_TYPE_CLUSTER_DELETE)
 
-	NewNamespaceAssigned  NamespaceConditionFunc = newNamespaceCondition(scheduler.ClusterNamespaceConditionType_CLUSTER_NAMESPACE_CONDITION_TYPE_CLUSTER_NAMESPACE_ASSIGNED_UNSPECIFIED)
+	NewNamespaceAssigned  NamespaceConditionFunc = newNamespaceCondition(scheduler.ClusterNamespaceConditionType_CLUSTER_NAMESPACE_CONDITION_TYPE_CLUSTER_NAMESPACE_NOT_SET)
 	NewNamespaceConverged NamespaceConditionFunc = newNamespaceCondition(scheduler.ClusterNamespaceConditionType_CLUSTER_NAMESPACE_CONDITION_TYPE_CLUSTER_NAMESPACE_CONVERGED)
 	NewNamespaceReady     NamespaceConditionFunc = newNamespaceCondition(scheduler.ClusterNamespaceConditionType_CLUSTER_NAMESPACE_CONDITION_TYPE_CLUSTER_NAMESPACE_READY)
 	NewNamespaceDeleted   NamespaceConditionFunc = newNamespaceCondition(scheduler.ClusterNamespaceConditionType_CLUSTER_NAMESPACE_CONDITION_TYPE_CLUSTER_NAMESPACE_DELETE)
 
-	IsNamespaceAssigned           NamespaceConditionReadyFunc  = isNamespaceCondition(scheduler.ClusterNamespaceConditionType_CLUSTER_NAMESPACE_CONDITION_TYPE_CLUSTER_NAMESPACE_ASSIGNED_UNSPECIFIED, constants.Success)
+	IsNamespaceAssigned           NamespaceConditionReadyFunc  = isNamespaceCondition(scheduler.ClusterNamespaceConditionType_CLUSTER_NAMESPACE_CONDITION_TYPE_CLUSTER_NAMESPACE_NOT_SET, constants.Success)
 	IsNamespaceConverged          NamespaceConditionReadyFunc  = isNamespaceCondition(scheduler.ClusterNamespaceConditionType_CLUSTER_NAMESPACE_CONDITION_TYPE_CLUSTER_NAMESPACE_CONVERGED, constants.Success)
 	IsNamespaceConvergeFailed     NamespaceConditionReadyFunc  = isNamespaceCondition(scheduler.ClusterNamespaceConditionType_CLUSTER_NAMESPACE_CONDITION_TYPE_CLUSTER_NAMESPACE_CONVERGED, constants.Failed)
 	IsNamespaceReady              NamespaceConditionReadyFunc  = isNamespaceCondition(scheduler.ClusterNamespaceConditionType_CLUSTER_NAMESPACE_CONDITION_TYPE_CLUSTER_NAMESPACE_READY, constants.Success)
@@ -81,7 +81,7 @@ var DefaultClusterConditions = func() []*infrav3.ClusterCondition {
 		if _, ok := infrav3.ClusterConditionType_name[i]; !ok {
 			break
 		}
-		clstrCnd := newClusterCondition(infrav3.ClusterConditionType(i))(commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_NOT_SET_UNSPECIFIED, "pending")
+		clstrCnd := newClusterCondition(infrav3.ClusterConditionType(i))(commonv3.ParalusConditionStatus_PARALUS_CONDITION_STATUS_NOT_SET, "pending")
 		conditions = append(conditions, clstrCnd)
 		i++
 	}

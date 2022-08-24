@@ -8,6 +8,7 @@ breaking:
   use:
     - FILE
 lint:
+  enum_zero_value_suffix: _NOT_SET
   use:
     - DEFAULT
   except:
