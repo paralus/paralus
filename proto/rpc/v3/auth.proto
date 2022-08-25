@@ -1,9 +1,9 @@
 syntax = "proto3";
-package paralus.dev.rpc.v3;
+package paralus.dev.rpc.auth.v3;
 
 import "proto/types/commonpb/v3/auth.proto";
 
-service Auth {
+service AuthService {
     rpc IsRequestAllowed(paralus.dev.types.common.v3.IsRequestAllowedRequest) returns (paralus.dev.types.common.v3.IsRequestAllowedResponse);
     // rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
     // rpc GetAPIKey(GetAPIKeyRequest) returns (GetAPIKeyResponse);

@@ -15,7 +15,7 @@ type partnerServer struct {
 }
 
 // NewPartnerServer returns new partner server implementation
-func NewPartnerServer(ps service.PartnerService) systemrpc.PartnerServer {
+func NewPartnerServer(ps service.PartnerService) systemrpc.PartnerServiceServer {
 	return &partnerServer{ps}
 }
 

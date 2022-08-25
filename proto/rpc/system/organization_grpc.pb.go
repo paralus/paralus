@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: proto/rpc/system/organization.proto
 
-package rpcv3
+package systemv3
 
 import (
 	context "context"
@@ -19,10 +19,10 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// OrganizationClient is the client API for Organization service.
+// OrganizationServiceClient is the client API for OrganizationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type OrganizationClient interface {
+type OrganizationServiceClient interface {
 	CreateOrganization(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.Organization, error)
 	GetOrganizations(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.OrganizationList, error)
 	GetOrganization(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.Organization, error)
@@ -30,63 +30,63 @@ type OrganizationClient interface {
 	DeleteOrganization(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.Organization, error)
 }
 
-type organizationClient struct {
+type organizationServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewOrganizationClient(cc grpc.ClientConnInterface) OrganizationClient {
-	return &organizationClient{cc}
+func NewOrganizationServiceClient(cc grpc.ClientConnInterface) OrganizationServiceClient {
+	return &organizationServiceClient{cc}
 }
 
-func (c *organizationClient) CreateOrganization(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.Organization, error) {
+func (c *organizationServiceClient) CreateOrganization(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.Organization, error) {
 	out := new(v3.Organization)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Organization/CreateOrganization", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.OrganizationService/CreateOrganization", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *organizationClient) GetOrganizations(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.OrganizationList, error) {
+func (c *organizationServiceClient) GetOrganizations(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.OrganizationList, error) {
 	out := new(v3.OrganizationList)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Organization/GetOrganizations", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.OrganizationService/GetOrganizations", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *organizationClient) GetOrganization(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.Organization, error) {
+func (c *organizationServiceClient) GetOrganization(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.Organization, error) {
 	out := new(v3.Organization)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Organization/GetOrganization", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.OrganizationService/GetOrganization", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *organizationClient) UpdateOrganization(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.Organization, error) {
+func (c *organizationServiceClient) UpdateOrganization(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.Organization, error) {
 	out := new(v3.Organization)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Organization/UpdateOrganization", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.OrganizationService/UpdateOrganization", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *organizationClient) DeleteOrganization(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.Organization, error) {
+func (c *organizationServiceClient) DeleteOrganization(ctx context.Context, in *v3.Organization, opts ...grpc.CallOption) (*v3.Organization, error) {
 	out := new(v3.Organization)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Organization/DeleteOrganization", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.OrganizationService/DeleteOrganization", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// OrganizationServer is the server API for Organization service.
-// All implementations should embed UnimplementedOrganizationServer
+// OrganizationServiceServer is the server API for OrganizationService service.
+// All implementations should embed UnimplementedOrganizationServiceServer
 // for forward compatibility
-type OrganizationServer interface {
+type OrganizationServiceServer interface {
 	CreateOrganization(context.Context, *v3.Organization) (*v3.Organization, error)
 	GetOrganizations(context.Context, *v3.Organization) (*v3.OrganizationList, error)
 	GetOrganization(context.Context, *v3.Organization) (*v3.Organization, error)
@@ -94,153 +94,153 @@ type OrganizationServer interface {
 	DeleteOrganization(context.Context, *v3.Organization) (*v3.Organization, error)
 }
 
-// UnimplementedOrganizationServer should be embedded to have forward compatible implementations.
-type UnimplementedOrganizationServer struct {
+// UnimplementedOrganizationServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedOrganizationServiceServer struct {
 }
 
-func (UnimplementedOrganizationServer) CreateOrganization(context.Context, *v3.Organization) (*v3.Organization, error) {
+func (UnimplementedOrganizationServiceServer) CreateOrganization(context.Context, *v3.Organization) (*v3.Organization, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOrganization not implemented")
 }
-func (UnimplementedOrganizationServer) GetOrganizations(context.Context, *v3.Organization) (*v3.OrganizationList, error) {
+func (UnimplementedOrganizationServiceServer) GetOrganizations(context.Context, *v3.Organization) (*v3.OrganizationList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizations not implemented")
 }
-func (UnimplementedOrganizationServer) GetOrganization(context.Context, *v3.Organization) (*v3.Organization, error) {
+func (UnimplementedOrganizationServiceServer) GetOrganization(context.Context, *v3.Organization) (*v3.Organization, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrganization not implemented")
 }
-func (UnimplementedOrganizationServer) UpdateOrganization(context.Context, *v3.Organization) (*v3.Organization, error) {
+func (UnimplementedOrganizationServiceServer) UpdateOrganization(context.Context, *v3.Organization) (*v3.Organization, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrganization not implemented")
 }
-func (UnimplementedOrganizationServer) DeleteOrganization(context.Context, *v3.Organization) (*v3.Organization, error) {
+func (UnimplementedOrganizationServiceServer) DeleteOrganization(context.Context, *v3.Organization) (*v3.Organization, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteOrganization not implemented")
 }
 
-// UnsafeOrganizationServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to OrganizationServer will
+// UnsafeOrganizationServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to OrganizationServiceServer will
 // result in compilation errors.
-type UnsafeOrganizationServer interface {
-	mustEmbedUnimplementedOrganizationServer()
+type UnsafeOrganizationServiceServer interface {
+	mustEmbedUnimplementedOrganizationServiceServer()
 }
 
-func RegisterOrganizationServer(s grpc.ServiceRegistrar, srv OrganizationServer) {
-	s.RegisterService(&Organization_ServiceDesc, srv)
+func RegisterOrganizationServiceServer(s grpc.ServiceRegistrar, srv OrganizationServiceServer) {
+	s.RegisterService(&OrganizationService_ServiceDesc, srv)
 }
 
-func _Organization_CreateOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OrganizationService_CreateOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Organization)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrganizationServer).CreateOrganization(ctx, in)
+		return srv.(OrganizationServiceServer).CreateOrganization(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Organization/CreateOrganization",
+		FullMethod: "/paralus.dev.rpc.system.v3.OrganizationService/CreateOrganization",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServer).CreateOrganization(ctx, req.(*v3.Organization))
+		return srv.(OrganizationServiceServer).CreateOrganization(ctx, req.(*v3.Organization))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Organization_GetOrganizations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OrganizationService_GetOrganizations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Organization)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrganizationServer).GetOrganizations(ctx, in)
+		return srv.(OrganizationServiceServer).GetOrganizations(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Organization/GetOrganizations",
+		FullMethod: "/paralus.dev.rpc.system.v3.OrganizationService/GetOrganizations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServer).GetOrganizations(ctx, req.(*v3.Organization))
+		return srv.(OrganizationServiceServer).GetOrganizations(ctx, req.(*v3.Organization))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Organization_GetOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OrganizationService_GetOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Organization)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrganizationServer).GetOrganization(ctx, in)
+		return srv.(OrganizationServiceServer).GetOrganization(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Organization/GetOrganization",
+		FullMethod: "/paralus.dev.rpc.system.v3.OrganizationService/GetOrganization",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServer).GetOrganization(ctx, req.(*v3.Organization))
+		return srv.(OrganizationServiceServer).GetOrganization(ctx, req.(*v3.Organization))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Organization_UpdateOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OrganizationService_UpdateOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Organization)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrganizationServer).UpdateOrganization(ctx, in)
+		return srv.(OrganizationServiceServer).UpdateOrganization(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Organization/UpdateOrganization",
+		FullMethod: "/paralus.dev.rpc.system.v3.OrganizationService/UpdateOrganization",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServer).UpdateOrganization(ctx, req.(*v3.Organization))
+		return srv.(OrganizationServiceServer).UpdateOrganization(ctx, req.(*v3.Organization))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Organization_DeleteOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OrganizationService_DeleteOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Organization)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrganizationServer).DeleteOrganization(ctx, in)
+		return srv.(OrganizationServiceServer).DeleteOrganization(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Organization/DeleteOrganization",
+		FullMethod: "/paralus.dev.rpc.system.v3.OrganizationService/DeleteOrganization",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServer).DeleteOrganization(ctx, req.(*v3.Organization))
+		return srv.(OrganizationServiceServer).DeleteOrganization(ctx, req.(*v3.Organization))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Organization_ServiceDesc is the grpc.ServiceDesc for Organization service.
+// OrganizationService_ServiceDesc is the grpc.ServiceDesc for OrganizationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Organization_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "paralus.dev.rpc.v3.Organization",
-	HandlerType: (*OrganizationServer)(nil),
+var OrganizationService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "paralus.dev.rpc.system.v3.OrganizationService",
+	HandlerType: (*OrganizationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreateOrganization",
-			Handler:    _Organization_CreateOrganization_Handler,
+			Handler:    _OrganizationService_CreateOrganization_Handler,
 		},
 		{
 			MethodName: "GetOrganizations",
-			Handler:    _Organization_GetOrganizations_Handler,
+			Handler:    _OrganizationService_GetOrganizations_Handler,
 		},
 		{
 			MethodName: "GetOrganization",
-			Handler:    _Organization_GetOrganization_Handler,
+			Handler:    _OrganizationService_GetOrganization_Handler,
 		},
 		{
 			MethodName: "UpdateOrganization",
-			Handler:    _Organization_UpdateOrganization_Handler,
+			Handler:    _OrganizationService_UpdateOrganization_Handler,
 		},
 		{
 			MethodName: "DeleteOrganization",
-			Handler:    _Organization_DeleteOrganization_Handler,
+			Handler:    _OrganizationService_DeleteOrganization_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -20,10 +20,10 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// ClusterClient is the client API for Cluster service.
+// ClusterServiceClient is the client API for ClusterService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ClusterClient interface {
+type ClusterServiceClient interface {
 	CreateCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error)
 	GetClusters(ctx context.Context, in *v31.QueryOptions, opts ...grpc.CallOption) (*v3.ClusterList, error)
 	GetCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error)
@@ -32,72 +32,72 @@ type ClusterClient interface {
 	DownloadCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v31.HttpBody, error)
 }
 
-type clusterClient struct {
+type clusterServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewClusterClient(cc grpc.ClientConnInterface) ClusterClient {
-	return &clusterClient{cc}
+func NewClusterServiceClient(cc grpc.ClientConnInterface) ClusterServiceClient {
+	return &clusterServiceClient{cc}
 }
 
-func (c *clusterClient) CreateCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error) {
+func (c *clusterServiceClient) CreateCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error) {
 	out := new(v3.Cluster)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Cluster/CreateCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.ClusterService/CreateCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *clusterClient) GetClusters(ctx context.Context, in *v31.QueryOptions, opts ...grpc.CallOption) (*v3.ClusterList, error) {
+func (c *clusterServiceClient) GetClusters(ctx context.Context, in *v31.QueryOptions, opts ...grpc.CallOption) (*v3.ClusterList, error) {
 	out := new(v3.ClusterList)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Cluster/GetClusters", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.ClusterService/GetClusters", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *clusterClient) GetCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error) {
+func (c *clusterServiceClient) GetCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error) {
 	out := new(v3.Cluster)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Cluster/GetCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.ClusterService/GetCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *clusterClient) UpdateCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error) {
+func (c *clusterServiceClient) UpdateCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error) {
 	out := new(v3.Cluster)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Cluster/UpdateCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.ClusterService/UpdateCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *clusterClient) DeleteCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*DeleteClusterResponse, error) {
+func (c *clusterServiceClient) DeleteCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*DeleteClusterResponse, error) {
 	out := new(DeleteClusterResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Cluster/DeleteCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.ClusterService/DeleteCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *clusterClient) DownloadCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v31.HttpBody, error) {
+func (c *clusterServiceClient) DownloadCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v31.HttpBody, error) {
 	out := new(v31.HttpBody)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Cluster/DownloadCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.ClusterService/DownloadCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ClusterServer is the server API for Cluster service.
-// All implementations should embed UnimplementedClusterServer
+// ClusterServiceServer is the server API for ClusterService service.
+// All implementations should embed UnimplementedClusterServiceServer
 // for forward compatibility
-type ClusterServer interface {
+type ClusterServiceServer interface {
 	CreateCluster(context.Context, *v3.Cluster) (*v3.Cluster, error)
 	GetClusters(context.Context, *v31.QueryOptions) (*v3.ClusterList, error)
 	GetCluster(context.Context, *v3.Cluster) (*v3.Cluster, error)
@@ -106,178 +106,178 @@ type ClusterServer interface {
 	DownloadCluster(context.Context, *v3.Cluster) (*v31.HttpBody, error)
 }
 
-// UnimplementedClusterServer should be embedded to have forward compatible implementations.
-type UnimplementedClusterServer struct {
+// UnimplementedClusterServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedClusterServiceServer struct {
 }
 
-func (UnimplementedClusterServer) CreateCluster(context.Context, *v3.Cluster) (*v3.Cluster, error) {
+func (UnimplementedClusterServiceServer) CreateCluster(context.Context, *v3.Cluster) (*v3.Cluster, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCluster not implemented")
 }
-func (UnimplementedClusterServer) GetClusters(context.Context, *v31.QueryOptions) (*v3.ClusterList, error) {
+func (UnimplementedClusterServiceServer) GetClusters(context.Context, *v31.QueryOptions) (*v3.ClusterList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetClusters not implemented")
 }
-func (UnimplementedClusterServer) GetCluster(context.Context, *v3.Cluster) (*v3.Cluster, error) {
+func (UnimplementedClusterServiceServer) GetCluster(context.Context, *v3.Cluster) (*v3.Cluster, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCluster not implemented")
 }
-func (UnimplementedClusterServer) UpdateCluster(context.Context, *v3.Cluster) (*v3.Cluster, error) {
+func (UnimplementedClusterServiceServer) UpdateCluster(context.Context, *v3.Cluster) (*v3.Cluster, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCluster not implemented")
 }
-func (UnimplementedClusterServer) DeleteCluster(context.Context, *v3.Cluster) (*DeleteClusterResponse, error) {
+func (UnimplementedClusterServiceServer) DeleteCluster(context.Context, *v3.Cluster) (*DeleteClusterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCluster not implemented")
 }
-func (UnimplementedClusterServer) DownloadCluster(context.Context, *v3.Cluster) (*v31.HttpBody, error) {
+func (UnimplementedClusterServiceServer) DownloadCluster(context.Context, *v3.Cluster) (*v31.HttpBody, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DownloadCluster not implemented")
 }
 
-// UnsafeClusterServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ClusterServer will
+// UnsafeClusterServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ClusterServiceServer will
 // result in compilation errors.
-type UnsafeClusterServer interface {
-	mustEmbedUnimplementedClusterServer()
+type UnsafeClusterServiceServer interface {
+	mustEmbedUnimplementedClusterServiceServer()
 }
 
-func RegisterClusterServer(s grpc.ServiceRegistrar, srv ClusterServer) {
-	s.RegisterService(&Cluster_ServiceDesc, srv)
+func RegisterClusterServiceServer(s grpc.ServiceRegistrar, srv ClusterServiceServer) {
+	s.RegisterService(&ClusterService_ServiceDesc, srv)
 }
 
-func _Cluster_CreateCluster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ClusterService_CreateCluster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Cluster)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ClusterServer).CreateCluster(ctx, in)
+		return srv.(ClusterServiceServer).CreateCluster(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Cluster/CreateCluster",
+		FullMethod: "/paralus.dev.rpc.v3.ClusterService/CreateCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ClusterServer).CreateCluster(ctx, req.(*v3.Cluster))
+		return srv.(ClusterServiceServer).CreateCluster(ctx, req.(*v3.Cluster))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Cluster_GetClusters_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ClusterService_GetClusters_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v31.QueryOptions)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ClusterServer).GetClusters(ctx, in)
+		return srv.(ClusterServiceServer).GetClusters(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Cluster/GetClusters",
+		FullMethod: "/paralus.dev.rpc.v3.ClusterService/GetClusters",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ClusterServer).GetClusters(ctx, req.(*v31.QueryOptions))
+		return srv.(ClusterServiceServer).GetClusters(ctx, req.(*v31.QueryOptions))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Cluster_GetCluster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ClusterService_GetCluster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Cluster)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ClusterServer).GetCluster(ctx, in)
+		return srv.(ClusterServiceServer).GetCluster(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Cluster/GetCluster",
+		FullMethod: "/paralus.dev.rpc.v3.ClusterService/GetCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ClusterServer).GetCluster(ctx, req.(*v3.Cluster))
+		return srv.(ClusterServiceServer).GetCluster(ctx, req.(*v3.Cluster))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Cluster_UpdateCluster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ClusterService_UpdateCluster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Cluster)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ClusterServer).UpdateCluster(ctx, in)
+		return srv.(ClusterServiceServer).UpdateCluster(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Cluster/UpdateCluster",
+		FullMethod: "/paralus.dev.rpc.v3.ClusterService/UpdateCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ClusterServer).UpdateCluster(ctx, req.(*v3.Cluster))
+		return srv.(ClusterServiceServer).UpdateCluster(ctx, req.(*v3.Cluster))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Cluster_DeleteCluster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ClusterService_DeleteCluster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Cluster)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ClusterServer).DeleteCluster(ctx, in)
+		return srv.(ClusterServiceServer).DeleteCluster(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Cluster/DeleteCluster",
+		FullMethod: "/paralus.dev.rpc.v3.ClusterService/DeleteCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ClusterServer).DeleteCluster(ctx, req.(*v3.Cluster))
+		return srv.(ClusterServiceServer).DeleteCluster(ctx, req.(*v3.Cluster))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Cluster_DownloadCluster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ClusterService_DownloadCluster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Cluster)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ClusterServer).DownloadCluster(ctx, in)
+		return srv.(ClusterServiceServer).DownloadCluster(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Cluster/DownloadCluster",
+		FullMethod: "/paralus.dev.rpc.v3.ClusterService/DownloadCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ClusterServer).DownloadCluster(ctx, req.(*v3.Cluster))
+		return srv.(ClusterServiceServer).DownloadCluster(ctx, req.(*v3.Cluster))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Cluster_ServiceDesc is the grpc.ServiceDesc for Cluster service.
+// ClusterService_ServiceDesc is the grpc.ServiceDesc for ClusterService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Cluster_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "paralus.dev.rpc.v3.Cluster",
-	HandlerType: (*ClusterServer)(nil),
+var ClusterService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "paralus.dev.rpc.v3.ClusterService",
+	HandlerType: (*ClusterServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreateCluster",
-			Handler:    _Cluster_CreateCluster_Handler,
+			Handler:    _ClusterService_CreateCluster_Handler,
 		},
 		{
 			MethodName: "GetClusters",
-			Handler:    _Cluster_GetClusters_Handler,
+			Handler:    _ClusterService_GetClusters_Handler,
 		},
 		{
 			MethodName: "GetCluster",
-			Handler:    _Cluster_GetCluster_Handler,
+			Handler:    _ClusterService_GetCluster_Handler,
 		},
 		{
 			MethodName: "UpdateCluster",
-			Handler:    _Cluster_UpdateCluster_Handler,
+			Handler:    _ClusterService_UpdateCluster_Handler,
 		},
 		{
 			MethodName: "DeleteCluster",
-			Handler:    _Cluster_DeleteCluster_Handler,
+			Handler:    _ClusterService_DeleteCluster_Handler,
 		},
 		{
 			MethodName: "DownloadCluster",
-			Handler:    _Cluster_DownloadCluster_Handler,
+			Handler:    _ClusterService_DownloadCluster_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

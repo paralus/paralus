@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: proto/rpc/system/idp.proto
 
-package rpcv3
+package systemv3
 
 import (
 	context "context"
@@ -20,10 +20,10 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// IdpClient is the client API for Idp service.
+// IdpServiceClient is the client API for IdpService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type IdpClient interface {
+type IdpServiceClient interface {
 	CreateIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v3.Idp, error)
 	GetIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v3.Idp, error)
 	ListIdps(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v3.IdpList, error)
@@ -31,63 +31,63 @@ type IdpClient interface {
 	DeleteIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
-type idpClient struct {
+type idpServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewIdpClient(cc grpc.ClientConnInterface) IdpClient {
-	return &idpClient{cc}
+func NewIdpServiceClient(cc grpc.ClientConnInterface) IdpServiceClient {
+	return &idpServiceClient{cc}
 }
 
-func (c *idpClient) CreateIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v3.Idp, error) {
+func (c *idpServiceClient) CreateIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v3.Idp, error) {
 	out := new(v3.Idp)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Idp/CreateIdp", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.IdpService/CreateIdp", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *idpClient) GetIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v3.Idp, error) {
+func (c *idpServiceClient) GetIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v3.Idp, error) {
 	out := new(v3.Idp)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Idp/GetIdp", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.IdpService/GetIdp", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *idpClient) ListIdps(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v3.IdpList, error) {
+func (c *idpServiceClient) ListIdps(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v3.IdpList, error) {
 	out := new(v3.IdpList)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Idp/ListIdps", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.IdpService/ListIdps", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *idpClient) UpdateIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v3.Idp, error) {
+func (c *idpServiceClient) UpdateIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v3.Idp, error) {
 	out := new(v3.Idp)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Idp/UpdateIdp", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.IdpService/UpdateIdp", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *idpClient) DeleteIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *idpServiceClient) DeleteIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Idp/DeleteIdp", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.IdpService/DeleteIdp", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// IdpServer is the server API for Idp service.
-// All implementations should embed UnimplementedIdpServer
+// IdpServiceServer is the server API for IdpService service.
+// All implementations should embed UnimplementedIdpServiceServer
 // for forward compatibility
-type IdpServer interface {
+type IdpServiceServer interface {
 	CreateIdp(context.Context, *v3.Idp) (*v3.Idp, error)
 	GetIdp(context.Context, *v3.Idp) (*v3.Idp, error)
 	ListIdps(context.Context, *emptypb.Empty) (*v3.IdpList, error)
@@ -95,153 +95,153 @@ type IdpServer interface {
 	DeleteIdp(context.Context, *v3.Idp) (*emptypb.Empty, error)
 }
 
-// UnimplementedIdpServer should be embedded to have forward compatible implementations.
-type UnimplementedIdpServer struct {
+// UnimplementedIdpServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedIdpServiceServer struct {
 }
 
-func (UnimplementedIdpServer) CreateIdp(context.Context, *v3.Idp) (*v3.Idp, error) {
+func (UnimplementedIdpServiceServer) CreateIdp(context.Context, *v3.Idp) (*v3.Idp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateIdp not implemented")
 }
-func (UnimplementedIdpServer) GetIdp(context.Context, *v3.Idp) (*v3.Idp, error) {
+func (UnimplementedIdpServiceServer) GetIdp(context.Context, *v3.Idp) (*v3.Idp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetIdp not implemented")
 }
-func (UnimplementedIdpServer) ListIdps(context.Context, *emptypb.Empty) (*v3.IdpList, error) {
+func (UnimplementedIdpServiceServer) ListIdps(context.Context, *emptypb.Empty) (*v3.IdpList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListIdps not implemented")
 }
-func (UnimplementedIdpServer) UpdateIdp(context.Context, *v3.Idp) (*v3.Idp, error) {
+func (UnimplementedIdpServiceServer) UpdateIdp(context.Context, *v3.Idp) (*v3.Idp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateIdp not implemented")
 }
-func (UnimplementedIdpServer) DeleteIdp(context.Context, *v3.Idp) (*emptypb.Empty, error) {
+func (UnimplementedIdpServiceServer) DeleteIdp(context.Context, *v3.Idp) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteIdp not implemented")
 }
 
-// UnsafeIdpServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to IdpServer will
+// UnsafeIdpServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to IdpServiceServer will
 // result in compilation errors.
-type UnsafeIdpServer interface {
-	mustEmbedUnimplementedIdpServer()
+type UnsafeIdpServiceServer interface {
+	mustEmbedUnimplementedIdpServiceServer()
 }
 
-func RegisterIdpServer(s grpc.ServiceRegistrar, srv IdpServer) {
-	s.RegisterService(&Idp_ServiceDesc, srv)
+func RegisterIdpServiceServer(s grpc.ServiceRegistrar, srv IdpServiceServer) {
+	s.RegisterService(&IdpService_ServiceDesc, srv)
 }
 
-func _Idp_CreateIdp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _IdpService_CreateIdp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Idp)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(IdpServer).CreateIdp(ctx, in)
+		return srv.(IdpServiceServer).CreateIdp(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Idp/CreateIdp",
+		FullMethod: "/paralus.dev.rpc.system.v3.IdpService/CreateIdp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IdpServer).CreateIdp(ctx, req.(*v3.Idp))
+		return srv.(IdpServiceServer).CreateIdp(ctx, req.(*v3.Idp))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Idp_GetIdp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _IdpService_GetIdp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Idp)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(IdpServer).GetIdp(ctx, in)
+		return srv.(IdpServiceServer).GetIdp(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Idp/GetIdp",
+		FullMethod: "/paralus.dev.rpc.system.v3.IdpService/GetIdp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IdpServer).GetIdp(ctx, req.(*v3.Idp))
+		return srv.(IdpServiceServer).GetIdp(ctx, req.(*v3.Idp))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Idp_ListIdps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _IdpService_ListIdps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(IdpServer).ListIdps(ctx, in)
+		return srv.(IdpServiceServer).ListIdps(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Idp/ListIdps",
+		FullMethod: "/paralus.dev.rpc.system.v3.IdpService/ListIdps",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IdpServer).ListIdps(ctx, req.(*emptypb.Empty))
+		return srv.(IdpServiceServer).ListIdps(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Idp_UpdateIdp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _IdpService_UpdateIdp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Idp)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(IdpServer).UpdateIdp(ctx, in)
+		return srv.(IdpServiceServer).UpdateIdp(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Idp/UpdateIdp",
+		FullMethod: "/paralus.dev.rpc.system.v3.IdpService/UpdateIdp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IdpServer).UpdateIdp(ctx, req.(*v3.Idp))
+		return srv.(IdpServiceServer).UpdateIdp(ctx, req.(*v3.Idp))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Idp_DeleteIdp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _IdpService_DeleteIdp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Idp)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(IdpServer).DeleteIdp(ctx, in)
+		return srv.(IdpServiceServer).DeleteIdp(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Idp/DeleteIdp",
+		FullMethod: "/paralus.dev.rpc.system.v3.IdpService/DeleteIdp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IdpServer).DeleteIdp(ctx, req.(*v3.Idp))
+		return srv.(IdpServiceServer).DeleteIdp(ctx, req.(*v3.Idp))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Idp_ServiceDesc is the grpc.ServiceDesc for Idp service.
+// IdpService_ServiceDesc is the grpc.ServiceDesc for IdpService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Idp_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "paralus.dev.rpc.v3.Idp",
-	HandlerType: (*IdpServer)(nil),
+var IdpService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "paralus.dev.rpc.system.v3.IdpService",
+	HandlerType: (*IdpServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreateIdp",
-			Handler:    _Idp_CreateIdp_Handler,
+			Handler:    _IdpService_CreateIdp_Handler,
 		},
 		{
 			MethodName: "GetIdp",
-			Handler:    _Idp_GetIdp_Handler,
+			Handler:    _IdpService_GetIdp_Handler,
 		},
 		{
 			MethodName: "ListIdps",
-			Handler:    _Idp_ListIdps_Handler,
+			Handler:    _IdpService_ListIdps_Handler,
 		},
 		{
 			MethodName: "UpdateIdp",
-			Handler:    _Idp_UpdateIdp_Handler,
+			Handler:    _IdpService_UpdateIdp_Handler,
 		},
 		{
 			MethodName: "DeleteIdp",
-			Handler:    _Idp_DeleteIdp_Handler,
+			Handler:    _IdpService_DeleteIdp_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

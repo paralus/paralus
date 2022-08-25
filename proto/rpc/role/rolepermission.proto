@@ -1,5 +1,5 @@
 syntax = "proto3";
-package paralus.dev.rpc.v3;
+package paralus.dev.rpc.role.v3;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -54,7 +54,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-service Rolepermission {
+service RolepermissionService {
   rpc GetRolepermissions(paralus.dev.types.common.v3.QueryOptions)
       returns (paralus.dev.types.role.v3.RolePermissionList) {
     option (google.api.http) = {

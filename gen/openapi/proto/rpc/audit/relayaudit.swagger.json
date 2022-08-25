@@ -9,7 +9,7 @@
   },
   "tags": [
     {
-      "name": "RelayAudit"
+      "name": "RelayAuditService"
     }
   ],
   "schemes": [
@@ -26,12 +26,12 @@
   "paths": {
     "/event/v1/audit/relay": {
       "get": {
-        "operationId": "RelayAudit_getRelayAuditByProjects",
+        "operationId": "RelayAuditService_GetRelayAuditByProjects",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1relayAuditSearchResponse"
+              "$ref": "#/definitions/v1RelayAuditResponse"
             }
           },
           "403": {
@@ -55,42 +55,42 @@
         "parameters": [
           {
             "name": "metadata.name",
-            "description": "Name. name of the resource",
+            "description": "Name\n\nname of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -215,18 +215,18 @@
           }
         ],
         "tags": [
-          "RelayAudit"
+          "RelayAuditService"
         ]
       }
     },
     "/event/v1/relayaudit": {
       "get": {
-        "operationId": "RelayAudit_getRelayAPIAuditByProjects",
+        "operationId": "RelayAuditService_GetRelayAPIAuditByProjects",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1relayAuditSearchResponse"
+              "$ref": "#/definitions/v1RelayAuditResponse"
             }
           },
           "403": {
@@ -250,42 +250,42 @@
         "parameters": [
           {
             "name": "metadata.name",
-            "description": "Name. name of the resource",
+            "description": "Name\n\nname of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -410,18 +410,18 @@
           }
         ],
         "tags": [
-          "RelayAudit"
+          "RelayAuditService"
         ]
       }
     },
     "/event/v1/{metadata.urlScope}/audit/relay": {
       "get": {
-        "operationId": "RelayAudit_getRelayAudit",
+        "operationId": "RelayAuditService_GetRelayAudit",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1relayAuditSearchResponse"
+              "$ref": "#/definitions/v1RelayAuditResponse"
             }
           },
           "403": {
@@ -452,42 +452,42 @@
           },
           {
             "name": "metadata.name",
-            "description": "Name. name of the resource",
+            "description": "Name\n\nname of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -606,18 +606,18 @@
           }
         ],
         "tags": [
-          "RelayAudit"
+          "RelayAuditService"
         ]
       }
     },
     "/event/v1/{metadata.urlScope}/relayaudit": {
       "get": {
-        "operationId": "RelayAudit_getRelayAPIAudit",
+        "operationId": "RelayAuditService_GetRelayAPIAudit",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1relayAuditSearchResponse"
+              "$ref": "#/definitions/v1RelayAuditResponse"
             }
           },
           "403": {
@@ -648,42 +648,42 @@
           },
           {
             "name": "metadata.name",
-            "description": "Name. name of the resource",
+            "description": "Name\n\nname of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -802,7 +802,7 @@
           }
         ],
         "tags": [
-          "RelayAudit"
+          "RelayAuditService"
         ]
       }
     }
@@ -843,7 +843,7 @@
       "default": "NULL_VALUE",
       "description": "`NullValue` is a singleton enumeration to represent the null value for the\n`Value` type union.\n\n The JSON representation for `NullValue` is JSON `null`.\n\n - NULL_VALUE: Null value."
     },
-    "v1relayAuditQueryFilter": {
+    "v1RelayAuditQueryFilter": {
       "type": "object",
       "properties": {
         "type": {
@@ -893,7 +893,7 @@
         }
       }
     },
-    "v1relayAuditSearchResponse": {
+    "v1RelayAuditResponse": {
       "type": "object",
       "properties": {
         "result": {

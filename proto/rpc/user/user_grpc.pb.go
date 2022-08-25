@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: proto/rpc/user/user.proto
 
-package rpcv3
+package userv3
 
 import (
 	context "context"
@@ -20,408 +20,408 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// UserClient is the client API for User service.
+// UserServiceClient is the client API for UserService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type UserClient interface {
+type UserServiceClient interface {
 	CreateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
 	GetUsers(ctx context.Context, in *v31.QueryOptions, opts ...grpc.CallOption) (*v3.UserList, error)
 	GetUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
 	GetUserInfo(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.UserInfo, error)
 	UpdateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
-	DeleteUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*DeleteUserResponse, error)
+	DeleteUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*UserDeleteApiKeysResponse, error)
 	DownloadCliConfig(ctx context.Context, in *CliConfigRequest, opts ...grpc.CallOption) (*v31.HttpBody, error)
-	UserListApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*ApiKeyResponseList, error)
-	UserDeleteApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
-	UserForgotPassword(ctx context.Context, in *ForgotPasswordRequest, opts ...grpc.CallOption) (*ForgotPasswordResponse, error)
+	UserListApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*UserListApiKeysResponse, error)
+	UserDeleteApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*UserDeleteApiKeysResponse, error)
+	UserForgotPassword(ctx context.Context, in *UserForgotPasswordRequest, opts ...grpc.CallOption) (*UserForgotPasswordResponse, error)
 }
 
-type userClient struct {
+type userServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewUserClient(cc grpc.ClientConnInterface) UserClient {
-	return &userClient{cc}
+func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
+	return &userServiceClient{cc}
 }
 
-func (c *userClient) CreateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error) {
+func (c *userServiceClient) CreateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error) {
 	out := new(v3.User)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/CreateUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.UserService/CreateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userClient) GetUsers(ctx context.Context, in *v31.QueryOptions, opts ...grpc.CallOption) (*v3.UserList, error) {
+func (c *userServiceClient) GetUsers(ctx context.Context, in *v31.QueryOptions, opts ...grpc.CallOption) (*v3.UserList, error) {
 	out := new(v3.UserList)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/GetUsers", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.UserService/GetUsers", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userClient) GetUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error) {
+func (c *userServiceClient) GetUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error) {
 	out := new(v3.User)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/GetUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.UserService/GetUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userClient) GetUserInfo(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.UserInfo, error) {
+func (c *userServiceClient) GetUserInfo(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.UserInfo, error) {
 	out := new(v3.UserInfo)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/GetUserInfo", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.UserService/GetUserInfo", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userClient) UpdateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error) {
+func (c *userServiceClient) UpdateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error) {
 	out := new(v3.User)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/UpdateUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.UserService/UpdateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userClient) DeleteUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*DeleteUserResponse, error) {
-	out := new(DeleteUserResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/DeleteUser", in, out, opts...)
+func (c *userServiceClient) DeleteUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*UserDeleteApiKeysResponse, error) {
+	out := new(UserDeleteApiKeysResponse)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.UserService/DeleteUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userClient) DownloadCliConfig(ctx context.Context, in *CliConfigRequest, opts ...grpc.CallOption) (*v31.HttpBody, error) {
+func (c *userServiceClient) DownloadCliConfig(ctx context.Context, in *CliConfigRequest, opts ...grpc.CallOption) (*v31.HttpBody, error) {
 	out := new(v31.HttpBody)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/DownloadCliConfig", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.UserService/DownloadCliConfig", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userClient) UserListApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*ApiKeyResponseList, error) {
-	out := new(ApiKeyResponseList)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/UserListApiKeys", in, out, opts...)
+func (c *userServiceClient) UserListApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*UserListApiKeysResponse, error) {
+	out := new(UserListApiKeysResponse)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.UserService/UserListApiKeys", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userClient) UserDeleteApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error) {
-	out := new(DeleteUserResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/UserDeleteApiKeys", in, out, opts...)
+func (c *userServiceClient) UserDeleteApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*UserDeleteApiKeysResponse, error) {
+	out := new(UserDeleteApiKeysResponse)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.UserService/UserDeleteApiKeys", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userClient) UserForgotPassword(ctx context.Context, in *ForgotPasswordRequest, opts ...grpc.CallOption) (*ForgotPasswordResponse, error) {
-	out := new(ForgotPasswordResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.User/UserForgotPassword", in, out, opts...)
+func (c *userServiceClient) UserForgotPassword(ctx context.Context, in *UserForgotPasswordRequest, opts ...grpc.CallOption) (*UserForgotPasswordResponse, error) {
+	out := new(UserForgotPasswordResponse)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.UserService/UserForgotPassword", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// UserServer is the server API for User service.
-// All implementations should embed UnimplementedUserServer
+// UserServiceServer is the server API for UserService service.
+// All implementations should embed UnimplementedUserServiceServer
 // for forward compatibility
-type UserServer interface {
+type UserServiceServer interface {
 	CreateUser(context.Context, *v3.User) (*v3.User, error)
 	GetUsers(context.Context, *v31.QueryOptions) (*v3.UserList, error)
 	GetUser(context.Context, *v3.User) (*v3.User, error)
 	GetUserInfo(context.Context, *v3.User) (*v3.UserInfo, error)
 	UpdateUser(context.Context, *v3.User) (*v3.User, error)
-	DeleteUser(context.Context, *v3.User) (*DeleteUserResponse, error)
+	DeleteUser(context.Context, *v3.User) (*UserDeleteApiKeysResponse, error)
 	DownloadCliConfig(context.Context, *CliConfigRequest) (*v31.HttpBody, error)
-	UserListApiKeys(context.Context, *ApiKeyRequest) (*ApiKeyResponseList, error)
-	UserDeleteApiKeys(context.Context, *ApiKeyRequest) (*DeleteUserResponse, error)
-	UserForgotPassword(context.Context, *ForgotPasswordRequest) (*ForgotPasswordResponse, error)
+	UserListApiKeys(context.Context, *ApiKeyRequest) (*UserListApiKeysResponse, error)
+	UserDeleteApiKeys(context.Context, *ApiKeyRequest) (*UserDeleteApiKeysResponse, error)
+	UserForgotPassword(context.Context, *UserForgotPasswordRequest) (*UserForgotPasswordResponse, error)
 }
 
-// UnimplementedUserServer should be embedded to have forward compatible implementations.
-type UnimplementedUserServer struct {
+// UnimplementedUserServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedUserServiceServer struct {
 }
 
-func (UnimplementedUserServer) CreateUser(context.Context, *v3.User) (*v3.User, error) {
+func (UnimplementedUserServiceServer) CreateUser(context.Context, *v3.User) (*v3.User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
-func (UnimplementedUserServer) GetUsers(context.Context, *v31.QueryOptions) (*v3.UserList, error) {
+func (UnimplementedUserServiceServer) GetUsers(context.Context, *v31.QueryOptions) (*v3.UserList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUsers not implemented")
 }
-func (UnimplementedUserServer) GetUser(context.Context, *v3.User) (*v3.User, error) {
+func (UnimplementedUserServiceServer) GetUser(context.Context, *v3.User) (*v3.User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
-func (UnimplementedUserServer) GetUserInfo(context.Context, *v3.User) (*v3.UserInfo, error) {
+func (UnimplementedUserServiceServer) GetUserInfo(context.Context, *v3.User) (*v3.UserInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
 }
-func (UnimplementedUserServer) UpdateUser(context.Context, *v3.User) (*v3.User, error) {
+func (UnimplementedUserServiceServer) UpdateUser(context.Context, *v3.User) (*v3.User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
-func (UnimplementedUserServer) DeleteUser(context.Context, *v3.User) (*DeleteUserResponse, error) {
+func (UnimplementedUserServiceServer) DeleteUser(context.Context, *v3.User) (*UserDeleteApiKeysResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
-func (UnimplementedUserServer) DownloadCliConfig(context.Context, *CliConfigRequest) (*v31.HttpBody, error) {
+func (UnimplementedUserServiceServer) DownloadCliConfig(context.Context, *CliConfigRequest) (*v31.HttpBody, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DownloadCliConfig not implemented")
 }
-func (UnimplementedUserServer) UserListApiKeys(context.Context, *ApiKeyRequest) (*ApiKeyResponseList, error) {
+func (UnimplementedUserServiceServer) UserListApiKeys(context.Context, *ApiKeyRequest) (*UserListApiKeysResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserListApiKeys not implemented")
 }
-func (UnimplementedUserServer) UserDeleteApiKeys(context.Context, *ApiKeyRequest) (*DeleteUserResponse, error) {
+func (UnimplementedUserServiceServer) UserDeleteApiKeys(context.Context, *ApiKeyRequest) (*UserDeleteApiKeysResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserDeleteApiKeys not implemented")
 }
-func (UnimplementedUserServer) UserForgotPassword(context.Context, *ForgotPasswordRequest) (*ForgotPasswordResponse, error) {
+func (UnimplementedUserServiceServer) UserForgotPassword(context.Context, *UserForgotPasswordRequest) (*UserForgotPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserForgotPassword not implemented")
 }
 
-// UnsafeUserServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to UserServer will
+// UnsafeUserServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UserServiceServer will
 // result in compilation errors.
-type UnsafeUserServer interface {
-	mustEmbedUnimplementedUserServer()
+type UnsafeUserServiceServer interface {
+	mustEmbedUnimplementedUserServiceServer()
 }
 
-func RegisterUserServer(s grpc.ServiceRegistrar, srv UserServer) {
-	s.RegisterService(&User_ServiceDesc, srv)
+func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
+	s.RegisterService(&UserService_ServiceDesc, srv)
 }
 
-func _User_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.User)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).CreateUser(ctx, in)
+		return srv.(UserServiceServer).CreateUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.User/CreateUser",
+		FullMethod: "/paralus.dev.rpc.user.v3.UserService/CreateUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).CreateUser(ctx, req.(*v3.User))
+		return srv.(UserServiceServer).CreateUser(ctx, req.(*v3.User))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_GetUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_GetUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v31.QueryOptions)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).GetUsers(ctx, in)
+		return srv.(UserServiceServer).GetUsers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.User/GetUsers",
+		FullMethod: "/paralus.dev.rpc.user.v3.UserService/GetUsers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).GetUsers(ctx, req.(*v31.QueryOptions))
+		return srv.(UserServiceServer).GetUsers(ctx, req.(*v31.QueryOptions))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.User)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).GetUser(ctx, in)
+		return srv.(UserServiceServer).GetUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.User/GetUser",
+		FullMethod: "/paralus.dev.rpc.user.v3.UserService/GetUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).GetUser(ctx, req.(*v3.User))
+		return srv.(UserServiceServer).GetUser(ctx, req.(*v3.User))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.User)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).GetUserInfo(ctx, in)
+		return srv.(UserServiceServer).GetUserInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.User/GetUserInfo",
+		FullMethod: "/paralus.dev.rpc.user.v3.UserService/GetUserInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).GetUserInfo(ctx, req.(*v3.User))
+		return srv.(UserServiceServer).GetUserInfo(ctx, req.(*v3.User))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.User)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).UpdateUser(ctx, in)
+		return srv.(UserServiceServer).UpdateUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.User/UpdateUser",
+		FullMethod: "/paralus.dev.rpc.user.v3.UserService/UpdateUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).UpdateUser(ctx, req.(*v3.User))
+		return srv.(UserServiceServer).UpdateUser(ctx, req.(*v3.User))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.User)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).DeleteUser(ctx, in)
+		return srv.(UserServiceServer).DeleteUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.User/DeleteUser",
+		FullMethod: "/paralus.dev.rpc.user.v3.UserService/DeleteUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).DeleteUser(ctx, req.(*v3.User))
+		return srv.(UserServiceServer).DeleteUser(ctx, req.(*v3.User))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_DownloadCliConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_DownloadCliConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CliConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).DownloadCliConfig(ctx, in)
+		return srv.(UserServiceServer).DownloadCliConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.User/DownloadCliConfig",
+		FullMethod: "/paralus.dev.rpc.user.v3.UserService/DownloadCliConfig",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).DownloadCliConfig(ctx, req.(*CliConfigRequest))
+		return srv.(UserServiceServer).DownloadCliConfig(ctx, req.(*CliConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_UserListApiKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_UserListApiKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ApiKeyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).UserListApiKeys(ctx, in)
+		return srv.(UserServiceServer).UserListApiKeys(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.User/UserListApiKeys",
+		FullMethod: "/paralus.dev.rpc.user.v3.UserService/UserListApiKeys",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).UserListApiKeys(ctx, req.(*ApiKeyRequest))
+		return srv.(UserServiceServer).UserListApiKeys(ctx, req.(*ApiKeyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_UserDeleteApiKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_UserDeleteApiKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ApiKeyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).UserDeleteApiKeys(ctx, in)
+		return srv.(UserServiceServer).UserDeleteApiKeys(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.User/UserDeleteApiKeys",
+		FullMethod: "/paralus.dev.rpc.user.v3.UserService/UserDeleteApiKeys",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).UserDeleteApiKeys(ctx, req.(*ApiKeyRequest))
+		return srv.(UserServiceServer).UserDeleteApiKeys(ctx, req.(*ApiKeyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_UserForgotPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ForgotPasswordRequest)
+func _UserService_UserForgotPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserForgotPasswordRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).UserForgotPassword(ctx, in)
+		return srv.(UserServiceServer).UserForgotPassword(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.User/UserForgotPassword",
+		FullMethod: "/paralus.dev.rpc.user.v3.UserService/UserForgotPassword",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).UserForgotPassword(ctx, req.(*ForgotPasswordRequest))
+		return srv.(UserServiceServer).UserForgotPassword(ctx, req.(*UserForgotPasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// User_ServiceDesc is the grpc.ServiceDesc for User service.
+// UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var User_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "paralus.dev.rpc.v3.User",
-	HandlerType: (*UserServer)(nil),
+var UserService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "paralus.dev.rpc.user.v3.UserService",
+	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreateUser",
-			Handler:    _User_CreateUser_Handler,
+			Handler:    _UserService_CreateUser_Handler,
 		},
 		{
 			MethodName: "GetUsers",
-			Handler:    _User_GetUsers_Handler,
+			Handler:    _UserService_GetUsers_Handler,
 		},
 		{
 			MethodName: "GetUser",
-			Handler:    _User_GetUser_Handler,
+			Handler:    _UserService_GetUser_Handler,
 		},
 		{
 			MethodName: "GetUserInfo",
-			Handler:    _User_GetUserInfo_Handler,
+			Handler:    _UserService_GetUserInfo_Handler,
 		},
 		{
 			MethodName: "UpdateUser",
-			Handler:    _User_UpdateUser_Handler,
+			Handler:    _UserService_UpdateUser_Handler,
 		},
 		{
 			MethodName: "DeleteUser",
-			Handler:    _User_DeleteUser_Handler,
+			Handler:    _UserService_DeleteUser_Handler,
 		},
 		{
 			MethodName: "DownloadCliConfig",
-			Handler:    _User_DownloadCliConfig_Handler,
+			Handler:    _UserService_DownloadCliConfig_Handler,
 		},
 		{
 			MethodName: "UserListApiKeys",
-			Handler:    _User_UserListApiKeys_Handler,
+			Handler:    _UserService_UserListApiKeys_Handler,
 		},
 		{
 			MethodName: "UserDeleteApiKeys",
-			Handler:    _User_UserDeleteApiKeys_Handler,
+			Handler:    _UserService_UserDeleteApiKeys_Handler,
 		},
 		{
 			MethodName: "UserForgotPassword",
-			Handler:    _User_UserForgotPassword_Handler,
+			Handler:    _UserService_UserForgotPassword_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

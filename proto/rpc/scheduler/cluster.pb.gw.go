@@ -33,7 +33,7 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_Cluster_CreateCluster_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_ClusterService_CreateCluster_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Cluster
 	var metadata runtime.ServerMetadata
 
@@ -67,7 +67,7 @@ func request_Cluster_CreateCluster_0(ctx context.Context, marshaler runtime.Mars
 
 }
 
-func local_request_Cluster_CreateCluster_0(ctx context.Context, marshaler runtime.Marshaler, server ClusterServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_ClusterService_CreateCluster_0(ctx context.Context, marshaler runtime.Marshaler, server ClusterServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Cluster
 	var metadata runtime.ServerMetadata
 
@@ -102,10 +102,10 @@ func local_request_Cluster_CreateCluster_0(ctx context.Context, marshaler runtim
 }
 
 var (
-	filter_Cluster_GetClusters_0 = &utilities.DoubleArray{Encoding: map[string]int{"project": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_ClusterService_GetClusters_0 = &utilities.DoubleArray{Encoding: map[string]int{"project": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
-func request_Cluster_GetClusters_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_ClusterService_GetClusters_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq commonv3.QueryOptions
 	var metadata runtime.ServerMetadata
 
@@ -129,7 +129,7 @@ func request_Cluster_GetClusters_0(ctx context.Context, marshaler runtime.Marsha
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Cluster_GetClusters_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ClusterService_GetClusters_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -138,7 +138,7 @@ func request_Cluster_GetClusters_0(ctx context.Context, marshaler runtime.Marsha
 
 }
 
-func local_request_Cluster_GetClusters_0(ctx context.Context, marshaler runtime.Marshaler, server ClusterServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_ClusterService_GetClusters_0(ctx context.Context, marshaler runtime.Marshaler, server ClusterServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq commonv3.QueryOptions
 	var metadata runtime.ServerMetadata
 
@@ -162,7 +162,7 @@ func local_request_Cluster_GetClusters_0(ctx context.Context, marshaler runtime.
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Cluster_GetClusters_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ClusterService_GetClusters_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -172,10 +172,10 @@ func local_request_Cluster_GetClusters_0(ctx context.Context, marshaler runtime.
 }
 
 var (
-	filter_Cluster_GetCluster_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "project": 1, "name": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
+	filter_ClusterService_GetCluster_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "project": 1, "name": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
 )
 
-func request_Cluster_GetCluster_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_ClusterService_GetCluster_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Cluster
 	var metadata runtime.ServerMetadata
 
@@ -209,7 +209,7 @@ func request_Cluster_GetCluster_0(ctx context.Context, marshaler runtime.Marshal
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Cluster_GetCluster_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ClusterService_GetCluster_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -218,7 +218,7 @@ func request_Cluster_GetCluster_0(ctx context.Context, marshaler runtime.Marshal
 
 }
 
-func local_request_Cluster_GetCluster_0(ctx context.Context, marshaler runtime.Marshaler, server ClusterServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_ClusterService_GetCluster_0(ctx context.Context, marshaler runtime.Marshaler, server ClusterServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Cluster
 	var metadata runtime.ServerMetadata
 
@@ -252,7 +252,7 @@ func local_request_Cluster_GetCluster_0(ctx context.Context, marshaler runtime.M
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Cluster_GetCluster_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ClusterService_GetCluster_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -261,7 +261,7 @@ func local_request_Cluster_GetCluster_0(ctx context.Context, marshaler runtime.M
 
 }
 
-func request_Cluster_UpdateCluster_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_ClusterService_UpdateCluster_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Cluster
 	var metadata runtime.ServerMetadata
 
@@ -305,7 +305,7 @@ func request_Cluster_UpdateCluster_0(ctx context.Context, marshaler runtime.Mars
 
 }
 
-func local_request_Cluster_UpdateCluster_0(ctx context.Context, marshaler runtime.Marshaler, server ClusterServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_ClusterService_UpdateCluster_0(ctx context.Context, marshaler runtime.Marshaler, server ClusterServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Cluster
 	var metadata runtime.ServerMetadata
 
@@ -350,10 +350,10 @@ func local_request_Cluster_UpdateCluster_0(ctx context.Context, marshaler runtim
 }
 
 var (
-	filter_Cluster_DeleteCluster_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "project": 1, "name": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
+	filter_ClusterService_DeleteCluster_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "project": 1, "name": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
 )
 
-func request_Cluster_DeleteCluster_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_ClusterService_DeleteCluster_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Cluster
 	var metadata runtime.ServerMetadata
 
@@ -387,7 +387,7 @@ func request_Cluster_DeleteCluster_0(ctx context.Context, marshaler runtime.Mars
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Cluster_DeleteCluster_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ClusterService_DeleteCluster_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -396,7 +396,7 @@ func request_Cluster_DeleteCluster_0(ctx context.Context, marshaler runtime.Mars
 
 }
 
-func local_request_Cluster_DeleteCluster_0(ctx context.Context, marshaler runtime.Marshaler, server ClusterServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_ClusterService_DeleteCluster_0(ctx context.Context, marshaler runtime.Marshaler, server ClusterServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Cluster
 	var metadata runtime.ServerMetadata
 
@@ -430,7 +430,7 @@ func local_request_Cluster_DeleteCluster_0(ctx context.Context, marshaler runtim
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Cluster_DeleteCluster_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ClusterService_DeleteCluster_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -440,10 +440,10 @@ func local_request_Cluster_DeleteCluster_0(ctx context.Context, marshaler runtim
 }
 
 var (
-	filter_Cluster_DownloadCluster_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "project": 1, "name": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
+	filter_ClusterService_DownloadCluster_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "project": 1, "name": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
 )
 
-func request_Cluster_DownloadCluster_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_ClusterService_DownloadCluster_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Cluster
 	var metadata runtime.ServerMetadata
 
@@ -477,7 +477,7 @@ func request_Cluster_DownloadCluster_0(ctx context.Context, marshaler runtime.Ma
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Cluster_DownloadCluster_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ClusterService_DownloadCluster_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -486,7 +486,7 @@ func request_Cluster_DownloadCluster_0(ctx context.Context, marshaler runtime.Ma
 
 }
 
-func local_request_Cluster_DownloadCluster_0(ctx context.Context, marshaler runtime.Marshaler, server ClusterServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_ClusterService_DownloadCluster_0(ctx context.Context, marshaler runtime.Marshaler, server ClusterServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Cluster
 	var metadata runtime.ServerMetadata
 
@@ -520,7 +520,7 @@ func local_request_Cluster_DownloadCluster_0(ctx context.Context, marshaler runt
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Cluster_DownloadCluster_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ClusterService_DownloadCluster_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -529,156 +529,168 @@ func local_request_Cluster_DownloadCluster_0(ctx context.Context, marshaler runt
 
 }
 
-// RegisterClusterHandlerServer registers the http handlers for service Cluster to "mux".
-// UnaryRPC     :call ClusterServer directly.
+// RegisterClusterServiceHandlerServer registers the http handlers for service ClusterService to "mux".
+// UnaryRPC     :call ClusterServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterClusterHandlerFromEndpoint instead.
-func RegisterClusterHandlerServer(ctx context.Context, mux *runtime.ServeMux, server ClusterServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterClusterServiceHandlerFromEndpoint instead.
+func RegisterClusterServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server ClusterServiceServer) error {
 
-	mux.Handle("POST", pattern_Cluster_CreateCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_ClusterService_CreateCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Cluster/CreateCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.ClusterService/CreateCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Cluster_CreateCluster_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ClusterService_CreateCluster_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Cluster_CreateCluster_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ClusterService_CreateCluster_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Cluster_GetClusters_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_ClusterService_GetClusters_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Cluster/GetClusters", runtime.WithHTTPPathPattern("/infra/v3/project/{project}/cluster"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.ClusterService/GetClusters", runtime.WithHTTPPathPattern("/infra/v3/project/{project}/cluster"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Cluster_GetClusters_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ClusterService_GetClusters_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Cluster_GetClusters_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ClusterService_GetClusters_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Cluster_GetCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_ClusterService_GetCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Cluster/GetCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.ClusterService/GetCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Cluster_GetCluster_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ClusterService_GetCluster_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Cluster_GetCluster_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ClusterService_GetCluster_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Cluster_UpdateCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_ClusterService_UpdateCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Cluster/UpdateCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.ClusterService/UpdateCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Cluster_UpdateCluster_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ClusterService_UpdateCluster_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Cluster_UpdateCluster_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ClusterService_UpdateCluster_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_Cluster_DeleteCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_ClusterService_DeleteCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Cluster/DeleteCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.ClusterService/DeleteCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Cluster_DeleteCluster_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ClusterService_DeleteCluster_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Cluster_DeleteCluster_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ClusterService_DeleteCluster_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Cluster_DownloadCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_ClusterService_DownloadCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Cluster/DownloadCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}/download"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.ClusterService/DownloadCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}/download"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Cluster_DownloadCluster_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ClusterService_DownloadCluster_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Cluster_DownloadCluster_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ClusterService_DownloadCluster_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterClusterHandlerFromEndpoint is same as RegisterClusterHandler but
+// RegisterClusterServiceHandlerFromEndpoint is same as RegisterClusterServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterClusterHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterClusterServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -698,139 +710,151 @@ func RegisterClusterHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeM
 		}()
 	}()
 
-	return RegisterClusterHandler(ctx, mux, conn)
+	return RegisterClusterServiceHandler(ctx, mux, conn)
 }
 
-// RegisterClusterHandler registers the http handlers for service Cluster to "mux".
+// RegisterClusterServiceHandler registers the http handlers for service ClusterService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterClusterHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterClusterHandlerClient(ctx, mux, NewClusterClient(conn))
+func RegisterClusterServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterClusterServiceHandlerClient(ctx, mux, NewClusterServiceClient(conn))
 }
 
-// RegisterClusterHandlerClient registers the http handlers for service Cluster
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "ClusterClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "ClusterClient"
+// RegisterClusterServiceHandlerClient registers the http handlers for service ClusterService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "ClusterServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "ClusterServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "ClusterClient" to call the correct interceptors.
-func RegisterClusterHandlerClient(ctx context.Context, mux *runtime.ServeMux, client ClusterClient) error {
+// "ClusterServiceClient" to call the correct interceptors.
+func RegisterClusterServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client ClusterServiceClient) error {
 
-	mux.Handle("POST", pattern_Cluster_CreateCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_ClusterService_CreateCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Cluster/CreateCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.ClusterService/CreateCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Cluster_CreateCluster_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_ClusterService_CreateCluster_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Cluster_CreateCluster_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ClusterService_CreateCluster_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Cluster_GetClusters_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_ClusterService_GetClusters_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Cluster/GetClusters", runtime.WithHTTPPathPattern("/infra/v3/project/{project}/cluster"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.ClusterService/GetClusters", runtime.WithHTTPPathPattern("/infra/v3/project/{project}/cluster"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Cluster_GetClusters_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_ClusterService_GetClusters_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Cluster_GetClusters_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ClusterService_GetClusters_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Cluster_GetCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_ClusterService_GetCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Cluster/GetCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.ClusterService/GetCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Cluster_GetCluster_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_ClusterService_GetCluster_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Cluster_GetCluster_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ClusterService_GetCluster_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Cluster_UpdateCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_ClusterService_UpdateCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Cluster/UpdateCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.ClusterService/UpdateCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Cluster_UpdateCluster_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_ClusterService_UpdateCluster_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Cluster_UpdateCluster_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ClusterService_UpdateCluster_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_Cluster_DeleteCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_ClusterService_DeleteCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Cluster/DeleteCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.ClusterService/DeleteCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Cluster_DeleteCluster_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_ClusterService_DeleteCluster_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Cluster_DeleteCluster_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ClusterService_DeleteCluster_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Cluster_DownloadCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_ClusterService_DownloadCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Cluster/DownloadCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}/download"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.ClusterService/DownloadCluster", runtime.WithHTTPPathPattern("/infra/v3/project/{metadata.project}/cluster/{metadata.name}/download"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Cluster_DownloadCluster_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_ClusterService_DownloadCluster_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Cluster_DownloadCluster_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ClusterService_DownloadCluster_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -838,29 +862,29 @@ func RegisterClusterHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 }
 
 var (
-	pattern_Cluster_CreateCluster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"infra", "v3", "project", "metadata.project", "cluster"}, ""))
+	pattern_ClusterService_CreateCluster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"infra", "v3", "project", "metadata.project", "cluster"}, ""))
 
-	pattern_Cluster_GetClusters_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"infra", "v3", "project", "cluster"}, ""))
+	pattern_ClusterService_GetClusters_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"infra", "v3", "project", "cluster"}, ""))
 
-	pattern_Cluster_GetCluster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"infra", "v3", "project", "metadata.project", "cluster", "metadata.name"}, ""))
+	pattern_ClusterService_GetCluster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"infra", "v3", "project", "metadata.project", "cluster", "metadata.name"}, ""))
 
-	pattern_Cluster_UpdateCluster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"infra", "v3", "project", "metadata.project", "cluster", "metadata.name"}, ""))
+	pattern_ClusterService_UpdateCluster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"infra", "v3", "project", "metadata.project", "cluster", "metadata.name"}, ""))
 
-	pattern_Cluster_DeleteCluster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"infra", "v3", "project", "metadata.project", "cluster", "metadata.name"}, ""))
+	pattern_ClusterService_DeleteCluster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"infra", "v3", "project", "metadata.project", "cluster", "metadata.name"}, ""))
 
-	pattern_Cluster_DownloadCluster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"infra", "v3", "project", "metadata.project", "cluster", "metadata.name", "download"}, ""))
+	pattern_ClusterService_DownloadCluster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"infra", "v3", "project", "metadata.project", "cluster", "metadata.name", "download"}, ""))
 )
 
 var (
-	forward_Cluster_CreateCluster_0 = runtime.ForwardResponseMessage
+	forward_ClusterService_CreateCluster_0 = runtime.ForwardResponseMessage
 
-	forward_Cluster_GetClusters_0 = runtime.ForwardResponseMessage
+	forward_ClusterService_GetClusters_0 = runtime.ForwardResponseMessage
 
-	forward_Cluster_GetCluster_0 = runtime.ForwardResponseMessage
+	forward_ClusterService_GetCluster_0 = runtime.ForwardResponseMessage
 
-	forward_Cluster_UpdateCluster_0 = runtime.ForwardResponseMessage
+	forward_ClusterService_UpdateCluster_0 = runtime.ForwardResponseMessage
 
-	forward_Cluster_DeleteCluster_0 = runtime.ForwardResponseMessage
+	forward_ClusterService_DeleteCluster_0 = runtime.ForwardResponseMessage
 
-	forward_Cluster_DownloadCluster_0 = runtime.ForwardResponseMessage
+	forward_ClusterService_DownloadCluster_0 = runtime.ForwardResponseMessage
 )

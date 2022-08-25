@@ -2,11 +2,11 @@
 // source: proto/rpc/system/metro.proto
 
 /*
-Package rpcv3 is a reverse proxy.
+Package systemv3 is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package rpcv3
+package systemv3
 
 import (
 	"context"
@@ -32,7 +32,7 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_Location_CreateLocation_0(ctx context.Context, marshaler runtime.Marshaler, client LocationClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_LocationService_CreateLocation_0(ctx context.Context, marshaler runtime.Marshaler, client LocationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Location
 	var metadata runtime.ServerMetadata
 
@@ -66,7 +66,7 @@ func request_Location_CreateLocation_0(ctx context.Context, marshaler runtime.Ma
 
 }
 
-func local_request_Location_CreateLocation_0(ctx context.Context, marshaler runtime.Marshaler, server LocationServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_LocationService_CreateLocation_0(ctx context.Context, marshaler runtime.Marshaler, server LocationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Location
 	var metadata runtime.ServerMetadata
 
@@ -101,10 +101,10 @@ func local_request_Location_CreateLocation_0(ctx context.Context, marshaler runt
 }
 
 var (
-	filter_Location_GetLocations_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_LocationService_GetLocations_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_Location_GetLocations_0(ctx context.Context, marshaler runtime.Marshaler, client LocationClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_LocationService_GetLocations_0(ctx context.Context, marshaler runtime.Marshaler, client LocationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Location
 	var metadata runtime.ServerMetadata
 
@@ -128,7 +128,7 @@ func request_Location_GetLocations_0(ctx context.Context, marshaler runtime.Mars
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Location_GetLocations_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_LocationService_GetLocations_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -137,7 +137,7 @@ func request_Location_GetLocations_0(ctx context.Context, marshaler runtime.Mars
 
 }
 
-func local_request_Location_GetLocations_0(ctx context.Context, marshaler runtime.Marshaler, server LocationServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_LocationService_GetLocations_0(ctx context.Context, marshaler runtime.Marshaler, server LocationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Location
 	var metadata runtime.ServerMetadata
 
@@ -161,7 +161,7 @@ func local_request_Location_GetLocations_0(ctx context.Context, marshaler runtim
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Location_GetLocations_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_LocationService_GetLocations_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -171,10 +171,10 @@ func local_request_Location_GetLocations_0(ctx context.Context, marshaler runtim
 }
 
 var (
-	filter_Location_GetLocation_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "name": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
+	filter_LocationService_GetLocation_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "name": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
 )
 
-func request_Location_GetLocation_0(ctx context.Context, marshaler runtime.Marshaler, client LocationClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_LocationService_GetLocation_0(ctx context.Context, marshaler runtime.Marshaler, client LocationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Location
 	var metadata runtime.ServerMetadata
 
@@ -208,7 +208,7 @@ func request_Location_GetLocation_0(ctx context.Context, marshaler runtime.Marsh
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Location_GetLocation_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_LocationService_GetLocation_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -217,7 +217,7 @@ func request_Location_GetLocation_0(ctx context.Context, marshaler runtime.Marsh
 
 }
 
-func local_request_Location_GetLocation_0(ctx context.Context, marshaler runtime.Marshaler, server LocationServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_LocationService_GetLocation_0(ctx context.Context, marshaler runtime.Marshaler, server LocationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Location
 	var metadata runtime.ServerMetadata
 
@@ -251,7 +251,7 @@ func local_request_Location_GetLocation_0(ctx context.Context, marshaler runtime
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Location_GetLocation_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_LocationService_GetLocation_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -260,7 +260,7 @@ func local_request_Location_GetLocation_0(ctx context.Context, marshaler runtime
 
 }
 
-func request_Location_UpdateLocation_0(ctx context.Context, marshaler runtime.Marshaler, client LocationClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_LocationService_UpdateLocation_0(ctx context.Context, marshaler runtime.Marshaler, client LocationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Location
 	var metadata runtime.ServerMetadata
 
@@ -304,7 +304,7 @@ func request_Location_UpdateLocation_0(ctx context.Context, marshaler runtime.Ma
 
 }
 
-func local_request_Location_UpdateLocation_0(ctx context.Context, marshaler runtime.Marshaler, server LocationServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_LocationService_UpdateLocation_0(ctx context.Context, marshaler runtime.Marshaler, server LocationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Location
 	var metadata runtime.ServerMetadata
 
@@ -349,10 +349,10 @@ func local_request_Location_UpdateLocation_0(ctx context.Context, marshaler runt
 }
 
 var (
-	filter_Location_DeleteLocation_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "name": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
+	filter_LocationService_DeleteLocation_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "name": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
 )
 
-func request_Location_DeleteLocation_0(ctx context.Context, marshaler runtime.Marshaler, client LocationClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_LocationService_DeleteLocation_0(ctx context.Context, marshaler runtime.Marshaler, client LocationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Location
 	var metadata runtime.ServerMetadata
 
@@ -386,7 +386,7 @@ func request_Location_DeleteLocation_0(ctx context.Context, marshaler runtime.Ma
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Location_DeleteLocation_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_LocationService_DeleteLocation_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -395,7 +395,7 @@ func request_Location_DeleteLocation_0(ctx context.Context, marshaler runtime.Ma
 
 }
 
-func local_request_Location_DeleteLocation_0(ctx context.Context, marshaler runtime.Marshaler, server LocationServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_LocationService_DeleteLocation_0(ctx context.Context, marshaler runtime.Marshaler, server LocationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq infrav3.Location
 	var metadata runtime.ServerMetadata
 
@@ -429,7 +429,7 @@ func local_request_Location_DeleteLocation_0(ctx context.Context, marshaler runt
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Location_DeleteLocation_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_LocationService_DeleteLocation_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -438,133 +438,143 @@ func local_request_Location_DeleteLocation_0(ctx context.Context, marshaler runt
 
 }
 
-// RegisterLocationHandlerServer registers the http handlers for service Location to "mux".
-// UnaryRPC     :call LocationServer directly.
+// RegisterLocationServiceHandlerServer registers the http handlers for service LocationService to "mux".
+// UnaryRPC     :call LocationServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterLocationHandlerFromEndpoint instead.
-func RegisterLocationHandlerServer(ctx context.Context, mux *runtime.ServeMux, server LocationServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterLocationServiceHandlerFromEndpoint instead.
+func RegisterLocationServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server LocationServiceServer) error {
 
-	mux.Handle("POST", pattern_Location_CreateLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_LocationService_CreateLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/CreateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.LocationService/CreateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Location_CreateLocation_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_LocationService_CreateLocation_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Location_CreateLocation_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_LocationService_CreateLocation_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Location_GetLocations_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_LocationService_GetLocations_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/GetLocations", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.LocationService/GetLocations", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Location_GetLocations_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_LocationService_GetLocations_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Location_GetLocations_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_LocationService_GetLocations_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Location_GetLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_LocationService_GetLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/GetLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.LocationService/GetLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Location_GetLocation_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_LocationService_GetLocation_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Location_GetLocation_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_LocationService_GetLocation_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Location_UpdateLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_LocationService_UpdateLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/UpdateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.LocationService/UpdateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Location_UpdateLocation_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_LocationService_UpdateLocation_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Location_UpdateLocation_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_LocationService_UpdateLocation_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_Location_DeleteLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_LocationService_DeleteLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/DeleteLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.LocationService/DeleteLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Location_DeleteLocation_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_LocationService_DeleteLocation_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Location_DeleteLocation_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_LocationService_DeleteLocation_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterLocationHandlerFromEndpoint is same as RegisterLocationHandler but
+// RegisterLocationServiceHandlerFromEndpoint is same as RegisterLocationServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterLocationHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterLocationServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -584,119 +594,129 @@ func RegisterLocationHandlerFromEndpoint(ctx context.Context, mux *runtime.Serve
 		}()
 	}()
 
-	return RegisterLocationHandler(ctx, mux, conn)
+	return RegisterLocationServiceHandler(ctx, mux, conn)
 }
 
-// RegisterLocationHandler registers the http handlers for service Location to "mux".
+// RegisterLocationServiceHandler registers the http handlers for service LocationService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterLocationHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterLocationHandlerClient(ctx, mux, NewLocationClient(conn))
+func RegisterLocationServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterLocationServiceHandlerClient(ctx, mux, NewLocationServiceClient(conn))
 }
 
-// RegisterLocationHandlerClient registers the http handlers for service Location
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "LocationClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "LocationClient"
+// RegisterLocationServiceHandlerClient registers the http handlers for service LocationService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "LocationServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "LocationServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "LocationClient" to call the correct interceptors.
-func RegisterLocationHandlerClient(ctx context.Context, mux *runtime.ServeMux, client LocationClient) error {
+// "LocationServiceClient" to call the correct interceptors.
+func RegisterLocationServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client LocationServiceClient) error {
 
-	mux.Handle("POST", pattern_Location_CreateLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_LocationService_CreateLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/CreateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.LocationService/CreateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Location_CreateLocation_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_LocationService_CreateLocation_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Location_CreateLocation_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_LocationService_CreateLocation_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Location_GetLocations_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_LocationService_GetLocations_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/GetLocations", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.LocationService/GetLocations", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Location_GetLocations_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_LocationService_GetLocations_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Location_GetLocations_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_LocationService_GetLocations_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Location_GetLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_LocationService_GetLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/GetLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.LocationService/GetLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Location_GetLocation_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_LocationService_GetLocation_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Location_GetLocation_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_LocationService_GetLocation_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Location_UpdateLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_LocationService_UpdateLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/UpdateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.LocationService/UpdateLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Location_UpdateLocation_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_LocationService_UpdateLocation_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Location_UpdateLocation_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_LocationService_UpdateLocation_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_Location_DeleteLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_LocationService_DeleteLocation_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Location/DeleteLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.LocationService/DeleteLocation", runtime.WithHTTPPathPattern("/infra/v3/partner/{metadata.partner}/location/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Location_DeleteLocation_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_LocationService_DeleteLocation_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Location_DeleteLocation_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_LocationService_DeleteLocation_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -704,25 +724,25 @@ func RegisterLocationHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 }
 
 var (
-	pattern_Location_CreateLocation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"infra", "v3", "partner", "metadata.partner", "location"}, ""))
+	pattern_LocationService_CreateLocation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"infra", "v3", "partner", "metadata.partner", "location"}, ""))
 
-	pattern_Location_GetLocations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"infra", "v3", "partner", "metadata.partner", "location"}, ""))
+	pattern_LocationService_GetLocations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"infra", "v3", "partner", "metadata.partner", "location"}, ""))
 
-	pattern_Location_GetLocation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"infra", "v3", "partner", "metadata.partner", "location", "metadata.name"}, ""))
+	pattern_LocationService_GetLocation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"infra", "v3", "partner", "metadata.partner", "location", "metadata.name"}, ""))
 
-	pattern_Location_UpdateLocation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"infra", "v3", "partner", "metadata.partner", "location", "metadata.name"}, ""))
+	pattern_LocationService_UpdateLocation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"infra", "v3", "partner", "metadata.partner", "location", "metadata.name"}, ""))
 
-	pattern_Location_DeleteLocation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"infra", "v3", "partner", "metadata.partner", "location", "metadata.name"}, ""))
+	pattern_LocationService_DeleteLocation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"infra", "v3", "partner", "metadata.partner", "location", "metadata.name"}, ""))
 )
 
 var (
-	forward_Location_CreateLocation_0 = runtime.ForwardResponseMessage
+	forward_LocationService_CreateLocation_0 = runtime.ForwardResponseMessage
 
-	forward_Location_GetLocations_0 = runtime.ForwardResponseMessage
+	forward_LocationService_GetLocations_0 = runtime.ForwardResponseMessage
 
-	forward_Location_GetLocation_0 = runtime.ForwardResponseMessage
+	forward_LocationService_GetLocation_0 = runtime.ForwardResponseMessage
 
-	forward_Location_UpdateLocation_0 = runtime.ForwardResponseMessage
+	forward_LocationService_UpdateLocation_0 = runtime.ForwardResponseMessage
 
-	forward_Location_DeleteLocation_0 = runtime.ForwardResponseMessage
+	forward_LocationService_DeleteLocation_0 = runtime.ForwardResponseMessage
 )

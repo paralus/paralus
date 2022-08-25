@@ -30,7 +30,7 @@ func (s *clusterAuthzServer) GetUserAuthorization(ctx context.Context, req *sent
 }
 
 // NewClusterAuthzServer returns New ClusterAuthzServer
-func NewClusterAuthzServer(bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, krs service.KubeconfigRevocationService, kcs service.KubectlClusterSettingsService, kss service.KubeconfigSettingService, ns service.NamespaceService) sentryrpc.ClusterAuthorizationServer {
+func NewClusterAuthzServer(bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, krs service.KubeconfigRevocationService, kcs service.KubectlClusterSettingsService, kss service.KubeconfigSettingService, ns service.NamespaceService) sentryrpc.ClusterAuthorizationServiceServer {
 	return &clusterAuthzServer{
 		bs:  bs,
 		aps: aps,

@@ -1,4 +1,4 @@
-package rpcv3
+package systemv3
 
 import (
 	"context"
@@ -12,16 +12,16 @@ import (
 type SystemClient interface {
 	Unhealthy()
 	Close() error
-	ProjectClient
-	OrganizationClient
-	PartnerClient
+	ProjectServiceClient
+	OrganizationServiceClient
+	PartnerServiceClient
 }
 
 type systemClient struct {
 	*grpcpool.ClientConn
-	*projectClient
-	*organizationClient
-	*partnerClient
+	*projectServiceClient
+	*organizationServiceClient
+	*partnerServiceClient
 }
 
 var _ SystemClient = (*systemClient)(nil)
@@ -56,9 +56,9 @@ func (p *systemPool) NewClient(ctx context.Context) (SystemClient, error) {
 	}
 	return &systemClient{
 		cc,
-		&projectClient{cc.ClientConn},
-		&organizationClient{cc.ClientConn},
-		&partnerClient{cc.ClientConn},
+		&projectServiceClient{cc.ClientConn},
+		&organizationServiceClient{cc.ClientConn},
+		&partnerServiceClient{cc.ClientConn},
 	}, nil
 }
 

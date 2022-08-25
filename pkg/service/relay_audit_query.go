@@ -20,7 +20,7 @@ func NewRelayAuditService(url string, auditPattern string, logPrefix string) (*R
 	return &RelayAuditService{relayQuery: relayQuery}, nil
 }
 
-func (ra *RelayAuditService) GetRelayAudit(req *v1.RelayAuditSearchRequest) (res *v1.RelayAuditSearchResponse, err error) {
+func (ra *RelayAuditService) GetRelayAudit(req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
 	if err != nil {
 		return nil, err
 	}
@@ -32,14 +32,14 @@ func (ra *RelayAuditService) GetRelayAudit(req *v1.RelayAuditSearchRequest) (res
 	return ra.GetRelayAuditByProjects(req)
 }
 
-func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchRequest) (res *v1.RelayAuditSearchResponse, err error) {
+func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
 	err = validateQueryString(req.GetFilter().QueryString)
 	if err != nil {
-		return &v1.RelayAuditSearchResponse{}, err
+		return &v1.RelayAuditResponse{}, err
 	}
 	var buf bytes.Buffer
 	var r map[string]interface{}
-	res = &v1.RelayAuditSearchResponse{}
+	res = &v1.RelayAuditResponse{}
 	//Handle defaults value
 	query := map[string]interface{}{
 		"_source": []string{"json"},
@@ -228,7 +228,7 @@ func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditSearchReq
 	if err != nil {
 		return res, err
 	}
-	res = &v1.RelayAuditSearchResponse{Result: raw}
+	res = &v1.RelayAuditResponse{Result: raw}
 
 	return res, nil
 }

@@ -32,10 +32,10 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 var (
-	filter_Test_Get_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 3, 1, 0, 3, 0}, Check: []int{0, 1, 2, 3, 2, 5}}
+	filter_TestService_Get_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 3, 1, 0, 3, 0}, Check: []int{0, 1, 2, 3, 2, 5}}
 )
 
-func request_Test_Get_0(ctx context.Context, marshaler runtime.Marshaler, client TestClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_TestService_Get_0(ctx context.Context, marshaler runtime.Marshaler, client TestServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq TestObject
 	var metadata runtime.ServerMetadata
 
@@ -69,7 +69,7 @@ func request_Test_Get_0(ctx context.Context, marshaler runtime.Marshaler, client
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Test_Get_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_TestService_Get_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -78,7 +78,7 @@ func request_Test_Get_0(ctx context.Context, marshaler runtime.Marshaler, client
 
 }
 
-func local_request_Test_Get_0(ctx context.Context, marshaler runtime.Marshaler, server TestServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_TestService_Get_0(ctx context.Context, marshaler runtime.Marshaler, server TestServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq TestObject
 	var metadata runtime.ServerMetadata
 
@@ -112,7 +112,7 @@ func local_request_Test_Get_0(ctx context.Context, marshaler runtime.Marshaler, 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Test_Get_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_TestService_Get_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -121,41 +121,43 @@ func local_request_Test_Get_0(ctx context.Context, marshaler runtime.Marshaler, 
 
 }
 
-// RegisterTestHandlerServer registers the http handlers for service Test to "mux".
-// UnaryRPC     :call TestServer directly.
+// RegisterTestServiceHandlerServer registers the http handlers for service TestService to "mux".
+// UnaryRPC     :call TestServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterTestHandlerFromEndpoint instead.
-func RegisterTestHandlerServer(ctx context.Context, mux *runtime.ServeMux, server TestServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterTestServiceHandlerFromEndpoint instead.
+func RegisterTestServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server TestServiceServer) error {
 
-	mux.Handle("GET", pattern_Test_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_TestService_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testdata.Test/Get", runtime.WithHTTPPathPattern("/v3/test/{metadata.name}/test/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/testdata.TestService/Get", runtime.WithHTTPPathPattern("/v3/test/{metadata.name}/test/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Test_Get_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_TestService_Get_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Test_Get_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestService_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterTestHandlerFromEndpoint is same as RegisterTestHandler but
+// RegisterTestServiceHandlerFromEndpoint is same as RegisterTestServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterTestHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterTestServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -175,39 +177,41 @@ func RegisterTestHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux,
 		}()
 	}()
 
-	return RegisterTestHandler(ctx, mux, conn)
+	return RegisterTestServiceHandler(ctx, mux, conn)
 }
 
-// RegisterTestHandler registers the http handlers for service Test to "mux".
+// RegisterTestServiceHandler registers the http handlers for service TestService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterTestHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterTestHandlerClient(ctx, mux, NewTestClient(conn))
+func RegisterTestServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterTestServiceHandlerClient(ctx, mux, NewTestServiceClient(conn))
 }
 
-// RegisterTestHandlerClient registers the http handlers for service Test
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "TestClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "TestClient"
+// RegisterTestServiceHandlerClient registers the http handlers for service TestService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "TestServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "TestServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "TestClient" to call the correct interceptors.
-func RegisterTestHandlerClient(ctx context.Context, mux *runtime.ServeMux, client TestClient) error {
+// "TestServiceClient" to call the correct interceptors.
+func RegisterTestServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client TestServiceClient) error {
 
-	mux.Handle("GET", pattern_Test_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_TestService_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/testdata.Test/Get", runtime.WithHTTPPathPattern("/v3/test/{metadata.name}/test/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/testdata.TestService/Get", runtime.WithHTTPPathPattern("/v3/test/{metadata.name}/test/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Test_Get_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_TestService_Get_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Test_Get_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestService_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -215,9 +219,9 @@ func RegisterTestHandlerClient(ctx context.Context, mux *runtime.ServeMux, clien
 }
 
 var (
-	pattern_Test_Get_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v3", "test", "metadata.name"}, ""))
+	pattern_TestService_Get_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v3", "test", "metadata.name"}, ""))
 )
 
 var (
-	forward_Test_Get_0 = runtime.ForwardResponseMessage
+	forward_TestService_Get_0 = runtime.ForwardResponseMessage
 )

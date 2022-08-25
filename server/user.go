@@ -19,7 +19,7 @@ type userServer struct {
 }
 
 // NewUserServer returns new user server implementation
-func NewUserServer(ps service.UserService, as service.ApiKeyService) rpcv3.UserServer {
+func NewUserServer(ps service.UserService, as service.ApiKeyService) rpcv3.UserServiceServer {
 	return &userServer{us: ps, ks: as}
 }
 func updateUserStatus(req *userpbv3.User, resp *userpbv3.User, err error) *userpbv3.User {
@@ -63,7 +63,7 @@ func (s *userServer) GetUserInfo(ctx context.Context, req *userpbv3.User) (*user
 	return resp, nil
 }
 
-func (s *userServer) DeleteUser(ctx context.Context, req *userpbv3.User) (*rpcv3.DeleteUserResponse, error) {
+func (s *userServer) DeleteUser(ctx context.Context, req *userpbv3.User) (*rpcv3.UserDeleteApiKeysResponse, error) {
 	return s.us.Delete(ctx, req)
 }
 
@@ -97,19 +97,19 @@ func (s *userServer) DownloadCliConfig(ctx context.Context, req *rpcv3.CliConfig
 	}, nil
 }
 
-func (s *userServer) UserListApiKeys(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.ApiKeyResponseList, error) {
+func (s *userServer) UserListApiKeys(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.UserListApiKeysResponse, error) {
 	return s.ks.List(ctx, req)
 }
 
-func (s *userServer) UserDeleteApiKeys(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.DeleteUserResponse, error) {
+func (s *userServer) UserDeleteApiKeys(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.UserDeleteApiKeysResponse, error) {
 	_, err := s.ks.Delete(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	return &rpcv3.DeleteUserResponse{}, nil
+	return &rpcv3.UserDeleteApiKeysResponse{}, nil
 }
 
-func (s *userServer) UserForgotPassword(ctx context.Context, req *rpcv3.ForgotPasswordRequest) (*rpcv3.ForgotPasswordResponse, error) {
+func (s *userServer) UserForgotPassword(ctx context.Context, req *rpcv3.UserForgotPasswordRequest) (*rpcv3.UserForgotPasswordResponse, error) {
 	return s.us.ForgotPassword(ctx, req)
 
 }

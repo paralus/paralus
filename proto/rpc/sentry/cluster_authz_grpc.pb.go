@@ -18,84 +18,84 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// ClusterAuthorizationClient is the client API for ClusterAuthorization service.
+// ClusterAuthorizationServiceClient is the client API for ClusterAuthorizationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ClusterAuthorizationClient interface {
+type ClusterAuthorizationServiceClient interface {
 	GetUserAuthorization(ctx context.Context, in *GetUserAuthorizationRequest, opts ...grpc.CallOption) (*GetUserAuthorizationResponse, error)
 }
 
-type clusterAuthorizationClient struct {
+type clusterAuthorizationServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewClusterAuthorizationClient(cc grpc.ClientConnInterface) ClusterAuthorizationClient {
-	return &clusterAuthorizationClient{cc}
+func NewClusterAuthorizationServiceClient(cc grpc.ClientConnInterface) ClusterAuthorizationServiceClient {
+	return &clusterAuthorizationServiceClient{cc}
 }
 
-func (c *clusterAuthorizationClient) GetUserAuthorization(ctx context.Context, in *GetUserAuthorizationRequest, opts ...grpc.CallOption) (*GetUserAuthorizationResponse, error) {
+func (c *clusterAuthorizationServiceClient) GetUserAuthorization(ctx context.Context, in *GetUserAuthorizationRequest, opts ...grpc.CallOption) (*GetUserAuthorizationResponse, error) {
 	out := new(GetUserAuthorizationResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.ClusterAuthorization/GetUserAuthorization", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.ClusterAuthorizationService/GetUserAuthorization", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ClusterAuthorizationServer is the server API for ClusterAuthorization service.
-// All implementations should embed UnimplementedClusterAuthorizationServer
+// ClusterAuthorizationServiceServer is the server API for ClusterAuthorizationService service.
+// All implementations should embed UnimplementedClusterAuthorizationServiceServer
 // for forward compatibility
-type ClusterAuthorizationServer interface {
+type ClusterAuthorizationServiceServer interface {
 	GetUserAuthorization(context.Context, *GetUserAuthorizationRequest) (*GetUserAuthorizationResponse, error)
 }
 
-// UnimplementedClusterAuthorizationServer should be embedded to have forward compatible implementations.
-type UnimplementedClusterAuthorizationServer struct {
+// UnimplementedClusterAuthorizationServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedClusterAuthorizationServiceServer struct {
 }
 
-func (UnimplementedClusterAuthorizationServer) GetUserAuthorization(context.Context, *GetUserAuthorizationRequest) (*GetUserAuthorizationResponse, error) {
+func (UnimplementedClusterAuthorizationServiceServer) GetUserAuthorization(context.Context, *GetUserAuthorizationRequest) (*GetUserAuthorizationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserAuthorization not implemented")
 }
 
-// UnsafeClusterAuthorizationServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ClusterAuthorizationServer will
+// UnsafeClusterAuthorizationServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ClusterAuthorizationServiceServer will
 // result in compilation errors.
-type UnsafeClusterAuthorizationServer interface {
-	mustEmbedUnimplementedClusterAuthorizationServer()
+type UnsafeClusterAuthorizationServiceServer interface {
+	mustEmbedUnimplementedClusterAuthorizationServiceServer()
 }
 
-func RegisterClusterAuthorizationServer(s grpc.ServiceRegistrar, srv ClusterAuthorizationServer) {
-	s.RegisterService(&ClusterAuthorization_ServiceDesc, srv)
+func RegisterClusterAuthorizationServiceServer(s grpc.ServiceRegistrar, srv ClusterAuthorizationServiceServer) {
+	s.RegisterService(&ClusterAuthorizationService_ServiceDesc, srv)
 }
 
-func _ClusterAuthorization_GetUserAuthorization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ClusterAuthorizationService_GetUserAuthorization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserAuthorizationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ClusterAuthorizationServer).GetUserAuthorization(ctx, in)
+		return srv.(ClusterAuthorizationServiceServer).GetUserAuthorization(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.sentry.rpc.ClusterAuthorization/GetUserAuthorization",
+		FullMethod: "/paralus.dev.sentry.rpc.ClusterAuthorizationService/GetUserAuthorization",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ClusterAuthorizationServer).GetUserAuthorization(ctx, req.(*GetUserAuthorizationRequest))
+		return srv.(ClusterAuthorizationServiceServer).GetUserAuthorization(ctx, req.(*GetUserAuthorizationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// ClusterAuthorization_ServiceDesc is the grpc.ServiceDesc for ClusterAuthorization service.
+// ClusterAuthorizationService_ServiceDesc is the grpc.ServiceDesc for ClusterAuthorizationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ClusterAuthorization_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "paralus.dev.sentry.rpc.ClusterAuthorization",
-	HandlerType: (*ClusterAuthorizationServer)(nil),
+var ClusterAuthorizationService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "paralus.dev.sentry.rpc.ClusterAuthorizationService",
+	HandlerType: (*ClusterAuthorizationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetUserAuthorization",
-			Handler:    _ClusterAuthorization_GetUserAuthorization_Handler,
+			Handler:    _ClusterAuthorizationService_GetUserAuthorization_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

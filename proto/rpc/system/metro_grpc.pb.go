@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: proto/rpc/system/metro.proto
 
-package rpcv3
+package systemv3
 
 import (
 	context "context"
@@ -19,10 +19,10 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// LocationClient is the client API for Location service.
+// LocationServiceClient is the client API for LocationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type LocationClient interface {
+type LocationServiceClient interface {
 	CreateLocation(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.Location, error)
 	GetLocations(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.LocationList, error)
 	GetLocation(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.Location, error)
@@ -30,63 +30,63 @@ type LocationClient interface {
 	DeleteLocation(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.Location, error)
 }
 
-type locationClient struct {
+type locationServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewLocationClient(cc grpc.ClientConnInterface) LocationClient {
-	return &locationClient{cc}
+func NewLocationServiceClient(cc grpc.ClientConnInterface) LocationServiceClient {
+	return &locationServiceClient{cc}
 }
 
-func (c *locationClient) CreateLocation(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.Location, error) {
+func (c *locationServiceClient) CreateLocation(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.Location, error) {
 	out := new(v3.Location)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Location/CreateLocation", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.LocationService/CreateLocation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *locationClient) GetLocations(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.LocationList, error) {
+func (c *locationServiceClient) GetLocations(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.LocationList, error) {
 	out := new(v3.LocationList)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Location/GetLocations", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.LocationService/GetLocations", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *locationClient) GetLocation(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.Location, error) {
+func (c *locationServiceClient) GetLocation(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.Location, error) {
 	out := new(v3.Location)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Location/GetLocation", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.LocationService/GetLocation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *locationClient) UpdateLocation(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.Location, error) {
+func (c *locationServiceClient) UpdateLocation(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.Location, error) {
 	out := new(v3.Location)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Location/UpdateLocation", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.LocationService/UpdateLocation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *locationClient) DeleteLocation(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.Location, error) {
+func (c *locationServiceClient) DeleteLocation(ctx context.Context, in *v3.Location, opts ...grpc.CallOption) (*v3.Location, error) {
 	out := new(v3.Location)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Location/DeleteLocation", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.LocationService/DeleteLocation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// LocationServer is the server API for Location service.
-// All implementations should embed UnimplementedLocationServer
+// LocationServiceServer is the server API for LocationService service.
+// All implementations should embed UnimplementedLocationServiceServer
 // for forward compatibility
-type LocationServer interface {
+type LocationServiceServer interface {
 	CreateLocation(context.Context, *v3.Location) (*v3.Location, error)
 	GetLocations(context.Context, *v3.Location) (*v3.LocationList, error)
 	GetLocation(context.Context, *v3.Location) (*v3.Location, error)
@@ -94,153 +94,153 @@ type LocationServer interface {
 	DeleteLocation(context.Context, *v3.Location) (*v3.Location, error)
 }
 
-// UnimplementedLocationServer should be embedded to have forward compatible implementations.
-type UnimplementedLocationServer struct {
+// UnimplementedLocationServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedLocationServiceServer struct {
 }
 
-func (UnimplementedLocationServer) CreateLocation(context.Context, *v3.Location) (*v3.Location, error) {
+func (UnimplementedLocationServiceServer) CreateLocation(context.Context, *v3.Location) (*v3.Location, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateLocation not implemented")
 }
-func (UnimplementedLocationServer) GetLocations(context.Context, *v3.Location) (*v3.LocationList, error) {
+func (UnimplementedLocationServiceServer) GetLocations(context.Context, *v3.Location) (*v3.LocationList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLocations not implemented")
 }
-func (UnimplementedLocationServer) GetLocation(context.Context, *v3.Location) (*v3.Location, error) {
+func (UnimplementedLocationServiceServer) GetLocation(context.Context, *v3.Location) (*v3.Location, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLocation not implemented")
 }
-func (UnimplementedLocationServer) UpdateLocation(context.Context, *v3.Location) (*v3.Location, error) {
+func (UnimplementedLocationServiceServer) UpdateLocation(context.Context, *v3.Location) (*v3.Location, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateLocation not implemented")
 }
-func (UnimplementedLocationServer) DeleteLocation(context.Context, *v3.Location) (*v3.Location, error) {
+func (UnimplementedLocationServiceServer) DeleteLocation(context.Context, *v3.Location) (*v3.Location, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteLocation not implemented")
 }
 
-// UnsafeLocationServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to LocationServer will
+// UnsafeLocationServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to LocationServiceServer will
 // result in compilation errors.
-type UnsafeLocationServer interface {
-	mustEmbedUnimplementedLocationServer()
+type UnsafeLocationServiceServer interface {
+	mustEmbedUnimplementedLocationServiceServer()
 }
 
-func RegisterLocationServer(s grpc.ServiceRegistrar, srv LocationServer) {
-	s.RegisterService(&Location_ServiceDesc, srv)
+func RegisterLocationServiceServer(s grpc.ServiceRegistrar, srv LocationServiceServer) {
+	s.RegisterService(&LocationService_ServiceDesc, srv)
 }
 
-func _Location_CreateLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _LocationService_CreateLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Location)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LocationServer).CreateLocation(ctx, in)
+		return srv.(LocationServiceServer).CreateLocation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Location/CreateLocation",
+		FullMethod: "/paralus.dev.rpc.system.v3.LocationService/CreateLocation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LocationServer).CreateLocation(ctx, req.(*v3.Location))
+		return srv.(LocationServiceServer).CreateLocation(ctx, req.(*v3.Location))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Location_GetLocations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _LocationService_GetLocations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Location)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LocationServer).GetLocations(ctx, in)
+		return srv.(LocationServiceServer).GetLocations(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Location/GetLocations",
+		FullMethod: "/paralus.dev.rpc.system.v3.LocationService/GetLocations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LocationServer).GetLocations(ctx, req.(*v3.Location))
+		return srv.(LocationServiceServer).GetLocations(ctx, req.(*v3.Location))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Location_GetLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _LocationService_GetLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Location)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LocationServer).GetLocation(ctx, in)
+		return srv.(LocationServiceServer).GetLocation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Location/GetLocation",
+		FullMethod: "/paralus.dev.rpc.system.v3.LocationService/GetLocation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LocationServer).GetLocation(ctx, req.(*v3.Location))
+		return srv.(LocationServiceServer).GetLocation(ctx, req.(*v3.Location))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Location_UpdateLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _LocationService_UpdateLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Location)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LocationServer).UpdateLocation(ctx, in)
+		return srv.(LocationServiceServer).UpdateLocation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Location/UpdateLocation",
+		FullMethod: "/paralus.dev.rpc.system.v3.LocationService/UpdateLocation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LocationServer).UpdateLocation(ctx, req.(*v3.Location))
+		return srv.(LocationServiceServer).UpdateLocation(ctx, req.(*v3.Location))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Location_DeleteLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _LocationService_DeleteLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Location)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LocationServer).DeleteLocation(ctx, in)
+		return srv.(LocationServiceServer).DeleteLocation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Location/DeleteLocation",
+		FullMethod: "/paralus.dev.rpc.system.v3.LocationService/DeleteLocation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LocationServer).DeleteLocation(ctx, req.(*v3.Location))
+		return srv.(LocationServiceServer).DeleteLocation(ctx, req.(*v3.Location))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Location_ServiceDesc is the grpc.ServiceDesc for Location service.
+// LocationService_ServiceDesc is the grpc.ServiceDesc for LocationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Location_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "paralus.dev.rpc.v3.Location",
-	HandlerType: (*LocationServer)(nil),
+var LocationService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "paralus.dev.rpc.system.v3.LocationService",
+	HandlerType: (*LocationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreateLocation",
-			Handler:    _Location_CreateLocation_Handler,
+			Handler:    _LocationService_CreateLocation_Handler,
 		},
 		{
 			MethodName: "GetLocations",
-			Handler:    _Location_GetLocations_Handler,
+			Handler:    _LocationService_GetLocations_Handler,
 		},
 		{
 			MethodName: "GetLocation",
-			Handler:    _Location_GetLocation_Handler,
+			Handler:    _LocationService_GetLocation_Handler,
 		},
 		{
 			MethodName: "UpdateLocation",
-			Handler:    _Location_UpdateLocation_Handler,
+			Handler:    _LocationService_UpdateLocation_Handler,
 		},
 		{
 			MethodName: "DeleteLocation",
-			Handler:    _Location_DeleteLocation_Handler,
+			Handler:    _LocationService_DeleteLocation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

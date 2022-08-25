@@ -15,7 +15,7 @@ type roleServer struct {
 }
 
 // NewRoleServer returns new role server implementation
-func NewRoleServer(ps service.RoleService) rpcv3.RoleServer {
+func NewRoleServer(ps service.RoleService) rpcv3.RoleServiceServer {
 	return &roleServer{ps}
 }
 

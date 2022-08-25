@@ -9,7 +9,7 @@
   },
   "tags": [
     {
-      "name": "Rolepermission"
+      "name": "RolepermissionService"
     }
   ],
   "schemes": [
@@ -26,7 +26,7 @@
   "paths": {
     "/auth/v3/rolepermissions": {
       "get": {
-        "operationId": "Rolepermission_GetRolepermissions",
+        "operationId": "RolepermissionService_GetRolepermissions",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -55,21 +55,21 @@
         "parameters": [
           {
             "name": "q",
-            "description": "query for filtering.",
+            "description": "query for filtering",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "name",
-            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID).",
+            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "selector",
-            "description": "selector is used to filter the labels of a resource.",
+            "description": "selector is used to filter the labels of a resource",
             "in": "query",
             "required": false,
             "type": "string"
@@ -106,7 +106,7 @@
           },
           {
             "name": "displayName",
-            "description": "displayName only used for update queries to set displayName (READONLY).",
+            "description": "displayName only used for update queries to set displayName (READONLY)",
             "in": "query",
             "required": false,
             "type": "string"
@@ -134,14 +134,14 @@
           },
           {
             "name": "ignoreScopeDefault",
-            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID.",
+            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "globalScope",
-            "description": "globalScope sets partnerID,organizationID,projectID = 0.",
+            "description": "globalScope sets partnerID,organizationID,projectID = 0",
             "in": "query",
             "required": false,
             "type": "boolean"
@@ -172,7 +172,7 @@
           },
           {
             "name": "urlScope",
-            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value).",
+            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value)",
             "in": "query",
             "required": false,
             "type": "string"
@@ -231,14 +231,14 @@
           },
           {
             "name": "type",
-            "description": "generic way to specify a type of resource, mainly for use in users endpoint.",
+            "description": "generic way to specify a type of resource, mainly for use in users endpoint",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Rolepermission"
+          "RolepermissionService"
         ]
       }
     }
@@ -483,11 +483,11 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v3RolePermission"
+            "$ref": "#/definitions/v3RolePermission",
+            "readOnly": true
           },
           "description": "List of the role permission resources",
-          "title": "Items",
-          "readOnly": true
+          "title": "Items"
         }
       },
       "description": "RolePeList list",

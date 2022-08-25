@@ -1,5 +1,5 @@
 syntax = "proto3";
-package paralus.dev.rpc.v3;
+package paralus.dev.rpc.system.v3;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -54,7 +54,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 
-service Idp {
+service IdpService {
   rpc CreateIdp(paralus.dev.types.system.v3.Idp) returns (paralus.dev.types.system.v3.Idp) {
     option (google.api.http) = {
       post : "/auth/v3/sso/idp"
@@ -106,4 +106,3 @@ service Idp {
   // TODO: endpooint /auth/v1/sso/idp/{name}/upload_metadata/
   // file content as request payload and response is Idp
 }
-

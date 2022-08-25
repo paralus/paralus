@@ -18,192 +18,192 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// RelayAuditClient is the client API for RelayAudit service.
+// RelayAuditServiceClient is the client API for RelayAuditService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type RelayAuditClient interface {
-	GetRelayAPIAudit(ctx context.Context, in *RelayAuditSearchRequest, opts ...grpc.CallOption) (*RelayAuditSearchResponse, error)
-	GetRelayAPIAuditByProjects(ctx context.Context, in *RelayAuditSearchRequest, opts ...grpc.CallOption) (*RelayAuditSearchResponse, error)
-	GetRelayAudit(ctx context.Context, in *RelayAuditSearchRequest, opts ...grpc.CallOption) (*RelayAuditSearchResponse, error)
-	GetRelayAuditByProjects(ctx context.Context, in *RelayAuditSearchRequest, opts ...grpc.CallOption) (*RelayAuditSearchResponse, error)
+type RelayAuditServiceClient interface {
+	GetRelayAPIAudit(ctx context.Context, in *RelayAuditRequest, opts ...grpc.CallOption) (*RelayAuditResponse, error)
+	GetRelayAPIAuditByProjects(ctx context.Context, in *RelayAuditRequest, opts ...grpc.CallOption) (*RelayAuditResponse, error)
+	GetRelayAudit(ctx context.Context, in *RelayAuditRequest, opts ...grpc.CallOption) (*RelayAuditResponse, error)
+	GetRelayAuditByProjects(ctx context.Context, in *RelayAuditRequest, opts ...grpc.CallOption) (*RelayAuditResponse, error)
 }
 
-type relayAuditClient struct {
+type relayAuditServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewRelayAuditClient(cc grpc.ClientConnInterface) RelayAuditClient {
-	return &relayAuditClient{cc}
+func NewRelayAuditServiceClient(cc grpc.ClientConnInterface) RelayAuditServiceClient {
+	return &relayAuditServiceClient{cc}
 }
 
-func (c *relayAuditClient) GetRelayAPIAudit(ctx context.Context, in *RelayAuditSearchRequest, opts ...grpc.CallOption) (*RelayAuditSearchResponse, error) {
-	out := new(RelayAuditSearchResponse)
-	err := c.cc.Invoke(ctx, "/rep.framework.event.v1.RelayAudit/getRelayAPIAudit", in, out, opts...)
+func (c *relayAuditServiceClient) GetRelayAPIAudit(ctx context.Context, in *RelayAuditRequest, opts ...grpc.CallOption) (*RelayAuditResponse, error) {
+	out := new(RelayAuditResponse)
+	err := c.cc.Invoke(ctx, "/rep.framework.event.v1.RelayAuditService/GetRelayAPIAudit", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *relayAuditClient) GetRelayAPIAuditByProjects(ctx context.Context, in *RelayAuditSearchRequest, opts ...grpc.CallOption) (*RelayAuditSearchResponse, error) {
-	out := new(RelayAuditSearchResponse)
-	err := c.cc.Invoke(ctx, "/rep.framework.event.v1.RelayAudit/getRelayAPIAuditByProjects", in, out, opts...)
+func (c *relayAuditServiceClient) GetRelayAPIAuditByProjects(ctx context.Context, in *RelayAuditRequest, opts ...grpc.CallOption) (*RelayAuditResponse, error) {
+	out := new(RelayAuditResponse)
+	err := c.cc.Invoke(ctx, "/rep.framework.event.v1.RelayAuditService/GetRelayAPIAuditByProjects", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *relayAuditClient) GetRelayAudit(ctx context.Context, in *RelayAuditSearchRequest, opts ...grpc.CallOption) (*RelayAuditSearchResponse, error) {
-	out := new(RelayAuditSearchResponse)
-	err := c.cc.Invoke(ctx, "/rep.framework.event.v1.RelayAudit/getRelayAudit", in, out, opts...)
+func (c *relayAuditServiceClient) GetRelayAudit(ctx context.Context, in *RelayAuditRequest, opts ...grpc.CallOption) (*RelayAuditResponse, error) {
+	out := new(RelayAuditResponse)
+	err := c.cc.Invoke(ctx, "/rep.framework.event.v1.RelayAuditService/GetRelayAudit", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *relayAuditClient) GetRelayAuditByProjects(ctx context.Context, in *RelayAuditSearchRequest, opts ...grpc.CallOption) (*RelayAuditSearchResponse, error) {
-	out := new(RelayAuditSearchResponse)
-	err := c.cc.Invoke(ctx, "/rep.framework.event.v1.RelayAudit/getRelayAuditByProjects", in, out, opts...)
+func (c *relayAuditServiceClient) GetRelayAuditByProjects(ctx context.Context, in *RelayAuditRequest, opts ...grpc.CallOption) (*RelayAuditResponse, error) {
+	out := new(RelayAuditResponse)
+	err := c.cc.Invoke(ctx, "/rep.framework.event.v1.RelayAuditService/GetRelayAuditByProjects", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// RelayAuditServer is the server API for RelayAudit service.
-// All implementations should embed UnimplementedRelayAuditServer
+// RelayAuditServiceServer is the server API for RelayAuditService service.
+// All implementations should embed UnimplementedRelayAuditServiceServer
 // for forward compatibility
-type RelayAuditServer interface {
-	GetRelayAPIAudit(context.Context, *RelayAuditSearchRequest) (*RelayAuditSearchResponse, error)
-	GetRelayAPIAuditByProjects(context.Context, *RelayAuditSearchRequest) (*RelayAuditSearchResponse, error)
-	GetRelayAudit(context.Context, *RelayAuditSearchRequest) (*RelayAuditSearchResponse, error)
-	GetRelayAuditByProjects(context.Context, *RelayAuditSearchRequest) (*RelayAuditSearchResponse, error)
+type RelayAuditServiceServer interface {
+	GetRelayAPIAudit(context.Context, *RelayAuditRequest) (*RelayAuditResponse, error)
+	GetRelayAPIAuditByProjects(context.Context, *RelayAuditRequest) (*RelayAuditResponse, error)
+	GetRelayAudit(context.Context, *RelayAuditRequest) (*RelayAuditResponse, error)
+	GetRelayAuditByProjects(context.Context, *RelayAuditRequest) (*RelayAuditResponse, error)
 }
 
-// UnimplementedRelayAuditServer should be embedded to have forward compatible implementations.
-type UnimplementedRelayAuditServer struct {
+// UnimplementedRelayAuditServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedRelayAuditServiceServer struct {
 }
 
-func (UnimplementedRelayAuditServer) GetRelayAPIAudit(context.Context, *RelayAuditSearchRequest) (*RelayAuditSearchResponse, error) {
+func (UnimplementedRelayAuditServiceServer) GetRelayAPIAudit(context.Context, *RelayAuditRequest) (*RelayAuditResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRelayAPIAudit not implemented")
 }
-func (UnimplementedRelayAuditServer) GetRelayAPIAuditByProjects(context.Context, *RelayAuditSearchRequest) (*RelayAuditSearchResponse, error) {
+func (UnimplementedRelayAuditServiceServer) GetRelayAPIAuditByProjects(context.Context, *RelayAuditRequest) (*RelayAuditResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRelayAPIAuditByProjects not implemented")
 }
-func (UnimplementedRelayAuditServer) GetRelayAudit(context.Context, *RelayAuditSearchRequest) (*RelayAuditSearchResponse, error) {
+func (UnimplementedRelayAuditServiceServer) GetRelayAudit(context.Context, *RelayAuditRequest) (*RelayAuditResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRelayAudit not implemented")
 }
-func (UnimplementedRelayAuditServer) GetRelayAuditByProjects(context.Context, *RelayAuditSearchRequest) (*RelayAuditSearchResponse, error) {
+func (UnimplementedRelayAuditServiceServer) GetRelayAuditByProjects(context.Context, *RelayAuditRequest) (*RelayAuditResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRelayAuditByProjects not implemented")
 }
 
-// UnsafeRelayAuditServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to RelayAuditServer will
+// UnsafeRelayAuditServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to RelayAuditServiceServer will
 // result in compilation errors.
-type UnsafeRelayAuditServer interface {
-	mustEmbedUnimplementedRelayAuditServer()
+type UnsafeRelayAuditServiceServer interface {
+	mustEmbedUnimplementedRelayAuditServiceServer()
 }
 
-func RegisterRelayAuditServer(s grpc.ServiceRegistrar, srv RelayAuditServer) {
-	s.RegisterService(&RelayAudit_ServiceDesc, srv)
+func RegisterRelayAuditServiceServer(s grpc.ServiceRegistrar, srv RelayAuditServiceServer) {
+	s.RegisterService(&RelayAuditService_ServiceDesc, srv)
 }
 
-func _RelayAudit_GetRelayAPIAudit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RelayAuditSearchRequest)
+func _RelayAuditService_GetRelayAPIAudit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RelayAuditRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RelayAuditServer).GetRelayAPIAudit(ctx, in)
+		return srv.(RelayAuditServiceServer).GetRelayAPIAudit(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rep.framework.event.v1.RelayAudit/getRelayAPIAudit",
+		FullMethod: "/rep.framework.event.v1.RelayAuditService/GetRelayAPIAudit",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RelayAuditServer).GetRelayAPIAudit(ctx, req.(*RelayAuditSearchRequest))
+		return srv.(RelayAuditServiceServer).GetRelayAPIAudit(ctx, req.(*RelayAuditRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RelayAudit_GetRelayAPIAuditByProjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RelayAuditSearchRequest)
+func _RelayAuditService_GetRelayAPIAuditByProjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RelayAuditRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RelayAuditServer).GetRelayAPIAuditByProjects(ctx, in)
+		return srv.(RelayAuditServiceServer).GetRelayAPIAuditByProjects(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rep.framework.event.v1.RelayAudit/getRelayAPIAuditByProjects",
+		FullMethod: "/rep.framework.event.v1.RelayAuditService/GetRelayAPIAuditByProjects",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RelayAuditServer).GetRelayAPIAuditByProjects(ctx, req.(*RelayAuditSearchRequest))
+		return srv.(RelayAuditServiceServer).GetRelayAPIAuditByProjects(ctx, req.(*RelayAuditRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RelayAudit_GetRelayAudit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RelayAuditSearchRequest)
+func _RelayAuditService_GetRelayAudit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RelayAuditRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RelayAuditServer).GetRelayAudit(ctx, in)
+		return srv.(RelayAuditServiceServer).GetRelayAudit(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rep.framework.event.v1.RelayAudit/getRelayAudit",
+		FullMethod: "/rep.framework.event.v1.RelayAuditService/GetRelayAudit",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RelayAuditServer).GetRelayAudit(ctx, req.(*RelayAuditSearchRequest))
+		return srv.(RelayAuditServiceServer).GetRelayAudit(ctx, req.(*RelayAuditRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RelayAudit_GetRelayAuditByProjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RelayAuditSearchRequest)
+func _RelayAuditService_GetRelayAuditByProjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RelayAuditRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RelayAuditServer).GetRelayAuditByProjects(ctx, in)
+		return srv.(RelayAuditServiceServer).GetRelayAuditByProjects(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rep.framework.event.v1.RelayAudit/getRelayAuditByProjects",
+		FullMethod: "/rep.framework.event.v1.RelayAuditService/GetRelayAuditByProjects",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RelayAuditServer).GetRelayAuditByProjects(ctx, req.(*RelayAuditSearchRequest))
+		return srv.(RelayAuditServiceServer).GetRelayAuditByProjects(ctx, req.(*RelayAuditRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// RelayAudit_ServiceDesc is the grpc.ServiceDesc for RelayAudit service.
+// RelayAuditService_ServiceDesc is the grpc.ServiceDesc for RelayAuditService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var RelayAudit_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rep.framework.event.v1.RelayAudit",
-	HandlerType: (*RelayAuditServer)(nil),
+var RelayAuditService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "rep.framework.event.v1.RelayAuditService",
+	HandlerType: (*RelayAuditServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "getRelayAPIAudit",
-			Handler:    _RelayAudit_GetRelayAPIAudit_Handler,
+			MethodName: "GetRelayAPIAudit",
+			Handler:    _RelayAuditService_GetRelayAPIAudit_Handler,
 		},
 		{
-			MethodName: "getRelayAPIAuditByProjects",
-			Handler:    _RelayAudit_GetRelayAPIAuditByProjects_Handler,
+			MethodName: "GetRelayAPIAuditByProjects",
+			Handler:    _RelayAuditService_GetRelayAPIAuditByProjects_Handler,
 		},
 		{
-			MethodName: "getRelayAudit",
-			Handler:    _RelayAudit_GetRelayAudit_Handler,
+			MethodName: "GetRelayAudit",
+			Handler:    _RelayAuditService_GetRelayAudit_Handler,
 		},
 		{
-			MethodName: "getRelayAuditByProjects",
-			Handler:    _RelayAudit_GetRelayAuditByProjects_Handler,
+			MethodName: "GetRelayAuditByProjects",
+			Handler:    _RelayAuditService_GetRelayAuditByProjects_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

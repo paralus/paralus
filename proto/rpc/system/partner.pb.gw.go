@@ -2,11 +2,11 @@
 // source: proto/rpc/system/partner.proto
 
 /*
-Package rpcv3 is a reverse proxy.
+Package systemv3 is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package rpcv3
+package systemv3
 
 import (
 	"context"
@@ -32,7 +32,7 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_Partner_CreatePartner_0(ctx context.Context, marshaler runtime.Marshaler, client PartnerClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_PartnerService_CreatePartner_0(ctx context.Context, marshaler runtime.Marshaler, client PartnerServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Partner
 	var metadata runtime.ServerMetadata
 
@@ -49,7 +49,7 @@ func request_Partner_CreatePartner_0(ctx context.Context, marshaler runtime.Mars
 
 }
 
-func local_request_Partner_CreatePartner_0(ctx context.Context, marshaler runtime.Marshaler, server PartnerServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_PartnerService_CreatePartner_0(ctx context.Context, marshaler runtime.Marshaler, server PartnerServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Partner
 	var metadata runtime.ServerMetadata
 
@@ -67,10 +67,10 @@ func local_request_Partner_CreatePartner_0(ctx context.Context, marshaler runtim
 }
 
 var (
-	filter_Partner_GetPartner_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_PartnerService_GetPartner_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_Partner_GetPartner_0(ctx context.Context, marshaler runtime.Marshaler, client PartnerClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_PartnerService_GetPartner_0(ctx context.Context, marshaler runtime.Marshaler, client PartnerServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Partner
 	var metadata runtime.ServerMetadata
 
@@ -94,7 +94,7 @@ func request_Partner_GetPartner_0(ctx context.Context, marshaler runtime.Marshal
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Partner_GetPartner_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_PartnerService_GetPartner_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -103,7 +103,7 @@ func request_Partner_GetPartner_0(ctx context.Context, marshaler runtime.Marshal
 
 }
 
-func local_request_Partner_GetPartner_0(ctx context.Context, marshaler runtime.Marshaler, server PartnerServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_PartnerService_GetPartner_0(ctx context.Context, marshaler runtime.Marshaler, server PartnerServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Partner
 	var metadata runtime.ServerMetadata
 
@@ -127,7 +127,7 @@ func local_request_Partner_GetPartner_0(ctx context.Context, marshaler runtime.M
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Partner_GetPartner_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_PartnerService_GetPartner_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -136,7 +136,7 @@ func local_request_Partner_GetPartner_0(ctx context.Context, marshaler runtime.M
 
 }
 
-func request_Partner_GetInitPartner_0(ctx context.Context, marshaler runtime.Marshaler, client PartnerClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_PartnerService_GetInitPartner_0(ctx context.Context, marshaler runtime.Marshaler, client PartnerServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq EmptyRequest
 	var metadata runtime.ServerMetadata
 
@@ -145,7 +145,7 @@ func request_Partner_GetInitPartner_0(ctx context.Context, marshaler runtime.Mar
 
 }
 
-func local_request_Partner_GetInitPartner_0(ctx context.Context, marshaler runtime.Marshaler, server PartnerServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_PartnerService_GetInitPartner_0(ctx context.Context, marshaler runtime.Marshaler, server PartnerServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq EmptyRequest
 	var metadata runtime.ServerMetadata
 
@@ -154,7 +154,7 @@ func local_request_Partner_GetInitPartner_0(ctx context.Context, marshaler runti
 
 }
 
-func request_Partner_UpdatePartner_0(ctx context.Context, marshaler runtime.Marshaler, client PartnerClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_PartnerService_UpdatePartner_0(ctx context.Context, marshaler runtime.Marshaler, client PartnerServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Partner
 	var metadata runtime.ServerMetadata
 
@@ -188,7 +188,7 @@ func request_Partner_UpdatePartner_0(ctx context.Context, marshaler runtime.Mars
 
 }
 
-func local_request_Partner_UpdatePartner_0(ctx context.Context, marshaler runtime.Marshaler, server PartnerServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_PartnerService_UpdatePartner_0(ctx context.Context, marshaler runtime.Marshaler, server PartnerServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Partner
 	var metadata runtime.ServerMetadata
 
@@ -223,10 +223,10 @@ func local_request_Partner_UpdatePartner_0(ctx context.Context, marshaler runtim
 }
 
 var (
-	filter_Partner_DeletePartner_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_PartnerService_DeletePartner_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_Partner_DeletePartner_0(ctx context.Context, marshaler runtime.Marshaler, client PartnerClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_PartnerService_DeletePartner_0(ctx context.Context, marshaler runtime.Marshaler, client PartnerServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Partner
 	var metadata runtime.ServerMetadata
 
@@ -250,7 +250,7 @@ func request_Partner_DeletePartner_0(ctx context.Context, marshaler runtime.Mars
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Partner_DeletePartner_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_PartnerService_DeletePartner_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -259,7 +259,7 @@ func request_Partner_DeletePartner_0(ctx context.Context, marshaler runtime.Mars
 
 }
 
-func local_request_Partner_DeletePartner_0(ctx context.Context, marshaler runtime.Marshaler, server PartnerServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_PartnerService_DeletePartner_0(ctx context.Context, marshaler runtime.Marshaler, server PartnerServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Partner
 	var metadata runtime.ServerMetadata
 
@@ -283,7 +283,7 @@ func local_request_Partner_DeletePartner_0(ctx context.Context, marshaler runtim
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Partner_DeletePartner_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_PartnerService_DeletePartner_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -292,133 +292,143 @@ func local_request_Partner_DeletePartner_0(ctx context.Context, marshaler runtim
 
 }
 
-// RegisterPartnerHandlerServer registers the http handlers for service Partner to "mux".
-// UnaryRPC     :call PartnerServer directly.
+// RegisterPartnerServiceHandlerServer registers the http handlers for service PartnerService to "mux".
+// UnaryRPC     :call PartnerServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterPartnerHandlerFromEndpoint instead.
-func RegisterPartnerHandlerServer(ctx context.Context, mux *runtime.ServeMux, server PartnerServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterPartnerServiceHandlerFromEndpoint instead.
+func RegisterPartnerServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server PartnerServiceServer) error {
 
-	mux.Handle("POST", pattern_Partner_CreatePartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PartnerService_CreatePartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Partner/CreatePartner", runtime.WithHTTPPathPattern("/auth/v3/partner"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.PartnerService/CreatePartner", runtime.WithHTTPPathPattern("/auth/v3/partner"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Partner_CreatePartner_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_PartnerService_CreatePartner_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Partner_CreatePartner_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PartnerService_CreatePartner_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Partner_GetPartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_PartnerService_GetPartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Partner/GetPartner", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.PartnerService/GetPartner", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Partner_GetPartner_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_PartnerService_GetPartner_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Partner_GetPartner_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PartnerService_GetPartner_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Partner_GetInitPartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_PartnerService_GetInitPartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Partner/GetInitPartner", runtime.WithHTTPPathPattern("/auth/v3/partner"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.PartnerService/GetInitPartner", runtime.WithHTTPPathPattern("/auth/v3/partner"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Partner_GetInitPartner_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_PartnerService_GetInitPartner_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Partner_GetInitPartner_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PartnerService_GetInitPartner_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Partner_UpdatePartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_PartnerService_UpdatePartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Partner/UpdatePartner", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.PartnerService/UpdatePartner", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Partner_UpdatePartner_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_PartnerService_UpdatePartner_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Partner_UpdatePartner_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PartnerService_UpdatePartner_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_Partner_DeletePartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_PartnerService_DeletePartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Partner/DeletePartner", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.PartnerService/DeletePartner", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Partner_DeletePartner_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_PartnerService_DeletePartner_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Partner_DeletePartner_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PartnerService_DeletePartner_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterPartnerHandlerFromEndpoint is same as RegisterPartnerHandler but
+// RegisterPartnerServiceHandlerFromEndpoint is same as RegisterPartnerServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterPartnerHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterPartnerServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -438,119 +448,129 @@ func RegisterPartnerHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeM
 		}()
 	}()
 
-	return RegisterPartnerHandler(ctx, mux, conn)
+	return RegisterPartnerServiceHandler(ctx, mux, conn)
 }
 
-// RegisterPartnerHandler registers the http handlers for service Partner to "mux".
+// RegisterPartnerServiceHandler registers the http handlers for service PartnerService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterPartnerHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterPartnerHandlerClient(ctx, mux, NewPartnerClient(conn))
+func RegisterPartnerServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterPartnerServiceHandlerClient(ctx, mux, NewPartnerServiceClient(conn))
 }
 
-// RegisterPartnerHandlerClient registers the http handlers for service Partner
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "PartnerClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "PartnerClient"
+// RegisterPartnerServiceHandlerClient registers the http handlers for service PartnerService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "PartnerServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "PartnerServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "PartnerClient" to call the correct interceptors.
-func RegisterPartnerHandlerClient(ctx context.Context, mux *runtime.ServeMux, client PartnerClient) error {
+// "PartnerServiceClient" to call the correct interceptors.
+func RegisterPartnerServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client PartnerServiceClient) error {
 
-	mux.Handle("POST", pattern_Partner_CreatePartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PartnerService_CreatePartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Partner/CreatePartner", runtime.WithHTTPPathPattern("/auth/v3/partner"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.PartnerService/CreatePartner", runtime.WithHTTPPathPattern("/auth/v3/partner"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Partner_CreatePartner_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_PartnerService_CreatePartner_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Partner_CreatePartner_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PartnerService_CreatePartner_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Partner_GetPartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_PartnerService_GetPartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Partner/GetPartner", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.PartnerService/GetPartner", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Partner_GetPartner_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_PartnerService_GetPartner_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Partner_GetPartner_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PartnerService_GetPartner_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Partner_GetInitPartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_PartnerService_GetInitPartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Partner/GetInitPartner", runtime.WithHTTPPathPattern("/auth/v3/partner"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.PartnerService/GetInitPartner", runtime.WithHTTPPathPattern("/auth/v3/partner"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Partner_GetInitPartner_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_PartnerService_GetInitPartner_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Partner_GetInitPartner_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PartnerService_GetInitPartner_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Partner_UpdatePartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_PartnerService_UpdatePartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Partner/UpdatePartner", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.PartnerService/UpdatePartner", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Partner_UpdatePartner_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_PartnerService_UpdatePartner_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Partner_UpdatePartner_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PartnerService_UpdatePartner_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_Partner_DeletePartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_PartnerService_DeletePartner_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Partner/DeletePartner", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.PartnerService/DeletePartner", runtime.WithHTTPPathPattern("/auth/v3/partner/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Partner_DeletePartner_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_PartnerService_DeletePartner_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Partner_DeletePartner_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PartnerService_DeletePartner_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -558,25 +578,25 @@ func RegisterPartnerHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 }
 
 var (
-	pattern_Partner_CreatePartner_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"auth", "v3", "partner"}, ""))
+	pattern_PartnerService_CreatePartner_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"auth", "v3", "partner"}, ""))
 
-	pattern_Partner_GetPartner_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"auth", "v3", "partner", "metadata.name"}, ""))
+	pattern_PartnerService_GetPartner_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"auth", "v3", "partner", "metadata.name"}, ""))
 
-	pattern_Partner_GetInitPartner_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"auth", "v3", "partner"}, ""))
+	pattern_PartnerService_GetInitPartner_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"auth", "v3", "partner"}, ""))
 
-	pattern_Partner_UpdatePartner_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"auth", "v3", "partner", "metadata.name"}, ""))
+	pattern_PartnerService_UpdatePartner_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"auth", "v3", "partner", "metadata.name"}, ""))
 
-	pattern_Partner_DeletePartner_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"auth", "v3", "partner", "metadata.name"}, ""))
+	pattern_PartnerService_DeletePartner_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"auth", "v3", "partner", "metadata.name"}, ""))
 )
 
 var (
-	forward_Partner_CreatePartner_0 = runtime.ForwardResponseMessage
+	forward_PartnerService_CreatePartner_0 = runtime.ForwardResponseMessage
 
-	forward_Partner_GetPartner_0 = runtime.ForwardResponseMessage
+	forward_PartnerService_GetPartner_0 = runtime.ForwardResponseMessage
 
-	forward_Partner_GetInitPartner_0 = runtime.ForwardResponseMessage
+	forward_PartnerService_GetInitPartner_0 = runtime.ForwardResponseMessage
 
-	forward_Partner_UpdatePartner_0 = runtime.ForwardResponseMessage
+	forward_PartnerService_UpdatePartner_0 = runtime.ForwardResponseMessage
 
-	forward_Partner_DeletePartner_0 = runtime.ForwardResponseMessage
+	forward_PartnerService_DeletePartner_0 = runtime.ForwardResponseMessage
 )

@@ -13,7 +13,7 @@ type idpServer struct {
 	service.IdpService
 }
 
-func NewIdpServer(is service.IdpService) rpcv3.IdpServer {
+func NewIdpServer(is service.IdpService) rpcv3.IdpServiceServer {
 	return &idpServer{is}
 }
 

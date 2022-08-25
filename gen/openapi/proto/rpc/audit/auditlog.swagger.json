@@ -9,7 +9,7 @@
   },
   "tags": [
     {
-      "name": "AuditLog"
+      "name": "AuditLogService"
     }
   ],
   "schemes": [
@@ -26,12 +26,12 @@
   "paths": {
     "/event/v1/auditlog": {
       "get": {
-        "operationId": "AuditLog_getAuditLogByProjects",
+        "operationId": "AuditLogService_GetAuditLogByProjects",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1auditLogSearchResponse"
+              "$ref": "#/definitions/v1GetAuditLogSearchResponse"
             }
           },
           "403": {
@@ -55,42 +55,42 @@
         "parameters": [
           {
             "name": "metadata.name",
-            "description": "Name. name of the resource",
+            "description": "Name\n\nname of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -199,18 +199,18 @@
           }
         ],
         "tags": [
-          "AuditLog"
+          "AuditLogService"
         ]
       }
     },
     "/event/v1/{metadata.urlScope}/auditlog": {
       "get": {
-        "operationId": "AuditLog_getAuditLog",
+        "operationId": "AuditLogService_GetAuditLog",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1auditLogSearchResponse"
+              "$ref": "#/definitions/v1GetAuditLogSearchResponse"
             }
           },
           "403": {
@@ -241,42 +241,42 @@
           },
           {
             "name": "metadata.name",
-            "description": "Name. name of the resource",
+            "description": "Name\n\nname of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -379,7 +379,7 @@
           }
         ],
         "tags": [
-          "AuditLog"
+          "AuditLogService"
         ]
       }
     }
@@ -420,7 +420,7 @@
       "default": "NULL_VALUE",
       "description": "`NullValue` is a singleton enumeration to represent the null value for the\n`Value` type union.\n\n The JSON representation for `NullValue` is JSON `null`.\n\n - NULL_VALUE: Null value."
     },
-    "v1auditLogQueryFilter": {
+    "v1AuditLogQueryFilter": {
       "type": "object",
       "properties": {
         "type": {
@@ -464,7 +464,7 @@
         }
       }
     },
-    "v1auditLogSearchResponse": {
+    "v1GetAuditLogSearchResponse": {
       "type": "object",
       "properties": {
         "result": {

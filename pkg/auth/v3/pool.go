@@ -13,12 +13,12 @@ import (
 type AuthPoolClient interface {
 	Unhealthy()
 	Close() error
-	rpcv3.AuthClient
+	rpcv3.AuthServiceClient
 }
 
 type authPoolClient struct {
 	*grpcpool.ClientConn
-	rpcv3.AuthClient
+	rpcv3.AuthServiceClient
 }
 
 var _ AuthPoolClient = (*authPoolClient)(nil)
@@ -48,7 +48,7 @@ func (p *authPool) NewClient(ctx context.Context) (AuthPoolClient, error) {
 	}
 	return &authPoolClient{
 		cc,
-		rpcv3.NewAuthClient(cc.ClientConn),
+		rpcv3.NewAuthServiceClient(cc.ClientConn),
 	}, nil
 }
 

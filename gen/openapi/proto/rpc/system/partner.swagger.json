@@ -9,7 +9,7 @@
   },
   "tags": [
     {
-      "name": "Partner"
+      "name": "PartnerService"
     }
   ],
   "schemes": [
@@ -26,7 +26,7 @@
   "paths": {
     "/auth/v3/partner": {
       "get": {
-        "operationId": "Partner_GetInitPartner",
+        "operationId": "PartnerService_GetInitPartner",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -53,11 +53,11 @@
           }
         },
         "tags": [
-          "Partner"
+          "PartnerService"
         ]
       },
       "post": {
-        "operationId": "Partner_CreatePartner",
+        "operationId": "PartnerService_CreatePartner",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -90,6 +90,7 @@
         "parameters": [
           {
             "name": "body",
+            "description": "Partner",
             "in": "body",
             "required": true,
             "schema": {
@@ -98,13 +99,13 @@
           }
         ],
         "tags": [
-          "Partner"
+          "PartnerService"
         ]
       }
     },
     "/auth/v3/partner/{metadata.name}": {
       "get": {
-        "operationId": "Partner_GetPartner",
+        "operationId": "PartnerService_GetPartner",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -140,51 +141,51 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "Partner"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -217,91 +218,91 @@
           },
           {
             "name": "spec.host",
-            "description": "Host. Host of the partner",
+            "description": "Host\n\nHost of the partner",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.domain",
-            "description": "Domain. Domain of the partner",
+            "description": "Domain\n\nDomain of the partner",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.tosLink",
-            "description": "TOS. Terms of service url of the partner",
+            "description": "TOS\n\nTerms of service url of the partner",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.logoLink",
-            "description": "Logo. Logo url of the partner",
+            "description": "Logo\n\nLogo url of the partner",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.notificationEmail",
-            "description": "Notification Email. Notification email of the partner",
+            "description": "Notification Email\n\nNotification email of the partner",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.helpdeskEmail",
-            "description": "Helpdesk Email. Helpdesk email of the partner",
+            "description": "Helpdesk Email\n\nHelpdesk email of the partner",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.productName",
-            "description": "Product Name. Product Name",
+            "description": "Product Name\n\nProduct Name",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.supportTeamName",
-            "description": "Support Team Name. Support Team Name",
+            "description": "Support Team Name\n\nSupport Team Name",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.opsHost",
-            "description": "OPS Host. Operations host of the partner",
+            "description": "OPS Host\n\nOperations host of the partner",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.favIconLink",
-            "description": "Fav Icon Link. Fav Icon Link",
+            "description": "Fav Icon Link\n\nFav Icon Link",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.isTOTPEnabled",
-            "description": "TOTP Enabled. TOTP Enabled flag at the partner level",
+            "description": "TOTP Enabled\n\nTOTP Enabled flag at the partner level",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
@@ -315,7 +316,7 @@
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -323,18 +324,18 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Partner"
+          "PartnerService"
         ]
       },
       "delete": {
-        "operationId": "Partner_DeletePartner",
+        "operationId": "PartnerService_DeletePartner",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -374,51 +375,51 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "Partner"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -451,91 +452,91 @@
           },
           {
             "name": "spec.host",
-            "description": "Host. Host of the partner",
+            "description": "Host\n\nHost of the partner",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.domain",
-            "description": "Domain. Domain of the partner",
+            "description": "Domain\n\nDomain of the partner",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.tosLink",
-            "description": "TOS. Terms of service url of the partner",
+            "description": "TOS\n\nTerms of service url of the partner",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.logoLink",
-            "description": "Logo. Logo url of the partner",
+            "description": "Logo\n\nLogo url of the partner",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.notificationEmail",
-            "description": "Notification Email. Notification email of the partner",
+            "description": "Notification Email\n\nNotification email of the partner",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.helpdeskEmail",
-            "description": "Helpdesk Email. Helpdesk email of the partner",
+            "description": "Helpdesk Email\n\nHelpdesk email of the partner",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.productName",
-            "description": "Product Name. Product Name",
+            "description": "Product Name\n\nProduct Name",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.supportTeamName",
-            "description": "Support Team Name. Support Team Name",
+            "description": "Support Team Name\n\nSupport Team Name",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.opsHost",
-            "description": "OPS Host. Operations host of the partner",
+            "description": "OPS Host\n\nOperations host of the partner",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.favIconLink",
-            "description": "Fav Icon Link. Fav Icon Link",
+            "description": "Fav Icon Link\n\nFav Icon Link",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.isTOTPEnabled",
-            "description": "TOTP Enabled. TOTP Enabled flag at the partner level",
+            "description": "TOTP Enabled\n\nTOTP Enabled flag at the partner level",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
@@ -549,7 +550,7 @@
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -557,18 +558,18 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Partner"
+          "PartnerService"
         ]
       },
       "put": {
-        "operationId": "Partner_UpdatePartner",
+        "operationId": "PartnerService_UpdatePartner",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -607,12 +608,118 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v3Partner"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "system.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Partner",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3PartnerSpec",
+                  "description": "Spec of the resource",
+                  "title": "Spec"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Partner",
+              "title": "Partner",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec",
+                "project"
+              ]
             }
           }
         ],
         "tags": [
-          "Partner"
+          "PartnerService"
         ]
       }
     }

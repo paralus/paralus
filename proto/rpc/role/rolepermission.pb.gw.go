@@ -2,11 +2,11 @@
 // source: proto/rpc/role/rolepermission.proto
 
 /*
-Package rpcv3 is a reverse proxy.
+Package rolev3 is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package rpcv3
+package rolev3
 
 import (
 	"context"
@@ -33,17 +33,17 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 var (
-	filter_Rolepermission_GetRolepermissions_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+	filter_RolepermissionService_GetRolepermissions_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
-func request_Rolepermission_GetRolepermissions_0(ctx context.Context, marshaler runtime.Marshaler, client RolepermissionClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_RolepermissionService_GetRolepermissions_0(ctx context.Context, marshaler runtime.Marshaler, client RolepermissionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq commonv3.QueryOptions
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Rolepermission_GetRolepermissions_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RolepermissionService_GetRolepermissions_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -52,14 +52,14 @@ func request_Rolepermission_GetRolepermissions_0(ctx context.Context, marshaler 
 
 }
 
-func local_request_Rolepermission_GetRolepermissions_0(ctx context.Context, marshaler runtime.Marshaler, server RolepermissionServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_RolepermissionService_GetRolepermissions_0(ctx context.Context, marshaler runtime.Marshaler, server RolepermissionServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq commonv3.QueryOptions
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Rolepermission_GetRolepermissions_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RolepermissionService_GetRolepermissions_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -68,41 +68,43 @@ func local_request_Rolepermission_GetRolepermissions_0(ctx context.Context, mars
 
 }
 
-// RegisterRolepermissionHandlerServer registers the http handlers for service Rolepermission to "mux".
-// UnaryRPC     :call RolepermissionServer directly.
+// RegisterRolepermissionServiceHandlerServer registers the http handlers for service RolepermissionService to "mux".
+// UnaryRPC     :call RolepermissionServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterRolepermissionHandlerFromEndpoint instead.
-func RegisterRolepermissionHandlerServer(ctx context.Context, mux *runtime.ServeMux, server RolepermissionServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterRolepermissionServiceHandlerFromEndpoint instead.
+func RegisterRolepermissionServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server RolepermissionServiceServer) error {
 
-	mux.Handle("GET", pattern_Rolepermission_GetRolepermissions_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RolepermissionService_GetRolepermissions_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Rolepermission/GetRolepermissions", runtime.WithHTTPPathPattern("/auth/v3/rolepermissions"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.role.v3.RolepermissionService/GetRolepermissions", runtime.WithHTTPPathPattern("/auth/v3/rolepermissions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Rolepermission_GetRolepermissions_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_RolepermissionService_GetRolepermissions_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Rolepermission_GetRolepermissions_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RolepermissionService_GetRolepermissions_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterRolepermissionHandlerFromEndpoint is same as RegisterRolepermissionHandler but
+// RegisterRolepermissionServiceHandlerFromEndpoint is same as RegisterRolepermissionServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterRolepermissionHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterRolepermissionServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -122,39 +124,41 @@ func RegisterRolepermissionHandlerFromEndpoint(ctx context.Context, mux *runtime
 		}()
 	}()
 
-	return RegisterRolepermissionHandler(ctx, mux, conn)
+	return RegisterRolepermissionServiceHandler(ctx, mux, conn)
 }
 
-// RegisterRolepermissionHandler registers the http handlers for service Rolepermission to "mux".
+// RegisterRolepermissionServiceHandler registers the http handlers for service RolepermissionService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterRolepermissionHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterRolepermissionHandlerClient(ctx, mux, NewRolepermissionClient(conn))
+func RegisterRolepermissionServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterRolepermissionServiceHandlerClient(ctx, mux, NewRolepermissionServiceClient(conn))
 }
 
-// RegisterRolepermissionHandlerClient registers the http handlers for service Rolepermission
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "RolepermissionClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "RolepermissionClient"
+// RegisterRolepermissionServiceHandlerClient registers the http handlers for service RolepermissionService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "RolepermissionServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "RolepermissionServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "RolepermissionClient" to call the correct interceptors.
-func RegisterRolepermissionHandlerClient(ctx context.Context, mux *runtime.ServeMux, client RolepermissionClient) error {
+// "RolepermissionServiceClient" to call the correct interceptors.
+func RegisterRolepermissionServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client RolepermissionServiceClient) error {
 
-	mux.Handle("GET", pattern_Rolepermission_GetRolepermissions_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RolepermissionService_GetRolepermissions_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Rolepermission/GetRolepermissions", runtime.WithHTTPPathPattern("/auth/v3/rolepermissions"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.role.v3.RolepermissionService/GetRolepermissions", runtime.WithHTTPPathPattern("/auth/v3/rolepermissions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Rolepermission_GetRolepermissions_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_RolepermissionService_GetRolepermissions_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Rolepermission_GetRolepermissions_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RolepermissionService_GetRolepermissions_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -162,9 +166,9 @@ func RegisterRolepermissionHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_Rolepermission_GetRolepermissions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"auth", "v3", "rolepermissions"}, ""))
+	pattern_RolepermissionService_GetRolepermissions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"auth", "v3", "rolepermissions"}, ""))
 )
 
 var (
-	forward_Rolepermission_GetRolepermissions_0 = runtime.ForwardResponseMessage
+	forward_RolepermissionService_GetRolepermissions_0 = runtime.ForwardResponseMessage
 )

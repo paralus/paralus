@@ -17,10 +17,10 @@ type auditInfoServer struct {
 	aps service.AccountPermissionService
 }
 
-var _ sentryrpc.AuditInformationServer = (*auditInfoServer)(nil)
+var _ sentryrpc.AuditInformationServiceServer = (*auditInfoServer)(nil)
 
 // NewAuditInfoServer returns new Audit Information Server
-func NewAuditInfoServer(bs service.BootstrapService, aps service.AccountPermissionService) sentryrpc.AuditInformationServer {
+func NewAuditInfoServer(bs service.BootstrapService, aps service.AccountPermissionService) sentryrpc.AuditInformationServiceServer {
 	return &auditInfoServer{bs: bs, aps: aps}
 }
 

@@ -2,11 +2,11 @@
 // source: proto/rpc/system/idp.proto
 
 /*
-Package rpcv3 is a reverse proxy.
+Package systemv3 is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package rpcv3
+package systemv3
 
 import (
 	"context"
@@ -33,7 +33,7 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_Idp_CreateIdp_0(ctx context.Context, marshaler runtime.Marshaler, client IdpClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_IdpService_CreateIdp_0(ctx context.Context, marshaler runtime.Marshaler, client IdpServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Idp
 	var metadata runtime.ServerMetadata
 
@@ -50,7 +50,7 @@ func request_Idp_CreateIdp_0(ctx context.Context, marshaler runtime.Marshaler, c
 
 }
 
-func local_request_Idp_CreateIdp_0(ctx context.Context, marshaler runtime.Marshaler, server IdpServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_IdpService_CreateIdp_0(ctx context.Context, marshaler runtime.Marshaler, server IdpServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Idp
 	var metadata runtime.ServerMetadata
 
@@ -68,10 +68,10 @@ func local_request_Idp_CreateIdp_0(ctx context.Context, marshaler runtime.Marsha
 }
 
 var (
-	filter_Idp_GetIdp_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_IdpService_GetIdp_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_Idp_GetIdp_0(ctx context.Context, marshaler runtime.Marshaler, client IdpClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_IdpService_GetIdp_0(ctx context.Context, marshaler runtime.Marshaler, client IdpServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Idp
 	var metadata runtime.ServerMetadata
 
@@ -95,7 +95,7 @@ func request_Idp_GetIdp_0(ctx context.Context, marshaler runtime.Marshaler, clie
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Idp_GetIdp_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_IdpService_GetIdp_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -104,7 +104,7 @@ func request_Idp_GetIdp_0(ctx context.Context, marshaler runtime.Marshaler, clie
 
 }
 
-func local_request_Idp_GetIdp_0(ctx context.Context, marshaler runtime.Marshaler, server IdpServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_IdpService_GetIdp_0(ctx context.Context, marshaler runtime.Marshaler, server IdpServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Idp
 	var metadata runtime.ServerMetadata
 
@@ -128,7 +128,7 @@ func local_request_Idp_GetIdp_0(ctx context.Context, marshaler runtime.Marshaler
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Idp_GetIdp_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_IdpService_GetIdp_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -137,7 +137,7 @@ func local_request_Idp_GetIdp_0(ctx context.Context, marshaler runtime.Marshaler
 
 }
 
-func request_Idp_ListIdps_0(ctx context.Context, marshaler runtime.Marshaler, client IdpClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_IdpService_ListIdps_0(ctx context.Context, marshaler runtime.Marshaler, client IdpServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq emptypb.Empty
 	var metadata runtime.ServerMetadata
 
@@ -146,7 +146,7 @@ func request_Idp_ListIdps_0(ctx context.Context, marshaler runtime.Marshaler, cl
 
 }
 
-func local_request_Idp_ListIdps_0(ctx context.Context, marshaler runtime.Marshaler, server IdpServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_IdpService_ListIdps_0(ctx context.Context, marshaler runtime.Marshaler, server IdpServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq emptypb.Empty
 	var metadata runtime.ServerMetadata
 
@@ -155,7 +155,7 @@ func local_request_Idp_ListIdps_0(ctx context.Context, marshaler runtime.Marshal
 
 }
 
-func request_Idp_UpdateIdp_0(ctx context.Context, marshaler runtime.Marshaler, client IdpClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_IdpService_UpdateIdp_0(ctx context.Context, marshaler runtime.Marshaler, client IdpServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Idp
 	var metadata runtime.ServerMetadata
 
@@ -189,7 +189,7 @@ func request_Idp_UpdateIdp_0(ctx context.Context, marshaler runtime.Marshaler, c
 
 }
 
-func local_request_Idp_UpdateIdp_0(ctx context.Context, marshaler runtime.Marshaler, server IdpServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_IdpService_UpdateIdp_0(ctx context.Context, marshaler runtime.Marshaler, server IdpServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Idp
 	var metadata runtime.ServerMetadata
 
@@ -224,10 +224,10 @@ func local_request_Idp_UpdateIdp_0(ctx context.Context, marshaler runtime.Marsha
 }
 
 var (
-	filter_Idp_DeleteIdp_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_IdpService_DeleteIdp_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_Idp_DeleteIdp_0(ctx context.Context, marshaler runtime.Marshaler, client IdpClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_IdpService_DeleteIdp_0(ctx context.Context, marshaler runtime.Marshaler, client IdpServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Idp
 	var metadata runtime.ServerMetadata
 
@@ -251,7 +251,7 @@ func request_Idp_DeleteIdp_0(ctx context.Context, marshaler runtime.Marshaler, c
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Idp_DeleteIdp_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_IdpService_DeleteIdp_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -260,7 +260,7 @@ func request_Idp_DeleteIdp_0(ctx context.Context, marshaler runtime.Marshaler, c
 
 }
 
-func local_request_Idp_DeleteIdp_0(ctx context.Context, marshaler runtime.Marshaler, server IdpServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_IdpService_DeleteIdp_0(ctx context.Context, marshaler runtime.Marshaler, server IdpServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.Idp
 	var metadata runtime.ServerMetadata
 
@@ -284,7 +284,7 @@ func local_request_Idp_DeleteIdp_0(ctx context.Context, marshaler runtime.Marsha
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Idp_DeleteIdp_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_IdpService_DeleteIdp_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -293,133 +293,143 @@ func local_request_Idp_DeleteIdp_0(ctx context.Context, marshaler runtime.Marsha
 
 }
 
-// RegisterIdpHandlerServer registers the http handlers for service Idp to "mux".
-// UnaryRPC     :call IdpServer directly.
+// RegisterIdpServiceHandlerServer registers the http handlers for service IdpService to "mux".
+// UnaryRPC     :call IdpServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterIdpHandlerFromEndpoint instead.
-func RegisterIdpHandlerServer(ctx context.Context, mux *runtime.ServeMux, server IdpServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterIdpServiceHandlerFromEndpoint instead.
+func RegisterIdpServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server IdpServiceServer) error {
 
-	mux.Handle("POST", pattern_Idp_CreateIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_IdpService_CreateIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Idp/CreateIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.IdpService/CreateIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Idp_CreateIdp_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_IdpService_CreateIdp_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Idp_CreateIdp_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_IdpService_CreateIdp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Idp_GetIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_IdpService_GetIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Idp/GetIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.IdpService/GetIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Idp_GetIdp_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_IdpService_GetIdp_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Idp_GetIdp_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_IdpService_GetIdp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Idp_ListIdps_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_IdpService_ListIdps_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Idp/ListIdps", runtime.WithHTTPPathPattern("/auth/v3/sso/idp"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.IdpService/ListIdps", runtime.WithHTTPPathPattern("/auth/v3/sso/idp"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Idp_ListIdps_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_IdpService_ListIdps_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Idp_ListIdps_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_IdpService_ListIdps_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Idp_UpdateIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_IdpService_UpdateIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Idp/UpdateIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.IdpService/UpdateIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Idp_UpdateIdp_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_IdpService_UpdateIdp_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Idp_UpdateIdp_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_IdpService_UpdateIdp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_Idp_DeleteIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_IdpService_DeleteIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.Idp/DeleteIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.IdpService/DeleteIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Idp_DeleteIdp_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_IdpService_DeleteIdp_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Idp_DeleteIdp_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_IdpService_DeleteIdp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterIdpHandlerFromEndpoint is same as RegisterIdpHandler but
+// RegisterIdpServiceHandlerFromEndpoint is same as RegisterIdpServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterIdpHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterIdpServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -439,119 +449,129 @@ func RegisterIdpHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, 
 		}()
 	}()
 
-	return RegisterIdpHandler(ctx, mux, conn)
+	return RegisterIdpServiceHandler(ctx, mux, conn)
 }
 
-// RegisterIdpHandler registers the http handlers for service Idp to "mux".
+// RegisterIdpServiceHandler registers the http handlers for service IdpService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterIdpHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterIdpHandlerClient(ctx, mux, NewIdpClient(conn))
+func RegisterIdpServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterIdpServiceHandlerClient(ctx, mux, NewIdpServiceClient(conn))
 }
 
-// RegisterIdpHandlerClient registers the http handlers for service Idp
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "IdpClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "IdpClient"
+// RegisterIdpServiceHandlerClient registers the http handlers for service IdpService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "IdpServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "IdpServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "IdpClient" to call the correct interceptors.
-func RegisterIdpHandlerClient(ctx context.Context, mux *runtime.ServeMux, client IdpClient) error {
+// "IdpServiceClient" to call the correct interceptors.
+func RegisterIdpServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client IdpServiceClient) error {
 
-	mux.Handle("POST", pattern_Idp_CreateIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_IdpService_CreateIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Idp/CreateIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.IdpService/CreateIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Idp_CreateIdp_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_IdpService_CreateIdp_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Idp_CreateIdp_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_IdpService_CreateIdp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Idp_GetIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_IdpService_GetIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Idp/GetIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.IdpService/GetIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Idp_GetIdp_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_IdpService_GetIdp_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Idp_GetIdp_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_IdpService_GetIdp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Idp_ListIdps_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_IdpService_ListIdps_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Idp/ListIdps", runtime.WithHTTPPathPattern("/auth/v3/sso/idp"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.IdpService/ListIdps", runtime.WithHTTPPathPattern("/auth/v3/sso/idp"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Idp_ListIdps_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_IdpService_ListIdps_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Idp_ListIdps_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_IdpService_ListIdps_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Idp_UpdateIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_IdpService_UpdateIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Idp/UpdateIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.IdpService/UpdateIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Idp_UpdateIdp_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_IdpService_UpdateIdp_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Idp_UpdateIdp_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_IdpService_UpdateIdp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_Idp_DeleteIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_IdpService_DeleteIdp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.Idp/DeleteIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.IdpService/DeleteIdp", runtime.WithHTTPPathPattern("/auth/v3/sso/idp/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Idp_DeleteIdp_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_IdpService_DeleteIdp_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Idp_DeleteIdp_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_IdpService_DeleteIdp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -559,25 +579,25 @@ func RegisterIdpHandlerClient(ctx context.Context, mux *runtime.ServeMux, client
 }
 
 var (
-	pattern_Idp_CreateIdp_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"auth", "v3", "sso", "idp"}, ""))
+	pattern_IdpService_CreateIdp_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"auth", "v3", "sso", "idp"}, ""))
 
-	pattern_Idp_GetIdp_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"auth", "v3", "sso", "idp", "metadata.name"}, ""))
+	pattern_IdpService_GetIdp_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"auth", "v3", "sso", "idp", "metadata.name"}, ""))
 
-	pattern_Idp_ListIdps_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"auth", "v3", "sso", "idp"}, ""))
+	pattern_IdpService_ListIdps_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"auth", "v3", "sso", "idp"}, ""))
 
-	pattern_Idp_UpdateIdp_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"auth", "v3", "sso", "idp", "metadata.name"}, ""))
+	pattern_IdpService_UpdateIdp_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"auth", "v3", "sso", "idp", "metadata.name"}, ""))
 
-	pattern_Idp_DeleteIdp_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"auth", "v3", "sso", "idp", "metadata.name"}, ""))
+	pattern_IdpService_DeleteIdp_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"auth", "v3", "sso", "idp", "metadata.name"}, ""))
 )
 
 var (
-	forward_Idp_CreateIdp_0 = runtime.ForwardResponseMessage
+	forward_IdpService_CreateIdp_0 = runtime.ForwardResponseMessage
 
-	forward_Idp_GetIdp_0 = runtime.ForwardResponseMessage
+	forward_IdpService_GetIdp_0 = runtime.ForwardResponseMessage
 
-	forward_Idp_ListIdps_0 = runtime.ForwardResponseMessage
+	forward_IdpService_ListIdps_0 = runtime.ForwardResponseMessage
 
-	forward_Idp_UpdateIdp_0 = runtime.ForwardResponseMessage
+	forward_IdpService_UpdateIdp_0 = runtime.ForwardResponseMessage
 
-	forward_Idp_DeleteIdp_0 = runtime.ForwardResponseMessage
+	forward_IdpService_DeleteIdp_0 = runtime.ForwardResponseMessage
 )

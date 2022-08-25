@@ -52,7 +52,7 @@ type bootstrapServer struct {
 	cs       service.ClusterService
 }
 
-var _ sentryrpc.BootstrapServer = (*bootstrapServer)(nil)
+var _ sentryrpc.BootstrapServiceServer = (*bootstrapServer)(nil)
 
 func (s *bootstrapServer) GetBootstrapInfra(ctx context.Context, in *sentry.BootstrapInfra) (*sentry.BootstrapInfra, error) {
 	return s.bs.GetBootstrapInfra(ctx, in.Metadata.Name)
@@ -295,6 +295,6 @@ func (s *bootstrapServer) GetBootstrapAgentConfig(ctx context.Context, in *sentr
 }
 
 // NewBootstrapServer return new bootstrap server
-func NewBootstrapServer(bs service.BootstrapService, f cryptoutil.PasswordFunc, cs service.ClusterService) sentryrpc.BootstrapServer {
+func NewBootstrapServer(bs service.BootstrapService, f cryptoutil.PasswordFunc, cs service.ClusterService) sentryrpc.BootstrapServiceServer {
 	return &bootstrapServer{bs, f, cs}
 }

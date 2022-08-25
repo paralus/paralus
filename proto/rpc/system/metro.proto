@@ -1,5 +1,5 @@
 syntax = "proto3";
-package paralus.dev.rpc.v3;
+package paralus.dev.rpc.system.v3;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -51,7 +51,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     }
   };
   
-  service Location {
+  service LocationService {
     rpc CreateLocation(paralus.dev.types.infra.v3.Location)
         returns (paralus.dev.types.infra.v3.Location) {
       option (google.api.http) = {
@@ -106,5 +106,4 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
         }
       };
     };
-  
   }

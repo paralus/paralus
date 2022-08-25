@@ -9,7 +9,7 @@
   },
   "tags": [
     {
-      "name": "ClusterAuthorization"
+      "name": "ClusterAuthorizationService"
     }
   ],
   "schemes": [
@@ -26,7 +26,7 @@
   "paths": {
     "/v2/sentry/authorization/user": {
       "get": {
-        "operationId": "ClusterAuthorization_GetUserAuthorization",
+        "operationId": "ClusterAuthorizationService_GetUserAuthorization",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -74,7 +74,7 @@
           }
         ],
         "tags": [
-          "ClusterAuthorization"
+          "ClusterAuthorizationService"
         ]
       }
     }

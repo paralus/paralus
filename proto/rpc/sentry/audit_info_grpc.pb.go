@@ -18,120 +18,120 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// AuditInformationClient is the client API for AuditInformation service.
+// AuditInformationServiceClient is the client API for AuditInformationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type AuditInformationClient interface {
+type AuditInformationServiceClient interface {
 	LookupUser(ctx context.Context, in *LookupUserRequest, opts ...grpc.CallOption) (*LookupUserResponse, error)
 	LookupCluster(ctx context.Context, in *LookupClusterRequest, opts ...grpc.CallOption) (*LookupClusterResponse, error)
 }
 
-type auditInformationClient struct {
+type auditInformationServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewAuditInformationClient(cc grpc.ClientConnInterface) AuditInformationClient {
-	return &auditInformationClient{cc}
+func NewAuditInformationServiceClient(cc grpc.ClientConnInterface) AuditInformationServiceClient {
+	return &auditInformationServiceClient{cc}
 }
 
-func (c *auditInformationClient) LookupUser(ctx context.Context, in *LookupUserRequest, opts ...grpc.CallOption) (*LookupUserResponse, error) {
+func (c *auditInformationServiceClient) LookupUser(ctx context.Context, in *LookupUserRequest, opts ...grpc.CallOption) (*LookupUserResponse, error) {
 	out := new(LookupUserResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.AuditInformation/LookupUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.AuditInformationService/LookupUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *auditInformationClient) LookupCluster(ctx context.Context, in *LookupClusterRequest, opts ...grpc.CallOption) (*LookupClusterResponse, error) {
+func (c *auditInformationServiceClient) LookupCluster(ctx context.Context, in *LookupClusterRequest, opts ...grpc.CallOption) (*LookupClusterResponse, error) {
 	out := new(LookupClusterResponse)
-	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.AuditInformation/LookupCluster", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.sentry.rpc.AuditInformationService/LookupCluster", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// AuditInformationServer is the server API for AuditInformation service.
-// All implementations should embed UnimplementedAuditInformationServer
+// AuditInformationServiceServer is the server API for AuditInformationService service.
+// All implementations should embed UnimplementedAuditInformationServiceServer
 // for forward compatibility
-type AuditInformationServer interface {
+type AuditInformationServiceServer interface {
 	LookupUser(context.Context, *LookupUserRequest) (*LookupUserResponse, error)
 	LookupCluster(context.Context, *LookupClusterRequest) (*LookupClusterResponse, error)
 }
 
-// UnimplementedAuditInformationServer should be embedded to have forward compatible implementations.
-type UnimplementedAuditInformationServer struct {
+// UnimplementedAuditInformationServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedAuditInformationServiceServer struct {
 }
 
-func (UnimplementedAuditInformationServer) LookupUser(context.Context, *LookupUserRequest) (*LookupUserResponse, error) {
+func (UnimplementedAuditInformationServiceServer) LookupUser(context.Context, *LookupUserRequest) (*LookupUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LookupUser not implemented")
 }
-func (UnimplementedAuditInformationServer) LookupCluster(context.Context, *LookupClusterRequest) (*LookupClusterResponse, error) {
+func (UnimplementedAuditInformationServiceServer) LookupCluster(context.Context, *LookupClusterRequest) (*LookupClusterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LookupCluster not implemented")
 }
 
-// UnsafeAuditInformationServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to AuditInformationServer will
+// UnsafeAuditInformationServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AuditInformationServiceServer will
 // result in compilation errors.
-type UnsafeAuditInformationServer interface {
-	mustEmbedUnimplementedAuditInformationServer()
+type UnsafeAuditInformationServiceServer interface {
+	mustEmbedUnimplementedAuditInformationServiceServer()
 }
 
-func RegisterAuditInformationServer(s grpc.ServiceRegistrar, srv AuditInformationServer) {
-	s.RegisterService(&AuditInformation_ServiceDesc, srv)
+func RegisterAuditInformationServiceServer(s grpc.ServiceRegistrar, srv AuditInformationServiceServer) {
+	s.RegisterService(&AuditInformationService_ServiceDesc, srv)
 }
 
-func _AuditInformation_LookupUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AuditInformationService_LookupUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LookupUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuditInformationServer).LookupUser(ctx, in)
+		return srv.(AuditInformationServiceServer).LookupUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.sentry.rpc.AuditInformation/LookupUser",
+		FullMethod: "/paralus.dev.sentry.rpc.AuditInformationService/LookupUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuditInformationServer).LookupUser(ctx, req.(*LookupUserRequest))
+		return srv.(AuditInformationServiceServer).LookupUser(ctx, req.(*LookupUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuditInformation_LookupCluster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AuditInformationService_LookupCluster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LookupClusterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuditInformationServer).LookupCluster(ctx, in)
+		return srv.(AuditInformationServiceServer).LookupCluster(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.sentry.rpc.AuditInformation/LookupCluster",
+		FullMethod: "/paralus.dev.sentry.rpc.AuditInformationService/LookupCluster",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuditInformationServer).LookupCluster(ctx, req.(*LookupClusterRequest))
+		return srv.(AuditInformationServiceServer).LookupCluster(ctx, req.(*LookupClusterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// AuditInformation_ServiceDesc is the grpc.ServiceDesc for AuditInformation service.
+// AuditInformationService_ServiceDesc is the grpc.ServiceDesc for AuditInformationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var AuditInformation_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "paralus.dev.sentry.rpc.AuditInformation",
-	HandlerType: (*AuditInformationServer)(nil),
+var AuditInformationService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "paralus.dev.sentry.rpc.AuditInformationService",
+	HandlerType: (*AuditInformationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "LookupUser",
-			Handler:    _AuditInformation_LookupUser_Handler,
+			Handler:    _AuditInformationService_LookupUser_Handler,
 		},
 		{
 			MethodName: "LookupCluster",
-			Handler:    _AuditInformation_LookupCluster_Handler,
+			Handler:    _AuditInformationService_LookupCluster_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -22,7 +22,7 @@ func NewAuditLogService(url string, auditPattern string, logPrefix string) (*Aud
 	return &AuditLogService{auditQuery: auditQuery}, nil
 }
 
-func (a *AuditLogService) GetAuditLog(req *v1.AuditLogSearchRequest) (res *v1.AuditLogSearchResponse, err error) {
+func (a *AuditLogService) GetAuditLog(req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
 	if err != nil {
 		return nil, err
 	}
@@ -53,12 +53,12 @@ func getPrjectFromUrlScope(urlScope string) (string, error) {
 	return s[1], nil
 }
 
-func (a *AuditLogService) GetAuditLogByProjects(req *v1.AuditLogSearchRequest) (res *v1.AuditLogSearchResponse, err error) {
+func (a *AuditLogService) GetAuditLogByProjects(req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
 	err = validateQueryString(req.GetFilter().QueryString)
 	if err != nil {
 		return nil, err
 	}
-	res = &v1.AuditLogSearchResponse{
+	res = &v1.GetAuditLogSearchResponse{
 		Result: &structpb.Struct{},
 	}
 	var buf bytes.Buffer
@@ -207,6 +207,6 @@ func (a *AuditLogService) GetAuditLogByProjects(req *v1.AuditLogSearchRequest) (
 	if err != nil {
 		return res, err
 	}
-	res = &v1.AuditLogSearchResponse{Result: raw}
+	res = &v1.GetAuditLogSearchResponse{Result: raw}
 	return res, nil
 }

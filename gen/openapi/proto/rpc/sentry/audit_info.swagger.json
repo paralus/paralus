@@ -9,7 +9,7 @@
   },
   "tags": [
     {
-      "name": "AuditInformation"
+      "name": "AuditInformationService"
     }
   ],
   "schemes": [
@@ -26,7 +26,7 @@
   "paths": {
     "/v2/sentry/auditInfo/cluster": {
       "get": {
-        "operationId": "AuditInformation_LookupCluster",
+        "operationId": "AuditInformationService_LookupCluster",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -61,13 +61,13 @@
           }
         ],
         "tags": [
-          "AuditInformation"
+          "AuditInformationService"
         ]
       }
     },
     "/v2/sentry/auditInfo/user": {
       "get": {
-        "operationId": "AuditInformation_LookupUser",
+        "operationId": "AuditInformationService_LookupUser",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -102,7 +102,7 @@
           }
         ],
         "tags": [
-          "AuditInformation"
+          "AuditInformationService"
         ]
       }
     }

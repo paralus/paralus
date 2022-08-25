@@ -13,7 +13,7 @@ type oidcProvider struct {
 	service.OIDCProviderService
 }
 
-func NewOIDCServer(providerSvc service.OIDCProviderService) rpcv3.OIDCProviderServer {
+func NewOIDCServer(providerSvc service.OIDCProviderService) rpcv3.OIDCProviderServiceServer {
 	return &oidcProvider{providerSvc}
 }
 

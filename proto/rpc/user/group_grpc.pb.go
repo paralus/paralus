@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: proto/rpc/user/group.proto
 
-package rpcv3
+package userv3
 
 import (
 	context "context"
@@ -20,10 +20,10 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// GroupClient is the client API for Group service.
+// GroupServiceClient is the client API for GroupService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type GroupClient interface {
+type GroupServiceClient interface {
 	CreateGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error)
 	GetGroups(ctx context.Context, in *v31.QueryOptions, opts ...grpc.CallOption) (*v3.GroupList, error)
 	GetGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error)
@@ -31,63 +31,63 @@ type GroupClient interface {
 	DeleteGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error)
 }
 
-type groupClient struct {
+type groupServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewGroupClient(cc grpc.ClientConnInterface) GroupClient {
-	return &groupClient{cc}
+func NewGroupServiceClient(cc grpc.ClientConnInterface) GroupServiceClient {
+	return &groupServiceClient{cc}
 }
 
-func (c *groupClient) CreateGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error) {
+func (c *groupServiceClient) CreateGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error) {
 	out := new(v3.Group)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Group/CreateGroup", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.GroupService/CreateGroup", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *groupClient) GetGroups(ctx context.Context, in *v31.QueryOptions, opts ...grpc.CallOption) (*v3.GroupList, error) {
+func (c *groupServiceClient) GetGroups(ctx context.Context, in *v31.QueryOptions, opts ...grpc.CallOption) (*v3.GroupList, error) {
 	out := new(v3.GroupList)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Group/GetGroups", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.GroupService/GetGroups", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *groupClient) GetGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error) {
+func (c *groupServiceClient) GetGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error) {
 	out := new(v3.Group)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Group/GetGroup", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.GroupService/GetGroup", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *groupClient) UpdateGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error) {
+func (c *groupServiceClient) UpdateGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error) {
 	out := new(v3.Group)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Group/UpdateGroup", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.GroupService/UpdateGroup", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *groupClient) DeleteGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error) {
+func (c *groupServiceClient) DeleteGroup(ctx context.Context, in *v3.Group, opts ...grpc.CallOption) (*v3.Group, error) {
 	out := new(v3.Group)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.Group/DeleteGroup", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.GroupService/DeleteGroup", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// GroupServer is the server API for Group service.
-// All implementations should embed UnimplementedGroupServer
+// GroupServiceServer is the server API for GroupService service.
+// All implementations should embed UnimplementedGroupServiceServer
 // for forward compatibility
-type GroupServer interface {
+type GroupServiceServer interface {
 	CreateGroup(context.Context, *v3.Group) (*v3.Group, error)
 	GetGroups(context.Context, *v31.QueryOptions) (*v3.GroupList, error)
 	GetGroup(context.Context, *v3.Group) (*v3.Group, error)
@@ -95,153 +95,153 @@ type GroupServer interface {
 	DeleteGroup(context.Context, *v3.Group) (*v3.Group, error)
 }
 
-// UnimplementedGroupServer should be embedded to have forward compatible implementations.
-type UnimplementedGroupServer struct {
+// UnimplementedGroupServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedGroupServiceServer struct {
 }
 
-func (UnimplementedGroupServer) CreateGroup(context.Context, *v3.Group) (*v3.Group, error) {
+func (UnimplementedGroupServiceServer) CreateGroup(context.Context, *v3.Group) (*v3.Group, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateGroup not implemented")
 }
-func (UnimplementedGroupServer) GetGroups(context.Context, *v31.QueryOptions) (*v3.GroupList, error) {
+func (UnimplementedGroupServiceServer) GetGroups(context.Context, *v31.QueryOptions) (*v3.GroupList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGroups not implemented")
 }
-func (UnimplementedGroupServer) GetGroup(context.Context, *v3.Group) (*v3.Group, error) {
+func (UnimplementedGroupServiceServer) GetGroup(context.Context, *v3.Group) (*v3.Group, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGroup not implemented")
 }
-func (UnimplementedGroupServer) UpdateGroup(context.Context, *v3.Group) (*v3.Group, error) {
+func (UnimplementedGroupServiceServer) UpdateGroup(context.Context, *v3.Group) (*v3.Group, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateGroup not implemented")
 }
-func (UnimplementedGroupServer) DeleteGroup(context.Context, *v3.Group) (*v3.Group, error) {
+func (UnimplementedGroupServiceServer) DeleteGroup(context.Context, *v3.Group) (*v3.Group, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteGroup not implemented")
 }
 
-// UnsafeGroupServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to GroupServer will
+// UnsafeGroupServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to GroupServiceServer will
 // result in compilation errors.
-type UnsafeGroupServer interface {
-	mustEmbedUnimplementedGroupServer()
+type UnsafeGroupServiceServer interface {
+	mustEmbedUnimplementedGroupServiceServer()
 }
 
-func RegisterGroupServer(s grpc.ServiceRegistrar, srv GroupServer) {
-	s.RegisterService(&Group_ServiceDesc, srv)
+func RegisterGroupServiceServer(s grpc.ServiceRegistrar, srv GroupServiceServer) {
+	s.RegisterService(&GroupService_ServiceDesc, srv)
 }
 
-func _Group_CreateGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GroupService_CreateGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Group)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GroupServer).CreateGroup(ctx, in)
+		return srv.(GroupServiceServer).CreateGroup(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Group/CreateGroup",
+		FullMethod: "/paralus.dev.rpc.user.v3.GroupService/CreateGroup",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GroupServer).CreateGroup(ctx, req.(*v3.Group))
+		return srv.(GroupServiceServer).CreateGroup(ctx, req.(*v3.Group))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Group_GetGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GroupService_GetGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v31.QueryOptions)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GroupServer).GetGroups(ctx, in)
+		return srv.(GroupServiceServer).GetGroups(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Group/GetGroups",
+		FullMethod: "/paralus.dev.rpc.user.v3.GroupService/GetGroups",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GroupServer).GetGroups(ctx, req.(*v31.QueryOptions))
+		return srv.(GroupServiceServer).GetGroups(ctx, req.(*v31.QueryOptions))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Group_GetGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GroupService_GetGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Group)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GroupServer).GetGroup(ctx, in)
+		return srv.(GroupServiceServer).GetGroup(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Group/GetGroup",
+		FullMethod: "/paralus.dev.rpc.user.v3.GroupService/GetGroup",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GroupServer).GetGroup(ctx, req.(*v3.Group))
+		return srv.(GroupServiceServer).GetGroup(ctx, req.(*v3.Group))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Group_UpdateGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GroupService_UpdateGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Group)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GroupServer).UpdateGroup(ctx, in)
+		return srv.(GroupServiceServer).UpdateGroup(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Group/UpdateGroup",
+		FullMethod: "/paralus.dev.rpc.user.v3.GroupService/UpdateGroup",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GroupServer).UpdateGroup(ctx, req.(*v3.Group))
+		return srv.(GroupServiceServer).UpdateGroup(ctx, req.(*v3.Group))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Group_DeleteGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GroupService_DeleteGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.Group)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GroupServer).DeleteGroup(ctx, in)
+		return srv.(GroupServiceServer).DeleteGroup(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.Group/DeleteGroup",
+		FullMethod: "/paralus.dev.rpc.user.v3.GroupService/DeleteGroup",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GroupServer).DeleteGroup(ctx, req.(*v3.Group))
+		return srv.(GroupServiceServer).DeleteGroup(ctx, req.(*v3.Group))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Group_ServiceDesc is the grpc.ServiceDesc for Group service.
+// GroupService_ServiceDesc is the grpc.ServiceDesc for GroupService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Group_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "paralus.dev.rpc.v3.Group",
-	HandlerType: (*GroupServer)(nil),
+var GroupService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "paralus.dev.rpc.user.v3.GroupService",
+	HandlerType: (*GroupServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreateGroup",
-			Handler:    _Group_CreateGroup_Handler,
+			Handler:    _GroupService_CreateGroup_Handler,
 		},
 		{
 			MethodName: "GetGroups",
-			Handler:    _Group_GetGroups_Handler,
+			Handler:    _GroupService_GetGroups_Handler,
 		},
 		{
 			MethodName: "GetGroup",
-			Handler:    _Group_GetGroup_Handler,
+			Handler:    _GroupService_GetGroup_Handler,
 		},
 		{
 			MethodName: "UpdateGroup",
-			Handler:    _Group_UpdateGroup_Handler,
+			Handler:    _GroupService_UpdateGroup_Handler,
 		},
 		{
 			MethodName: "DeleteGroup",
-			Handler:    _Group_DeleteGroup_Handler,
+			Handler:    _GroupService_DeleteGroup_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
