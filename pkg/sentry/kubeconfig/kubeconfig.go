@@ -16,6 +16,7 @@ import (
 	rpcv3 "github.com/paralus/paralus/proto/rpc/user"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	sentry "github.com/paralus/paralus/proto/types/sentry"
+	"go.uber.org/zap"
 
 	clientcmdapiv1 "k8s.io/client-go/tools/clientcmd/api/v1"
 	"sigs.k8s.io/yaml"
@@ -111,7 +112,7 @@ func getProjectsForAccount(ctx context.Context, accountID, orgID, partnerID stri
 }
 
 // GetConfigForUser returns YAML encoding of kubeconfig
-func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, req *sentryrpc.GetForUserRequest, pf cryptoutil.PasswordFunc, kss service.KubeconfigSettingService, ksvc service.ApiKeyService, os service.OrganizationService, ps service.PartnerService) ([]byte, error) {
+func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, req *sentryrpc.GetForUserRequest, pf cryptoutil.PasswordFunc, kss service.KubeconfigSettingService, ksvc service.ApiKeyService, os service.OrganizationService, ps service.PartnerService, al *zap.Logger) ([]byte, error) {
 	opts := req.Opts
 	if opts.Selector != "" {
 		opts.Selector = fmt.Sprintf("%s,!paralus.dev/cdRelayAgent", opts.Selector)
@@ -331,16 +332,7 @@ func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps serv
 		return nil, err
 	}
 
-	/* TODO: as part of event handling
-	partnerID := opts.Partner
-	orgID := opts.Organization
-
-	message := fmt.Sprintf("%s downloaded kubeconfig for: %s", sessionUserName, username)
-
-
-	kubeconfigDownloadEvent(ctx, "user.kubeconfig.download", orgID, partnerID, sessionUserName, sessionAccountID,
-		message, groups)
-	*/
+	service.DownloadKubeconfigAuditEvent(ctx, al, username)
 
 	return yaml.JSONToYAML(jb)
 }

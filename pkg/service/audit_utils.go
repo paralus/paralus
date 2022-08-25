@@ -408,6 +408,24 @@ func DownloadCliConfigAuditEvent(ctx context.Context, al *zap.Logger, action str
 	}
 }
 
+func DownloadKubeconfigAuditEvent(ctx context.Context, al *zap.Logger, user string) {
+	sd, ok := GetSessionDataFromContext(ctx)
+	if !ok {
+		_log.Warn("unable to create audit event: could not fetch info from context")
+		return
+	}
+
+	detail := &audit.EventDetail{
+		Message: fmt.Sprintf("Kubeconfig downloaded for %s", user),
+		Meta: map[string]string{
+			"user": user,
+		},
+	}
+	if err := audit.CreateV1Event(al, sd, detail, "user.kubeconfig.download", ""); err != nil {
+		_log.Warn("unable to create audit event", err)
+	}
+}
+
 func RevokeKubeconfigAuditEvent(ctx context.Context, al *zap.Logger, user string) {
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {

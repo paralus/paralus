@@ -40,6 +40,7 @@ import (
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
 	"github.com/uptrace/bun/extra/bundebug"
+	"go.uber.org/zap"
 	_grpc "google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
@@ -121,6 +122,7 @@ var (
 	esIndexPrefix              string
 	relayAuditsESIndexPrefix   string
 	relayCommandsESIndexPrefix string
+	auditLogger                *zap.Logger
 
 	// cd relay
 	coreCDRelayUserHost      string
@@ -309,7 +311,7 @@ func setup() {
 		MaxBackups: 10, // Should we let sidecar do rotation?
 		MaxAgeDays: 10, // Make these configurable via env
 	}
-	auditLogger := audit.GetAuditLogger(&ao)
+	auditLogger = audit.GetAuditLogger(&ao)
 
 	// authz services
 	gormDb, err := gorm.Open(postgres.New(postgres.Config{
@@ -557,7 +559,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	projectServer := server.NewProjectServer(pps)
 
 	bootstrapServer := server.NewBootstrapServer(bs, kekFunc, cs)
-	kubeConfigServer := server.NewKubeConfigServer(bs, aps, gps, kss, krs, kekFunc, ks, os, ps)
+	kubeConfigServer := server.NewKubeConfigServer(bs, aps, gps, kss, krs, kekFunc, ks, os, ps, auditLogger)
 	auditInfoServer := server.NewAuditInfoServer(bs, aps)
 	clusterAuthzServer := server.NewClusterAuthzServer(bs, aps, gps, krs, kcs, kss, ns)
 	kubectlClusterSettingsServer := server.NewKubectlClusterSettingsServer(bs, kcs)

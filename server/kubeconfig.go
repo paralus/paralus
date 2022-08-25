@@ -15,6 +15,7 @@ import (
 	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	sentry "github.com/paralus/paralus/proto/types/sentry"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -28,6 +29,7 @@ type kubeConfigServer struct {
 	ks  service.ApiKeyService
 	os  service.OrganizationService
 	ps  service.PartnerService
+	al  *zap.Logger
 }
 
 var _ sentryrpc.KubeConfigServer = (*kubeConfigServer)(nil)
@@ -55,7 +57,7 @@ func (s *kubeConfigServer) GetForClusterWebSession(ctx context.Context, in *sent
 }
 
 func (s *kubeConfigServer) GetForUser(ctx context.Context, in *sentryrpc.GetForUserRequest) (*commonv3.HttpBody, error) {
-	config, err := kubeconfig.GetConfigForUser(ctx, s.bs, s.aps, s.gps, in, s.pf, s.kss, s.ks, s.os, s.ps)
+	config, err := kubeconfig.GetConfigForUser(ctx, s.bs, s.aps, s.gps, in, s.pf, s.kss, s.ks, s.os, s.ps, s.al)
 	if err != nil {
 		_log.Errorw("error generating kubeconfig", "error", err.Error())
 		return nil, err
@@ -202,8 +204,8 @@ func (s *kubeConfigServer) UpdateUserSetting(ctx context.Context, req *sentryrpc
 
 // NewKubeConfigServer returns new kube config server
 func NewKubeConfigServer(bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, kss service.KubeconfigSettingService,
-	krs service.KubeconfigRevocationService, pf cryptoutil.PasswordFunc, ksvc service.ApiKeyService, os service.OrganizationService, ps service.PartnerService) sentryrpc.KubeConfigServer {
-	return &kubeConfigServer{bs, aps, gps, kss, krs, pf, ksvc, os, ps}
+	krs service.KubeconfigRevocationService, pf cryptoutil.PasswordFunc, ksvc service.ApiKeyService, os service.OrganizationService, ps service.PartnerService, al *zap.Logger) sentryrpc.KubeConfigServer {
+	return &kubeConfigServer{bs, aps, gps, kss, krs, pf, ksvc, os, ps, al}
 }
 
 func checkOrgAdmin(groups []string) bool {
