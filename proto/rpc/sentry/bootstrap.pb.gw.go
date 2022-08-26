@@ -33,7 +33,7 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_Bootstrap_PatchBootstrapInfra_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BootstrapService_PatchBootstrapInfra_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapInfra
 	var metadata runtime.ServerMetadata
 
@@ -67,7 +67,7 @@ func request_Bootstrap_PatchBootstrapInfra_0(ctx context.Context, marshaler runt
 
 }
 
-func local_request_Bootstrap_PatchBootstrapInfra_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BootstrapService_PatchBootstrapInfra_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapInfra
 	var metadata runtime.ServerMetadata
 
@@ -102,10 +102,10 @@ func local_request_Bootstrap_PatchBootstrapInfra_0(ctx context.Context, marshale
 }
 
 var (
-	filter_Bootstrap_GetBootstrapInfra_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_BootstrapService_GetBootstrapInfra_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_Bootstrap_GetBootstrapInfra_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BootstrapService_GetBootstrapInfra_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapInfra
 	var metadata runtime.ServerMetadata
 
@@ -129,7 +129,7 @@ func request_Bootstrap_GetBootstrapInfra_0(ctx context.Context, marshaler runtim
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bootstrap_GetBootstrapInfra_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BootstrapService_GetBootstrapInfra_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -138,7 +138,7 @@ func request_Bootstrap_GetBootstrapInfra_0(ctx context.Context, marshaler runtim
 
 }
 
-func local_request_Bootstrap_GetBootstrapInfra_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BootstrapService_GetBootstrapInfra_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapInfra
 	var metadata runtime.ServerMetadata
 
@@ -162,7 +162,7 @@ func local_request_Bootstrap_GetBootstrapInfra_0(ctx context.Context, marshaler 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bootstrap_GetBootstrapInfra_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BootstrapService_GetBootstrapInfra_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -171,7 +171,7 @@ func local_request_Bootstrap_GetBootstrapInfra_0(ctx context.Context, marshaler 
 
 }
 
-func request_Bootstrap_PatchBootstrapAgentTemplate_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BootstrapService_PatchBootstrapAgentTemplate_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapAgentTemplate
 	var metadata runtime.ServerMetadata
 
@@ -205,7 +205,7 @@ func request_Bootstrap_PatchBootstrapAgentTemplate_0(ctx context.Context, marsha
 
 }
 
-func local_request_Bootstrap_PatchBootstrapAgentTemplate_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BootstrapService_PatchBootstrapAgentTemplate_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapAgentTemplate
 	var metadata runtime.ServerMetadata
 
@@ -240,10 +240,10 @@ func local_request_Bootstrap_PatchBootstrapAgentTemplate_0(ctx context.Context, 
 }
 
 var (
-	filter_Bootstrap_GetBootstrapAgentTemplate_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_BootstrapService_GetBootstrapAgentTemplate_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_Bootstrap_GetBootstrapAgentTemplate_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BootstrapService_GetBootstrapAgentTemplate_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapAgentTemplate
 	var metadata runtime.ServerMetadata
 
@@ -267,7 +267,7 @@ func request_Bootstrap_GetBootstrapAgentTemplate_0(ctx context.Context, marshale
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bootstrap_GetBootstrapAgentTemplate_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BootstrapService_GetBootstrapAgentTemplate_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -276,7 +276,7 @@ func request_Bootstrap_GetBootstrapAgentTemplate_0(ctx context.Context, marshale
 
 }
 
-func local_request_Bootstrap_GetBootstrapAgentTemplate_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BootstrapService_GetBootstrapAgentTemplate_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapAgentTemplate
 	var metadata runtime.ServerMetadata
 
@@ -300,7 +300,7 @@ func local_request_Bootstrap_GetBootstrapAgentTemplate_0(ctx context.Context, ma
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bootstrap_GetBootstrapAgentTemplate_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BootstrapService_GetBootstrapAgentTemplate_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -310,17 +310,17 @@ func local_request_Bootstrap_GetBootstrapAgentTemplate_0(ctx context.Context, ma
 }
 
 var (
-	filter_Bootstrap_GetBootstrapAgentTemplates_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+	filter_BootstrapService_GetBootstrapAgentTemplates_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
-func request_Bootstrap_GetBootstrapAgentTemplates_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BootstrapService_GetBootstrapAgentTemplates_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq commonv3.QueryOptions
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bootstrap_GetBootstrapAgentTemplates_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BootstrapService_GetBootstrapAgentTemplates_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -329,14 +329,14 @@ func request_Bootstrap_GetBootstrapAgentTemplates_0(ctx context.Context, marshal
 
 }
 
-func local_request_Bootstrap_GetBootstrapAgentTemplates_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BootstrapService_GetBootstrapAgentTemplates_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq commonv3.QueryOptions
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bootstrap_GetBootstrapAgentTemplates_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BootstrapService_GetBootstrapAgentTemplates_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -345,7 +345,7 @@ func local_request_Bootstrap_GetBootstrapAgentTemplates_0(ctx context.Context, m
 
 }
 
-func request_Bootstrap_RegisterBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BootstrapService_RegisterBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq RegisterAgentRequest
 	var metadata runtime.ServerMetadata
 
@@ -379,7 +379,7 @@ func request_Bootstrap_RegisterBootstrapAgent_0(ctx context.Context, marshaler r
 
 }
 
-func local_request_Bootstrap_RegisterBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BootstrapService_RegisterBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq RegisterAgentRequest
 	var metadata runtime.ServerMetadata
 
@@ -414,10 +414,10 @@ func local_request_Bootstrap_RegisterBootstrapAgent_0(ctx context.Context, marsh
 }
 
 var (
-	filter_Bootstrap_GetBootstrapAgentConfig_0 = &utilities.DoubleArray{Encoding: map[string]int{"spec": 0, "templateRef": 1, "metadata": 2, "name": 3}, Base: []int{1, 1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 1, 4, 3, 5}}
+	filter_BootstrapService_GetBootstrapAgentConfig_0 = &utilities.DoubleArray{Encoding: map[string]int{"spec": 0, "templateRef": 1, "metadata": 2, "name": 3}, Base: []int{1, 1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 1, 4, 3, 5}}
 )
 
-func request_Bootstrap_GetBootstrapAgentConfig_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BootstrapService_GetBootstrapAgentConfig_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
@@ -451,7 +451,7 @@ func request_Bootstrap_GetBootstrapAgentConfig_0(ctx context.Context, marshaler 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bootstrap_GetBootstrapAgentConfig_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BootstrapService_GetBootstrapAgentConfig_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -460,7 +460,7 @@ func request_Bootstrap_GetBootstrapAgentConfig_0(ctx context.Context, marshaler 
 
 }
 
-func local_request_Bootstrap_GetBootstrapAgentConfig_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BootstrapService_GetBootstrapAgentConfig_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
@@ -494,7 +494,7 @@ func local_request_Bootstrap_GetBootstrapAgentConfig_0(ctx context.Context, mars
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bootstrap_GetBootstrapAgentConfig_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BootstrapService_GetBootstrapAgentConfig_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -503,7 +503,7 @@ func local_request_Bootstrap_GetBootstrapAgentConfig_0(ctx context.Context, mars
 
 }
 
-func request_Bootstrap_CreateBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BootstrapService_CreateBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
@@ -537,7 +537,7 @@ func request_Bootstrap_CreateBootstrapAgent_0(ctx context.Context, marshaler run
 
 }
 
-func local_request_Bootstrap_CreateBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BootstrapService_CreateBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
@@ -572,10 +572,10 @@ func local_request_Bootstrap_CreateBootstrapAgent_0(ctx context.Context, marshal
 }
 
 var (
-	filter_Bootstrap_GetBootstrapAgent_0 = &utilities.DoubleArray{Encoding: map[string]int{"spec": 0, "templateRef": 1, "metadata": 2, "name": 3}, Base: []int{1, 1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 1, 4, 3, 5}}
+	filter_BootstrapService_GetBootstrapAgent_0 = &utilities.DoubleArray{Encoding: map[string]int{"spec": 0, "templateRef": 1, "metadata": 2, "name": 3}, Base: []int{1, 1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 1, 4, 3, 5}}
 )
 
-func request_Bootstrap_GetBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BootstrapService_GetBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
@@ -609,7 +609,7 @@ func request_Bootstrap_GetBootstrapAgent_0(ctx context.Context, marshaler runtim
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bootstrap_GetBootstrapAgent_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BootstrapService_GetBootstrapAgent_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -618,7 +618,7 @@ func request_Bootstrap_GetBootstrapAgent_0(ctx context.Context, marshaler runtim
 
 }
 
-func local_request_Bootstrap_GetBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BootstrapService_GetBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
@@ -652,7 +652,7 @@ func local_request_Bootstrap_GetBootstrapAgent_0(ctx context.Context, marshaler 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bootstrap_GetBootstrapAgent_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BootstrapService_GetBootstrapAgent_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -662,10 +662,10 @@ func local_request_Bootstrap_GetBootstrapAgent_0(ctx context.Context, marshaler 
 }
 
 var (
-	filter_Bootstrap_GetBootstrapAgents_0 = &utilities.DoubleArray{Encoding: map[string]int{"templateScope": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_BootstrapService_GetBootstrapAgents_0 = &utilities.DoubleArray{Encoding: map[string]int{"templateScope": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
-func request_Bootstrap_GetBootstrapAgents_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BootstrapService_GetBootstrapAgents_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetBootstrapAgentsRequest
 	var metadata runtime.ServerMetadata
 
@@ -689,7 +689,7 @@ func request_Bootstrap_GetBootstrapAgents_0(ctx context.Context, marshaler runti
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bootstrap_GetBootstrapAgents_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BootstrapService_GetBootstrapAgents_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -698,7 +698,7 @@ func request_Bootstrap_GetBootstrapAgents_0(ctx context.Context, marshaler runti
 
 }
 
-func local_request_Bootstrap_GetBootstrapAgents_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BootstrapService_GetBootstrapAgents_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetBootstrapAgentsRequest
 	var metadata runtime.ServerMetadata
 
@@ -722,7 +722,7 @@ func local_request_Bootstrap_GetBootstrapAgents_0(ctx context.Context, marshaler
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bootstrap_GetBootstrapAgents_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BootstrapService_GetBootstrapAgents_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -732,10 +732,10 @@ func local_request_Bootstrap_GetBootstrapAgents_0(ctx context.Context, marshaler
 }
 
 var (
-	filter_Bootstrap_DeleteBootstrapAgent_0 = &utilities.DoubleArray{Encoding: map[string]int{"spec": 0, "templateRef": 1, "metadata": 2, "name": 3}, Base: []int{1, 1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 1, 4, 3, 5}}
+	filter_BootstrapService_DeleteBootstrapAgent_0 = &utilities.DoubleArray{Encoding: map[string]int{"spec": 0, "templateRef": 1, "metadata": 2, "name": 3}, Base: []int{1, 1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 1, 4, 3, 5}}
 )
 
-func request_Bootstrap_DeleteBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BootstrapService_DeleteBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
@@ -769,7 +769,7 @@ func request_Bootstrap_DeleteBootstrapAgent_0(ctx context.Context, marshaler run
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bootstrap_DeleteBootstrapAgent_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BootstrapService_DeleteBootstrapAgent_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -778,7 +778,7 @@ func request_Bootstrap_DeleteBootstrapAgent_0(ctx context.Context, marshaler run
 
 }
 
-func local_request_Bootstrap_DeleteBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BootstrapService_DeleteBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
@@ -812,7 +812,7 @@ func local_request_Bootstrap_DeleteBootstrapAgent_0(ctx context.Context, marshal
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bootstrap_DeleteBootstrapAgent_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BootstrapService_DeleteBootstrapAgent_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -821,7 +821,7 @@ func local_request_Bootstrap_DeleteBootstrapAgent_0(ctx context.Context, marshal
 
 }
 
-func request_Bootstrap_UpdateBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_BootstrapService_UpdateBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
@@ -865,7 +865,7 @@ func request_Bootstrap_UpdateBootstrapAgent_0(ctx context.Context, marshaler run
 
 }
 
-func local_request_Bootstrap_UpdateBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_BootstrapService_UpdateBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, server BootstrapServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sentry_0.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
@@ -909,294 +909,318 @@ func local_request_Bootstrap_UpdateBootstrapAgent_0(ctx context.Context, marshal
 
 }
 
-// RegisterBootstrapHandlerServer registers the http handlers for service Bootstrap to "mux".
-// UnaryRPC     :call BootstrapServer directly.
+// RegisterBootstrapServiceHandlerServer registers the http handlers for service BootstrapService to "mux".
+// UnaryRPC     :call BootstrapServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterBootstrapHandlerFromEndpoint instead.
-func RegisterBootstrapHandlerServer(ctx context.Context, mux *runtime.ServeMux, server BootstrapServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterBootstrapServiceHandlerFromEndpoint instead.
+func RegisterBootstrapServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server BootstrapServiceServer) error {
 
-	mux.Handle("PUT", pattern_Bootstrap_PatchBootstrapInfra_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_BootstrapService_PatchBootstrapInfra_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/PatchBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/PatchBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bootstrap_PatchBootstrapInfra_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BootstrapService_PatchBootstrapInfra_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_PatchBootstrapInfra_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_PatchBootstrapInfra_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bootstrap_GetBootstrapInfra_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BootstrapService_GetBootstrapInfra_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/GetBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bootstrap_GetBootstrapInfra_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BootstrapService_GetBootstrapInfra_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_GetBootstrapInfra_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_GetBootstrapInfra_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Bootstrap_PatchBootstrapAgentTemplate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_BootstrapService_PatchBootstrapAgentTemplate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/PatchBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/PatchBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bootstrap_PatchBootstrapAgentTemplate_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BootstrapService_PatchBootstrapAgentTemplate_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_PatchBootstrapAgentTemplate_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_PatchBootstrapAgentTemplate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bootstrap_GetBootstrapAgentTemplate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BootstrapService_GetBootstrapAgentTemplate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/GetBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bootstrap_GetBootstrapAgentTemplate_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BootstrapService_GetBootstrapAgentTemplate_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_GetBootstrapAgentTemplate_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_GetBootstrapAgentTemplate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bootstrap_GetBootstrapAgentTemplates_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BootstrapService_GetBootstrapAgentTemplates_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplates", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/GetBootstrapAgentTemplates", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bootstrap_GetBootstrapAgentTemplates_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BootstrapService_GetBootstrapAgentTemplates_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_GetBootstrapAgentTemplates_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_GetBootstrapAgentTemplates_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_Bootstrap_RegisterBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_BootstrapService_RegisterBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateToken=template/*}/register"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/RegisterBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateToken=template/*}/register"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bootstrap_RegisterBootstrapAgent_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BootstrapService_RegisterBootstrapAgent_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_RegisterBootstrapAgent_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_RegisterBootstrapAgent_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bootstrap_GetBootstrapAgentConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BootstrapService_GetBootstrapAgentConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentConfig", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}/config"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/GetBootstrapAgentConfig", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}/config"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bootstrap_GetBootstrapAgentConfig_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BootstrapService_GetBootstrapAgentConfig_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_GetBootstrapAgentConfig_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_GetBootstrapAgentConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_Bootstrap_CreateBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_BootstrapService_CreateBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/CreateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/CreateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bootstrap_CreateBootstrapAgent_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BootstrapService_CreateBootstrapAgent_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_CreateBootstrapAgent_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_CreateBootstrapAgent_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bootstrap_GetBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BootstrapService_GetBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/GetBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bootstrap_GetBootstrapAgent_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BootstrapService_GetBootstrapAgent_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_GetBootstrapAgent_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_GetBootstrapAgent_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bootstrap_GetBootstrapAgents_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BootstrapService_GetBootstrapAgents_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgents", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateScope=template/*}/agent"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/GetBootstrapAgents", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateScope=template/*}/agent"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bootstrap_GetBootstrapAgents_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BootstrapService_GetBootstrapAgents_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_GetBootstrapAgents_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_GetBootstrapAgents_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_Bootstrap_DeleteBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_BootstrapService_DeleteBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/DeleteBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/DeleteBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bootstrap_DeleteBootstrapAgent_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BootstrapService_DeleteBootstrapAgent_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_DeleteBootstrapAgent_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_DeleteBootstrapAgent_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Bootstrap_UpdateBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_BootstrapService_UpdateBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/UpdateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/UpdateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bootstrap_UpdateBootstrapAgent_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BootstrapService_UpdateBootstrapAgent_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_UpdateBootstrapAgent_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_UpdateBootstrapAgent_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterBootstrapHandlerFromEndpoint is same as RegisterBootstrapHandler but
+// RegisterBootstrapServiceHandlerFromEndpoint is same as RegisterBootstrapServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterBootstrapHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterBootstrapServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -1216,259 +1240,283 @@ func RegisterBootstrapHandlerFromEndpoint(ctx context.Context, mux *runtime.Serv
 		}()
 	}()
 
-	return RegisterBootstrapHandler(ctx, mux, conn)
+	return RegisterBootstrapServiceHandler(ctx, mux, conn)
 }
 
-// RegisterBootstrapHandler registers the http handlers for service Bootstrap to "mux".
+// RegisterBootstrapServiceHandler registers the http handlers for service BootstrapService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterBootstrapHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterBootstrapHandlerClient(ctx, mux, NewBootstrapClient(conn))
+func RegisterBootstrapServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterBootstrapServiceHandlerClient(ctx, mux, NewBootstrapServiceClient(conn))
 }
 
-// RegisterBootstrapHandlerClient registers the http handlers for service Bootstrap
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "BootstrapClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "BootstrapClient"
+// RegisterBootstrapServiceHandlerClient registers the http handlers for service BootstrapService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "BootstrapServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "BootstrapServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "BootstrapClient" to call the correct interceptors.
-func RegisterBootstrapHandlerClient(ctx context.Context, mux *runtime.ServeMux, client BootstrapClient) error {
+// "BootstrapServiceClient" to call the correct interceptors.
+func RegisterBootstrapServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client BootstrapServiceClient) error {
 
-	mux.Handle("PUT", pattern_Bootstrap_PatchBootstrapInfra_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_BootstrapService_PatchBootstrapInfra_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/PatchBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/PatchBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bootstrap_PatchBootstrapInfra_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_BootstrapService_PatchBootstrapInfra_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_PatchBootstrapInfra_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_PatchBootstrapInfra_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bootstrap_GetBootstrapInfra_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BootstrapService_GetBootstrapInfra_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/GetBootstrapInfra", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/infra/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bootstrap_GetBootstrapInfra_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_BootstrapService_GetBootstrapInfra_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_GetBootstrapInfra_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_GetBootstrapInfra_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Bootstrap_PatchBootstrapAgentTemplate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_BootstrapService_PatchBootstrapAgentTemplate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/PatchBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/PatchBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bootstrap_PatchBootstrapAgentTemplate_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_BootstrapService_PatchBootstrapAgentTemplate_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_PatchBootstrapAgentTemplate_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_PatchBootstrapAgentTemplate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bootstrap_GetBootstrapAgentTemplate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BootstrapService_GetBootstrapAgentTemplate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/GetBootstrapAgentTemplate", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bootstrap_GetBootstrapAgentTemplate_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_BootstrapService_GetBootstrapAgentTemplate_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_GetBootstrapAgentTemplate_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_GetBootstrapAgentTemplate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bootstrap_GetBootstrapAgentTemplates_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BootstrapService_GetBootstrapAgentTemplates_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentTemplates", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/GetBootstrapAgentTemplates", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/template"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bootstrap_GetBootstrapAgentTemplates_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_BootstrapService_GetBootstrapAgentTemplates_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_GetBootstrapAgentTemplates_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_GetBootstrapAgentTemplates_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_Bootstrap_RegisterBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_BootstrapService_RegisterBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/RegisterBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateToken=template/*}/register"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/RegisterBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateToken=template/*}/register"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bootstrap_RegisterBootstrapAgent_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_BootstrapService_RegisterBootstrapAgent_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_RegisterBootstrapAgent_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_RegisterBootstrapAgent_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bootstrap_GetBootstrapAgentConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BootstrapService_GetBootstrapAgentConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgentConfig", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}/config"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/GetBootstrapAgentConfig", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}/config"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bootstrap_GetBootstrapAgentConfig_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_BootstrapService_GetBootstrapAgentConfig_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_GetBootstrapAgentConfig_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_GetBootstrapAgentConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_Bootstrap_CreateBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_BootstrapService_CreateBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/CreateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/CreateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bootstrap_CreateBootstrapAgent_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_BootstrapService_CreateBootstrapAgent_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_CreateBootstrapAgent_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_CreateBootstrapAgent_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bootstrap_GetBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BootstrapService_GetBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/GetBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bootstrap_GetBootstrapAgent_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_BootstrapService_GetBootstrapAgent_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_GetBootstrapAgent_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_GetBootstrapAgent_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bootstrap_GetBootstrapAgents_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_BootstrapService_GetBootstrapAgents_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/GetBootstrapAgents", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateScope=template/*}/agent"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/GetBootstrapAgents", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{templateScope=template/*}/agent"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bootstrap_GetBootstrapAgents_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_BootstrapService_GetBootstrapAgents_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_GetBootstrapAgents_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_GetBootstrapAgents_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_Bootstrap_DeleteBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_BootstrapService_DeleteBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/DeleteBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/DeleteBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bootstrap_DeleteBootstrapAgent_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_BootstrapService_DeleteBootstrapAgent_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_DeleteBootstrapAgent_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_DeleteBootstrapAgent_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Bootstrap_UpdateBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_BootstrapService_UpdateBootstrapAgent_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.Bootstrap/UpdateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.BootstrapService/UpdateBootstrapAgent", runtime.WithHTTPPathPattern("/v2/sentry/bootstrap/{spec.templateRef=template/*}/agent/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bootstrap_UpdateBootstrapAgent_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_BootstrapService_UpdateBootstrapAgent_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bootstrap_UpdateBootstrapAgent_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_BootstrapService_UpdateBootstrapAgent_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -1476,53 +1524,53 @@ func RegisterBootstrapHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 }
 
 var (
-	pattern_Bootstrap_PatchBootstrapInfra_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v2", "sentry", "bootstrap", "infra", "metadata.name"}, ""))
+	pattern_BootstrapService_PatchBootstrapInfra_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v2", "sentry", "bootstrap", "infra", "metadata.name"}, ""))
 
-	pattern_Bootstrap_GetBootstrapInfra_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v2", "sentry", "bootstrap", "infra", "metadata.name"}, ""))
+	pattern_BootstrapService_GetBootstrapInfra_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v2", "sentry", "bootstrap", "infra", "metadata.name"}, ""))
 
-	pattern_Bootstrap_PatchBootstrapAgentTemplate_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v2", "sentry", "bootstrap", "template", "metadata.name"}, ""))
+	pattern_BootstrapService_PatchBootstrapAgentTemplate_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v2", "sentry", "bootstrap", "template", "metadata.name"}, ""))
 
-	pattern_Bootstrap_GetBootstrapAgentTemplate_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v2", "sentry", "bootstrap", "template", "metadata.name"}, ""))
+	pattern_BootstrapService_GetBootstrapAgentTemplate_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v2", "sentry", "bootstrap", "template", "metadata.name"}, ""))
 
-	pattern_Bootstrap_GetBootstrapAgentTemplates_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v2", "sentry", "bootstrap", "template"}, ""))
+	pattern_BootstrapService_GetBootstrapAgentTemplates_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v2", "sentry", "bootstrap", "template"}, ""))
 
-	pattern_Bootstrap_RegisterBootstrapAgent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "bootstrap", "template", "templateToken", "register"}, ""))
+	pattern_BootstrapService_RegisterBootstrapAgent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "bootstrap", "template", "templateToken", "register"}, ""))
 
-	pattern_Bootstrap_GetBootstrapAgentConfig_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"v2", "sentry", "bootstrap", "template", "spec.templateRef", "agent", "metadata.name", "config"}, ""))
+	pattern_BootstrapService_GetBootstrapAgentConfig_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"v2", "sentry", "bootstrap", "template", "spec.templateRef", "agent", "metadata.name", "config"}, ""))
 
-	pattern_Bootstrap_CreateBootstrapAgent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "bootstrap", "template", "spec.templateRef", "agent"}, ""))
+	pattern_BootstrapService_CreateBootstrapAgent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "bootstrap", "template", "spec.templateRef", "agent"}, ""))
 
-	pattern_Bootstrap_GetBootstrapAgent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"v2", "sentry", "bootstrap", "template", "spec.templateRef", "agent", "metadata.name"}, ""))
+	pattern_BootstrapService_GetBootstrapAgent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"v2", "sentry", "bootstrap", "template", "spec.templateRef", "agent", "metadata.name"}, ""))
 
-	pattern_Bootstrap_GetBootstrapAgents_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "bootstrap", "template", "templateScope", "agent"}, ""))
+	pattern_BootstrapService_GetBootstrapAgents_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "bootstrap", "template", "templateScope", "agent"}, ""))
 
-	pattern_Bootstrap_DeleteBootstrapAgent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"v2", "sentry", "bootstrap", "template", "spec.templateRef", "agent", "metadata.name"}, ""))
+	pattern_BootstrapService_DeleteBootstrapAgent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"v2", "sentry", "bootstrap", "template", "spec.templateRef", "agent", "metadata.name"}, ""))
 
-	pattern_Bootstrap_UpdateBootstrapAgent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"v2", "sentry", "bootstrap", "template", "spec.templateRef", "agent", "metadata.name"}, ""))
+	pattern_BootstrapService_UpdateBootstrapAgent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"v2", "sentry", "bootstrap", "template", "spec.templateRef", "agent", "metadata.name"}, ""))
 )
 
 var (
-	forward_Bootstrap_PatchBootstrapInfra_0 = runtime.ForwardResponseMessage
+	forward_BootstrapService_PatchBootstrapInfra_0 = runtime.ForwardResponseMessage
 
-	forward_Bootstrap_GetBootstrapInfra_0 = runtime.ForwardResponseMessage
+	forward_BootstrapService_GetBootstrapInfra_0 = runtime.ForwardResponseMessage
 
-	forward_Bootstrap_PatchBootstrapAgentTemplate_0 = runtime.ForwardResponseMessage
+	forward_BootstrapService_PatchBootstrapAgentTemplate_0 = runtime.ForwardResponseMessage
 
-	forward_Bootstrap_GetBootstrapAgentTemplate_0 = runtime.ForwardResponseMessage
+	forward_BootstrapService_GetBootstrapAgentTemplate_0 = runtime.ForwardResponseMessage
 
-	forward_Bootstrap_GetBootstrapAgentTemplates_0 = runtime.ForwardResponseMessage
+	forward_BootstrapService_GetBootstrapAgentTemplates_0 = runtime.ForwardResponseMessage
 
-	forward_Bootstrap_RegisterBootstrapAgent_0 = runtime.ForwardResponseMessage
+	forward_BootstrapService_RegisterBootstrapAgent_0 = runtime.ForwardResponseMessage
 
-	forward_Bootstrap_GetBootstrapAgentConfig_0 = runtime.ForwardResponseMessage
+	forward_BootstrapService_GetBootstrapAgentConfig_0 = runtime.ForwardResponseMessage
 
-	forward_Bootstrap_CreateBootstrapAgent_0 = runtime.ForwardResponseMessage
+	forward_BootstrapService_CreateBootstrapAgent_0 = runtime.ForwardResponseMessage
 
-	forward_Bootstrap_GetBootstrapAgent_0 = runtime.ForwardResponseMessage
+	forward_BootstrapService_GetBootstrapAgent_0 = runtime.ForwardResponseMessage
 
-	forward_Bootstrap_GetBootstrapAgents_0 = runtime.ForwardResponseMessage
+	forward_BootstrapService_GetBootstrapAgents_0 = runtime.ForwardResponseMessage
 
-	forward_Bootstrap_DeleteBootstrapAgent_0 = runtime.ForwardResponseMessage
+	forward_BootstrapService_DeleteBootstrapAgent_0 = runtime.ForwardResponseMessage
 
-	forward_Bootstrap_UpdateBootstrapAgent_0 = runtime.ForwardResponseMessage
+	forward_BootstrapService_UpdateBootstrapAgent_0 = runtime.ForwardResponseMessage
 )

@@ -2,11 +2,11 @@
 // source: proto/rpc/system/oidc_provider.proto
 
 /*
-Package rpcv3 is a reverse proxy.
+Package systemv3 is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package rpcv3
+package systemv3
 
 import (
 	"context"
@@ -33,7 +33,7 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_OIDCProvider_CreateOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_OIDCProviderService_CreateOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
@@ -50,7 +50,7 @@ func request_OIDCProvider_CreateOIDCProvider_0(ctx context.Context, marshaler ru
 
 }
 
-func local_request_OIDCProvider_CreateOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, server OIDCProviderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_OIDCProviderService_CreateOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, server OIDCProviderServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
@@ -68,10 +68,10 @@ func local_request_OIDCProvider_CreateOIDCProvider_0(ctx context.Context, marsha
 }
 
 var (
-	filter_OIDCProvider_GetOIDCProvider_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_OIDCProviderService_GetOIDCProvider_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_OIDCProvider_GetOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_OIDCProviderService_GetOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
@@ -95,7 +95,7 @@ func request_OIDCProvider_GetOIDCProvider_0(ctx context.Context, marshaler runti
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_OIDCProvider_GetOIDCProvider_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_OIDCProviderService_GetOIDCProvider_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -104,7 +104,7 @@ func request_OIDCProvider_GetOIDCProvider_0(ctx context.Context, marshaler runti
 
 }
 
-func local_request_OIDCProvider_GetOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, server OIDCProviderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_OIDCProviderService_GetOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, server OIDCProviderServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
@@ -128,7 +128,7 @@ func local_request_OIDCProvider_GetOIDCProvider_0(ctx context.Context, marshaler
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_OIDCProvider_GetOIDCProvider_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_OIDCProviderService_GetOIDCProvider_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -137,7 +137,7 @@ func local_request_OIDCProvider_GetOIDCProvider_0(ctx context.Context, marshaler
 
 }
 
-func request_OIDCProvider_ListOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_OIDCProviderService_ListOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq emptypb.Empty
 	var metadata runtime.ServerMetadata
 
@@ -146,7 +146,7 @@ func request_OIDCProvider_ListOIDCProvider_0(ctx context.Context, marshaler runt
 
 }
 
-func local_request_OIDCProvider_ListOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, server OIDCProviderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_OIDCProviderService_ListOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, server OIDCProviderServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq emptypb.Empty
 	var metadata runtime.ServerMetadata
 
@@ -155,7 +155,7 @@ func local_request_OIDCProvider_ListOIDCProvider_0(ctx context.Context, marshale
 
 }
 
-func request_OIDCProvider_UpdateOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_OIDCProviderService_UpdateOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
@@ -189,7 +189,7 @@ func request_OIDCProvider_UpdateOIDCProvider_0(ctx context.Context, marshaler ru
 
 }
 
-func local_request_OIDCProvider_UpdateOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, server OIDCProviderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_OIDCProviderService_UpdateOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, server OIDCProviderServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
@@ -224,10 +224,10 @@ func local_request_OIDCProvider_UpdateOIDCProvider_0(ctx context.Context, marsha
 }
 
 var (
-	filter_OIDCProvider_DeleteOIDCProvider_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_OIDCProviderService_DeleteOIDCProvider_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_OIDCProvider_DeleteOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_OIDCProviderService_DeleteOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
@@ -251,7 +251,7 @@ func request_OIDCProvider_DeleteOIDCProvider_0(ctx context.Context, marshaler ru
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_OIDCProvider_DeleteOIDCProvider_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_OIDCProviderService_DeleteOIDCProvider_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -260,7 +260,7 @@ func request_OIDCProvider_DeleteOIDCProvider_0(ctx context.Context, marshaler ru
 
 }
 
-func local_request_OIDCProvider_DeleteOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, server OIDCProviderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_OIDCProviderService_DeleteOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, server OIDCProviderServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq systemv3.OIDCProvider
 	var metadata runtime.ServerMetadata
 
@@ -284,7 +284,7 @@ func local_request_OIDCProvider_DeleteOIDCProvider_0(ctx context.Context, marsha
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_OIDCProvider_DeleteOIDCProvider_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_OIDCProviderService_DeleteOIDCProvider_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -293,133 +293,143 @@ func local_request_OIDCProvider_DeleteOIDCProvider_0(ctx context.Context, marsha
 
 }
 
-// RegisterOIDCProviderHandlerServer registers the http handlers for service OIDCProvider to "mux".
-// UnaryRPC     :call OIDCProviderServer directly.
+// RegisterOIDCProviderServiceHandlerServer registers the http handlers for service OIDCProviderService to "mux".
+// UnaryRPC     :call OIDCProviderServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterOIDCProviderHandlerFromEndpoint instead.
-func RegisterOIDCProviderHandlerServer(ctx context.Context, mux *runtime.ServeMux, server OIDCProviderServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterOIDCProviderServiceHandlerFromEndpoint instead.
+func RegisterOIDCProviderServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server OIDCProviderServiceServer) error {
 
-	mux.Handle("POST", pattern_OIDCProvider_CreateOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_OIDCProviderService_CreateOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/CreateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.OIDCProviderService/CreateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_OIDCProvider_CreateOIDCProvider_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_OIDCProviderService_CreateOIDCProvider_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_OIDCProvider_CreateOIDCProvider_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_OIDCProviderService_CreateOIDCProvider_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_OIDCProvider_GetOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_OIDCProviderService_GetOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/GetOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.OIDCProviderService/GetOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_OIDCProvider_GetOIDCProvider_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_OIDCProviderService_GetOIDCProvider_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_OIDCProvider_GetOIDCProvider_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_OIDCProviderService_GetOIDCProvider_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_OIDCProvider_ListOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_OIDCProviderService_ListOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/ListOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.OIDCProviderService/ListOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_OIDCProvider_ListOIDCProvider_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_OIDCProviderService_ListOIDCProvider_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_OIDCProvider_ListOIDCProvider_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_OIDCProviderService_ListOIDCProvider_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_OIDCProvider_UpdateOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_OIDCProviderService_UpdateOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.OIDCProviderService/UpdateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_OIDCProvider_UpdateOIDCProvider_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_OIDCProviderService_UpdateOIDCProvider_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_OIDCProvider_UpdateOIDCProvider_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_OIDCProviderService_UpdateOIDCProvider_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_OIDCProvider_DeleteOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_OIDCProviderService_DeleteOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.OIDCProviderService/DeleteOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_OIDCProvider_DeleteOIDCProvider_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_OIDCProviderService_DeleteOIDCProvider_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_OIDCProvider_DeleteOIDCProvider_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_OIDCProviderService_DeleteOIDCProvider_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterOIDCProviderHandlerFromEndpoint is same as RegisterOIDCProviderHandler but
+// RegisterOIDCProviderServiceHandlerFromEndpoint is same as RegisterOIDCProviderServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterOIDCProviderHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterOIDCProviderServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -439,119 +449,129 @@ func RegisterOIDCProviderHandlerFromEndpoint(ctx context.Context, mux *runtime.S
 		}()
 	}()
 
-	return RegisterOIDCProviderHandler(ctx, mux, conn)
+	return RegisterOIDCProviderServiceHandler(ctx, mux, conn)
 }
 
-// RegisterOIDCProviderHandler registers the http handlers for service OIDCProvider to "mux".
+// RegisterOIDCProviderServiceHandler registers the http handlers for service OIDCProviderService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterOIDCProviderHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterOIDCProviderHandlerClient(ctx, mux, NewOIDCProviderClient(conn))
+func RegisterOIDCProviderServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterOIDCProviderServiceHandlerClient(ctx, mux, NewOIDCProviderServiceClient(conn))
 }
 
-// RegisterOIDCProviderHandlerClient registers the http handlers for service OIDCProvider
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "OIDCProviderClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "OIDCProviderClient"
+// RegisterOIDCProviderServiceHandlerClient registers the http handlers for service OIDCProviderService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "OIDCProviderServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "OIDCProviderServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "OIDCProviderClient" to call the correct interceptors.
-func RegisterOIDCProviderHandlerClient(ctx context.Context, mux *runtime.ServeMux, client OIDCProviderClient) error {
+// "OIDCProviderServiceClient" to call the correct interceptors.
+func RegisterOIDCProviderServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client OIDCProviderServiceClient) error {
 
-	mux.Handle("POST", pattern_OIDCProvider_CreateOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_OIDCProviderService_CreateOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/CreateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.OIDCProviderService/CreateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_OIDCProvider_CreateOIDCProvider_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_OIDCProviderService_CreateOIDCProvider_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_OIDCProvider_CreateOIDCProvider_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_OIDCProviderService_CreateOIDCProvider_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_OIDCProvider_GetOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_OIDCProviderService_GetOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/GetOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.OIDCProviderService/GetOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_OIDCProvider_GetOIDCProvider_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_OIDCProviderService_GetOIDCProvider_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_OIDCProvider_GetOIDCProvider_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_OIDCProviderService_GetOIDCProvider_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_OIDCProvider_ListOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_OIDCProviderService_ListOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/ListOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.OIDCProviderService/ListOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_OIDCProvider_ListOIDCProvider_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_OIDCProviderService_ListOIDCProvider_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_OIDCProvider_ListOIDCProvider_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_OIDCProviderService_ListOIDCProvider_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_OIDCProvider_UpdateOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_OIDCProviderService_UpdateOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.OIDCProviderService/UpdateOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_OIDCProvider_UpdateOIDCProvider_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_OIDCProviderService_UpdateOIDCProvider_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_OIDCProvider_UpdateOIDCProvider_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_OIDCProviderService_UpdateOIDCProvider_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_OIDCProvider_DeleteOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_OIDCProviderService_DeleteOIDCProvider_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.rpc.system.v3.OIDCProviderService/DeleteOIDCProvider", runtime.WithHTTPPathPattern("/auth/v3/sso/oidc/provider/{metadata.name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_OIDCProvider_DeleteOIDCProvider_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_OIDCProviderService_DeleteOIDCProvider_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_OIDCProvider_DeleteOIDCProvider_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_OIDCProviderService_DeleteOIDCProvider_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -559,25 +579,25 @@ func RegisterOIDCProviderHandlerClient(ctx context.Context, mux *runtime.ServeMu
 }
 
 var (
-	pattern_OIDCProvider_CreateOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"auth", "v3", "sso", "oidc", "provider"}, ""))
+	pattern_OIDCProviderService_CreateOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"auth", "v3", "sso", "oidc", "provider"}, ""))
 
-	pattern_OIDCProvider_GetOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "sso", "oidc", "provider", "metadata.name"}, ""))
+	pattern_OIDCProviderService_GetOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "sso", "oidc", "provider", "metadata.name"}, ""))
 
-	pattern_OIDCProvider_ListOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"auth", "v3", "sso", "oidc", "provider"}, ""))
+	pattern_OIDCProviderService_ListOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"auth", "v3", "sso", "oidc", "provider"}, ""))
 
-	pattern_OIDCProvider_UpdateOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "sso", "oidc", "provider", "metadata.name"}, ""))
+	pattern_OIDCProviderService_UpdateOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "sso", "oidc", "provider", "metadata.name"}, ""))
 
-	pattern_OIDCProvider_DeleteOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "sso", "oidc", "provider", "metadata.name"}, ""))
+	pattern_OIDCProviderService_DeleteOIDCProvider_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"auth", "v3", "sso", "oidc", "provider", "metadata.name"}, ""))
 )
 
 var (
-	forward_OIDCProvider_CreateOIDCProvider_0 = runtime.ForwardResponseMessage
+	forward_OIDCProviderService_CreateOIDCProvider_0 = runtime.ForwardResponseMessage
 
-	forward_OIDCProvider_GetOIDCProvider_0 = runtime.ForwardResponseMessage
+	forward_OIDCProviderService_GetOIDCProvider_0 = runtime.ForwardResponseMessage
 
-	forward_OIDCProvider_ListOIDCProvider_0 = runtime.ForwardResponseMessage
+	forward_OIDCProviderService_ListOIDCProvider_0 = runtime.ForwardResponseMessage
 
-	forward_OIDCProvider_UpdateOIDCProvider_0 = runtime.ForwardResponseMessage
+	forward_OIDCProviderService_UpdateOIDCProvider_0 = runtime.ForwardResponseMessage
 
-	forward_OIDCProvider_DeleteOIDCProvider_0 = runtime.ForwardResponseMessage
+	forward_OIDCProviderService_DeleteOIDCProvider_0 = runtime.ForwardResponseMessage
 )

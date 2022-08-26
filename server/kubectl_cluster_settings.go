@@ -16,7 +16,7 @@ type kubectlClusterSettingsServer struct {
 	kcs service.KubectlClusterSettingsService
 }
 
-var _ sentryrpc.KubectlClusterSettingsServer = (*kubectlClusterSettingsServer)(nil)
+var _ sentryrpc.KubectlClusterSettingsServiceServer = (*kubectlClusterSettingsServer)(nil)
 
 func (s *kubectlClusterSettingsServer) GetKubectlClusterSettings(ctx context.Context, in *sentryrpc.GetKubectlClusterSettingsRequest) (*sentryrpc.GetKubectlClusterSettingsResponse, error) {
 	opts := in.Opts
@@ -113,6 +113,6 @@ func (s *kubectlClusterSettingsServer) UpdateKubectlClusterSettings(ctx context.
 }
 
 // NewKubectlClusterSettingsServer returns new kubectl cluster setting server
-func NewKubectlClusterSettingsServer(bs service.BootstrapService, kcs service.KubectlClusterSettingsService) sentryrpc.KubectlClusterSettingsServer {
+func NewKubectlClusterSettingsServer(bs service.BootstrapService, kcs service.KubectlClusterSettingsService) sentryrpc.KubectlClusterSettingsServiceServer {
 	return &kubectlClusterSettingsServer{bs, kcs}
 }

@@ -9,7 +9,7 @@
   },
   "tags": [
     {
-      "name": "Project"
+      "name": "ProjectService"
     }
   ],
   "schemes": [
@@ -26,7 +26,7 @@
   "paths": {
     "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project": {
       "post": {
-        "operationId": "Project_CreateProject",
+        "operationId": "ProjectService_CreateProject",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -76,18 +76,120 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v3Project"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "system.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Project",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "name of the resource",
+                      "title": "Name"
+                    },
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3ProjectSpec",
+                  "description": "Spec of the resource",
+                  "title": "Spec"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Project",
+              "title": "Project",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec",
+                "name",
+                "project"
+              ]
             }
           }
         ],
         "tags": [
-          "Project"
+          "ProjectService"
         ]
       }
     },
     "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/project/{metadata.name}": {
       "get": {
-        "operationId": "Project_GetProject",
+        "operationId": "ProjectService_GetProject",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -137,39 +239,39 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "Project"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
@@ -200,21 +302,21 @@
           },
           {
             "name": "spec.default",
-            "description": "Default. flag to indicate if this is the default project in the organization",
+            "description": "Default\n\nflag to indicate if this is the default project in the organization",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
@@ -228,7 +330,7 @@
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -236,18 +338,18 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Project"
+          "ProjectService"
         ]
       },
       "delete": {
-        "operationId": "Project_DeleteProject",
+        "operationId": "ProjectService_DeleteProject",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -301,39 +403,39 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "Project"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
@@ -364,21 +466,21 @@
           },
           {
             "name": "spec.default",
-            "description": "Default. flag to indicate if this is the default project in the organization",
+            "description": "Default\n\nflag to indicate if this is the default project in the organization",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
@@ -392,7 +494,7 @@
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -400,18 +502,18 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Project"
+          "ProjectService"
         ]
       },
       "put": {
-        "operationId": "Project_UpdateProject",
+        "operationId": "ProjectService_UpdateProject",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -464,18 +566,114 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v3Project"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "system.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Project",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3ProjectSpec",
+                  "description": "Spec of the resource",
+                  "title": "Spec"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Project",
+              "title": "Project",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec",
+                "project"
+              ]
             }
           }
         ],
         "tags": [
-          "Project"
+          "ProjectService"
         ]
       }
     },
     "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/projects": {
       "get": {
-        "operationId": "Project_GetProjects",
+        "operationId": "ProjectService_GetProjects",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -518,46 +716,46 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "Project"
           },
           {
             "name": "metadata.name",
-            "description": "Name. name of the resource",
+            "description": "Name\n\nname of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
@@ -588,21 +786,21 @@
           },
           {
             "name": "spec.default",
-            "description": "Default. flag to indicate if this is the default project in the organization",
+            "description": "Default\n\nflag to indicate if this is the default project in the organization",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
@@ -616,7 +814,7 @@
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -624,14 +822,14 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Project"
+          "ProjectService"
         ]
       }
     }
@@ -880,11 +1078,11 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v3Project"
+            "$ref": "#/definitions/v3Project",
+            "readOnly": true
           },
           "description": "List of the resources",
-          "title": "Items",
-          "readOnly": true
+          "title": "Items"
         }
       },
       "description": "Project list",

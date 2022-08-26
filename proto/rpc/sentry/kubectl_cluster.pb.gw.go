@@ -31,7 +31,7 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_KubectlClusterSettings_UpdateKubectlClusterSettings_0(ctx context.Context, marshaler runtime.Marshaler, client KubectlClusterSettingsClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_KubectlClusterSettingsService_UpdateKubectlClusterSettings_0(ctx context.Context, marshaler runtime.Marshaler, client KubectlClusterSettingsServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq UpdateKubectlClusterSettingsRequest
 	var metadata runtime.ServerMetadata
 
@@ -65,7 +65,7 @@ func request_KubectlClusterSettings_UpdateKubectlClusterSettings_0(ctx context.C
 
 }
 
-func local_request_KubectlClusterSettings_UpdateKubectlClusterSettings_0(ctx context.Context, marshaler runtime.Marshaler, server KubectlClusterSettingsServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_KubectlClusterSettingsService_UpdateKubectlClusterSettings_0(ctx context.Context, marshaler runtime.Marshaler, server KubectlClusterSettingsServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq UpdateKubectlClusterSettingsRequest
 	var metadata runtime.ServerMetadata
 
@@ -100,10 +100,10 @@ func local_request_KubectlClusterSettings_UpdateKubectlClusterSettings_0(ctx con
 }
 
 var (
-	filter_KubectlClusterSettings_GetKubectlClusterSettings_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_KubectlClusterSettingsService_GetKubectlClusterSettings_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
-func request_KubectlClusterSettings_GetKubectlClusterSettings_0(ctx context.Context, marshaler runtime.Marshaler, client KubectlClusterSettingsClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_KubectlClusterSettingsService_GetKubectlClusterSettings_0(ctx context.Context, marshaler runtime.Marshaler, client KubectlClusterSettingsServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetKubectlClusterSettingsRequest
 	var metadata runtime.ServerMetadata
 
@@ -127,7 +127,7 @@ func request_KubectlClusterSettings_GetKubectlClusterSettings_0(ctx context.Cont
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubectlClusterSettings_GetKubectlClusterSettings_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubectlClusterSettingsService_GetKubectlClusterSettings_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -136,7 +136,7 @@ func request_KubectlClusterSettings_GetKubectlClusterSettings_0(ctx context.Cont
 
 }
 
-func local_request_KubectlClusterSettings_GetKubectlClusterSettings_0(ctx context.Context, marshaler runtime.Marshaler, server KubectlClusterSettingsServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_KubectlClusterSettingsService_GetKubectlClusterSettings_0(ctx context.Context, marshaler runtime.Marshaler, server KubectlClusterSettingsServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetKubectlClusterSettingsRequest
 	var metadata runtime.ServerMetadata
 
@@ -160,7 +160,7 @@ func local_request_KubectlClusterSettings_GetKubectlClusterSettings_0(ctx contex
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubectlClusterSettings_GetKubectlClusterSettings_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KubectlClusterSettingsService_GetKubectlClusterSettings_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -169,64 +169,68 @@ func local_request_KubectlClusterSettings_GetKubectlClusterSettings_0(ctx contex
 
 }
 
-// RegisterKubectlClusterSettingsHandlerServer registers the http handlers for service KubectlClusterSettings to "mux".
-// UnaryRPC     :call KubectlClusterSettingsServer directly.
+// RegisterKubectlClusterSettingsServiceHandlerServer registers the http handlers for service KubectlClusterSettingsService to "mux".
+// UnaryRPC     :call KubectlClusterSettingsServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterKubectlClusterSettingsHandlerFromEndpoint instead.
-func RegisterKubectlClusterSettingsHandlerServer(ctx context.Context, mux *runtime.ServeMux, server KubectlClusterSettingsServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterKubectlClusterSettingsServiceHandlerFromEndpoint instead.
+func RegisterKubectlClusterSettingsServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server KubectlClusterSettingsServiceServer) error {
 
-	mux.Handle("PUT", pattern_KubectlClusterSettings_UpdateKubectlClusterSettings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_KubectlClusterSettingsService_UpdateKubectlClusterSettings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubectlClusterSettings/UpdateKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubectlClusterSettingsService/UpdateKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_KubectlClusterSettings_UpdateKubectlClusterSettings_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_KubectlClusterSettingsService_UpdateKubectlClusterSettings_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubectlClusterSettings_UpdateKubectlClusterSettings_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubectlClusterSettingsService_UpdateKubectlClusterSettings_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_KubectlClusterSettings_GetKubectlClusterSettings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubectlClusterSettingsService_GetKubectlClusterSettings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubectlClusterSettings/GetKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubectlClusterSettingsService/GetKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_KubectlClusterSettings_GetKubectlClusterSettings_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_KubectlClusterSettingsService_GetKubectlClusterSettings_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubectlClusterSettings_GetKubectlClusterSettings_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubectlClusterSettingsService_GetKubectlClusterSettings_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterKubectlClusterSettingsHandlerFromEndpoint is same as RegisterKubectlClusterSettingsHandler but
+// RegisterKubectlClusterSettingsServiceHandlerFromEndpoint is same as RegisterKubectlClusterSettingsServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterKubectlClusterSettingsHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterKubectlClusterSettingsServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -246,59 +250,63 @@ func RegisterKubectlClusterSettingsHandlerFromEndpoint(ctx context.Context, mux 
 		}()
 	}()
 
-	return RegisterKubectlClusterSettingsHandler(ctx, mux, conn)
+	return RegisterKubectlClusterSettingsServiceHandler(ctx, mux, conn)
 }
 
-// RegisterKubectlClusterSettingsHandler registers the http handlers for service KubectlClusterSettings to "mux".
+// RegisterKubectlClusterSettingsServiceHandler registers the http handlers for service KubectlClusterSettingsService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterKubectlClusterSettingsHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterKubectlClusterSettingsHandlerClient(ctx, mux, NewKubectlClusterSettingsClient(conn))
+func RegisterKubectlClusterSettingsServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterKubectlClusterSettingsServiceHandlerClient(ctx, mux, NewKubectlClusterSettingsServiceClient(conn))
 }
 
-// RegisterKubectlClusterSettingsHandlerClient registers the http handlers for service KubectlClusterSettings
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "KubectlClusterSettingsClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "KubectlClusterSettingsClient"
+// RegisterKubectlClusterSettingsServiceHandlerClient registers the http handlers for service KubectlClusterSettingsService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "KubectlClusterSettingsServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "KubectlClusterSettingsServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "KubectlClusterSettingsClient" to call the correct interceptors.
-func RegisterKubectlClusterSettingsHandlerClient(ctx context.Context, mux *runtime.ServeMux, client KubectlClusterSettingsClient) error {
+// "KubectlClusterSettingsServiceClient" to call the correct interceptors.
+func RegisterKubectlClusterSettingsServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client KubectlClusterSettingsServiceClient) error {
 
-	mux.Handle("PUT", pattern_KubectlClusterSettings_UpdateKubectlClusterSettings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_KubectlClusterSettingsService_UpdateKubectlClusterSettings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubectlClusterSettings/UpdateKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubectlClusterSettingsService/UpdateKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_KubectlClusterSettings_UpdateKubectlClusterSettings_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_KubectlClusterSettingsService_UpdateKubectlClusterSettings_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubectlClusterSettings_UpdateKubectlClusterSettings_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubectlClusterSettingsService_UpdateKubectlClusterSettings_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_KubectlClusterSettings_GetKubectlClusterSettings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_KubectlClusterSettingsService_GetKubectlClusterSettings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubectlClusterSettings/GetKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.KubectlClusterSettingsService/GetKubectlClusterSettings", runtime.WithHTTPPathPattern("/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_KubectlClusterSettings_GetKubectlClusterSettings_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_KubectlClusterSettingsService_GetKubectlClusterSettings_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KubectlClusterSettings_GetKubectlClusterSettings_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KubectlClusterSettingsService_GetKubectlClusterSettings_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -306,13 +314,13 @@ func RegisterKubectlClusterSettingsHandlerClient(ctx context.Context, mux *runti
 }
 
 var (
-	pattern_KubectlClusterSettings_UpdateKubectlClusterSettings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubectl", "cluster", "opts.urlScope", "settings"}, ""))
+	pattern_KubectlClusterSettingsService_UpdateKubectlClusterSettings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubectl", "cluster", "opts.urlScope", "settings"}, ""))
 
-	pattern_KubectlClusterSettings_GetKubectlClusterSettings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubectl", "cluster", "opts.urlScope", "settings"}, ""))
+	pattern_KubectlClusterSettingsService_GetKubectlClusterSettings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4, 2, 5}, []string{"v2", "sentry", "kubectl", "cluster", "opts.urlScope", "settings"}, ""))
 )
 
 var (
-	forward_KubectlClusterSettings_UpdateKubectlClusterSettings_0 = runtime.ForwardResponseMessage
+	forward_KubectlClusterSettingsService_UpdateKubectlClusterSettings_0 = runtime.ForwardResponseMessage
 
-	forward_KubectlClusterSettings_GetKubectlClusterSettings_0 = runtime.ForwardResponseMessage
+	forward_KubectlClusterSettingsService_GetKubectlClusterSettings_0 = runtime.ForwardResponseMessage
 )

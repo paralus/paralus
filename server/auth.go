@@ -13,7 +13,7 @@ type authServer struct {
 }
 
 // NewAuthServer returns new auth server implementation
-func NewAuthServer(as authv3.AuthService) rpcv3.AuthServer {
+func NewAuthServer(as authv3.AuthService) rpcv3.AuthServiceServer {
 	return &authServer{as}
 }
 

@@ -15,7 +15,7 @@ type projectServer struct {
 }
 
 // NewProjectServer returns new project server implementation
-func NewProjectServer(ps service.ProjectService) systemrpc.ProjectServer {
+func NewProjectServer(ps service.ProjectService) systemrpc.ProjectServiceServer {
 	return &projectServer{ps}
 }
 

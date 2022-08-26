@@ -1,7 +1,6 @@
 syntax = "proto3";
 package paralus.dev.types.sentry;
 
-import "google/protobuf/timestamp.proto";
 import "proto/types/sentry/account_permission.proto";
 
 message GroupPermission {

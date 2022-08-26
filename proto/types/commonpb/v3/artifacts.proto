@@ -3,7 +3,6 @@ syntax = "proto3";
 package paralus.dev.types.common.v3;
 
 import "protoc-gen-openapiv2/options/annotations.proto";
-import "google/api/field_behavior.proto";
 
 message File {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {

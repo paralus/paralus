@@ -1,4 +1,4 @@
-package rpcv3
+package userv3
 
 import (
 	"context"
@@ -12,12 +12,12 @@ import (
 type UGClient interface {
 	Unhealthy()
 	Close() error
-	UserClient
+	UserServiceClient
 }
 
 type ugClient struct {
 	*grpcpool.ClientConn
-	*userClient
+	*userServiceClient
 }
 
 var _ UGClient = (*ugClient)(nil)
@@ -52,7 +52,7 @@ func (p *ugPool) NewClient(ctx context.Context) (UGClient, error) {
 	}
 	return &ugClient{
 		cc,
-		&userClient{cc.ClientConn},
+		&userServiceClient{cc.ClientConn},
 	}, nil
 }
 

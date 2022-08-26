@@ -6,8 +6,12 @@ All notable changes to this project will be documented in this file.
 
 ## Added
 
-- Adding more audit points for better visibility from [vivekhiwarkar](https://github.com/vivekhiwarkar)
+- Added more audit points for better visibility from [vivekhiwarkar](https://github.com/vivekhiwarkar)
 - Added audit point for kubeconfig download [meain](https://github.com/meain)
+
+## Fixed
+
+- Fixed lint issues due to buf from [vivekhiwarkar](https://github.com/vivekhiwarkar)
 
 ## [0.1.2] - 2022-08-12
 

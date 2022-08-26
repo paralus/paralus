@@ -32,17 +32,17 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 var (
-	filter_AuditInformation_LookupUser_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+	filter_AuditInformationService_LookupUser_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
-func request_AuditInformation_LookupUser_0(ctx context.Context, marshaler runtime.Marshaler, client AuditInformationClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_AuditInformationService_LookupUser_0(ctx context.Context, marshaler runtime.Marshaler, client AuditInformationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq LookupUserRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_AuditInformation_LookupUser_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_AuditInformationService_LookupUser_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -51,14 +51,14 @@ func request_AuditInformation_LookupUser_0(ctx context.Context, marshaler runtim
 
 }
 
-func local_request_AuditInformation_LookupUser_0(ctx context.Context, marshaler runtime.Marshaler, server AuditInformationServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_AuditInformationService_LookupUser_0(ctx context.Context, marshaler runtime.Marshaler, server AuditInformationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq LookupUserRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_AuditInformation_LookupUser_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_AuditInformationService_LookupUser_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -68,17 +68,17 @@ func local_request_AuditInformation_LookupUser_0(ctx context.Context, marshaler 
 }
 
 var (
-	filter_AuditInformation_LookupCluster_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+	filter_AuditInformationService_LookupCluster_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
-func request_AuditInformation_LookupCluster_0(ctx context.Context, marshaler runtime.Marshaler, client AuditInformationClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_AuditInformationService_LookupCluster_0(ctx context.Context, marshaler runtime.Marshaler, client AuditInformationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq LookupClusterRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_AuditInformation_LookupCluster_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_AuditInformationService_LookupCluster_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -87,14 +87,14 @@ func request_AuditInformation_LookupCluster_0(ctx context.Context, marshaler run
 
 }
 
-func local_request_AuditInformation_LookupCluster_0(ctx context.Context, marshaler runtime.Marshaler, server AuditInformationServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_AuditInformationService_LookupCluster_0(ctx context.Context, marshaler runtime.Marshaler, server AuditInformationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq LookupClusterRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_AuditInformation_LookupCluster_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_AuditInformationService_LookupCluster_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -103,64 +103,68 @@ func local_request_AuditInformation_LookupCluster_0(ctx context.Context, marshal
 
 }
 
-// RegisterAuditInformationHandlerServer registers the http handlers for service AuditInformation to "mux".
-// UnaryRPC     :call AuditInformationServer directly.
+// RegisterAuditInformationServiceHandlerServer registers the http handlers for service AuditInformationService to "mux".
+// UnaryRPC     :call AuditInformationServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterAuditInformationHandlerFromEndpoint instead.
-func RegisterAuditInformationHandlerServer(ctx context.Context, mux *runtime.ServeMux, server AuditInformationServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterAuditInformationServiceHandlerFromEndpoint instead.
+func RegisterAuditInformationServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server AuditInformationServiceServer) error {
 
-	mux.Handle("GET", pattern_AuditInformation_LookupUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_AuditInformationService_LookupUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.AuditInformation/LookupUser", runtime.WithHTTPPathPattern("/v2/sentry/auditInfo/user"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.AuditInformationService/LookupUser", runtime.WithHTTPPathPattern("/v2/sentry/auditInfo/user"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_AuditInformation_LookupUser_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_AuditInformationService_LookupUser_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_AuditInformation_LookupUser_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_AuditInformationService_LookupUser_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_AuditInformation_LookupCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_AuditInformationService_LookupCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.AuditInformation/LookupCluster", runtime.WithHTTPPathPattern("/v2/sentry/auditInfo/cluster"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/paralus.dev.sentry.rpc.AuditInformationService/LookupCluster", runtime.WithHTTPPathPattern("/v2/sentry/auditInfo/cluster"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_AuditInformation_LookupCluster_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_AuditInformationService_LookupCluster_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_AuditInformation_LookupCluster_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_AuditInformationService_LookupCluster_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterAuditInformationHandlerFromEndpoint is same as RegisterAuditInformationHandler but
+// RegisterAuditInformationServiceHandlerFromEndpoint is same as RegisterAuditInformationServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterAuditInformationHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterAuditInformationServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -180,59 +184,63 @@ func RegisterAuditInformationHandlerFromEndpoint(ctx context.Context, mux *runti
 		}()
 	}()
 
-	return RegisterAuditInformationHandler(ctx, mux, conn)
+	return RegisterAuditInformationServiceHandler(ctx, mux, conn)
 }
 
-// RegisterAuditInformationHandler registers the http handlers for service AuditInformation to "mux".
+// RegisterAuditInformationServiceHandler registers the http handlers for service AuditInformationService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterAuditInformationHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterAuditInformationHandlerClient(ctx, mux, NewAuditInformationClient(conn))
+func RegisterAuditInformationServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterAuditInformationServiceHandlerClient(ctx, mux, NewAuditInformationServiceClient(conn))
 }
 
-// RegisterAuditInformationHandlerClient registers the http handlers for service AuditInformation
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "AuditInformationClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "AuditInformationClient"
+// RegisterAuditInformationServiceHandlerClient registers the http handlers for service AuditInformationService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "AuditInformationServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "AuditInformationServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "AuditInformationClient" to call the correct interceptors.
-func RegisterAuditInformationHandlerClient(ctx context.Context, mux *runtime.ServeMux, client AuditInformationClient) error {
+// "AuditInformationServiceClient" to call the correct interceptors.
+func RegisterAuditInformationServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client AuditInformationServiceClient) error {
 
-	mux.Handle("GET", pattern_AuditInformation_LookupUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_AuditInformationService_LookupUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.AuditInformation/LookupUser", runtime.WithHTTPPathPattern("/v2/sentry/auditInfo/user"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.AuditInformationService/LookupUser", runtime.WithHTTPPathPattern("/v2/sentry/auditInfo/user"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_AuditInformation_LookupUser_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_AuditInformationService_LookupUser_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_AuditInformation_LookupUser_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_AuditInformationService_LookupUser_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_AuditInformation_LookupCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_AuditInformationService_LookupCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.AuditInformation/LookupCluster", runtime.WithHTTPPathPattern("/v2/sentry/auditInfo/cluster"))
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/paralus.dev.sentry.rpc.AuditInformationService/LookupCluster", runtime.WithHTTPPathPattern("/v2/sentry/auditInfo/cluster"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_AuditInformation_LookupCluster_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
+		resp, md, err := request_AuditInformationService_LookupCluster_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_AuditInformation_LookupCluster_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_AuditInformationService_LookupCluster_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -240,13 +248,13 @@ func RegisterAuditInformationHandlerClient(ctx context.Context, mux *runtime.Ser
 }
 
 var (
-	pattern_AuditInformation_LookupUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v2", "sentry", "auditInfo", "user"}, ""))
+	pattern_AuditInformationService_LookupUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v2", "sentry", "auditInfo", "user"}, ""))
 
-	pattern_AuditInformation_LookupCluster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v2", "sentry", "auditInfo", "cluster"}, ""))
+	pattern_AuditInformationService_LookupCluster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v2", "sentry", "auditInfo", "cluster"}, ""))
 )
 
 var (
-	forward_AuditInformation_LookupUser_0 = runtime.ForwardResponseMessage
+	forward_AuditInformationService_LookupUser_0 = runtime.ForwardResponseMessage
 
-	forward_AuditInformation_LookupCluster_0 = runtime.ForwardResponseMessage
+	forward_AuditInformationService_LookupCluster_0 = runtime.ForwardResponseMessage
 )

@@ -4,7 +4,6 @@ package paralus.dev.sentry.rpc;
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "proto/types/commonpb/v3/common.proto";
-import "proto/types/sentry/sentry.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {
@@ -71,7 +70,7 @@ message GetKubectlClusterSettingsResponse {
   bool disableCLIKubectl = 2;
 }
 
-service KubectlClusterSettings {
+service KubectlClusterSettingsService {
   rpc UpdateKubectlClusterSettings(UpdateKubectlClusterSettingsRequest) returns (UpdateKubectlClusterSettingsResponse) {
     option (google.api.http) = {
 		put : "/v2/sentry/kubectl/{opts.urlScope=cluster/*}/settings"

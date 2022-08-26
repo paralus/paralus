@@ -64,7 +64,7 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/rpcrelayClusterConnectionInfo"
+            "$ref": "#/definitions/rpcRelayClusterConnectionInfo"
           }
         }
       },
@@ -79,7 +79,7 @@
       },
       "title": "Survey request sent from the service to all relays"
     },
-    "rpcrelayClusterConnectionInfo": {
+    "rpcRelayClusterConnectionInfo": {
       "type": "object",
       "properties": {
         "relayuuid": {

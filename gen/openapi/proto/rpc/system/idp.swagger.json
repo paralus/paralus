@@ -9,7 +9,7 @@
   },
   "tags": [
     {
-      "name": "Idp"
+      "name": "IdpService"
     }
   ],
   "schemes": [
@@ -26,7 +26,7 @@
   "paths": {
     "/auth/v3/sso/idp": {
       "get": {
-        "operationId": "Idp_ListIdps",
+        "operationId": "IdpService_ListIdps",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -53,11 +53,11 @@
           }
         },
         "tags": [
-          "Idp"
+          "IdpService"
         ]
       },
       "post": {
-        "operationId": "Idp_CreateIdp",
+        "operationId": "IdpService_CreateIdp",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -90,6 +90,7 @@
         "parameters": [
           {
             "name": "body",
+            "description": "Idp",
             "in": "body",
             "required": true,
             "schema": {
@@ -98,13 +99,13 @@
           }
         ],
         "tags": [
-          "Idp"
+          "IdpService"
         ]
       }
     },
     "/auth/v3/sso/idp/{metadata.name}": {
       "get": {
-        "operationId": "Idp_GetIdp",
+        "operationId": "IdpService_GetIdp",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -140,51 +141,51 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the idp resource",
+            "description": "API Version\n\nAPI Version of the idp resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the idp resource",
+            "description": "Kind\n\nKind of the idp resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "Idp"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -295,14 +296,14 @@
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
@@ -316,7 +317,7 @@
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -324,22 +325,23 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Idp"
+          "IdpService"
         ]
       },
       "delete": {
-        "operationId": "Idp_DeleteIdp",
+        "operationId": "IdpService_DeleteIdp",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
+              "type": "object",
               "properties": {}
             }
           },
@@ -375,51 +377,51 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the idp resource",
+            "description": "API Version\n\nAPI Version of the idp resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the idp resource",
+            "description": "Kind\n\nKind of the idp resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "Idp"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -530,14 +532,14 @@
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
@@ -551,7 +553,7 @@
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -559,18 +561,18 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Idp"
+          "IdpService"
         ]
       },
       "put": {
-        "operationId": "Idp_UpdateIdp",
+        "operationId": "IdpService_UpdateIdp",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -609,12 +611,116 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v3Idp"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "system.k8smgmt.io/v3",
+                  "description": "API Version of the idp resource",
+                  "title": "API Version"
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Idp",
+                  "description": "Kind of the idp resource",
+                  "title": "Kind"
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3IdpSpec",
+                  "description": "Spec of the idp resource",
+                  "title": "Spec"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Idp",
+              "title": "Idp",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec",
+                "project"
+              ]
             }
           }
         ],
         "tags": [
-          "Idp"
+          "IdpService"
         ]
       }
     }
@@ -764,11 +870,11 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v3Idp"
+            "$ref": "#/definitions/v3Idp",
+            "readOnly": true
           },
           "description": "List of the idp resources",
-          "title": "Items",
-          "readOnly": true
+          "title": "Items"
         }
       },
       "description": "idp list",

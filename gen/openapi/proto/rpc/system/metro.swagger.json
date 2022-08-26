@@ -9,7 +9,7 @@
   },
   "tags": [
     {
-      "name": "Location"
+      "name": "LocationService"
     }
   ],
   "schemes": [
@@ -26,7 +26,7 @@
   "paths": {
     "/infra/v3/partner/{metadata.partner}/location": {
       "get": {
-        "operationId": "Location_GetLocations",
+        "operationId": "LocationService_GetLocations",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -62,51 +62,51 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "infra.k8smgmt.io/v3"
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "Location"
           },
           {
             "name": "metadata.name",
-            "description": "Name. name of the resource",
+            "description": "Name\n\nname of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -139,84 +139,84 @@
           },
           {
             "name": "spec.id",
-            "description": "ID of Location. ID Location of the cluster",
+            "description": "ID of Location\n\nID Location of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.name",
-            "description": "Location. Location of the cluster",
+            "description": "Location\n\nLocation of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.city",
-            "description": "City. City of the location",
+            "description": "City\n\nCity of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.state",
-            "description": "State. State of the location",
+            "description": "State\n\nState of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.country",
-            "description": "Country. country of the location",
+            "description": "Country\n\ncountry of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.locale",
-            "description": "Locale. locale of the location",
+            "description": "Locale\n\nlocale of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.latitude",
-            "description": "Latitude. Latitude of the location",
+            "description": "Latitude\n\nLatitude of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.longitude",
-            "description": "Longitude. Longitude of the location",
+            "description": "Longitude\n\nLongitude of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.countryCode",
-            "description": "CountryCode. CountryCode of the location",
+            "description": "CountryCode\n\nCountryCode of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.stateCode",
-            "description": "StateCode. StateCode of the location",
+            "description": "StateCode\n\nStateCode of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
@@ -230,7 +230,7 @@
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -238,18 +238,18 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Location"
+          "LocationService"
         ]
       },
       "post": {
-        "operationId": "Location_CreateLocation",
+        "operationId": "LocationService_CreateLocation",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -292,18 +292,125 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/infrav3Location"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Location",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "name of the resource",
+                      "title": "Name"
+                    },
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3Metro",
+                  "description": "Spec of the resource",
+                  "title": "Spec"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Location",
+              "title": "Location",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec",
+                "name",
+                "project"
+              ]
             }
           }
         ],
         "tags": [
-          "Location"
+          "LocationService"
         ]
       }
     },
     "/infra/v3/partner/{metadata.partner}/location/{metadata.name}": {
       "get": {
-        "operationId": "Location_GetLocation",
+        "operationId": "LocationService_GetLocation",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -346,44 +453,44 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "infra.k8smgmt.io/v3"
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "Location"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -416,84 +523,84 @@
           },
           {
             "name": "spec.id",
-            "description": "ID of Location. ID Location of the cluster",
+            "description": "ID of Location\n\nID Location of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.name",
-            "description": "Location. Location of the cluster",
+            "description": "Location\n\nLocation of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.city",
-            "description": "City. City of the location",
+            "description": "City\n\nCity of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.state",
-            "description": "State. State of the location",
+            "description": "State\n\nState of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.country",
-            "description": "Country. country of the location",
+            "description": "Country\n\ncountry of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.locale",
-            "description": "Locale. locale of the location",
+            "description": "Locale\n\nlocale of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.latitude",
-            "description": "Latitude. Latitude of the location",
+            "description": "Latitude\n\nLatitude of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.longitude",
-            "description": "Longitude. Longitude of the location",
+            "description": "Longitude\n\nLongitude of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.countryCode",
-            "description": "CountryCode. CountryCode of the location",
+            "description": "CountryCode\n\nCountryCode of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.stateCode",
-            "description": "StateCode. StateCode of the location",
+            "description": "StateCode\n\nStateCode of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
@@ -507,7 +614,7 @@
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -515,18 +622,18 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Location"
+          "LocationService"
         ]
       },
       "delete": {
-        "operationId": "Location_DeleteLocation",
+        "operationId": "LocationService_DeleteLocation",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -573,44 +680,44 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "infra.k8smgmt.io/v3"
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "Location"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -643,84 +750,84 @@
           },
           {
             "name": "spec.id",
-            "description": "ID of Location. ID Location of the cluster",
+            "description": "ID of Location\n\nID Location of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.name",
-            "description": "Location. Location of the cluster",
+            "description": "Location\n\nLocation of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.city",
-            "description": "City. City of the location",
+            "description": "City\n\nCity of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.state",
-            "description": "State. State of the location",
+            "description": "State\n\nState of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.country",
-            "description": "Country. country of the location",
+            "description": "Country\n\ncountry of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.locale",
-            "description": "Locale. locale of the location",
+            "description": "Locale\n\nlocale of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.latitude",
-            "description": "Latitude. Latitude of the location",
+            "description": "Latitude\n\nLatitude of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.longitude",
-            "description": "Longitude. Longitude of the location",
+            "description": "Longitude\n\nLongitude of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.countryCode",
-            "description": "CountryCode. CountryCode of the location",
+            "description": "CountryCode\n\nCountryCode of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.stateCode",
-            "description": "StateCode. StateCode of the location",
+            "description": "StateCode\n\nStateCode of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
@@ -734,7 +841,7 @@
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -742,18 +849,18 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Location"
+          "LocationService"
         ]
       },
       "put": {
-        "operationId": "Location_UpdateLocation",
+        "operationId": "LocationService_UpdateLocation",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -799,12 +906,113 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/infrav3Location"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Location",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3Metro",
+                  "description": "Spec of the resource",
+                  "title": "Spec"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Location",
+              "title": "Location",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec",
+                "project"
+              ]
             }
           }
         ],
         "tags": [
-          "Location"
+          "LocationService"
         ]
       }
     }
@@ -974,11 +1182,11 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v3Metro"
+            "$ref": "#/definitions/v3Metro",
+            "readOnly": true
           },
           "description": "List of the resources",
-          "title": "Items",
-          "readOnly": true
+          "title": "Items"
         }
       }
     },

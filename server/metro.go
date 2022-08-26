@@ -14,7 +14,7 @@ type locationServer struct {
 }
 
 // NewLocationServer returns new location server implementation
-func NewLocationServer(ms service.MetroService) systemrpc.LocationServer {
+func NewLocationServer(ms service.MetroService) systemrpc.LocationServiceServer {
 	return &locationServer{ms}
 }
 

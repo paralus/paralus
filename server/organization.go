@@ -15,7 +15,7 @@ type organizationServer struct {
 }
 
 // NewOrganizationServer returns new organization server implementation
-func NewOrganizationServer(ps service.OrganizationService) systemrpc.OrganizationServer {
+func NewOrganizationServer(ps service.OrganizationService) systemrpc.OrganizationServiceServer {
 	return &organizationServer{ps}
 }
 

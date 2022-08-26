@@ -1,5 +1,5 @@
 syntax = "proto3";
-package paralus.dev.rpc.v3;
+package paralus.dev.rpc.system.v3;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -51,7 +51,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-service Organization {
+service OrganizationService {
   rpc CreateOrganization(paralus.dev.types.system.v3.Organization)
       returns (paralus.dev.types.system.v3.Organization) {
     option (google.api.http) = {
@@ -109,5 +109,4 @@ service Organization {
       }
     };
   };
-
 }

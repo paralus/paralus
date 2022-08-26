@@ -9,7 +9,7 @@
   },
   "tags": [
     {
-      "name": "Group"
+      "name": "GroupService"
     }
   ],
   "schemes": [
@@ -26,7 +26,7 @@
   "paths": {
     "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/group/{metadata.name}": {
       "get": {
-        "operationId": "Group_GetGroup",
+        "operationId": "GroupService_GetGroup",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -76,39 +76,39 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the group resource",
+            "description": "API Version\n\nAPI Version of the group resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the group resource",
+            "description": "Kind\n\nKind of the group resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "Group"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
@@ -139,7 +139,7 @@
           },
           {
             "name": "spec.users",
-            "description": "Users. List of users for group",
+            "description": "Users\n\nList of users for group",
             "in": "query",
             "required": false,
             "type": "array",
@@ -150,21 +150,21 @@
           },
           {
             "name": "spec.type",
-            "description": "Type. Type of group",
+            "description": "Type\n\nType of group",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
@@ -178,7 +178,7 @@
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -186,18 +186,18 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Group"
+          "GroupService"
         ]
       },
       "delete": {
-        "operationId": "Group_DeleteGroup",
+        "operationId": "GroupService_DeleteGroup",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -251,39 +251,39 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the group resource",
+            "description": "API Version\n\nAPI Version of the group resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "system.k8smgmt.io/v3"
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the group resource",
+            "description": "Kind\n\nKind of the group resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "Group"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
@@ -314,7 +314,7 @@
           },
           {
             "name": "spec.users",
-            "description": "Users. List of users for group",
+            "description": "Users\n\nList of users for group",
             "in": "query",
             "required": false,
             "type": "array",
@@ -325,21 +325,21 @@
           },
           {
             "name": "spec.type",
-            "description": "Type. Type of group",
+            "description": "Type\n\nType of group",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
@@ -353,7 +353,7 @@
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -361,18 +361,18 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Group"
+          "GroupService"
         ]
       },
       "put": {
-        "operationId": "Group_UpdateGroup",
+        "operationId": "GroupService_UpdateGroup",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -425,18 +425,112 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v3Group"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "system.k8smgmt.io/v3",
+                  "description": "API Version of the group resource",
+                  "title": "API Version"
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Group",
+                  "description": "Kind of the group resource",
+                  "title": "Kind"
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3GroupSpec",
+                  "description": "Metadata of the group resource",
+                  "title": "Metadata"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Group",
+              "title": "Group",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec",
+                "project"
+              ]
             }
           }
         ],
         "tags": [
-          "Group"
+          "GroupService"
         ]
       }
     },
     "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/groups": {
       "post": {
-        "operationId": "Group_CreateGroup",
+        "operationId": "GroupService_CreateGroup",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -486,18 +580,118 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v3Group"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "system.k8smgmt.io/v3",
+                  "description": "API Version of the group resource",
+                  "title": "API Version"
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Group",
+                  "description": "Kind of the group resource",
+                  "title": "Kind"
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "name of the resource",
+                      "title": "Name"
+                    },
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3GroupSpec",
+                  "description": "Metadata of the group resource",
+                  "title": "Metadata"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Group",
+              "title": "Group",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec",
+                "name",
+                "project"
+              ]
             }
           }
         ],
         "tags": [
-          "Group"
+          "GroupService"
         ]
       }
     },
     "/auth/v3/partner/{partner}/organization/{organization}/groups": {
       "get": {
-        "operationId": "Group_GetGroups",
+        "operationId": "GroupService_GetGroups",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -538,21 +732,21 @@
           },
           {
             "name": "q",
-            "description": "query for filtering.",
+            "description": "query for filtering",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "name",
-            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID).",
+            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "selector",
-            "description": "selector is used to filter the labels of a resource.",
+            "description": "selector is used to filter the labels of a resource",
             "in": "query",
             "required": false,
             "type": "string"
@@ -577,7 +771,7 @@
           },
           {
             "name": "displayName",
-            "description": "displayName only used for update queries to set displayName (READONLY).",
+            "description": "displayName only used for update queries to set displayName (READONLY)",
             "in": "query",
             "required": false,
             "type": "string"
@@ -605,14 +799,14 @@
           },
           {
             "name": "ignoreScopeDefault",
-            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID.",
+            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "globalScope",
-            "description": "globalScope sets partnerID,organizationID,projectID = 0.",
+            "description": "globalScope sets partnerID,organizationID,projectID = 0",
             "in": "query",
             "required": false,
             "type": "boolean"
@@ -643,7 +837,7 @@
           },
           {
             "name": "urlScope",
-            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value).",
+            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value)",
             "in": "query",
             "required": false,
             "type": "string"
@@ -702,14 +896,14 @@
           },
           {
             "name": "type",
-            "description": "generic way to specify a type of resource, mainly for use in users endpoint.",
+            "description": "generic way to specify a type of resource, mainly for use in users endpoint",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Group"
+          "GroupService"
         ]
       }
     }
@@ -857,11 +1051,11 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v3Group"
+            "$ref": "#/definitions/v3Group",
+            "readOnly": true
           },
           "description": "List of the group resources",
-          "title": "Items",
-          "readOnly": true
+          "title": "Items"
         }
       },
       "description": "Group list",

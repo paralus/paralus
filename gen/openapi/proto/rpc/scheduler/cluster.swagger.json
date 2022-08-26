@@ -9,7 +9,7 @@
   },
   "tags": [
     {
-      "name": "Cluster"
+      "name": "ClusterService"
     }
   ],
   "schemes": [
@@ -26,7 +26,7 @@
   "paths": {
     "/infra/v3/project/{metadata.project}/cluster": {
       "post": {
-        "operationId": "Cluster_CreateCluster",
+        "operationId": "ClusterService_CreateCluster",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -69,18 +69,124 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v3Cluster"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Cluster",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "name of the resource",
+                      "title": "Name"
+                    },
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3ClusterSpec",
+                  "description": "Spec of the resource",
+                  "title": "Spec"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Cluster",
+              "title": "Cluster",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec",
+                "name"
+              ]
             }
           }
         ],
         "tags": [
-          "Cluster"
+          "ClusterService"
         ]
       }
     },
     "/infra/v3/project/{metadata.project}/cluster/{metadata.name}": {
       "get": {
-        "operationId": "Cluster_GetCluster",
+        "operationId": "ClusterService_GetCluster",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -123,44 +229,44 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "infra.k8smgmt.io/v3"
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "Cluster"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -193,7 +299,7 @@
           },
           {
             "name": "spec.clusterType",
-            "description": "Cluster Type. Type of the cluster being created",
+            "description": "Cluster Type\n\nType of the cluster being created",
             "in": "query",
             "required": false,
             "type": "string",
@@ -201,126 +307,126 @@
           },
           {
             "name": "spec.metro.id",
-            "description": "ID of Location. ID Location of the cluster",
+            "description": "ID of Location\n\nID Location of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.name",
-            "description": "Location. Location of the cluster",
+            "description": "Location\n\nLocation of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.city",
-            "description": "City. City of the location",
+            "description": "City\n\nCity of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.state",
-            "description": "State. State of the location",
+            "description": "State\n\nState of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.country",
-            "description": "Country. country of the location",
+            "description": "Country\n\ncountry of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.locale",
-            "description": "Locale. locale of the location",
+            "description": "Locale\n\nlocale of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.latitude",
-            "description": "Latitude. Latitude of the location",
+            "description": "Latitude\n\nLatitude of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.longitude",
-            "description": "Longitude. Longitude of the location",
+            "description": "Longitude\n\nLongitude of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.countryCode",
-            "description": "CountryCode. CountryCode of the location",
+            "description": "CountryCode\n\nCountryCode of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.stateCode",
-            "description": "StateCode. StateCode of the location",
+            "description": "StateCode\n\nStateCode of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.overrideSelector",
-            "description": "Override Selector. Override selector of the cluster",
+            "description": "Override Selector\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.environmentProvider",
-            "description": "EnvironmentProvider. environment provider of the cluster",
+            "description": "EnvironmentProvider\n\nenvironment provider of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.kubernetesProvider",
-            "description": "KubernetesProvider. kubernetes provider",
+            "description": "KubernetesProvider\n\nkubernetes provider",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.provisionEnvironment",
-            "description": "ProvisionEnvironment. provision environment",
+            "description": "ProvisionEnvironment\n\nprovision environment",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.provisionPackageType",
-            "description": "ProvisionPackageType. provision package type",
+            "description": "ProvisionPackageType\n\nprovision package type",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.provisionType",
-            "description": "ProvisionType. provision type",
+            "description": "ProvisionType\n\nprovision type",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.state",
-            "description": "State. state",
+            "description": "State\n\nstate",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.shareMode",
-            "description": "Override Selector. Override selector of the cluster",
+            "description": "Override Selector\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string",
@@ -333,91 +439,91 @@
           },
           {
             "name": "spec.proxyConfig.httpProxy",
-            "description": "HttpProxy. http proxy",
+            "description": "HttpProxy\n\nhttp proxy",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.proxyConfig.httpsProxy",
-            "description": "HttpsProxy. https proxy",
+            "description": "HttpsProxy\n\nhttps proxy",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.proxyConfig.noProxy",
-            "description": "noproxy. noproxy",
+            "description": "noproxy\n\nnoproxy",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.proxyConfig.proxyAuth",
-            "description": "ProxyAuth. proxy auth",
+            "description": "ProxyAuth\n\nproxy auth",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.proxyConfig.allowInsecureBootstrap",
-            "description": "AllowInsecureBootstrap. Allow insecure bootstrap",
+            "description": "AllowInsecureBootstrap\n\nAllow insecure bootstrap",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.proxyConfig.enabled",
-            "description": "Enabled. enabled",
+            "description": "Enabled\n\nenabled",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.proxyConfig.bootstrapCA",
-            "description": "BootstrapCA. Certificate Authority of bootstrap server",
+            "description": "BootstrapCA\n\nCertificate Authority of bootstrap server",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.provider",
-            "description": "Provider. Provider",
+            "description": "Provider\n\nProvider",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.passphrase",
-            "description": "Passphrase. passphrase of the cluster",
+            "description": "Passphrase\n\npassphrase of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.cname",
-            "description": "CNAME. cname of the cluster",
+            "description": "CNAME\n\ncname of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.arecord",
-            "description": "DNS A Record. Entry for DNS A Record",
+            "description": "DNS A Record\n\nEntry for DNS A Record",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.displayName",
-            "description": "Display Name. Display Name",
+            "description": "Display Name\n\nDisplay Name",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.health",
-            "description": "Health. Health",
+            "description": "Health\n\nHealth",
             "in": "query",
             "required": false,
             "type": "string",
@@ -431,35 +537,35 @@
           },
           {
             "name": "spec.clusterData.manufacturer",
-            "description": "Manufacturer. Manufacturer",
+            "description": "Manufacturer\n\nManufacturer",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.clusterBlueprint",
-            "description": "ClusterBlueprint. Cluster Blueprint",
+            "description": "ClusterBlueprint\n\nCluster Blueprint",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.clusterStatus.token",
-            "description": "Cluster Information. Override selector of the cluster",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.clusterStatus.publishedBlueprint",
-            "description": "Cluster Information. Override selector of the cluster",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.clusterStatus.systemTaskCount",
-            "description": "Cluster Information. Override selector of the cluster",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string",
@@ -467,7 +573,7 @@
           },
           {
             "name": "spec.clusterData.clusterStatus.customTaskCount",
-            "description": "Cluster Information. Override selector of the cluster",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string",
@@ -475,7 +581,7 @@
           },
           {
             "name": "spec.clusterData.clusterStatus.auxiliaryTaskCount",
-            "description": "Cluster Information. Override selector of the cluster",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string",
@@ -483,14 +589,14 @@
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
@@ -504,7 +610,7 @@
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -512,18 +618,18 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Cluster"
+          "ClusterService"
         ]
       },
       "delete": {
-        "operationId": "Cluster_DeleteCluster",
+        "operationId": "ClusterService_DeleteCluster",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -570,44 +676,44 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "infra.k8smgmt.io/v3"
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "Cluster"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -640,7 +746,7 @@
           },
           {
             "name": "spec.clusterType",
-            "description": "Cluster Type. Type of the cluster being created",
+            "description": "Cluster Type\n\nType of the cluster being created",
             "in": "query",
             "required": false,
             "type": "string",
@@ -648,126 +754,126 @@
           },
           {
             "name": "spec.metro.id",
-            "description": "ID of Location. ID Location of the cluster",
+            "description": "ID of Location\n\nID Location of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.name",
-            "description": "Location. Location of the cluster",
+            "description": "Location\n\nLocation of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.city",
-            "description": "City. City of the location",
+            "description": "City\n\nCity of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.state",
-            "description": "State. State of the location",
+            "description": "State\n\nState of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.country",
-            "description": "Country. country of the location",
+            "description": "Country\n\ncountry of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.locale",
-            "description": "Locale. locale of the location",
+            "description": "Locale\n\nlocale of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.latitude",
-            "description": "Latitude. Latitude of the location",
+            "description": "Latitude\n\nLatitude of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.longitude",
-            "description": "Longitude. Longitude of the location",
+            "description": "Longitude\n\nLongitude of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.countryCode",
-            "description": "CountryCode. CountryCode of the location",
+            "description": "CountryCode\n\nCountryCode of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.stateCode",
-            "description": "StateCode. StateCode of the location",
+            "description": "StateCode\n\nStateCode of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.overrideSelector",
-            "description": "Override Selector. Override selector of the cluster",
+            "description": "Override Selector\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.environmentProvider",
-            "description": "EnvironmentProvider. environment provider of the cluster",
+            "description": "EnvironmentProvider\n\nenvironment provider of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.kubernetesProvider",
-            "description": "KubernetesProvider. kubernetes provider",
+            "description": "KubernetesProvider\n\nkubernetes provider",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.provisionEnvironment",
-            "description": "ProvisionEnvironment. provision environment",
+            "description": "ProvisionEnvironment\n\nprovision environment",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.provisionPackageType",
-            "description": "ProvisionPackageType. provision package type",
+            "description": "ProvisionPackageType\n\nprovision package type",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.provisionType",
-            "description": "ProvisionType. provision type",
+            "description": "ProvisionType\n\nprovision type",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.state",
-            "description": "State. state",
+            "description": "State\n\nstate",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.shareMode",
-            "description": "Override Selector. Override selector of the cluster",
+            "description": "Override Selector\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string",
@@ -780,91 +886,91 @@
           },
           {
             "name": "spec.proxyConfig.httpProxy",
-            "description": "HttpProxy. http proxy",
+            "description": "HttpProxy\n\nhttp proxy",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.proxyConfig.httpsProxy",
-            "description": "HttpsProxy. https proxy",
+            "description": "HttpsProxy\n\nhttps proxy",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.proxyConfig.noProxy",
-            "description": "noproxy. noproxy",
+            "description": "noproxy\n\nnoproxy",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.proxyConfig.proxyAuth",
-            "description": "ProxyAuth. proxy auth",
+            "description": "ProxyAuth\n\nproxy auth",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.proxyConfig.allowInsecureBootstrap",
-            "description": "AllowInsecureBootstrap. Allow insecure bootstrap",
+            "description": "AllowInsecureBootstrap\n\nAllow insecure bootstrap",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.proxyConfig.enabled",
-            "description": "Enabled. enabled",
+            "description": "Enabled\n\nenabled",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.proxyConfig.bootstrapCA",
-            "description": "BootstrapCA. Certificate Authority of bootstrap server",
+            "description": "BootstrapCA\n\nCertificate Authority of bootstrap server",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.provider",
-            "description": "Provider. Provider",
+            "description": "Provider\n\nProvider",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.passphrase",
-            "description": "Passphrase. passphrase of the cluster",
+            "description": "Passphrase\n\npassphrase of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.cname",
-            "description": "CNAME. cname of the cluster",
+            "description": "CNAME\n\ncname of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.arecord",
-            "description": "DNS A Record. Entry for DNS A Record",
+            "description": "DNS A Record\n\nEntry for DNS A Record",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.displayName",
-            "description": "Display Name. Display Name",
+            "description": "Display Name\n\nDisplay Name",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.health",
-            "description": "Health. Health",
+            "description": "Health\n\nHealth",
             "in": "query",
             "required": false,
             "type": "string",
@@ -878,35 +984,35 @@
           },
           {
             "name": "spec.clusterData.manufacturer",
-            "description": "Manufacturer. Manufacturer",
+            "description": "Manufacturer\n\nManufacturer",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.clusterBlueprint",
-            "description": "ClusterBlueprint. Cluster Blueprint",
+            "description": "ClusterBlueprint\n\nCluster Blueprint",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.clusterStatus.token",
-            "description": "Cluster Information. Override selector of the cluster",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.clusterStatus.publishedBlueprint",
-            "description": "Cluster Information. Override selector of the cluster",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.clusterStatus.systemTaskCount",
-            "description": "Cluster Information. Override selector of the cluster",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string",
@@ -914,7 +1020,7 @@
           },
           {
             "name": "spec.clusterData.clusterStatus.customTaskCount",
-            "description": "Cluster Information. Override selector of the cluster",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string",
@@ -922,7 +1028,7 @@
           },
           {
             "name": "spec.clusterData.clusterStatus.auxiliaryTaskCount",
-            "description": "Cluster Information. Override selector of the cluster",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string",
@@ -930,14 +1036,14 @@
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
@@ -951,7 +1057,7 @@
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -959,18 +1065,18 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Cluster"
+          "ClusterService"
         ]
       },
       "put": {
-        "operationId": "Cluster_UpdateCluster",
+        "operationId": "ClusterService_UpdateCluster",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -1016,18 +1122,118 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v3Cluster"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Cluster",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3ClusterSpec",
+                  "description": "Spec of the resource",
+                  "title": "Spec"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Cluster",
+              "title": "Cluster",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec"
+              ]
             }
           }
         ],
         "tags": [
-          "Cluster"
+          "ClusterService"
         ]
       }
     },
     "/infra/v3/project/{metadata.project}/cluster/{metadata.name}/download": {
       "get": {
-        "operationId": "Cluster_DownloadCluster",
+        "operationId": "ClusterService_DownloadCluster",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -1070,44 +1276,44 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "infra.k8smgmt.io/v3"
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string",
             "default": "Cluster"
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1140,7 +1346,7 @@
           },
           {
             "name": "spec.clusterType",
-            "description": "Cluster Type. Type of the cluster being created",
+            "description": "Cluster Type\n\nType of the cluster being created",
             "in": "query",
             "required": false,
             "type": "string",
@@ -1148,126 +1354,126 @@
           },
           {
             "name": "spec.metro.id",
-            "description": "ID of Location. ID Location of the cluster",
+            "description": "ID of Location\n\nID Location of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.name",
-            "description": "Location. Location of the cluster",
+            "description": "Location\n\nLocation of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.city",
-            "description": "City. City of the location",
+            "description": "City\n\nCity of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.state",
-            "description": "State. State of the location",
+            "description": "State\n\nState of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.country",
-            "description": "Country. country of the location",
+            "description": "Country\n\ncountry of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.locale",
-            "description": "Locale. locale of the location",
+            "description": "Locale\n\nlocale of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.latitude",
-            "description": "Latitude. Latitude of the location",
+            "description": "Latitude\n\nLatitude of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.longitude",
-            "description": "Longitude. Longitude of the location",
+            "description": "Longitude\n\nLongitude of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.countryCode",
-            "description": "CountryCode. CountryCode of the location",
+            "description": "CountryCode\n\nCountryCode of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.metro.stateCode",
-            "description": "StateCode. StateCode of the location",
+            "description": "StateCode\n\nStateCode of the location",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.overrideSelector",
-            "description": "Override Selector. Override selector of the cluster",
+            "description": "Override Selector\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.environmentProvider",
-            "description": "EnvironmentProvider. environment provider of the cluster",
+            "description": "EnvironmentProvider\n\nenvironment provider of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.kubernetesProvider",
-            "description": "KubernetesProvider. kubernetes provider",
+            "description": "KubernetesProvider\n\nkubernetes provider",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.provisionEnvironment",
-            "description": "ProvisionEnvironment. provision environment",
+            "description": "ProvisionEnvironment\n\nprovision environment",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.provisionPackageType",
-            "description": "ProvisionPackageType. provision package type",
+            "description": "ProvisionPackageType\n\nprovision package type",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.provisionType",
-            "description": "ProvisionType. provision type",
+            "description": "ProvisionType\n\nprovision type",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.params.state",
-            "description": "State. state",
+            "description": "State\n\nstate",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.shareMode",
-            "description": "Override Selector. Override selector of the cluster",
+            "description": "Override Selector\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string",
@@ -1280,91 +1486,91 @@
           },
           {
             "name": "spec.proxyConfig.httpProxy",
-            "description": "HttpProxy. http proxy",
+            "description": "HttpProxy\n\nhttp proxy",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.proxyConfig.httpsProxy",
-            "description": "HttpsProxy. https proxy",
+            "description": "HttpsProxy\n\nhttps proxy",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.proxyConfig.noProxy",
-            "description": "noproxy. noproxy",
+            "description": "noproxy\n\nnoproxy",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.proxyConfig.proxyAuth",
-            "description": "ProxyAuth. proxy auth",
+            "description": "ProxyAuth\n\nproxy auth",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.proxyConfig.allowInsecureBootstrap",
-            "description": "AllowInsecureBootstrap. Allow insecure bootstrap",
+            "description": "AllowInsecureBootstrap\n\nAllow insecure bootstrap",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.proxyConfig.enabled",
-            "description": "Enabled. enabled",
+            "description": "Enabled\n\nenabled",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "spec.proxyConfig.bootstrapCA",
-            "description": "BootstrapCA. Certificate Authority of bootstrap server",
+            "description": "BootstrapCA\n\nCertificate Authority of bootstrap server",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.provider",
-            "description": "Provider. Provider",
+            "description": "Provider\n\nProvider",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.passphrase",
-            "description": "Passphrase. passphrase of the cluster",
+            "description": "Passphrase\n\npassphrase of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.cname",
-            "description": "CNAME. cname of the cluster",
+            "description": "CNAME\n\ncname of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.arecord",
-            "description": "DNS A Record. Entry for DNS A Record",
+            "description": "DNS A Record\n\nEntry for DNS A Record",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.displayName",
-            "description": "Display Name. Display Name",
+            "description": "Display Name\n\nDisplay Name",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.health",
-            "description": "Health. Health",
+            "description": "Health\n\nHealth",
             "in": "query",
             "required": false,
             "type": "string",
@@ -1378,35 +1584,35 @@
           },
           {
             "name": "spec.clusterData.manufacturer",
-            "description": "Manufacturer. Manufacturer",
+            "description": "Manufacturer\n\nManufacturer",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.clusterBlueprint",
-            "description": "ClusterBlueprint. Cluster Blueprint",
+            "description": "ClusterBlueprint\n\nCluster Blueprint",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.clusterStatus.token",
-            "description": "Cluster Information. Override selector of the cluster",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.clusterStatus.publishedBlueprint",
-            "description": "Cluster Information. Override selector of the cluster",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "spec.clusterData.clusterStatus.systemTaskCount",
-            "description": "Cluster Information. Override selector of the cluster",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string",
@@ -1414,7 +1620,7 @@
           },
           {
             "name": "spec.clusterData.clusterStatus.customTaskCount",
-            "description": "Cluster Information. Override selector of the cluster",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string",
@@ -1422,7 +1628,7 @@
           },
           {
             "name": "spec.clusterData.clusterStatus.auxiliaryTaskCount",
-            "description": "Cluster Information. Override selector of the cluster",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
             "in": "query",
             "required": false,
             "type": "string",
@@ -1430,14 +1636,14 @@
           },
           {
             "name": "status.conditionType",
-            "description": "Condition Type. type of the status condition",
+            "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "status.conditionStatus",
-            "description": "Condition Status. status of the condition",
+            "description": "Condition Status\n\nstatus of the condition",
             "in": "query",
             "required": false,
             "type": "string",
@@ -1451,7 +1657,7 @@
           },
           {
             "name": "status.lastUpdated",
-            "description": "Last Updated. when the condition status is last updated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
             "in": "query",
             "required": false,
             "type": "string",
@@ -1459,20 +1665,20 @@
           },
           {
             "name": "status.reason",
-            "description": "Reason. reason of the last condition status",
+            "description": "Reason\n\nreason of the last condition status",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Cluster"
+          "ClusterService"
         ]
       }
     },
     "/infra/v3/project/{project}/cluster": {
       "get": {
-        "operationId": "Cluster_GetClusters",
+        "operationId": "ClusterService_GetClusters",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -1507,21 +1713,21 @@
           },
           {
             "name": "q",
-            "description": "query for filtering.",
+            "description": "query for filtering",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "name",
-            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID).",
+            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "selector",
-            "description": "selector is used to filter the labels of a resource.",
+            "description": "selector is used to filter the labels of a resource",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1552,7 +1758,7 @@
           },
           {
             "name": "displayName",
-            "description": "displayName only used for update queries to set displayName (READONLY).",
+            "description": "displayName only used for update queries to set displayName (READONLY)",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1580,14 +1786,14 @@
           },
           {
             "name": "ignoreScopeDefault",
-            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID.",
+            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "globalScope",
-            "description": "globalScope sets partnerID,organizationID,projectID = 0.",
+            "description": "globalScope sets partnerID,organizationID,projectID = 0",
             "in": "query",
             "required": false,
             "type": "boolean"
@@ -1618,7 +1824,7 @@
           },
           {
             "name": "urlScope",
-            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value).",
+            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value)",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1677,14 +1883,14 @@
           },
           {
             "name": "type",
-            "description": "generic way to specify a type of resource, mainly for use in users endpoint.",
+            "description": "generic way to specify a type of resource, mainly for use in users endpoint",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "Cluster"
+          "ClusterService"
         ]
       }
     }
@@ -2056,11 +2262,11 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v3Cluster"
+            "$ref": "#/definitions/v3Cluster",
+            "readOnly": true
           },
           "description": "List of the resources",
-          "title": "Items",
-          "readOnly": true
+          "title": "Items"
         }
       }
     },

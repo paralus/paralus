@@ -742,7 +742,7 @@ func TestUserForgotPassword(t *testing.T) {
 
 	uuuid := addUserFetchExpectation(mock)
 
-	fpreq := &userrpcv3.ForgotPasswordRequest{Username: "user-" + uuuid}
+	fpreq := &userrpcv3.UserForgotPasswordRequest{Username: "user-" + uuuid}
 	fpresp, err := us.ForgotPassword(context.Background(), fpreq)
 	if err != nil {
 		t.Fatal("could not fetch password recovery link:", err)

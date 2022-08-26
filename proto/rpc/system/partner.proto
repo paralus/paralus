@@ -1,5 +1,5 @@
 syntax = "proto3";
-package paralus.dev.rpc.v3;
+package paralus.dev.rpc.system.v3;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -53,7 +53,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 
 message EmptyRequest {}
 
-service Partner {
+service PartnerService {
   rpc CreatePartner(paralus.dev.types.system.v3.Partner)
       returns (paralus.dev.types.system.v3.Partner) {
     option (google.api.http) = {
@@ -108,5 +108,4 @@ service Partner {
       }
     };
   };
-
 }

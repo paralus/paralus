@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: proto/rpc/system/oidc_provider.proto
 
-package rpcv3
+package systemv3
 
 import (
 	context "context"
@@ -20,10 +20,10 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// OIDCProviderClient is the client API for OIDCProvider service.
+// OIDCProviderServiceClient is the client API for OIDCProviderService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type OIDCProviderClient interface {
+type OIDCProviderServiceClient interface {
 	CreateOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v3.OIDCProvider, error)
 	GetOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v3.OIDCProvider, error)
 	ListOIDCProvider(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v3.OIDCProviderList, error)
@@ -31,63 +31,63 @@ type OIDCProviderClient interface {
 	DeleteOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
-type oIDCProviderClient struct {
+type oIDCProviderServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewOIDCProviderClient(cc grpc.ClientConnInterface) OIDCProviderClient {
-	return &oIDCProviderClient{cc}
+func NewOIDCProviderServiceClient(cc grpc.ClientConnInterface) OIDCProviderServiceClient {
+	return &oIDCProviderServiceClient{cc}
 }
 
-func (c *oIDCProviderClient) CreateOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v3.OIDCProvider, error) {
+func (c *oIDCProviderServiceClient) CreateOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v3.OIDCProvider, error) {
 	out := new(v3.OIDCProvider)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.OIDCProvider/CreateOIDCProvider", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.OIDCProviderService/CreateOIDCProvider", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *oIDCProviderClient) GetOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v3.OIDCProvider, error) {
+func (c *oIDCProviderServiceClient) GetOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v3.OIDCProvider, error) {
 	out := new(v3.OIDCProvider)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.OIDCProvider/GetOIDCProvider", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.OIDCProviderService/GetOIDCProvider", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *oIDCProviderClient) ListOIDCProvider(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v3.OIDCProviderList, error) {
+func (c *oIDCProviderServiceClient) ListOIDCProvider(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v3.OIDCProviderList, error) {
 	out := new(v3.OIDCProviderList)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.OIDCProvider/ListOIDCProvider", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.OIDCProviderService/ListOIDCProvider", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *oIDCProviderClient) UpdateOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v3.OIDCProvider, error) {
+func (c *oIDCProviderServiceClient) UpdateOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v3.OIDCProvider, error) {
 	out := new(v3.OIDCProvider)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.OIDCProviderService/UpdateOIDCProvider", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *oIDCProviderClient) DeleteOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *oIDCProviderServiceClient) DeleteOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.system.v3.OIDCProviderService/DeleteOIDCProvider", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// OIDCProviderServer is the server API for OIDCProvider service.
-// All implementations should embed UnimplementedOIDCProviderServer
+// OIDCProviderServiceServer is the server API for OIDCProviderService service.
+// All implementations should embed UnimplementedOIDCProviderServiceServer
 // for forward compatibility
-type OIDCProviderServer interface {
+type OIDCProviderServiceServer interface {
 	CreateOIDCProvider(context.Context, *v3.OIDCProvider) (*v3.OIDCProvider, error)
 	GetOIDCProvider(context.Context, *v3.OIDCProvider) (*v3.OIDCProvider, error)
 	ListOIDCProvider(context.Context, *emptypb.Empty) (*v3.OIDCProviderList, error)
@@ -95,153 +95,153 @@ type OIDCProviderServer interface {
 	DeleteOIDCProvider(context.Context, *v3.OIDCProvider) (*emptypb.Empty, error)
 }
 
-// UnimplementedOIDCProviderServer should be embedded to have forward compatible implementations.
-type UnimplementedOIDCProviderServer struct {
+// UnimplementedOIDCProviderServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedOIDCProviderServiceServer struct {
 }
 
-func (UnimplementedOIDCProviderServer) CreateOIDCProvider(context.Context, *v3.OIDCProvider) (*v3.OIDCProvider, error) {
+func (UnimplementedOIDCProviderServiceServer) CreateOIDCProvider(context.Context, *v3.OIDCProvider) (*v3.OIDCProvider, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOIDCProvider not implemented")
 }
-func (UnimplementedOIDCProviderServer) GetOIDCProvider(context.Context, *v3.OIDCProvider) (*v3.OIDCProvider, error) {
+func (UnimplementedOIDCProviderServiceServer) GetOIDCProvider(context.Context, *v3.OIDCProvider) (*v3.OIDCProvider, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOIDCProvider not implemented")
 }
-func (UnimplementedOIDCProviderServer) ListOIDCProvider(context.Context, *emptypb.Empty) (*v3.OIDCProviderList, error) {
+func (UnimplementedOIDCProviderServiceServer) ListOIDCProvider(context.Context, *emptypb.Empty) (*v3.OIDCProviderList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOIDCProvider not implemented")
 }
-func (UnimplementedOIDCProviderServer) UpdateOIDCProvider(context.Context, *v3.OIDCProvider) (*v3.OIDCProvider, error) {
+func (UnimplementedOIDCProviderServiceServer) UpdateOIDCProvider(context.Context, *v3.OIDCProvider) (*v3.OIDCProvider, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOIDCProvider not implemented")
 }
-func (UnimplementedOIDCProviderServer) DeleteOIDCProvider(context.Context, *v3.OIDCProvider) (*emptypb.Empty, error) {
+func (UnimplementedOIDCProviderServiceServer) DeleteOIDCProvider(context.Context, *v3.OIDCProvider) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteOIDCProvider not implemented")
 }
 
-// UnsafeOIDCProviderServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to OIDCProviderServer will
+// UnsafeOIDCProviderServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to OIDCProviderServiceServer will
 // result in compilation errors.
-type UnsafeOIDCProviderServer interface {
-	mustEmbedUnimplementedOIDCProviderServer()
+type UnsafeOIDCProviderServiceServer interface {
+	mustEmbedUnimplementedOIDCProviderServiceServer()
 }
 
-func RegisterOIDCProviderServer(s grpc.ServiceRegistrar, srv OIDCProviderServer) {
-	s.RegisterService(&OIDCProvider_ServiceDesc, srv)
+func RegisterOIDCProviderServiceServer(s grpc.ServiceRegistrar, srv OIDCProviderServiceServer) {
+	s.RegisterService(&OIDCProviderService_ServiceDesc, srv)
 }
 
-func _OIDCProvider_CreateOIDCProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OIDCProviderService_CreateOIDCProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.OIDCProvider)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OIDCProviderServer).CreateOIDCProvider(ctx, in)
+		return srv.(OIDCProviderServiceServer).CreateOIDCProvider(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.OIDCProvider/CreateOIDCProvider",
+		FullMethod: "/paralus.dev.rpc.system.v3.OIDCProviderService/CreateOIDCProvider",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OIDCProviderServer).CreateOIDCProvider(ctx, req.(*v3.OIDCProvider))
+		return srv.(OIDCProviderServiceServer).CreateOIDCProvider(ctx, req.(*v3.OIDCProvider))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OIDCProvider_GetOIDCProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OIDCProviderService_GetOIDCProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.OIDCProvider)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OIDCProviderServer).GetOIDCProvider(ctx, in)
+		return srv.(OIDCProviderServiceServer).GetOIDCProvider(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.OIDCProvider/GetOIDCProvider",
+		FullMethod: "/paralus.dev.rpc.system.v3.OIDCProviderService/GetOIDCProvider",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OIDCProviderServer).GetOIDCProvider(ctx, req.(*v3.OIDCProvider))
+		return srv.(OIDCProviderServiceServer).GetOIDCProvider(ctx, req.(*v3.OIDCProvider))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OIDCProvider_ListOIDCProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OIDCProviderService_ListOIDCProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OIDCProviderServer).ListOIDCProvider(ctx, in)
+		return srv.(OIDCProviderServiceServer).ListOIDCProvider(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.OIDCProvider/ListOIDCProvider",
+		FullMethod: "/paralus.dev.rpc.system.v3.OIDCProviderService/ListOIDCProvider",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OIDCProviderServer).ListOIDCProvider(ctx, req.(*emptypb.Empty))
+		return srv.(OIDCProviderServiceServer).ListOIDCProvider(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OIDCProvider_UpdateOIDCProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OIDCProviderService_UpdateOIDCProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.OIDCProvider)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OIDCProviderServer).UpdateOIDCProvider(ctx, in)
+		return srv.(OIDCProviderServiceServer).UpdateOIDCProvider(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.OIDCProvider/UpdateOIDCProvider",
+		FullMethod: "/paralus.dev.rpc.system.v3.OIDCProviderService/UpdateOIDCProvider",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OIDCProviderServer).UpdateOIDCProvider(ctx, req.(*v3.OIDCProvider))
+		return srv.(OIDCProviderServiceServer).UpdateOIDCProvider(ctx, req.(*v3.OIDCProvider))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OIDCProvider_DeleteOIDCProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OIDCProviderService_DeleteOIDCProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.OIDCProvider)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OIDCProviderServer).DeleteOIDCProvider(ctx, in)
+		return srv.(OIDCProviderServiceServer).DeleteOIDCProvider(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/paralus.dev.rpc.v3.OIDCProvider/DeleteOIDCProvider",
+		FullMethod: "/paralus.dev.rpc.system.v3.OIDCProviderService/DeleteOIDCProvider",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OIDCProviderServer).DeleteOIDCProvider(ctx, req.(*v3.OIDCProvider))
+		return srv.(OIDCProviderServiceServer).DeleteOIDCProvider(ctx, req.(*v3.OIDCProvider))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// OIDCProvider_ServiceDesc is the grpc.ServiceDesc for OIDCProvider service.
+// OIDCProviderService_ServiceDesc is the grpc.ServiceDesc for OIDCProviderService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var OIDCProvider_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "paralus.dev.rpc.v3.OIDCProvider",
-	HandlerType: (*OIDCProviderServer)(nil),
+var OIDCProviderService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "paralus.dev.rpc.system.v3.OIDCProviderService",
+	HandlerType: (*OIDCProviderServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreateOIDCProvider",
-			Handler:    _OIDCProvider_CreateOIDCProvider_Handler,
+			Handler:    _OIDCProviderService_CreateOIDCProvider_Handler,
 		},
 		{
 			MethodName: "GetOIDCProvider",
-			Handler:    _OIDCProvider_GetOIDCProvider_Handler,
+			Handler:    _OIDCProviderService_GetOIDCProvider_Handler,
 		},
 		{
 			MethodName: "ListOIDCProvider",
-			Handler:    _OIDCProvider_ListOIDCProvider_Handler,
+			Handler:    _OIDCProviderService_ListOIDCProvider_Handler,
 		},
 		{
 			MethodName: "UpdateOIDCProvider",
-			Handler:    _OIDCProvider_UpdateOIDCProvider_Handler,
+			Handler:    _OIDCProviderService_UpdateOIDCProvider_Handler,
 		},
 		{
 			MethodName: "DeleteOIDCProvider",
-			Handler:    _OIDCProvider_DeleteOIDCProvider_Handler,
+			Handler:    _OIDCProviderService_DeleteOIDCProvider_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
