@@ -87,7 +87,7 @@ func (m *mockElasticSearchQuery) Handle(msg bytes.Buffer) (map[string]interface{
 func TestGetAuditLogByProjectsSimple(t *testing.T) {
 	esq := &mockElasticSearchQuery{}
 	al := &AuditLogService{auditQuery: esq}
-	req := v1.AuditLogSearchRequest{
+	req := v1.GetAuditLogSearchRequest{
 		Filter: &v1.AuditLogQueryFilter{
 			QueryString:   "query-string",
 			Projects:      []string{"project-one", "project-two"},
@@ -119,7 +119,7 @@ func TestGetAuditLogByProjectsSimple(t *testing.T) {
 func TestGetAuditLogByProjectsNoProject(t *testing.T) {
 	esq := &mockElasticSearchQuery{}
 	al := &AuditLogService{auditQuery: esq}
-	req := v1.AuditLogSearchRequest{
+	req := v1.GetAuditLogSearchRequest{
 		Metadata: &v3.Metadata{UrlScope: "url/project"},
 		Filter: &v1.AuditLogQueryFilter{
 			QueryString: "query-string",
