@@ -12,10 +12,11 @@ Below is a list of features that are planned for Paralus:
 - **Paralus Access Plane:** Enable Paralus to provide zero trust access to resources outside of Kubernetes like Virtual Machines, Servers, Databases etc.
 - **Multi Factor Authentication:** Make Paralus more robust and secured by implementing multi factor authentication for users.
 - **Unified Error Handling:** We want to improve the way we handle errors. Make them more streamlined and standardized across all the APIs in Paralus.
-- **Postgres For Audit Logs:** Make Postgres as a default database for storing audit logs to simplify the initial setup. Currently we are using Elasticsearch. Post the proposed change, users will be able to choose between Elasticsearch and Postgres.
 - **Easier CLI Download:** Currently the end user has to choose the CLI binary based on their system which means they can download an incompatible binary. The goal is to automatically identify user's system and provide the correct binary for download.
 - **Update Group Flows From OIDC Provider:** We want to add the ability to automatically configure groups in Paralus based on changes made to a user's associated group in the OIDC provider. Currently, the org admin has to manually update the groups in Paralus if there's any changes made in the OIDC provider.
 - **Fix Buf Lint Issues:** Paralus makes extensive use of [Protobufs](https://github.com/protocolbuffers/protobuf) across the application. The code currently isn't as per the standards and hence there are linting issues that we want to fix in the near future.
 - **CLI Usage Without Dashboard:** Currently the user needs to setup Paralus dashboard to use the CLI. We want to remove that and allow the users to use the CLI tool as a standalone application.
+- **Add Cluster / Namespace selection in role association:** Currently the user needs to input namespace(s) to be given access to when choosing a namespace related role. This enhancement will add the ability to choose a cluster and pre-populate namespaces from the target cluster for user to choose from.
+- **Cluster status - heartbeat:** Ability to regularly check in on the target cluster status
 
 While these are the planned features and enhancements, we definitely welcome suggestions and ideas from everyone. Feel free to [open an issue](https://github.com/paralus/paralus/issues).
