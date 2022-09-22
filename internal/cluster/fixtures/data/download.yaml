@@ -318,6 +318,7 @@ spec:
                     operator: In
                     values:
                       - amd64
+                      - arm64
       terminationGracePeriodSeconds: 10
       priorityClassName: paralus-cluster-critical
       serviceAccountName: system-sa
