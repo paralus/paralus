@@ -236,7 +236,7 @@ func List(ctx context.Context, db bun.IDB, partnerId uuid.NullUUID, organization
 // TODO: Should we simplify this (less args)?
 func ListFiltered(ctx context.Context, db bun.IDB,
 	partnerId uuid.NullUUID, organizationId uuid.NullUUID,
-	entities interface{},
+	projectId uuid.NullUUID, entities interface{},
 	query string, orderBy string, order string,
 	limit int, offset int) (interface{}, error) {
 	sq := db.NewSelect().Model(entities)
@@ -248,6 +248,9 @@ func ListFiltered(ctx context.Context, db bun.IDB,
 	}
 	if organizationId.Valid {
 		sq = sq.Where("organization_id = ?", organizationId)
+	}
+	if projectId.Valid {
+		sq = sq.Where("project_id = ?", projectId)
 	}
 	sq = sq.Where("trash = ?", false)
 	if orderBy != "" && order != "" {

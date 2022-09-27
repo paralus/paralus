@@ -103,6 +103,14 @@ func ListClusters(ctx context.Context, db bun.IDB, qo commonv3.QueryOptions) (cl
 	oid := uuid.NullUUID{UUID: uuid.MustParse(qo.Organization), Valid: true}
 	prid := uuid.NullUUID{UUID: uuid.MustParse(qo.Project), Valid: true}
 
+	if qo.Q != "" || qo.OrderBy != "" {
+		_, err = dao.ListFiltered(ctx, db, pid, oid, prid, &clusters, qo.Q, qo.OrderBy, qo.Order, int(qo.Limit), int(qo.Offset))
+		if err != nil {
+			return nil, err
+		}
+		return clusters, err
+	}
+
 	err = dao.ListByProject(ctx, db, pid, oid, prid, &clusters)
 	if err != nil {
 		return nil, err
