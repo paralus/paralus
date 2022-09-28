@@ -11,12 +11,11 @@
 <img src="https://img.shields.io/badge/Twitter-%20Follow-blue.svg?logo=slack&&logoColor=%231DA1F2&color=%231DA1F2" />
 </a>
 
-[Paralus](https://paralus.io) is a free, open source tool that enables controlled, audited access to Kubernetes infrastructure for your users, user groups, and services. 
-Ships as a GUI, API, and CLI.
+[Paralus](https://paralus.io) is a free, open source tool that enables controlled, audited access to Kubernetes infrastructure for your users, user groups, and services. Ships as a GUI, API, and CLI.
 
 Paralus can be easily integrated with your pre-existing RBAC configuration and your SSO providers, or Identity Providers (IdP) that support OIDC (OpenID Connect). Through just-in-time service account creation and fine-grained user credential management, Paralus provides teams with an adaptable system for guaranteeing secure access to resources when necessary, along with the ability to rapidly identify and respond to threats through dynamic permission revocation and real time audit logs.
 
-<p align="">
+<p align="center">
   <a href="https://paralus.io">
     <img alt="Kubernetes Goat" src="https://www.paralus.io/img/hero.svg" width="600" />
   </a>
@@ -29,7 +28,13 @@ Paralus can be easily integrated with your pre-existing RBAC configuration and y
 - Ability to control access via [pre-configured roles](https://www.paralus.io/docs/usage/) across clusters, namespaces, projects, and more.
 - Seamless integration with [Identity Providers (IdPs)](https://www.paralus.io/docs/single-sign-on/) allowing the use of external authentication engines for users and group definitions, such as GitHub, Google, Azure AD, Okta, and others.
 - [Automatic logging](https://www.paralus.io/docs/usage/audit-logs) of all user actions performed for audit and compliance purposes.
-- Flexible workflows with a modern web GUI (default), a CLI tool called [pctl](https://www.paralus.io/docs/usage/cli), and [Paralus API](https://www.paralus.io/docs/references/api-reference).
+- Interact with Paralus either with a modern web GUI (default), a CLI tool called [pctl](https://www.paralus.io/docs/usage/cli), or [Paralus API](https://www.paralus.io/docs/references/api-reference).
+  
+<p align="center">
+  <a href="https://paralus.io">
+    <img alt="Kubernetes Goat" src="https://raw.githubusercontent.com/paralus/paralus/main/paralus.gif" width="600" />
+  </a>
+</p>
 
 ## Getting Started
 
