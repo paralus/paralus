@@ -416,6 +416,7 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 		Organization: org.Name,
 		Partner:      part.Name,
 		ModifiedAt:   timestamppb.New(c.ModifiedAt),
+		CreatedAt:    timestamppb.New(c.CreatedAt),
 	}
 
 	sm := int32(infrav3.ClusterShareMode_ClusterShareModeNotSet)
@@ -681,6 +682,11 @@ func (cs *clusterService) List(ctx context.Context, opts ...query.Option) (*infr
 		Project:      proj.ID.String(),
 		Organization: proj.OrganizationId.String(),
 		Partner:      proj.PartnerId.String(),
+		Q:            queryOptions.Q,
+		OrderBy:      queryOptions.OrderBy,
+		Order:        queryOptions.Order,
+		Limit:        queryOptions.Limit,
+		Offset:       queryOptions.Offset,
 	})
 	if err != nil {
 		return nil, err

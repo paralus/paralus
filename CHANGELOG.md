@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## Fixed
 
 - Fixed issue where relay server is not coming up in arm64 (Mac M1) from [sandeep540](https://github.com/sandeep540)
+- Fixed cluster lister and set group created at property [niravparikh05](https://github.com/niravparikh05)
 
 ## [0.1.3] - 2022-08-26
 

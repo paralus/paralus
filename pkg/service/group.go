@@ -412,6 +412,7 @@ func (s *groupService) toV3Group(ctx context.Context, db bun.IDB, group *userv3.
 		Partner:      group.GetMetadata().GetPartner(),
 		Labels:       labels,
 		ModifiedAt:   timestamppb.New(grp.ModifiedAt),
+		CreatedAt:    timestamppb.New(grp.CreatedAt),
 	}
 	users, err := dao.GetUsers(ctx, db, grp.ID)
 	if err != nil {
@@ -613,6 +614,7 @@ func (s *groupService) List(ctx context.Context, opts ...query.Option) (*userv3.
 	var grps []models.Group
 	entities, err := dao.ListFiltered(ctx, s.db,
 		uuid.NullUUID{UUID: partId, Valid: true}, uuid.NullUUID{UUID: orgId, Valid: true},
+		uuid.NullUUID{Valid: false},
 		&grps,
 		queryOptions.Q,
 		queryOptions.OrderBy,
