@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## [0.1.4] - 2022-09-30
+
 ## Fixed
 
 - Fixed issue where relay server is not coming up in arm64 (Mac M1) from [sandeep540](https://github.com/sandeep540)
@@ -34,7 +36,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Initial release
 
-[Unreleased]: https://github.com/paralus/paralus/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/paralus/paralus/compare/v0.1.4...HEAD
+[0.1.4]: https://github.com/paralus/paralus/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/paralus/paralus/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/paralus/paralus/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/paralus/paralus/compare/v0.1.0...v0.1.1
