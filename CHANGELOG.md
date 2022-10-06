@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+- Fixed issue where relay server is not coming up in arm64 (Mac M1) from [niravparikh05](https://github.com/niravparikh05)
+
 ## [0.1.4] - 2022-09-30
 
 ## Fixed
