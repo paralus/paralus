@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## Fixed
+
+- Fixed creating project scoped role failed from cli [niravparikh05](https://github.com/niravparikh05)
+
 ## [0.1.5] - 2022-10-10
 
 ## Fixed

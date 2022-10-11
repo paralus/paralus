@@ -92,6 +92,13 @@ func (s *rolepermissionService) List(ctx context.Context, opts ...query.Option) 
 			}
 			rles = append(rles, rps...)
 		}
+		// add partner and organization read roles as it is organization scoped yet required by all
+		rps, err := dao.GetRolePermissionsByNames(ctx, s.db, partnerR, organizationR)
+		if err != nil {
+			return rolepermissionList, err
+		}
+		rles = append(rles, rps...)
+
 		for _, rle := range rles {
 			entry := &rolev3.RolePermission{}
 			entry = s.toV3Rolepermission(entry, &rle)
