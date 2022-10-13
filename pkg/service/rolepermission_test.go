@@ -76,6 +76,10 @@ func TestRolePermissionListWithSelectors(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).
 		AddRow(ruuid2, "role-"+ruuid2))
 
+	mock.ExpectQuery(`SELECT authsrv_resourcepermission.name as name, authsrv_resourcepermission.description as description, authsrv_resourcepermission.scope as scope FROM "authsrv_resourcepermission" WHERE \(name IN \('partner.read', 'organization.read'\)\) AND \(authsrv_resourcepermission.trash = FALSE\)`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).
+		AddRow(ruuid2, "role-"+ruuid2).AddRow(ruuid1, "role-"+ruuid1))
+
 	req := &commonv3.QueryOptions{
 		Partner:      "partner-" + puuid,
 		Organization: "org-" + ouuid,
@@ -85,7 +89,7 @@ func TestRolePermissionListWithSelectors(t *testing.T) {
 	if err != nil {
 		t.Fatal("could not list rolepermissions:", err)
 	}
-	if rolelist.Metadata.Count != 2 {
+	if rolelist.Metadata.Count != 4 {
 		t.Errorf("incorrect number of rolepermissions returned, expected 2; got %v", rolelist.Metadata.Count)
 	}
 	if rolelist.Items[0].Metadata.Name != "role-"+ruuid1 || rolelist.Items[1].Metadata.Name != "role-"+ruuid2 {
