@@ -444,7 +444,7 @@ func RevokeKubeconfigAuditEvent(ctx context.Context, al *zap.Logger, user string
 	}
 }
 
-func CreateClusterAuditEvent(ctx context.Context, al *zap.Logger, action string, name string, id uuid.UUID) {
+func CreateClusterAuditEvent(ctx context.Context, al *zap.Logger, action string, name string, id uuid.UUID, project string) {
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {
 		_log.Warn("unable to create audit event: could not fetch info from context")
@@ -457,7 +457,7 @@ func CreateClusterAuditEvent(ctx context.Context, al *zap.Logger, action string,
 			"cluster_name": name,
 		},
 	}
-	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("cluster.%s.success", action), ""); err != nil {
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("cluster.%s.success", action), project); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
 }

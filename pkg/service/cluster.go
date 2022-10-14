@@ -299,7 +299,7 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 		h.OnChange(ev)
 	}
 
-	CreateClusterAuditEvent(ctx, s.al, AuditActionCreate, clusterResp.GetMetadata().GetName(), edb.ID)
+	CreateClusterAuditEvent(ctx, s.al, AuditActionCreate, clusterResp.GetMetadata().GetName(), edb.ID, cluster.Metadata.Project)
 	return clusterResp, nil
 }
 
@@ -598,13 +598,14 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 		h.OnChange(ev)
 	}*/
 
-	CreateClusterAuditEvent(ctx, s.al, AuditActionUpdate, cluster.GetMetadata().GetName(), cdb.ID)
+	CreateClusterAuditEvent(ctx, s.al, AuditActionUpdate, cluster.GetMetadata().GetName(), cdb.ID, cluster.Metadata.Project)
 
 	return cluster, nil
 }
 
 func (s *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) error {
 
+	projectName := cluster.Metadata.Project
 	cluster, err := s.Get(ctx, func(qo *commonv3.QueryOptions) {
 		qo.Name = cluster.Metadata.Name
 		qo.Project = cluster.Metadata.Project
@@ -646,7 +647,7 @@ func (s *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) e
 
 	id, err := uuid.Parse(clusterId)
 	if err == nil {
-		CreateClusterAuditEvent(ctx, s.al, AuditActionDelete, cluster.GetMetadata().GetName(), id)
+		CreateClusterAuditEvent(ctx, s.al, AuditActionDelete, cluster.GetMetadata().GetName(), id, projectName)
 	}
 	return nil
 
