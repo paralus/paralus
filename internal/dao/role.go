@@ -38,3 +38,16 @@ func GetRolePermissionsByScope(ctx context.Context, db bun.IDB, scope string) ([
 	}
 	return r, nil
 }
+
+func GetRolePermissionsByNames(ctx context.Context, db bun.IDB, permissions ...string) ([]models.ResourcePermission, error) {
+	var r = []models.ResourcePermission{}
+	err := db.NewSelect().Table("authsrv_resourcepermission").
+		ColumnExpr("authsrv_resourcepermission.name as name, authsrv_resourcepermission.description as description, authsrv_resourcepermission.scope as scope").
+		Where("name IN (?)", bun.In(permissions)).
+		Where("authsrv_resourcepermission.trash = ?", false).
+		Scan(ctx, &r)
+	if err != nil {
+		return nil, err
+	}
+	return r, nil
+}
