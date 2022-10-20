@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	_ "github.com/lib/pq"
 	kclient "github.com/ory/kratos-client-go"
 	"github.com/paralus/paralus/internal/fixtures"
 	providers "github.com/paralus/paralus/internal/provider/kratos"
@@ -74,6 +75,7 @@ const (
 	relayImageEnv             = "RELAY_IMAGE"
 
 	// audit
+	auditLogStorage            = "AUDIT_LOG_STORAGE"
 	auditFileEnv               = "AUDIT_LOG_FILE"
 	esEndPointEnv              = "ES_END_POINT"
 	esIndexPrefixEnv           = "ES_INDEX_PREFIX"
@@ -117,6 +119,7 @@ var (
 	relayImage             string
 
 	// audit
+	auditLogDB                 string
 	auditFile                  string
 	elasticSearchUrl           string
 	esIndexPrefix              string
@@ -196,6 +199,7 @@ func setup() {
 	viper.SetDefault(relayImageEnv, "paralusio/relay:v0.1.0")
 
 	// audit
+	viper.SetDefault(auditLogStorage, "database")
 	viper.SetDefault(esEndPointEnv, "http://127.0.0.1:9200")
 	viper.SetDefault(esIndexPrefixEnv, "ralog-system")
 	viper.SetDefault(relayAuditESIndexPrefixEnv, "ralog-relay")
@@ -236,6 +240,7 @@ func setup() {
 	viper.BindEnv(relayImageEnv)
 	viper.BindEnv(schedulerNamespaceEnv)
 
+	viper.BindEnv(auditLogStorage)
 	viper.BindEnv(auditFileEnv)
 	viper.BindEnv(esEndPointEnv)
 	viper.BindEnv(esIndexPrefixEnv)
@@ -267,6 +272,7 @@ func setup() {
 	schedulerNamespace = viper.GetString(schedulerNamespaceEnv)
 	sentryBootstrapAddr = viper.GetString(sentryBootstrapEnv)
 
+	auditLogDB = viper.GetString(auditLogStorage)
 	auditFile = viper.GetString(auditFileEnv)
 	elasticSearchUrl = viper.GetString(esEndPointEnv)
 	esIndexPrefix = viper.GetString(esIndexPrefixEnv)
@@ -285,6 +291,11 @@ func setup() {
 	kratosAdminConfig.Servers[0].URL = kratosAddr
 	akc = kclient.NewAPIClient(kratosAdminConfig)
 
+	var logDB = true
+
+	if auditLogStorage == "elasticsearch" {
+		logDB = false
+	}
 	// db setup
 	if dbDSN == "" {
 		dbDSN = fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", dbUser, dbPassword, dbAddr, dbName)
@@ -304,6 +315,7 @@ func setup() {
 	}
 
 	_log.Infow("printing db", "db", db)
+	_log.Infow("auditLogStorage", "db", logDB)
 
 	ao := audit.AuditOptions{
 		LogPath:    auditFile,
@@ -361,6 +373,26 @@ func setup() {
 
 	// audit services
 	aus, err = service.NewAuditLogService(elasticSearchUrl, esIndexPrefix+"-*", "AuditLog API: ")
+
+	//create a seperate model file
+	type AuditLog struct {
+		bun.BaseModel `bun:"table:fluentbit,alias:fluentbit"`
+
+		Tag  string                 `bun:"tag"`
+		Time time.Time              `bun:"time,type:timestampz"`
+		Data map[string]interface{} `bun:"data,type:jsonb"`
+	}
+
+	ctx := context.Background()
+	entity := new(AuditLog)
+	errrr := db.NewSelect().Model(entity).Where("tag=?",
+		"systemd").Where("data ->> 'category'=?", "AUDIT").Limit(10).Scan(ctx)
+
+	if errrr != nil {
+		fmt.Println("ERR : ", errrr)
+	}
+	fmt.Println("OUTPUT: ", entity)
+
 	if err != nil {
 		if dev && strings.Contains(err.Error(), "connect: connection refused") {
 			// This is primarily from ES not being available. ES being
