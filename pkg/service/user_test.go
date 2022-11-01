@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/google/uuid"
@@ -382,6 +383,7 @@ func TestUserGetByName(t *testing.T) {
 	guuid := uuid.New().String()
 	ruuid := uuid.New().String()
 	pruuid := uuid.New().String()
+	authenticated := time.Date(2022, 11, 1, 17, 49, 0, 0, time.UTC)
 
 	uuuid := addUserFetchExpectation(mock)
 	mock.ExpectQuery(`SELECT "group"."id".* FROM "authsrv_group" AS "group" JOIN authsrv_groupaccount ON authsrv_groupaccount.group_id="group".id WHERE .authsrv_groupaccount.account_id = '` + uuuid + `'`).
@@ -402,6 +404,9 @@ func TestUserGetByName(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+pruuid))
 	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id WHERE .authsrv_projectaccountnamespacerole.account_id = '` + uuuid + `'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+ruuid, "project-"+pruuid, "ns"))
+	mock.ExpectQuery(`SELECT "sessions"."id", "sessions"."authenticated_at", "sessions"."identity_id".* FROM "sessions" WHERE .*`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "authenticated_at", "identity_id"}).
+		AddRow(uuuid, authenticated, uuuid))
 
 	user := &userv3.User{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
@@ -541,6 +546,7 @@ func TestUserGetById(t *testing.T) {
 }
 
 func TestUserList(t *testing.T) {
+	authenticated := time.Date(2022, 11, 1, 17, 49, 0, 0, time.UTC)
 	tests := []struct {
 		name     string
 		q        string
@@ -625,10 +631,16 @@ func TestUserList(t *testing.T) {
 			guuid := addUsersGroupFetchExpectation(mock, uuuid1)
 			addGroupRoleMappingsFetchExpectation(mock, guuid, pruuid)
 			addUserRoleMappingsFetchExpectation(mock, uuuid1, pruuid)
+			mock.ExpectQuery(`SELECT "sessions"."id", "sessions"."authenticated_at", "sessions"."identity_id".* FROM "sessions" WHERE .*`).
+				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "authenticated_at", "identity_id"}).
+				AddRow(uuuid1, authenticated, uuuid1))
 
 			guuid = addUsersGroupFetchExpectation(mock, uuuid2)
 			addGroupRoleMappingsFetchExpectation(mock, guuid, pruuid)
 			addUserRoleMappingsFetchExpectation(mock, uuuid2, pruuid)
+			mock.ExpectQuery(`SELECT "sessions"."id", "sessions"."authenticated_at", "sessions"."identity_id".* FROM "sessions" WHERE .*`).
+				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "authenticated_at", "identity_id"}).
+				AddRow(uuuid1, authenticated, uuuid1))
 
 			qo := &commonv3.QueryOptions{
 				Q:            tc.q,
