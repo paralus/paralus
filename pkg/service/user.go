@@ -548,9 +548,27 @@ func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3
 			return &userv3.User{}, err
 		}
 
+		err = s.updateLastLogin(ctx, user, usr.ID)
+		if err != nil {
+			return &userv3.User{}, err
+		}
 		return user, nil
 	}
 	return user, nil
+}
+
+// updateLastLogin updates the last login field of the user provided.
+func (s *userService) updateLastLogin(ctx context.Context, user *userv3.User, userId uuid.UUID) error {
+	lastLogin := "NA"
+	sessions, err := dao.GetUserSessions(ctx, s.db, userId)
+	if err != nil {
+		return err
+	}
+	if len(sessions) != 0 {
+		lastLogin = getLastLoginTime(sessions).Format(time.RFC3339)
+	}
+	user.GetSpec().LastLogin = lastLogin
+	return nil
 }
 
 func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*userv3.UserInfo, error) {
@@ -890,6 +908,10 @@ func (s *userService) List(ctx context.Context, opts ...query.Option) (*userv3.U
 	for _, usr := range usrs {
 		user := &userv3.User{}
 		user, err := s.identitiesModelToUser(ctx, s.db, user, &usr)
+		if err != nil {
+			return userList, err
+		}
+		err = s.updateLastLogin(ctx, user, usr.ID)
 		if err != nil {
 			return userList, err
 		}

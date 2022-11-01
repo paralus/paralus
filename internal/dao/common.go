@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/paralus/paralus/internal/models"
 	bun "github.com/uptrace/bun"
 )
 
@@ -323,4 +324,16 @@ func GetUserIdByEmail(ctx context.Context, db bun.IDB, name string, entity inter
 	}
 
 	return entity, nil
+}
+
+// GetUserSessions fetches sessions of the user with userId.
+func GetUserSessions(ctx context.Context, db bun.IDB, userId uuid.UUID) ([]models.KratosSessions, error) {
+	var sessions []models.KratosSessions
+	err := db.NewSelect().Model(&sessions).
+		Where("identity_id = ?", userId.String()).
+		Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return sessions, nil
 }
