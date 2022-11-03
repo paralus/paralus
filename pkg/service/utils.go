@@ -2,11 +2,9 @@ package service
 
 import (
 	"context"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/paralus/paralus/internal/dao"
-	"github.com/paralus/paralus/internal/models"
 	"github.com/paralus/paralus/pkg/common"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	"github.com/uptrace/bun"
@@ -34,19 +32,4 @@ func IsInternalRequest(ctx context.Context) bool {
 	v := ctx.Value(common.SessionInternalKey)
 	b, ok := v.(bool)
 	return ok && b
-}
-
-// getLastLoginTime return latest authenticated time from sessions.
-func getLastLoginTime(sessions []models.KratosSessions) time.Time {
-	var auths []int64
-	for _, s := range sessions {
-		auths = append(auths, s.AuthenticatedAt.UnixMilli())
-	}
-	latest := auths[0]
-	for _, auth := range auths {
-		if auth > latest {
-			latest = auth
-		}
-	}
-	return time.UnixMilli(latest)
 }

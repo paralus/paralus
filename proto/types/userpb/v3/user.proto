@@ -203,7 +203,7 @@ message UserSpec {
   string lastLogin = 12
     [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "LastLogin"
-        description : "Last access date time in RFC3339 format. NA if not found"
+        description : "Last access date time in RFC3339 format."
         read_only : true
     } ];
 }

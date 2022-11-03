@@ -243,7 +243,7 @@
           },
           {
             "name": "spec.lastLogin",
-            "description": "LastLogin. Last access date time in RFC3339 format. NA if not found",
+            "description": "LastLogin. Last access date time in RFC3339 format.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -478,7 +478,7 @@
           },
           {
             "name": "spec.lastLogin",
-            "description": "LastLogin. Last access date time in RFC3339 format. NA if not found",
+            "description": "LastLogin. Last access date time in RFC3339 format.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -894,7 +894,7 @@
           },
           {
             "name": "spec.lastLogin",
-            "description": "LastLogin. Last access date time in RFC3339 format. NA if not found",
+            "description": "LastLogin. Last access date time in RFC3339 format.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1744,7 +1744,7 @@
         },
         "lastLogin": {
           "type": "string",
-          "description": "Last access date time in RFC3339 format. NA if not found",
+          "description": "Last access date time in RFC3339 format.",
           "title": "LastLogin",
           "readOnly": true
         }
