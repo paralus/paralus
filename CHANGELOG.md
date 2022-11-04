@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## Added
+
+- Added last login field to user spec from [akshay196](https://github.com/akshay196)
+
 ## [0.1.6] - 2022-10-14
 
 ## Fixed
