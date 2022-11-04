@@ -548,6 +548,14 @@ func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3
 			return &userv3.User{}, err
 		}
 
+		lastLogin, err := s.getUserLastLogin(ctx, usr.ID)
+		if err != nil {
+			return &userv3.User{}, err
+		}
+		if lastLogin != "" {
+			user.GetSpec().LastLogin = lastLogin
+		}
+
 		return user, nil
 	}
 	return user, nil
@@ -893,6 +901,15 @@ func (s *userService) List(ctx context.Context, opts ...query.Option) (*userv3.U
 		if err != nil {
 			return userList, err
 		}
+
+		lastLogin, err := s.getUserLastLogin(ctx, usr.ID)
+		if err != nil {
+			return userList, err
+		}
+		if lastLogin != "" {
+			user.GetSpec().LastLogin = lastLogin
+		}
+
 		users = append(users, user)
 	}
 
@@ -1049,4 +1066,16 @@ func (s *userService) ForgotPassword(ctx context.Context, req *userrpcv3.UserFor
 	} else {
 		return &userrpcv3.UserForgotPasswordResponse{}, fmt.Errorf("unable to generate recovery url")
 	}
+}
+
+func (s *userService) getUserLastLogin(ctx context.Context, userId uuid.UUID) (string, error) {
+	var lastLogin string
+	authTime, err := dao.GetUserLastAuthTime(ctx, s.db, userId)
+	if err != nil {
+		return "", err
+	}
+	if !authTime.IsZero() {
+		lastLogin = authTime.Format(time.RFC3339)
+	}
+	return lastLogin, nil
 }

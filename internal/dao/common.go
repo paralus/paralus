@@ -3,6 +3,7 @@ package dao
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	bun "github.com/uptrace/bun"
@@ -323,4 +324,21 @@ func GetUserIdByEmail(ctx context.Context, db bun.IDB, name string, entity inter
 	}
 
 	return entity, nil
+}
+
+func GetUserLastAuthTime(ctx context.Context, db bun.IDB, userId uuid.UUID) (time.Time, error) {
+	var result time.Time
+	query := `select max(authenticated_at) from sessions where identity_id = ?`
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	err := db.QueryRowContext(ctx, query, userId).Scan(&result)
+	if err != nil {
+		switch {
+		case err.Error() == `sql: Scan error on column index 0, name "max": unsupported Scan, storing driver.Value type <nil> into type *time.Time`:
+			return time.Time{}, nil
+		default:
+			return time.Time{}, err
+		}
+	}
+	return result, nil
 }
