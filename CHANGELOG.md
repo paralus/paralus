@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## Changes
+- Modified docker release to use paralusci from [niravparikh05](https://github.com/niravparikh05)
+
 ## [0.1.7] - 2022-11-04
 
 ## Added

@@ -2,7 +2,7 @@ name: Create, publish container image
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, paralusci ]
     tags: [ 'v*.*.*' ]
 env:
   REGISTRY: docker.io
