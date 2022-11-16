@@ -10,14 +10,14 @@ import (
 )
 
 type relayAuditServer struct {
-	rs *q.RelayAuditService
-	al *q.AuditLogService
+	rs q.RelayAuditService
+	al q.AuditLogService
 }
 
 var _ v1.RelayAuditServiceServer = (*relayAuditServer)(nil)
 
 // NewAuditServer returns new placement server implementation
-func NewRelayAuditServer(relayAuditService *q.RelayAuditService, relayCommandAuditService *q.AuditLogService) (v1.RelayAuditServiceServer, error) {
+func NewRelayAuditServer(relayAuditService q.RelayAuditService, relayCommandAuditService q.AuditLogService) (v1.RelayAuditServiceServer, error) {
 	return &relayAuditServer{
 		rs: relayAuditService,
 		al: relayCommandAuditService,

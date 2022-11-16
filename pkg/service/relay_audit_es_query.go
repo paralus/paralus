@@ -8,23 +8,15 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-type RelayAuditService struct {
+type relayAuditElasticSearchService struct {
 	relayQuery ElasticSearchQuery
 }
 
-func NewRelayAuditService(url string, auditPattern string, logPrefix string) (*RelayAuditService, error) {
-	relayQuery, err := NewElasticSearchQuery(url, auditPattern, logPrefix)
+func (ra *relayAuditElasticSearchService) GetRelayAudit(req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
 	if err != nil {
 		return nil, err
 	}
-	return &RelayAuditService{relayQuery: relayQuery}, nil
-}
-
-func (ra *RelayAuditService) GetRelayAudit(req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
-	if err != nil {
-		return nil, err
-	}
-	project, err := getPrjectFromUrlScope(req.GetMetadata().UrlScope)
+	project, err := getProjectFromUrlScope(req.GetMetadata().UrlScope)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +24,7 @@ func (ra *RelayAuditService) GetRelayAudit(req *v1.RelayAuditRequest) (res *v1.R
 	return ra.GetRelayAuditByProjects(req)
 }
 
-func (ra *RelayAuditService) GetRelayAuditByProjects(req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
+func (ra *relayAuditElasticSearchService) GetRelayAuditByProjects(req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
 	err = validateQueryString(req.GetFilter().QueryString)
 	if err != nil {
 		return &v1.RelayAuditResponse{}, err

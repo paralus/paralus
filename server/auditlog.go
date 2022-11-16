@@ -8,13 +8,13 @@ import (
 )
 
 type auditLogServer struct {
-	as *q.AuditLogService
+	as q.AuditLogService
 }
 
 var _ v1.AuditLogServiceServer = (*auditLogServer)(nil)
 
 // NewAuditServer returns new placement server implementation
-func NewAuditLogServer(auditLogService *q.AuditLogService) (v1.AuditLogServiceServer, error) {
+func NewAuditLogServer(auditLogService q.AuditLogService) (v1.AuditLogServiceServer, error) {
 	return &auditLogServer{as: auditLogService}, nil
 }
 
