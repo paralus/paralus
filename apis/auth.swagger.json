@@ -1,0 +1,236 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "proto/rpc/v3/auth.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "AuthService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v3AuthType": {
+      "type": "string",
+      "enum": [
+        "AuthTypeNotSet",
+        "SessionLogin",
+        "APIKey"
+      ],
+      "default": "AuthTypeNotSet"
+    },
+    "v3ClientType": {
+      "type": "string",
+      "enum": [
+        "ClientTypeNotSet",
+        "BROWSER",
+        "CLI"
+      ],
+      "default": "ClientTypeNotSet"
+    },
+    "v3IsRequestAllowedResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/v3RequestStatus"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "sessionData": {
+          "$ref": "#/definitions/v3SessionData"
+        }
+      }
+    },
+    "v3NamespaceData": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string"
+        },
+        "namespaceId": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "v3ProjectData": {
+      "type": "object",
+      "properties": {
+        "all": {
+          "type": "boolean"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3ProjectRole"
+          }
+        }
+      }
+    },
+    "v3ProjectRole": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string"
+        },
+        "projectId": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "v3RequestStatus": {
+      "type": "string",
+      "enum": [
+        "Unknown",
+        "RequestNotAuthenticated",
+        "RequestMethodOrURLNotAllowed",
+        "RequestAllowed"
+      ],
+      "default": "Unknown"
+    },
+    "v3ResourceURLMethods": {
+      "type": "object",
+      "properties": {
+        "methods": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "Remove unnecessary fields"
+    },
+    "v3SessionData": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string"
+        },
+        "organization": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "partnerDomain": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "isSuperAdmin": {
+          "type": "boolean"
+        },
+        "isPartnerAdmin": {
+          "type": "boolean"
+        },
+        "isSsoUser": {
+          "type": "boolean"
+        },
+        "resourceUrls": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/v3ResourceURLMethods"
+          }
+        },
+        "ttl": {
+          "type": "string"
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "authType": {
+          "$ref": "#/definitions/v3AuthType"
+        },
+        "idp": {
+          "type": "string"
+        },
+        "isOrgAdmin": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        },
+        "clientType": {
+          "$ref": "#/definitions/v3ClientType"
+        },
+        "clientHost": {
+          "type": "string"
+        },
+        "clientIp": {
+          "type": "string"
+        },
+        "clientUa": {
+          "type": "string"
+        },
+        "isAllNsAccess": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        },
+        "namespaces": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3NamespaceData"
+          }
+        },
+        "project": {
+          "$ref": "#/definitions/v3ProjectData"
+        }
+      }
+    }
+  }
+}

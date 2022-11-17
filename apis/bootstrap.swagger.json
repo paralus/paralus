@@ -1,0 +1,2493 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Sentry Bootstrap Service",
+    "version": "2.0",
+    "contact": {
+      "name": "Paralus Dev"
+    }
+  },
+  "tags": [
+    {
+      "name": "BootstrapService"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json",
+    "application/yaml"
+  ],
+  "produces": [
+    "application/json",
+    "application/yaml"
+  ],
+  "paths": {
+    "/v2/sentry/bootstrap/infra/{metadata.name}": {
+      "get": {
+        "operationId": "BootstrapService_GetBootstrapInfra",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sentryBootstrapInfra"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {}
+          },
+          "500": {
+            "description": "Returned for internal server error",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version\n\nAPI Version of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "infra.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind\n\nKind of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "BootstrapInfra"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name\n\ndisplay name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project\n\nProject of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization\n\nOrganization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner\n\nPartner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.urlScope",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.createdAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.caCert",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.caKey",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.caKeyPass",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "BootstrapService"
+        ]
+      },
+      "put": {
+        "operationId": "BootstrapService_PatchBootstrapInfra",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sentryBootstrapInfra"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {}
+          },
+          "500": {
+            "description": "Returned for internal server error",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "BootstrapInfra",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/sentryBootstrapInfraSpec"
+                },
+                "status": {
+                  "$ref": "#/definitions/sentryBootstrapInfraStatus"
+                }
+              },
+              "required": [
+                "project"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "BootstrapService"
+        ]
+      }
+    },
+    "/v2/sentry/bootstrap/template": {
+      "get": {
+        "operationId": "BootstrapService_GetBootstrapAgentTemplates",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sentryBootstrapAgentTemplateList"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {}
+          },
+          "500": {
+            "description": "Returned for internal server error",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "q",
+            "description": "query for filtering",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "selector",
+            "description": "selector is used to filter the labels of a resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "organization",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "project",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "group",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "displayName",
+            "description": "displayName only used for update queries to set displayName (READONLY)",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "ignoreScopeDefault",
+            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "globalScope",
+            "description": "globalScope sets partnerID,organizationID,projectID = 0",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "deleted",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "extended",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "urlScope",
+            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value)",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "isSSOUser",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "username",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "groups",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "blueprintRef",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "publishedVersion",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "clusterID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "account",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "description": "generic way to specify a type of resource, mainly for use in users endpoint",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "BootstrapService"
+        ]
+      }
+    },
+    "/v2/sentry/bootstrap/template/{metadata.name}": {
+      "get": {
+        "operationId": "BootstrapService_GetBootstrapAgentTemplate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sentryBootstrapAgentTemplate"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {}
+          },
+          "500": {
+            "description": "Returned for internal server error",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version\n\nAPI Version of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "infra.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind\n\nKind of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "BootstrapAgentTemplate"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name\n\ndisplay name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project\n\nProject of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization\n\nOrganization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner\n\nPartner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.urlScope",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.createdAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.infraRef",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.autoRegister",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.ignoreMultipleRegister",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.autoApprove",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.templateType",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "TemplateTypeNotSet",
+              "Client",
+              "Server",
+              "Mixed"
+            ],
+            "default": "TemplateTypeNotSet"
+          },
+          {
+            "name": "spec.token",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.inClusterTemplate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.outOfClusterTemplate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "BootstrapService"
+        ]
+      },
+      "put": {
+        "operationId": "BootstrapService_PatchBootstrapAgentTemplate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sentryBootstrapAgentTemplate"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {}
+          },
+          "500": {
+            "description": "Returned for internal server error",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "BootstrapAgentTemplate",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/sentryBootstrapAgentTemplateSpec"
+                },
+                "status": {
+                  "$ref": "#/definitions/sentryBootstrapAgentTemplateStatus"
+                }
+              },
+              "required": [
+                "project"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "BootstrapService"
+        ]
+      }
+    },
+    "/v2/sentry/bootstrap/{spec.templateRef}/agent": {
+      "post": {
+        "operationId": "BootstrapService_CreateBootstrapAgent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sentryBootstrapAgent"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {}
+          },
+          "500": {
+            "description": "Returned for internal server error",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "spec.templateRef",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "template/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "BootstrapAgent",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "$ref": "#/definitions/v3Metadata",
+                  "description": "Metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "agentMode": {
+                      "$ref": "#/definitions/sentryBootstrapAgentMode"
+                    }
+                  }
+                },
+                "status": {
+                  "$ref": "#/definitions/sentryBootStrapAgentStatus"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "BootstrapService"
+        ]
+      }
+    },
+    "/v2/sentry/bootstrap/{spec.templateRef}/agent/{metadata.name}": {
+      "get": {
+        "operationId": "BootstrapService_GetBootstrapAgent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sentryBootstrapAgent"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {}
+          },
+          "500": {
+            "description": "Returned for internal server error",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "spec.templateRef",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "template/[^/]+"
+          },
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version\n\nAPI Version of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "infra.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind\n\nKind of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "BootstrapAgent"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name\n\ndisplay name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project\n\nProject of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization\n\nOrganization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner\n\nPartner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.urlScope",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.createdAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.token",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.agentMode",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "InCluster",
+              "OutOfCluster"
+            ],
+            "default": "InCluster"
+          },
+          {
+            "name": "status.tokenState",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "NotSet",
+              "NotRegistered",
+              "NotApproved",
+              "Approved"
+            ],
+            "default": "NotSet"
+          },
+          {
+            "name": "status.ipAddress",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.lastCheckedIn",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.fingerprint",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "BootstrapService"
+        ]
+      },
+      "delete": {
+        "operationId": "BootstrapService_DeleteBootstrapAgent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/rpcDeleteBootstrapAgentResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {}
+          },
+          "500": {
+            "description": "Returned for internal server error",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "spec.templateRef",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "template/[^/]+"
+          },
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version\n\nAPI Version of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "infra.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind\n\nKind of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "BootstrapAgent"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name\n\ndisplay name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project\n\nProject of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization\n\nOrganization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner\n\nPartner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.urlScope",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.createdAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.token",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.agentMode",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "InCluster",
+              "OutOfCluster"
+            ],
+            "default": "InCluster"
+          },
+          {
+            "name": "status.tokenState",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "NotSet",
+              "NotRegistered",
+              "NotApproved",
+              "Approved"
+            ],
+            "default": "NotSet"
+          },
+          {
+            "name": "status.ipAddress",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.lastCheckedIn",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.fingerprint",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "BootstrapService"
+        ]
+      },
+      "put": {
+        "operationId": "BootstrapService_UpdateBootstrapAgent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sentryBootstrapAgent"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {}
+          },
+          "500": {
+            "description": "Returned for internal server error",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "spec.templateRef",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "template/[^/]+"
+          },
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "BootstrapAgent",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "agentMode": {
+                      "$ref": "#/definitions/sentryBootstrapAgentMode"
+                    }
+                  }
+                },
+                "status": {
+                  "$ref": "#/definitions/sentryBootStrapAgentStatus"
+                }
+              },
+              "required": [
+                "project"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "BootstrapService"
+        ]
+      }
+    },
+    "/v2/sentry/bootstrap/{spec.templateRef}/agent/{metadata.name}/config": {
+      "get": {
+        "operationId": "BootstrapService_GetBootstrapAgentConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3HttpBody"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {}
+          },
+          "500": {
+            "description": "Returned for internal server error",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "spec.templateRef",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "template/[^/]+"
+          },
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version\n\nAPI Version of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "infra.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind\n\nKind of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "BootstrapAgent"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name\n\ndisplay name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project\n\nProject of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization\n\nOrganization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner\n\nPartner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.urlScope",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.createdAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.token",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.agentMode",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "InCluster",
+              "OutOfCluster"
+            ],
+            "default": "InCluster"
+          },
+          {
+            "name": "status.tokenState",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "NotSet",
+              "NotRegistered",
+              "NotApproved",
+              "Approved"
+            ],
+            "default": "NotSet"
+          },
+          {
+            "name": "status.ipAddress",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.lastCheckedIn",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.fingerprint",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "BootstrapService"
+        ]
+      }
+    },
+    "/v2/sentry/bootstrap/{templateScope}/agent": {
+      "get": {
+        "operationId": "BootstrapService_GetBootstrapAgents",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sentryBootstrapAgentList"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {}
+          },
+          "500": {
+            "description": "Returned for internal server error",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "templateScope",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "template/[^/]+"
+          },
+          {
+            "name": "opts.q",
+            "description": "query for filtering",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.name",
+            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.selector",
+            "description": "selector is used to filter the labels of a resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.organization",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.project",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.group",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.role",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.displayName",
+            "description": "displayName only used for update queries to set displayName (READONLY)",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.count",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "opts.offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "opts.limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "opts.ignoreScopeDefault",
+            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "opts.globalScope",
+            "description": "globalScope sets partnerID,organizationID,projectID = 0",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "opts.orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.order",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.deleted",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "opts.extended",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "opts.urlScope",
+            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value)",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.isSSOUser",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "opts.username",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.groups",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "opts.blueprintRef",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.publishedVersion",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.clusterID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.account",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.type",
+            "description": "generic way to specify a type of resource, mainly for use in users endpoint",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "BootstrapService"
+        ]
+      }
+    },
+    "/v2/sentry/bootstrap/{templateToken}/register": {
+      "post": {
+        "operationId": "BootstrapService_RegisterBootstrapAgent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/rpcRegisterAgentResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {}
+          },
+          "500": {
+            "description": "Returned for internal server error",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "templateToken",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "template/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "templateName": {
+                  "type": "string"
+                },
+                "token": {
+                  "type": "string"
+                },
+                "csr": {
+                  "type": "string",
+                  "format": "byte"
+                },
+                "ipAddress": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "BootstrapService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcDeleteBootstrapAgentResponse": {
+      "type": "object"
+    },
+    "rpcRegisterAgentResponse": {
+      "type": "object",
+      "properties": {
+        "certificate": {
+          "type": "string",
+          "format": "byte"
+        },
+        "caCertificate": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "sentryBootStrapAgentStatus": {
+      "type": "object",
+      "properties": {
+        "tokenState": {
+          "$ref": "#/definitions/sentryBootstrapAgentState"
+        },
+        "ipAddress": {
+          "type": "string"
+        },
+        "lastCheckedIn": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "fingerprint": {
+          "type": "string"
+        }
+      }
+    },
+    "sentryBootstrapAgent": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "infra.k8smgmt.io/v3",
+          "description": "API Version of the resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "BootstrapAgent",
+          "description": "Kind of the resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3Metadata",
+          "description": "Metadata of the resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/sentryBootstrapAgentSpec"
+        },
+        "status": {
+          "$ref": "#/definitions/sentryBootStrapAgentStatus"
+        }
+      }
+    },
+    "sentryBootstrapAgentList": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "infra.k8smgmt.io/v3",
+          "description": "API Version of the list resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "BootstrapAgentList",
+          "description": "Kind of the list resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3ListMetadata",
+          "description": "Metadata of the list resource",
+          "title": "ListMetadata",
+          "readOnly": true
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sentryBootstrapAgent"
+          }
+        }
+      },
+      "title": "BootstrapAgentList is a list of bootstrap agents"
+    },
+    "sentryBootstrapAgentMode": {
+      "type": "string",
+      "enum": [
+        "InCluster",
+        "OutOfCluster"
+      ],
+      "default": "InCluster"
+    },
+    "sentryBootstrapAgentSpec": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "templateRef": {
+          "type": "string"
+        },
+        "agentMode": {
+          "$ref": "#/definitions/sentryBootstrapAgentMode"
+        }
+      }
+    },
+    "sentryBootstrapAgentState": {
+      "type": "string",
+      "enum": [
+        "NotSet",
+        "NotRegistered",
+        "NotApproved",
+        "Approved"
+      ],
+      "default": "NotSet"
+    },
+    "sentryBootstrapAgentTemplate": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "infra.k8smgmt.io/v3",
+          "description": "API Version of the resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "BootstrapAgentTemplate",
+          "description": "Kind of the resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3Metadata",
+          "description": "Metadata of the resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/sentryBootstrapAgentTemplateSpec"
+        },
+        "status": {
+          "$ref": "#/definitions/sentryBootstrapAgentTemplateStatus"
+        }
+      }
+    },
+    "sentryBootstrapAgentTemplateList": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "infra.k8smgmt.io/v3",
+          "description": "API Version of the list resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "BootstrapAgentTemplateList",
+          "description": "Kind of the list resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3ListMetadata",
+          "description": "Metadata of the list resource",
+          "title": "ListMetadata",
+          "readOnly": true
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sentryBootstrapAgentTemplate"
+          }
+        }
+      }
+    },
+    "sentryBootstrapAgentTemplateSpec": {
+      "type": "object",
+      "properties": {
+        "infraRef": {
+          "type": "string"
+        },
+        "autoRegister": {
+          "type": "boolean"
+        },
+        "ignoreMultipleRegister": {
+          "type": "boolean"
+        },
+        "autoApprove": {
+          "type": "boolean"
+        },
+        "templateType": {
+          "$ref": "#/definitions/sentryBootstrapAgentTemplateType"
+        },
+        "token": {
+          "type": "string"
+        },
+        "hosts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sentryBootstrapTemplateHost"
+          }
+        },
+        "inClusterTemplate": {
+          "type": "string"
+        },
+        "outOfClusterTemplate": {
+          "type": "string"
+        }
+      }
+    },
+    "sentryBootstrapAgentTemplateStatus": {
+      "type": "object"
+    },
+    "sentryBootstrapAgentTemplateType": {
+      "type": "string",
+      "enum": [
+        "TemplateTypeNotSet",
+        "Client",
+        "Server",
+        "Mixed"
+      ],
+      "default": "TemplateTypeNotSet"
+    },
+    "sentryBootstrapInfra": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "infra.k8smgmt.io/v3",
+          "description": "API Version of the resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "BootstrapInfra",
+          "description": "Kind of the resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3Metadata",
+          "description": "Metadata of the resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/sentryBootstrapInfraSpec"
+        },
+        "status": {
+          "$ref": "#/definitions/sentryBootstrapInfraStatus"
+        }
+      }
+    },
+    "sentryBootstrapInfraSpec": {
+      "type": "object",
+      "properties": {
+        "caCert": {
+          "type": "string"
+        },
+        "caKey": {
+          "type": "string"
+        },
+        "caKeyPass": {
+          "type": "string"
+        }
+      }
+    },
+    "sentryBootstrapInfraStatus": {
+      "type": "object"
+    },
+    "sentryBootstrapTemplateHost": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/sentryBootstrapTemplateHostType"
+        }
+      }
+    },
+    "sentryBootstrapTemplateHostType": {
+      "type": "string",
+      "enum": [
+        "HostTypeNotSet",
+        "HostTypeInternal",
+        "HostTypeExternal"
+      ],
+      "default": "HostTypeNotSet"
+    },
+    "v3HttpBody": {
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "type": "string",
+          "description": "The HTTP Content-Type header value specifying the content type of the body."
+        },
+        "data": {
+          "type": "string",
+          "format": "byte",
+          "description": "The HTTP request/response body as raw binary."
+        }
+      },
+      "title": "HttpBody represents arbitrary HTTP Body. It should only be used for\npayload formats that can't be represented as JSON"
+    },
+    "v3ListMetadata": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "string",
+          "format": "int64"
+        },
+        "offset": {
+          "type": "string",
+          "format": "int64"
+        },
+        "limit": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "$title: ListMetadata\n$description: metadata for a list of resources\n$required: enabled"
+    },
+    "v3Metadata": {
+      "type": "object",
+      "example": {
+        "name": "some-name",
+        "project": "defaultproject"
+      },
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "name of the resource",
+          "title": "Name"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "display name of the resource",
+          "title": "Display Name"
+        },
+        "description": {
+          "type": "string",
+          "description": "description of the resource",
+          "title": "Description"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "labels of the resource",
+          "title": "Labels"
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "annotations of the resource",
+          "title": "Annotations"
+        },
+        "project": {
+          "type": "string",
+          "description": "Project of the resource",
+          "title": "Project"
+        },
+        "organization": {
+          "type": "string",
+          "description": "Organization to which the resource belongs",
+          "title": "Organization"
+        },
+        "partner": {
+          "type": "string",
+          "description": "Partner to which the resource belongs",
+          "title": "Partner"
+        },
+        "id": {
+          "type": "string",
+          "readOnly": true
+        },
+        "urlScope": {
+          "type": "string",
+          "readOnly": true
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        },
+        "modifiedAt": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        }
+      },
+      "description": "metadata of the resource",
+      "title": "Metadata",
+      "required": [
+        "name",
+        "project"
+      ]
+    },
+    "v3QueryOptions": {
+      "type": "object",
+      "properties": {
+        "q": {
+          "type": "string",
+          "title": "query for filtering"
+        },
+        "name": {
+          "type": "string",
+          "title": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)"
+        },
+        "selector": {
+          "type": "string",
+          "title": "selector is used to filter the labels of a resource"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "organization": {
+          "type": "string"
+        },
+        "project": {
+          "type": "string"
+        },
+        "group": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string",
+          "title": "displayName only used for update queries to set displayName (READONLY)"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "labels only used for update queries to set labels (READONLY)"
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "annotations only used for update queries to set annotations (READONLY)"
+        },
+        "count": {
+          "type": "string",
+          "format": "int64"
+        },
+        "offset": {
+          "type": "string",
+          "format": "int64"
+        },
+        "limit": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ignoreScopeDefault": {
+          "type": "boolean",
+          "title": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID"
+        },
+        "globalScope": {
+          "type": "boolean",
+          "title": "globalScope sets partnerID,organizationID,projectID = 0"
+        },
+        "orderBy": {
+          "type": "string"
+        },
+        "order": {
+          "type": "string"
+        },
+        "deleted": {
+          "type": "boolean"
+        },
+        "extended": {
+          "type": "boolean"
+        },
+        "urlScope": {
+          "type": "string",
+          "title": "urlScope is supposed to be passed in the URL as kind/HashID(value)"
+        },
+        "isSSOUser": {
+          "type": "boolean"
+        },
+        "username": {
+          "type": "string"
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "blueprintRef": {
+          "type": "string"
+        },
+        "publishedVersion": {
+          "type": "string"
+        },
+        "clusterID": {
+          "type": "string"
+        },
+        "ID": {
+          "type": "string"
+        },
+        "account": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "title": "generic way to specify a type of resource, mainly for use in users endpoint"
+        }
+      },
+      "title": "QueryOptions is the options for performing queries on resources"
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "X-PARALUS-API-KEYID",
+      "in": "header"
+    },
+    "BasicAuth": {
+      "type": "basic"
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": [],
+      "BasicAuth": []
+    }
+  ]
+}

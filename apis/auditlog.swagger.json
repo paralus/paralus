@@ -1,0 +1,571 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "AuditLog Service",
+    "version": "2.0",
+    "contact": {
+      "name": "Paralus Dev"
+    }
+  },
+  "tags": [
+    {
+      "name": "AuditLogService"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json",
+    "application/yaml"
+  ],
+  "produces": [
+    "application/json",
+    "application/yaml"
+  ],
+  "paths": {
+    "/event/v1/auditlog": {
+      "get": {
+        "operationId": "AuditLogService_GetAuditLogByProjects",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetAuditLogSearchResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.name",
+            "description": "Name\n\nname of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name\n\ndisplay name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project\n\nProject of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization\n\nOrganization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner\n\nPartner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.urlScope",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.createdAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "filter.type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.user",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.client",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.timefrom",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.portal",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.namespace",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.kind",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.method",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.projects",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "filter.queryString",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.dashboardData",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "AuditLogService"
+        ]
+      }
+    },
+    "/event/v1/{metadata.urlScope}/auditlog": {
+      "get": {
+        "operationId": "AuditLogService_GetAuditLog",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetAuditLogSearchResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.urlScope",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "project/[^/]+"
+          },
+          {
+            "name": "metadata.name",
+            "description": "Name\n\nname of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name\n\ndisplay name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project\n\nProject of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization\n\nOrganization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner\n\nPartner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.createdAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "filter.type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.user",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.client",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.timefrom",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.portal",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.namespace",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.kind",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.method",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.projects",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "filter.queryString",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter.dashboardData",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "AuditLogService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "protobufNullValue": {
+      "type": "string",
+      "enum": [
+        "NULL_VALUE"
+      ],
+      "default": "NULL_VALUE",
+      "description": "`NullValue` is a singleton enumeration to represent the null value for the\n`Value` type union.\n\n The JSON representation for `NullValue` is JSON `null`.\n\n - NULL_VALUE: Null value."
+    },
+    "v1AuditLogQueryFilter": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        },
+        "client": {
+          "type": "string"
+        },
+        "timefrom": {
+          "type": "string"
+        },
+        "portal": {
+          "type": "string"
+        },
+        "cluster": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "projects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "queryString": {
+          "type": "string"
+        },
+        "dashboardData": {
+          "type": "boolean"
+        }
+      }
+    },
+    "v1GetAuditLogSearchResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "object"
+        }
+      }
+    },
+    "v3Metadata": {
+      "type": "object",
+      "example": {
+        "name": "some-name",
+        "project": "defaultproject"
+      },
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "name of the resource",
+          "title": "Name"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "display name of the resource",
+          "title": "Display Name"
+        },
+        "description": {
+          "type": "string",
+          "description": "description of the resource",
+          "title": "Description"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "labels of the resource",
+          "title": "Labels"
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "annotations of the resource",
+          "title": "Annotations"
+        },
+        "project": {
+          "type": "string",
+          "description": "Project of the resource",
+          "title": "Project"
+        },
+        "organization": {
+          "type": "string",
+          "description": "Organization to which the resource belongs",
+          "title": "Organization"
+        },
+        "partner": {
+          "type": "string",
+          "description": "Partner to which the resource belongs",
+          "title": "Partner"
+        },
+        "id": {
+          "type": "string",
+          "readOnly": true
+        },
+        "urlScope": {
+          "type": "string",
+          "readOnly": true
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        },
+        "modifiedAt": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        }
+      },
+      "description": "metadata of the resource",
+      "title": "Metadata",
+      "required": [
+        "name",
+        "project"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "X-PARALUS-API-KEYID",
+      "in": "header"
+    },
+    "BasicAuth": {
+      "type": "basic"
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": [],
+      "BasicAuth": []
+    }
+  ]
+}

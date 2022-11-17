@@ -1,0 +1,1205 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Role management Service",
+    "version": "2.0",
+    "contact": {
+      "name": "Paralus Dev"
+    }
+  },
+  "tags": [
+    {
+      "name": "RoleService"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json",
+    "application/yaml"
+  ],
+  "produces": [
+    "application/json",
+    "application/yaml"
+  ],
+  "paths": {
+    "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/role/{metadata.name}": {
+      "get": {
+        "operationId": "RoleService_GetRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Role"
+            }
+          },
+          "403": {
+            "description": "Returned when the role does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.partner",
+            "description": "Partner to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version\n\nAPI Version of the Role resource",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "system.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind\n\nKind of the role resource",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "Role"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name\n\ndisplay name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project\n\nProject of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.urlScope",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.createdAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.rolepermissions",
+            "description": "Role Permissions\n\nPermissions for the role",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "spec.isGlobal",
+            "description": "IsGlobal\n\nSpecify if this is a global role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.scope",
+            "description": "Scope\n\nScope of role",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.builtin",
+            "description": "Builtin\n\nSpecify if this is a builtin role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "status.conditionType",
+            "description": "Condition Type\n\ntype of the status condition",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.conditionStatus",
+            "description": "Condition Status\n\nstatus of the condition",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "StatusNotSet",
+              "StatusSubmitted",
+              "StatusOK",
+              "StatusFailed"
+            ],
+            "default": "StatusNotSet"
+          },
+          {
+            "name": "status.lastUpdated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.reason",
+            "description": "Reason\n\nreason of the last condition status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "RoleService"
+        ]
+      },
+      "delete": {
+        "operationId": "RoleService_DeleteRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Role"
+            }
+          },
+          "204": {
+            "description": "Returned when role is deleted successfully.",
+            "schema": {}
+          },
+          "403": {
+            "description": "Returned when the role does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.partner",
+            "description": "Partner to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version\n\nAPI Version of the Role resource",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "system.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind\n\nKind of the role resource",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "Role"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name\n\ndisplay name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project\n\nProject of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.urlScope",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.createdAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.rolepermissions",
+            "description": "Role Permissions\n\nPermissions for the role",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "spec.isGlobal",
+            "description": "IsGlobal\n\nSpecify if this is a global role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.scope",
+            "description": "Scope\n\nScope of role",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.builtin",
+            "description": "Builtin\n\nSpecify if this is a builtin role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "status.conditionType",
+            "description": "Condition Type\n\ntype of the status condition",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.conditionStatus",
+            "description": "Condition Status\n\nstatus of the condition",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "StatusNotSet",
+              "StatusSubmitted",
+              "StatusOK",
+              "StatusFailed"
+            ],
+            "default": "StatusNotSet"
+          },
+          {
+            "name": "status.lastUpdated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.reason",
+            "description": "Reason\n\nreason of the last condition status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "RoleService"
+        ]
+      },
+      "put": {
+        "operationId": "RoleService_UpdateRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Role"
+            }
+          },
+          "403": {
+            "description": "Returned when the role does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.partner",
+            "description": "Partner to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "system.k8smgmt.io/v3",
+                  "description": "API Version of the Role resource",
+                  "title": "API Version"
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Role",
+                  "description": "Kind of the role resource",
+                  "title": "Kind"
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3RoleSpec",
+                  "description": "Spec of the role resource",
+                  "title": "Spec"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Role",
+              "title": "Role",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec",
+                "project"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "RoleService"
+        ]
+      }
+    },
+    "/auth/v3/partner/{metadata.partner}/organization/{metadata.organization}/roles": {
+      "get": {
+        "operationId": "RoleService_GetRoles",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3RoleList"
+            }
+          },
+          "403": {
+            "description": "Returned when the role does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.partner",
+            "description": "Partner to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version\n\nAPI Version of the Role resource",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "system.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind\n\nKind of the role resource",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "Role"
+          },
+          {
+            "name": "metadata.name",
+            "description": "Name\n\nname of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name\n\ndisplay name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.project",
+            "description": "Project\n\nProject of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.urlScope",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.createdAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.rolepermissions",
+            "description": "Role Permissions\n\nPermissions for the role",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "spec.isGlobal",
+            "description": "IsGlobal\n\nSpecify if this is a global role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.scope",
+            "description": "Scope\n\nScope of role",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.builtin",
+            "description": "Builtin\n\nSpecify if this is a builtin role",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "status.conditionType",
+            "description": "Condition Type\n\ntype of the status condition",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.conditionStatus",
+            "description": "Condition Status\n\nstatus of the condition",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "StatusNotSet",
+              "StatusSubmitted",
+              "StatusOK",
+              "StatusFailed"
+            ],
+            "default": "StatusNotSet"
+          },
+          {
+            "name": "status.lastUpdated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.reason",
+            "description": "Reason\n\nreason of the last condition status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "RoleService"
+        ]
+      },
+      "post": {
+        "operationId": "RoleService_CreateRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Role"
+            }
+          },
+          "201": {
+            "description": "Returned when role is created successfully.",
+            "schema": {}
+          },
+          "403": {
+            "description": "Returned when the role does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.partner",
+            "description": "Partner to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization to which the resource belongs",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "system.k8smgmt.io/v3",
+                  "description": "API Version of the Role resource",
+                  "title": "API Version"
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Role",
+                  "description": "Kind of the role resource",
+                  "title": "Kind"
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "name of the resource",
+                      "title": "Name"
+                    },
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3RoleSpec",
+                  "description": "Spec of the role resource",
+                  "title": "Spec"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Role",
+              "title": "Role",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec",
+                "name",
+                "project"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "RoleService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "commonv3Status": {
+      "type": "object",
+      "properties": {
+        "conditionType": {
+          "type": "string",
+          "description": "type of the status condition",
+          "title": "Condition Type",
+          "readOnly": true
+        },
+        "conditionStatus": {
+          "$ref": "#/definitions/v3ConditionStatus",
+          "enum": [
+            "StatusNotSet",
+            "StatusSubmitted",
+            "StatusOK",
+            "StatusFailed"
+          ],
+          "description": "status of the condition",
+          "title": "Condition Status",
+          "readOnly": true
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "when the condition status is last updated",
+          "title": "Last Updated",
+          "readOnly": true
+        },
+        "reason": {
+          "type": "string",
+          "description": "reason of the last condition status",
+          "title": "Reason",
+          "readOnly": true
+        }
+      },
+      "description": "status of a resource",
+      "title": "Status",
+      "readOnly": true
+    },
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "v3ConditionStatus": {
+      "type": "string",
+      "enum": [
+        "StatusNotSet",
+        "StatusSubmitted",
+        "StatusOK",
+        "StatusFailed"
+      ],
+      "default": "StatusNotSet",
+      "title": "$title: ConditionStatus\n$description: status of a condition for a resource"
+    },
+    "v3ListMetadata": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "string",
+          "format": "int64"
+        },
+        "offset": {
+          "type": "string",
+          "format": "int64"
+        },
+        "limit": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "$title: ListMetadata\n$description: metadata for a list of resources\n$required: enabled"
+    },
+    "v3Metadata": {
+      "type": "object",
+      "example": {
+        "name": "some-name",
+        "project": "defaultproject"
+      },
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "name of the resource",
+          "title": "Name"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "display name of the resource",
+          "title": "Display Name"
+        },
+        "description": {
+          "type": "string",
+          "description": "description of the resource",
+          "title": "Description"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "labels of the resource",
+          "title": "Labels"
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "annotations of the resource",
+          "title": "Annotations"
+        },
+        "project": {
+          "type": "string",
+          "description": "Project of the resource",
+          "title": "Project"
+        },
+        "organization": {
+          "type": "string",
+          "description": "Organization to which the resource belongs",
+          "title": "Organization"
+        },
+        "partner": {
+          "type": "string",
+          "description": "Partner to which the resource belongs",
+          "title": "Partner"
+        },
+        "id": {
+          "type": "string",
+          "readOnly": true
+        },
+        "urlScope": {
+          "type": "string",
+          "readOnly": true
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        },
+        "modifiedAt": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        }
+      },
+      "description": "metadata of the resource",
+      "title": "Metadata",
+      "required": [
+        "name",
+        "project"
+      ]
+    },
+    "v3Role": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "system.k8smgmt.io/v3",
+          "description": "API Version of the Role resource",
+          "title": "API Version"
+        },
+        "kind": {
+          "type": "string",
+          "default": "Role",
+          "description": "Kind of the role resource",
+          "title": "Kind"
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3Metadata",
+          "description": "Metadata of the role resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3RoleSpec",
+          "description": "Spec of the role resource",
+          "title": "Spec"
+        },
+        "status": {
+          "$ref": "#/definitions/commonv3Status",
+          "description": "Status of the resource",
+          "title": "Status",
+          "readOnly": true
+        }
+      },
+      "description": "Role",
+      "title": "Role",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+      ]
+    },
+    "v3RoleList": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "description": "API Version of the role list resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "description": "Kind of the role list resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3ListMetadata",
+          "description": "Metadata of the role list resource",
+          "title": "Metadata",
+          "readOnly": true
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3Role",
+            "readOnly": true
+          },
+          "description": "List of role resources",
+          "title": "Items"
+        }
+      },
+      "description": "Role list",
+      "title": "RoleList",
+      "readOnly": true
+    },
+    "v3RoleSpec": {
+      "type": "object",
+      "properties": {
+        "rolepermissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Permissions for the role",
+          "title": "Role Permissions"
+        },
+        "isGlobal": {
+          "type": "boolean",
+          "description": "Specify if this is a global role",
+          "title": "IsGlobal"
+        },
+        "scope": {
+          "type": "string",
+          "description": "Scope of role",
+          "title": "Scope"
+        },
+        "builtin": {
+          "type": "boolean",
+          "description": "Specify if this is a builtin role",
+          "title": "Builtin",
+          "readOnly": true
+        }
+      },
+      "description": "Role specification",
+      "title": "Role Specification"
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "X-PARALUS-API-KEYID",
+      "in": "header"
+    },
+    "BasicAuth": {
+      "type": "basic"
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": [],
+      "BasicAuth": []
+    }
+  ]
+}

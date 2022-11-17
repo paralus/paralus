@@ -1,0 +1,2794 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Cluster Service",
+    "version": "3.0",
+    "contact": {
+      "name": "Paralus Dev"
+    }
+  },
+  "tags": [
+    {
+      "name": "ClusterService"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json",
+    "application/yaml"
+  ],
+  "produces": [
+    "application/json",
+    "application/yaml"
+  ],
+  "paths": {
+    "/infra/v3/project/{metadata.project}/cluster": {
+      "post": {
+        "operationId": "ClusterService_CreateCluster",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Cluster"
+            }
+          },
+          "201": {
+            "description": "Returned when edge is created successfully.",
+            "schema": {}
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.project",
+            "description": "Project of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Cluster",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "name of the resource",
+                      "title": "Name"
+                    },
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3ClusterSpec",
+                  "description": "Spec of the resource",
+                  "title": "Spec"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Cluster",
+              "title": "Cluster",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec",
+                "name"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "ClusterService"
+        ]
+      }
+    },
+    "/infra/v3/project/{metadata.project}/cluster/{metadata.name}": {
+      "get": {
+        "operationId": "ClusterService_GetCluster",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Cluster"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.project",
+            "description": "Project of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version\n\nAPI Version of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "infra.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind\n\nKind of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "Cluster"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name\n\ndisplay name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization\n\nOrganization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner\n\nPartner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.urlScope",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.createdAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.clusterType",
+            "description": "Cluster Type\n\nType of the cluster being created",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "Imported"
+          },
+          {
+            "name": "spec.metro.id",
+            "description": "ID of Location\n\nID Location of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.name",
+            "description": "Location\n\nLocation of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.city",
+            "description": "City\n\nCity of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.state",
+            "description": "State\n\nState of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.country",
+            "description": "Country\n\ncountry of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.locale",
+            "description": "Locale\n\nlocale of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.latitude",
+            "description": "Latitude\n\nLatitude of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.longitude",
+            "description": "Longitude\n\nLongitude of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.countryCode",
+            "description": "CountryCode\n\nCountryCode of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.stateCode",
+            "description": "StateCode\n\nStateCode of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.overrideSelector",
+            "description": "Override Selector\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.environmentProvider",
+            "description": "EnvironmentProvider\n\nenvironment provider of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.kubernetesProvider",
+            "description": "KubernetesProvider\n\nkubernetes provider",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.provisionEnvironment",
+            "description": "ProvisionEnvironment\n\nprovision environment",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.provisionPackageType",
+            "description": "ProvisionPackageType\n\nprovision package type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.provisionType",
+            "description": "ProvisionType\n\nprovision type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.state",
+            "description": "State\n\nstate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.shareMode",
+            "description": "Override Selector\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "ClusterShareModeNotSet",
+              "ALL",
+              "CUSTOM"
+            ],
+            "default": "ClusterShareModeNotSet"
+          },
+          {
+            "name": "spec.proxyConfig.httpProxy",
+            "description": "HttpProxy\n\nhttp proxy",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.proxyConfig.httpsProxy",
+            "description": "HttpsProxy\n\nhttps proxy",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.proxyConfig.noProxy",
+            "description": "noproxy\n\nnoproxy",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.proxyConfig.proxyAuth",
+            "description": "ProxyAuth\n\nproxy auth",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.proxyConfig.allowInsecureBootstrap",
+            "description": "AllowInsecureBootstrap\n\nAllow insecure bootstrap",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.proxyConfig.enabled",
+            "description": "Enabled\n\nenabled",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.proxyConfig.bootstrapCA",
+            "description": "BootstrapCA\n\nCertificate Authority of bootstrap server",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.provider",
+            "description": "Provider\n\nProvider",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.passphrase",
+            "description": "Passphrase\n\npassphrase of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.cname",
+            "description": "CNAME\n\ncname of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.arecord",
+            "description": "DNS A Record\n\nEntry for DNS A Record",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.displayName",
+            "description": "Display Name\n\nDisplay Name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.health",
+            "description": "Health\n\nHealth",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EDGE_IGNORE",
+              "EDGE_HEALTHY",
+              "EDGE_UNHEALTHY",
+              "EDGE_DISCONNECTED"
+            ],
+            "default": "EDGE_IGNORE"
+          },
+          {
+            "name": "spec.clusterData.manufacturer",
+            "description": "Manufacturer\n\nManufacturer",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.clusterBlueprint",
+            "description": "ClusterBlueprint\n\nCluster Blueprint",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.clusterStatus.token",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.clusterStatus.publishedBlueprint",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.clusterStatus.systemTaskCount",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "spec.clusterData.clusterStatus.customTaskCount",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "spec.clusterData.clusterStatus.auxiliaryTaskCount",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "status.conditionType",
+            "description": "Condition Type\n\ntype of the status condition",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.conditionStatus",
+            "description": "Condition Status\n\nstatus of the condition",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "StatusNotSet",
+              "StatusSubmitted",
+              "StatusOK",
+              "StatusFailed"
+            ],
+            "default": "StatusNotSet"
+          },
+          {
+            "name": "status.lastUpdated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.reason",
+            "description": "Reason\n\nreason of the last condition status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ClusterService"
+        ]
+      },
+      "delete": {
+        "operationId": "ClusterService_DeleteCluster",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3DeleteClusterResponse"
+            }
+          },
+          "204": {
+            "description": "Returned when project is deleted successfully.",
+            "schema": {}
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.project",
+            "description": "Project of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version\n\nAPI Version of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "infra.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind\n\nKind of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "Cluster"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name\n\ndisplay name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization\n\nOrganization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner\n\nPartner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.urlScope",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.createdAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.clusterType",
+            "description": "Cluster Type\n\nType of the cluster being created",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "Imported"
+          },
+          {
+            "name": "spec.metro.id",
+            "description": "ID of Location\n\nID Location of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.name",
+            "description": "Location\n\nLocation of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.city",
+            "description": "City\n\nCity of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.state",
+            "description": "State\n\nState of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.country",
+            "description": "Country\n\ncountry of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.locale",
+            "description": "Locale\n\nlocale of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.latitude",
+            "description": "Latitude\n\nLatitude of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.longitude",
+            "description": "Longitude\n\nLongitude of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.countryCode",
+            "description": "CountryCode\n\nCountryCode of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.stateCode",
+            "description": "StateCode\n\nStateCode of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.overrideSelector",
+            "description": "Override Selector\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.environmentProvider",
+            "description": "EnvironmentProvider\n\nenvironment provider of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.kubernetesProvider",
+            "description": "KubernetesProvider\n\nkubernetes provider",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.provisionEnvironment",
+            "description": "ProvisionEnvironment\n\nprovision environment",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.provisionPackageType",
+            "description": "ProvisionPackageType\n\nprovision package type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.provisionType",
+            "description": "ProvisionType\n\nprovision type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.state",
+            "description": "State\n\nstate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.shareMode",
+            "description": "Override Selector\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "ClusterShareModeNotSet",
+              "ALL",
+              "CUSTOM"
+            ],
+            "default": "ClusterShareModeNotSet"
+          },
+          {
+            "name": "spec.proxyConfig.httpProxy",
+            "description": "HttpProxy\n\nhttp proxy",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.proxyConfig.httpsProxy",
+            "description": "HttpsProxy\n\nhttps proxy",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.proxyConfig.noProxy",
+            "description": "noproxy\n\nnoproxy",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.proxyConfig.proxyAuth",
+            "description": "ProxyAuth\n\nproxy auth",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.proxyConfig.allowInsecureBootstrap",
+            "description": "AllowInsecureBootstrap\n\nAllow insecure bootstrap",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.proxyConfig.enabled",
+            "description": "Enabled\n\nenabled",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.proxyConfig.bootstrapCA",
+            "description": "BootstrapCA\n\nCertificate Authority of bootstrap server",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.provider",
+            "description": "Provider\n\nProvider",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.passphrase",
+            "description": "Passphrase\n\npassphrase of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.cname",
+            "description": "CNAME\n\ncname of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.arecord",
+            "description": "DNS A Record\n\nEntry for DNS A Record",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.displayName",
+            "description": "Display Name\n\nDisplay Name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.health",
+            "description": "Health\n\nHealth",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EDGE_IGNORE",
+              "EDGE_HEALTHY",
+              "EDGE_UNHEALTHY",
+              "EDGE_DISCONNECTED"
+            ],
+            "default": "EDGE_IGNORE"
+          },
+          {
+            "name": "spec.clusterData.manufacturer",
+            "description": "Manufacturer\n\nManufacturer",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.clusterBlueprint",
+            "description": "ClusterBlueprint\n\nCluster Blueprint",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.clusterStatus.token",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.clusterStatus.publishedBlueprint",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.clusterStatus.systemTaskCount",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "spec.clusterData.clusterStatus.customTaskCount",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "spec.clusterData.clusterStatus.auxiliaryTaskCount",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "status.conditionType",
+            "description": "Condition Type\n\ntype of the status condition",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.conditionStatus",
+            "description": "Condition Status\n\nstatus of the condition",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "StatusNotSet",
+              "StatusSubmitted",
+              "StatusOK",
+              "StatusFailed"
+            ],
+            "default": "StatusNotSet"
+          },
+          {
+            "name": "status.lastUpdated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.reason",
+            "description": "Reason\n\nreason of the last condition status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ClusterService"
+        ]
+      },
+      "put": {
+        "operationId": "ClusterService_UpdateCluster",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3Cluster"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.project",
+            "description": "Project of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "Cluster",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v3ClusterSpec",
+                  "description": "Spec of the resource",
+                  "title": "Spec"
+                },
+                "status": {
+                  "$ref": "#/definitions/commonv3Status",
+                  "description": "Status of the resource",
+                  "title": "Status",
+                  "readOnly": true
+                }
+              },
+              "description": "Cluster",
+              "title": "Cluster",
+              "required": [
+                "apiVersion",
+                "kind",
+                "metadata",
+                "spec"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "ClusterService"
+        ]
+      }
+    },
+    "/infra/v3/project/{metadata.project}/cluster/{metadata.name}/download": {
+      "get": {
+        "operationId": "ClusterService_DownloadCluster",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3HttpBody"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.project",
+            "description": "Project of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.name",
+            "description": "name of the resource",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "apiVersion",
+            "description": "API Version\n\nAPI Version of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "infra.k8smgmt.io/v3"
+          },
+          {
+            "name": "kind",
+            "description": "Kind\n\nKind of the resource",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "Cluster"
+          },
+          {
+            "name": "metadata.displayName",
+            "description": "Display Name\n\ndisplay name of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.description",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.organization",
+            "description": "Organization\n\nOrganization to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.partner",
+            "description": "Partner\n\nPartner to which the resource belongs",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.urlScope",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.createdAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "metadata.modifiedAt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "spec.clusterType",
+            "description": "Cluster Type\n\nType of the cluster being created",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "Imported"
+          },
+          {
+            "name": "spec.metro.id",
+            "description": "ID of Location\n\nID Location of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.name",
+            "description": "Location\n\nLocation of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.city",
+            "description": "City\n\nCity of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.state",
+            "description": "State\n\nState of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.country",
+            "description": "Country\n\ncountry of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.locale",
+            "description": "Locale\n\nlocale of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.latitude",
+            "description": "Latitude\n\nLatitude of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.longitude",
+            "description": "Longitude\n\nLongitude of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.countryCode",
+            "description": "CountryCode\n\nCountryCode of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.metro.stateCode",
+            "description": "StateCode\n\nStateCode of the location",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.overrideSelector",
+            "description": "Override Selector\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.environmentProvider",
+            "description": "EnvironmentProvider\n\nenvironment provider of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.kubernetesProvider",
+            "description": "KubernetesProvider\n\nkubernetes provider",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.provisionEnvironment",
+            "description": "ProvisionEnvironment\n\nprovision environment",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.provisionPackageType",
+            "description": "ProvisionPackageType\n\nprovision package type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.provisionType",
+            "description": "ProvisionType\n\nprovision type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.params.state",
+            "description": "State\n\nstate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.shareMode",
+            "description": "Override Selector\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "ClusterShareModeNotSet",
+              "ALL",
+              "CUSTOM"
+            ],
+            "default": "ClusterShareModeNotSet"
+          },
+          {
+            "name": "spec.proxyConfig.httpProxy",
+            "description": "HttpProxy\n\nhttp proxy",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.proxyConfig.httpsProxy",
+            "description": "HttpsProxy\n\nhttps proxy",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.proxyConfig.noProxy",
+            "description": "noproxy\n\nnoproxy",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.proxyConfig.proxyAuth",
+            "description": "ProxyAuth\n\nproxy auth",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.proxyConfig.allowInsecureBootstrap",
+            "description": "AllowInsecureBootstrap\n\nAllow insecure bootstrap",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.proxyConfig.enabled",
+            "description": "Enabled\n\nenabled",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "spec.proxyConfig.bootstrapCA",
+            "description": "BootstrapCA\n\nCertificate Authority of bootstrap server",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.provider",
+            "description": "Provider\n\nProvider",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.passphrase",
+            "description": "Passphrase\n\npassphrase of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.cname",
+            "description": "CNAME\n\ncname of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.arecord",
+            "description": "DNS A Record\n\nEntry for DNS A Record",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.displayName",
+            "description": "Display Name\n\nDisplay Name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.health",
+            "description": "Health\n\nHealth",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EDGE_IGNORE",
+              "EDGE_HEALTHY",
+              "EDGE_UNHEALTHY",
+              "EDGE_DISCONNECTED"
+            ],
+            "default": "EDGE_IGNORE"
+          },
+          {
+            "name": "spec.clusterData.manufacturer",
+            "description": "Manufacturer\n\nManufacturer",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.clusterBlueprint",
+            "description": "ClusterBlueprint\n\nCluster Blueprint",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.clusterStatus.token",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.clusterStatus.publishedBlueprint",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spec.clusterData.clusterStatus.systemTaskCount",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "spec.clusterData.clusterStatus.customTaskCount",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "spec.clusterData.clusterStatus.auxiliaryTaskCount",
+            "description": "Cluster Information\n\nOverride selector of the cluster",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "status.conditionType",
+            "description": "Condition Type\n\ntype of the status condition",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.conditionStatus",
+            "description": "Condition Status\n\nstatus of the condition",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "StatusNotSet",
+              "StatusSubmitted",
+              "StatusOK",
+              "StatusFailed"
+            ],
+            "default": "StatusNotSet"
+          },
+          {
+            "name": "status.lastUpdated",
+            "description": "Last Updated\n\nwhen the condition status is last updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.reason",
+            "description": "Reason\n\nreason of the last condition status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ClusterService"
+        ]
+      }
+    },
+    "/infra/v3/project/{project}/cluster": {
+      "get": {
+        "operationId": "ClusterService_GetClusters",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3ClusterList"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "project",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "q",
+            "description": "query for filtering",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "selector",
+            "description": "selector is used to filter the labels of a resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "organization",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "group",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "displayName",
+            "description": "displayName only used for update queries to set displayName (READONLY)",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "ignoreScopeDefault",
+            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "globalScope",
+            "description": "globalScope sets partnerID,organizationID,projectID = 0",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "deleted",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "extended",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "urlScope",
+            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value)",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "isSSOUser",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "username",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "groups",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "blueprintRef",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "publishedVersion",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "clusterID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "account",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "description": "generic way to specify a type of resource, mainly for use in users endpoint",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ClusterService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "commonv3Status": {
+      "type": "object",
+      "properties": {
+        "conditionType": {
+          "type": "string",
+          "description": "type of the status condition",
+          "title": "Condition Type",
+          "readOnly": true
+        },
+        "conditionStatus": {
+          "$ref": "#/definitions/v3ConditionStatus",
+          "enum": [
+            "StatusNotSet",
+            "StatusSubmitted",
+            "StatusOK",
+            "StatusFailed"
+          ],
+          "description": "status of the condition",
+          "title": "Condition Status",
+          "readOnly": true
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "when the condition status is last updated",
+          "title": "Last Updated",
+          "readOnly": true
+        },
+        "reason": {
+          "type": "string",
+          "description": "reason of the last condition status",
+          "title": "Reason",
+          "readOnly": true
+        }
+      },
+      "description": "status of a resource",
+      "title": "Status",
+      "readOnly": true
+    },
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "v1NodeCondition": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Type of node condition."
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the condition, one of True, False, Unknown."
+        },
+        "lastHeartbeatTime": {
+          "$ref": "#/definitions/v1Time",
+          "title": "Last time we got an update on a given condition.\n+optional"
+        },
+        "lastTransitionTime": {
+          "$ref": "#/definitions/v1Time",
+          "title": "Last time the condition transit from one status to another.\n+optional"
+        },
+        "reason": {
+          "type": "string",
+          "title": "(brief) reason for the condition's last transition.\n+optional"
+        },
+        "message": {
+          "type": "string",
+          "title": "Human readable message indicating details about last transition.\n+optional"
+        }
+      },
+      "description": "NodeCondition contains condition information for a node."
+    },
+    "v1NodeSystemInfo": {
+      "type": "object",
+      "properties": {
+        "machineID": {
+          "type": "string",
+          "title": "MachineID reported by the node. For unique machine identification\nin the cluster this field is preferred. Learn more from man(5)\nmachine-id: http://man7.org/linux/man-pages/man5/machine-id.5.html"
+        },
+        "systemUUID": {
+          "type": "string",
+          "title": "SystemUUID reported by the node. For unique machine identification\nMachineID is preferred. This field is specific to Red Hat hosts\nhttps://access.redhat.com/documentation/en-us/red_hat_subscription_management/1/html/rhsm/uuid"
+        },
+        "bootID": {
+          "type": "string",
+          "description": "Boot ID reported by the node."
+        },
+        "kernelVersion": {
+          "type": "string",
+          "description": "Kernel Version reported by the node from 'uname -r' (e.g. 3.16.0-0.bpo.4-amd64)."
+        },
+        "osImage": {
+          "type": "string",
+          "description": "OS Image reported by the node from /etc/os-release (e.g. Debian GNU/Linux 7 (wheezy))."
+        },
+        "containerRuntimeVersion": {
+          "type": "string",
+          "description": "ContainerRuntime Version reported by the node through runtime remote API (e.g. docker://1.5.0)."
+        },
+        "kubeletVersion": {
+          "type": "string",
+          "description": "Kubelet Version reported by the node."
+        },
+        "kubeProxyVersion": {
+          "type": "string",
+          "description": "KubeProxy Version reported by the node."
+        },
+        "operatingSystem": {
+          "type": "string",
+          "title": "The Operating System reported by the node"
+        },
+        "architecture": {
+          "type": "string",
+          "title": "The Architecture reported by the node"
+        }
+      },
+      "description": "NodeSystemInfo is a set of ids/uuids to uniquely identify the node."
+    },
+    "v1Taint": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "Required. The taint key to be applied to a node."
+        },
+        "value": {
+          "type": "string",
+          "title": "The taint value corresponding to the taint key.\n+optional"
+        },
+        "effect": {
+          "type": "string",
+          "description": "Required. The effect of the taint on pods\nthat do not tolerate the taint.\nValid effects are NoSchedule, PreferNoSchedule and NoExecute."
+        },
+        "timeAdded": {
+          "$ref": "#/definitions/v1Time",
+          "title": "TimeAdded represents the time at which the taint was added.\nIt is only written for NoExecute taints.\n+optional"
+        }
+      },
+      "description": "The node this Taint is attached to has the \"effect\" on\nany pod that does not tolerate the Taint."
+    },
+    "v1Time": {
+      "type": "object",
+      "properties": {
+        "seconds": {
+          "type": "string",
+          "format": "int64",
+          "description": "Represents seconds of UTC time since Unix epoch\n1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to\n9999-12-31T23:59:59Z inclusive."
+        },
+        "nanos": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Non-negative fractions of a second at nanosecond resolution. Negative\nsecond values with fractions must still have non-negative nanos values\nthat count forward in time. Must be from 0 to 999,999,999\ninclusive. This field may be limited in precision depending on context."
+        }
+      },
+      "description": "Time is a wrapper around time.Time which supports correct\nmarshaling to YAML and JSON.  Wrappers are provided for many\nof the factory methods that the time package offers.\n\n+protobuf.options.marshal=false\n+protobuf.as=Timestamp\n+protobuf.options.(gogoproto.goproto_stringer)=false"
+    },
+    "v3Cluster": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "infra.k8smgmt.io/v3",
+          "description": "API Version of the resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "Cluster",
+          "description": "Kind of the resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3Metadata",
+          "description": "Metadata of the resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3ClusterSpec",
+          "description": "Spec of the resource",
+          "title": "Spec"
+        },
+        "status": {
+          "$ref": "#/definitions/commonv3Status",
+          "description": "Status of the resource",
+          "title": "Status",
+          "readOnly": true
+        }
+      },
+      "description": "Cluster",
+      "title": "Cluster",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+      ]
+    },
+    "v3ClusterCondition": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/v3ClusterConditionType",
+          "description": "Override selector of the cluster",
+          "title": "Cluster Information"
+        },
+        "status": {
+          "$ref": "#/definitions/v3ParalusConditionStatus",
+          "description": "Current status of the cluster",
+          "title": "Cluster Condition Status"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Cluster condition last updated",
+          "title": "Cluster condition last updated"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Reason of cluster condition",
+          "title": "Reason of cluster condition"
+        }
+      }
+    },
+    "v3ClusterConditionType": {
+      "type": "string",
+      "enum": [
+        "ClusterBlueprintSync",
+        "ClusterApprove",
+        "ClusterCheckIn",
+        "ClusterNodeSync",
+        "ClusterRegister",
+        "ClusterNamespaceSync",
+        "ClusterReady",
+        "ClusterAuxiliaryTaskSync",
+        "ClusterBootstrapAgent",
+        "ClusterDelete"
+      ],
+      "default": "ClusterBlueprintSync"
+    },
+    "v3ClusterData": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "description": "Provider",
+          "title": "Provider",
+          "readOnly": true
+        },
+        "passphrase": {
+          "type": "string",
+          "description": "passphrase of the cluster",
+          "title": "Passphrase",
+          "readOnly": true
+        },
+        "cname": {
+          "type": "string",
+          "description": "cname of the cluster",
+          "title": "CNAME",
+          "readOnly": true
+        },
+        "arecord": {
+          "type": "string",
+          "description": "Entry for DNS A Record",
+          "title": "DNS A Record",
+          "readOnly": true
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Display Name",
+          "title": "Display Name",
+          "readOnly": true
+        },
+        "health": {
+          "$ref": "#/definitions/v3Health",
+          "description": "Health",
+          "title": "Health",
+          "readOnly": true
+        },
+        "manufacturer": {
+          "type": "string",
+          "description": "Manufacturer",
+          "title": "Manufacturer",
+          "readOnly": true
+        },
+        "clusterBlueprint": {
+          "type": "string",
+          "description": "Cluster Blueprint",
+          "title": "ClusterBlueprint",
+          "readOnly": true
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3ClusterNode"
+          },
+          "description": "Override selector of the cluster",
+          "title": "Cluster Information"
+        },
+        "projects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3ProjectCluster"
+          },
+          "description": "Override selector of the cluster",
+          "title": "Cluster Information"
+        },
+        "clusterStatus": {
+          "$ref": "#/definitions/v3ClusterStatus",
+          "description": "Cluster Status",
+          "title": "ClusterStatus",
+          "readOnly": true
+        }
+      }
+    },
+    "v3ClusterList": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "infra.k8smgmt.io/v3",
+          "description": "API Version of the list resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "ClusterList",
+          "description": "Kind of the list resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3ListMetadata",
+          "description": "Metadata of the list resource",
+          "title": "ListMetadata",
+          "readOnly": true
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3Cluster",
+            "readOnly": true
+          },
+          "description": "List of the resources",
+          "title": "Items"
+        }
+      }
+    },
+    "v3ClusterNode": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "$ref": "#/definitions/v3Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3ClusterNodeSpec"
+        },
+        "status": {
+          "$ref": "#/definitions/v3ClusterNodeStatus"
+        }
+      }
+    },
+    "v3ClusterNodeIP": {
+      "type": "object",
+      "properties": {
+        "privateIP": {
+          "type": "string"
+        },
+        "publicIP": {
+          "type": "string"
+        }
+      }
+    },
+    "v3ClusterNodeSpec": {
+      "type": "object",
+      "properties": {
+        "unschedulable": {
+          "type": "boolean"
+        },
+        "taints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Taint"
+          }
+        }
+      }
+    },
+    "v3ClusterNodeState": {
+      "type": "string",
+      "enum": [
+        "ClusterNodeCreated",
+        "ClusterNodeNotReady",
+        "ClusterNodeReady"
+      ],
+      "default": "ClusterNodeCreated"
+    },
+    "v3ClusterNodeStatus": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/v3ClusterNodeState"
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1NodeCondition"
+          }
+        },
+        "nodeInfo": {
+          "$ref": "#/definitions/v1NodeSystemInfo"
+        },
+        "capacity": {
+          "$ref": "#/definitions/v3Resources"
+        },
+        "allocatable": {
+          "$ref": "#/definitions/v3Resources"
+        },
+        "allocated": {
+          "$ref": "#/definitions/v3Resources"
+        },
+        "ips": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3ClusterNodeIP"
+          }
+        }
+      }
+    },
+    "v3ClusterShareMode": {
+      "type": "string",
+      "enum": [
+        "ClusterShareModeNotSet",
+        "ALL",
+        "CUSTOM"
+      ],
+      "default": "ClusterShareModeNotSet"
+    },
+    "v3ClusterSpec": {
+      "type": "object",
+      "properties": {
+        "clusterType": {
+          "type": "string",
+          "default": "Imported",
+          "description": "Type of the cluster being created",
+          "title": "Cluster Type"
+        },
+        "metro": {
+          "$ref": "#/definitions/v3Metro",
+          "description": "Location of the cluster",
+          "title": "Location"
+        },
+        "overrideSelector": {
+          "type": "string",
+          "description": "Override selector of the cluster",
+          "title": "Override Selector"
+        },
+        "params": {
+          "$ref": "#/definitions/v3ProvisionParams",
+          "description": "Cluster provisioning params",
+          "title": "Provision Params"
+        },
+        "shareMode": {
+          "$ref": "#/definitions/v3ClusterShareMode",
+          "description": "Override selector of the cluster",
+          "title": "Override Selector"
+        },
+        "proxyConfig": {
+          "$ref": "#/definitions/v3ProxyConfig",
+          "description": "Override selector of the cluster",
+          "title": "ProxyConfig"
+        },
+        "clusterData": {
+          "$ref": "#/definitions/v3ClusterData",
+          "description": "Override selector of the cluster",
+          "title": "Cluster Information",
+          "readOnly": true
+        }
+      }
+    },
+    "v3ClusterStatus": {
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3ClusterCondition"
+          },
+          "description": "Override selector of the cluster",
+          "title": "Cluster Information"
+        },
+        "token": {
+          "type": "string",
+          "description": "Override selector of the cluster",
+          "title": "Cluster Information"
+        },
+        "publishedBlueprint": {
+          "type": "string",
+          "description": "Override selector of the cluster",
+          "title": "Cluster Information"
+        },
+        "systemTaskCount": {
+          "type": "string",
+          "format": "int64",
+          "description": "Override selector of the cluster",
+          "title": "Cluster Information"
+        },
+        "customTaskCount": {
+          "type": "string",
+          "format": "int64",
+          "description": "Override selector of the cluster",
+          "title": "Cluster Information"
+        },
+        "auxiliaryTaskCount": {
+          "type": "string",
+          "format": "int64",
+          "description": "Override selector of the cluster",
+          "title": "Cluster Information"
+        }
+      }
+    },
+    "v3ConditionStatus": {
+      "type": "string",
+      "enum": [
+        "StatusNotSet",
+        "StatusSubmitted",
+        "StatusOK",
+        "StatusFailed"
+      ],
+      "default": "StatusNotSet",
+      "title": "$title: ConditionStatus\n$description: status of a condition for a resource"
+    },
+    "v3DeleteClusterResponse": {
+      "type": "object"
+    },
+    "v3Health": {
+      "type": "string",
+      "enum": [
+        "EDGE_IGNORE",
+        "EDGE_HEALTHY",
+        "EDGE_UNHEALTHY",
+        "EDGE_DISCONNECTED"
+      ],
+      "default": "EDGE_IGNORE"
+    },
+    "v3HttpBody": {
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "type": "string",
+          "description": "The HTTP Content-Type header value specifying the content type of the body."
+        },
+        "data": {
+          "type": "string",
+          "format": "byte",
+          "description": "The HTTP request/response body as raw binary."
+        }
+      },
+      "title": "HttpBody represents arbitrary HTTP Body. It should only be used for\npayload formats that can't be represented as JSON"
+    },
+    "v3ListMetadata": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "string",
+          "format": "int64"
+        },
+        "offset": {
+          "type": "string",
+          "format": "int64"
+        },
+        "limit": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "$title: ListMetadata\n$description: metadata for a list of resources\n$required: enabled"
+    },
+    "v3Metadata": {
+      "type": "object",
+      "example": {
+        "name": "some-name",
+        "project": "defaultproject"
+      },
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "name of the resource",
+          "title": "Name"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "display name of the resource",
+          "title": "Display Name"
+        },
+        "description": {
+          "type": "string",
+          "description": "description of the resource",
+          "title": "Description"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "labels of the resource",
+          "title": "Labels"
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "annotations of the resource",
+          "title": "Annotations"
+        },
+        "project": {
+          "type": "string",
+          "description": "Project of the resource",
+          "title": "Project"
+        },
+        "organization": {
+          "type": "string",
+          "description": "Organization to which the resource belongs",
+          "title": "Organization"
+        },
+        "partner": {
+          "type": "string",
+          "description": "Partner to which the resource belongs",
+          "title": "Partner"
+        },
+        "id": {
+          "type": "string",
+          "readOnly": true
+        },
+        "urlScope": {
+          "type": "string",
+          "readOnly": true
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        },
+        "modifiedAt": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        }
+      },
+      "description": "metadata of the resource",
+      "title": "Metadata",
+      "required": [
+        "name",
+        "project"
+      ]
+    },
+    "v3Metro": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "ID Location of the cluster",
+          "title": "ID of Location"
+        },
+        "name": {
+          "type": "string",
+          "description": "Location of the cluster",
+          "title": "Location"
+        },
+        "city": {
+          "type": "string",
+          "description": "City of the location",
+          "title": "City",
+          "readOnly": true
+        },
+        "state": {
+          "type": "string",
+          "description": "State of the location",
+          "title": "State",
+          "readOnly": true
+        },
+        "country": {
+          "type": "string",
+          "description": "country of the location",
+          "title": "Country",
+          "readOnly": true
+        },
+        "locale": {
+          "type": "string",
+          "description": "locale of the location",
+          "title": "Locale",
+          "readOnly": true
+        },
+        "latitude": {
+          "type": "string",
+          "description": "Latitude of the location",
+          "title": "Latitude",
+          "readOnly": true
+        },
+        "longitude": {
+          "type": "string",
+          "description": "Longitude of the location",
+          "title": "Longitude",
+          "readOnly": true
+        },
+        "countryCode": {
+          "type": "string",
+          "description": "CountryCode of the location",
+          "title": "CountryCode",
+          "readOnly": true
+        },
+        "stateCode": {
+          "type": "string",
+          "description": "StateCode of the location",
+          "title": "StateCode",
+          "readOnly": true
+        }
+      }
+    },
+    "v3ParalusConditionStatus": {
+      "type": "string",
+      "enum": [
+        "NotSet",
+        "Pending",
+        "InProgress",
+        "Success",
+        "Failed",
+        "Retry",
+        "Skipped",
+        "Stopped",
+        "Expired",
+        "Stopping",
+        "Submitted"
+      ],
+      "default": "NotSet",
+      "title": "ParalusConditionStatus is the status of the status condition"
+    },
+    "v3ProjectCluster": {
+      "type": "object",
+      "properties": {
+        "projectID": {
+          "type": "string",
+          "description": "Project ID associated with the cluster",
+          "title": "Project ID"
+        },
+        "clusterID": {
+          "type": "string",
+          "description": "Cluster ID associated with the project",
+          "title": "Cluster ID"
+        }
+      }
+    },
+    "v3ProvisionParams": {
+      "type": "object",
+      "properties": {
+        "environmentProvider": {
+          "type": "string",
+          "description": "environment provider of the cluster",
+          "title": "EnvironmentProvider"
+        },
+        "kubernetesProvider": {
+          "type": "string",
+          "description": "kubernetes provider",
+          "title": "KubernetesProvider"
+        },
+        "provisionEnvironment": {
+          "type": "string",
+          "description": "provision environment",
+          "title": "ProvisionEnvironment"
+        },
+        "provisionPackageType": {
+          "type": "string",
+          "description": "provision package type",
+          "title": "ProvisionPackageType"
+        },
+        "provisionType": {
+          "type": "string",
+          "description": "provision type",
+          "title": "ProvisionType"
+        },
+        "state": {
+          "type": "string",
+          "description": "state",
+          "title": "State"
+        }
+      }
+    },
+    "v3ProxyConfig": {
+      "type": "object",
+      "properties": {
+        "httpProxy": {
+          "type": "string",
+          "description": "http proxy",
+          "title": "HttpProxy"
+        },
+        "httpsProxy": {
+          "type": "string",
+          "description": "https proxy",
+          "title": "HttpsProxy"
+        },
+        "noProxy": {
+          "type": "string",
+          "description": "noproxy",
+          "title": "noproxy"
+        },
+        "proxyAuth": {
+          "type": "string",
+          "description": "proxy auth",
+          "title": "ProxyAuth"
+        },
+        "allowInsecureBootstrap": {
+          "type": "boolean",
+          "description": "Allow insecure bootstrap",
+          "title": "AllowInsecureBootstrap"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "enabled",
+          "title": "Enabled"
+        },
+        "bootstrapCA": {
+          "type": "string",
+          "description": "Certificate Authority of bootstrap server",
+          "title": "BootstrapCA"
+        }
+      }
+    },
+    "v3Resources": {
+      "type": "object",
+      "properties": {
+        "cpuCount": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ephemeralStorageKB": {
+          "type": "string",
+          "format": "int64"
+        },
+        "memoryKB": {
+          "type": "string",
+          "format": "int64"
+        },
+        "podsCount": {
+          "type": "string",
+          "format": "int64"
+        },
+        "gpuCount": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "X-PARALUS-API-KEYID",
+      "in": "header"
+    },
+    "BasicAuth": {
+      "type": "basic"
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": [],
+      "BasicAuth": []
+    }
+  ]
+}
