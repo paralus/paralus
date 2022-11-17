@@ -19,7 +19,7 @@ jobs:
         uses: pjoc-team/swagger-ui-action@v0.0.2
         with:
           dir: './gen/openapi'
-          pattern: '*/*swagger.json'
+          pattern: '*swagger.json'
           debug: 'true'
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
