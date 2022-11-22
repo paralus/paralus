@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/paralus/paralus/internal/models"
+	"github.com/paralus/paralus/pkg/audit"
 	"github.com/paralus/paralus/pkg/query"
 	"github.com/uptrace/bun"
 )
@@ -19,7 +20,7 @@ func GetAuditLogAggregations(ctx context.Context, db *bun.DB, tag, field string,
 		sq.ColumnExpr("data->>'type' as key").
 			Where("tag = ?", tag).GroupExpr("data->>'type'")
 	case "username":
-		if tag != "kubectl_api" {
+		if tag != audit.KUBECTL_API {
 			sq.ColumnExpr("data->'actor'->'account'->>'username' as key").
 				Where("tag = ?", tag).GroupExpr("data->'actor'->'account'->>'username'")
 		} else {
@@ -45,9 +46,9 @@ func GetAuditLogAggregations(ctx context.Context, db *bun.DB, tag, field string,
 
 	// add filters
 	switch tag {
-	case "kubectl_api":
+	case audit.KUBECTL_API:
 		sq = buildRelayAuditQuery(sq, filters)
-	case "system", "kubectl_cmd":
+	case audit.SYSTEM, audit.KUBECTL_CMD:
 		sq = buildQuery(sq, filters)
 	}
 
@@ -61,9 +62,9 @@ func GetAuditLogs(ctx context.Context, db *bun.DB, tag string, filters query.Que
 		Where("tag = ?", tag)
 
 	switch tag {
-	case "kubectl_api":
+	case audit.KUBECTL_API:
 		sq = buildRelayAuditQuery(sq, filters)
-	case "system", "kubectl_cmd":
+	case audit.SYSTEM, audit.KUBECTL_CMD:
 		sq = buildQuery(sq, filters)
 	}
 

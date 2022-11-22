@@ -365,9 +365,9 @@ func setup() {
 	gps = service.NewGroupPermissionService(db)
 
 	switch auditLogStorage {
-	case "database":
+	case audit.DATABASE:
 		// audit services
-		aus, err = service.NewAuditLogDatabaseService(db, "system")
+		aus, err = service.NewAuditLogDatabaseService(db, audit.SYSTEM)
 		if err != nil {
 			if dev && strings.Contains(err.Error(), "connect: connection refused") {
 				// This is primarily from ES not being available. ES being
@@ -379,7 +379,7 @@ func setup() {
 				_log.Fatalw("unable to create auditLog service", "error", err)
 			}
 		}
-		ras, err = service.NewRelayAuditDatabaseService(db, "kubectl_api")
+		ras, err = service.NewRelayAuditDatabaseService(db, audit.KUBECTL_API)
 		if err != nil {
 			if dev && strings.Contains(err.Error(), "connect: connection refused") {
 				_log.Warn("unable to create relayAudit service: ", err)
@@ -387,7 +387,7 @@ func setup() {
 				_log.Fatalw("unable to create relayAudit service", "error", err)
 			}
 		}
-		rcs, err = service.NewAuditLogDatabaseService(db, "kubectl_cmd")
+		rcs, err = service.NewAuditLogDatabaseService(db, audit.KUBECTL_CMD)
 		if err != nil {
 			if dev && strings.Contains(err.Error(), "connect: connection refused") {
 				_log.Warn("unable to create auditLog service:", err)
@@ -395,7 +395,7 @@ func setup() {
 				_log.Fatalw("unable to create auditLog service", "error", err)
 			}
 		}
-	case "elasticsearch":
+	case audit.ELASTICSEARCH:
 		// audit services
 		aus, err = service.NewAuditLogElasticSearchService(elasticSearchUrl, esIndexPrefix+"-*", "AuditLog API: ")
 		if err != nil {
@@ -426,7 +426,7 @@ func setup() {
 			}
 		}
 	default:
-
+		_log.Warn("unable to create audit log service: invalid storage option ! should be either %s or %s", audit.DATABASE, audit.ELASTICSEARCH)
 	}
 
 	// cluster bootstrap

@@ -88,7 +88,10 @@ func (ra *relayAuditDatabaseService) GetRelayAuditByProjects(req *v1.RelayAuditR
 	}
 
 	var resMap map[string]interface{}
-	data, _ := json.Marshal(response)
+	data, err := json.Marshal(response)
+	if err != nil {
+		return nil, err
+	}
 	json.Unmarshal(data, &resMap)
 
 	result, _ := structpb.NewStruct(resMap)

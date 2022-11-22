@@ -91,8 +91,14 @@ func (a *auditLogDatabaseService) GetAuditLogByProjects(req *v1.GetAuditLogSearc
 	}
 
 	var resMap map[string]interface{}
-	data, _ := json.Marshal(response)
-	json.Unmarshal(data, &resMap)
+	data, err := json.Marshal(response)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(data, &resMap)
+	if err != nil {
+		return nil, err
+	}
 
 	result, _ := structpb.NewStruct(resMap)
 	res = &v1.GetAuditLogSearchResponse{
