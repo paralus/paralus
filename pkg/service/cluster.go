@@ -477,6 +477,7 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 
 func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (*infrav3.Cluster, error) {
 
+	projectName := cluster.Metadata.Project
 	var errormsg string
 
 	if cluster.Metadata.Name == "" {
@@ -598,7 +599,7 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 		h.OnChange(ev)
 	}*/
 
-	CreateClusterAuditEvent(ctx, s.al, AuditActionUpdate, cluster.GetMetadata().GetName(), cdb.ID, cluster.Metadata.Project)
+	CreateClusterAuditEvent(ctx, s.al, AuditActionUpdate, cluster.GetMetadata().GetName(), cdb.ID, projectName)
 
 	return cluster, nil
 }

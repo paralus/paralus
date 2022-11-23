@@ -41,6 +41,7 @@ func buildDataSource(logs []models.AuditLog) (ds []*auditv1.DataSource) {
 	for _, log := range logs {
 		data := &auditv1.Data{}
 		json.Unmarshal(log.Data, data)
+		data.Timestamp = log.Time.String()
 		ds = append(ds, &auditv1.DataSource{
 			XSource: &auditv1.DataSourceJSON{
 				Json: data,

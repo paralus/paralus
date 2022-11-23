@@ -70,16 +70,16 @@ func testGetAuditLogForLastHour(tag string) func(t *testing.T) {
 			},
 		}
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (to_timestamp(data->>'timestamp', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now())`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now())`)).
 			WillReturnRows(sqlmock.NewRows([]string{"tag", "time", "data"}).AddRow("system", time.Now(), auditrecord))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'project' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (to_timestamp(data->>'timestamp', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'project'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'project' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'project'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "cluster"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->'actor'->'account'->>'username' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (to_timestamp(data->>'timestamp', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->'actor'->'account'->>'username'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->'actor'->'account'->>'username' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->'actor'->'account'->>'username'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "username"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'type' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (to_timestamp(data->>'timestamp', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'type'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'type' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'type'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "type"))
 
 		res, err := as.GetAuditLogByProjects(req)
@@ -127,16 +127,16 @@ func testGetAuditLogForDay(tag string) func(t *testing.T) {
 			},
 		}
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (to_timestamp(data->>'timestamp', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now())`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now())`)).
 			WillReturnRows(sqlmock.NewRows([]string{"tag", "time", "data"}).AddRow(tag, time.Now(), auditrecord).AddRow(tag, time.Now(), auditrecordtwo))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'project' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (to_timestamp(data->>'timestamp', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'project'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'project' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'project'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "project"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->'actor'->'account'->>'username' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (to_timestamp(data->>'timestamp', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->'actor'->'account'->>'username'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->'actor'->'account'->>'username' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->'actor'->'account'->>'username'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "username"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'type' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (to_timestamp(data->>'timestamp', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'type'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'type' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'type'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "type"))
 
 		res, err := as.GetAuditLog(req)
@@ -184,16 +184,16 @@ func testGetKubectlCommands(tag string) func(t *testing.T) {
 			},
 		}
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (to_timestamp(data->>'timestamp', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now())`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now())`)).
 			WillReturnRows(sqlmock.NewRows([]string{"tag", "time", "data"}).AddRow(tag, time.Now(), auditrecord).AddRow(tag, time.Now(), auditrecordtwo))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'project' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (to_timestamp(data->>'timestamp', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'project'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'project' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'project'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "project"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->'actor'->'account'->>'username' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (to_timestamp(data->>'timestamp', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->'actor'->'account'->>'username'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->'actor'->'account'->>'username' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->'actor'->'account'->>'username'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "username"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'type' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (to_timestamp(data->>'timestamp', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'type'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'type' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'type'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "type"))
 
 		res, err := as.GetAuditLog(req)

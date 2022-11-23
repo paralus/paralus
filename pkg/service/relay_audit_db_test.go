@@ -64,22 +64,22 @@ func testGetRelayAuditLogForCluster(tag string) func(t *testing.T) {
 			},
 		}
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (to_timestamp(data->>'ts', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now())`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now())`)).
 			WillReturnRows(sqlmock.NewRows([]string{"tag", "time", "data"}).AddRow(tag, time.Now(), auditrecord))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'cn' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (to_timestamp(data->>'ts', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'cn'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'cn' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'cn'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "cluster"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'un' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (to_timestamp(data->>'ts', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'un'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'un' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'un'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "username"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'n' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (to_timestamp(data->>'ts', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'n'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'n' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'n'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "namespace"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'k' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (to_timestamp(data->>'ts', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'k'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'k' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'k'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "kind"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'m' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (to_timestamp(data->>'ts', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'m'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'m' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'m'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "method"))
 
 		res, err := ras.GetRelayAudit(req)
@@ -128,22 +128,22 @@ func testGetRelayAuditLogForKind(tag string) func(t *testing.T) {
 			},
 		}
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (to_timestamp(data->>'ts', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now())`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now())`)).
 			WillReturnRows(sqlmock.NewRows([]string{"tag", "time", "data"}).AddRow(tag, time.Now(), auditrecord).AddRow(tag, time.Now(), auditrecordtwo))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'cn' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (to_timestamp(data->>'ts', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'cn'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'cn' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'cn'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "cluster"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'un' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (to_timestamp(data->>'ts', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'un'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'un' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'un'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "username"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'n' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (to_timestamp(data->>'ts', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'n'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'n' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'n'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "namespace"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'k' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (to_timestamp(data->>'ts', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'k'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'k' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'k'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "kind"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'m' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (to_timestamp(data->>'ts', 'YYYY-MM-DD"T"HH:MI:SS') between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'m'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'m' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'m'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "method"))
 
 		res, err := as.GetRelayAudit(req)

@@ -92,7 +92,7 @@ func buildRelayAuditQuery(query *bun.SelectQuery, filters query.QueryFilters) *b
 	}
 	if filters.GetTimefrom() != "" {
 		diff := strings.Split(filters.GetTimefrom(), "-")[1]
-		query.Where("to_timestamp(data->>'ts', 'YYYY-MM-DD\"T\"HH:MI:SS') between now() - interval ? and now()", diff)
+		query.Where("time between now() - interval ? and now()", diff)
 	}
 	return query
 }
@@ -118,7 +118,7 @@ func buildQuery(query *bun.SelectQuery, filters query.QueryFilters) *bun.SelectQ
 
 	if filters.GetTimefrom() != "" {
 		diff := strings.Split(filters.GetTimefrom(), "-")[1]
-		query.Where("to_timestamp(data->>'timestamp', 'YYYY-MM-DD\"T\"HH:MI:SS') between now() - interval ? and now()", diff)
+		query.Where("time between now() - interval ? and now()", diff)
 	}
 
 	return query
