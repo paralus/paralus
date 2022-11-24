@@ -67,8 +67,7 @@ func GetAuditLogs(ctx context.Context, db *bun.DB, tag string, filters query.Que
 	case audit.SYSTEM, audit.KUBECTL_CMD:
 		sq = buildQuery(sq, filters)
 	}
-
-	err := sq.Scan(ctx)
+	err := sq.Order("time desc").Scan(ctx)
 	return logs, err
 }
 
