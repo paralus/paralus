@@ -1,0 +1,98 @@
+syntax = "proto3";
+package paralus.dev.types.audit.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message AuditResponse {
+    Aggregations aggregations = 1;
+    Hits hits = 2;
+}
+
+message Aggregations {
+    AggregatorGroup group_by_type = 1;
+    AggregatorGroup group_by_username = 2;
+    AggregatorGroup group_by_cluster = 3;
+    AggregatorGroup group_by_kind = 4;
+    AggregatorGroup group_by_method = 5;
+    AggregatorGroup group_by_namespace = 6;
+}
+
+message AggregatorGroup {
+    repeated GroupByType buckets = 1;
+}
+
+message GroupByType {
+    int32 doc_count = 1;
+    string key = 2;
+}
+
+message DataSourceJSON {
+    Data json = 1;
+}
+
+message DataSource {
+    DataSourceJSON _source = 1;
+}
+
+message Hits {
+    repeated DataSource hits = 1;    
+}
+
+message Data {
+    Actor actor = 1;
+    string category = 2;
+    Client client = 3;
+    Detail detail = 4;
+    string origin = 5;
+    string portal = 6;
+    string project = 7;
+    string timestamp = 8;
+    string type = 9;
+    string version = 10;
+
+    // below are for kubectl api, attribute names are maintained as below for consistency with es. need to be refactored to be more meaningful.
+    string av = 11;
+    string cn = 12;
+    double d = 13;
+    string id = 14;
+    string k = 15;
+    string m = 16;
+    string n = 17;
+    string ns = 18;
+    string o = 19;
+    string p = 20;
+    string q = 21;
+    string ra = 22;
+    int32 sc = 23;
+    string st = 24;
+    string ts = 25;
+    string un = 26;
+    string url = 27;
+    int32 w = 28;
+}
+
+message Actor {
+    Account account = 1;
+    repeated string groups = 2;
+    string type = 3;
+}
+
+message Account {
+    string username = 1;
+}
+
+message Client {
+    string host = 1;
+    string ip = 2;
+    string type = 3;
+    string user_agent = 4;
+}
+
+message Detail {
+    string message = 1;
+    DetailMeta meta = 2;
+}
+
+message DetailMeta {
+    string cluster_name = 1;
+}
