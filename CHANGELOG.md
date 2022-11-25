@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## [0.1.8] - 2022-11-25
+
+## Added
+
 - Added database auditlog storage option [niravparikh05](https://github.com/niravparikh05)
 
 ## [0.1.7] - 2022-11-04
@@ -56,7 +60,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Initial release
 
-[Unreleased]: https://github.com/paralus/paralus/compare/v0.1.7...HEAD
+[Unreleased]: https://github.com/paralus/paralus/compare/v0.1.8...HEAD
+[0.1.8]: https://github.com/paralus/paralus/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/paralus/paralus/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/paralus/paralus/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/paralus/paralus/compare/v0.1.4...v0.1.5
