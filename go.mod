@@ -11,7 +11,7 @@ require (
 	github.com/cloudflare/cfssl v0.0.0-20190726000631-633726f6bcb7
 	github.com/crewjam/saml v0.4.6
 	github.com/dgraph-io/ristretto v0.1.0
-	github.com/elastic/go-elasticsearch v0.0.0
+	github.com/elastic/go-elasticsearch/v6 v6.8.10
 	github.com/evanphx/json-patch v4.12.0+incompatible
 	github.com/go-openapi/errors v0.20.2
 	github.com/go-openapi/runtime v0.23.1

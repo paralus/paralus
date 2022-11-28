@@ -25,7 +25,7 @@ services:
       - xpack.security.enabled=false  # disable auth for local dev
 
   kratos-migrate:
-    image: oryd/kratos:v0.8.0-alpha.3-sqlite
+    image: oryd/kratos:v0.10.1
     environment:
       - DSN=postgres://$DB_USER:$DB_PASSWORD@postgresd:$DB_PORT/$DB_NAME?sslmode=disable&max_conns=20&max_idle_conns=4
     volumes:
@@ -50,7 +50,7 @@ services:
   kratos:
     depends_on:
       - kratos-migrate
-    image: oryd/kratos:v0.8.0-alpha.3-sqlite
+    image: oryd/kratos:v0.10.1
     ports:
       - '4433:4433' # public
       - '4434:4434' # admin
