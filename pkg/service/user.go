@@ -420,6 +420,7 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 		"email":      user.GetMetadata().GetName(), // can be just username for API access
 		"first_name": user.GetSpec().GetFirstName(),
 		"last_name":  user.GetSpec().GetLastName(),
+		"password":   user.GetSpec().GetPassword(),
 	})
 	if err != nil {
 		return &userv3.User{}, err
@@ -450,13 +451,6 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 		_log.Warn("unable to commit changes", err)
 		return &userv3.User{}, err
 	}
-
-	rl, err := s.ap.GetRecoveryLink(ctx, id)
-	if err != nil {
-		_log.Warn("unable to generate recovery url", err)
-		return &userv3.User{}, err
-	}
-	user.Spec.RecoveryUrl = &rl
 
 	CreateUserAuditEvent(ctx, s.al, s.db, AuditActionCreate, user.GetMetadata().GetName(), uid, []uuid.UUID{}, rolesAfter, []uuid.UUID{}, groupsAfter)
 	return user, nil

@@ -24,6 +24,7 @@ import (
 	rolev3 "github.com/paralus/paralus/proto/types/rolepb/v3"
 	systemv3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	userv3 "github.com/paralus/paralus/proto/types/userpb/v3"
+	"github.com/rs/xid"
 	"github.com/spf13/viper"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -304,6 +305,7 @@ retry:
 		Spec: &userv3.UserSpec{
 			FirstName:             *oafn,
 			LastName:              *oaln,
+			Password:              xid.New().String(),
 			Groups:                []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
 			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Role: "ADMIN", Group: &admingrp.Metadata.Name}}},
 	})
@@ -319,5 +321,5 @@ retry:
 		goto retry
 	}
 
-	fmt.Println("Org Admin signup URL: ", *orgA.Spec.RecoveryUrl)
+	fmt.Println("Org Admin User Password:", orgA.Spec.GetPassword())
 }
