@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	v6Client "github.com/elastic/go-elasticsearch"
+	v6Client "github.com/elastic/go-elasticsearch/v6"
 )
 
 type elasticSearchQuery struct {
