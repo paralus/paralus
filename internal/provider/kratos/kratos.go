@@ -36,7 +36,7 @@ func (k *kratosAuthProvider) Create(ctx context.Context, traits map[string]inter
 }
 
 func (k *kratosAuthProvider) Update(ctx context.Context, id string, traits map[string]interface{}) error {
-	uib := kclient.NewAdminUpdateIdentityBody("active", traits)
+	uib := kclient.NewAdminUpdateIdentityBody("default", "active", traits)
 	_, hr, err := k.kc.V0alpha2Api.AdminUpdateIdentity(ctx, id).AdminUpdateIdentityBody(*uib).Execute()
 	if err != nil {
 		fmt.Println(hr)
