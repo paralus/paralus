@@ -12,7 +12,7 @@ type kratosAuthProvider struct {
 }
 type AuthProvider interface {
 	// create new user
-	Create(context.Context, map[string]interface{}) (string, error) // returns id,error
+	Create(context.Context, string, map[string]interface{}) (string, error) // returns id,error
 	// update user
 	Update(context.Context, string, map[string]interface{}) error
 	// get recovery link for user
@@ -25,8 +25,13 @@ func NewKratosAuthProvider(kc *kclient.APIClient) AuthProvider {
 	return &kratosAuthProvider{kc: kc}
 }
 
-func (k *kratosAuthProvider) Create(ctx context.Context, traits map[string]interface{}) (string, error) {
+func (k *kratosAuthProvider) Create(ctx context.Context, password string, traits map[string]interface{}) (string, error) {
 	cib := kclient.NewAdminCreateIdentityBody("default", traits)
+	cib.Credentials.SetPassword(kclient.AdminCreateIdentityImportCredentialsPassword{
+		Config: &kclient.AdminCreateIdentityImportCredentialsPasswordConfig{
+			Password: kclient.PtrString(password),
+		},
+	})
 	ir, hr, err := k.kc.V0alpha2Api.AdminCreateIdentity(ctx).AdminCreateIdentityBody(*cib).Execute()
 	if err != nil {
 		fmt.Println(hr)
