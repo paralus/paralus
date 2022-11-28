@@ -13,6 +13,9 @@ All notable changes to this project will be documented in this file.
 - Fix modify userinfo service to include scope in response [mabhi](https://github.com/mabhi)
 - Kubectl commands work even after deleting an imported cluster from [mabhi](https://github.com/mabhi) and [niravparikh05](https://github.com/niravparikh05)
 
+## Changed
+- Upgraded Ory Kratos to v0.10.1 [akshay196](https://github.com/akshay196)
+
 ## [0.1.8] - 2022-11-25
 
 ## Added
