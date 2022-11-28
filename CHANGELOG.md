@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## Changed
+- Upgraded Ory Kratos to v0.10.1 [akshay196](https://github.com/akshay196)
+
 ## [0.1.8] - 2022-11-25
 
 ## Added
