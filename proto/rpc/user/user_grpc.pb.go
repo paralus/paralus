@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
+	AuditLogWebhook(ctx context.Context, in *AuditWebhook, opts ...grpc.CallOption) (*AuditWebhook, error)
 	CreateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
 	GetUsers(ctx context.Context, in *v31.QueryOptions, opts ...grpc.CallOption) (*v3.UserList, error)
 	GetUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
@@ -42,6 +43,15 @@ type userServiceClient struct {
 
 func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
+}
+
+func (c *userServiceClient) AuditLogWebhook(ctx context.Context, in *AuditWebhook, opts ...grpc.CallOption) (*AuditWebhook, error) {
+	out := new(AuditWebhook)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.UserService/AuditLogWebhook", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *userServiceClient) CreateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error) {
@@ -138,6 +148,7 @@ func (c *userServiceClient) UserForgotPassword(ctx context.Context, in *UserForg
 // All implementations should embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
+	AuditLogWebhook(context.Context, *AuditWebhook) (*AuditWebhook, error)
 	CreateUser(context.Context, *v3.User) (*v3.User, error)
 	GetUsers(context.Context, *v31.QueryOptions) (*v3.UserList, error)
 	GetUser(context.Context, *v3.User) (*v3.User, error)
@@ -154,6 +165,9 @@ type UserServiceServer interface {
 type UnimplementedUserServiceServer struct {
 }
 
+func (UnimplementedUserServiceServer) AuditLogWebhook(context.Context, *AuditWebhook) (*AuditWebhook, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AuditLogWebhook not implemented")
+}
 func (UnimplementedUserServiceServer) CreateUser(context.Context, *v3.User) (*v3.User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
@@ -194,6 +208,24 @@ type UnsafeUserServiceServer interface {
 
 func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
 	s.RegisterService(&UserService_ServiceDesc, srv)
+}
+
+func _UserService_AuditLogWebhook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuditWebhook)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AuditLogWebhook(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/paralus.dev.rpc.user.v3.UserService/AuditLogWebhook",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AuditLogWebhook(ctx, req.(*AuditWebhook))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _UserService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -383,6 +415,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "paralus.dev.rpc.user.v3.UserService",
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "AuditLogWebhook",
+			Handler:    _UserService_AuditLogWebhook_Handler,
+		},
 		{
 			MethodName: "CreateUser",
 			Handler:    _UserService_CreateUser_Handler,

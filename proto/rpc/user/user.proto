@@ -75,8 +75,18 @@ message UserForgotPasswordResponse { string recoveryLink = 1; }
 
 message UserDeleteApiKeysResponse {}
 message CliConfigRequest {}
+message AuditWebhook {}
 
-service UserService {
+service UserService { 
+
+  rpc AuditLogWebhook(AuditWebhook)
+      returns (AuditWebhook) {
+    option (google.api.http) = {
+      post : "/userauditlog"
+      body : "*"    
+    }; 
+  };
+
   rpc CreateUser(paralus.dev.types.user.v3.User)
       returns (paralus.dev.types.user.v3.User) {
     option (google.api.http) = {

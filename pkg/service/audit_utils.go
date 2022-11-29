@@ -480,3 +480,22 @@ func CreateLocationAuditEvent(ctx context.Context, al *zap.Logger, action string
 		_log.Warn("unable to create audit event", err)
 	}
 }
+
+func UserLoginAuditEvent(ctx context.Context, al *zap.Logger, action string, name string) {
+	sd, ok := GetSessionDataFromContext(ctx)
+	if !ok {
+		_log.Warn("unable to create audit event: could not fetch info from context")
+		return
+	}
+
+	detail := &audit.EventDetail{
+		Message: fmt.Sprintf("User login: %s", name),
+		Meta: map[string]string{
+			"user": name,
+		},
+	}
+	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("user.%s.success", action), ""); err != nil {
+		_log.Warn("unable to create audit event", err)
+	}
+
+}

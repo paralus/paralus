@@ -15,7 +15,7 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
-	rolev3_0 "github.com/paralus/paralus/proto/types/rolepb/v3"
+	"github.com/paralus/paralus/proto/types/rolepb/v3"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
@@ -33,7 +33,7 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 func request_RoleService_CreateRole_0(ctx context.Context, marshaler runtime.Marshaler, client RoleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq rolev3_0.Role
+	var protoReq rolev3.Role
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -77,7 +77,7 @@ func request_RoleService_CreateRole_0(ctx context.Context, marshaler runtime.Mar
 }
 
 func local_request_RoleService_CreateRole_0(ctx context.Context, marshaler runtime.Marshaler, server RoleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq rolev3_0.Role
+	var protoReq rolev3.Role
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -125,7 +125,7 @@ var (
 )
 
 func request_RoleService_GetRoles_0(ctx context.Context, marshaler runtime.Marshaler, client RoleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq rolev3_0.Role
+	var protoReq rolev3.Role
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -168,7 +168,7 @@ func request_RoleService_GetRoles_0(ctx context.Context, marshaler runtime.Marsh
 }
 
 func local_request_RoleService_GetRoles_0(ctx context.Context, marshaler runtime.Marshaler, server RoleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq rolev3_0.Role
+	var protoReq rolev3.Role
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -215,7 +215,7 @@ var (
 )
 
 func request_RoleService_GetRole_0(ctx context.Context, marshaler runtime.Marshaler, client RoleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq rolev3_0.Role
+	var protoReq rolev3.Role
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -268,7 +268,7 @@ func request_RoleService_GetRole_0(ctx context.Context, marshaler runtime.Marsha
 }
 
 func local_request_RoleService_GetRole_0(ctx context.Context, marshaler runtime.Marshaler, server RoleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq rolev3_0.Role
+	var protoReq rolev3.Role
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -321,7 +321,7 @@ func local_request_RoleService_GetRole_0(ctx context.Context, marshaler runtime.
 }
 
 func request_RoleService_UpdateRole_0(ctx context.Context, marshaler runtime.Marshaler, client RoleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq rolev3_0.Role
+	var protoReq rolev3.Role
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -375,7 +375,7 @@ func request_RoleService_UpdateRole_0(ctx context.Context, marshaler runtime.Mar
 }
 
 func local_request_RoleService_UpdateRole_0(ctx context.Context, marshaler runtime.Marshaler, server RoleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq rolev3_0.Role
+	var protoReq rolev3.Role
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -433,7 +433,7 @@ var (
 )
 
 func request_RoleService_DeleteRole_0(ctx context.Context, marshaler runtime.Marshaler, client RoleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq rolev3_0.Role
+	var protoReq rolev3.Role
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -486,7 +486,7 @@ func request_RoleService_DeleteRole_0(ctx context.Context, marshaler runtime.Mar
 }
 
 func local_request_RoleService_DeleteRole_0(ctx context.Context, marshaler runtime.Marshaler, server RoleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq rolev3_0.Role
+	var protoReq rolev3.Role
 	var metadata runtime.ServerMetadata
 
 	var (

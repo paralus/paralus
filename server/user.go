@@ -113,3 +113,7 @@ func (s *userServer) UserForgotPassword(ctx context.Context, req *rpcv3.UserForg
 	return s.us.ForgotPassword(ctx, req)
 
 }
+
+func (s *userServer) AuditLogWebhook(ctx context.Context, req *rpcv3.AuditWebhook) (*rpcv3.AuditWebhook, error) {
+	return s.us.AuditLogWebhook(ctx, req)
+}

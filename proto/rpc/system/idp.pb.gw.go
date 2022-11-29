@@ -15,7 +15,7 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
-	"github.com/paralus/paralus/proto/types/systempb/v3"
+	systemv3_0 "github.com/paralus/paralus/proto/types/systempb/v3"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
@@ -34,7 +34,7 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 func request_IdpService_CreateIdp_0(ctx context.Context, marshaler runtime.Marshaler, client IdpServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3.Idp
+	var protoReq systemv3_0.Idp
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -51,7 +51,7 @@ func request_IdpService_CreateIdp_0(ctx context.Context, marshaler runtime.Marsh
 }
 
 func local_request_IdpService_CreateIdp_0(ctx context.Context, marshaler runtime.Marshaler, server IdpServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3.Idp
+	var protoReq systemv3_0.Idp
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -72,7 +72,7 @@ var (
 )
 
 func request_IdpService_GetIdp_0(ctx context.Context, marshaler runtime.Marshaler, client IdpServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3.Idp
+	var protoReq systemv3_0.Idp
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -105,7 +105,7 @@ func request_IdpService_GetIdp_0(ctx context.Context, marshaler runtime.Marshale
 }
 
 func local_request_IdpService_GetIdp_0(ctx context.Context, marshaler runtime.Marshaler, server IdpServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3.Idp
+	var protoReq systemv3_0.Idp
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -156,7 +156,7 @@ func local_request_IdpService_ListIdps_0(ctx context.Context, marshaler runtime.
 }
 
 func request_IdpService_UpdateIdp_0(ctx context.Context, marshaler runtime.Marshaler, client IdpServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3.Idp
+	var protoReq systemv3_0.Idp
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -190,7 +190,7 @@ func request_IdpService_UpdateIdp_0(ctx context.Context, marshaler runtime.Marsh
 }
 
 func local_request_IdpService_UpdateIdp_0(ctx context.Context, marshaler runtime.Marshaler, server IdpServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3.Idp
+	var protoReq systemv3_0.Idp
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -228,7 +228,7 @@ var (
 )
 
 func request_IdpService_DeleteIdp_0(ctx context.Context, marshaler runtime.Marshaler, client IdpServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3.Idp
+	var protoReq systemv3_0.Idp
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -261,7 +261,7 @@ func request_IdpService_DeleteIdp_0(ctx context.Context, marshaler runtime.Marsh
 }
 
 func local_request_IdpService_DeleteIdp_0(ctx context.Context, marshaler runtime.Marshaler, server IdpServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3.Idp
+	var protoReq systemv3_0.Idp
 	var metadata runtime.ServerMetadata
 
 	var (

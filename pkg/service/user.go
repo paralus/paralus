@@ -52,6 +52,8 @@ type UserService interface {
 	UpdateIdpUserGroupPolicy(context.Context, string, string, string) error
 	// Generate recovery link for users
 	ForgotPassword(context.Context, *userrpcv3.UserForgotPasswordRequest) (*userrpcv3.UserForgotPasswordResponse, error)
+	// Generate auditLog event
+	AuditLogWebhook(context.Context, *userrpcv3.AuditWebhook) (*userrpcv3.AuditWebhook, error)
 }
 
 type userService struct {
@@ -1078,4 +1080,11 @@ func (s *userService) getUserLastLogin(ctx context.Context, userId uuid.UUID) (s
 		lastLogin = authTime.Format(time.RFC3339)
 	}
 	return lastLogin, nil
+}
+
+func (s *userService) AuditLogWebhook(ctx context.Context, req *userrpcv3.AuditWebhook) (*userrpcv3.AuditWebhook, error) {
+
+	UserLoginAuditEvent(ctx, s.al, "login", "username")
+
+	return &userrpcv3.AuditWebhook{}, fmt.Errorf("unable to create login audit event")
 }
