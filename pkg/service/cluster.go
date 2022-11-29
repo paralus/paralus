@@ -635,7 +635,7 @@ func (s *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) e
 
 	//TODO
 	in := &sentryrpc.GetForClusterRequest{
-		Namespace: "paralus-system",
+		Namespace:  "paralus-system",
 		SystemUser: false,
 	}
 	kss := NewKubeconfigSettingService(s.db)
@@ -673,10 +673,6 @@ func (s *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) e
 	}
 	return nil
 
-}
-
-func DeleteRelayAgent() {
-	panic("unimplemented")
 }
 
 func (cs *clusterService) deleteCluster(ctx context.Context, clusterId, projectId string) error {
