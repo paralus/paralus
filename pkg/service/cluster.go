@@ -23,7 +23,11 @@ import (
 	"github.com/paralus/paralus/pkg/log"
 	"github.com/paralus/paralus/pkg/patch"
 	"github.com/paralus/paralus/pkg/query"
+	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
+	"github.com/paralus/paralus/pkg/sentry/kubeconfig"
 	sentryutil "github.com/paralus/paralus/pkg/sentry/util"
+	"github.com/paralus/paralus/pkg/utils"
+	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
 	"github.com/paralus/paralus/proto/types/sentry"
@@ -625,6 +629,23 @@ func (s *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) e
 
 	_log.Infow("deleting cluster", "name", cluster.Metadata.Name)
 
+	if err != nil {
+		return err
+	}
+
+	//TODO
+	in := &sentryrpc.GetForClusterRequest{
+		Namespace: "paralus-system",
+		SystemUser: false,
+	}
+	kss := NewKubeconfigSettingService(s.db)
+	var pf cryptoutil.PasswordFunc
+	config, err := kubeconfig.GetConfigForCluster(ctx, s.bs, in, pf, kss, kubeconfig.ParalusSystem)
+
+	status := utils.DeleteRelayAgent(config, "paralus-system")
+
+	_log.Infow("deleting relay Agent in Cluster Status: ", status)
+
 	_log.Debugw("setting cluster condition to pending delete", "name", cluster.Metadata.Name, "conditions", cluster.Spec.ClusterData.ClusterStatus.Conditions)
 	clstrutil.SetClusterCondition(cluster, clstrutil.NewClusterDelete(constants.Pending, "deleted"))
 
@@ -652,6 +673,10 @@ func (s *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) e
 	}
 	return nil
 
+}
+
+func DeleteRelayAgent() {
+	panic("unimplemented")
 }
 
 func (cs *clusterService) deleteCluster(ctx context.Context, clusterId, projectId string) error {
