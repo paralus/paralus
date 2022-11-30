@@ -53,7 +53,7 @@ type UserService interface {
 	// Generate recovery link for users
 	ForgotPassword(context.Context, *userrpcv3.UserForgotPasswordRequest) (*userrpcv3.UserForgotPasswordResponse, error)
 	// Generate auditLog event
-	AuditLogWebhook(context.Context, *userrpcv3.AuditWebhook) (*userrpcv3.AuditWebhook, error)
+	CreateLoginAuditLog(context.Context, *userrpcv3.UserLoginAuditRequest) (*userrpcv3.UserLoginAuditResponse, error)
 }
 
 type userService struct {
@@ -1082,9 +1082,9 @@ func (s *userService) getUserLastLogin(ctx context.Context, userId uuid.UUID) (s
 	return lastLogin, nil
 }
 
-func (s *userService) AuditLogWebhook(ctx context.Context, req *userrpcv3.AuditWebhook) (*userrpcv3.AuditWebhook, error) {
+func (s *userService) CreateLoginAuditLog(ctx context.Context, req *userrpcv3.UserLoginAuditRequest) (*userrpcv3.UserLoginAuditResponse, error) {
 
-	UserLoginAuditEvent(ctx, s.al, "login", "username")
+	CreateUserLoginAuditEvent(ctx, s.al, "login", "username")
 
-	return &userrpcv3.AuditWebhook{}, fmt.Errorf("unable to create login audit event")
+	return &userrpcv3.UserLoginAuditResponse{}, fmt.Errorf("unable to create login audit event")
 }

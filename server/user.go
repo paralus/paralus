@@ -114,6 +114,6 @@ func (s *userServer) UserForgotPassword(ctx context.Context, req *rpcv3.UserForg
 
 }
 
-func (s *userServer) AuditLogWebhook(ctx context.Context, req *rpcv3.AuditWebhook) (*rpcv3.AuditWebhook, error) {
-	return s.us.AuditLogWebhook(ctx, req)
+func (s *userServer) AuditLogWebhook(ctx context.Context, req *rpcv3.UserLoginAuditRequest) (*rpcv3.UserLoginAuditResponse, error) {
+	return s.us.CreateLoginAuditLog(ctx, req)
 }

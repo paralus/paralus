@@ -57,6 +57,49 @@
         ]
       }
     },
+    "/auth/v3/user/auditlog": {
+      "post": {
+        "operationId": "UserService_AuditLogWebhook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3UserLoginAuditResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3UserLoginAuditRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UserService"
+        ]
+      }
+    },
     "/auth/v3/user/{metadata.name}": {
       "get": {
         "operationId": "UserService_GetUser",
@@ -1314,49 +1357,6 @@
           "UserService"
         ]
       }
-    },
-    "/userauditlog": {
-      "post": {
-        "operationId": "UserService_AuditLogWebhook",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v3AuditWebhook"
-            }
-          },
-          "403": {
-            "description": "Returned when the user does not have permission to access the resource.",
-            "schema": {}
-          },
-          "404": {
-            "description": "Returned when the resource does not exist.",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/googlerpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v3AuditWebhook"
-            }
-          }
-        ],
-        "tags": [
-          "UserService"
-        ]
-      }
     }
   },
   "definitions": {
@@ -1447,9 +1447,6 @@
           "type": "string"
         }
       }
-    },
-    "v3AuditWebhook": {
-      "type": "object"
     },
     "v3ConditionStatus": {
       "type": "string",
@@ -1831,6 +1828,17 @@
           }
         }
       }
+    },
+    "v3UserLoginAuditRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        }
+      }
+    },
+    "v3UserLoginAuditResponse": {
+      "type": "object"
     },
     "v3UserSpec": {
       "type": "object",

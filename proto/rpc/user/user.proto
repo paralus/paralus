@@ -75,14 +75,15 @@ message UserForgotPasswordResponse { string recoveryLink = 1; }
 
 message UserDeleteApiKeysResponse {}
 message CliConfigRequest {}
-message AuditWebhook {}
+message UserLoginAuditRequest {string user_id = 1;}
+message UserLoginAuditResponse {}
 
 service UserService { 
 
-  rpc AuditLogWebhook(AuditWebhook)
-      returns (AuditWebhook) {
+  rpc AuditLogWebhook(UserLoginAuditRequest)
+      returns (UserLoginAuditResponse) {
     option (google.api.http) = {
-      post : "/userauditlog"
+      post : "/auth/v3/user/auditlog"
       body : "*"    
     }; 
   };

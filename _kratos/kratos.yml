@@ -84,6 +84,14 @@ selfservice:
     login:
       ui_url: http://127.0.0.1:3000/login
       lifespan: 10m
+      after: 
+        hooks: 
+          - hook: web_hook
+            config:
+              url: https://localhost:11000/auth/v3/user/auditlog
+              method: POST
+              body: /home/infracloud/go/paralus/loginAuditLog.jsonnet
+
 
     registration:
       lifespan: 10m
