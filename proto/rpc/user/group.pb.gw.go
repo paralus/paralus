@@ -16,7 +16,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
 	"github.com/paralus/paralus/proto/types/commonpb/v3"
-	userv3_0 "github.com/paralus/paralus/proto/types/userpb/v3"
+	"github.com/paralus/paralus/proto/types/userpb/v3"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
@@ -34,7 +34,7 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 func request_GroupService_CreateGroup_0(ctx context.Context, marshaler runtime.Marshaler, client GroupServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq userv3_0.Group
+	var protoReq userv3.Group
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -78,7 +78,7 @@ func request_GroupService_CreateGroup_0(ctx context.Context, marshaler runtime.M
 }
 
 func local_request_GroupService_CreateGroup_0(ctx context.Context, marshaler runtime.Marshaler, server GroupServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq userv3_0.Group
+	var protoReq userv3.Group
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -216,7 +216,7 @@ var (
 )
 
 func request_GroupService_GetGroup_0(ctx context.Context, marshaler runtime.Marshaler, client GroupServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq userv3_0.Group
+	var protoReq userv3.Group
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -269,7 +269,7 @@ func request_GroupService_GetGroup_0(ctx context.Context, marshaler runtime.Mars
 }
 
 func local_request_GroupService_GetGroup_0(ctx context.Context, marshaler runtime.Marshaler, server GroupServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq userv3_0.Group
+	var protoReq userv3.Group
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -322,7 +322,7 @@ func local_request_GroupService_GetGroup_0(ctx context.Context, marshaler runtim
 }
 
 func request_GroupService_UpdateGroup_0(ctx context.Context, marshaler runtime.Marshaler, client GroupServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq userv3_0.Group
+	var protoReq userv3.Group
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -376,7 +376,7 @@ func request_GroupService_UpdateGroup_0(ctx context.Context, marshaler runtime.M
 }
 
 func local_request_GroupService_UpdateGroup_0(ctx context.Context, marshaler runtime.Marshaler, server GroupServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq userv3_0.Group
+	var protoReq userv3.Group
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -434,7 +434,7 @@ var (
 )
 
 func request_GroupService_DeleteGroup_0(ctx context.Context, marshaler runtime.Marshaler, client GroupServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq userv3_0.Group
+	var protoReq userv3.Group
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -487,7 +487,7 @@ func request_GroupService_DeleteGroup_0(ctx context.Context, marshaler runtime.M
 }
 
 func local_request_GroupService_DeleteGroup_0(ctx context.Context, marshaler runtime.Marshaler, server GroupServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq userv3_0.Group
+	var protoReq userv3.Group
 	var metadata runtime.ServerMetadata
 
 	var (

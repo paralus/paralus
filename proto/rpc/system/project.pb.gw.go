@@ -15,7 +15,7 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
-	systemv3_0 "github.com/paralus/paralus/proto/types/systempb/v3"
+	"github.com/paralus/paralus/proto/types/systempb/v3"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
@@ -33,7 +33,7 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 func request_ProjectService_CreateProject_0(ctx context.Context, marshaler runtime.Marshaler, client ProjectServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Project
+	var protoReq systemv3.Project
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -77,7 +77,7 @@ func request_ProjectService_CreateProject_0(ctx context.Context, marshaler runti
 }
 
 func local_request_ProjectService_CreateProject_0(ctx context.Context, marshaler runtime.Marshaler, server ProjectServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Project
+	var protoReq systemv3.Project
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -125,7 +125,7 @@ var (
 )
 
 func request_ProjectService_GetProjects_0(ctx context.Context, marshaler runtime.Marshaler, client ProjectServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Project
+	var protoReq systemv3.Project
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -168,7 +168,7 @@ func request_ProjectService_GetProjects_0(ctx context.Context, marshaler runtime
 }
 
 func local_request_ProjectService_GetProjects_0(ctx context.Context, marshaler runtime.Marshaler, server ProjectServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Project
+	var protoReq systemv3.Project
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -215,7 +215,7 @@ var (
 )
 
 func request_ProjectService_GetProject_0(ctx context.Context, marshaler runtime.Marshaler, client ProjectServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Project
+	var protoReq systemv3.Project
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -268,7 +268,7 @@ func request_ProjectService_GetProject_0(ctx context.Context, marshaler runtime.
 }
 
 func local_request_ProjectService_GetProject_0(ctx context.Context, marshaler runtime.Marshaler, server ProjectServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Project
+	var protoReq systemv3.Project
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -321,7 +321,7 @@ func local_request_ProjectService_GetProject_0(ctx context.Context, marshaler ru
 }
 
 func request_ProjectService_UpdateProject_0(ctx context.Context, marshaler runtime.Marshaler, client ProjectServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Project
+	var protoReq systemv3.Project
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -375,7 +375,7 @@ func request_ProjectService_UpdateProject_0(ctx context.Context, marshaler runti
 }
 
 func local_request_ProjectService_UpdateProject_0(ctx context.Context, marshaler runtime.Marshaler, server ProjectServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Project
+	var protoReq systemv3.Project
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -433,7 +433,7 @@ var (
 )
 
 func request_ProjectService_DeleteProject_0(ctx context.Context, marshaler runtime.Marshaler, client ProjectServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Project
+	var protoReq systemv3.Project
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -486,7 +486,7 @@ func request_ProjectService_DeleteProject_0(ctx context.Context, marshaler runti
 }
 
 func local_request_ProjectService_DeleteProject_0(ctx context.Context, marshaler runtime.Marshaler, server ProjectServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq systemv3_0.Project
+	var protoReq systemv3.Project
 	var metadata runtime.ServerMetadata
 
 	var (
