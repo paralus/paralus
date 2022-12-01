@@ -98,6 +98,11 @@ message Permission {
         title : "Permissions"
         description : "Permissions provided by role"
       } ];
+  optional string scope = 5
+    [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title : "Scope"
+      description : "Scope"
+    } ];
 }
 
 message GroupSpec {

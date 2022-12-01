@@ -461,6 +461,7 @@ type ArtifactSpec struct {
 
 	Type string `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
 	// Types that are assignable to Artifact:
+	//
 	//	*ArtifactSpec_UploadedYAML
 	//	*ArtifactSpec_UploadedHelm
 	//	*ArtifactSpec_YamlInGitRepo
@@ -469,6 +470,7 @@ type ArtifactSpec struct {
 	//	*ArtifactSpec_ManagedAlertManger
 	Artifact isArtifactSpec_Artifact `protobuf_oneof:"artifact"`
 	// Types that are assignable to Options:
+	//
 	//	*ArtifactSpec_HelmOptions
 	//	*ArtifactSpec_YamlOptions
 	Options isArtifactSpec_Options `protobuf_oneof:"options"`

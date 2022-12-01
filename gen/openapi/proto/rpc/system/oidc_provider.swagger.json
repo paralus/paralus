@@ -218,6 +218,7 @@
           },
           {
             "name": "spec.providerName",
+            "description": "enumeration?",
             "in": "query",
             "required": false,
             "type": "string"
@@ -446,6 +447,7 @@
           },
           {
             "name": "spec.providerName",
+            "description": "enumeration?",
             "in": "query",
             "required": false,
             "type": "string"
@@ -974,7 +976,8 @@
       "type": "object",
       "properties": {
         "providerName": {
-          "type": "string"
+          "type": "string",
+          "title": "enumeration?"
         },
         "mapperUrl": {
           "type": "string"
@@ -1004,7 +1007,8 @@
           "type": "string"
         },
         "requestedClaims": {
-          "type": "object"
+          "type": "object",
+          "title": "JSON object"
         },
         "predefined": {
           "type": "boolean"

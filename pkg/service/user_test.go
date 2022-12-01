@@ -446,6 +446,7 @@ func TestUserGetInfo(t *testing.T) {
 	guuid := uuid.New().String()
 	ruuid := uuid.New().String()
 	pruuid := uuid.New().String()
+	fakescope := uuid.New().String()
 
 	mock.ExpectQuery(`SELECT "identities"."id", "identities"."schema_id", .*WHERE .traits ->> 'email' = 'user-` + uuuid + `'.`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).AddRow(uuuid, []byte(`{"email":"johndoe@provider.com", "first_name": "John", "last_name": "Doe", "organization_id": "`+ouuid+`", "partner_id": "`+puuid+`", "description": "My awesome user"}`)))
@@ -464,8 +465,8 @@ func TestUserGetInfo(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project"}).AddRow("role-"+ruuid, "project-"+pruuid))
 	mock.ExpectQuery(`SELECT authsrv_resourcerole.name as role, authsrv_project.name as project, namespace FROM "authsrv_projectaccountnamespacerole" JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id JOIN authsrv_project ON authsrv_project.id=authsrv_projectaccountnamespacerole.project_id WHERE .authsrv_projectaccountnamespacerole.account_id = '` + uuuid + `'`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"role", "project", "namespace"}).AddRow("role-"+ruuid, "project-"+pruuid, "ns"))
-	mock.ExpectQuery(`SELECT "resourcerole"."id" FROM "authsrv_resourcerole" AS "resourcerole" WHERE .name = 'role-` + ruuid + `'. AND .trash = FALSE.`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(ruuid, "role-"+ruuid))
+	mock.ExpectQuery(`SELECT "resourcerole"."id", "resourcerole"."scope" FROM "authsrv_resourcerole" AS "resourcerole" WHERE .name = 'role-` + ruuid + `'. AND .trash = FALSE.`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "scope", "name"}).AddRow(ruuid, fakescope, "role-"+ruuid))
 	mock.ExpectQuery(`SELECT authsrv_resourcepermission.name as name FROM "authsrv_resourcepermission" JOIN authsrv_resourcerolepermission ON authsrv_resourcerolepermission.resource_permission_id=authsrv_resourcepermission.id WHERE .authsrv_resourcerolepermission.resource_role_id = '` + ruuid + `'. AND .authsrv_resourcepermission.trash = FALSE. AND .authsrv_resourcerolepermission.trash = FALSE.`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"name"}).AddRow("account.read").AddRow("account.write"))
 
@@ -499,6 +500,9 @@ func TestUserGetInfo(t *testing.T) {
 	}
 	if len(userinfo.Spec.Permissions[0].Permissions) != 2 {
 		t.Errorf("incorrect number of permissions; expected '%v', got '%v'", 2, len(userinfo.Spec.Permissions[0].Permissions))
+	}
+	if len(*userinfo.Spec.Permissions[0].Scope) == 0 {
+		t.Errorf("incorrect scope for permissions; expected '%v', got '%v'", fakescope, *userinfo.Spec.Permissions[0].Scope)
 	}
 
 }
