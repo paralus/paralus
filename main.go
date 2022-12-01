@@ -74,6 +74,7 @@ const (
 	relayImageEnv             = "RELAY_IMAGE"
 
 	// audit
+	auditLogStorageEnv         = "AUDIT_LOG_STORAGE"
 	auditFileEnv               = "AUDIT_LOG_FILE"
 	esEndPointEnv              = "ES_END_POINT"
 	esIndexPrefixEnv           = "ES_INDEX_PREFIX"
@@ -117,6 +118,7 @@ var (
 	relayImage             string
 
 	// audit
+	auditLogStorage            string
 	auditFile                  string
 	elasticSearchUrl           string
 	esIndexPrefix              string
@@ -157,9 +159,9 @@ var (
 	rrs   service.RolepermissionService
 	is    service.IdpService
 	oidcs service.OIDCProviderService
-	aus   *service.AuditLogService
-	ras   *service.RelayAuditService
-	rcs   *service.AuditLogService
+	aus   service.AuditLogService
+	ras   service.RelayAuditService
+	rcs   service.AuditLogService
 
 	schedulerPool schedulerrpc.SchedulerPool
 	schedulerAddr string
@@ -196,6 +198,7 @@ func setup() {
 	viper.SetDefault(relayImageEnv, "paralusio/relay:v0.1.0")
 
 	// audit
+	viper.SetDefault(auditLogStorageEnv, "database")
 	viper.SetDefault(esEndPointEnv, "http://127.0.0.1:9200")
 	viper.SetDefault(esIndexPrefixEnv, "ralog-system")
 	viper.SetDefault(relayAuditESIndexPrefixEnv, "ralog-relay")
@@ -236,6 +239,7 @@ func setup() {
 	viper.BindEnv(relayImageEnv)
 	viper.BindEnv(schedulerNamespaceEnv)
 
+	viper.BindEnv(auditLogStorageEnv)
 	viper.BindEnv(auditFileEnv)
 	viper.BindEnv(esEndPointEnv)
 	viper.BindEnv(esIndexPrefixEnv)
@@ -267,6 +271,7 @@ func setup() {
 	schedulerNamespace = viper.GetString(schedulerNamespaceEnv)
 	sentryBootstrapAddr = viper.GetString(sentryBootstrapEnv)
 
+	auditLogStorage = viper.GetString(auditLogStorageEnv)
 	auditFile = viper.GetString(auditFileEnv)
 	elasticSearchUrl = viper.GetString(esEndPointEnv)
 	esIndexPrefix = viper.GetString(esIndexPrefixEnv)
@@ -359,34 +364,69 @@ func setup() {
 	aps = service.NewAccountPermissionService(db)
 	gps = service.NewGroupPermissionService(db)
 
-	// audit services
-	aus, err = service.NewAuditLogService(elasticSearchUrl, esIndexPrefix+"-*", "AuditLog API: ")
-	if err != nil {
-		if dev && strings.Contains(err.Error(), "connect: connection refused") {
-			// This is primarily from ES not being available. ES being
-			// pretty heavy, you might not always wanna have it
-			// running in the background. This way, you can continue
-			// working on paralus with ES eating up all the cpu.
-			_log.Warn("unable to create auditLog service: ", err)
-		} else {
-			_log.Fatalw("unable to create auditLog service", "error", err)
+	switch auditLogStorage {
+	case audit.DATABASE:
+		// audit services
+		aus, err = service.NewAuditLogDatabaseService(db, audit.SYSTEM)
+		if err != nil {
+			if dev && strings.Contains(err.Error(), "connect: connection refused") {
+				// This is primarily from ES not being available. ES being
+				// pretty heavy, you might not always wanna have it
+				// running in the background. This way, you can continue
+				// working on paralus with ES eating up all the cpu.
+				_log.Warn("unable to create auditLog service: ", err)
+			} else {
+				_log.Fatalw("unable to create auditLog service", "error", err)
+			}
 		}
-	}
-	ras, err = service.NewRelayAuditService(elasticSearchUrl, relayAuditsESIndexPrefix+"-*", "RelayAudit API: ")
-	if err != nil {
-		if dev && strings.Contains(err.Error(), "connect: connection refused") {
-			_log.Warn("unable to create relayAudit service: ", err)
-		} else {
-			_log.Fatalw("unable to create relayAudit service", "error", err)
+		ras, err = service.NewRelayAuditDatabaseService(db, audit.KUBECTL_API)
+		if err != nil {
+			if dev && strings.Contains(err.Error(), "connect: connection refused") {
+				_log.Warn("unable to create relayAudit service: ", err)
+			} else {
+				_log.Fatalw("unable to create relayAudit service", "error", err)
+			}
 		}
-	}
-	rcs, err = service.NewAuditLogService(elasticSearchUrl, relayCommandsESIndexPrefix+"-*", "RelayCommand API: ")
-	if err != nil {
-		if dev && strings.Contains(err.Error(), "connect: connection refused") {
-			_log.Warn("unable to create auditLog service:", err)
-		} else {
-			_log.Fatalw("unable to create auditLog service", "error", err)
+		rcs, err = service.NewAuditLogDatabaseService(db, audit.KUBECTL_CMD)
+		if err != nil {
+			if dev && strings.Contains(err.Error(), "connect: connection refused") {
+				_log.Warn("unable to create auditLog service:", err)
+			} else {
+				_log.Fatalw("unable to create auditLog service", "error", err)
+			}
 		}
+	case audit.ELASTICSEARCH:
+		// audit services
+		aus, err = service.NewAuditLogElasticSearchService(elasticSearchUrl, esIndexPrefix+"-*", "AuditLog API: ")
+		if err != nil {
+			if dev && strings.Contains(err.Error(), "connect: connection refused") {
+				// This is primarily from ES not being available. ES being
+				// pretty heavy, you might not always wanna have it
+				// running in the background. This way, you can continue
+				// working on paralus with ES eating up all the cpu.
+				_log.Warn("unable to create auditLog service: ", err)
+			} else {
+				_log.Fatalw("unable to create auditLog service", "error", err)
+			}
+		}
+		ras, err = service.NewRelayAuditElasticSearchService(elasticSearchUrl, relayAuditsESIndexPrefix+"-*", "RelayAudit API: ")
+		if err != nil {
+			if dev && strings.Contains(err.Error(), "connect: connection refused") {
+				_log.Warn("unable to create relayAudit service: ", err)
+			} else {
+				_log.Fatalw("unable to create relayAudit service", "error", err)
+			}
+		}
+		rcs, err = service.NewAuditLogElasticSearchService(elasticSearchUrl, relayCommandsESIndexPrefix+"-*", "RelayCommand API: ")
+		if err != nil {
+			if dev && strings.Contains(err.Error(), "connect: connection refused") {
+				_log.Warn("unable to create auditLog service:", err)
+			} else {
+				_log.Fatalw("unable to create auditLog service", "error", err)
+			}
+		}
+	default:
+		_log.Warn("unable to create audit log service: invalid storage option ! should be either %s or %s", audit.DATABASE, audit.ELASTICSEARCH)
 	}
 
 	// cluster bootstrap

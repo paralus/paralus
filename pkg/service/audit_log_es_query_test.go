@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bytes"
 	"encoding/json"
 	"strings"
 	"testing"
@@ -9,17 +10,17 @@ import (
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 )
 
-type rmd struct {
+type md struct {
 	Source []string `json:"_source"`
 	Aggs   struct {
-		GroupByCluster struct {
+		GroupByProject struct {
 			Aggs struct {
-				GroupByNamespace struct {
+				GroupByType struct {
 					Terms struct {
 						Field string `json:"field"`
 						Size  int    `json:"size"`
 					} `json:"terms"`
-				} `json:"group_by_namespace"`
+				} `json:"group_by_type"`
 				GroupByUsername struct {
 					Terms struct {
 						Field string `json:"field"`
@@ -31,22 +32,12 @@ type rmd struct {
 				Field string `json:"field"`
 				Size  int    `json:"size"`
 			} `json:"terms"`
-		} `json:"group_by_cluster"`
-		GroupByKind struct {
+		} `json:"group_by_project"`
+		GroupByType struct {
 			Terms struct {
 				Field string `json:"field"`
 			} `json:"terms"`
-		} `json:"group_by_kind"`
-		GroupByMethod struct {
-			Terms struct {
-				Field string `json:"field"`
-			} `json:"terms"`
-		} `json:"group_by_method"`
-		GroupByNamespace struct {
-			Terms struct {
-				Field string `json:"field"`
-			} `json:"terms"`
-		} `json:"group_by_namespace"`
+		} `json:"group_by_type"`
 		GroupByUsername struct {
 			Terms struct {
 				Field string `json:"field"`
@@ -57,15 +48,15 @@ type rmd struct {
 		Bool struct {
 			Filter struct {
 				Range struct {
-					JSONTs struct {
+					JSONTimestamp struct {
 						Gte string `json:"gte"`
 						Lt  string `json:"lt"`
-					} `json:"json.ts"`
+					} `json:"json.timestamp"`
 				} `json:"range"`
 			} `json:"filter"`
 			Must []struct {
 				Term struct {
-					JSONUn string `json:"json.un"`
+					JSONCategory string `json:"json.category"`
 				} `json:"term,omitempty"`
 				Terms struct {
 					JSONProject []string `json:"json.project"`
@@ -78,71 +69,76 @@ type rmd struct {
 	} `json:"query"`
 	Size int `json:"size"`
 	Sort struct {
-		JSONTs struct {
+		JSONTimestamp struct {
 			Order string `json:"order"`
-		} `json:"json.ts"`
+		} `json:"json.timestamp"`
 	} `json:"sort"`
 }
 
-func TestGetRelayAuditLogByProjectsSimple(t *testing.T) {
+type mockElasticSearchQuery struct {
+	msg []bytes.Buffer
+}
+
+func (m *mockElasticSearchQuery) Handle(msg bytes.Buffer) (map[string]interface{}, error) {
+	m.msg = append(m.msg, msg)
+	return map[string]interface{}{}, nil
+}
+
+func TestGetAuditLogByProjectsSimple(t *testing.T) {
 	esq := &mockElasticSearchQuery{}
-	al := &RelayAuditService{relayQuery: esq}
-	req := v1.RelayAuditRequest{
-		Filter: &v1.RelayAuditQueryFilter{
+	al := &auditLogElasticSearchService{auditQuery: esq}
+	req := v1.GetAuditLogSearchRequest{
+		Filter: &v1.AuditLogQueryFilter{
 			QueryString:   "query-string",
 			Projects:      []string{"project-one", "project-two"},
 			Timefrom:      "now-1h",
-			Type:          "test-type",
-			User:          "test-user",
-			Client:        "test-client",
-			Cluster:       "test-cluster",
-			Namespace:     "test-namespace",
-			Kind:          "test-kind",
-			Method:        "test-method",
+			Type:          "fake-type",
+			User:          "fake-user",
+			Client:        "fake-client",
 			DashboardData: true,
 		},
 	}
-	_, err := al.GetRelayAuditByProjects(&req)
+	_, err := al.GetAuditLogByProjects(&req)
 	if err != nil {
 		t.Error("unable to get audit logs")
 	}
 	if len(esq.msg) != 1 {
 		t.Fatalf("incorrect number of searches; expected '%v', got '%v'", 1, len(esq.msg))
 	}
-	m := &rmd{}
+	m := &md{}
 	err = json.Unmarshal(esq.msg[0].Bytes(), m)
 	if err != nil {
 		t.Fatal("unable to unmarshall es request")
 	}
-	expected := `{"_source":["json"],"aggs":{"group_by_cluster":{"aggs":{"group_by_namespace":{"terms":{"field":"json.ns","size":1000}},"group_by_username":{"terms":{"field":"json.un","size":1000}}},"terms":{"field":"json.cn","size":1000}},"group_by_kind":{"terms":{"field":"json.k"}},"group_by_method":{"terms":{"field":"json.m"}},"group_by_namespace":{"terms":{"field":"json.ns"}},"group_by_username":{"terms":{"field":"json.un"}}},"query":{"bool":{"filter":{"range":{"json.ts":{"gte":"now-1h","lt":"now"}}},"must":[{"term":{"json.un":"test-user"}},{"term":{"json.cn":"test-cluster"}},{"term":{"json.ns":"test-namespace"}},{"term":{"json.k":"test-kind"}},{"term":{"json.m":"test-method"}},{"terms":{"json.project":["project-one","project-two"]}},{"query_string":{"query":"query-string"}}]}},"size":0,"sort":{"json.ts":{"order":"desc"}}}`
+	expected := `{"_source":["json"],"aggs":{"group_by_project":{"aggs":{"group_by_type":{"terms":{"field":"json.type","size":1000}},"group_by_username":{"terms":{"field":"json.actor.account.username","size":1000}}},"terms":{"field":"json.project","size":1000}},"group_by_type":{"terms":{"field":"json.type"}},"group_by_username":{"terms":{"field":"json.actor.account.username"}}},"query":{"bool":{"filter":{"range":{"json.timestamp":{"gte":"now-1h","lt":"now"}}},"must":[{"term":{"json.category":"AUDIT"}},{"term":{"json.type":"fake-type"}},{"term":{"json.actor.account.username":"fake-user"}},{"term":{"json.client.type":"fake-client"}},{"terms":{"json.project":["project-one","project-two"]}},{"query_string":{"query":"query-string"}}]}},"size":0,"sort":{"json.timestamp":{"order":"desc"}}}`
 	if strings.TrimSpace(esq.msg[0].String()) != expected {
 		t.Errorf("incorrect es query; expected '%v', got '%v'", expected, strings.TrimSpace(esq.msg[0].String()))
 	}
 }
 
-func TestGetRelayAuditLogByProjectsNoProject(t *testing.T) {
+func TestGetAuditLogByProjectsNoProject(t *testing.T) {
 	esq := &mockElasticSearchQuery{}
-	al := &RelayAuditService{relayQuery: esq}
-	req := v1.RelayAuditRequest{
+	al := &auditLogElasticSearchService{auditQuery: esq}
+	req := v1.GetAuditLogSearchRequest{
 		Metadata: &v3.Metadata{UrlScope: "url/project"},
-		Filter: &v1.RelayAuditQueryFilter{
+		Filter: &v1.AuditLogQueryFilter{
 			QueryString: "query-string",
 		},
 	}
-	_, err := al.GetRelayAudit(&req)
+	_, err := al.GetAuditLog(&req)
 	if err != nil {
 		t.Error("unable to get audit logs", err)
 	}
 	if len(esq.msg) != 1 {
 		t.Fatalf("incorrect number of searches; expected '%v', got '%v'", 1, len(esq.msg))
 	}
-	m := &rmd{}
+	m := &md{}
 	err = json.Unmarshal(esq.msg[0].Bytes(), m)
 	if err != nil {
 		t.Fatal("unable to unmarshall es request")
 	}
 
-	expected := `{"_source":["json"],"aggs":{"group_by_cluster":{"terms":{"field":"json.cn"}},"group_by_kind":{"terms":{"field":"json.k"}},"group_by_method":{"terms":{"field":"json.m"}},"group_by_namespace":{"terms":{"field":"json.ns"}},"group_by_username":{"terms":{"field":"json.un"}}},"query":{"bool":{"must":[{"terms":{"json.project":["project"]}},{"query_string":{"query":"query-string"}}]}},"size":500,"sort":{"json.ts":{"order":"desc"}}}`
+	expected := `{"_source":["json"],"aggs":{"group_by_type":{"terms":{"field":"json.type"}},"group_by_username":{"terms":{"field":"json.actor.account.username"}}},"query":{"bool":{"must":[{"term":{"json.category":"AUDIT"}},{"terms":{"json.project":["project"]}},{"query_string":{"query":"query-string"}}]}},"size":500,"sort":{"json.timestamp":{"order":"desc"}}}`
 	if strings.TrimSpace(esq.msg[0].String()) != expected {
 		t.Errorf("incorrect es query; expected '%v', got '%v'", expected, strings.TrimSpace(esq.msg[0].String()))
 	}
