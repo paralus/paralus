@@ -29,6 +29,7 @@ import (
 	"github.com/paralus/paralus/pkg/utils"
 	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	ctypesv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
 	"github.com/paralus/paralus/proto/types/sentry"
 	"github.com/pkg/errors"
@@ -633,15 +634,17 @@ func (s *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) e
 		return err
 	}
 
-	//TODO
+	//GetForClusterRequest
 	in := &sentryrpc.GetForClusterRequest{
 		Namespace:  "paralus-system",
-		SystemUser: false,
+		SystemUser: true,
+		Opts:       &ctypesv3.QueryOptions{},
 	}
+
 	kss := NewKubeconfigSettingService(s.db)
 	var pf cryptoutil.PasswordFunc
-	config, err := kubeconfig.GetConfigForCluster(ctx, s.bs, in, pf, kss, kubeconfig.ParalusSystem)
 
+	config, err := kubeconfig.GetConfigForCluster(ctx, s.bs, in, pf, kss, kubeconfig.ParalusSystem)
 	status := utils.DeleteRelayAgent(config, "paralus-system")
 
 	_log.Infow("deleting relay Agent in Cluster Status: ", status)
