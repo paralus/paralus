@@ -101,7 +101,7 @@ message Permission {
   optional string scope = 5
     [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title : "Scope"
-      description : "Scope"
+      description : "Scope holds information about org wide, project or namespace access"
     } ];
 }
 
