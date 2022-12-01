@@ -2,11 +2,9 @@ package utils
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"log"
 
-	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -15,24 +13,19 @@ import (
 
 func DeleteRelayAgent(kubeConfig []byte, namespace string) bool {
 
-	kubeconfig := flag.String("kubeconfig", string(kubeConfig[:]), "kubeconfig file yaml byte")
-	flag.Parse()
-
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
+	config, err := clientcmd.NewClientConfigFromBytes(kubeConfig)
 	if err != nil {
 		fmt.Println("Unable to build kube configuration ", err.Error())
-		config, err = rest.InClusterConfig()
-		if err != nil {
-			log.Fatalf("Error %s, getting incluster config", err.Error())
-		}
 	}
-
-	clientset, err := kubernetes.NewForConfig(config)
+	clientConfig, err := config.ClientConfig()
 	if err != nil {
-		log.Fatalln("Unable to build kube clientset ", err.Error())
+		fmt.Println("ClientConfig," + err.Error())
 	}
-
-	status, err := processDeleteDeployment(clientset, namespace)
+	clientSet, err := kubernetes.NewForConfig(clientConfig)
+	if err != nil {
+		fmt.Println("NewForConfigorConfigFile," + err.Error())
+	}
+	status, err := processDeleteDeployment(clientSet, namespace)
 	if err != nil {
 		log.Fatalf("Error %s, Error Deleting", err.Error())
 	}
