@@ -420,7 +420,7 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 		"email":      user.GetMetadata().GetName(), // can be just username for API access
 		"first_name": user.GetSpec().GetFirstName(),
 		"last_name":  user.GetSpec().GetLastName(),
-	})
+	}, user.Spec.ForceReset)
 	if err != nil {
 		return &userv3.User{}, err
 	}
@@ -548,6 +548,12 @@ func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3
 		if lastLogin != "" {
 			user.GetSpec().LastLogin = lastLogin
 		}
+
+		meta, err := s.ap.GetPublicMetadata(ctx, usr.ID.String())
+		if err != nil {
+			return &userv3.User{}, err
+		}
+		user.Spec.ForceReset = meta.ForceReset
 
 		return user, nil
 	}
@@ -690,7 +696,7 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 				"email":      user.GetMetadata().GetName(),
 				"first_name": user.GetSpec().GetFirstName(),
 				"last_name":  user.GetSpec().GetLastName(),
-			})
+			}, user.Spec.ForceReset)
 			if err != nil {
 				return &userv3.User{}, err
 			}
