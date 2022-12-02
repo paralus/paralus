@@ -294,6 +294,13 @@
             "type": "string"
           },
           {
+            "name": "spec.forceReset",
+            "description": "ForceReset. This indicate user has auto generated password. Client should reset the user password.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
             "name": "status.conditionType",
             "description": "Condition Type\n\ntype of the status condition",
             "in": "query",
@@ -529,6 +536,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "spec.forceReset",
+            "description": "ForceReset. This indicate user has auto generated password. Client should reset the user password.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "status.conditionType",
@@ -1051,6 +1065,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "spec.forceReset",
+            "description": "ForceReset. This indicate user has auto generated password. Client should reset the user password.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "status.conditionType",
@@ -1917,6 +1938,11 @@
           "description": "Last access date time in RFC3339 format.",
           "title": "LastLogin",
           "readOnly": true
+        },
+        "forceReset": {
+          "type": "boolean",
+          "description": "This indicate user has auto generated password. Client should reset the user password.",
+          "title": "ForceReset"
         }
       },
       "description": "User specification",
