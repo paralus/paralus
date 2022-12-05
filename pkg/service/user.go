@@ -593,9 +593,10 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 		}
 		permissions := []*userv3.Permission{}
 		for _, p := range user.Spec.ProjectNamespaceRoles {
+			var scope string
 			rps, ok := roleMap[p.Role]
 			if !ok {
-				role, err := dao.GetIdByName(ctx, s.db, p.Role, &models.Role{})
+				role, err := dao.GetAttributesByName(ctx, s.db, p.Role, &models.Role{}, "id", "scope")
 				if err != nil {
 					return &userv3.UserInfo{}, err
 				}
@@ -612,6 +613,7 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 					rps = append(rps, r.Name)
 				}
 				roleMap[p.Role] = rps
+				scope = rle.Scope
 			}
 			permissions = append(
 				permissions,
@@ -620,8 +622,10 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 					Namespace:   p.Namespace,
 					Role:        p.Role,
 					Permissions: rps,
+					Scope:       &scope,
 				},
 			)
+
 		}
 		userinfo.Spec.Permissions = permissions
 		return userinfo, nil
