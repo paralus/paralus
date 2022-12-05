@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## Fixed
+- Fix modify userinfo service to include scope in response [mabhi](https://github.com/mabhi)
+
 ## [0.1.8] - 2022-11-25
 
 ## Added
