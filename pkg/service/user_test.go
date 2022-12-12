@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -853,4 +854,48 @@ func TestUserRetrieveCliConfigCreate(t *testing.T) {
 	if resp.Partner != "partner-name" {
 		t.Error("invalid partner name")
 	}
+}
+
+func TestCreateLoginAuditLog(t *testing.T) {
+	tt := []struct {
+		name            string
+		uuid            string
+		invalid         bool
+		shouldHaveError bool
+	}{
+		{"invalid uid format", "user-" + uuid.New().String(), false, true},
+		{"invalid user id", uuid.New().String(), true, true},
+		{"valid user id", uuid.New().String(), false, false},
+	}
+
+	for _, tc := range tt {
+		t.Run(tc.name, func(t *testing.T) {
+			db, mock := getDB(t)
+			defer db.Close()
+
+			ap := &mockAuthProvider{}
+			mazc := mockAuthzClient{}
+			us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
+			if tc.invalid {
+
+				uid := uuid.New().String()
+				// without regexp QuoteMeta, getting mismatch actual and required SQL queries
+				mock.ExpectQuery(regexp.QuoteMeta(`SELECT traits ->> 'email' as name FROM "identities" WHERE (id = ('` + uid + `'))`)).
+					WithArgs().WillReturnRows(sqlmock.NewRows([]string{"traits"}).AddRow([]byte(`{"email":"johndoe@provider.com"}`)))
+
+			} else {
+				mock.ExpectQuery(regexp.QuoteMeta(`SELECT traits ->> 'email' as name FROM "identities" WHERE (id = ('` + tc.uuid + `'))`)).
+					WithArgs().WillReturnRows(sqlmock.NewRows([]string{"traits"}).AddRow([]byte(`{"email":"johndoe@provider.com"}`)))
+
+			}
+
+			audreq := &userrpcv3.UserLoginAuditRequest{UserId: tc.uuid}
+			_, err := us.CreateLoginAuditLog(context.TODO(), audreq)
+			if tc.shouldHaveError && err == nil {
+
+				t.Error("could not add audit log", err)
+			}
+		})
+	}
+
 }
