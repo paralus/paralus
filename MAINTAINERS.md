@@ -6,7 +6,7 @@
 
 | Maintainer | GitHub ID | Project Roles | Affiliation
 | --------------- | --------- | ----------- | ----------- |
-| Avinash Varma Penmetsa | [avinashpenmetsa](https://github.com/avinashpenmetsa) | aralus - Reviewer, Approver | [Rafay](https://rafay.co/) |
+| Avinash Varma Penmetsa | [avinashpenmetsa](https://github.com/avinashpenmetsa) | Paralus - Reviewer, Approver | [Rafay](https://rafay.co/) |
 | Benny Stephan | [sbenny](https://github.com/sbenny) | Paralus - Reviewer, Approver | [Rafay](https://rafay.co/) |
 | Elena Lape | [elenalape](https://github.com/elenalape) | Content - Reviewer, Approver | [Rafay](https://rafay.co/) |
 | Saim Safdar | [Saim-Safdar](https://github.com/Saim-Safdar) | Content - Reviewer, Approver | [Rafay](https://rafay.co/) |
