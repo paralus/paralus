@@ -4,6 +4,7 @@
 ![helm](https://img.shields.io/github/v/tag/paralus/helm-charts?label=Helm%20Chart%20Version&logo=helm&color=%230F1689&logoColor=%23f0f0f0)
 ![go](https://img.shields.io/github/go-mod/go-version/paralus/paralus?color=%2300ADD8&logo=go&logoColor=%2300ADD8)
 ![license](https://img.shields.io/github/license/paralus/paralus?color=%23D22128&label=License&logo=apache&logoColor=%23D22128)
+[![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/6823/badge)](https://bestpractices.coreinfrastructure.org/projects/6823)
 <a href="https://join.slack.com/t/paralus/shared_invite/zt-1a9x6y729-ySmAq~I3tjclEG7nDoXB0A" target="_blank">
 <img src="https://img.shields.io/badge/Community-%20Slack-blue.svg?logo=slack&&logoColor=%23FFA500&color=%23FFA500" />
 </a>
@@ -50,6 +51,8 @@ Installing and setting up Paralus takes less time than it takes to brew a (good)
 - Tweet [@paralus_](https://twitter.com/paralus_/) on Twitter.
 - Create [GitHub Issues](https://github.com/paralus/paralus/issues) to report bugs or request features.
 
+Participation in Paralus project is governed by the CNCF [Code of Conduct](/paralus/CODE_OF_CONDUCT.md).
+
 ## Contributing
 
 We 💖 our contributors! Have a look at our [contributor guidelines](https://github.com/paralus/paralus/blob/main/CONTRIBUTING.md) to get started.
@@ -60,4 +63,4 @@ You're also very welcome to look at the existing issues. If there’s something 
 
 ## Authors
 
-This project is maintained & supported by [Rafay](https://rafay.co).
+This project is maintained & supported by [Rafay](https://rafay.co). Meet the [maintainers](/paralus/MAINTAINERS.md) of Paralus.
