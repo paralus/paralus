@@ -637,6 +637,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 			"/paralus.dev.sentry.rpc.BootstrapService/RegisterBootstrapAgent",
 			"/paralus.dev.sentry.rpc.KubeConfigService/GetForClusterWebSession", //TODO: enable auth from prompt
 			"/paralus.dev.rpc.auth.v3.AuthService/IsRequestAllowed",
+			"/paralus.dev.rpc.user.v3.UserService/AuditLogWebhook",
 		},
 		ExcludeAuthzMethods: []string{
 			"/paralus.dev.rpc.user.v3.UserService/GetUserInfo",

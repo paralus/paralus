@@ -21,6 +21,7 @@ import (
 	"github.com/paralus/paralus/pkg/utils"
 	userrpcv3 "github.com/paralus/paralus/proto/rpc/user"
 	authzv1 "github.com/paralus/paralus/proto/types/authz"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	userv3 "github.com/paralus/paralus/proto/types/userpb/v3"
 )
@@ -52,6 +53,8 @@ type UserService interface {
 	UpdateIdpUserGroupPolicy(context.Context, string, string, string) error
 	// Generate recovery link for users
 	ForgotPassword(context.Context, *userrpcv3.UserForgotPasswordRequest) (*userrpcv3.UserForgotPasswordResponse, error)
+	// Generate auditLog event
+	CreateLoginAuditLog(context.Context, *userrpcv3.UserLoginAuditRequest) (*userrpcv3.UserLoginAuditResponse, error)
 }
 
 type userService struct {
@@ -1070,6 +1073,26 @@ func (s *userService) ForgotPassword(ctx context.Context, req *userrpcv3.UserFor
 	} else {
 		return &userrpcv3.UserForgotPasswordResponse{}, fmt.Errorf("unable to generate recovery url")
 	}
+}
+
+func (s *userService) CreateLoginAuditLog(ctx context.Context, req *userrpcv3.UserLoginAuditRequest) (*userrpcv3.UserLoginAuditResponse, error) {
+	uid, err := uuid.Parse(req.UserId)
+	if err != nil {
+		return &userrpcv3.UserLoginAuditResponse{}, fmt.Errorf("unable to create login audit event. reason: uid parse error.%v", err.Error())
+	}
+
+	entities, err := dao.GetUserNamesByIds(ctx, s.db, []uuid.UUID{uid}, &models.KratosIdentities{})
+	if err != nil {
+		return &userrpcv3.UserLoginAuditResponse{}, fmt.Errorf("unable to create login audit event. reason: internal error. %v", err.Error())
+	}
+	if len(entities) == 0 {
+		return &userrpcv3.UserLoginAuditResponse{}, fmt.Errorf("unable to create login audit event. reason: user not found")
+	}
+	username := entities[0]
+	new_ctx := context.WithValue(ctx, common.SessionDataKey, &commonv3.SessionData{Username: username})
+	CreateUserLoginAuditEvent(new_ctx, s.al, "login", username)
+
+	return &userrpcv3.UserLoginAuditResponse{}, nil
 }
 
 func (s *userService) getUserLastLogin(ctx context.Context, userId uuid.UUID) (string, error) {

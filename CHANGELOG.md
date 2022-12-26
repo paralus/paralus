@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## Added
+- Enhance: record user.login event via kratos hooks [mabhi](https://github.com/mabhi)
+
 ## Fixed
 - Fix modify userinfo service to include scope in response [mabhi](https://github.com/mabhi)
 
