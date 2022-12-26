@@ -4,8 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
-## Changed
-- Upgraded Ory Kratos to v0.10.1 [akshay196](https://github.com/akshay196)
+## Added
+- Enhance: record user.login event via kratos hooks [mabhi](https://github.com/mabhi)
+
 ## Fixed
 - Fix modify userinfo service to include scope in response [mabhi](https://github.com/mabhi)
 
