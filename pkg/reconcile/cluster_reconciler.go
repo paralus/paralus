@@ -7,11 +7,15 @@ import (
 
 	clstrutil "github.com/paralus/paralus/internal/cluster"
 	"github.com/paralus/paralus/internal/cluster/constants"
-	"github.com/paralus/paralus/pkg/service"
-	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
-
 	"github.com/paralus/paralus/pkg/query"
+	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
+	"github.com/paralus/paralus/pkg/sentry/kubeconfig"
+	"github.com/paralus/paralus/pkg/service"
+	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
+	ctypesv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
 	"github.com/pkg/errors"
+	"github.com/uptrace/bun"
 )
 
 const (
@@ -25,11 +29,13 @@ type ClusterReconciler interface {
 
 type clusterReconciler struct {
 	cs service.ClusterService
+	db *bun.DB
+	bs service.BootstrapService
 }
 
 // NewClusterReconciler returns new cluster reconciler
-func NewClusterReconciler(cs service.ClusterService) ClusterReconciler {
-	return &clusterReconciler{cs: cs}
+func NewClusterReconciler(cs service.ClusterService, db *bun.DB, bs service.BootstrapService) ClusterReconciler {
+	return &clusterReconciler{cs: cs, db: db, bs: bs}
 }
 
 func (r *clusterReconciler) Reconcile(ctx context.Context, cluster *infrav3.Cluster) error {
@@ -70,6 +76,24 @@ func (r *clusterReconciler) handleClusterDelete(ctx context.Context, cluster *in
 	_log.Infow("handling cluster delete", "cluster.Name", cluster.Metadata.Name)
 	try := func() error {
 		_log.Debugw("no relay networks to disassociate", "cluster name", cluster.Metadata.Name)
+		in := &sentryrpc.GetForClusterRequest{
+			Namespace:  "paralus-system",
+			SystemUser: true,
+			Opts:       &ctypesv3.QueryOptions{},
+		}
+
+		var pf cryptoutil.PasswordFunc
+
+		kss := service.NewKubeconfigSettingService(r.db)
+		config, err := kubeconfig.GetConfigForCluster(ctx, r.bs, in, pf, kss, kubeconfig.ParalusSystem)
+
+		if err != nil {
+			return err
+		}
+		status := service.DeleteRelayAgent(config, "paralus-system")
+
+		_log.Infow("deleting relay Agent in Cluster Status: ", status)
+
 		return nil
 	}
 
