@@ -697,7 +697,7 @@ func runEventHandlers(wg *sync.WaitGroup, ctx context.Context) {
 	defer wg.Done()
 
 	//TODO: need to add a bunch of other handlers with gitops
-	ceh := reconcile.NewClusterEventHandler(cs, db, bs)
+	ceh := reconcile.NewClusterEventHandler(cs, db, bs, kekFunc)
 	_log.Infow("starting cluster event handler")
 	go ceh.Handle(ctx.Done())
 

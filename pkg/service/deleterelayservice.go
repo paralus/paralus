@@ -2,8 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
-	"log"
 
 	"k8s.io/client-go/tools/clientcmd"
 
@@ -11,39 +9,40 @@ import (
 	"k8s.io/client-go/kubernetes"
 )
 
-func DeleteRelayAgent(kubeConfig []byte, namespace string) bool {
+func DeleteRelayAgent(ctx context.Context, kubeConfig []byte, namespace string) bool {
 
 	config, err := clientcmd.NewClientConfigFromBytes(kubeConfig)
 	if err != nil {
-		fmt.Println("Unable to build kube configuration ", err.Error())
+		_log.Errorf("Unable to build kube configuration %s", err.Error())
+		return false
 	}
 	clientConfig, err := config.ClientConfig()
 	if err != nil {
-		fmt.Println("ClientConfig," + err.Error())
+		_log.Errorf("Unable to get client config %s", err.Error())
+		return false
 	}
 	clientSet, err := kubernetes.NewForConfig(clientConfig)
 	if err != nil {
-		fmt.Println("NewForConfigorConfigFile," + err.Error())
+		_log.Errorf("Unable to clientset %s", err.Error())
+		return false
 	}
-	status, err := processDeleteDeployment(clientSet, namespace)
+	status, err := processDeleteDeployment(ctx, clientSet, namespace)
 	if err != nil {
-		log.Fatalf("Error %s, Error Deleting", err.Error())
+		return false
 	}
 
 	return status
 }
 
-func processDeleteDeployment(clientset *kubernetes.Clientset, ns string) (bool, error) {
-	fmt.Println("Process deleted deployment ")
-	ctx := context.Background()
+func processDeleteDeployment(ctx context.Context, clientset *kubernetes.Clientset, ns string) (bool, error) {
 	err := clientset.AppsV1().Deployments(ns).Delete(ctx, "relay-agent", v1.DeleteOptions{})
 	if err != nil {
-		fmt.Printf("Error while deleting Deployment %s\n", err.Error())
+		_log.Errorf("Error while deleting deployment %s", err.Error())
 		return false, err
 	}
 	err = clientset.CoreV1().ConfigMaps(ns).Delete(ctx, "relay-agent-config", v1.DeleteOptions{})
 	if err != nil {
-		fmt.Printf("Error while deleting ConfigMap %s\n", err.Error())
+		_log.Errorf("Error while deleting ConfigMap %s", err.Error())
 		return false, err
 	}
 	return true, nil

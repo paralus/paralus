@@ -10,10 +10,12 @@ import (
 	"github.com/paralus/paralus/pkg/query"
 	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
 	"github.com/paralus/paralus/pkg/sentry/kubeconfig"
+	sentryutil "github.com/paralus/paralus/pkg/sentry/util"
 	"github.com/paralus/paralus/pkg/service"
 	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
 	ctypesv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
+	"github.com/paralus/paralus/proto/types/sentry"
 	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
 )
@@ -31,11 +33,12 @@ type clusterReconciler struct {
 	cs service.ClusterService
 	db *bun.DB
 	bs service.BootstrapService
+	pf cryptoutil.PasswordFunc
 }
 
 // NewClusterReconciler returns new cluster reconciler
-func NewClusterReconciler(cs service.ClusterService, db *bun.DB, bs service.BootstrapService) ClusterReconciler {
-	return &clusterReconciler{cs: cs, db: db, bs: bs}
+func NewClusterReconciler(cs service.ClusterService, db *bun.DB, bs service.BootstrapService, pf cryptoutil.PasswordFunc) ClusterReconciler {
+	return &clusterReconciler{cs: cs, db: db, bs: bs, pf: pf}
 }
 
 func (r *clusterReconciler) Reconcile(ctx context.Context, cluster *infrav3.Cluster) error {
@@ -72,27 +75,78 @@ func canReconcileClusterBootstrapAgent(c *infrav3.Cluster) bool {
 	}
 }
 
+// DeleteForCluster delete bootstrap agent
+func (r *clusterReconciler) deleteBootstrapAgentForCluster(ctx context.Context, cluster *infrav3.Cluster) error {
+
+	resp, err := r.bs.SelectBootstrapAgentTemplates(ctx, query.WithOptions(&ctypesv3.QueryOptions{
+		GlobalScope: true,
+		Selector:    "paralus.dev/defaultRelay=true",
+	}))
+	if err != nil {
+		return err
+	}
+
+	for _, bat := range resp.Items {
+
+		agent := &sentry.BootstrapAgent{
+			Metadata: &ctypesv3.Metadata{
+				Id:           cluster.Metadata.Id,
+				Name:         cluster.Metadata.Name,
+				Partner:      cluster.Metadata.Partner,
+				Organization: cluster.Metadata.Organization,
+				Project:      cluster.Metadata.Project,
+			},
+			Spec: &sentry.BootstrapAgentSpec{
+				TemplateRef: fmt.Sprintf("template/%s", bat.Metadata.Name),
+			},
+		}
+
+		templateRef, err := sentryutil.GetTemplateScope(agent.Spec.TemplateRef)
+		if err != nil {
+			return err
+		}
+
+		err = r.bs.DeleteBootstrapAgent(ctx, templateRef, query.WithMeta(agent.Metadata))
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (r *clusterReconciler) handleClusterDelete(ctx context.Context, cluster *infrav3.Cluster) error {
 	_log.Infow("handling cluster delete", "cluster.Name", cluster.Metadata.Name)
 	try := func() error {
 		_log.Debugw("no relay networks to disassociate", "cluster name", cluster.Metadata.Name)
-		in := &sentryrpc.GetForClusterRequest{
-			Namespace:  "paralus-system",
-			SystemUser: true,
-			Opts:       &ctypesv3.QueryOptions{},
+
+		sd, ok := service.GetSessionDataFromContext(ctx)
+		if !ok {
+			return errors.New("failed to get session data")
 		}
 
-		var pf cryptoutil.PasswordFunc
+		in := &sentryrpc.GetForClusterRequest{
+			Namespace:  "paralus-system",
+			SystemUser: false,
+			Opts: &ctypesv3.QueryOptions{
+				Name:         cluster.Metadata.Name,
+				ClusterID:    cluster.Metadata.Id,
+				Organization: cluster.Metadata.Organization,
+				Partner:      cluster.Metadata.Partner,
+				Username:     sd.Username,
+				Account:      sd.Account,
+			},
+		}
 
 		kss := service.NewKubeconfigSettingService(r.db)
-		config, err := kubeconfig.GetConfigForCluster(ctx, r.bs, in, pf, kss, kubeconfig.ParalusSystem)
-
+		config, err := kubeconfig.GetConfigForCluster(ctx, r.bs, in, r.pf, kss, kubeconfig.ParalusSystem)
 		if err != nil {
 			return err
 		}
-		status := service.DeleteRelayAgent(config, "paralus-system")
 
-		_log.Infow("deleting relay Agent in Cluster Status: ", status)
+		status := service.DeleteRelayAgent(ctx, config, "paralus-system")
+
+		_log.Infof("deleted relay agent in cluster with status: ", fmt.Sprint(status))
 
 		return nil
 	}
@@ -101,7 +155,13 @@ func (r *clusterReconciler) handleClusterDelete(ctx context.Context, cluster *in
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 		defer cancel()
 
-		err := r.cs.UpdateStatus(ctx, &infrav3.Cluster{
+		err := r.deleteBootstrapAgentForCluster(ctx, cluster)
+		if err != nil {
+			return err
+		}
+		_log.Info("deleted bootstrap agent for cluster")
+
+		err = r.cs.UpdateStatus(ctx, &infrav3.Cluster{
 			Metadata: cluster.Metadata,
 			Spec: &infrav3.ClusterSpec{
 				ClusterData: &infrav3.ClusterData{
