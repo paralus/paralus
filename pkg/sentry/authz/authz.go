@@ -398,7 +398,7 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 		// is local user active
 		if ok, _ := aps.IsSSOAccount(ctx, accountID); !ok {
 			active, err := aps.IsAccountActive(ctx, accountID, orgID)
-			_log.Infow("accountID ", accountID, "orgID ", orgID, "active ", active)
+			_log.Infow("accountID ", accountID, "orgID ", orgID, "active ", fmt.Sprint(active))
 			if err != nil {
 				return nil, err
 			}
@@ -680,7 +680,7 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 	resp.EnforceOrgAdminOnlySecretAccess = enforceOrgAdminOnlySecretAccess
 	resp.IsOrgAdmin = isOrgAdmin
 
-	_log.Infow("username", userName)
+	_log.Infof("username %s", userName)
 
 	return resp, nil
 }

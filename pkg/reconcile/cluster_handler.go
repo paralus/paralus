@@ -4,11 +4,14 @@ import (
 	"context"
 	"time"
 
+	"github.com/paralus/paralus/pkg/common"
 	"github.com/paralus/paralus/pkg/event"
 	"github.com/paralus/paralus/pkg/query"
+	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
 	"github.com/paralus/paralus/pkg/service"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
+	"github.com/uptrace/bun"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/util/workqueue"
 )
@@ -43,14 +46,22 @@ type clusterEventHandler struct {
 
 	// cluster workload work queue
 	wwq workqueue.RateLimitingInterface
+
+	// required for cluster event reconciler
+	db *bun.DB
+	bs service.BootstrapService
+	pf cryptoutil.PasswordFunc
 }
 
 // NewClusterEventHandler returns new cluster event handler
-func NewClusterEventHandler(cs service.ClusterService) ClusterEventHandler {
+func NewClusterEventHandler(cs service.ClusterService, db *bun.DB, bs service.BootstrapService, pf cryptoutil.PasswordFunc) ClusterEventHandler {
 	return &clusterEventHandler{
 		cs:  cs,
 		cwq: workqueue.NewRateLimitingQueue(workqueue.DefaultItemBasedRateLimiter()),
 		wwq: workqueue.NewRateLimitingQueue(workqueue.DefaultItemBasedRateLimiter()),
+		db:  db,
+		bs:  bs,
+		pf:  pf,
 	}
 }
 
@@ -159,9 +170,14 @@ func (h *clusterEventHandler) handleClusterEvent(ev event.Resource) {
 	cluster.Metadata.Partner = ev.PartnerID
 	cluster.Metadata.Id = ev.ID
 
+	ctx = context.WithValue(ctx, common.SessionDataKey, &commonv3.SessionData{
+		Username: ev.Username,
+		Account:  ev.Account,
+	})
+
 	_log.Debugw("handling cluster reconcile", "cluster", cluster.Metadata, "event", ev, "cluster status", cluster.Spec.ClusterData.ClusterStatus)
 
-	reconciler := NewClusterReconciler(h.cs)
+	reconciler := NewClusterReconciler(h.cs, h.db, h.bs, h.pf)
 	err = reconciler.Reconcile(ctx, cluster)
 	if err != nil {
 		_log.Infow("unable to reconcile cluster", "error", err, "event", "ev")
