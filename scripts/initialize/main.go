@@ -20,7 +20,6 @@ import (
 	"github.com/paralus/paralus/pkg/common"
 	"github.com/paralus/paralus/pkg/enforcer"
 	"github.com/paralus/paralus/pkg/service"
-	"github.com/paralus/paralus/pkg/utils"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	rolev3 "github.com/paralus/paralus/proto/types/rolepb/v3"
 	systemv3 "github.com/paralus/paralus/proto/types/systempb/v3"
@@ -303,11 +302,14 @@ retry:
 	_, err = us.Create(context.Background(), &userv3.User{
 		Metadata: &commonv3.Metadata{Name: *oae, Partner: *partner, Organization: *org},
 		Spec: &userv3.UserSpec{
-			FirstName:             *oafn,
-			LastName:              *oaln,
-			Password:              utils.GetRandomPassword(8),
-			Groups:                []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
-			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Role: "ADMIN", Group: &admingrp.Metadata.Name}}},
+			FirstName: *oafn,
+			LastName:  *oaln,
+			Groups:    []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
+			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{
+				{Role: "ADMIN", Group: &admingrp.Metadata.Name},
+			},
+			ForceReset: true,
+		},
 	})
 
 	if err != nil {
