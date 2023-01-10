@@ -303,11 +303,22 @@ retry:
 	_, err = us.Create(context.Background(), &userv3.User{
 		Metadata: &commonv3.Metadata{Name: *oae, Partner: *partner, Organization: *org},
 		Spec: &userv3.UserSpec{
-			FirstName:             *oafn,
-			LastName:              *oaln,
-			Password:              utils.GetRandomPassword(8),
-			Groups:                []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
-			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Role: "ADMIN", Group: &admingrp.Metadata.Name}}},
+
+			// FirstName:             *oafn,
+			// LastName:              *oaln,
+			// Password:              utils.GetRandomPassword(8),
+			// Groups:                []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
+			// ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Role: "ADMIN", Group: &admingrp.Metadata.Name}}},
+
+			FirstName: *oafn,
+			LastName:  *oaln,
+			Password:  utils.GetRandomPassword(8),
+			Groups:    []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
+			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{
+				{Role: "ADMIN", Group: &admingrp.Metadata.Name},
+			},
+			ForceReset: true,
+		},
 	})
 
 	if err != nil {
