@@ -295,7 +295,7 @@
           },
           {
             "name": "spec.forceReset",
-            "description": "ForceReset. This indicate user has auto generated password. Client should reset the user password.",
+            "description": "ForceReset\n\nThis indicate user has auto generated password. Client should reset the user password.",
             "in": "query",
             "required": false,
             "type": "boolean"
@@ -539,7 +539,7 @@
           },
           {
             "name": "spec.forceReset",
-            "description": "ForceReset. This indicate user has auto generated password. Client should reset the user password.",
+            "description": "ForceReset\n\nThis indicate user has auto generated password. Client should reset the user password.",
             "in": "query",
             "required": false,
             "type": "boolean"
@@ -1068,7 +1068,7 @@
           },
           {
             "name": "spec.forceReset",
-            "description": "ForceReset. This indicate user has auto generated password. Client should reset the user password.",
+            "description": "ForceReset\n\nThis indicate user has auto generated password. Client should reset the user password.",
             "in": "query",
             "required": false,
             "type": "boolean"
@@ -1702,6 +1702,9 @@
       "type": "object",
       "properties": {
         "recoveryLink": {
+          "type": "string"
+        },
+        "defaultPassword": {
           "type": "string"
         }
       }

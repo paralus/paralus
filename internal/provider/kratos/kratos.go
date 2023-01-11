@@ -94,7 +94,7 @@ func (k *kratosAuthProvider) GetPublicMetadata(ctx context.Context, id string) (
 		return nil, err
 	}
 	if res.StatusCode != http.StatusOK {
-		return nil, errors.New("Failed to get identity")
+		return nil, errors.New("failed to get identity")
 	}
 	ipm := &IdentityPublicMetadata{}
 	if identity.HasMetadataPublic() {

@@ -417,9 +417,13 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 
 	// we should not be taking idp groups as input on local user creation
 	user.Spec.IdpGroups = []string{}
-
+	generatedPassword := user.GetSpec().GetPassword()
+	if len(generatedPassword) == 0 {
+		generatedPassword = utils.GetRandomPassword(8)
+	}
+	user.Spec.Password = generatedPassword
 	// Kratos checks if the user is already available
-	id, err := s.ap.Create(ctx, user.GetSpec().GetPassword(), map[string]interface{}{
+	id, err := s.ap.Create(ctx, generatedPassword, map[string]interface{}{
 		"email":      user.GetMetadata().GetName(), // can be just username for API access
 		"first_name": user.GetSpec().GetFirstName(),
 		"last_name":  user.GetSpec().GetLastName(),
