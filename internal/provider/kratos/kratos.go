@@ -23,7 +23,7 @@ type kratosAuthProvider struct {
 }
 type AuthProvider interface {
 	// create new user
-	Create(context.Context, map[string]interface{}, bool) (string, error) // returns id,error
+	Create(context.Context, string, map[string]interface{}, bool) (string, error) // returns id,error
 	// update user
 	Update(context.Context, string, map[string]interface{}, bool) error
 	// get recovery link for user
@@ -38,8 +38,16 @@ func NewKratosAuthProvider(kc *kclient.APIClient) AuthProvider {
 	return &kratosAuthProvider{kc: kc}
 }
 
-func (k *kratosAuthProvider) Create(ctx context.Context, traits map[string]interface{}, forceReset bool) (string, error) {
+func (k *kratosAuthProvider) Create(ctx context.Context, password string, traits map[string]interface{}, forceReset bool) (string, error) {
 	cib := kclient.NewAdminCreateIdentityBody("default", traits)
+	cib.SetCredentials(kclient.AdminIdentityImportCredentials{
+		Password: &kclient.AdminCreateIdentityImportCredentialsPassword{
+			Config: &kclient.AdminCreateIdentityImportCredentialsPasswordConfig{
+				Password: kclient.PtrString(password),
+			},
+		},
+	})
+
 	ipm := IdentityPublicMetadata{
 		ForceReset: forceReset,
 	}
@@ -88,7 +96,7 @@ func (k *kratosAuthProvider) GetPublicMetadata(ctx context.Context, id string) (
 		return nil, err
 	}
 	if res.StatusCode != http.StatusOK {
-		return nil, errors.New("Failed to get identity")
+		return nil, errors.New("failed to get identity")
 	}
 	ipm := &IdentityPublicMetadata{}
 	if identity.HasMetadataPublic() {

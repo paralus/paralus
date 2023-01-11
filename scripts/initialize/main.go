@@ -20,6 +20,7 @@ import (
 	"github.com/paralus/paralus/pkg/common"
 	"github.com/paralus/paralus/pkg/enforcer"
 	"github.com/paralus/paralus/pkg/service"
+	"github.com/paralus/paralus/pkg/utils"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	rolev3 "github.com/paralus/paralus/proto/types/rolepb/v3"
 	systemv3 "github.com/paralus/paralus/proto/types/systempb/v3"
@@ -298,12 +299,14 @@ func main() {
 
 retry:
 	numOfRetries := 0
+	defaultPassword := utils.GetRandomPassword(8)
 	// should we directly interact with kratos and create a user with a password?
 	_, err = us.Create(context.Background(), &userv3.User{
 		Metadata: &commonv3.Metadata{Name: *oae, Partner: *partner, Organization: *org},
 		Spec: &userv3.UserSpec{
 			FirstName: *oafn,
 			LastName:  *oaln,
+			Password:  defaultPassword,
 			Groups:    []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
 			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{
 				{Role: "ADMIN", Group: &admingrp.Metadata.Name},
@@ -322,4 +325,5 @@ retry:
 		time.Sleep(10 * time.Second)
 		goto retry
 	}
+	fmt.Println("Org Admin default password: ", defaultPassword)
 }

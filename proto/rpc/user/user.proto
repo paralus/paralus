@@ -71,7 +71,10 @@ message UserListApiKeysResponse { repeated ApiKeyResponse items = 1; }
 
 message UserForgotPasswordRequest { string username = 1; }
 
-message UserForgotPasswordResponse { string recoveryLink = 1; }
+message UserForgotPasswordResponse { 
+  string recoveryLink = 1; 
+  string defaultPassword = 2; 
+}
 
 message UserDeleteApiKeysResponse {}
 message CliConfigRequest {}
