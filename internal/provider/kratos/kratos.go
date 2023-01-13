@@ -40,6 +40,7 @@ func NewKratosAuthProvider(kc *kclient.APIClient) AuthProvider {
 
 func (k *kratosAuthProvider) Create(ctx context.Context, password string, traits map[string]interface{}, forceReset bool) (string, error) {
 	cib := kclient.NewAdminCreateIdentityBody("default", traits)
+	cib.Credentials = kclient.NewAdminIdentityImportCredentials()
 	cib.Credentials.SetPassword(kclient.AdminCreateIdentityImportCredentialsPassword{
 		Config: &kclient.AdminCreateIdentityImportCredentialsPasswordConfig{
 			Password: kclient.PtrString(password),

@@ -297,6 +297,7 @@ func main() {
 		},
 	})
 
+	p := utils.GetRandomPassword(8)
 retry:
 	numOfRetries := 0
 	// should we directly interact with kratos and create a user with a password?
@@ -305,7 +306,7 @@ retry:
 		Spec: &userv3.UserSpec{
 			FirstName: *oafn,
 			LastName:  *oaln,
-			Password:  utils.GetRandomPassword(8),
+			Password:  p,
 			Groups:    []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
 			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{
 				{Role: "ADMIN", Group: &admingrp.Metadata.Name},
@@ -324,4 +325,5 @@ retry:
 		time.Sleep(10 * time.Second)
 		goto retry
 	}
+	fmt.Printf("Org Admin default password: %s\n", p)
 }
