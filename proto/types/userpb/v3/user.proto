@@ -96,6 +96,11 @@ message UserInfoSpec {
         description : "Flag to show if phone number of the user was verified"
         read_only : true
       } ];
+  bool forceReset = 11
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+          title : "ForceReset"
+          description : "This indicate user has auto generated password. Client should reset the user password."
+      } ];
 }
 
 message User {
@@ -143,6 +148,7 @@ message UserSpec {
     json_schema : {
       title : "User Specification"
       description : "User specification"
+      required : [ "forceReset" ]
     }
   };
   string firstName = 1

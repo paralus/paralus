@@ -136,6 +136,14 @@ service UserService {
     };
   };
 
+  rpc UpdateUserForceReset(paralus.dev.types.user.v3.User)
+      returns (paralus.dev.types.user.v3.User) {
+    option (google.api.http) = {
+      put : "/auth/v3/user/{metadata.name}/reset"
+      body : "*"
+    };
+  };
+
   rpc DeleteUser(paralus.dev.types.user.v3.User) returns (UserDeleteApiKeysResponse) {
     option (google.api.http) = {
       delete : "/auth/v3/user/{metadata.name}"

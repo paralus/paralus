@@ -43,6 +43,8 @@ type UserService interface {
 	GetUserInfo(context.Context, *userv3.User) (*userv3.UserInfo, error)
 	// create or update user
 	Update(context.Context, *userv3.User) (*userv3.User, error)
+	// update user force reset flag
+	UpdateForceResetFlag(context.Context, *userv3.User) (*userv3.User, error)
 	// delete user
 	Delete(context.Context, *userv3.User) (*userrpcv3.UserDeleteApiKeysResponse, error)
 	// list users
@@ -591,18 +593,23 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 
 	roleMap := map[string][]string{}
 	if usr, ok := entity.(*models.KratosIdentities); ok {
+
 		user, err := s.identitiesModelToUser(ctx, s.db, user, usr)
 		if err != nil {
 			return &userv3.UserInfo{}, err
 		}
-
+		meta, err := s.ap.GetPublicMetadata(ctx, usr.ID.String())
+		if err != nil {
+			return &userv3.UserInfo{}, err
+		}
 		userinfo := &userv3.UserInfo{Metadata: user.Metadata}
 		userinfo.ApiVersion = apiVersion
 		userinfo.Kind = "UserInfo"
 		userinfo.Spec = &userv3.UserInfoSpec{
-			FirstName: user.Spec.FirstName,
-			LastName:  user.Spec.LastName,
-			Groups:    user.Spec.Groups,
+			FirstName:  user.Spec.FirstName,
+			LastName:   user.Spec.LastName,
+			Groups:     user.Spec.Groups,
+			ForceReset: meta.ForceReset,
 		}
 		permissions := []*userv3.Permission{}
 		for _, p := range user.Spec.ProjectNamespaceRoles {
@@ -682,6 +689,32 @@ func (s *userService) deleteUserRoleRelations(ctx context.Context, db bun.IDB, u
 	}
 
 	return ids, nil
+}
+
+func (s *userService) UpdateForceResetFlag(ctx context.Context, user *userv3.User) (*userv3.User, error) {
+	name := user.GetMetadata().GetName()
+	entity, err := dao.GetUserFullByEmail(ctx, s.db, name, &models.KratosIdentities{})
+	if err != nil {
+		return &userv3.User{}, fmt.Errorf("no user found with name '%v'", name)
+	}
+
+	if usr, ok := entity.(*models.KratosIdentities); ok {
+		if usr.IdentityCredential.IdentityCredentialType.Name == "password" {
+			// Don't update details for non local(IDP) users
+			err = s.ap.Update(ctx, usr.ID.String(), map[string]interface{}{
+				"email":      user.GetMetadata().GetName(),
+				"first_name": user.GetSpec().GetFirstName(),
+				"last_name":  user.GetSpec().GetLastName(),
+			}, user.Spec.ForceReset)
+			if err != nil {
+				return &userv3.User{}, err
+			}
+		} else {
+			return &userv3.User{}, fmt.Errorf("unable to update for '%v' due to non IDP user", name)
+		}
+
+	}
+	return user, nil
 }
 
 func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.User, error) {
