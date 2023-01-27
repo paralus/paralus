@@ -148,7 +148,6 @@ message UserSpec {
     json_schema : {
       title : "User Specification"
       description : "User specification"
-      required : [ "forceReset" ]
     }
   };
   string firstName = 1

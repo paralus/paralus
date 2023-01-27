@@ -44,7 +44,7 @@ type UserService interface {
 	// create or update user
 	Update(context.Context, *userv3.User) (*userv3.User, error)
 	// update user force reset flag
-	UpdateForceResetFlag(context.Context, *userv3.User) (*userv3.User, error)
+	UpdateForceResetFlag(context.Context, string) error
 	// delete user
 	Delete(context.Context, *userv3.User) (*userrpcv3.UserDeleteApiKeysResponse, error)
 	// list users
@@ -691,30 +691,19 @@ func (s *userService) deleteUserRoleRelations(ctx context.Context, db bun.IDB, u
 	return ids, nil
 }
 
-func (s *userService) UpdateForceResetFlag(ctx context.Context, user *userv3.User) (*userv3.User, error) {
-	name := user.GetMetadata().GetName()
-	entity, err := dao.GetUserFullByEmail(ctx, s.db, name, &models.KratosIdentities{})
+func (s *userService) UpdateForceResetFlag(ctx context.Context, username string) error {
+	entity, err := dao.GetUserFullByEmail(ctx, s.db, username, &models.KratosIdentities{})
 	if err != nil {
-		return &userv3.User{}, fmt.Errorf("no user found with name '%v'", name)
+		return fmt.Errorf("no user found with name '%v'", username)
 	}
 
 	if usr, ok := entity.(*models.KratosIdentities); ok {
-		if usr.IdentityCredential.IdentityCredentialType.Name == "password" {
-			// Don't update details for non local(IDP) users
-			err = s.ap.Update(ctx, usr.ID.String(), map[string]interface{}{
-				"email":      user.GetMetadata().GetName(),
-				"first_name": user.GetSpec().GetFirstName(),
-				"last_name":  user.GetSpec().GetLastName(),
-			}, user.Spec.ForceReset)
-			if err != nil {
-				return &userv3.User{}, err
-			}
-		} else {
-			return &userv3.User{}, fmt.Errorf("unable to update for '%v' due to non IDP user", name)
+		err = s.ap.Update(ctx, usr.ID.String(), usr.Traits, false)
+		if err != nil {
+			return err
 		}
-
 	}
-	return user, nil
+	return nil
 }
 
 func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.User, error) {

@@ -72,14 +72,14 @@ func (s *userServer) UpdateUser(ctx context.Context, req *userpbv3.User) (*userp
 	return updateUserStatus(req, resp, err), err
 }
 
-func (s *userServer) UpdateUserForceReset(ctx context.Context, req *userpbv3.User) (*userpbv3.User, error) {
-	_, ok := service.GetSessionDataFromContext(ctx)
+func (s *userServer) UpdateUserForceReset(ctx context.Context, req *rpcv3.UpdateForceResetRequest) (*rpcv3.UpdateForceResetResponse, error) {
+	sessData, ok := service.GetSessionDataFromContext(ctx)
 	if !ok {
 		return nil, fmt.Errorf("unable to retrieve session data")
 	}
 
-	resp, err := s.us.UpdateForceResetFlag(ctx, req)
-	return updateUserStatus(req, resp, err), err
+	err := s.us.UpdateForceResetFlag(ctx, sessData.Username)
+	return &rpcv3.UpdateForceResetResponse{}, err
 }
 
 func (s *userServer) DownloadCliConfig(ctx context.Context, req *rpcv3.CliConfigRequest) (*v3.HttpBody, error) {

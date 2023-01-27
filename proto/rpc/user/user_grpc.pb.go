@@ -30,7 +30,7 @@ type UserServiceClient interface {
 	GetUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
 	GetUserInfo(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.UserInfo, error)
 	UpdateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
-	UpdateUserForceReset(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
+	UpdateUserForceReset(ctx context.Context, in *UpdateForceResetRequest, opts ...grpc.CallOption) (*UpdateForceResetResponse, error)
 	DeleteUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*UserDeleteApiKeysResponse, error)
 	DownloadCliConfig(ctx context.Context, in *CliConfigRequest, opts ...grpc.CallOption) (*v31.HttpBody, error)
 	UserListApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*UserListApiKeysResponse, error)
@@ -100,8 +100,8 @@ func (c *userServiceClient) UpdateUser(ctx context.Context, in *v3.User, opts ..
 	return out, nil
 }
 
-func (c *userServiceClient) UpdateUserForceReset(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error) {
-	out := new(v3.User)
+func (c *userServiceClient) UpdateUserForceReset(ctx context.Context, in *UpdateForceResetRequest, opts ...grpc.CallOption) (*UpdateForceResetResponse, error) {
+	out := new(UpdateForceResetResponse)
 	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.UserService/UpdateUserForceReset", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -164,7 +164,7 @@ type UserServiceServer interface {
 	GetUser(context.Context, *v3.User) (*v3.User, error)
 	GetUserInfo(context.Context, *v3.User) (*v3.UserInfo, error)
 	UpdateUser(context.Context, *v3.User) (*v3.User, error)
-	UpdateUserForceReset(context.Context, *v3.User) (*v3.User, error)
+	UpdateUserForceReset(context.Context, *UpdateForceResetRequest) (*UpdateForceResetResponse, error)
 	DeleteUser(context.Context, *v3.User) (*UserDeleteApiKeysResponse, error)
 	DownloadCliConfig(context.Context, *CliConfigRequest) (*v31.HttpBody, error)
 	UserListApiKeys(context.Context, *ApiKeyRequest) (*UserListApiKeysResponse, error)
@@ -194,7 +194,7 @@ func (UnimplementedUserServiceServer) GetUserInfo(context.Context, *v3.User) (*v
 func (UnimplementedUserServiceServer) UpdateUser(context.Context, *v3.User) (*v3.User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
-func (UnimplementedUserServiceServer) UpdateUserForceReset(context.Context, *v3.User) (*v3.User, error) {
+func (UnimplementedUserServiceServer) UpdateUserForceReset(context.Context, *UpdateForceResetRequest) (*UpdateForceResetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserForceReset not implemented")
 }
 func (UnimplementedUserServiceServer) DeleteUser(context.Context, *v3.User) (*UserDeleteApiKeysResponse, error) {
@@ -333,7 +333,7 @@ func _UserService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _UserService_UpdateUserForceReset_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v3.User)
+	in := new(UpdateForceResetRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -345,7 +345,7 @@ func _UserService_UpdateUserForceReset_Handler(srv interface{}, ctx context.Cont
 		FullMethod: "/paralus.dev.rpc.user.v3.UserService/UpdateUserForceReset",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).UpdateUserForceReset(ctx, req.(*v3.User))
+		return srv.(UserServiceServer).UpdateUserForceReset(ctx, req.(*UpdateForceResetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

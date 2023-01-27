@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	v6Client "github.com/elastic/go-elasticsearch/v6"
+	v6Client "github.com/elastic/go-elasticsearch"
 )
 
 type elasticSearchQuery struct {
@@ -46,7 +46,7 @@ func NewElasticSearchQuery(url string, indexPattern string, logPrefix string) (E
 	return esQuery, nil
 }
 
-//Handle Fires the search query
+// Handle Fires the search query
 func (q *elasticSearchQuery) Handle(msg bytes.Buffer) (map[string]interface{}, error) {
 	_log.Debugw("Searching elastic search: ", "index", q.indexPattern, "url", q.url, "q", q)
 	res, err := q.esClient.Search(

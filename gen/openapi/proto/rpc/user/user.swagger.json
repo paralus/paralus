@@ -100,6 +100,49 @@
         ]
       }
     },
+    "/auth/v3/user/reset": {
+      "put": {
+        "operationId": "UserService_UpdateUserForceReset",
+        "responses": {
+          "200": {
+            "description": "Returned when user forcereset flag has been successfully unset",
+            "schema": {
+              "$ref": "#/definitions/v3UpdateForceResetResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3UpdateForceResetRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UserService"
+        ]
+      }
+    },
     "/auth/v3/user/{metadata.name}": {
       "get": {
         "operationId": "UserService_GetUser",
@@ -297,7 +340,7 @@
             "name": "spec.forceReset",
             "description": "ForceReset\n\nThis indicate user has auto generated password. Client should reset the user password.",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "boolean"
           },
           {
@@ -541,7 +584,7 @@
             "name": "spec.forceReset",
             "description": "ForceReset\n\nThis indicate user has auto generated password. Client should reset the user password.",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "boolean"
           },
           {
@@ -587,160 +630,6 @@
       },
       "put": {
         "operationId": "UserService_UpdateUser",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v3User"
-            }
-          },
-          "403": {
-            "description": "Returned when the user does not have permission to access the resource.",
-            "schema": {}
-          },
-          "404": {
-            "description": "Returned when the resource does not exist.",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/googlerpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "metadata.name",
-            "description": "name of the resource",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "apiVersion": {
-                  "type": "string",
-                  "default": "system.k8smgmt.io/v3",
-                  "description": "API Version of the user resource",
-                  "title": "API Version"
-                },
-                "kind": {
-                  "type": "string",
-                  "default": "User",
-                  "description": "Kind of the user resource",
-                  "title": "Kind"
-                },
-                "metadata": {
-                  "type": "object",
-                  "example": {
-                    "name": "some-name",
-                    "project": "defaultproject"
-                  },
-                  "properties": {
-                    "displayName": {
-                      "type": "string",
-                      "description": "display name of the resource",
-                      "title": "Display Name"
-                    },
-                    "description": {
-                      "type": "string",
-                      "description": "description of the resource",
-                      "title": "Description"
-                    },
-                    "labels": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "labels of the resource",
-                      "title": "Labels"
-                    },
-                    "annotations": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "annotations of the resource",
-                      "title": "Annotations"
-                    },
-                    "project": {
-                      "type": "string",
-                      "description": "Project of the resource",
-                      "title": "Project"
-                    },
-                    "organization": {
-                      "type": "string",
-                      "description": "Organization to which the resource belongs",
-                      "title": "Organization"
-                    },
-                    "partner": {
-                      "type": "string",
-                      "description": "Partner to which the resource belongs",
-                      "title": "Partner"
-                    },
-                    "id": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "urlScope": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    },
-                    "modifiedAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    }
-                  },
-                  "description": "metadata of the resource",
-                  "title": "Metadata"
-                },
-                "spec": {
-                  "$ref": "#/definitions/v3UserSpec",
-                  "description": "Spec of the user resource",
-                  "title": "Spec"
-                },
-                "status": {
-                  "$ref": "#/definitions/commonv3Status",
-                  "description": "Status of the resource",
-                  "title": "Status",
-                  "readOnly": true
-                }
-              },
-              "description": "User",
-              "title": "User",
-              "required": [
-                "apiVersion",
-                "kind",
-                "metadata",
-                "spec",
-                "project"
-              ]
-            }
-          }
-        ],
-        "tags": [
-          "UserService"
-        ]
-      }
-    },
-    "/auth/v3/user/{metadata.name}/reset": {
-      "put": {
-        "operationId": "UserService_UpdateUserForceReset",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -1224,7 +1113,7 @@
             "name": "spec.forceReset",
             "description": "ForceReset\n\nThis indicate user has auto generated password. Client should reset the user password.",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "boolean"
           },
           {
@@ -1808,6 +1697,12 @@
       "description": "Project, role and namespace pairing for permission",
       "title": "ProjectNamespaceRole"
     },
+    "v3UpdateForceResetRequest": {
+      "type": "object"
+    },
+    "v3UpdateForceResetResponse": {
+      "type": "object"
+    },
     "v3User": {
       "type": "object",
       "properties": {
@@ -1856,9 +1751,6 @@
       "type": "object",
       "properties": {
         "recoveryLink": {
-          "type": "string"
-        },
-        "defaultPassword": {
           "type": "string"
         }
       }
@@ -2108,10 +2000,7 @@
         }
       },
       "description": "User specification",
-      "title": "User Specification",
-      "required": [
-        "forceReset"
-      ]
+      "title": "User Specification"
     }
   },
   "securityDefinitions": {
