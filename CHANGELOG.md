@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## Fixed
+- Fix project id is recorded as part of cluster related auditlogs from [niravparikh05](https://github.com/niravparikh05)
+
 ## Added
 - Enhance: Ability to set auto generated password during installation and force reset during first login [mabhi](https://github.com/mabhi)
 
