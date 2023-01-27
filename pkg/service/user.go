@@ -43,6 +43,8 @@ type UserService interface {
 	GetUserInfo(context.Context, *userv3.User) (*userv3.UserInfo, error)
 	// create or update user
 	Update(context.Context, *userv3.User) (*userv3.User, error)
+	// update user force reset flag
+	UpdateForceResetFlag(context.Context, string) error
 	// delete user
 	Delete(context.Context, *userv3.User) (*userrpcv3.UserDeleteApiKeysResponse, error)
 	// list users
@@ -417,13 +419,17 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 
 	// we should not be taking idp groups as input on local user creation
 	user.Spec.IdpGroups = []string{}
-
+	generatedPassword := user.GetSpec().GetPassword()
+	if len(generatedPassword) == 0 {
+		generatedPassword = utils.GetRandomPassword(8)
+	}
+	user.Spec.Password = generatedPassword
 	// Kratos checks if the user is already available
-	id, err := s.ap.Create(ctx, map[string]interface{}{
+	id, err := s.ap.Create(ctx, generatedPassword, map[string]interface{}{
 		"email":      user.GetMetadata().GetName(), // can be just username for API access
 		"first_name": user.GetSpec().GetFirstName(),
 		"last_name":  user.GetSpec().GetLastName(),
-	})
+	}, user.Spec.ForceReset)
 	if err != nil {
 		return &userv3.User{}, err
 	}
@@ -453,13 +459,6 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 		_log.Warn("unable to commit changes", err)
 		return &userv3.User{}, err
 	}
-
-	rl, err := s.ap.GetRecoveryLink(ctx, id)
-	if err != nil {
-		_log.Warn("unable to generate recovery url", err)
-		return &userv3.User{}, err
-	}
-	user.Spec.RecoveryUrl = &rl
 
 	CreateUserAuditEvent(ctx, s.al, s.db, AuditActionCreate, user.GetMetadata().GetName(), uid, []uuid.UUID{}, rolesAfter, []uuid.UUID{}, groupsAfter)
 	return user, nil
@@ -559,6 +558,12 @@ func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3
 			user.GetSpec().LastLogin = lastLogin
 		}
 
+		meta, err := s.ap.GetPublicMetadata(ctx, usr.ID.String())
+		if err != nil {
+			return &userv3.User{}, err
+		}
+		user.Spec.ForceReset = meta.ForceReset
+
 		return user, nil
 	}
 	return user, nil
@@ -588,18 +593,23 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 
 	roleMap := map[string][]string{}
 	if usr, ok := entity.(*models.KratosIdentities); ok {
+
 		user, err := s.identitiesModelToUser(ctx, s.db, user, usr)
 		if err != nil {
 			return &userv3.UserInfo{}, err
 		}
-
+		meta, err := s.ap.GetPublicMetadata(ctx, usr.ID.String())
+		if err != nil {
+			return &userv3.UserInfo{}, err
+		}
 		userinfo := &userv3.UserInfo{Metadata: user.Metadata}
 		userinfo.ApiVersion = apiVersion
 		userinfo.Kind = "UserInfo"
 		userinfo.Spec = &userv3.UserInfoSpec{
-			FirstName: user.Spec.FirstName,
-			LastName:  user.Spec.LastName,
-			Groups:    user.Spec.Groups,
+			FirstName:  user.Spec.FirstName,
+			LastName:   user.Spec.LastName,
+			Groups:     user.Spec.Groups,
+			ForceReset: meta.ForceReset,
 		}
 		permissions := []*userv3.Permission{}
 		for _, p := range user.Spec.ProjectNamespaceRoles {
@@ -681,6 +691,21 @@ func (s *userService) deleteUserRoleRelations(ctx context.Context, db bun.IDB, u
 	return ids, nil
 }
 
+func (s *userService) UpdateForceResetFlag(ctx context.Context, username string) error {
+	entity, err := dao.GetUserFullByEmail(ctx, s.db, username, &models.KratosIdentities{})
+	if err != nil {
+		return fmt.Errorf("no user found with name '%v'", username)
+	}
+
+	if usr, ok := entity.(*models.KratosIdentities); ok {
+		err = s.ap.Update(ctx, usr.ID.String(), usr.Traits, false)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.User, error) {
 	name := user.GetMetadata().GetName()
 	entity, err := dao.GetUserFullByEmail(ctx, s.db, name, &models.KratosIdentities{})
@@ -700,7 +725,7 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 				"email":      user.GetMetadata().GetName(),
 				"first_name": user.GetSpec().GetFirstName(),
 				"last_name":  user.GetSpec().GetLastName(),
-			})
+			}, user.Spec.ForceReset)
 			if err != nil {
 				return &userv3.User{}, err
 			}

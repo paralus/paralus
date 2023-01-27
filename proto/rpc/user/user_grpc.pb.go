@@ -30,6 +30,7 @@ type UserServiceClient interface {
 	GetUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
 	GetUserInfo(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.UserInfo, error)
 	UpdateUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*v3.User, error)
+	UpdateUserForceReset(ctx context.Context, in *UpdateForceResetRequest, opts ...grpc.CallOption) (*UpdateForceResetResponse, error)
 	DeleteUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*UserDeleteApiKeysResponse, error)
 	DownloadCliConfig(ctx context.Context, in *CliConfigRequest, opts ...grpc.CallOption) (*v31.HttpBody, error)
 	UserListApiKeys(ctx context.Context, in *ApiKeyRequest, opts ...grpc.CallOption) (*UserListApiKeysResponse, error)
@@ -99,6 +100,15 @@ func (c *userServiceClient) UpdateUser(ctx context.Context, in *v3.User, opts ..
 	return out, nil
 }
 
+func (c *userServiceClient) UpdateUserForceReset(ctx context.Context, in *UpdateForceResetRequest, opts ...grpc.CallOption) (*UpdateForceResetResponse, error) {
+	out := new(UpdateForceResetResponse)
+	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.UserService/UpdateUserForceReset", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) DeleteUser(ctx context.Context, in *v3.User, opts ...grpc.CallOption) (*UserDeleteApiKeysResponse, error) {
 	out := new(UserDeleteApiKeysResponse)
 	err := c.cc.Invoke(ctx, "/paralus.dev.rpc.user.v3.UserService/DeleteUser", in, out, opts...)
@@ -154,6 +164,7 @@ type UserServiceServer interface {
 	GetUser(context.Context, *v3.User) (*v3.User, error)
 	GetUserInfo(context.Context, *v3.User) (*v3.UserInfo, error)
 	UpdateUser(context.Context, *v3.User) (*v3.User, error)
+	UpdateUserForceReset(context.Context, *UpdateForceResetRequest) (*UpdateForceResetResponse, error)
 	DeleteUser(context.Context, *v3.User) (*UserDeleteApiKeysResponse, error)
 	DownloadCliConfig(context.Context, *CliConfigRequest) (*v31.HttpBody, error)
 	UserListApiKeys(context.Context, *ApiKeyRequest) (*UserListApiKeysResponse, error)
@@ -182,6 +193,9 @@ func (UnimplementedUserServiceServer) GetUserInfo(context.Context, *v3.User) (*v
 }
 func (UnimplementedUserServiceServer) UpdateUser(context.Context, *v3.User) (*v3.User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
+}
+func (UnimplementedUserServiceServer) UpdateUserForceReset(context.Context, *UpdateForceResetRequest) (*UpdateForceResetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserForceReset not implemented")
 }
 func (UnimplementedUserServiceServer) DeleteUser(context.Context, *v3.User) (*UserDeleteApiKeysResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
@@ -318,6 +332,24 @@ func _UserService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_UpdateUserForceReset_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateForceResetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UpdateUserForceReset(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/paralus.dev.rpc.user.v3.UserService/UpdateUserForceReset",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UpdateUserForceReset(ctx, req.(*UpdateForceResetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v3.User)
 	if err := dec(in); err != nil {
@@ -438,6 +470,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUser",
 			Handler:    _UserService_UpdateUser_Handler,
+		},
+		{
+			MethodName: "UpdateUserForceReset",
+			Handler:    _UserService_UpdateUserForceReset_Handler,
 		},
 		{
 			MethodName: "DeleteUser",

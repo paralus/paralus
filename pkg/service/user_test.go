@@ -85,7 +85,7 @@ func TestCreateUser(t *testing.T) {
 	if user.GetMetadata().GetName() != "user-"+uuuid {
 		t.Errorf("expected name 'user-%v'; got '%v'", uuuid, user.GetMetadata().GetName())
 	}
-	performBasicAuthProviderChecks(t, *ap, 1, 0, 1, 0)
+	performBasicAuthProviderChecks(t, *ap, 1, 0, 0, 0)
 }
 
 func TestCreateUserWithRole(t *testing.T) {
@@ -160,7 +160,7 @@ func TestCreateUserWithRole(t *testing.T) {
 				t.Errorf("expected name 'user-%v'; got '%v'", uuuid, user.GetMetadata().GetName())
 			}
 
-			performBasicAuthProviderChecks(t, *ap, 1, 0, 1, 0)
+			performBasicAuthProviderChecks(t, *ap, 1, 0, 0, 0)
 		})
 	}
 }

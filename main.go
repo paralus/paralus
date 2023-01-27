@@ -641,6 +641,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 		},
 		ExcludeAuthzMethods: []string{
 			"/paralus.dev.rpc.user.v3.UserService/GetUserInfo",
+			"/paralus.dev.rpc.user.v3.UserService/UpdateUserForceReset",
 		},
 	}
 	opts = append(opts, _grpc.UnaryInterceptor(

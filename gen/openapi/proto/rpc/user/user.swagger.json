@@ -100,6 +100,49 @@
         ]
       }
     },
+    "/auth/v3/user/reset": {
+      "put": {
+        "operationId": "UserService_UpdateUserForceReset",
+        "responses": {
+          "200": {
+            "description": "Returned when user forcereset flag has been successfully unset",
+            "schema": {
+              "$ref": "#/definitions/v3UpdateForceResetResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3UpdateForceResetRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UserService"
+        ]
+      }
+    },
     "/auth/v3/user/{metadata.name}": {
       "get": {
         "operationId": "UserService_GetUser",
@@ -292,6 +335,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "spec.forceReset",
+            "description": "ForceReset\n\nThis indicate user has auto generated password. Client should reset the user password.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "status.conditionType",
@@ -529,6 +579,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "spec.forceReset",
+            "description": "ForceReset\n\nThis indicate user has auto generated password. Client should reset the user password.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "status.conditionType",
@@ -1051,6 +1108,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "spec.forceReset",
+            "description": "ForceReset\n\nThis indicate user has auto generated password. Client should reset the user password.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "status.conditionType",
@@ -1633,6 +1697,12 @@
       "description": "Project, role and namespace pairing for permission",
       "title": "ProjectNamespaceRole"
     },
+    "v3UpdateForceResetRequest": {
+      "type": "object"
+    },
+    "v3UpdateForceResetResponse": {
+      "type": "object"
+    },
     "v3User": {
       "type": "object",
       "properties": {
@@ -1781,6 +1851,11 @@
           "description": "Flag to show if phone number of the user was verified",
           "title": "PhoneVerified",
           "readOnly": true
+        },
+        "forceReset": {
+          "type": "boolean",
+          "description": "This indicate user has auto generated password. Client should reset the user password.",
+          "title": "ForceReset"
         }
       },
       "description": "User info specification",
@@ -1917,6 +1992,11 @@
           "description": "Last access date time in RFC3339 format.",
           "title": "LastLogin",
           "readOnly": true
+        },
+        "forceReset": {
+          "type": "boolean",
+          "description": "This indicate user has auto generated password. Client should reset the user password.",
+          "title": "ForceReset"
         }
       },
       "description": "User specification",
