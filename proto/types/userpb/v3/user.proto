@@ -96,6 +96,11 @@ message UserInfoSpec {
         description : "Flag to show if phone number of the user was verified"
         read_only : true
       } ];
+  bool forceReset = 11
+      [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+          title : "ForceReset"
+          description : "This indicate user has auto generated password. Client should reset the user password."
+      } ];
 }
 
 message User {
@@ -205,6 +210,11 @@ message UserSpec {
         title : "LastLogin"
         description : "Last access date time in RFC3339 format."
         read_only : true
+    } ];
+  bool forceReset = 13
+    [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        title : "ForceReset"
+        description : "This indicate user has auto generated password. Client should reset the user password."
     } ];
 }
 

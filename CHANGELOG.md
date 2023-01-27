@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## Added
+- Enhance: Ability to set auto generated password during installation and force reset during first login [mabhi](https://github.com/mabhi)
+
+## Changed
+- Upgraded Ory Kratos to v0.10.1 [akshay196](https://github.com/akshay196)
+
 ## [0.1.9] - 2022-12-29
 
 ## Added
