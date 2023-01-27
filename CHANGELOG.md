@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## Fixed
+- Fix project id is recorded as part of cluster related auditlogs from [niravparikh05](https://github.com/niravparikh05)
+
 ## [0.1.9] - 2022-12-29
 
 ## Added

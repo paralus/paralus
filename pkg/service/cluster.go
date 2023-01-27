@@ -596,6 +596,13 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 		h.OnChange(ev)
 	}*/
 
+	if id, err := uuid.Parse(projectName); err == nil {
+		projectName, err = dao.GetProjectName(ctx, s.db, id)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	CreateClusterAuditEvent(ctx, s.al, AuditActionUpdate, cluster.GetMetadata().GetName(), cdb.ID, projectName)
 
 	return cluster, nil
