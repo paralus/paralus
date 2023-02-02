@@ -66,7 +66,8 @@ func NewBootstrapRegisterBootstrapAgentOK() *BootstrapRegisterBootstrapAgentOK {
 	return &BootstrapRegisterBootstrapAgentOK{}
 }
 
-/* BootstrapRegisterBootstrapAgentOK describes a response with status code 200, with default header values.
+/*
+	BootstrapRegisterBootstrapAgentOK describes a response with status code 200, with default header values.
 
 A successful response.
 */
@@ -98,7 +99,8 @@ func NewBootstrapRegisterBootstrapAgentForbidden() *BootstrapRegisterBootstrapAg
 	return &BootstrapRegisterBootstrapAgentForbidden{}
 }
 
-/* BootstrapRegisterBootstrapAgentForbidden describes a response with status code 403, with default header values.
+/*
+	BootstrapRegisterBootstrapAgentForbidden describes a response with status code 403, with default header values.
 
 Returned when the user does not have permission to access the resource.
 */
@@ -128,7 +130,8 @@ func NewBootstrapRegisterBootstrapAgentNotFound() *BootstrapRegisterBootstrapAge
 	return &BootstrapRegisterBootstrapAgentNotFound{}
 }
 
-/* BootstrapRegisterBootstrapAgentNotFound describes a response with status code 404, with default header values.
+/*
+	BootstrapRegisterBootstrapAgentNotFound describes a response with status code 404, with default header values.
 
 Returned when the resource does not exist.
 */
@@ -158,7 +161,8 @@ func NewBootstrapRegisterBootstrapAgentInternalServerError() *BootstrapRegisterB
 	return &BootstrapRegisterBootstrapAgentInternalServerError{}
 }
 
-/* BootstrapRegisterBootstrapAgentInternalServerError describes a response with status code 500, with default header values.
+/*
+	BootstrapRegisterBootstrapAgentInternalServerError describes a response with status code 500, with default header values.
 
 Returned for internal server error
 */
@@ -190,7 +194,8 @@ func NewBootstrapRegisterBootstrapAgentDefault(code int) *BootstrapRegisterBoots
 	}
 }
 
-/* BootstrapRegisterBootstrapAgentDefault describes a response with status code -1, with default header values.
+/*
+	BootstrapRegisterBootstrapAgentDefault describes a response with status code -1, with default header values.
 
 An unexpected error response.
 */
@@ -224,7 +229,8 @@ func (o *BootstrapRegisterBootstrapAgentDefault) readResponse(response runtime.C
 	return nil
 }
 
-/*BootstrapRegisterBootstrapAgentBody bootstrap register bootstrap agent body
+/*
+BootstrapRegisterBootstrapAgentBody bootstrap register bootstrap agent body
 swagger:model BootstrapRegisterBootstrapAgentBody
 */
 type BootstrapRegisterBootstrapAgentBody struct {

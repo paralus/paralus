@@ -25,7 +25,7 @@ var (
 	_log = log.GetLogger()
 )
 
-//RelayClusterConnectionInfo relay conn info
+// RelayClusterConnectionInfo relay conn info
 type RelayClusterConnectionInfo struct {
 	Relayuuid string
 	Relayip   string
@@ -106,7 +106,7 @@ helloRPCSendLoop:
 	_log.Debugw("Exit: helloRPCSendLoop")
 }
 
-//ClientHelloRPC will handle periodic heartbeat messages between relay and the core service.
+// ClientHelloRPC will handle periodic heartbeat messages between relay and the core service.
 func ClientHelloRPC(ctx context.Context, stream sentryrpc.RelayPeerService_RelayPeerHelloRPCClient, interval time.Duration, relayUUID string, ip func() string) {
 
 	go helloRPCSend(ctx, stream, interval, relayUUID, ip)
@@ -127,7 +127,7 @@ func ClientHelloRPC(ctx context.Context, stream sentryrpc.RelayPeerService_Relay
 	_log.Debugw("stopping helloRPC routine")
 }
 
-//send loop of probe rpc. recvs clustersni from PeerProbeChanel and sends to core service
+// send loop of probe rpc. recvs clustersni from PeerProbeChanel and sends to core service
 func probeRPCSend(ctx context.Context, stream sentryrpc.RelayPeerService_RelayPeerProbeRPCClient, relayUUID string, peerProbeChanel chan string) {
 probeRPCSendLoop:
 	for {

@@ -52,10 +52,12 @@ func NewBootstrapGetBootstrapInfraParamsWithHTTPClient(client *http.Client) *Boo
 	}
 }
 
-/* BootstrapGetBootstrapInfraParams contains all the parameters to send to the API endpoint
-   for the bootstrap get bootstrap infra operation.
+/*
+BootstrapGetBootstrapInfraParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the bootstrap get bootstrap infra operation.
+
+	Typically these are written to a http.Request.
 */
 type BootstrapGetBootstrapInfraParams struct {
 

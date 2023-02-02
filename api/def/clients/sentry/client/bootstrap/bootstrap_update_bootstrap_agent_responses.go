@@ -64,7 +64,8 @@ func NewBootstrapUpdateBootstrapAgentOK() *BootstrapUpdateBootstrapAgentOK {
 	return &BootstrapUpdateBootstrapAgentOK{}
 }
 
-/* BootstrapUpdateBootstrapAgentOK describes a response with status code 200, with default header values.
+/*
+	BootstrapUpdateBootstrapAgentOK describes a response with status code 200, with default header values.
 
 A successful response.
 */
@@ -96,7 +97,8 @@ func NewBootstrapUpdateBootstrapAgentForbidden() *BootstrapUpdateBootstrapAgentF
 	return &BootstrapUpdateBootstrapAgentForbidden{}
 }
 
-/* BootstrapUpdateBootstrapAgentForbidden describes a response with status code 403, with default header values.
+/*
+	BootstrapUpdateBootstrapAgentForbidden describes a response with status code 403, with default header values.
 
 Returned when the user does not have permission to access the resource.
 */
@@ -126,7 +128,8 @@ func NewBootstrapUpdateBootstrapAgentNotFound() *BootstrapUpdateBootstrapAgentNo
 	return &BootstrapUpdateBootstrapAgentNotFound{}
 }
 
-/* BootstrapUpdateBootstrapAgentNotFound describes a response with status code 404, with default header values.
+/*
+	BootstrapUpdateBootstrapAgentNotFound describes a response with status code 404, with default header values.
 
 Returned when the resource does not exist.
 */
@@ -156,7 +159,8 @@ func NewBootstrapUpdateBootstrapAgentInternalServerError() *BootstrapUpdateBoots
 	return &BootstrapUpdateBootstrapAgentInternalServerError{}
 }
 
-/* BootstrapUpdateBootstrapAgentInternalServerError describes a response with status code 500, with default header values.
+/*
+	BootstrapUpdateBootstrapAgentInternalServerError describes a response with status code 500, with default header values.
 
 Returned for internal server error
 */
@@ -188,7 +192,8 @@ func NewBootstrapUpdateBootstrapAgentDefault(code int) *BootstrapUpdateBootstrap
 	}
 }
 
-/* BootstrapUpdateBootstrapAgentDefault describes a response with status code -1, with default header values.
+/*
+	BootstrapUpdateBootstrapAgentDefault describes a response with status code -1, with default header values.
 
 An unexpected error response.
 */

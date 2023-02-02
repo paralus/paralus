@@ -14,7 +14,7 @@ import (
 	relayrpc "github.com/paralus/paralus/proto/rpc/sentry"
 )
 
-//RelayClusterConnectionInfo relay conn info
+// RelayClusterConnectionInfo relay conn info
 type RelayClusterConnectionInfo struct {
 	Relayuuid string
 	Relayip   string
@@ -95,7 +95,7 @@ helloRPCSendLoop:
 	_log.Debugw("Exit: helloRPCSendLoop")
 }
 
-//ClientHelloRPC will handle periodic heartbeat messages between relay and the core service.
+// ClientHelloRPC will handle periodic heartbeat messages between relay and the core service.
 func ClientHelloRPC(ctx context.Context, stream relayrpc.RelayPeerService_RelayPeerHelloRPCClient, interval time.Duration, relayUUID string, ip func() string) {
 
 	go helloRPCSend(ctx, stream, interval, relayUUID, ip)
@@ -116,7 +116,7 @@ func ClientHelloRPC(ctx context.Context, stream relayrpc.RelayPeerService_RelayP
 	_log.Debugw("stopping helloRPC routine")
 }
 
-//ClientTLSConfig sets tls config
+// ClientTLSConfig sets tls config
 func ClientTLSConfig(tlsCrt string, tlsKey string, rootCA string, addr string) (*tls.Config, error) {
 
 	cert, err := tls.LoadX509KeyPair(tlsCrt, tlsKey)
@@ -155,7 +155,7 @@ func ClientTLSConfig(tlsCrt string, tlsKey string, rootCA string, addr string) (
 	}, nil
 }
 
-//send loop of probe rpc. recvs clustersni from PeerProbeChanel and sends to core service
+// send loop of probe rpc. recvs clustersni from PeerProbeChanel and sends to core service
 func probeRPCSend(ctx context.Context, stream relayrpc.RelayPeerService_RelayPeerProbeRPCClient, relayUUID string, peerProbeChanel chan string) {
 probeRPCSendLoop:
 	for {

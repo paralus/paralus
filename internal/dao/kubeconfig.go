@@ -67,6 +67,7 @@ func UpdateKubeconfigSetting(ctx context.Context, db bun.IDB, ks *models.Kubecon
 
 	q = q.Set("modified_at = ?", time.Now()).
 		Set("validity_seconds = ?", ks.ValiditySeconds).
+		Set("sa_validity_seconds = ?", ks.SaValiditySeconds).
 		Set("enforce_rsid = ?", ks.EnforceRsId).
 		Set("is_sso_user = ?", ks.IsSSOUser).
 		Set("disable_web_kubectl = ?", ks.DisableWebKubectl).

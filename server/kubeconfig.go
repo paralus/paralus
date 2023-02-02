@@ -101,18 +101,24 @@ func (s *kubeConfigServer) GetOrganizationSetting(ctx context.Context, req *sent
 	if err != nil {
 		return nil, err
 	}
+	sessData, ok := service.GetSessionDataFromContext(ctx)
+	if !ok {
+		return nil, fmt.Errorf("unable to retrieve session data")
+	}
+
 	if orgID != opts.Organization {
 		opts.Organization = orgID
 	}
-	ks, err := s.kss.Get(ctx, opts.Organization, "", false)
+	ks, err := s.kss.Get(ctx, opts.Organization, sessData.Account, false)
 	if err == constants.ErrNotFound {
-		return &sentryrpc.GetKubeconfigSettingResponse{ValiditySeconds: 31536000}, nil
+		return &sentryrpc.GetKubeconfigSettingResponse{ValiditySeconds: 31536000, SaValiditySeconds: 28800}, nil
 	} else if err != nil {
 		return nil, err
 	}
 
 	resp := &sentryrpc.GetKubeconfigSettingResponse{
 		ValiditySeconds:             ks.ValiditySeconds,
+		SaValiditySeconds:           ks.SaValiditySeconds,
 		EnableSessionCheck:          ks.EnableSessionCheck,
 		EnablePrivateRelay:          ks.EnablePrivateRelay,
 		EnforceOrgAdminSecretAccess: ks.EnforceOrgAdminSecretAccess,
@@ -137,6 +143,7 @@ func (s *kubeConfigServer) GetUserSetting(ctx context.Context, req *sentryrpc.Ge
 	}
 	resp := &sentryrpc.GetKubeconfigSettingResponse{
 		ValiditySeconds:             ks.ValiditySeconds,
+		SaValiditySeconds:           ks.SaValiditySeconds,
 		EnableSessionCheck:          ks.EnableSessionCheck,
 		EnablePrivateRelay:          ks.EnablePrivateRelay,
 		EnforceOrgAdminSecretAccess: ks.EnforceOrgAdminSecretAccess,
@@ -160,8 +167,9 @@ func (s *kubeConfigServer) UpdateOrganizationSetting(ctx context.Context, req *s
 	err = s.kss.Patch(ctx, &sentry.KubeconfigSetting{
 		OrganizationID:              opts.Organization,
 		PartnerID:                   opts.Partner,
-		AccountID:                   "",
+		AccountID:                   opts.Account,
 		ValiditySeconds:             req.ValiditySeconds,
+		SaValiditySeconds:           req.SaValiditySeconds,
 		EnableSessionCheck:          req.EnableSessionCheck,
 		EnablePrivateRelay:          req.EnablePrivateRelay,
 		EnforceOrgAdminSecretAccess: req.EnforceOrgAdminSecretAccess,
@@ -189,6 +197,7 @@ func (s *kubeConfigServer) UpdateUserSetting(ctx context.Context, req *sentryrpc
 		PartnerID:                   opts.Partner,
 		AccountID:                   accountID,
 		ValiditySeconds:             req.ValiditySeconds,
+		SaValiditySeconds:           req.SaValiditySeconds,
 		EnableSessionCheck:          req.EnableSessionCheck,
 		IsSSOUser:                   false,
 		EnforceOrgAdminSecretAccess: req.EnforceOrgAdminSecretAccess,
@@ -261,6 +270,7 @@ func (s *kubeConfigServer) GetSSOUserSetting(ctx context.Context, req *sentryrpc
 	}
 	resp := &sentryrpc.GetKubeconfigSettingResponse{
 		ValiditySeconds:             ks.ValiditySeconds,
+		SaValiditySeconds:           ks.SaValiditySeconds,
 		EnableSessionCheck:          ks.EnableSessionCheck,
 		EnablePrivateRelay:          ks.EnablePrivateRelay,
 		EnforceOrgAdminSecretAccess: ks.EnforceOrgAdminSecretAccess,
@@ -284,6 +294,7 @@ func (s *kubeConfigServer) UpdateSSOUserSetting(ctx context.Context, req *sentry
 		PartnerID:                   opts.Partner,
 		AccountID:                   accountID,
 		ValiditySeconds:             req.ValiditySeconds,
+		SaValiditySeconds:           req.SaValiditySeconds,
 		EnableSessionCheck:          req.EnableSessionCheck,
 		IsSSOUser:                   true,
 		EnforceOrgAdminSecretAccess: req.EnforceOrgAdminSecretAccess,
@@ -299,7 +310,7 @@ func (s *kubeConfigServer) UpdateSSOUserSetting(ctx context.Context, req *sentry
 	acID := accountID
 	partnerID := opts.Partner
 	orgIDString := opts.Organization
-	kubeconfigSettingEvent(ctx, "user.kubeconfig.setting", orgIDString, partnerID, forUser, acID, opts.Username, opts.Account.String(), opts.Groups, req.ValiditySeconds, req.EnableSessionCheck)
+	kubeconfigSettingEvent(ctx, "user.kubeconfig.setting", orgIDString, partnerID, forUser, acID, opts.Username, opts.Account.String(), opts.Groups, req.ValiditySeconds, req.SaValiditySeconds, req.EnableSessionCheck)
 	*/
 
 	return &sentryrpc.UpdateKubeconfigSettingResponse{}, nil

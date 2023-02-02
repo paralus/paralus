@@ -48,6 +48,7 @@ const (
 	relayUserLabel      = "relay-user"
 	authzRefreshedLabel = "authz-refreshed"
 	systemUsername      = "admin@paralus.co"
+	authzExpiryLabel    = "authz-expiry"
 )
 
 type roleBindExclusionList struct {
@@ -59,11 +60,12 @@ func getCurrentEpoch() string {
 	return strconv.FormatInt(time.Now().Unix(), 10)
 }
 
-func getAuthzLabels(userName string) map[string]string {
+func getAuthzLabels(userName, saValidityDuration string) map[string]string {
 	return map[string]string{
 		paralusRelayLabel:   "true",
 		relayUserLabel:      userName,
 		authzRefreshedLabel: getCurrentEpoch(),
+		authzExpiryLabel:    saValidityDuration,
 	}
 }
 
@@ -290,23 +292,28 @@ func getProjectsFromLabels(labels map[string]string) ([]string, error) {
 // GetAuthorization returns authorization for user, cluster
 // The RBAC model mapped to the existing role
 // PROJECT_ADMIN:
-//   -   Read/Write access to all cluster scoped resources
-//   -   Read/Write access to all namespace scoped resources
+//   - Read/Write access to all cluster scoped resources
+//   - Read/Write access to all namespace scoped resources
+//
 // PROJECT_READ:
-//   -   Read access to all cluster scoped resources
-//   -   Read access to all namespace scoped resources
+//   - Read access to all cluster scoped resources
+//   - Read access to all namespace scoped resources
+//
 // INFRA_ADMIN:
-//   -   Read/Write access to all cluster scoped resources
-//   -   Read/Write access to all namespace scoped resources
+//   - Read/Write access to all cluster scoped resources
+//   - Read/Write access to all namespace scoped resources
+//
 // INFRA_READ:
-//   -   Read access to all cluster scoped resources
-//   -   Read access to all namespace scoped resources
+//   - Read access to all cluster scoped resources
+//   - Read access to all namespace scoped resources
+//
 // ENV_ADMIN
-//   -   NO Access to cluster scoped resources
-//   -   Read/Write Access to namespace scoped resources (only within the environment)
+//   - NO Access to cluster scoped resources
+//   - Read/Write Access to namespace scoped resources (only within the environment)
+//
 // ENV_READ
-//   -   NO Access to cluster scoped resources
-//   -   Read Access to namespace scoped resources (only within the environment)
+//   - NO Access to cluster scoped resources
+//   - Read Access to namespace scoped resources (only within the environment)
 func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRequest, bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, krs service.KubeconfigRevocationService, kcs service.KubectlClusterSettingsService, kss service.KubeconfigSettingService, ns service.NamespaceService) (resp *sentryrpc.GetUserAuthorizationResponse, err error) {
 	var userName string
 	var groups []string
@@ -321,9 +328,15 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 	accountID := cnAttr.AccountID
 	orgID := cnAttr.OrganizationID
 	partnerID := cnAttr.PartnerID
+	ks, err := kss.Get(ctx, orgID, accountID, cnAttr.IsSSO)
+	if err != nil {
+		_log.Errorf("unable to fetch k8s service as per org level kubectl settings for accId:%s orgID:%s %v", accountID, orgID, cnAttr.IsSSO)
+		return nil, fmt.Errorf("unable to fetch k8s service %s", err.Error())
+	}
+	fmtSaValidityDuration := fmt.Sprint(ks.SaValiditySeconds)
 
 	if cnAttr.SystemUser {
-		return getSystemUserAuthz(cnAttr)
+		return getSystemUserAuthz(cnAttr, fmtSaValidityDuration)
 	}
 
 	isOrgAdmin, _ = aps.IsOrgAdmin(ctx, accountID, partnerID)
@@ -592,7 +605,7 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 	}
 
 	// add authz labels
-	authzLabels := getAuthzLabels(cnAttr.Username)
+	authzLabels := getAuthzLabels(cnAttr.Username, fmtSaValidityDuration)
 
 	sa.Labels = authzLabels
 	for k := range crMap {
@@ -685,10 +698,10 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 	return resp, nil
 }
 
-func getSystemUserAuthz(cnAttrs kubeconfig.CNAttributes) (resp *sentryrpc.GetUserAuthorizationResponse, err error) {
+func getSystemUserAuthz(cnAttrs kubeconfig.CNAttributes, fmtSaValidityDuration string) (resp *sentryrpc.GetUserAuthorizationResponse, err error) {
 	resp = new(sentryrpc.GetUserAuthorizationResponse)
 
-	authzLabels := getAuthzLabels(cnAttrs.Username)
+	authzLabels := getAuthzLabels(cnAttrs.Username, fmtSaValidityDuration)
 	sa := &corev1.ServiceAccount{}
 	sa.APIVersion = "v1"
 	sa.Kind = "ServiceAccount"

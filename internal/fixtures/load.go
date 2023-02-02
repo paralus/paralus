@@ -33,10 +33,11 @@ var (
 // Changes to the below code will affect the default template
 // and risks CA cert update. Once the template certs are
 // updated following situation will arise.
-// - Existing relay connections will fail, need to restart
-//   agents to re-bootstrap.
-// - Existing kubeconfig will fail, need to download new
-//   kubeconfig to continue
+//   - Existing relay connections will fail, need to restart
+//     agents to re-bootstrap.
+//   - Existing kubeconfig will fail, need to download new
+//     kubeconfig to continue
+//
 // This can cause issues in the case of production clusters
 // Take extra caution while modifying the code to avoid
 // unintended side effects.
