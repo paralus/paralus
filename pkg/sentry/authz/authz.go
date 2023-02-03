@@ -333,7 +333,8 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 		_log.Errorf("unable to fetch k8s service as per org level kubectl settings for accId:%s orgID:%s %v", accountID, orgID, cnAttr.IsSSO)
 		return nil, fmt.Errorf("unable to fetch k8s service %s", err.Error())
 	}
-	fmtSaValidityDuration := fmt.Sprint(ks.SaValiditySeconds)
+	expiryTime := time.Now().Add(time.Second * time.Duration(ks.SaValiditySeconds)).Unix()
+	fmtSaValidityDuration := strconv.FormatInt(expiryTime, 10)
 
 	if cnAttr.SystemUser {
 		return getSystemUserAuthz(cnAttr, fmtSaValidityDuration)
