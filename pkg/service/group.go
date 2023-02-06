@@ -103,7 +103,7 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 	var grs []models.GroupRole
 	var ps []*authzv1.Policy
 	var rids []uuid.UUID
-	regexc := regexp.MustCompile(`[^a-z0-9-]+`)
+	regexc := regexp.MustCompile(`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`)
 
 	for _, pnr := range projectNamespaceRoles {
 		role := pnr.GetRole()
@@ -208,10 +208,10 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 
 			namespace := pnr.GetNamespace()
 			match := regexc.MatchString(namespace)
-			if match {
+			if !match {
 				return &userv3.Group{}, nil, fmt.Errorf("namespace %q is invalid", namespace)
 			}
-			if !(len(namespace) >= 1 && len(namespace) <= 63) {
+			if len(namespace) < 1 || len(namespace) > 63 {
 				return &userv3.Group{}, nil, fmt.Errorf("namespace %q is invalid. must be no more than 63 characters", namespace)
 			}
 
