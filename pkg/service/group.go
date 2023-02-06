@@ -106,13 +106,6 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 	regexc := regexp.MustCompile(`[^a-z0-9-]+`)
 
 	for _, pnr := range projectNamespaceRoles {
-		match := regexc.MatchString(*pnr.Namespace)
-		if match {
-			return &userv3.Group{}, nil, fmt.Errorf("namespace %q is invalid", *pnr.Namespace)
-		}
-		if !(len(*pnr.Namespace) >= 1 && len(*pnr.Namespace) <= 63) {
-			return &userv3.Group{}, nil, fmt.Errorf("namespace %q is invalid. must be no more than 63 characters", *pnr.Namespace)
-		}
 		role := pnr.GetRole()
 		entity, err := dao.GetByName(ctx, db, role, &models.Role{})
 		if err != nil {
@@ -214,6 +207,14 @@ func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB,
 			}
 
 			namespace := pnr.GetNamespace()
+			match := regexc.MatchString(namespace)
+			if match {
+				return &userv3.Group{}, nil, fmt.Errorf("namespace %q is invalid", namespace)
+			}
+			if !(len(namespace) >= 1 && len(namespace) <= 63) {
+				return &userv3.Group{}, nil, fmt.Errorf("namespace %q is invalid. must be no more than 63 characters", namespace)
+			}
+
 			pgnrObj := models.ProjectGroupNamespaceRole{
 				CreatedAt:      time.Now(),
 				ModifiedAt:     time.Now(),
