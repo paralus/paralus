@@ -40,11 +40,19 @@ func UpdateKubeconfigRevocation(ctx context.Context, db bun.IDB, kr *models.Kube
 
 func GetKubeconfigSetting(ctx context.Context, db bun.IDB, orgID, accountID uuid.UUID, issSSO bool) (*models.KubeconfigSetting, error) {
 	var ks models.KubeconfigSetting
-	err := db.NewSelect().Model(&ks).
-		Where("organization_id = ?", orgID).
-		Where("account_id = ?", accountID).
-		Where("is_sso_user= ?", issSSO).
-		Scan(ctx)
+	var err error = nil
+	if len(accountID.String()) > 0 {
+		err = db.NewSelect().Model(&ks).
+			Where("organization_id = ?", orgID).
+			Where("account_id = ?", accountID).
+			Where("is_sso_user= ?", issSSO).
+			Scan(ctx)
+	} else {
+		err = db.NewSelect().Model(&ks).
+			Where("organization_id = ?", orgID).
+			Where("is_sso_user= ?", issSSO).
+			Scan(ctx)
+	}
 	return &ks, err
 }
 
@@ -67,6 +75,7 @@ func UpdateKubeconfigSetting(ctx context.Context, db bun.IDB, ks *models.Kubecon
 
 	q = q.Set("modified_at = ?", time.Now()).
 		Set("validity_seconds = ?", ks.ValiditySeconds).
+		Set("sa_validity_seconds = ?", ks.SaValiditySeconds).
 		Set("enforce_rsid = ?", ks.EnforceRsId).
 		Set("is_sso_user = ?", ks.IsSSOUser).
 		Set("disable_web_kubectl = ?", ks.DisableWebKubectl).

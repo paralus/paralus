@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -54,6 +55,26 @@ func (kss *kubeconfigSettingService) Patch(ctx context.Context, ks *sentry.Kubec
 	if err != nil {
 		accId = uuid.Nil
 	}
+	const maxSeconds = 30 * 24 * 60 * 60
+	const minSeconds = 10 * 60
+
+	minTimeDuration := time.Second * time.Duration(minSeconds) // min. 10 mins
+	maxTimeDuration := time.Second * time.Duration(maxSeconds) // max. 30 days
+
+	validityDuration := time.Second * time.Duration(ks.ValiditySeconds)
+	if validityDuration < minTimeDuration || validityDuration > maxTimeDuration {
+		maxTimeDisplay, _ := time.ParseDuration(fmt.Sprintf("%ds", maxSeconds))
+		minTimeDisplay, _ := time.ParseDuration(fmt.Sprintf("%ds", minSeconds))
+		return fmt.Errorf("invalid validity duration. should be between %.0f mins and %.0f hours", minTimeDisplay.Minutes(), maxTimeDisplay.Hours())
+	}
+
+	saValidityDuration := time.Second * time.Duration(ks.SaValiditySeconds)
+	if saValidityDuration < minTimeDuration || saValidityDuration > maxTimeDuration {
+		maxTimeDisplay, _ := time.ParseDuration(fmt.Sprintf("%ds", maxSeconds))
+		minTimeDisplay, _ := time.ParseDuration(fmt.Sprintf("%ds", minSeconds))
+		return fmt.Errorf("invalid sa validity duration. should be between %.0f mins and %.0f hours", minTimeDisplay.Minutes(), maxTimeDisplay.Hours())
+	}
+
 	return kss.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
 		_, err := dao.GetKubeconfigSetting(ctx, tx, uuid.MustParse(ks.OrganizationID), accId, ks.IsSSOUser)
 		db := convertToKubeCfgSettingModel(ks)
@@ -74,6 +95,7 @@ func prepareKubeCfgSettingResponse(ks *models.KubeconfigSetting) *sentry.Kubecon
 		AccountID:                   ks.AccountId.String(),
 		Scope:                       ks.Scope,
 		ValiditySeconds:             ks.ValiditySeconds,
+		SaValiditySeconds:           ks.SaValiditySeconds,
 		CreatedAt:                   timestamppb.New(ks.CreatedAt),
 		ModifiedAt:                  timestamppb.New(ks.ModifiedAt),
 		EnableSessionCheck:          ks.EnforceRsId,
@@ -90,6 +112,7 @@ func convertToKubeCfgSettingModel(ks *sentry.KubeconfigSetting) *models.Kubeconf
 		OrganizationId:              uuid.MustParse(ks.OrganizationID),
 		Scope:                       ks.Scope,
 		ValiditySeconds:             ks.ValiditySeconds,
+		SaValiditySeconds:           ks.SaValiditySeconds,
 		EnforceRsId:                 ks.EnableSessionCheck,
 		IsSSOUser:                   ks.IsSSOUser,
 		DisableWebKubectl:           ks.DisableWebKubectl,
