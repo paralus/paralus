@@ -24,21 +24,38 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
       key : "BasicAuth"
       value : {type : TYPE_BASIC}
     }
+    
     security : {
       key : "ApiKeyAuth"
-      value : {type : TYPE_API_KEY in : IN_HEADER name : "X-PARALUS-API-KEYID"}
+      value: {
+        type : TYPE_API_KEY in : IN_HEADER name : "X-API-KEYID"
+      }
     }
+    security : {
+      key : "ApiTokenAuth"
+      value : {
+        type : TYPE_API_KEY in : IN_HEADER name : "X-API-TOKEN"      
+      }
+    }     
   }
+  
   security : {
     security_requirement : {
       key : "BasicAuth"
       value : {}
     }
+  }
+  security : {
     security_requirement : {
       key : "ApiKeyAuth"
       value : {}
     }
+    security_requirement : {
+      key : "ApiTokenAuth"
+      value : {}
+    }
   }
+
   responses : {
     key : "403"
     value : {

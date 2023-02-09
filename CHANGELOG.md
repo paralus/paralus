@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## Unreleased
+## Added
+- Enhance: Improve Documentation for APIs [mabhi](https://github.com/mabhi)
 
 ## [0.2.0] - 2023-01-27
 
