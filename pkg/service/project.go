@@ -7,9 +7,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	cdao "github.com/paralus/paralus/internal/cluster/dao"
 	"github.com/paralus/paralus/internal/dao"
 	"github.com/paralus/paralus/internal/models"
 	authzv1 "github.com/paralus/paralus/proto/types/authz"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	systemv3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	bun "github.com/uptrace/bun"
@@ -308,6 +310,20 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 		tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 		if err != nil {
 			return &systemv3.Project{}, err
+		}
+
+		clusters, err := cdao.ListClusters(ctx, s.db, commonv3.QueryOptions{
+			Project:      proj.ID.String(),
+			Organization: proj.OrganizationId.String(),
+			Partner:      proj.PartnerId.String(),
+		})
+		if err != nil {
+			tx.Rollback()
+			return &systemv3.Project{}, err
+		}
+		if len(clusters) > 0 {
+			tx.Rollback()
+			return &systemv3.Project{}, fmt.Errorf("there is(are) active cluster(s) %d in the project %s", len(clusters), proj.Name)
 		}
 
 		project, err = s.deleteGroupRoleRelations(ctx, tx, proj.ID, project)
