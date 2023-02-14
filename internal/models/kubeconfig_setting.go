@@ -15,7 +15,7 @@ type KubeconfigSetting struct {
 	PartnerId                   uuid.UUID `bun:"partner_id,type:uuid,notnull"`
 	AccountId                   uuid.UUID `bun:"account_id,type:uuid,notnull"`
 	Scope                       string    `bun:"scope,notnull"`
-	ValiditySeconds             int64     `bun:"validity_seconds,notnull,default:28800"`
+	ValiditySeconds             int64     `bun:"validity_seconds,notnull,default:0"`
 	SaValiditySeconds           int64     `bun:"sa_validity_seconds,notnull,default:28800"`
 	CreatedAt                   time.Time `bun:"created_at,notnull,default:current_timestamp"`
 	ModifiedAt                  time.Time `bun:"modified_at"`

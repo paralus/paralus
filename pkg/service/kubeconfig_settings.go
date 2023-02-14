@@ -61,13 +61,6 @@ func (kss *kubeconfigSettingService) Patch(ctx context.Context, ks *sentry.Kubec
 	minTimeDuration := time.Second * time.Duration(minSeconds) // min. 10 mins
 	maxTimeDuration := time.Second * time.Duration(maxSeconds) // max. 30 days
 
-	validityDuration := time.Second * time.Duration(ks.ValiditySeconds)
-	if validityDuration < minTimeDuration || validityDuration > maxTimeDuration {
-		maxTimeDisplay, _ := time.ParseDuration(fmt.Sprintf("%ds", maxSeconds))
-		minTimeDisplay, _ := time.ParseDuration(fmt.Sprintf("%ds", minSeconds))
-		return fmt.Errorf("invalid validity duration. should be between %.0f mins and %.0f hours", minTimeDisplay.Minutes(), maxTimeDisplay.Hours())
-	}
-
 	saValidityDuration := time.Second * time.Duration(ks.SaValiditySeconds)
 	if saValidityDuration < minTimeDuration || saValidityDuration > maxTimeDuration {
 		maxTimeDisplay, _ := time.ParseDuration(fmt.Sprintf("%ds", maxSeconds))
