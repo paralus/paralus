@@ -79,6 +79,8 @@ func TestUpdateCluster(t *testing.T) {
 	puuid := uuid.New().String()
 	cuuid := uuid.New().String()
 
+	mock.ExpectQuery(`SELECT "project"."id"`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
+
 	mock.ExpectQuery(`SELECT "cluster"."id", "cluster"."organization_id"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(cuuid))
 
@@ -113,6 +115,8 @@ func TestSelectCluster(t *testing.T) {
 	puuid := uuid.New().String()
 	cuuid := uuid.New().String()
 
+	mock.ExpectQuery(`SELECT "project"."id"`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
+
 	mock.ExpectQuery(`SELECT "cluster"."id", "cluster"."organization_id"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(cuuid))
 
@@ -146,6 +150,8 @@ func TestGetCluster(t *testing.T) {
 
 	puuid := uuid.New().String()
 	cuuid := uuid.New().String()
+
+	// mock.ExpectQuery(`SELECT "project"."id"`).WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 
 	mock.ExpectQuery(`SELECT "cluster"."id", "cluster"."organization_id"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(cuuid))
