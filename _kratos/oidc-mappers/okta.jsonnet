@@ -12,7 +12,7 @@ local lName = if "name" in claims && claims.name!=null && std.length(std.findSub
       email: claims.email,
       first_name: fName,
       last_name: lName,
-      [if "team" in claims then "idp_group" else null]: claims.team,
+      [if "groups" in claims.raw_claims then "idp_groups" else null]: claims.raw_claims.groups,
     },
   },
 }

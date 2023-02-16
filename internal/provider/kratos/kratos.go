@@ -39,10 +39,11 @@ func NewKratosAuthProvider(kc *kclient.APIClient) AuthProvider {
 }
 
 func (k *kratosAuthProvider) Create(ctx context.Context, password string, traits map[string]interface{}, forceReset bool) (string, error) {
-	cib := kclient.NewAdminCreateIdentityBody("default", traits)
-	cib.Credentials = kclient.NewAdminIdentityImportCredentials()
-	cib.Credentials.SetPassword(kclient.AdminCreateIdentityImportCredentialsPassword{
-		Config: &kclient.AdminCreateIdentityImportCredentialsPasswordConfig{
+	cib := kclient.NewCreateIdentityBody("default", traits)
+
+	cib.Credentials = kclient.NewIdentityWithCredentials()
+	cib.Credentials.SetPassword(kclient.IdentityWithCredentialsPassword{
+		Config: &kclient.IdentityWithCredentialsPasswordConfig{
 			Password: kclient.PtrString(password),
 		},
 	})
@@ -50,7 +51,7 @@ func (k *kratosAuthProvider) Create(ctx context.Context, password string, traits
 		ForceReset: forceReset,
 	}
 	cib.SetMetadataPublic(ipm)
-	ir, hr, err := k.kc.V0alpha2Api.AdminCreateIdentity(ctx).AdminCreateIdentityBody(*cib).Execute()
+	ir, hr, err := k.kc.IdentityApi.CreateIdentity(ctx).CreateIdentityBody(*cib).Execute()
 	if err != nil {
 		fmt.Println(hr)
 		return "", err
@@ -59,12 +60,13 @@ func (k *kratosAuthProvider) Create(ctx context.Context, password string, traits
 }
 
 func (k *kratosAuthProvider) Update(ctx context.Context, id string, traits map[string]interface{}, forceReset bool) error {
-	uib := kclient.NewAdminUpdateIdentityBody("default", "active", traits)
+	uib := kclient.NewUpdateIdentityBody("default", "active", traits)
 	ipm := IdentityPublicMetadata{
 		ForceReset: forceReset,
 	}
 	uib.SetMetadataPublic(ipm)
-	_, hr, err := k.kc.V0alpha2Api.AdminUpdateIdentity(ctx, id).AdminUpdateIdentityBody(*uib).Execute()
+
+	_, hr, err := k.kc.IdentityApi.UpdateIdentity(ctx, id).UpdateIdentityBody(*uib).Execute()
 	if err != nil {
 		fmt.Println(hr)
 	}
@@ -72,8 +74,8 @@ func (k *kratosAuthProvider) Update(ctx context.Context, id string, traits map[s
 }
 
 func (k *kratosAuthProvider) GetRecoveryLink(ctx context.Context, id string) (string, error) {
-	rlb := kclient.NewAdminCreateSelfServiceRecoveryLinkBody(id)
-	rl, _, err := k.kc.V0alpha2Api.AdminCreateSelfServiceRecoveryLink(ctx).AdminCreateSelfServiceRecoveryLinkBody(*rlb).Execute()
+	rlb := kclient.NewCreateRecoveryLinkForIdentityBody(id)
+	rl, _, err := k.kc.IdentityApi.CreateRecoveryLinkForIdentity(ctx).CreateRecoveryLinkForIdentityBody(*rlb).Execute()
 	if err != nil {
 		return "", err
 	}
@@ -81,7 +83,7 @@ func (k *kratosAuthProvider) GetRecoveryLink(ctx context.Context, id string) (st
 }
 
 func (k *kratosAuthProvider) Delete(ctx context.Context, id string) error {
-	hr, err := k.kc.V0alpha2Api.AdminDeleteIdentity(ctx, id).Execute()
+	hr, err := k.kc.IdentityApi.DeleteIdentity(ctx, id).Execute()
 	if err != nil {
 		fmt.Println(hr)
 	}
@@ -89,7 +91,7 @@ func (k *kratosAuthProvider) Delete(ctx context.Context, id string) error {
 }
 
 func (k *kratosAuthProvider) GetPublicMetadata(ctx context.Context, id string) (*IdentityPublicMetadata, error) {
-	identity, res, err := k.kc.V0alpha2Api.AdminGetIdentity(ctx, id).Execute()
+	identity, res, err := k.kc.IdentityApi.GetIdentity(ctx, id).Execute()
 	if err != nil {
 		return nil, err
 	}
