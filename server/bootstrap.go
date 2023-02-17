@@ -249,16 +249,17 @@ func (s *bootstrapServer) RegisterBootstrapAgent(ctx context.Context, in *sentry
 
 	if template.Metadata.Name == "paralus-core-relay-agent" {
 		_log.Info("updating cluster status for :: ", agent.Metadata.Name)
-		err = s.updateClusterStatus(ctx, agent.Metadata.Name)
+		err = s.updateClusterStatus(ctx, agent.Metadata.Name, agent.Metadata.Project)
 	}
 
 	return
 }
 
-func (s *bootstrapServer) updateClusterStatus(ctx context.Context, clusterID string) error {
+func (s *bootstrapServer) updateClusterStatus(ctx context.Context, clusterID, projectID string) error {
 	cluster := &infrav3.Cluster{
 		Metadata: &commonv3.Metadata{
-			Id: clusterID,
+			Id:      clusterID,
+			Project: projectID,
 		},
 		Spec: &infrav3.ClusterSpec{
 			ClusterData: &infrav3.ClusterData{
