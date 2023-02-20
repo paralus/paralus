@@ -148,7 +148,7 @@ func (h *clusterEventHandler) handleClusterEvent(ev event.Resource) {
 
 	if ev.ID != "" {
 		cluster, err = h.cs.Select(ctx, &infrav3.Cluster{
-			Metadata: &commonv3.Metadata{Id: ev.ID},
+			Metadata: &commonv3.Metadata{Id: ev.ID, Project: ev.ProjectID},
 		}, true)
 	} else {
 
@@ -156,6 +156,7 @@ func (h *clusterEventHandler) handleClusterEvent(ev event.Resource) {
 			query.WithName(ev.Name),
 			query.WithPartnerID(ev.PartnerID),
 			query.WithOrganizationID(ev.OrganizationID),
+			query.WithProjectID(ev.ProjectID),
 		)
 	}
 
@@ -196,7 +197,7 @@ func (h *clusterEventHandler) handleClusterWorkloadEvent(ev event.Resource) {
 
 	if ev.ID != "" {
 		cluster, err = h.cs.Select(ctx, &infrav3.Cluster{
-			Metadata: &commonv3.Metadata{Id: ev.ID},
+			Metadata: &commonv3.Metadata{Id: ev.ID, Project: ev.ProjectID},
 		}, true)
 	} else {
 		cluster, err = h.cs.Get(ctx,

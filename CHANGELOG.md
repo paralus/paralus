@@ -6,8 +6,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 -  Configure the SA account lifetime from [mabhi](https://github.com/mabhi)
 
-### Fixed
-- namespace limitation [mabhi](https://github.com/mabhi)
+## Fixed
+- Able to Deleted Project With Clusters In It from [mabhi](https://github.com/mabhi)
 
 ## [0.2.0] - 2023-01-27
 
