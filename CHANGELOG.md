@@ -3,11 +3,14 @@
 All notable changes to this project will be documented in this file.
 
 ## Unreleased
+
+## [0.2.1] - 2023-02-24
 ### Added
--  Configure the SA account lifetime from [mabhi](https://github.com/mabhi)
+-  Configure the service account lifetime from [mabhi](https://github.com/mabhi)
 
 ## Fixed
-- Able to Deleted Project With Clusters In It from [mabhi](https://github.com/mabhi)
+- User should not be able to delete project with clusters in it from [mabhi](https://github.com/mabhi)
+- Namespace limitation input on roles [mabhi](https://github.com/mabhi)
 
 ## [0.2.0] - 2023-01-27
 
@@ -85,7 +88,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Initial release
 
-[Unreleased]: https://github.com/paralus/paralus/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/paralus/paralus/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/paralus/paralus/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/paralus/paralus/compare/v0.1.9...v0.2.0
 [0.1.9]: https://github.com/paralus/paralus/compare/v0.1.8...v0.1.9
 [0.1.8]: https://github.com/paralus/paralus/compare/v0.1.7...v0.1.8
