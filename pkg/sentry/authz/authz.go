@@ -320,6 +320,7 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 	var rolePrevilage int
 	var highestRole string
 	var enforceOrgAdminOnlySecretAccess, isOrgAdmin bool
+	const defaultSaValiditySeconds = 28800
 
 	resp = new(sentryrpc.GetUserAuthorizationResponse)
 
@@ -329,13 +330,19 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 	orgID := cnAttr.OrganizationID
 	partnerID := cnAttr.PartnerID
 	// fetch at org level
-	ks, err := kss.Get(ctx, orgID, "", cnAttr.IsSSO)
-	if err != nil {
+	kubeSetting, err := kss.Get(ctx, orgID, "", cnAttr.IsSSO)
+	if err == constants.ErrNotFound {
+		// set default org level settings
+		kubeSetting = &sentry.KubeconfigSetting{
+			SaValiditySeconds: defaultSaValiditySeconds,
+		}
+
+	} else if err != nil {
 		_log.Errorf("unable to fetch k8s service as per org level kubectl settings for orgID:%s %v", orgID, cnAttr.IsSSO)
 		return nil, fmt.Errorf("unable to fetch k8s service %s", err.Error())
 	}
 
-	expiryTime := time.Now().Add(time.Second * time.Duration(ks.SaValiditySeconds)).Unix()
+	expiryTime := time.Now().Add(time.Second * time.Duration(kubeSetting.SaValiditySeconds)).Unix()
 	fmtSaValidityDuration := strconv.FormatInt(expiryTime, 10)
 	if cnAttr.SystemUser {
 		return getSystemUserAuthz(cnAttr, fmtSaValidityDuration)
