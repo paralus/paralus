@@ -40,7 +40,7 @@ type BootstrapService interface {
 	GetBootstrapAgentCountForClusterID(ctx context.Context, clusterID string, orgID string) (int, error)
 	GetBootstrapAgentForClusterID(ctx context.Context, clusterID string, orgID string) (*sentry.BootstrapAgent, error)
 	SelectBootstrapAgents(ctx context.Context, templateRef string, opts ...query.Option) (*sentry.BootstrapAgentList, error)
-	RegisterBootstrapAgent(ctx context.Context, token string) error
+	RegisterBootstrapAgent(ctx context.Context, token, clientip string) error
 	DeleteBootstrapAgent(ctx context.Context, templateRef string, opts ...query.Option) error
 	PatchBootstrapAgent(ctx context.Context, ba *sentry.BootstrapAgent, templateRef string, opts ...query.Option) error
 }
@@ -323,9 +323,9 @@ func (s *bootstrapService) SelectBootstrapAgents(ctx context.Context, templateRe
 	return
 }
 
-func (s *bootstrapService) RegisterBootstrapAgent(ctx context.Context, token string) error {
+func (s *bootstrapService) RegisterBootstrapAgent(ctx context.Context, token, clientip string) error {
 	err := s.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
-		return dao.RegisterBootstrapAgent(ctx, tx, token)
+		return dao.RegisterBootstrapAgent(ctx, tx, token, clientip)
 	})
 	return err
 }

@@ -127,7 +127,7 @@ func CreateBootstrapAgent(ctx context.Context, db bun.IDB, ba *models.BootstrapA
 	return err
 }
 
-func RegisterBootstrapAgent(ctx context.Context, db bun.Tx, token string) error {
+func RegisterBootstrapAgent(ctx context.Context, db bun.Tx, token, clientip string) error {
 	ba, err := getBootstrapAgentForToken(ctx, db, token)
 	if err != nil {
 		return err
@@ -148,13 +148,14 @@ func RegisterBootstrapAgent(ctx context.Context, db bun.Tx, token string) error 
 		ba.TokenState = sentry.BootstrapAgentState_Approved.String()
 	case sentry.BootstrapAgentState_NotApproved.String(), sentry.BootstrapAgentState_Approved.String():
 		if !bat.IgnoreMultipleRegister {
-			return fmt.Errorf("cannot register token %s state is %s", token, ba.TokenState)
+			return fmt.Errorf("multiple agent register requests recieved: cannot register token %s state is %s", token, ba.TokenState)
 		}
 	default:
 		return fmt.Errorf("invalid token state %s", ba.TokenState)
 	}
 
 	_, err = db.NewUpdate().Model(ba).
+		Set("ip_address = ?", clientip).
 		Set("token_state = ?", state).
 		Where("token = ?", token).
 		Exec(ctx)

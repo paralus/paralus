@@ -53,7 +53,7 @@ items:
       infraRef: paralus-core-relay
       autoRegister: false
       autoApprove: true
-      ignoreMultipleRegister: true
+      ignoreMultipleRegister: false
       templateType: "Client"
       hosts: 
         - host: "{{ .coreRelayServerHost }}"
