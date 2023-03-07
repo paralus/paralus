@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## Fixed
+- Fix to error out multiple bootstrap agent registration requests from [niravparikh05](https://github.com/niravparikh05)
+
 ## [0.2.1] - 2023-02-24
 ### Added
 -  Configure the service account lifetime from [mabhi](https://github.com/mabhi)
