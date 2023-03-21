@@ -1,6 +1,9 @@
 package common
 
-import "time"
+import (
+	"regexp"
+	"time"
+)
 
 // environment variables for configuration
 const (
@@ -49,3 +52,8 @@ const (
 
 var SessionDataKey contextKey
 var SessionInternalKey contextKey
+
+// Regex
+var (
+	PrjNameRX = regexp.MustCompile(`^[a-zA-Z][-a-zA-Z0-9]*[a-zA-Z0-9]$`)
+)
