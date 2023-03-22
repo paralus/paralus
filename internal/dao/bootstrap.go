@@ -127,7 +127,7 @@ func CreateBootstrapAgent(ctx context.Context, db bun.IDB, ba *models.BootstrapA
 	return err
 }
 
-func RegisterBootstrapAgent(ctx context.Context, db bun.Tx, token string) error {
+func RegisterBootstrapAgent(ctx context.Context, db bun.Tx, token, ip, fingerprint string) error {
 	ba, err := getBootstrapAgentForToken(ctx, db, token)
 	if err != nil {
 		return err
@@ -147,7 +147,7 @@ func RegisterBootstrapAgent(ctx context.Context, db bun.Tx, token string) error 
 	case sentry.BootstrapAgentState_NotRegistered.String():
 		ba.TokenState = sentry.BootstrapAgentState_Approved.String()
 	case sentry.BootstrapAgentState_NotApproved.String(), sentry.BootstrapAgentState_Approved.String():
-		if !bat.IgnoreMultipleRegister {
+		if !bat.IgnoreMultipleRegister || ba.Fingerprint != fingerprint {
 			return fmt.Errorf("cannot register token %s state is %s", token, ba.TokenState)
 		}
 	default:
@@ -156,6 +156,8 @@ func RegisterBootstrapAgent(ctx context.Context, db bun.Tx, token string) error 
 
 	_, err = db.NewUpdate().Model(ba).
 		Set("token_state = ?", state).
+		Set("fingerprint = ?", fingerprint).
+		Set("ip_address = ?", ip).
 		Where("token = ?", token).
 		Exec(ctx)
 

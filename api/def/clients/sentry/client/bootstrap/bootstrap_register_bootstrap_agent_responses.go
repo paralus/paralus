@@ -233,6 +233,9 @@ type BootstrapRegisterBootstrapAgentBody struct {
 	// Format: byte
 	Csr strfmt.Base64 `json:"csr,omitempty"`
 
+	// fingerprint
+	Fingerprint string `json:"fingerprint,omitempty"`
+
 	// ip address
 	IPAddress string `json:"ipAddress,omitempty"`
 
