@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## Unreleased
+## Fixed
+- Fix: add project name validation [hiteshwani29](https://github.com/hiteshwani29)
 
 ## [0.2.1] - 2023-02-24
 ### Added

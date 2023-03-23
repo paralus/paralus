@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 
@@ -10,6 +11,7 @@ import (
 	cdao "github.com/paralus/paralus/internal/cluster/dao"
 	"github.com/paralus/paralus/internal/dao"
 	"github.com/paralus/paralus/internal/models"
+	"github.com/paralus/paralus/pkg/common"
 	authzv1 "github.com/paralus/paralus/proto/types/authz"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
@@ -58,6 +60,11 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 
 	if project.Metadata.Organization == "" {
 		return nil, fmt.Errorf("missing organization in metadata")
+	}
+
+	matched := common.PrjNameRX.MatchString(project.Metadata.GetName())
+	if !matched {
+		return nil, errors.New("project name contains invalid characters. Valid characters are alphanumeric and hyphen, except at the beginning or the end")
 	}
 
 	var org models.Organization
