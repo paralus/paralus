@@ -9,11 +9,10 @@ require (
 	github.com/casbin/casbin/v2 v2.40.6
 	github.com/casbin/gorm-adapter/v3 v3.4.6
 	github.com/cloudflare/cfssl v0.0.0-20190726000631-633726f6bcb7
-	github.com/crewjam/saml v0.4.6
+	github.com/crewjam/saml v0.4.13
 	github.com/dgraph-io/ristretto v0.1.0
 	github.com/elastic/go-elasticsearch v0.0.0
 	github.com/evanphx/json-patch v4.12.0+incompatible
-	github.com/fdaines/go-architect-lib v1.0.1
 	github.com/go-openapi/errors v0.20.2
 	github.com/go-openapi/runtime v0.23.1
 	github.com/go-openapi/strfmt v0.21.2
@@ -78,13 +77,13 @@ require (
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/gofrs/uuid v4.1.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/golang-jwt/jwt/v4 v4.1.0 // indirect
+	github.com/golang-jwt/jwt/v4 v4.4.3 // indirect
 	github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe // indirect
 	github.com/golang/glog v1.0.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/go-cmp v0.5.7 // indirect
+	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/googleapis/gnostic v0.5.5 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -118,7 +117,7 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	github.com/russellhaering/goxmldsig v1.1.1 // indirect
+	github.com/russellhaering/goxmldsig v1.2.0 // indirect
 	github.com/segmentio/asm v1.1.3 // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
@@ -133,7 +132,6 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/crypto v0.3.0 // indirect
-	golang.org/x/mod v0.7.0 // indirect
 	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
 	golang.org/x/sys v0.5.0 // indirect
