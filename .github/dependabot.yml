@@ -1,0 +1,18 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      # Prefix all commit messages with "chore(deps): "
+      prefix: "chore(deps)"
+  - package-ecosystem: gomod
+    directory: /
+    schedule:
+      interval: daily
+    commit-message:
+      # Prefix all commit messages with "chore(deps): "
+      prefix: "chore(deps)"
+    # Disable version updates (no impact on security updates)
+    open-pull-requests-limit: 0
