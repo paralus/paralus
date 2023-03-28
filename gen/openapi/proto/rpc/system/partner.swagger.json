@@ -1017,11 +1017,11 @@
   },
   "security": [
     {
-      "ApiKeyAuth": [],
-      "ApiTokenAuth": []
+      "BasicAuth": []
     },
     {
-      "BasicAuth": []
+      "ApiKeyAuth": [],
+      "ApiTokenAuth": []
     }
   ]
 }

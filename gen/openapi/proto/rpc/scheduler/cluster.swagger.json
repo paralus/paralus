@@ -2792,9 +2792,11 @@
   },
   "security": [
     {
-      "ApiKeyAuth": [],
-      "ApiTokenAuth": [],
       "BasicAuth": []
+    },
+    {
+      "ApiKeyAuth": [],
+      "ApiTokenAuth": []
     }
   ]
 }
