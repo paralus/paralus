@@ -2,7 +2,7 @@ We 💚 Opensource!
 
 Yes, because we feel that it’s the best way to build and improve a product. It allows people like you from across the globe to contribute and improve a product over time. And we’re super happy to see that you’d like to contribute to Paralus.
 
-We are always on the lookout for anything that can improve the product. Be it feature requests, issues/bugs, code or content, we’d love to see what you’ve got to make this better. If you’ve got anything exciting and would love to contribute, this is the right place to begin your journey as a contributor to Paralus and the larger open source community.
+We are always on the lookout for anything that can improve the product. Be it feature requests, issues/bugs, code, or content, we’d love to see what you’ve got to make this better. If you’ve got anything exciting and would love to contribute, this is the right place to begin your journey as a contributor to Paralus and the larger open-source community.
 
 ## How to get started?
 
@@ -152,9 +152,9 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 ## DCO Sign off
 
-All authors to the project retain copyright to their work. However, to ensure
+All authors of the project retain copyright to their work. However, to ensure
 that they are only submitting work that they have rights to, we are requiring
-everyone to acknowledge this by signing their work.
+everyone is to acknowledge this by signing their work.
 
 Any copyright notices in this repo should specify the authors as "the
 paralus contributors".
