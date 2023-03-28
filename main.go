@@ -246,36 +246,36 @@ func setup() {
 	viper.BindEnv(relayAuditESIndexPrefixEnv)
 	viper.BindEnv(relayCommandESIndexPrefix)
 
-	rpcPort = viper.GetInt(rpcPortEnv)
-	apiPort = viper.GetInt(apiPortEnv)
+	rpcPort   = viper.GetInt(rpcPortEnv)
+	apiPort   = viper.GetInt(apiPortEnv)
 	debugPort = viper.GetInt(debugPortEnv)
-	apiAddr = viper.GetString(apiAddrEnv)
-	dev = viper.GetBool(devEnv)
+	apiAddr   = viper.GetString(apiAddrEnv)
+	dev       = viper.GetBool(devEnv)
 
-	dbDSN = viper.GetString(dbDSNEnv)
-	dbAddr = viper.GetString(dbAddrEnv)
-	dbName = viper.GetString(dbNameEnv)
-	dbUser = viper.GetString(dbUserEnv)
+	dbDSN      = viper.GetString(dbDSNEnv)
+	dbAddr     = viper.GetString(dbAddrEnv)
+	dbName     = viper.GetString(dbNameEnv)
+	dbUser     = viper.GetString(dbUserEnv)
 	dbPassword = viper.GetString(dbPasswordEnv)
 
-	kratosAddr = viper.GetString(kratosAddrEnv)
+	kratosAddr       = viper.GetString(kratosAddrEnv)
 	kratosPublicAddr = viper.GetString(kratosPublicAddrEnv)
 
-	bootstrapKEK = viper.GetString(bootstrapKEKEnv)
-	sentryPeeringHost = viper.GetString(sentryPeeringHostEnv)
-	coreRelayConnectorHost = viper.GetString(coreRelayConnectorHostEnv)
-	coreRelayUserHost = viper.GetString(coreRelayUserHostEnv)
+	bootstrapKEK             = viper.GetString(bootstrapKEKEnv)
+	sentryPeeringHost        = viper.GetString(sentryPeeringHostEnv)
+	coreRelayConnectorHost   = viper.GetString(coreRelayConnectorHostEnv)
+	coreRelayUserHost        = viper.GetString(coreRelayUserHostEnv)
 	coreCDRelayConnectorHost = viper.GetString(coreCDRelayConnectorHostEnv)
-	coreCDRelayUserHost = viper.GetString(coreCDRelayUserHostEnv)
-	relayImage = viper.GetString(relayImageEnv)
-	schedulerNamespace = viper.GetString(schedulerNamespaceEnv)
-	sentryBootstrapAddr = viper.GetString(sentryBootstrapEnv)
+	coreCDRelayUserHost      = viper.GetString(coreCDRelayUserHostEnv)
+	relayImage               = viper.GetString(relayImageEnv)
+	schedulerNamespace       = viper.GetString(schedulerNamespaceEnv)
+	sentryBootstrapAddr      = viper.GetString(sentryBootstrapEnv)
 
-	auditLogStorage = viper.GetString(auditLogStorageEnv)
-	auditFile = viper.GetString(auditFileEnv)
-	elasticSearchUrl = viper.GetString(esEndPointEnv)
-	esIndexPrefix = viper.GetString(esIndexPrefixEnv)
-	relayAuditsESIndexPrefix = viper.GetString(relayAuditESIndexPrefixEnv)
+	auditLogStorage            = viper.GetString(auditLogStorageEnv)
+	auditFile                  = viper.GetString(auditFileEnv)
+	elasticSearchUrl           = viper.GetString(esEndPointEnv)
+	esIndexPrefix              = viper.GetString(esIndexPrefixEnv)
+	relayAuditsESIndexPrefix   = viper.GetString(relayAuditESIndexPrefixEnv)
 	relayCommandsESIndexPrefix = viper.GetString(relayCommandESIndexPrefix)
 
 	rpcRelayPeeringPort = rpcPort + 1
@@ -283,12 +283,12 @@ func setup() {
 	// Kratos client setup for authentication
 	kratosConfig := kclient.NewConfiguration()
 	kratosConfig.Servers[0].URL = kratosPublicAddr
-	kc = kclient.NewAPIClient(kratosConfig)
+	kc                          = kclient.NewAPIClient(kratosConfig)
 
 	// Kratos client setup for admin purpose
 	kratosAdminConfig := kclient.NewConfiguration()
 	kratosAdminConfig.Servers[0].URL = kratosAddr
-	akc = kclient.NewAPIClient(kratosAdminConfig)
+	akc                              = kclient.NewAPIClient(kratosAdminConfig)
 
 	// db setup
 	if dbDSN == "" {
@@ -333,8 +333,8 @@ func setup() {
 
 	schedulerPool = schedulerrpc.NewSchedulerPool(schedulerAddr, 5*goruntime.NumCPU())
 
-	ps = service.NewPartnerService(db, auditLogger)
-	os = service.NewOrganizationService(db, auditLogger)
+	ps  = service.NewPartnerService(db, auditLogger)
+	os  = service.NewOrganizationService(db, auditLogger)
 	pps = service.NewProjectService(db, as, auditLogger, dev)
 
 	// users and role management services
@@ -347,19 +347,19 @@ func setup() {
 	} else {
 		cc.Profile = "prod"
 	}
-	ks = service.NewApiKeyService(db, auditLogger)
-	us = service.NewUserService(providers.NewKratosAuthProvider(akc), db, as, ks, cc, auditLogger, dev)
-	gs = service.NewGroupService(db, as, auditLogger)
-	rs = service.NewRoleService(db, as, auditLogger)
-	rrs = service.NewRolepermissionService(db)
-	is = service.NewIdpService(db, apiAddr, auditLogger)
+	ks    = service.NewApiKeyService(db, auditLogger)
+	us    = service.NewUserService(providers.NewKratosAuthProvider(akc), db, as, ks, cc, auditLogger, dev)
+	gs    = service.NewGroupService(db, as, auditLogger)
+	rs    = service.NewRoleService(db, as, auditLogger)
+	rrs   = service.NewRolepermissionService(db)
+	is    = service.NewIdpService(db, apiAddr, auditLogger)
 	oidcs = service.NewOIDCProviderService(db, sentryBootstrapAddr, auditLogger)
 
 	//sentry related services
-	bs = service.NewBootstrapService(db)
+	bs  = service.NewBootstrapService(db)
 	krs = service.NewKubeconfigRevocationService(db, auditLogger)
 	kss = service.NewKubeconfigSettingService(db)
-	ns = service.NewNamespaceService(db)
+	ns  = service.NewNamespaceService(db)
 	kcs = service.NewkubectlClusterSettingsService(db)
 	aps = service.NewAccountPermissionService(db)
 	gps = service.NewGroupPermissionService(db)
@@ -390,7 +390,7 @@ func setup() {
 		rcs, err = service.NewAuditLogDatabaseService(db, audit.KUBECTL_CMD)
 		if err != nil {
 			if dev && strings.Contains(err.Error(), "connect: connection refused") {
-				_log.Warn("unable to create auditLog service:", err)
+				_log.Warn("unable to create auditLog service: ", err)
 			} else {
 				_log.Fatalw("unable to create auditLog service", "error", err)
 			}
@@ -420,7 +420,7 @@ func setup() {
 		rcs, err = service.NewAuditLogElasticSearchService(elasticSearchUrl, relayCommandsESIndexPrefix+"-*", "RelayCommand API: ")
 		if err != nil {
 			if dev && strings.Contains(err.Error(), "connect: connection refused") {
-				_log.Warn("unable to create auditLog service:", err)
+				_log.Warn("unable to create auditLog service: ", err)
 			} else {
 				_log.Fatalw("unable to create auditLog service", "error", err)
 			}
@@ -552,7 +552,7 @@ func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
 
 	relayPeerService, err := server.NewRelayPeerService()
 	if err != nil {
-		_log.Fatalw("unable to get create relay peer service")
+		_log.Fatalw("unable to get create relay peer service", "error", err)
 	}
 	clusterAuthzServer := server.NewClusterAuthzServer(bs, aps, gps, krs, kcs, kss, ns)
 	auditInfoServer := server.NewAuditInfoServer(bs, aps)
