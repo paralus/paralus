@@ -1,6 +1,6 @@
 # Filebeat
 
-We use filebeat inorder to push logs from application to elasticsearch
+We use filebeat in order to push logs from the application to elasticsearch
 server.
 
 In actual deployment, the idea is that we will have a sidecar
