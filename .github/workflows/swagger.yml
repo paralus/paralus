@@ -2,11 +2,7 @@ name: Swagger
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "main" ]
+    tags: [ 'v*.*.*' ]
 
 jobs:
   deploy:
