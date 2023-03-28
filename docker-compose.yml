@@ -39,6 +39,7 @@ services:
     depends_on:
       kratos-migrate:
         condition: service_completed_successfully
+    
     image: migrate/migrate:v4.15.1
     restart: on-failure
     command: -path=/migrations/admindb -database postgres://$DB_USER:$DB_PASSWORD@postgresd:$DB_PORT/$DB_NAME?sslmode=disable up
@@ -46,10 +47,12 @@ services:
       - type: bind
         source: ./persistence/migrations/admindb
         target: /migrations/admindb
-
   kratos:
+
     depends_on:
+
       - kratos-migrate
+      
     image: oryd/kratos:v0.10.1
     ports:
       - '4433:4433' # public
@@ -62,7 +65,6 @@ services:
       - type: bind
         source: ./_kratos
         target: /etc/config/kratos
-
   mailslurper:
     image: oryd/mailslurper:latest-smtps
     ports:
