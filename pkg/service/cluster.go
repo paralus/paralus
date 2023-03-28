@@ -313,7 +313,16 @@ func (s *clusterService) Select(ctx context.Context, cluster *infrav3.Cluster, i
 	if err != nil {
 		id = uuid.Nil
 	}
-	c, err := cdao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: cluster.Metadata.Name})
+
+	reqProjectId, err := uuid.Parse(cluster.Metadata.Project)
+	if err != nil {
+		reqProjectId, err = dao.GetProjectId(ctx, s.db, cluster.Metadata.Project)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	c, err := cdao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: cluster.Metadata.Name, ProjectId: reqProjectId})
 	if err != nil {
 		return &infrav3.Cluster{}, err
 	}
@@ -323,6 +332,9 @@ func (s *clusterService) Select(ctx context.Context, cluster *infrav3.Cluster, i
 		projects, err = cdao.GetProjectsForCluster(ctx, s.db, c.ID)
 		if err != nil {
 			return &infrav3.Cluster{}, err
+		}
+		if len(projects) <= 0 {
+			return &infrav3.Cluster{}, fmt.Errorf("no projects associated with the cluster")
 		}
 	}
 
@@ -356,7 +368,15 @@ func (s *clusterService) Get(ctx context.Context, opts ...query.Option) (*infrav
 	if err != nil {
 		id = uuid.Nil
 	}
-	c, err := cdao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: queryOptions.Name})
+	reqProjectId, err := uuid.Parse(queryOptions.Project)
+	if err != nil {
+		reqProjectId, err = dao.GetProjectId(ctx, s.db, queryOptions.Project)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	c, err := cdao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: queryOptions.Name, ProjectId: reqProjectId})
 	if err != nil {
 		return &infrav3.Cluster{}, err
 	}
@@ -365,6 +385,10 @@ func (s *clusterService) Get(ctx context.Context, opts ...query.Option) (*infrav
 		projects, err = cdao.GetProjectsForCluster(ctx, s.db, c.ID)
 		if err != nil {
 			return &infrav3.Cluster{}, err
+		}
+
+		if len(projects) <= 0 {
+			return &infrav3.Cluster{}, fmt.Errorf("no projects associated with the cluster")
 		}
 	}
 
@@ -479,12 +503,22 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 		}
 		return cluster, fmt.Errorf("invalid cluster data, name is missing")
 	}
-
-	edb, err := dao.GetByName(ctx, s.db, cluster.Metadata.Name, &models.Cluster{})
+	// look for projectId and validate it during cluster fetch
+	reqProjectId, err := uuid.Parse(projectName)
 	if err != nil {
-		return &infrav3.Cluster{}, fmt.Errorf(errormsg)
+		reqProjectId, err = dao.GetProjectId(ctx, s.db, projectName)
+		if err != nil {
+			return nil, err
+		}
 	}
-	cdb := edb.(*models.Cluster)
+	id, err := uuid.Parse(cluster.Metadata.Id)
+	if err != nil {
+		return nil, err
+	}
+	cdb, err := cdao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: cluster.Metadata.Name, ProjectId: reqProjectId})
+	if err != nil {
+		return &infrav3.Cluster{}, err
+	}
 
 	pid := cdb.PartnerId
 	if cluster.Spec.ClusterType == "" {

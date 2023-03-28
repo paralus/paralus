@@ -106,13 +106,15 @@ func (s *kubeConfigServer) GetOrganizationSetting(ctx context.Context, req *sent
 	}
 	ks, err := s.kss.Get(ctx, opts.Organization, "", false)
 	if err == constants.ErrNotFound {
-		return &sentryrpc.GetKubeconfigSettingResponse{ValiditySeconds: 31536000}, nil
+		// default values for ValiditySeconds and SaValiditySeconds: 8 hours
+		return &sentryrpc.GetKubeconfigSettingResponse{ValiditySeconds: 28800, SaValiditySeconds: 28800}, nil
 	} else if err != nil {
 		return nil, err
 	}
 
 	resp := &sentryrpc.GetKubeconfigSettingResponse{
 		ValiditySeconds:             ks.ValiditySeconds,
+		SaValiditySeconds:           ks.SaValiditySeconds,
 		EnableSessionCheck:          ks.EnableSessionCheck,
 		EnablePrivateRelay:          ks.EnablePrivateRelay,
 		EnforceOrgAdminSecretAccess: ks.EnforceOrgAdminSecretAccess,
@@ -162,6 +164,7 @@ func (s *kubeConfigServer) UpdateOrganizationSetting(ctx context.Context, req *s
 		PartnerID:                   opts.Partner,
 		AccountID:                   "",
 		ValiditySeconds:             req.ValiditySeconds,
+		SaValiditySeconds:           req.SaValiditySeconds,
 		EnableSessionCheck:          req.EnableSessionCheck,
 		EnablePrivateRelay:          req.EnablePrivateRelay,
 		EnforceOrgAdminSecretAccess: req.EnforceOrgAdminSecretAccess,
