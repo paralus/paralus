@@ -147,8 +147,10 @@ func RegisterBootstrapAgent(ctx context.Context, db bun.Tx, token, ip, fingerpri
 	case sentry.BootstrapAgentState_NotRegistered.String():
 		ba.TokenState = sentry.BootstrapAgentState_Approved.String()
 	case sentry.BootstrapAgentState_NotApproved.String(), sentry.BootstrapAgentState_Approved.String():
-		if !bat.IgnoreMultipleRegister || ba.Fingerprint != fingerprint {
+		if !bat.IgnoreMultipleRegister {
 			return fmt.Errorf("cannot register token %s state is %s", token, ba.TokenState)
+		} else if ba.Fingerprint != fingerprint {
+			return fmt.Errorf("fingerprint mismatch for token %s", token)
 		}
 	default:
 		return fmt.Errorf("invalid token state %s", ba.TokenState)
