@@ -21,7 +21,6 @@ func getDB(t *testing.T) (*bun.DB, sqlmock.Sqlmock) {
 	}
 	db := bun.NewDB(sqldb, pgdialect.New())
 	db.AddQueryHook(bundebug.NewQueryHook(
-		bundebug.WithVerbose(true),
 		bundebug.FromEnv("BUNDEBUG"),
 	))
 	return db, mock

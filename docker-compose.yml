@@ -13,19 +13,8 @@ services:
       POSTGRES_DB: $DB_NAME
       POSTGRES_PASSWORD: $DB_PASSWORD
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.0.0
-    container_name: paralus_elasticsearch_8
-    ports:
-      - '${ES_PORT:-9200}:9200'
-    volumes:
-      - paralus_es_data:/usr/share/elasticsearch/data
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false  # disable auth for local dev
-
   kratos-migrate:
-    image: oryd/kratos:v0.10.1
+    image: oryd/kratos:v0.11.0
     environment:
       - DSN=postgres://$DB_USER:$DB_PASSWORD@postgresd:$DB_PORT/$DB_NAME?sslmode=disable&max_conns=20&max_idle_conns=4
     volumes:
@@ -50,7 +39,7 @@ services:
   kratos:
     depends_on:
       - kratos-migrate
-    image: oryd/kratos:v0.10.1
+    image: oryd/kratos:v0.11.0
     ports:
       - '4433:4433' # public
       - '4434:4434' # admin

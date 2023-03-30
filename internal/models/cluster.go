@@ -17,6 +17,7 @@ type Cluster struct {
 	ProjectId          uuid.UUID       `bun:"project_id,type:uuid"`
 	MetroId            uuid.UUID       `bun:"metro_id,type:uuid"`
 	Name               string          `bun:"name,notnull"`
+	Description        string          `bun:"description"`
 	DisplayName        string          `bun:"display_name,notnull"`
 	CreatedAt          time.Time       `bun:"created_at,notnull,default:current_timestamp"`
 	ModifiedAt         time.Time       `bun:"modified_at,default:current_timestamp"`
