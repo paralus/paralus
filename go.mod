@@ -22,7 +22,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/json-iterator/go v1.1.12
-	github.com/ory/kratos-client-go v0.10.1
+	github.com/ory/kratos-client-go v0.11.0
 	github.com/pkg/errors v0.9.1
 	github.com/processout/grpc-go-pool v1.2.1
 	github.com/rs/xid v1.3.0
@@ -39,7 +39,7 @@ require (
 	go.uber.org/zap v1.21.0
 	google.golang.org/genproto v0.0.0-20220118154757-00ab72f36ad5
 	google.golang.org/grpc v1.44.0
-	google.golang.org/protobuf v1.27.1
+	google.golang.org/protobuf v1.28.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/postgres v1.2.2
@@ -53,6 +53,8 @@ require (
 	sigs.k8s.io/kustomize/pseudo/k8s v0.1.0
 	sigs.k8s.io/yaml v1.3.0
 )
+
+require golang.org/x/mod v0.7.0 // indirect
 
 require (
 	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
@@ -133,9 +135,8 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/crypto v0.3.0 // indirect
-	golang.org/x/mod v0.7.0 // indirect
 	golang.org/x/net v0.7.0 // indirect
-	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
+	golang.org/x/oauth2 v0.2.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/term v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect

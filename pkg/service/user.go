@@ -73,7 +73,7 @@ type userTraits struct {
 	Email     string
 	FirstName string
 	LastName  string
-	IdpGroup  string `json:"idp_group"`
+	IdpGroups []string `json:"idp_groups"`
 }
 
 // FIXME: find a better way to do this
@@ -102,16 +102,20 @@ func getUserTraits(traits map[string]interface{}) userTraits {
 	if !ok {
 		lname = ""
 	}
-	idpGroup, ok := traits["idp_group"]
+	idpGroups, ok := traits["idp_groups"]
 	if !ok {
-		idpGroup = ""
+		idpGroups = make([]interface{}, 0)
+	}
+	groupStringList := make([]string, 0)
+	for _, grp := range idpGroups.([]interface{}) {
+		groupStringList = append(groupStringList, grp.(string))
 	}
 
 	return userTraits{
 		Email:     email.(string),
 		FirstName: fname.(string),
 		LastName:  lname.(string),
-		IdpGroup:  idpGroup.(string),
+		IdpGroups: groupStringList,
 	}
 }
 
@@ -466,7 +470,7 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 
 func (s *userService) identitiesModelToUser(ctx context.Context, db bun.IDB, user *userv3.User, usr *models.KratosIdentities) (*userv3.User, error) {
 	traits := getUserTraits(usr.Traits)
-	idpGroup := traits.IdpGroup
+	idpGroups := traits.IdpGroups
 	groups, err := dao.GetGroups(ctx, db, usr.ID)
 	if err != nil {
 		return &userv3.User{}, err
@@ -483,7 +487,13 @@ func (s *userService) identitiesModelToUser(ctx context.Context, db bun.IDB, use
 
 		// idp groups will be available in both traits and groups and
 		// needs to be filetered out
-		if idpGroup != g.Name {
+		var exist bool
+		for _, ig := range idpGroups {
+			if ig == g.Name {
+				exist = true
+			}
+		}
+		if !exist {
 			groupNames = append(groupNames, g.Name)
 		}
 	}
@@ -507,7 +517,7 @@ func (s *userService) identitiesModelToUser(ctx context.Context, db bun.IDB, use
 		FirstName:             traits.FirstName,
 		LastName:              traits.LastName,
 		Groups:                groupNames,
-		IdpGroups:             []string{idpGroup},
+		IdpGroups:             idpGroups,
 		ProjectNamespaceRoles: roles,
 	}
 
@@ -584,7 +594,6 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 		}
 		username = sd.Username
 	}
-	_log.Info("username ", username)
 
 	entity, err := dao.GetUserByEmail(ctx, s.db, username, &models.KratosIdentities{})
 	if err != nil {
@@ -755,12 +764,7 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 		}
 
 		// Add idp groups to user so that it gets added on update
-		idpGroupTrait := getUserTraits(usr.Traits).IdpGroup
-		if idpGroupTrait == "" {
-			user.Spec.IdpGroups = []string{}
-		} else {
-			user.Spec.IdpGroups = []string{idpGroupTrait}
-		}
+		user.Spec.IdpGroups = getUserTraits(usr.Traits).IdpGroups
 		user, groupsAfter, err := s.createGroupAccountRelations(ctx, tx, usr.ID, user)
 		if err != nil {
 			tx.Rollback()
@@ -1023,8 +1027,8 @@ func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, trai
 	if err != nil {
 		return fmt.Errorf("encountered error unmarshing payload to userInfo: %s", err)
 	}
-	// Early return if idpGroup is empty.
-	if strings.Trim(userInfo.IdpGroup, " ") == "" {
+	// Early return if idpGroups is empty.
+	if len(userInfo.IdpGroups) == 0 {
 		return fmt.Errorf("empty idp groups for user with id %s", id)
 	}
 
@@ -1038,7 +1042,13 @@ func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, trai
 	// All existing groups except idpGroup
 	ugn := []string{}
 	for _, g := range userGroups {
-		if userInfo.IdpGroup != g.Name {
+		var exist bool
+		for _, ig := range userInfo.IdpGroups {
+			if ig == g.Name {
+				exist = true
+			}
+		}
+		if !exist {
 			ugn = append(ugn, g.Name)
 		}
 	}
@@ -1050,7 +1060,7 @@ func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, trai
 			FirstName: userInfo.FirstName,
 			LastName:  userInfo.LastName,
 			Groups:    ugn,
-			IdpGroups: []string{userInfo.IdpGroup},
+			IdpGroups: userInfo.IdpGroups,
 		},
 	}
 	switch op {
