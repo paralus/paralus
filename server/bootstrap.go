@@ -238,7 +238,7 @@ func (s *bootstrapServer) RegisterBootstrapAgent(ctx context.Context, in *sentry
 		return
 	}
 
-	err = s.bs.RegisterBootstrapAgent(ctx, in.Token)
+	err = s.bs.RegisterBootstrapAgent(ctx, in.Token, in.IpAddress, in.Fingerprint)
 	if err != nil {
 		_log.Error(err.Error())
 		return

@@ -61,6 +61,7 @@ message RegisterAgentRequest {
   bytes csr = 4;
   string ipAddress = 5;
   string name = 6;
+  string fingerprint = 7;
 }
 
 message RegisterAgentResponse {

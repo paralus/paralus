@@ -93,6 +93,10 @@ type Config struct {
 	// ServerPort is port the registered server should listen on
 	// it is returned after registration
 	ServerPort int32
+
+	// Fingerprint is the unique identifier of the target cluster
+	// Currently it is the uid of default namespace that is created
+	Fingerprint string
 }
 
 func registerHTTP(ctx context.Context, config *Config) error {
@@ -133,10 +137,11 @@ func registerHTTP(ctx context.Context, config *Config) error {
 		Context:       ctx,
 		TemplateToken: fmt.Sprintf("template/%s", config.TemplateToken),
 		Body: bootstrapapiv2.BootstrapRegisterBootstrapAgentBody{
-			Token:     config.ClientID,
-			Csr:       config.CSR,
-			IPAddress: config.ClientIP,
-			Name:      config.Name,
+			Token:       config.ClientID,
+			Csr:         config.CSR,
+			IPAddress:   config.ClientIP,
+			Name:        config.Name,
+			Fingerprint: config.Fingerprint,
 		},
 		HTTPClient: httpClient,
 	}, nil)
@@ -210,6 +215,7 @@ func registerGRPC(ctx context.Context, config *Config) error {
 		Name:          config.Name,
 		IpAddress:     config.ClientIP,
 		Token:         config.ClientID,
+		Fingerprint:   config.Fingerprint,
 	})
 	if err != nil {
 		return err
