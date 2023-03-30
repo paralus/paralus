@@ -25,6 +25,8 @@ type Resource struct {
 	ID             string            `json:"id,omitempty"`
 	Name           string            `json:"n,omitempty"`
 	EventType      ResourceEventType `json:"t,omitempty"`
+	Username       string            `json:"un,omitempty"`
+	Account        string            `json:"acc,omitempty"`
 }
 
 // Key is the key for this event which can be used as a cache key etc

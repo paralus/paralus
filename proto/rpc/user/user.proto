@@ -71,12 +71,28 @@ message UserListApiKeysResponse { repeated ApiKeyResponse items = 1; }
 
 message UserForgotPasswordRequest { string username = 1; }
 
-message UserForgotPasswordResponse { string recoveryLink = 1; }
+message UserForgotPasswordResponse { 
+  string recoveryLink = 1; 
+}
 
 message UserDeleteApiKeysResponse {}
 message CliConfigRequest {}
+message UpdateForceResetRequest {}
+message UpdateForceResetResponse {}
+
+message UserLoginAuditRequest {string user_id = 1;}
+message UserLoginAuditResponse {}
 
 service UserService {
+
+  rpc AuditLogWebhook(UserLoginAuditRequest)
+      returns (UserLoginAuditResponse) {
+    option (google.api.http) = {
+      post : "/auth/v3/user/auditlog"
+      body : "*"    
+    }; 
+  };
+
   rpc CreateUser(paralus.dev.types.user.v3.User)
       returns (paralus.dev.types.user.v3.User) {
     option (google.api.http) = {
@@ -118,6 +134,20 @@ service UserService {
     option (google.api.http) = {
       put : "/auth/v3/user/{metadata.name}"
       body : "*"
+    };
+  };
+
+  rpc UpdateUserForceReset(UpdateForceResetRequest) 
+      returns (UpdateForceResetResponse){
+    option (google.api.http) = {
+      put : "/auth/v3/user/reset"
+      body : "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses : {
+        key : "200"
+        value : {description : "Returned when user forcereset flag has been successfully unset"}
+      }
     };
   };
 

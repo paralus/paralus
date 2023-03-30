@@ -126,6 +126,10 @@ func TestProjectDelete(t *testing.T) {
 	mock.ExpectQuery(`SELECT "project"."id", "project"."name", .* FROM "authsrv_project" AS "project" WHERE`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(puuid, "project-"+puuid))
 	mock.ExpectBegin()
+	// return empty rows
+	mock.ExpectQuery(`SELECT "cluster"."id"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}))
+
 	mock.ExpectExec(`UPDATE "authsrv_projectgrouprole" AS "projectgrouprole" SET trash = TRUE WHERE`).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectQuery(`UPDATE "authsrv_projectgroupnamespacerole" AS "projectgroupnamespacerole" SET trash = TRUE WHERE ."project_id" = '` + puuid + `'. AND .trash = false. RETURNING *`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
@@ -143,6 +147,37 @@ func TestProjectDelete(t *testing.T) {
 	_, err := ps.Delete(context.Background(), project)
 	if err != nil {
 		t.Fatal("could not delete project:", err)
+	}
+}
+
+func TestNonEmptyProjectDelete(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
+	mazc := mockAuthzClient{}
+	ps := NewProjectService(db, &mazc, getLogger(), true)
+
+	puuid := uuid.New().String()
+	cuuid := uuid.New().String()
+
+	mock.ExpectQuery(`SELECT "project"."id", "project"."name", .* FROM "authsrv_project" AS "project" WHERE`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(puuid, "project-"+puuid))
+
+	mock.ExpectBegin()
+
+	mock.ExpectQuery(`SELECT "cluster"."id", "cluster"."organization_id"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(cuuid))
+
+	mock.ExpectRollback()
+	mock.ExpectQuery(`SELECT "projectcluster"."cluster_id", "projectcluster"."project_id"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(cuuid))
+
+	project := &systemv3.Project{
+		Metadata: &v3.Metadata{Id: puuid, Name: "project-" + puuid},
+	}
+	_, err := ps.Delete(context.Background(), project)
+	if err == nil {
+		t.Fatal("non empty project deleted:", err)
 	}
 }
 

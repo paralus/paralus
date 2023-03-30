@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -314,7 +313,16 @@ func (s *clusterService) Select(ctx context.Context, cluster *infrav3.Cluster, i
 	if err != nil {
 		id = uuid.Nil
 	}
-	c, err := cdao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: cluster.Metadata.Name})
+
+	reqProjectId, err := uuid.Parse(cluster.Metadata.Project)
+	if err != nil {
+		reqProjectId, err = dao.GetProjectId(ctx, s.db, cluster.Metadata.Project)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	c, err := cdao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: cluster.Metadata.Name, ProjectId: reqProjectId})
 	if err != nil {
 		return &infrav3.Cluster{}, err
 	}
@@ -324,6 +332,9 @@ func (s *clusterService) Select(ctx context.Context, cluster *infrav3.Cluster, i
 		projects, err = cdao.GetProjectsForCluster(ctx, s.db, c.ID)
 		if err != nil {
 			return &infrav3.Cluster{}, err
+		}
+		if len(projects) <= 0 {
+			return &infrav3.Cluster{}, fmt.Errorf("no projects associated with the cluster")
 		}
 	}
 
@@ -357,7 +368,15 @@ func (s *clusterService) Get(ctx context.Context, opts ...query.Option) (*infrav
 	if err != nil {
 		id = uuid.Nil
 	}
-	c, err := cdao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: queryOptions.Name})
+	reqProjectId, err := uuid.Parse(queryOptions.Project)
+	if err != nil {
+		reqProjectId, err = dao.GetProjectId(ctx, s.db, queryOptions.Project)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	c, err := cdao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: queryOptions.Name, ProjectId: reqProjectId})
 	if err != nil {
 		return &infrav3.Cluster{}, err
 	}
@@ -366,6 +385,10 @@ func (s *clusterService) Get(ctx context.Context, opts ...query.Option) (*infrav
 		projects, err = cdao.GetProjectsForCluster(ctx, s.db, c.ID)
 		if err != nil {
 			return &infrav3.Cluster{}, err
+		}
+
+		if len(projects) <= 0 {
+			return &infrav3.Cluster{}, fmt.Errorf("no projects associated with the cluster")
 		}
 	}
 
@@ -419,13 +442,6 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 		CreatedAt:    timestamppb.New(c.CreatedAt),
 	}
 
-	sm := int32(infrav3.ClusterShareMode_ClusterShareModeNotSet)
-	smv, err := strconv.ParseInt(c.ShareMode, 10, 32)
-	if err != nil {
-		_log.Infow("unable to convert value, ", err.Error())
-	} else {
-		sm = int32(smv)
-	}
 	var proxy infrav3.ProxyConfig
 	if c.ProxyConfig != nil {
 		json.Unmarshal(c.ProxyConfig, &proxy)
@@ -451,7 +467,6 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 	clstr.Spec = &infrav3.ClusterSpec{
 		ClusterType:      c.ClusterType,
 		OverrideSelector: c.OverrideSelector,
-		ShareMode:        infrav3.ClusterShareMode(sm),
 		ProxyConfig:      &proxy,
 		Params:           &params,
 		ClusterData: &infrav3.ClusterData{
@@ -477,6 +492,7 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 
 func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (*infrav3.Cluster, error) {
 
+	projectName := cluster.Metadata.Project
 	var errormsg string
 
 	if cluster.Metadata.Name == "" {
@@ -487,12 +503,22 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 		}
 		return cluster, fmt.Errorf("invalid cluster data, name is missing")
 	}
-
-	edb, err := dao.GetByName(ctx, s.db, cluster.Metadata.Name, &models.Cluster{})
+	// look for projectId and validate it during cluster fetch
+	reqProjectId, err := uuid.Parse(projectName)
 	if err != nil {
-		return &infrav3.Cluster{}, fmt.Errorf(errormsg)
+		reqProjectId, err = dao.GetProjectId(ctx, s.db, projectName)
+		if err != nil {
+			return nil, err
+		}
 	}
-	cdb := edb.(*models.Cluster)
+	id, err := uuid.Parse(cluster.Metadata.Id)
+	if err != nil {
+		return nil, err
+	}
+	cdb, err := cdao.GetCluster(ctx, s.db, &models.Cluster{ID: id, Name: cluster.Metadata.Name, ProjectId: reqProjectId})
+	if err != nil {
+		return &infrav3.Cluster{}, err
+	}
 
 	pid := cdb.PartnerId
 	if cluster.Spec.ClusterType == "" {
@@ -591,6 +617,12 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 		ID:             cluster.Metadata.Id,
 	}
 
+	sd, ok := GetSessionDataFromContext(ctx)
+	if ok {
+		ev.Username = sd.Username
+		ev.Account = sd.Account
+	}
+
 	for _, h := range s.clusterHandlers {
 		h.OnChange(ev)
 	}
@@ -598,7 +630,14 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 		h.OnChange(ev)
 	}*/
 
-	CreateClusterAuditEvent(ctx, s.al, AuditActionUpdate, cluster.GetMetadata().GetName(), cdb.ID, cluster.Metadata.Project)
+	if id, err := uuid.Parse(projectName); err == nil {
+		projectName, err = dao.GetProjectName(ctx, s.db, id)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	CreateClusterAuditEvent(ctx, s.al, AuditActionUpdate, cluster.GetMetadata().GetName(), cdb.ID, projectName)
 
 	return cluster, nil
 }
@@ -617,19 +656,19 @@ func (s *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) e
 	clusterId := cluster.Metadata.Id
 	projectId := cluster.Metadata.Project
 
-	err = s.deleteBootstrapAgentForCluster(ctx, cluster)
-	if err != nil {
-		return err
-	}
-
 	_log.Infow("deleting cluster", "name", cluster.Metadata.Name)
 
 	_log.Debugw("setting cluster condition to pending delete", "name", cluster.Metadata.Name, "conditions", cluster.Spec.ClusterData.ClusterStatus.Conditions)
-	clstrutil.SetClusterCondition(cluster, clstrutil.NewClusterDelete(constants.Pending, "deleted"))
+	clstrutil.SetClusterCondition(cluster, clstrutil.NewClusterDelete(constants.Pending, "delete request submitted"))
 
 	err = s.UpdateClusterConditionStatus(ctx, cluster)
 	if err != nil {
 		return errors.Wrapf(err, "could not update cluster %s status to pending delete", cluster.Metadata.Name)
+	}
+
+	sd, ok := GetSessionDataFromContext(ctx)
+	if !ok {
+		return errors.New("failed to get session data")
 	}
 
 	ev := event.Resource{
@@ -639,6 +678,8 @@ func (s *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) e
 		Name:           cluster.Metadata.Name,
 		EventType:      event.ResourceDelete,
 		ID:             clusterId,
+		Username:       sd.Username,
+		Account:        sd.Account,
 	}
 
 	for _, h := range s.clusterHandlers {
@@ -868,46 +909,6 @@ func (s *clusterService) UpdateStatus(ctx context.Context, current *infrav3.Clus
 	}
 
 	s.notifyCluster(ctx, current)
-
-	return nil
-}
-
-// DeleteForCluster delete bootstrap agent
-func (s *clusterService) deleteBootstrapAgentForCluster(ctx context.Context, cluster *infrav3.Cluster) error {
-
-	resp, err := s.bs.SelectBootstrapAgentTemplates(ctx, query.WithOptions(&commonv3.QueryOptions{
-		GlobalScope: true,
-		Selector:    "paralus.dev/defaultRelay=true",
-	}))
-	if err != nil {
-		return err
-	}
-
-	for _, bat := range resp.Items {
-
-		agent := &sentry.BootstrapAgent{
-			Metadata: &commonv3.Metadata{
-				Id:           cluster.Metadata.Id,
-				Name:         cluster.Metadata.Name,
-				Partner:      cluster.Metadata.Partner,
-				Organization: cluster.Metadata.Organization,
-				Project:      cluster.Metadata.Project,
-			},
-			Spec: &sentry.BootstrapAgentSpec{
-				TemplateRef: fmt.Sprintf("template/%s", bat.Metadata.Name),
-			},
-		}
-
-		templateRef, err := sentryutil.GetTemplateScope(agent.Spec.TemplateRef)
-		if err != nil {
-			return err
-		}
-
-		err = s.bs.DeleteBootstrapAgent(ctx, templateRef, query.WithMeta(agent.Metadata))
-		if err != nil {
-			return err
-		}
-	}
 
 	return nil
 }

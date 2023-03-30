@@ -29,7 +29,7 @@ import (
 
 const (
 	kubeconfigPermission = sentry.KubeconfigReadPermission
-	systemUsername       = "admin@paralus.co"
+	systemUsername       = "admin@paralus.local"
 )
 
 var _log = log.GetLogger()
@@ -356,7 +356,7 @@ func getCertValidity(ctx context.Context, orgID, accountID string, isSSO bool, k
 	return (360 * (time.Hour * 24)), nil
 }
 
-func getConfig(username, namespace, certCN, serverHost string, bootstrapInfra *sentry.BootstrapInfra, bootstrapAgents []*sentry.BootstrapAgent, pf cryptoutil.PasswordFunc, certValidity time.Duration) (*clientcmdapiv1.Config, error) {
+func getConfig(username, namespace, certCN, serverHost string, bootstrapInfra *sentry.BootstrapInfra, bootstrapAgents []*sentry.BootstrapAgent, pf cryptoutil.PasswordFunc, certValidity time.Duration, clusterName string) (*clientcmdapiv1.Config, error) {
 
 	if namespace == "" {
 		namespace = "default"
@@ -443,7 +443,9 @@ func getConfig(username, namespace, certCN, serverHost string, bootstrapInfra *s
 		Contexts:   contexts,
 	}
 
-	if len(contexts) > 0 {
+	if clusterName = strings.Trim(clusterName, " "); clusterName != "" {
+		config.CurrentContext = clusterName
+	} else if len(contexts) > 0 {
 		config.CurrentContext = contexts[0].Name
 	}
 
@@ -498,9 +500,6 @@ func GetConfigForCluster(ctx context.Context, bs service.BootstrapService, req *
 	if req.SystemUser {
 		username = systemUsername
 	}
-	if sessionType == ParalusSystem {
-		username = ParalusSystem + "-" + username
-	}
 	enforceSession := false
 
 	// get user level settings if exist
@@ -553,7 +552,7 @@ func GetConfigForCluster(ctx context.Context, bs service.BootstrapService, req *
 		certValidity = 8 * time.Hour
 	}
 
-	config, err := getConfig(username, req.Namespace, cn, serverHost, bi, bal.Items, pf, certValidity)
+	config, err := getConfig(username, req.Namespace, cn, serverHost, bi, bal.Items, pf, certValidity, opts.Name)
 	if err != nil {
 		_log.Errorw("error generating kubeconfig", "error", err.Error())
 		return nil, err

@@ -1,2 +1,9 @@
 coverage.out
 paralus
+bin
+.air.toml
+.envrc
+tmp
+audit.log
+buf.lock
+.vscode

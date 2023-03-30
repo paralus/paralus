@@ -20,6 +20,7 @@ import (
 	"github.com/paralus/paralus/pkg/common"
 	"github.com/paralus/paralus/pkg/enforcer"
 	"github.com/paralus/paralus/pkg/service"
+	"github.com/paralus/paralus/pkg/utils"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	rolev3 "github.com/paralus/paralus/proto/types/rolepb/v3"
 	systemv3 "github.com/paralus/paralus/proto/types/systempb/v3"
@@ -296,16 +297,22 @@ func main() {
 		},
 	})
 
+	p := utils.GetRandomPassword(8)
 retry:
 	numOfRetries := 0
 	// should we directly interact with kratos and create a user with a password?
-	orgA, err := us.Create(context.Background(), &userv3.User{
+	_, err = us.Create(context.Background(), &userv3.User{
 		Metadata: &commonv3.Metadata{Name: *oae, Partner: *partner, Organization: *org},
 		Spec: &userv3.UserSpec{
-			FirstName:             *oafn,
-			LastName:              *oaln,
-			Groups:                []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
-			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Role: "ADMIN", Group: &admingrp.Metadata.Name}}},
+			FirstName: *oafn,
+			LastName:  *oaln,
+			Password:  p,
+			Groups:    []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
+			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{
+				{Role: "ADMIN", Group: &admingrp.Metadata.Name},
+			},
+			ForceReset: true,
+		},
 	})
 
 	if err != nil {
@@ -318,6 +325,5 @@ retry:
 		time.Sleep(10 * time.Second)
 		goto retry
 	}
-
-	fmt.Println("Org Admin signup URL: ", *orgA.Spec.RecoveryUrl)
+	fmt.Printf("Org Admin default password: %s\n", p)
 }

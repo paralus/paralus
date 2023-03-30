@@ -72,6 +72,16 @@ func (s *userServer) UpdateUser(ctx context.Context, req *userpbv3.User) (*userp
 	return updateUserStatus(req, resp, err), err
 }
 
+func (s *userServer) UpdateUserForceReset(ctx context.Context, req *rpcv3.UpdateForceResetRequest) (*rpcv3.UpdateForceResetResponse, error) {
+	sessData, ok := service.GetSessionDataFromContext(ctx)
+	if !ok {
+		return nil, fmt.Errorf("unable to retrieve session data")
+	}
+
+	err := s.us.UpdateForceResetFlag(ctx, sessData.Username)
+	return &rpcv3.UpdateForceResetResponse{}, err
+}
+
 func (s *userServer) DownloadCliConfig(ctx context.Context, req *rpcv3.CliConfigRequest) (*v3.HttpBody, error) {
 	sessData, ok := service.GetSessionDataFromContext(ctx)
 	if !ok {
@@ -112,4 +122,8 @@ func (s *userServer) UserDeleteApiKeys(ctx context.Context, req *rpcv3.ApiKeyReq
 func (s *userServer) UserForgotPassword(ctx context.Context, req *rpcv3.UserForgotPasswordRequest) (*rpcv3.UserForgotPasswordResponse, error) {
 	return s.us.ForgotPassword(ctx, req)
 
+}
+
+func (s *userServer) AuditLogWebhook(ctx context.Context, req *rpcv3.UserLoginAuditRequest) (*rpcv3.UserLoginAuditResponse, error) {
+	return s.us.CreateLoginAuditLog(ctx, req)
 }

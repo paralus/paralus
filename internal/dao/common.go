@@ -92,14 +92,17 @@ func GetByNamePartnerOrg(ctx context.Context, db bun.IDB, name string, pid uuid.
 }
 
 func GetIdByName(ctx context.Context, db bun.IDB, name string, entity interface{}) (interface{}, error) {
-	err := db.NewSelect().Column("id").Model(entity).
+	return GetAttributesByName(ctx, db, name, entity, "id")
+}
+
+func GetAttributesByName(ctx context.Context, db bun.IDB, name string, entity interface{}, columns ...string) (interface{}, error) {
+	err := db.NewSelect().Column(columns...).Model(entity).
 		Where("name = ?", name).
 		Where("trash = ?", false).
 		Scan(ctx)
 	if err != nil {
 		return nil, err
 	}
-
 	return entity, nil
 }
 

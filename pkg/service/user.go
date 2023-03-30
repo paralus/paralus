@@ -21,6 +21,7 @@ import (
 	"github.com/paralus/paralus/pkg/utils"
 	userrpcv3 "github.com/paralus/paralus/proto/rpc/user"
 	authzv1 "github.com/paralus/paralus/proto/types/authz"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	userv3 "github.com/paralus/paralus/proto/types/userpb/v3"
 )
@@ -42,6 +43,8 @@ type UserService interface {
 	GetUserInfo(context.Context, *userv3.User) (*userv3.UserInfo, error)
 	// create or update user
 	Update(context.Context, *userv3.User) (*userv3.User, error)
+	// update user force reset flag
+	UpdateForceResetFlag(context.Context, string) error
 	// delete user
 	Delete(context.Context, *userv3.User) (*userrpcv3.UserDeleteApiKeysResponse, error)
 	// list users
@@ -52,6 +55,8 @@ type UserService interface {
 	UpdateIdpUserGroupPolicy(context.Context, string, string, string) error
 	// Generate recovery link for users
 	ForgotPassword(context.Context, *userrpcv3.UserForgotPasswordRequest) (*userrpcv3.UserForgotPasswordResponse, error)
+	// Generate auditLog event
+	CreateLoginAuditLog(context.Context, *userrpcv3.UserLoginAuditRequest) (*userrpcv3.UserLoginAuditResponse, error)
 }
 
 type userService struct {
@@ -414,13 +419,17 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 
 	// we should not be taking idp groups as input on local user creation
 	user.Spec.IdpGroups = []string{}
-
+	generatedPassword := user.GetSpec().GetPassword()
+	if len(generatedPassword) == 0 {
+		generatedPassword = utils.GetRandomPassword(8)
+	}
+	user.Spec.Password = generatedPassword
 	// Kratos checks if the user is already available
-	id, err := s.ap.Create(ctx, map[string]interface{}{
+	id, err := s.ap.Create(ctx, generatedPassword, map[string]interface{}{
 		"email":      user.GetMetadata().GetName(), // can be just username for API access
 		"first_name": user.GetSpec().GetFirstName(),
 		"last_name":  user.GetSpec().GetLastName(),
-	})
+	}, user.Spec.ForceReset)
 	if err != nil {
 		return &userv3.User{}, err
 	}
@@ -450,13 +459,6 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 		_log.Warn("unable to commit changes", err)
 		return &userv3.User{}, err
 	}
-
-	rl, err := s.ap.GetRecoveryLink(ctx, id)
-	if err != nil {
-		_log.Warn("unable to generate recovery url", err)
-		return &userv3.User{}, err
-	}
-	user.Spec.RecoveryUrl = &rl
 
 	CreateUserAuditEvent(ctx, s.al, s.db, AuditActionCreate, user.GetMetadata().GetName(), uid, []uuid.UUID{}, rolesAfter, []uuid.UUID{}, groupsAfter)
 	return user, nil
@@ -556,6 +558,12 @@ func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3
 			user.GetSpec().LastLogin = lastLogin
 		}
 
+		meta, err := s.ap.GetPublicMetadata(ctx, usr.ID.String())
+		if err != nil {
+			return &userv3.User{}, err
+		}
+		user.Spec.ForceReset = meta.ForceReset
+
 		return user, nil
 	}
 	return user, nil
@@ -585,24 +593,30 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 
 	roleMap := map[string][]string{}
 	if usr, ok := entity.(*models.KratosIdentities); ok {
+
 		user, err := s.identitiesModelToUser(ctx, s.db, user, usr)
 		if err != nil {
 			return &userv3.UserInfo{}, err
 		}
-
+		meta, err := s.ap.GetPublicMetadata(ctx, usr.ID.String())
+		if err != nil {
+			return &userv3.UserInfo{}, err
+		}
 		userinfo := &userv3.UserInfo{Metadata: user.Metadata}
 		userinfo.ApiVersion = apiVersion
 		userinfo.Kind = "UserInfo"
 		userinfo.Spec = &userv3.UserInfoSpec{
-			FirstName: user.Spec.FirstName,
-			LastName:  user.Spec.LastName,
-			Groups:    user.Spec.Groups,
+			FirstName:  user.Spec.FirstName,
+			LastName:   user.Spec.LastName,
+			Groups:     user.Spec.Groups,
+			ForceReset: meta.ForceReset,
 		}
 		permissions := []*userv3.Permission{}
 		for _, p := range user.Spec.ProjectNamespaceRoles {
+			var scope string
 			rps, ok := roleMap[p.Role]
 			if !ok {
-				role, err := dao.GetIdByName(ctx, s.db, p.Role, &models.Role{})
+				role, err := dao.GetAttributesByName(ctx, s.db, p.Role, &models.Role{}, "id", "scope")
 				if err != nil {
 					return &userv3.UserInfo{}, err
 				}
@@ -619,6 +633,7 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 					rps = append(rps, r.Name)
 				}
 				roleMap[p.Role] = rps
+				scope = rle.Scope
 			}
 			permissions = append(
 				permissions,
@@ -627,8 +642,10 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 					Namespace:   p.Namespace,
 					Role:        p.Role,
 					Permissions: rps,
+					Scope:       &scope,
 				},
 			)
+
 		}
 		userinfo.Spec.Permissions = permissions
 		return userinfo, nil
@@ -674,6 +691,21 @@ func (s *userService) deleteUserRoleRelations(ctx context.Context, db bun.IDB, u
 	return ids, nil
 }
 
+func (s *userService) UpdateForceResetFlag(ctx context.Context, username string) error {
+	entity, err := dao.GetUserFullByEmail(ctx, s.db, username, &models.KratosIdentities{})
+	if err != nil {
+		return fmt.Errorf("no user found with name '%v'", username)
+	}
+
+	if usr, ok := entity.(*models.KratosIdentities); ok {
+		err = s.ap.Update(ctx, usr.ID.String(), usr.Traits, false)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.User, error) {
 	name := user.GetMetadata().GetName()
 	entity, err := dao.GetUserFullByEmail(ctx, s.db, name, &models.KratosIdentities{})
@@ -693,7 +725,7 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 				"email":      user.GetMetadata().GetName(),
 				"first_name": user.GetSpec().GetFirstName(),
 				"last_name":  user.GetSpec().GetLastName(),
-			})
+			}, user.Spec.ForceReset)
 			if err != nil {
 				return &userv3.User{}, err
 			}
@@ -1066,6 +1098,26 @@ func (s *userService) ForgotPassword(ctx context.Context, req *userrpcv3.UserFor
 	} else {
 		return &userrpcv3.UserForgotPasswordResponse{}, fmt.Errorf("unable to generate recovery url")
 	}
+}
+
+func (s *userService) CreateLoginAuditLog(ctx context.Context, req *userrpcv3.UserLoginAuditRequest) (*userrpcv3.UserLoginAuditResponse, error) {
+	uid, err := uuid.Parse(req.UserId)
+	if err != nil {
+		return &userrpcv3.UserLoginAuditResponse{}, fmt.Errorf("unable to create login audit event. reason: uid parse error.%v", err.Error())
+	}
+
+	entities, err := dao.GetUserNamesByIds(ctx, s.db, []uuid.UUID{uid}, &models.KratosIdentities{})
+	if err != nil {
+		return &userrpcv3.UserLoginAuditResponse{}, fmt.Errorf("unable to create login audit event. reason: internal error. %v", err.Error())
+	}
+	if len(entities) == 0 {
+		return &userrpcv3.UserLoginAuditResponse{}, fmt.Errorf("unable to create login audit event. reason: user not found")
+	}
+	username := entities[0]
+	new_ctx := context.WithValue(ctx, common.SessionDataKey, &commonv3.SessionData{Username: username})
+	CreateUserLoginAuditEvent(new_ctx, s.al, "login", username)
+
+	return &userrpcv3.UserLoginAuditResponse{}, nil
 }
 
 func (s *userService) getUserLastLogin(ctx context.Context, userId uuid.UUID) (string, error) {

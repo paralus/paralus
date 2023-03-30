@@ -188,6 +188,7 @@ func prepareAgentResponse(agent *models.BootstrapAgent) *sentry.BootstrapAgent {
 			ModifiedAt:  timestamppb.New(agent.ModifiedAt),
 			Labels:      lbls,
 			Annotations: ann,
+			Project:     agent.ProjectId.String(),
 		},
 		Spec: &sentry.BootstrapAgentSpec{
 			Token:       agent.Token,

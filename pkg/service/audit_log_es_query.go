@@ -10,23 +10,15 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-type AuditLogService struct {
+type auditLogElasticSearchService struct {
 	auditQuery ElasticSearchQuery
 }
 
-func NewAuditLogService(url string, auditPattern string, logPrefix string) (*AuditLogService, error) {
-	auditQuery, err := NewElasticSearchQuery(url, auditPattern, logPrefix)
+func (a *auditLogElasticSearchService) GetAuditLog(req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
 	if err != nil {
 		return nil, err
 	}
-	return &AuditLogService{auditQuery: auditQuery}, nil
-}
-
-func (a *AuditLogService) GetAuditLog(req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
-	if err != nil {
-		return nil, err
-	}
-	project, err := getPrjectFromUrlScope(req.GetMetadata().UrlScope)
+	project, err := getProjectFromUrlScope(req.GetMetadata().UrlScope)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +36,7 @@ func validateQueryString(queryString string) error {
 	return nil
 }
 
-func getPrjectFromUrlScope(urlScope string) (string, error) {
+func getProjectFromUrlScope(urlScope string) (string, error) {
 	s := strings.Split(urlScope, "/")
 	if len(s) != 2 {
 		_log.Errorw("Unable to retrieve project from urlScope", "urlScope", urlScope)
@@ -53,7 +45,7 @@ func getPrjectFromUrlScope(urlScope string) (string, error) {
 	return s[1], nil
 }
 
-func (a *AuditLogService) GetAuditLogByProjects(req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
+func (a *auditLogElasticSearchService) GetAuditLogByProjects(req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
 	err = validateQueryString(req.GetFilter().QueryString)
 	if err != nil {
 		return nil, err
