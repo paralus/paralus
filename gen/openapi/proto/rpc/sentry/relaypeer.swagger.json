@@ -48,10 +48,12 @@
       "type": "object",
       "properties": {
         "serviceuuid": {
-          "type": "string"
+          "type": "string",
+          "title": "the uuid of the service"
         },
         "serviceip": {
-          "type": "string"
+          "type": "string",
+          "title": "the ip address of the relay"
         }
       }
     },
@@ -83,10 +85,12 @@
       "type": "object",
       "properties": {
         "relayuuid": {
-          "type": "string"
+          "type": "string",
+          "title": "the uuid of the relay"
         },
         "relayip": {
-          "type": "string"
+          "type": "string",
+          "title": "the ip address of the relay"
         }
       }
     }

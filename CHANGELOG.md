@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 
 ## Unreleased
+
+## Added
+- Enhance: Improve Documentation for APIs [mabhi](https://github.com/mabhi) and [niravparikh05](https://github.com/niravparikh05)
+
 ## Fixed
 - Fix: add project name validation [hiteshwani29](https://github.com/hiteshwani29)
 

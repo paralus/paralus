@@ -1570,7 +1570,12 @@
   "securityDefinitions": {
     "ApiKeyAuth": {
       "type": "apiKey",
-      "name": "X-PARALUS-API-KEYID",
+      "name": "X-API-KEYID",
+      "in": "header"
+    },
+    "ApiTokenAuth": {
+      "type": "apiKey",
+      "name": "X-API-TOKEN",
       "in": "header"
     },
     "BasicAuth": {
@@ -1579,8 +1584,11 @@
   },
   "security": [
     {
-      "ApiKeyAuth": [],
       "BasicAuth": []
+    },
+    {
+      "ApiKeyAuth": [],
+      "ApiTokenAuth": []
     }
   ]
 }
