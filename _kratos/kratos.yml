@@ -1,4 +1,4 @@
-version: v0.10.1
+version: v0.11.0
 
 dsn: postgres://admindbuser:admindbpassword@localhost:5432/admindb?sslmode=disable&max_conns=20&max_idle_conns=4
 
