@@ -185,6 +185,7 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 
 	edb := &models.Cluster{
 		Name:           strings.ToLower(cluster.Metadata.Name),
+		Description:    cluster.Metadata.Description,
 		CreatedAt:      time.Now(),
 		ModifiedAt:     time.Now(),
 		Trash:          false,
@@ -432,7 +433,7 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 	clstr.Metadata = &commonv3.Metadata{
 		Id:           c.ID.String(),
 		Name:         c.Name,
-		Description:  c.DisplayName,
+		Description:  c.Description,
 		Labels:       lbls,
 		Annotations:  ann,
 		Project:      proj.Name,
@@ -947,7 +948,7 @@ func (s *clusterService) CreateBootstrapAgentForCluster(ctx context.Context, clu
 				Metadata: &commonv3.Metadata{
 					Name:        cluster.Metadata.Id,
 					DisplayName: cluster.Metadata.Name,
-					Description: cluster.Metadata.Name,
+					Description: cluster.Metadata.Description,
 					Labels: map[string]string{
 						"paralus.dev/clusterName": cluster.Metadata.Name,
 					},
