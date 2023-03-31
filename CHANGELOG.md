@@ -4,14 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## [0.2.2] - 2023-03-31
+
 ## Added
-- Enhance: Improve Documentation for APIs [mabhi](https://github.com/mabhi) and [niravparikh05](https://github.com/niravparikh05)
+- Support more than one IdP groups mapping from [akshay196](https://github.com/akshay196)
 
 ## Fixed
-- Fix: add project name validation [hiteshwani29](https://github.com/hiteshwani29)
-
-## Fixed
+- Add project name validation [hiteshwani29](https://github.com/hiteshwani29)
 - Fix to error out multiple bootstrap agent registration requests from [niravparikh05](https://github.com/niravparikh05)
+- Updated Documentation for APIs [mabhi](https://github.com/mabhi) and [niravparikh05](https://github.com/niravparikh05)
 
 ## [0.2.1] - 2023-02-24
 ### Added
@@ -97,7 +98,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Initial release
 
-[Unreleased]: https://github.com/paralus/paralus/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/paralus/paralus/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/paralus/paralus/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/paralus/paralus/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/paralus/paralus/compare/v0.1.9...v0.2.0
 [0.1.9]: https://github.com/paralus/paralus/compare/v0.1.8...v0.1.9
