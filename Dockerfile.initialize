@@ -4,7 +4,7 @@ LABEL description="Build container"
 ENV CGO_ENABLED 0
 WORKDIR /build
 
-RUN wget -O kratos.tar.gz -q https://github.com/ory/kratos/releases/download/v0.10.1/kratos_0.10.1-linux_64bit.tar.gz && tar -xf kratos.tar.gz
+RUN wget -O kratos.tar.gz -q https://github.com/ory/kratos/releases/download/v0.11.0/kratos_0.11.0-linux_64bit.tar.gz && tar -xf kratos.tar.gz
 RUN wget -O migrate.tar.gz -q https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz && tar -xf migrate.tar.gz
 
 COPY . /build
