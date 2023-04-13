@@ -11,8 +11,6 @@ CREATE TABLE IF NOT EXISTS authsrv_resourcepermission (
     resource_action_urls jsonb NOT NULL
 );
 
-ALTER TABLE authsrv_resourcepermission OWNER TO admindbuser;
-
 ALTER TABLE ONLY authsrv_resourcepermission ADD CONSTRAINT authsrv_resourcepermission_pkey PRIMARY KEY (id);
 
 CREATE INDEX authsrv_resourcepermission_name_97f09d50 ON authsrv_resourcepermission USING btree (name);

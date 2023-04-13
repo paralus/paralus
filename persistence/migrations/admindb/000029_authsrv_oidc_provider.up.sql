@@ -21,8 +21,6 @@ CREATE TABLE IF NOT EXISTS authsrv_oidc_provider (
     trash boolean NOT NULL
 );
 
-ALTER TABLE authsrv_oidc_provider OWNER TO admindbuser;
-
 ALTER TABLE ONLY authsrv_oidc_provider ADD CONSTRAINT authsrv_oidc_provider_pkey PRIMARY KEY (id);
 
 CREATE UNIQUE index authsrv_oidc_provider_issuer_url ON authsrv_oidc_provider (issuer_url) WHERE trash IS false;

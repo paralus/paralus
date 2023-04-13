@@ -10,8 +10,6 @@ CREATE TABLE IF NOT EXISTS authsrv_project (
     "default" boolean NOT NULL
 );
 
-ALTER TABLE authsrv_project OWNER TO admindbuser;
-
 ALTER TABLE ONLY authsrv_project ADD CONSTRAINT authsrv_project_pkey PRIMARY KEY (id);
 
 -- update when we have more than one org

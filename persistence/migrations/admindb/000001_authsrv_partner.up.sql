@@ -1,5 +1,4 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-GRANT EXECUTE ON FUNCTION uuid_generate_v4() TO admindbuser;
 CREATE TABLE IF NOT EXISTS authsrv_partner (
     id uuid NOT NULL default uuid_generate_v4(),
     name character varying(256) NOT NULL,
@@ -22,9 +21,6 @@ CREATE TABLE IF NOT EXISTS authsrv_partner (
     is_totp_enabled boolean NOT NULL,
     is_synthetic_partner_enabled boolean NOT NULL
 );
-
-
-ALTER TABLE authsrv_partner OWNER TO admindbuser;
 
 ALTER TABLE ONLY authsrv_partner ADD CONSTRAINT authsrv_partner_pkey PRIMARY KEY (id);
 

@@ -15,6 +15,4 @@ CREATE TABLE IF NOT EXISTS cluster_tokens (
     state varchar NOT NULL
 );
 
-ALTER TABLE cluster_tokens OWNER TO admindbuser;
-
 ALTER TABLE ONLY cluster_tokens ADD CONSTRAINT cluster_tokens_pkey PRIMARY KEY (name);

@@ -10,8 +10,6 @@ CREATE TABLE IF NOT EXISTS authsrv_group (
     type character varying(64) NOT NULL
 );
 
-ALTER TABLE authsrv_group OWNER TO admindbuser;
-
 ALTER TABLE ONLY authsrv_group ADD CONSTRAINT authsrv_group_pkey PRIMARY KEY (id);
 
 CREATE INDEX authsrv_group_name_d90b4524 ON authsrv_group USING btree (name);

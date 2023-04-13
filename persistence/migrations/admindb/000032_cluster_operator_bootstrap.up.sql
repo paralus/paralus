@@ -5,5 +5,3 @@ CREATE TABLE IF NOT EXISTS cluster_operator_bootstrap (
     trash boolean DEFAULT false NOT NULL,
     yaml_content text
 );
-
-ALTER TABLE cluster_operator_bootstrap OWNER TO admindbuser;

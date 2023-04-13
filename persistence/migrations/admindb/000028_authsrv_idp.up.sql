@@ -20,8 +20,6 @@ CREATE TABLE IF NOT EXISTS authsrv_idp (
     is_sae_enabled boolean default false
 );
 
-ALTER TABLE authsrv_idp OWNER TO admindbuser;
-
 ALTER TABLE ONLY authsrv_idp ADD CONSTRAINT authsrv_idp_pkey PRIMARY KEY (id);
 
 ALTER TABLE ONLY authsrv_idp ADD CONSTRAINT authsrv_idp_partner_id_domain_5669b152_uniq UNIQUE (partner_id, domain);

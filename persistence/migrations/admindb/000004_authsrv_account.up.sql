@@ -16,8 +16,6 @@ CREATE TABLE IF NOT EXISTS authsrv_ssoaccount (
     last_logout timestamp with time zone
 );
 
-ALTER TABLE authsrv_ssoaccount OWNER TO admindbuser;
-
 ALTER TABLE ONLY authsrv_ssoaccount ADD CONSTRAINT authsrv_ssoaccount_pkey PRIMARY KEY (id);
 
 ALTER TABLE ONLY authsrv_ssoaccount ADD CONSTRAINT authsrv_ssoaccount_username_key UNIQUE (username);

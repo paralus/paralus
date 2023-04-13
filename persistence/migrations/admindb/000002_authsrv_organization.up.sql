@@ -28,8 +28,6 @@ CREATE TABLE IF NOT EXISTS authsrv_organization (
     referer character varying(30)
 );
 
-ALTER TABLE authsrv_organization OWNER TO admindbuser;
-
 ALTER TABLE ONLY authsrv_organization
     ADD CONSTRAINT authsrv_organization_name_partner_id_7d1113b9_uniq UNIQUE (name, partner_id);
 

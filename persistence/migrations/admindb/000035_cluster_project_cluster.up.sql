@@ -4,8 +4,6 @@ CREATE TABLE IF NOT EXISTS cluster_project_cluster (
     trash boolean NOT NULL default false
 );
 
-ALTER TABLE cluster_project_cluster OWNER TO admindbuser;
-
 CREATE INDEX cluster_project_cluster_project_id_cluster_id_key ON cluster_project_cluster USING btree (project_id, cluster_id);
 
 ALTER TABLE ONLY cluster_project_cluster

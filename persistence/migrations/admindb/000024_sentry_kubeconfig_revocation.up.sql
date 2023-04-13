@@ -8,8 +8,6 @@ CREATE TABLE IF NOT EXISTS sentry_kubeconfig_revocation (
     is_sso_user boolean default FALSE
 );
 
-ALTER TABLE sentry_kubeconfig_revocation OWNER TO admindbuser;
-
 ALTER TABLE ONLY sentry_kubeconfig_revocation ADD CONSTRAINT sentry_kubeconfig_revocation_pkey PRIMARY KEY (id);
 
 ALTER TABLE ONLY sentry_kubeconfig_revocation

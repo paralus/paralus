@@ -14,8 +14,6 @@ CREATE TABLE IF NOT EXISTS authsrv_projectaccountresourcerole (
     role_id uuid NOT NULL
 );
 
-ALTER TABLE authsrv_projectaccountresourcerole OWNER TO admindbuser;
-
 ALTER TABLE ONLY authsrv_projectaccountresourcerole ADD CONSTRAINT authsrv_projectaccountresourcerole_pkey PRIMARY KEY (id);
 
 CREATE INDEX authsrv_projectaccountresourcerole_account_id_532ce8df ON authsrv_projectaccountresourcerole USING btree (account_id);

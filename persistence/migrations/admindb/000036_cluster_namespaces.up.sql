@@ -9,8 +9,6 @@ CREATE TABLE IF NOT EXISTS cluster_namespaces (
     status jsonb not null default '{}'::jsonb
 );
 
-ALTER TABLE cluster_namespaces OWNER TO admindbuser;
-
 ALTER TABLE ONLY cluster_namespaces ADD CONSTRAINT cluster_namespaces_pkey PRIMARY KEY (cluster_id, name);
 
 ALTER TABLE ONLY cluster_namespaces
