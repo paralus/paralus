@@ -475,7 +475,7 @@ func run() {
 	_log.Infow("registered grpc health server")
 
 	var wg sync.WaitGroup
-	wg.Add(5)
+	wg.Add(6)
 
 	go runAPI(&wg, ctx)
 	go runRPC(&wg, ctx)
