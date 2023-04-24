@@ -98,7 +98,7 @@ documentation.
 Perform the Kratos migrations:
 
 ```bash
-export DSN='postgres://<user>:<pass>@<host>:<port>/<db_name>?sslmode=disable'
+export DSN='postgres://<db_user>:<db_password>@<host>:<port>/<db_name>?sslmode=disable'
 kratos -c <kratos-config> migrate sql -e --yes
 ```
 
