@@ -124,7 +124,7 @@ You can refer to the [guide](https://github.com/golang-migrate/migrate/tree/mast
 _It is required to perform Kratos migrations before this step._
 
 ```shell
-export POSTGRESQL_URL='postgres://<user>:<pass>@<host>:<port>/<db_name>?sslmode=disable'
+export POSTGRESQL_URL='postgres://<db_user>:<db_password>@<host>:<port>/<db_name>?sslmode=disable'
 migrate -path ./persistence/migrations/admindb -database "$POSTGRESQL_URL" up
 ```
 
