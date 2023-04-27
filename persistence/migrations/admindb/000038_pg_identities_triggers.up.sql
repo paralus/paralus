@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION identities_after_change() RETURNS TRIGGER AS $$
   END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_identities_update
+CREATE OR REPLACE TRIGGER trigger_identities_update
   AFTER INSERT OR UPDATE OR DELETE
   ON identities
   FOR EACH ROW

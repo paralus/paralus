@@ -1,14 +1,14 @@
 CREATE TABLE IF NOT EXISTS authsrv_ssoaccount (
     password character varying(128) NOT NULL,
     last_login timestamp with time zone,
-    id uuid NOT NULL default uuid_generate_v4(),
+    id uuid default uuid_generate_v4() PRIMARY KEY,
     name character varying(256) NOT NULL,
-    organization_id uuid,
+    organization_id uuid REFERENCES authsrv_organization(id) DEFERRABLE INITIALLY DEFERRED,
     description character varying(512) NOT NULL,
     created_at timestamp with time zone NOT NULL,
     modified_at timestamp with time zone NOT NULL,
     trash boolean NOT NULL,
-    username character varying(256) NOT NULL,
+    username character varying(256) NOT NULL UNIQUE,
     phone character varying(36) NOT NULL,
     first_name character varying(64) NOT NULL,
     last_name character varying(64) NOT NULL,
@@ -16,18 +16,10 @@ CREATE TABLE IF NOT EXISTS authsrv_ssoaccount (
     last_logout timestamp with time zone
 );
 
-ALTER TABLE ONLY authsrv_ssoaccount ADD CONSTRAINT authsrv_ssoaccount_pkey PRIMARY KEY (id);
+CREATE INDEX IF NOT EXISTS authsrv_ssoaccount_name_4def83cc ON authsrv_ssoaccount USING btree (name);
 
-ALTER TABLE ONLY authsrv_ssoaccount ADD CONSTRAINT authsrv_ssoaccount_username_key UNIQUE (username);
+CREATE INDEX IF NOT EXISTS authsrv_ssoaccount_name_4def83cc_like ON authsrv_ssoaccount USING btree (name varchar_pattern_ops);
 
-CREATE INDEX authsrv_ssoaccount_name_4def83cc ON authsrv_ssoaccount USING btree (name);
+CREATE INDEX IF NOT EXISTS authsrv_ssoaccount_organization_id_d2a979a5 ON authsrv_ssoaccount USING btree (organization_id);
 
-CREATE INDEX authsrv_ssoaccount_name_4def83cc_like ON authsrv_ssoaccount USING btree (name varchar_pattern_ops);
-
-CREATE INDEX authsrv_ssoaccount_organization_id_d2a979a5 ON authsrv_ssoaccount USING btree (organization_id);
-
-CREATE INDEX authsrv_ssoaccount_username_029374ce_like ON authsrv_ssoaccount USING btree (username varchar_pattern_ops);
-
-ALTER TABLE ONLY authsrv_ssoaccount
-    ADD CONSTRAINT authsrv_ssoaccount_organization_id_d2a979a5_fk_authsrv_o FOREIGN KEY (organization_id) 
-    REFERENCES authsrv_organization(id) DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX IF NOT EXISTS authsrv_ssoaccount_username_029374ce_like ON authsrv_ssoaccount USING btree (username varchar_pattern_ops);

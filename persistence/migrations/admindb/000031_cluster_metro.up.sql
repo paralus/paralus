@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS cluster_metro (
-    id uuid NOT NULL default uuid_generate_v4(),
+    id uuid default uuid_generate_v4() PRIMARY KEY,
     name character varying(256) NOT NULL,
     created_at timestamp with time zone NOT NULL,
     modified_at timestamp with time zone NOT NULL,
@@ -14,5 +14,3 @@ CREATE TABLE IF NOT EXISTS cluster_metro (
     organization_id uuid,
     partner_id uuid NOT NULL
 );
-
-ALTER TABLE ONLY cluster_metro ADD CONSTRAINT cluster_metro_pkey PRIMARY KEY (id);

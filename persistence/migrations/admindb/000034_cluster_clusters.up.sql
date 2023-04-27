@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS cluster_clusters (
-    id uuid NOT NULL default uuid_generate_v4(),
+    id uuid default uuid_generate_v4() PRIMARY KEY,
     organization_id uuid not null,
     partner_id uuid not null,
     project_id uuid not null,
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS cluster_clusters (
     blueprint_ref varchar NOT NULL default '',
     cluster_type text,
     override_selector varchar NOT NULL default '',
-    token varchar not null,
+    token varchar not null REFERENCES cluster_tokens(name) DEFERRABLE INITIALLY DEFERRED,
     conditions jsonb NOT NULL default '[]'::jsonb,
     published_blueprint varchar NOT NULL default '',
     system_task_count integer NOT NULL DEFAULT 0,
@@ -26,14 +26,8 @@ CREATE TABLE IF NOT EXISTS cluster_clusters (
     proxy_config jsonb
 );
 
-ALTER TABLE ONLY cluster_clusters ADD CONSTRAINT cluster_clusters_pkey PRIMARY KEY (id);
+CREATE INDEX IF NOT EXISTS cluster_clusters_name_organization_id_partner_id_key ON cluster_clusters USING btree (name, organization_id, partner_id);
 
-CREATE INDEX cluster_clusters_name_organization_id_partner_id_key ON cluster_clusters USING btree (name, organization_id, partner_id);
+CREATE INDEX IF NOT EXISTS idx_cluster_blueprint ON cluster_clusters USING btree (blueprint_ref, published_blueprint);
 
-CREATE INDEX idx_cluster_blueprint ON cluster_clusters USING btree (blueprint_ref, published_blueprint);
-
-CREATE INDEX idx_clusters_labels ON cluster_clusters USING GIN (labels jsonb_path_ops);
-
-ALTER TABLE ONLY cluster_clusters
-    ADD CONSTRAINT cluster_clusters_token_fkey FOREIGN KEY (token) 
-    REFERENCES cluster_tokens(name) DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX IF NOT EXISTS idx_clusters_labels ON cluster_clusters USING GIN (labels jsonb_path_ops);
