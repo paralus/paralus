@@ -71,22 +71,12 @@ docker run --network host \
     -it postgres
 ```
 
-##### Elasticsearch
-
-```bash
-docker run --network host \
-    -v elastic-data:/usr/share/elasticsearch/data \
-    -e "discovery.type=single-node" \
-    -e "xpack.security.enabled=false" \
-    -it docker.elastic.co/elasticsearch/elasticsearch:8.0.0
-```
-
 #### Create the initial db and user
 
 ```sql
-create database admindb;
-CREATE ROLE admindbuser WITH LOGIN PASSWORD '<your_password>';
-GRANT ALL PRIVILEGES ON DATABASE admindb to admindbuser;
+create database <db_name>;
+CREATE ROLE <db_user> WITH LOGIN PASSWORD '<your_password>';
+GRANT ALL PRIVILEGES ON DATABASE <db_name> to <db_user>;
 ```
 
 #### Ory Kratos
@@ -98,7 +88,7 @@ documentation.
 Perform the Kratos migrations:
 
 ```bash
-export DSN='postgres://<user>:<pass>@<host>:<port>/admindb?sslmode=disable'
+export DSN='postgres://<db_user>:<db_password>@<host>:<port>/<db_name>?sslmode=disable'
 kratos -c <kratos-config> migrate sql -e --yes
 ```
 
@@ -124,7 +114,7 @@ You can refer to the [guide](https://github.com/golang-migrate/migrate/tree/mast
 _It is required to perform Kratos migrations before this step._
 
 ```shell
-export POSTGRESQL_URL='postgres://<user>:<pass>@<host>:<port>/admindb?sslmode=disable'
+export POSTGRESQL_URL='postgres://<db_user>:<db_password>@<host>:<port>/<db_name>?sslmode=disable'
 migrate -path ./persistence/migrations/admindb -database "$POSTGRESQL_URL" up
 ```
 

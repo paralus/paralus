@@ -17,8 +17,6 @@ CREATE TABLE IF NOT EXISTS sentry_bootstrap_infra (
     ca_key text NOT NULL
 );
 
-ALTER TABLE sentry_bootstrap_infra OWNER TO admindbuser;
-
 ALTER TABLE ONLY sentry_bootstrap_infra ADD CONSTRAINT sentry_bootstrap_infra_pkey PRIMARY KEY (name);
 
 ALTER TABLE ONLY sentry_bootstrap_infra

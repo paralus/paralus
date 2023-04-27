@@ -10,8 +10,6 @@ CREATE TABLE IF NOT EXISTS authsrv_template (
     partner_id uuid NOT NULL
 );
 
-ALTER TABLE authsrv_template OWNER TO admindbuser;
-
 ALTER TABLE ONLY authsrv_template ADD CONSTRAINT authsrv_template_pkey PRIMARY KEY (id);
 
 CREATE INDEX authsrv_template_name_274ef2d3 ON authsrv_template USING btree (name);

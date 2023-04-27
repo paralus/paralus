@@ -23,8 +23,6 @@ CREATE TABLE IF NOT EXISTS sentry_bootstrap_agent (
     fingerprint character varying(256) NOT NULL
 );
 
-ALTER TABLE sentry_bootstrap_agent OWNER TO admindbuser;
-
 ALTER TABLE ONLY sentry_bootstrap_agent ADD CONSTRAINT sentry_bootstrap_agent_pkey PRIMARY KEY (id);
 
 ALTER TABLE ONLY sentry_bootstrap_agent

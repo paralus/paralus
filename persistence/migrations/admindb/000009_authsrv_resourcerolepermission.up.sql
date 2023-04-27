@@ -9,8 +9,6 @@ CREATE TABLE IF NOT EXISTS authsrv_resourcerolepermission (
     resource_role_id uuid NOT NULL
 );
 
-ALTER TABLE authsrv_resourcerolepermission OWNER TO admindbuser;
-
 ALTER TABLE ONLY authsrv_resourcerolepermission ADD CONSTRAINT authsrv_resourcerolepermission_pkey PRIMARY KEY (id);
 
 CREATE INDEX authsrv_resourcerolepermission_name_a65794e7 ON authsrv_resourcerolepermission USING btree (name);

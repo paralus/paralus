@@ -13,6 +13,4 @@ CREATE TABLE IF NOT EXISTS authsrv_apikey (
     secret text not null
 );
 
-ALTER TABLE authsrv_apikey OWNER TO admindbuser;
-
 ALTER TABLE ONLY authsrv_apikey ADD CONSTRAINT authsrv_apikey_pkey PRIMARY KEY (id);

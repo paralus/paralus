@@ -24,8 +24,6 @@ CREATE TABLE IF NOT EXISTS sentry_bootstrap_agent_template (
     outofcluster_template text NOT NULL
 );
 
-ALTER TABLE sentry_bootstrap_agent_template OWNER TO admindbuser;
-
 ALTER TABLE ONLY sentry_bootstrap_agent_template ADD CONSTRAINT sentry_bootstrap_agent_template_pkey PRIMARY KEY (name);
 
 ALTER TABLE ONLY sentry_bootstrap_agent_template

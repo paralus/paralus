@@ -15,6 +15,4 @@ CREATE TABLE IF NOT EXISTS cluster_metro (
     partner_id uuid NOT NULL
 );
 
-ALTER TABLE cluster_metro OWNER TO admindbuser;
-
 ALTER TABLE ONLY cluster_metro ADD CONSTRAINT cluster_metro_pkey PRIMARY KEY (id);

@@ -9,8 +9,6 @@ CREATE TABLE IF NOT EXISTS sentry_kubectl_cluster_settings (
     deleted_at timestamp WITH time zone
 );
 
-ALTER TABLE sentry_kubectl_cluster_settings OWNER TO admindbuser;
-
 ALTER TABLE ONLY sentry_kubectl_cluster_settings ADD CONSTRAINT sentry_kubectl_cluster_settings_pkey PRIMARY KEY (name);
 
 ALTER TABLE ONLY sentry_kubectl_cluster_settings

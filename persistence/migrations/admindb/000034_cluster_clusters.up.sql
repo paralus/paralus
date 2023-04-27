@@ -26,8 +26,6 @@ CREATE TABLE IF NOT EXISTS cluster_clusters (
     proxy_config jsonb
 );
 
-ALTER TABLE cluster_clusters OWNER TO admindbuser;
-
 ALTER TABLE ONLY cluster_clusters ADD CONSTRAINT cluster_clusters_pkey PRIMARY KEY (id);
 
 CREATE INDEX cluster_clusters_name_organization_id_partner_id_key ON cluster_clusters USING btree (name, organization_id, partner_id);

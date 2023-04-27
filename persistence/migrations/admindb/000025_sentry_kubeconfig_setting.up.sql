@@ -19,8 +19,6 @@ CREATE TABLE IF NOT EXISTS sentry_kubeconfig_setting (
     enforce_orgadmin_secret_access boolean default false
 );
 
-ALTER TABLE sentry_kubeconfig_setting OWNER TO admindbuser;
-
 ALTER TABLE ONLY sentry_kubeconfig_setting ADD CONSTRAINT sentry_kubeconfig_setting_pkey PRIMARY KEY (id);
 
 ALTER TABLE ONLY sentry_kubeconfig_setting
