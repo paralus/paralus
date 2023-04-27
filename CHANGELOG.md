@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## Fixed
+- Migrate admindb fails when user not admindbuser from [niravparikh05](https://github.com/niravparikh05)
+
 ## [0.2.2] - 2023-03-31
 
 ## Added

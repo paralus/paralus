@@ -71,16 +71,6 @@ docker run --network host \
     -it postgres
 ```
 
-##### Elasticsearch
-
-```bash
-docker run --network host \
-    -v elastic-data:/usr/share/elasticsearch/data \
-    -e "discovery.type=single-node" \
-    -e "xpack.security.enabled=false" \
-    -it docker.elastic.co/elasticsearch/elasticsearch:8.0.0
-```
-
 #### Create the initial db and user
 
 ```sql
