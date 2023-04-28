@@ -12,7 +12,7 @@
 <img src="https://img.shields.io/badge/Twitter-%20Follow-blue.svg?logo=slack&&logoColor=%231DA1F2&color=%231DA1F2" />
 </a>
 
-[Paralus](https://paralus.io) is a free, open source tool that enables controlled, audited access to Kubernetes infrastructure for your users, user groups, and services. Ships as a GUI, API, and CLI.
+[Paralus](https://paralus.io) is a free, open source tool that enables controlled, audited access to Kubernetes infrastructure for your users, user groups, and services. Ships as a GUI, API, and CLI. We are a [**CNCF Sandbox project**](https://www.cncf.io/projects/paralus/)
 
 Paralus can be easily integrated with your pre-existing RBAC configuration and your SSO providers, or Identity Providers (IdP) that support OIDC (OpenID Connect). Through just-in-time service account creation and fine-grained user credential management, Paralus provides teams with an adaptable system for guaranteeing secure access to resources when necessary, along with the ability to rapidly identify and respond to threats through dynamic permission revocation and real time audit logs.
 
@@ -41,8 +41,8 @@ Paralus can be easily integrated with your pre-existing RBAC configuration and y
 
 Installing and setting up Paralus takes less time than it takes to brew a (good) cup of coffee! You'll find the instructions here:
 
-- [Docs](https://www.paralus.io/docs)
-- [Installation](https://www.paralus.io/docs/installation)
+- [Docs](https://www.paralus.io/docs/)
+- [Installation](https://www.paralus.io/docs/installation/)
 
 ## Community & Support
 
