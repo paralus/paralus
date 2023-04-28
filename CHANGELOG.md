@@ -4,8 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## [0.2.3] - 2023-04-28
+
 ## Fixed
 - Migrate admindb fails when user not admindbuser from [niravparikh05](https://github.com/niravparikh05)
+- Fixed incorrect number of wg.add from [tyut22316](https://github.com/tyut22316)
+- Make all admindb migration queries re-entrant from [akshay196](https://github.com/akshay196)
+
 
 ## [0.2.2] - 2023-03-31
 
@@ -101,7 +106,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Initial release
 
-[Unreleased]: https://github.com/paralus/paralus/compare/v0.2.2...HEAD
+[Unreleased]: https://github.com/paralus/paralus/compare/v0.2.3...HEAD
+[0.2.3]: https://github.com/paralus/paralus/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/paralus/paralus/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/paralus/paralus/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/paralus/paralus/compare/v0.1.9...v0.2.0
