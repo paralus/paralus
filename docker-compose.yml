@@ -2,8 +2,8 @@ version: '3.7'
 
 services:
   postgresd:
-    image: postgres:13.4
-    container_name: paralus_postgres_13
+    image: postgres:14.2
+    container_name: paralus_postgres_14
     ports:
       - "$DB_PORT:$DB_PORT"
     volumes:
@@ -60,4 +60,3 @@ services:
 
 volumes:
   paralus_db_data:
-  paralus_es_data:

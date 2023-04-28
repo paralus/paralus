@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS authsrv_organization (
-    id uuid NOT NULL default uuid_generate_v4(),
+    id uuid default uuid_generate_v4() PRIMARY KEY,
     name character varying(256) NOT NULL,
     description character varying(512) NOT NULL,
     created_at timestamp with time zone NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS authsrv_organization (
     trash boolean NOT NULL,
     settings jsonb NOT NULL,
     billing_address text NOT NULL,
-    partner_id uuid NOT NULL,
+    partner_id uuid NOT NULL REFERENCES authsrv_partner(id) DEFERRABLE INITIALLY DEFERRED,
     active boolean NOT NULL,
     approved boolean NOT NULL,
     type character varying(64) NOT NULL,
@@ -25,20 +25,12 @@ CREATE TABLE IF NOT EXISTS authsrv_organization (
     psps_enabled boolean default TRUE,
     custom_psps_enabled boolean,
     default_blueprints_enabled boolean default TRUE,
-    referer character varying(30)
+    referer character varying(30),
+    CONSTRAINT authsrv_organization_name_partner_id_7d1113b9_uniq UNIQUE (name, partner_id)
 );
 
-ALTER TABLE ONLY authsrv_organization
-    ADD CONSTRAINT authsrv_organization_name_partner_id_7d1113b9_uniq UNIQUE (name, partner_id);
+CREATE INDEX IF NOT EXISTS authsrv_organization_name_23376e56 ON authsrv_organization USING btree (name);
 
-ALTER TABLE ONLY authsrv_organization ADD CONSTRAINT authsrv_organization_pkey PRIMARY KEY (id);
+CREATE INDEX IF NOT EXISTS authsrv_organization_name_23376e56_like ON authsrv_organization USING btree (name varchar_pattern_ops);
 
-CREATE INDEX authsrv_organization_name_23376e56 ON authsrv_organization USING btree (name);
-
-CREATE INDEX authsrv_organization_name_23376e56_like ON authsrv_organization USING btree (name varchar_pattern_ops);
-
-CREATE INDEX authsrv_organization_partner_id_7b55b579 ON authsrv_organization USING btree (partner_id);
-
-ALTER TABLE ONLY authsrv_organization
-    ADD CONSTRAINT authsrv_organization_partner_id_7b55b579_fk_authsrv_partner_id FOREIGN KEY (partner_id) 
-    REFERENCES authsrv_partner(id) DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX IF NOT EXISTS authsrv_organization_partner_id_7b55b579 ON authsrv_organization USING btree (partner_id);

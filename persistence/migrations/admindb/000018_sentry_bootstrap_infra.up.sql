@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS sentry_bootstrap_infra (
     -- database id fields
-    name character varying(256) NOT NULL,
+    name character varying(256) PRIMARY KEY,
     organization_id uuid,
     partner_id uuid,
     project_id uuid,
@@ -14,10 +14,6 @@ CREATE TABLE IF NOT EXISTS sentry_bootstrap_infra (
     annotations jsonb NOT NULL DEFAULT '{}' ::jsonb,
     -- infra spec
     ca_cert text NOT NULL,
-    ca_key text NOT NULL
+    ca_key text NOT NULL,
+    CONSTRAINT sentry_bootstrap_infra_name_partner_id_organization_id_proj_key UNIQUE (name, partner_id, organization_id, project_id)
 );
-
-ALTER TABLE ONLY sentry_bootstrap_infra ADD CONSTRAINT sentry_bootstrap_infra_pkey PRIMARY KEY (name);
-
-ALTER TABLE ONLY sentry_bootstrap_infra
-    ADD CONSTRAINT sentry_bootstrap_infra_name_partner_id_organization_id_proj_key UNIQUE (name, partner_id, organization_id, project_id);

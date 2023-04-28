@@ -1,2 +1,1 @@
-ALTER TABLE cluster_clusters
-DROP COLUMN IF EXISTS description;
+ALTER TABLE cluster_clusters DROP COLUMN IF EXISTS description;
