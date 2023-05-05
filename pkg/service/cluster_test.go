@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"testing"
 
@@ -12,6 +13,8 @@ import (
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func performClusterBasicChecks(t *testing.T, cluster *infrav3.Cluster, puuid string) {
@@ -206,5 +209,29 @@ func TestListCluster(t *testing.T) {
 	_, err := ps.List(context.Background(), query.WithOptions(&qo))
 	if err != nil {
 		t.Fatal("could not fetch cluster:", err)
+	}
+}
+
+func TestListClusterNoProject(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+	ps := NewClusterService(db, &common.DownloadData{}, NewBootstrapService(db), getLogger())
+
+	pruuid := uuid.New().String()
+
+	mock.ExpectQuery(`SELECT "project"."id", "project"."name"`).
+		WithArgs().WillReturnError(sql.ErrNoRows)
+
+	expect := status.Error(codes.NotFound, "no clusters found")
+
+	qo := commonv3.QueryOptions{
+		Project: pruuid,
+	}
+	_, err := ps.List(context.Background(), query.WithOptions(&qo))
+	if err == nil {
+		t.Errorf("expect error %s, got no error", expect.Error())
+	}
+	if err.Error() != expect.Error() {
+		t.Errorf("expect error: %s, got error: %s", expect.Error(), err.Error())
 	}
 }
