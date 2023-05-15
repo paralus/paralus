@@ -73,7 +73,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.10.0
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -104,7 +104,7 @@ jobs:
       - name: Run Trivy vulnerability scanner (paralus-init)
         uses: aquasecurity/trivy-action@0.10.0
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ github.sha }}
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:latest
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -131,11 +131,11 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta-sync.outputs.tags }}
           labels: ${{ steps.meta-sync.outputs.labels }}
-          
+
       - name: Run Trivy vulnerability scanner (kratos-sync)
         uses: aquasecurity/trivy-action@0.10.0
         with:
-          image-ref: ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:${{ github.sha }}
+          image-ref: ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:latest
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
