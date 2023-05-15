@@ -53,7 +53,6 @@ jobs:
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
-        if: github.event_name != 'pull_request'
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
@@ -61,14 +60,16 @@ jobs:
             type=ref,event=tag
             type=ref,event=pr
             type=sha
-
-      - name: Build and export to Docker
+      
+      - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
-          load: true
-          tags: ${{ github.sha }}
-      
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.10.0
         with:
@@ -79,20 +80,9 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        if: github.event_name != 'pull_request'
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
       - name: Extract metadata (tags, labels) for Docker (paralus-init)
         id: meta-init
         uses: docker/metadata-action@v4
-        if: github.event_name != 'pull_request'
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init
           tags: |
@@ -101,38 +91,29 @@ jobs:
             type=ref,event=pr
             type=sha
 
-      - name: Build and export to Docker (paralus-init)
+      - name: Build and push Docker image (paralus-init)
         uses: docker/build-push-action@v4
         with:
           context: .
-          load: true
-          tags: ${{ github.sha }}
+          file: ./Dockerfile.initialize
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta-init.outputs.tags }}
+          labels: ${{ steps.meta-init.outputs.labels }}
       
       - name: Run Trivy vulnerability scanner (paralus-init)
         uses: aquasecurity/trivy-action@0.10.0
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ steps.meta-init.outputs.tags }}
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ github.sha }}
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
-      - name: Build and push Docker image (paralus-init)
-        uses: docker/build-push-action@v4
-        if: github.event_name != 'pull_request'
-        with:
-          context: .
-          file: ./Dockerfile.initialize
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ steps.meta-init.outputs.tags }}
-          labels: ${{ steps.meta-init.outputs.labels }}
-
       - name: Extract metadata (tags, labels) for Docker (kratos-sync)
         id: meta-sync
         uses: docker/metadata-action@v4
-        if: github.event_name != 'pull_request'
         with:
           images: ${{ env.REGISTRY }}/paralusio/kratos-synchronizer
           tags: |
@@ -140,14 +121,17 @@ jobs:
             type=ref,event=tag
             type=ref,event=pr
             type=sha
-
-      - name: Build and export to Docker (kratos-sync)
+      
+      - name: Build and push Docker image (kratos-sync)
         uses: docker/build-push-action@v4
         with:
           context: .
-          load: true
-          tags: ${{ github.sha }}
-      
+          file: ./Dockerfile.synchronizer
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta-sync.outputs.tags }}
+          labels: ${{ steps.meta-sync.outputs.labels }}
+          
       - name: Run Trivy vulnerability scanner (kratos-sync)
         uses: aquasecurity/trivy-action@0.10.0
         with:
@@ -157,14 +141,3 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-
-      - name: Build and push Docker image (kratos-sync)
-        uses: docker/build-push-action@v4
-        if: github.event_name != 'pull_request'
-        with:
-          context: .
-          file: ./Dockerfile.synchronizer
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ steps.meta-sync.outputs.tags }}
-          labels: ${{ steps.meta-sync.outputs.labels }}
