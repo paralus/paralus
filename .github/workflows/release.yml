@@ -2,8 +2,8 @@ name: Create, publish container image
 
 on:
   push:
-    branches: [ main ]
     tags: [ 'v*.*.*' ]
+
 env:
   REGISTRY: docker.io
   IMAGE_NAME: paralusio/paralus
@@ -13,7 +13,6 @@ jobs:
   build-push:
     strategy:
       matrix:
-        go-version: [1.17.x]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
 
@@ -30,7 +29,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version-file: 'go.mod'
 
       # Sanity check before publishing
       - name: Create k8s Kind Cluster
@@ -40,7 +39,7 @@ jobs:
         run: go test -v ./...
 
       - name: Log in to the Container registry
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.REGISTRY_USERNAME }}
@@ -48,7 +47,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@c4ee3adeed93b1fa6a762f209fb01608c1a22f1e
+        uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
@@ -58,7 +57,7 @@ jobs:
             type=sha
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        uses: docker/build-push-action@v4
         with:
           context: .
           platforms: linux/amd64,linux/arm64
@@ -68,7 +67,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker (paralus-init)
         id: meta-init
-        uses: docker/metadata-action@c4ee3adeed93b1fa6a762f209fb01608c1a22f1e
+        uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init
           tags: |
@@ -78,7 +77,7 @@ jobs:
             type=sha
 
       - name: Build and push Docker image (paralus-init)
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile.initialize
@@ -89,7 +88,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker (kratos-sync)
         id: meta-sync
-        uses: docker/metadata-action@c4ee3adeed93b1fa6a762f209fb01608c1a22f1e
+        uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/paralusio/kratos-synchronizer
           tags: |
@@ -99,7 +98,7 @@ jobs:
             type=sha
 
       - name: Build and push Docker image (kratos-sync)
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile.synchronizer
