@@ -257,11 +257,6 @@ kind: ConfigMap
 metadata:
   name: proxy-config
   namespace: paralus-system
-  labels:
-    app.kubernetes.io/managed-by: Helm
-  annotations:
-    meta.helm.sh/release-name: v2-infra
-    meta.helm.sh/release-namespace: paralus-system
 data:
   httpProxy: "{{if .Cluster.Spec.ProxyConfig}}{{ if .Cluster.Spec.ProxyConfig.Enabled }}{{- .Cluster.Spec.ProxyConfig.HttpProxy -}}{{end}}{{end}}"
   httpsProxy: "{{if .Cluster.Spec.ProxyConfig}}{{ if .Cluster.Spec.ProxyConfig.Enabled }}{{- .Cluster.Spec.ProxyConfig.HttpsProxy -}}{{end}}{{end}}"
@@ -275,11 +270,6 @@ kind: ConfigMap
 metadata:
   name: relay-agent-config
   namespace: paralus-system
-  labels:
-    app.kubernetes.io/managed-by: Helm
-  annotations:
-    meta.helm.sh/release-name: v2-infra
-    meta.helm.sh/release-namespace: paralus-system
 data:
   clusterID: {{if .Cluster.Metadata.Labels}}{{ index .Cluster.Metadata.Labels "paralus.dev/clusterID" }}{{end}}
   relays: '{{if .Cluster.Metadata.Annotations}}{{- index .Cluster.Metadata.Annotations "relays" -}}{{end}}'
@@ -289,11 +279,6 @@ kind: Deployment
 metadata:
   name: relay-agent
   namespace: paralus-system
-  labels:
-    app.kubernetes.io/managed-by: Helm
-  annotations:
-    meta.helm.sh/release-name: v2-infra
-    meta.helm.sh/release-namespace: paralus-system
 spec:
   selector:
     matchLabels:
