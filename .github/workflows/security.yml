@@ -72,6 +72,7 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results-paralus.sarif'
+          category: 'paralus'
 
       - name: Build Docker image (paralus-init)
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
@@ -97,6 +98,7 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results-paralus-init.sarif'
+          category: 'paralus-init'
 
       - name: Build and push Docker image (kratos-sync)
         uses: docker/build-push-action@v4
@@ -106,19 +108,3 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:${{ env.TAG }}
-
-      - name: Run Trivy vulnerability scanner (kratos-sync)
-        uses: aquasecurity/trivy-action@0.10.0
-        with:
-          image-ref: ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:${{ env.TAG }}
-          format: 'sarif'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
-          output: 'trivy-results-kratos-sync.sarif'
-
-      - name: Upload Trivy scan results to GitHub Security tab (kratos-sync)
-        uses: github/codeql-action/upload-sarif@v2
-        if: always()
-        with:
-          sarif_file: 'trivy-results-kratos-sync.sarif'
