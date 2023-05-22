@@ -4,6 +4,7 @@ kind: Namespace
 metadata:
   labels:
     control-plane: controller-manager
+    app.kubernetes.io/managed-by: paralus
   name: paralus-system
 ---
 apiVersion: v1
@@ -11,6 +12,8 @@ kind: ServiceAccount
 metadata:
   name: system-sa
   namespace: paralus-system
+  labels:
+    app.kubernetes.io/managed-by: paralus
 ---
 {{- if and .Cluster.Metadata.Labels (eq (index .Cluster.Metadata.Labels "paralus.dev/kubernetesProvider") "OPENSHIFT") }}
 apiVersion: security.openshift.io/v1
@@ -28,6 +31,7 @@ metadata:
     release.openshift.io/create-only: "true"
   labels:
     rep-workload: "paralus-privileged-scc"
+    app.kubernetes.io/managed-by: paralus
 allowHostDirVolumePlugin: true
 allowHostIPC: true
 allowHostNetwork: true
@@ -72,6 +76,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: paralus:manager
+  labels:
+    app.kubernetes.io/managed-by: paralus
 rules:
 - apiGroups:
   - '*'
@@ -148,6 +154,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: paralus:paralus-system:manager-rolebinding
+  labels:
+    app.kubernetes.io/managed-by: paralus
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -164,6 +172,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: paralus:proxy-role
+  labels:
+    app.kubernetes.io/managed-by: paralus
 rules:
 - apiGroups:
   - authentication.k8s.io
@@ -183,6 +193,8 @@ kind: ClusterRoleBinding
 metadata:
   name: paralus:paralus-system:proxy-rolebinding
   namespace: paralus-system
+  labels:
+    app.kubernetes.io/managed-by: paralus
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -200,6 +212,8 @@ description: This priority class should be used for paralus service pods only.
 kind: PriorityClass
 metadata:
   name: paralus-cluster-critical
+  labels:
+    app.kubernetes.io/managed-by: paralus
 value: 1000000000
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -207,6 +221,8 @@ kind: Role
 metadata:
   name: paralus:leader-election-role
   namespace: paralus-system
+  labels:
+    app.kubernetes.io/managed-by: paralus
 rules:
 - apiGroups:
   - ""
@@ -240,6 +256,8 @@ kind: RoleBinding
 metadata:
   name: paralus:leader-election-rolebinding
   namespace: paralus-system
+  labels:
+    app.kubernetes.io/managed-by: paralus
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -257,6 +275,8 @@ kind: ConfigMap
 metadata:
   name: proxy-config
   namespace: paralus-system
+  labels:
+    app.kubernetes.io/managed-by: paralus
 data:
   httpProxy: "{{if .Cluster.Spec.ProxyConfig}}{{ if .Cluster.Spec.ProxyConfig.Enabled }}{{- .Cluster.Spec.ProxyConfig.HttpProxy -}}{{end}}{{end}}"
   httpsProxy: "{{if .Cluster.Spec.ProxyConfig}}{{ if .Cluster.Spec.ProxyConfig.Enabled }}{{- .Cluster.Spec.ProxyConfig.HttpsProxy -}}{{end}}{{end}}"
@@ -270,6 +290,8 @@ kind: ConfigMap
 metadata:
   name: relay-agent-config
   namespace: paralus-system
+  labels:
+    app.kubernetes.io/managed-by: paralus
 data:
   clusterID: {{if .Cluster.Metadata.Labels}}{{ index .Cluster.Metadata.Labels "paralus.dev/clusterID" }}{{end}}
   relays: '{{if .Cluster.Metadata.Annotations}}{{- index .Cluster.Metadata.Annotations "relays" -}}{{end}}'
@@ -279,6 +301,8 @@ kind: Deployment
 metadata:
   name: relay-agent
   namespace: paralus-system
+  labels:
+    app.kubernetes.io/managed-by: paralus
 spec:
   selector:
     matchLabels:
