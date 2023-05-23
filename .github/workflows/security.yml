@@ -42,19 +42,9 @@ jobs:
       - name: Test all
         run: go test -v ./...
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-
-      - name: Build docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      - name: Build an image from Dockerfile
+        run: |
+          docker build -f "Dockerfile" -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.10.0
@@ -66,13 +56,9 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
-      - name: Build Docker image (paralus-init)
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./Dockerfile.initialize
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ github.sha }}
+      - name: Build an image from Dockerfile (paralus-init)
+        run: |
+          docker build -f "Dockerfile.initialize" -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ github.sha }} .
 
       - name: Run Trivy vulnerability scanner (paralus-init)
         uses: aquasecurity/trivy-action@0.10.0
@@ -81,14 +67,23 @@ jobs:
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
+          # skipping below binaries as they have vulnerabilities reported
+          # golang-migrate tracking issue - https://github.com/golang-migrate/migrate/issues/926
+          # kratos tracking - https://ory-community.slack.com/archives/C012RJ2MQ1H/p1684750686065509
           skip-files: '/usr/bin/kratos,/usr/bin/migrate'
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
-      - name: Build Docker image (kratos-sync)
-        uses: docker/build-push-action@v4
+       - name: Build an image from Dockerfile (kratos-sync)
+        run: |
+          docker build -f "Dockerfile.synchronizer" -t ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:${{ github.sha }} .
+
+      - name: Run Trivy vulnerability scanner (kratos-sync)
+        uses: aquasecurity/trivy-action@0.10.0
         with:
-          context: .
-          file: ./Dockerfile.synchronizer
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:${{ github.sha }}
+          image-ref: ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:${{ github.sha }}
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
