@@ -74,7 +74,7 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
-       - name: Build an image from Dockerfile (kratos-sync)
+      - name: Build an image from Dockerfile (kratos-sync)
         run: |
           docker build -f "Dockerfile.synchronizer" -t ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:${{ github.sha }} .
 
