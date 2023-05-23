@@ -60,6 +60,9 @@ jobs:
         run: |
           docker build -f "Dockerfile.initialize" -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ github.sha }} .
 
+      # skipping below binaries as they have vulnerabilities reported
+      # golang-migrate tracking issue - https://github.com/golang-migrate/migrate/issues/926
+      # kratos tracking - https://ory-community.slack.com/archives/C012RJ2MQ1H/p1684750686065509
       - name: Run Trivy vulnerability scanner (paralus-init)
         uses: aquasecurity/trivy-action@0.10.0
         with:
@@ -67,9 +70,6 @@ jobs:
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
-          # skipping below binaries as they have vulnerabilities reported
-          # golang-migrate tracking issue - https://github.com/golang-migrate/migrate/issues/926
-          # kratos tracking - https://ory-community.slack.com/archives/C012RJ2MQ1H/p1684750686065509
           skip-files: '/usr/bin/kratos,/usr/bin/migrate'
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
