@@ -11,7 +11,6 @@ on:
 env:
   REGISTRY: docker.io
   IMAGE_NAME: paralusio/paralus
-  TAG: latest
 
 jobs:
 
@@ -55,12 +54,12 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.10.0
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -68,18 +67,17 @@ jobs:
           severity: 'CRITICAL,HIGH'
 
       - name: Build Docker image (paralus-init)
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile.initialize
           platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ env.TAG }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ github.sha }}
 
       - name: Run Trivy vulnerability scanner (paralus-init)
         uses: aquasecurity/trivy-action@0.10.0
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ env.TAG }}
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ github.sha }}
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -87,11 +85,10 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
-      - name: Build and push Docker image (kratos-sync)
+      - name: Build Docker image (kratos-sync)
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile.synchronizer
           platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:${{ env.TAG }}
+          tags: ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:${{ github.sha }}
