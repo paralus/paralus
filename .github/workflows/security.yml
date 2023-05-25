@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    - cron: '0 0 * * 1'
+    - cron: '0 4 * * 1'  # Every Monday at 9:30 IST
 
 env:
   REGISTRY: docker.io
@@ -14,7 +14,7 @@ env:
 
 jobs:
 
-  build:
+  build-scan-paralus:
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -24,23 +24,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
           go-version-file: 'go.mod'
-
-      # Sanity check before publishing
-      - name: Create k8s Kind Cluster
-        uses: helm/kind-action@v1.2.0
-
-      - name: Test all
-        run: go test -v ./...
 
       - name: Build an image from Dockerfile
         run: |
@@ -56,9 +43,19 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
+  build-scan-paralus-init:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Build an image from Dockerfile (paralus-init)
         run: |
-          docker build -f "Dockerfile.initialize" -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ github.sha }} .
+          docker build -f "Dockerfile.initialize" -t paralus-init:${{ github.sha }} .
 
       # skipping below binaries as they have vulnerabilities reported
       # golang-migrate tracking issue - https://github.com/golang-migrate/migrate/issues/926
@@ -66,24 +63,32 @@ jobs:
       - name: Run Trivy vulnerability scanner (paralus-init)
         uses: aquasecurity/trivy-action@0.10.0
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ github.sha }}
+          image-ref: paralus-init:${{ github.sha }}
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
           skip-files: '/usr/bin/kratos,/usr/bin/migrate'
-          vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
+
+  build-scan-kratos-sync:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Build an image from Dockerfile (kratos-sync)
         run: |
-          docker build -f "Dockerfile.synchronizer" -t ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:${{ github.sha }} .
+          docker build -f "Dockerfile.synchronizer" -t kratos-synchronizer:${{ github.sha }} .
 
       - name: Run Trivy vulnerability scanner (kratos-sync)
         uses: aquasecurity/trivy-action@0.10.0
         with:
-          image-ref: ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:${{ github.sha }}
+          image-ref: kratos-synchronizer:${{ github.sha }}
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
-          vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
