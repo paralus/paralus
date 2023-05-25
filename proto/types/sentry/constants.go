@@ -46,8 +46,8 @@ func GetKubeConfigPermissionIsRead(permission string) bool {
 	return false
 }
 
-// GetKubeConfigPermissionPrivilage privilage order
-func GetKubeConfigPermissionPrivilage(permission string) int {
+// GetKubeConfigPermissionprivilege privilege order
+func GetKubeConfigPermissionPrivilege(permission string) int {
 	switch permission {
 	case KubeconfigReadPermission:
 		return 0

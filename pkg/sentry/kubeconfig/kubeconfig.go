@@ -177,7 +177,7 @@ func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps serv
 		org, err := os.GetByName(ctx, opts.Organization)
 		if err != nil {
 			_log.Errorw("error getting organization data", "error", err.Error())
-			return nil, fmt.Errorf("failed to retrieve organziation %s", err.Error())
+			return nil, fmt.Errorf("failed to retrieve organization %s", err.Error())
 		}
 		oid = uuid.MustParse(org.Metadata.Id)
 		opts.Organization = oid.String()

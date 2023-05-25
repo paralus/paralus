@@ -559,7 +559,7 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 					return nil, err
 				}
 
-				rp := sentry.GetKubeConfigPermissionPrivilage(permission)
+				rp := sentry.GetKubeConfigPermissionPrivilege(permission)
 				if rp > rolePrevilage {
 					rolePrevilage = rp
 					highestRole = permission
@@ -574,7 +574,7 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 		}
 		for _, permission := range permissions {
 
-			rp := sentry.GetKubeConfigPermissionPrivilage(permission)
+			rp := sentry.GetKubeConfigPermissionPrivilege(permission)
 			if rp > rolePrevilage {
 				rolePrevilage = rp
 				highestRole = permission
@@ -787,7 +787,7 @@ func verifyClusterKubectlSettings(ctx context.Context, bs service.BootstrapServi
 	}
 
 	if cnAttr.SessionType == "" || cnAttr.SessionType == kubeconfig.TerminalShell {
-		// backward combatibility treat "" as terminal session for old kubeconfigs
+		// backward compatibility treat "" as terminal session for old kubeconfigs
 		if kc.DisableCLIKubectl {
 			_log.Infow("kubectl cli is not authorized for ", "cnAttr", cnAttr)
 			return fmt.Errorf("kubectl cli is not authorized") //deny
@@ -815,7 +815,7 @@ func verifyKubectlSettings(cnAttr kubeconfig.CNAttributes, ks *sentry.Kubeconfig
 	}
 
 	if cnAttr.SessionType == "" || cnAttr.SessionType == kubeconfig.TerminalShell {
-		// backward combatibility treat "" as terminal session for old kubeconfigs
+		// backward compatibility treat "" as terminal session for old kubeconfigs
 		if ks.DisableCLIKubectl {
 			_log.Infow("kubectl cli is not authorized for ", "cnAttr", cnAttr, " by ", level, "config")
 			return fmt.Errorf("kubectl cli is not authorized" + " by " + level + "config") //deny
