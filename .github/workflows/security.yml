@@ -8,10 +8,6 @@ on:
   schedule:
     - cron: '0 4 * * 1'  # Every Monday at 9:30 IST
 
-env:
-  REGISTRY: docker.io
-  IMAGE_NAME: paralusio/paralus
-
 jobs:
 
   build-scan-paralus:
@@ -24,19 +20,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version-file: 'go.mod'
-
       - name: Build an image from Dockerfile
         run: |
-          docker build -f "Dockerfile" -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
+          docker build -f "Dockerfile" -t paralus:${{ github.sha }} .
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.10.0
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          image-ref: paralus:${{ github.sha }}
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
