@@ -2,8 +2,8 @@ name: Create, publish container image
 
 on:
   push:
-    branches: [ main ]
     tags: [ 'v*.*.*' ]
+
 env:
   REGISTRY: docker.io
   IMAGE_NAME: paralusio/paralus
@@ -13,7 +13,6 @@ jobs:
   build-push:
     strategy:
       matrix:
-        go-version: [1.17.x]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
 
@@ -30,12 +29,12 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version-file: 'go.mod'
 
-      # Sanity check before publishing
       - name: Create k8s Kind Cluster
         uses: helm/kind-action@v1.2.0
 
+      # Sanity check before publishing
       - name: Test all
         run: go test -v ./...
 

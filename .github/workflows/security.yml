@@ -1,0 +1,85 @@
+name: Scan container images
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 4 * * 1'  # Every Monday at 9:30 IST
+
+jobs:
+
+  build-scan-paralus:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build an image from Dockerfile
+        run: |
+          docker build -f "Dockerfile" -t paralus:${{ github.sha }} .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.10.0
+        with:
+          image-ref: paralus:${{ github.sha }}
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+
+  build-scan-paralus-init:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build an image from Dockerfile (paralus-init)
+        run: |
+          docker build -f "Dockerfile.initialize" -t paralus-init:${{ github.sha }} .
+
+      # skipping below binaries as they have vulnerabilities reported
+      # golang-migrate tracking issue - https://github.com/golang-migrate/migrate/issues/926
+      # kratos tracking - https://ory-community.slack.com/archives/C012RJ2MQ1H/p1684750686065509
+      - name: Run Trivy vulnerability scanner (paralus-init)
+        uses: aquasecurity/trivy-action@0.10.0
+        with:
+          image-ref: paralus-init:${{ github.sha }}
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          skip-files: '/usr/bin/kratos,/usr/bin/migrate'
+          severity: 'CRITICAL,HIGH'
+
+  build-scan-kratos-sync:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build an image from Dockerfile (kratos-sync)
+        run: |
+          docker build -f "Dockerfile.synchronizer" -t kratos-synchronizer:${{ github.sha }} .
+
+      - name: Run Trivy vulnerability scanner (kratos-sync)
+        uses: aquasecurity/trivy-action@0.10.0
+        with:
+          image-ref: kratos-synchronizer:${{ github.sha }}
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
