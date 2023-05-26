@@ -129,7 +129,7 @@ func (a *applier) Apply(ctx context.Context, obj ctrlclient.Object, opts ...Opti
 		f(applyOpts)
 	}
 
-	// added to preserve backward compatability with other code
+	// added to preserve backward compatibility with other code
 	if !applyOpts.UseUpdate {
 		applyOpts.UseUpdate = isApplyUpdate(obj)
 	}
