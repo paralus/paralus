@@ -111,6 +111,10 @@ func buildQuery(query *bun.SelectQuery, filters query.QueryFilters) *bun.SelectQ
 		query.Where("data->'actor'->'account'->>'username' = ?", filters.GetUser())
 	}
 
+	if filters.GetCluster() != "" {
+		query.Where("data->'detail'->'meta'->>'cluster_name' = ?", filters.GetCluster()) //->> value of field.
+	}
+
 	if filters.GetClient() != "" {
 		query.Where("data->'client'->>'type' = ?", filters.GetClient())
 	}
