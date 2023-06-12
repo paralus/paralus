@@ -557,8 +557,10 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 
 	// validate cluster annotation to retain the relay information within annotations
 	existingAnnotations := make(map[string]string)
-	if err = json.Unmarshal(cdb.Annotations, &existingAnnotations); err != nil {
-		return nil, err
+	if cdb.Annotations != nil {
+		if err = json.Unmarshal(cdb.Annotations, &existingAnnotations); err != nil {
+			return nil, err
+		}
 	}
 	if len(cluster.Metadata.Annotations) > 0 {
 		if existingAnnotations["relays"] != cluster.Metadata.Annotations["relays"] {

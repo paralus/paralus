@@ -10,7 +10,9 @@ RUN wget -O migrate.tar.gz -q https://github.com/golang-migrate/migrate/releases
 COPY . /build
 RUN go build -ldflags "-s" -o paralus-init scripts/initialize/main.go
 
-FROM alpine:latest as runtime
+# pinning to 3.14.10 which does not have any vulnerabilities
+# track https://hub.docker.com/_/alpine/tags for vulnerability fixes in latest version and move back to using latest
+FROM alpine:3.14.10 as runtime
 LABEL description="Run container"
 
 WORKDIR /usr/bin
