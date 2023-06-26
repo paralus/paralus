@@ -9,9 +9,7 @@ RUN go mod download
 COPY . .
 RUN make build
 
-# pinning to 3.14.10 which does not have any vulnerabilities
-# track https://hub.docker.com/_/alpine/tags for vulnerability fixes in latest version and move back to using latest
-FROM alpine:3.14.10 as runtime
+FROM alpine:latest as runtime
 LABEL description="Run container"
 
 WORKDIR /usr/bin

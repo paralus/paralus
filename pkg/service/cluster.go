@@ -555,24 +555,9 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 	cdb.ShareMode = cluster.Spec.ShareMode.String()
 	cdb.Labels = json.RawMessage(lbsBytes)
 
-	// validate cluster annotation to retain the relay information within annotations
-	existingAnnotations := make(map[string]string)
-	if cdb.Annotations != nil {
-		if err = json.Unmarshal(cdb.Annotations, &existingAnnotations); err != nil {
-			return nil, err
-		}
-	}
 	if len(cluster.Metadata.Annotations) > 0 {
-		if existingAnnotations["relays"] != cluster.Metadata.Annotations["relays"] {
-			_log.Warn("relays annotation populated during cluster bootstrapping is readonly, ignoring updates from user")
-		}
-		cluster.Metadata.Annotations["relays"] = existingAnnotations["relays"]
 		annBytes, _ := json.Marshal(cluster.Metadata.Annotations)
 		cdb.Annotations = json.RawMessage(annBytes)
-	} else {
-		// update back the relay information
-		cluster.Metadata.Annotations = make(map[string]string)
-		cluster.Metadata.Annotations["relays"] = existingAnnotations["relays"]
 	}
 
 	//location of cluster is updated
@@ -1017,7 +1002,7 @@ func (s *clusterService) CreateBootstrapAgentForCluster(ctx context.Context, clu
 	if cluster.Metadata.Annotations == nil {
 		cluster.Metadata.Annotations = make(map[string]string)
 	}
-	cluster.Metadata.Annotations["relays"] = string(relaysBytes)
+	cluster.Metadata.Annotations["paralus.dev/relays"] = string(relaysBytes)
 
 	return nil
 }

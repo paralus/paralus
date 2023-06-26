@@ -221,7 +221,7 @@ func (r *clusterReconciler) handleClusterBootstrapAgent(ctx context.Context, clu
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 		defer cancel()
 
-		fmt.Print("annotations in reconciler :: ", cluster.Metadata.Annotations)
+		_log.Info("annotations in reconciler :: ", cluster.Metadata.Annotations)
 
 		err := r.cs.UpdateStatus(ctx, &infrav3.Cluster{
 			Metadata: cluster.Metadata,

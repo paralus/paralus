@@ -294,7 +294,7 @@ metadata:
     app.kubernetes.io/managed-by: paralus
 data:
   clusterID: {{if .Cluster.Metadata.Labels}}{{ index .Cluster.Metadata.Labels "paralus.dev/clusterID" }}{{end}}
-  relays: '{{if .Cluster.Metadata.Annotations}}{{- index .Cluster.Metadata.Annotations "relays" -}}{{end}}'
+  relays: '{{if .Cluster.Metadata.Annotations}}{{- index .Cluster.Metadata.Annotations "paralus.dev/relays" -}}{{end}}'
 ---
 apiVersion: apps/v1
 kind: Deployment
