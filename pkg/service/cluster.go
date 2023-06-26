@@ -1002,7 +1002,7 @@ func (s *clusterService) CreateBootstrapAgentForCluster(ctx context.Context, clu
 	if cluster.Metadata.Annotations == nil {
 		cluster.Metadata.Annotations = make(map[string]string)
 	}
-	cluster.Metadata.Annotations["relays"] = string(relaysBytes)
+	cluster.Metadata.Annotations["paralus.dev/relays"] = string(relaysBytes)
 
 	return nil
 }
