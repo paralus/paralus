@@ -1,4 +1,4 @@
-name: Create, publish container image
+name: Create, publish, sign and verify container image
 
 on:
   push:
@@ -10,7 +10,7 @@ env:
 
 jobs:
 
-  build-push:
+  build-push-sign-verify:
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -106,3 +106,457 @@ jobs:
           push: true
           tags: ${{ steps.meta-sync.outputs.tags }}
           labels: ${{ steps.meta-sync.outputs.labels }}
+      
+      # Ensuring latest version of Cosign is installed
+      - name: Install Latest Cosign Version
+        run: |
+
+          curl -LO $(curl -s https://api.github.com/repos/sigstore/cosign/releases/latest | grep "browser_download_url.*cosign-linux-amd64" | cut -d : -f 2,3 | tr -d \")
+          chmod +x cosign-linux-amd64
+          sudo mv cosign-linux-amd64 /usr/local/bin/cosign
+
+      - name: Check Installed Cosign Version
+        run: |
+
+          # Get installed and latest versions
+          installed_version=$(cosign version | awk '/GitVersion:/ {print $2}')
+          latest_version=$(curl -s https://api.github.com/repos/sigstore/cosign/releases/latest | jq -r '.tag_name')
+
+          # Compare versions and provide appropriate output
+          if [[ "$installed_version" = "$latest_version" ]]; then
+            echo "Cosign is up to date (version $installed_version)"
+          else
+            echo "Cosign is not up to date"
+            echo "Installed version: $installed_version"
+            echo "Latest version: $latest_version"
+          fi
+      
+      - name: Check if COSIGN_PASSWORD exists in GitHub secrets
+        run: |
+
+          if 
+            ! gh secret get COSIGN_PASSWORD > /dev/null 2>&1; then
+            RANDOM_PASSWORD=$(openssl rand -base64 32)
+            echo $RANDOM_PASSWORD | gh secret set COSIGN_PASSWORD -
+            echo "COSIGN_PASSWORD secret set."
+  
+            # Removing the secret from the local runner's environment
+            # No sensitive initialized secrets should be left in the environment
+            echo "Removing RANDOM_PASSWORD from local runner."
+            unset RANDOM_PASSWORD
+          fi  
+
+      # These key pairs should not be removed from the secrets once generated as the public key is used by the end user for verification.
+      # Frequent changes in these key pairs can make it easier for an insider to exploit vulnerabilities.
+      # Using key management services is the best possible approach to protect against insider attacks.
+      # KMS can harden the key management process and provide better security.
+      # Changes would be visible in more transparent and secure manner to both external and internal stakeholders and thus any insider attack can be detected.
+      # Cosign natively supports many key management services such as Google Cloud KMS, Azure Key Vault, AWS KMS, Hashicorp Vault, etc.
+      # Keyless signing can also be considered for future purposes.
+      # Currently it may not be possible to use keyless Cosign signing with GitHub action identity provider.
+      # Sigstore community is actively working on various such projects to provide native tools integration with many CI providers such as GitHub, GitLab, etc.
+      # We can explore the above given options in the future to further harden up our Supply chain security, but for time being let's just get up and running with the current solution. 
+      - name: Generating Cosign Key
+        id: cosign_key
+        run: |
+          if [[ -z "${{ secrets.COSIGN_PUBLIC_KEY }}" || -z "${{ secrets.COSIGN_PRIVATE_KEY }}" ]]; then
+            cosign generate-key-pair github://paralus/paralus
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+
+      # Storing COSIGN_PRIVATE_KEY on local runner is a potential security threat
+      # It can be mitigated using Key Management Services is recommended.
+      - name: Write signing key to disk
+        run: |
+          echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
+
+      # Added all the fields as annotation that seems to cover all kind of trust boundaries that can persist in the workflow.
+      # More annotations can be added or deprecated as per the requirements in the future. 
+      - name: Sign Published Docker image using Cosign with annotation from metadata
+        run: |
+          cosign sign --key cosign.key \
+            -a "tags"="${{ steps.meta.outputs.tags }}" \
+            -a "labels=${{ steps.meta.outputs.labels }}" \
+            -a "owner"=${{ github.repository_owner }}" \
+            -a "repo=${{ github.repository }}" \
+            -a "actor=${{ github.actor }}" \
+            -a "trigerringactor=${{ github.triggering_actor}}" \
+            -a "ref=${{ github.ref }}" \
+            -a "sha=${{ github.sha }}" \
+            -a "workflowref=${{ github.workflow_ref }}" \
+            -a "workflowsha=${{ github.workflow_sha }}" \
+            -a "type=paralus" \ 
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tags }}
+
+          cosign sign --key cosign.key \
+            -a "tags"="${{ steps.meta-init.outputs.tags }}" \
+            -a "labels=${{ steps.meta-init.outputs.labels }}" \
+            -a "owner"=${{ github.repository_owner }}" \
+            -a "repo=${{ github.repository }}" \
+            -a "actor=${{ github.actor }}" \
+            -a "trigerringactor=${{ github.triggering_actor}}" \
+            -a "ref=${{ github.ref }}" \
+            -a "sha=${{ github.sha }}" \
+            -a "workflowref=${{ github.workflow_ref }}" \
+            -a "workflowsha=${{ github.workflow_sha }}" \
+            -a "type=paralus-init" \ 
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ steps.meta-init.outputs.tags }}
+
+          cosign sign --key cosign.key \
+            -a "tags"="${{ steps.meta-sync.outputs.tags }}" \
+            -a "labels=${{ steps.meta-sync.outputs.labels }}" \
+            -a "owner"=${{ github.repository_owner }}" \
+            -a "repo=${{ github.repository }}" \
+            -a "actor=${{ github.actor }}" \
+            -a "trigerringactor=${{ github.triggering_actor}}" \
+            -a "ref=${{ github.ref }}" \
+            -a "sha=${{ github.sha }}" \
+            -a "workflowref=${{ github.workflow_ref }}" \
+            -a "workflowsha=${{ github.workflow_sha }}" \
+            -a "type=kratos-synchronizer" \ 
+            ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:${{ steps.meta-sync.outputs.tags }}
+
+      # Removing private key from the local runner
+      # Sensitive information from local environments can be leaked.
+      # Using Key Management Services is recommended.
+      - name: Clean up the Cosign private key
+        run: |
+          rm cosign.key
+
+      - name: Write public key to disk
+        shell: bash
+        run: |
+            'echo "$KEY" > cosign.pub'
+        env:
+          KEY: ${{ secrets.COSIGN_PUBLIC_KEY }}
+      
+      # Using external action for simplicity sake.
+      # There codebase is available for public on GitHub thus vulnerabilities can be discovered if any.
+      - name: The Docker CLI
+        uses: actions-hub/docker@v1.0.3
+        env:
+          DOCKER_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+          
+      - name: Verify Cosign Signature (paralus)
+        run: |
+
+         # Fetch image digest
+          image_digest=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tags }} | cut -d '@' -f 2)
+
+          # Verify the signature
+          verification_result=$(cosign verify --key cosign.pub ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tags }} | jq -r '.')
+      
+          # Extract individual fields for comparison
+          identity=$(echo "$verification_result"        | jq -r '.critical.identity."docker-reference"')
+          manifest_digest=$(echo "$verification_result" | jq -r '.critical.image."docker-manifest-digest"')
+          signature_type=$(echo "$verification_result"  | jq -r '.critical.type')      
+      
+          # Verify individual optional fields
+          signature_optional_field1=$(echo "$verification_result"  | jq -r '.optional.tags')
+          signature_optional_field2=$(echo "$verification_result"  | jq -r '.optional.labels')
+          signature_optional_field3=$(echo "$verification_result"  | jq -r '.optional.owner')
+          signature_optional_field4=$(echo "$verification_result"  | jq -r '.optional.repo')
+          signature_optional_field5=$(echo "$verification_result"  | jq -r '.optional.actor')
+          signature_optional_field6=$(echo "$verification_result"  | jq -r '.optional.triggeringactor')
+          signature_optional_field7=$(echo "$verification_result"  | jq -r '.optional.ref')
+          signature_optional_field8=$(echo "$verification_result"  | jq -r '.optional.sha')
+          signature_optional_field9=$(echo "$verification_result"  | jq -r '.optional.type')
+          signature_optional_field10=$(echo "$verification_result" | jq -r '.optional.workflowref')
+          signature_optional_field11=$(echo "$verification_result" | jq -r '.optional.workflowsha')
+      
+          # Compare the fields
+          error_detected=false
+      
+          if [ "$identity" != "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}" ]; then
+            echo "Error: identity does not match"
+            error_detected=true
+          fi
+      
+          if [ "$manifest_digest" != "$image_digest" ]; then
+            echo "Error: Manifest digest does not match"
+            error_detected=true
+          fi
+      
+          if [ "$signature_type" != "cosign container image signature" ]; then
+            echo "Error: Signature type does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field1" != "${{ steps.meta.outputs.tags }}" ]; then
+            echo "Error: optional field 'tags' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field2" != "${{ steps.meta.outputs.labels }}" ]; then
+            echo "Error: optional field 'labels' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field3" != "${{ github.repository_owner }}" ]; then
+            echo "Error: optional field 'owner' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field4" != "${{ github.repository }}" ]; then
+            echo "Error: optional field 'repo' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field5" != "${{ github.actor }}" ]; then
+            echo "Error: optional field 'actor' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field6" != "${{ github.triggering_actor }}" ]; then
+            echo "Error: optional field 'triggeringactor' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field7" != "${{ github.ref }}" ]; then
+            echo "Error: optional field 'ref' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field8" != "${{ github.sha }}" ]; then
+            echo "Error: optional field 'sha' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field9" != "paralus" ]; then
+            echo "Error: optional field 'type' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field10" != "${{ github.workflow_ref }}" ]; then
+            echo "Error: optional field 'workflowref' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field11" != "${{ github.workflow_sha }}" ]; then
+            echo "Error: optional field 'workflowsha' does not match"
+            error_detected=true
+          fi
+
+          if [ "$error_detected" = true ]; then
+            echo "Cosign signature verification failed"
+            exit 1
+          else
+            echo "Cosign signature verification passed"
+          fi
+
+      - name: Verify Cosign Signature (paralus-init)
+        run: |
+
+          # Fetch image digest
+          image_digest=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ steps.meta-init.outputs.tags }} | cut -d '@' -f 2)
+
+          # Verify the signature
+          verification_result=$(cosign verify --key cosign.pub ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ steps.meta-init.outputs.tags }} | jq -r '.')
+      
+          # Extract individual fields for comparison
+          identity=$(echo "$verification_result"        | jq -r '.critical.identity."docker-reference"')
+          manifest_digest=$(echo "$verification_result" | jq -r '.critical.image."docker-manifest-digest"')
+          signature_type=$(echo "$verification_result"  | jq -r '.critical.type')      
+      
+          # Verify individual optional fields
+          signature_optional_field1=$(echo "$verification_result"  | jq -r '.optional.tags')
+          signature_optional_field2=$(echo "$verification_result"  | jq -r '.optional.labels')
+          signature_optional_field3=$(echo "$verification_result"  | jq -r '.optional.owner')
+          signature_optional_field4=$(echo "$verification_result"  | jq -r '.optional.repo')
+          signature_optional_field5=$(echo "$verification_result"  | jq -r '.optional.actor')
+          signature_optional_field6=$(echo "$verification_result"  | jq -r '.optional.triggeringactor')
+          signature_optional_field7=$(echo "$verification_result"  | jq -r '.optional.ref')
+          signature_optional_field8=$(echo "$verification_result"  | jq -r '.optional.sha')
+          signature_optional_field9=$(echo "$verification_result"  | jq -r '.optional.type')
+          signature_optional_field10=$(echo "$verification_result" | jq -r '.optional.workflowref')
+          signature_optional_field11=$(echo "$verification_result" | jq -r '.optional.workflowsha')
+      
+          # Compare the fields
+          error_detected=false
+      
+          if [ "$identity" != "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init" ]; then
+            echo "Error: identity does not match"
+            error_detected=true
+          fi
+      
+          if [ "$manifest_digest" != "$image_digest" ]; then
+            echo "Error: Manifest digest does not match"
+            error_detected=true
+          fi
+      
+          if [ "$signature_type" != "cosign container image signature" ]; then
+            echo "Error: Signature type does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field1" != "${{ steps.meta-init.outputs.tags }}" ]; then
+            echo "Error: optional field 'tags' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field2" != "${{ steps.meta-init.outputs.labels }}" ]; then
+            echo "Error: optional field 'labels' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field3" != "${{ github.repository_owner }}" ]; then
+            echo "Error: optional field 'owner' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field4" != "${{ github.repository }}" ]; then
+            echo "Error: optional field 'repo' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field5" != "${{ github.actor }}" ]; then
+            echo "Error: optional field 'actor' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field6" != "${{ github.triggering_actor }}" ]; then
+            echo "Error: optional field 'triggeringactor' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field7" != "${{ github.ref }}" ]; then
+            echo "Error: optional field 'ref' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field8" != "${{ github.sha }}" ]; then
+            echo "Error: optional field 'sha' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field9" != "paralus-init" ]; then
+            echo "Error: optional field 'type' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field10" != "${{ github.workflow_ref }}" ]; then
+            echo "Error: optional field 'workflowref' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field11" != "${{ github.workflow_sha }}" ]; then
+            echo "Error: optional field 'workflowsha' does not match"
+            error_detected=true
+          fi
+
+          if [ "$error_detected" = true ]; then
+            echo "Cosign signature verification failed"
+            exit 1
+          else
+            echo "Cosign signature verification passed"
+          fi
+
+      - name: Verify Cosign Signature (kratos-synchronizer)
+        run: |
+
+          # Fetch image digest
+          image_digest=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:${{ steps.meta-sync.outputs.tags }} | cut -d '@' -f 2)
+
+          # Verify the signature
+          verification_result=$(cosign verify --key cosign.pub ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:${{ steps.meta-sync.outputs.tags }} | jq -r '.')
+      
+          # Extract individual fields for comparison
+          identity=$(echo "$verification_result"        | jq -r '.critical.identity."docker-reference"')
+          manifest_digest=$(echo "$verification_result" | jq -r '.critical.image."docker-manifest-digest"')
+          signature_type=$(echo "$verification_result"  | jq -r '.critical.type')      
+      
+          # Verify individual optional fields
+          signature_optional_field1=$(echo "$verification_result"  | jq -r '.optional.tags')
+          signature_optional_field2=$(echo "$verification_result"  | jq -r '.optional.labels')
+          signature_optional_field3=$(echo "$verification_result"  | jq -r '.optional.owner')
+          signature_optional_field4=$(echo "$verification_result"  | jq -r '.optional.repo')
+          signature_optional_field5=$(echo "$verification_result"  | jq -r '.optional.actor')
+          signature_optional_field6=$(echo "$verification_result"  | jq -r '.optional.triggeringactor')
+          signature_optional_field7=$(echo "$verification_result"  | jq -r '.optional.ref')
+          signature_optional_field8=$(echo "$verification_result"  | jq -r '.optional.sha')
+          signature_optional_field9=$(echo "$verification_result"  | jq -r '.optional.type')
+          signature_optional_field10=$(echo "$verification_result" | jq -r '.optional.workflowref')
+          signature_optional_field11=$(echo "$verification_result" | jq -r '.optional.workflowsha')
+      
+          # Compare the fields
+          error_detected=false
+      
+          if [ "$identity" != "${{ env.REGISTRY }}/paralusio/kratos-synchronizer" ]; then
+            echo "Error: identity does not match"
+            error_detected=true
+          fi
+      
+          if [ "$manifest_digest" != "$image_digest" ]; then
+            echo "Error: Manifest digest does not match"
+            error_detected=true
+          fi
+      
+          if [ "$signature_type" != "cosign container image signature" ]; then
+            echo "Error: Signature type does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field1" != "${{ steps.meta-sync.outputs.tags }}" ]; then
+            echo "Error: optional field 'tags' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field2" != "${{ steps.meta-sync.outputs.labels }}" ]; then
+            echo "Error: optional field 'labels' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field3" != "${{ github.repository_owner }}" ]; then
+            echo "Error: optional field 'owner' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field4" != "${{ github.repository }}" ]; then
+            echo "Error: optional field 'repo' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field5" != "${{ github.actor }}" ]; then
+            echo "Error: optional field 'actor' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field6" != "${{ github.triggering_actor }}" ]; then
+            echo "Error: optional field 'triggeringactor' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field7" != "${{ github.ref }}" ]; then
+            echo "Error: optional field 'ref' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field8" != "${{ github.sha }}" ]; then
+            echo "Error: optional field 'sha' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field9" != "kratos-synchronizer" ]; then
+            echo "Error: optional field 'type' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field10" != "${{ github.workflow_ref }}" ]; then
+            echo "Error: optional field 'workflowref' does not match"
+            error_detected=true
+          fi
+
+          if [ "$signature_optional_field11" != "${{ github.workflow_sha }}" ]; then
+            echo "Error: optional field 'workflowsha' does not match"
+            error_detected=true
+          fi
+
+          if [ "$error_detected" = true ]; then
+            echo "Cosign signature verification failed"
+            exit 1
+          else
+            echo "Cosign signature verification passed"
+          fi
