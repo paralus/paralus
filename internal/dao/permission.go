@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/paralus/paralus/internal/models"
@@ -211,15 +212,15 @@ func IsOrgAdmin(ctx context.Context, db bun.IDB, accountID, partnerID uuid.UUID)
 	err = db.NewSelect().Model(&aps).
 		Where("account_id = ?", accountID).
 		Where("partner_id = ?", partnerID).
-		Where("role_name = ?", "ADMIN").
-		Where("scope = ?", "ORGANIZATION").
+		Where("lower(role_name) = ?", "admin").
+		Where("lower(scope) = ?", "organization").
 		Scan(ctx)
 	if err != nil {
 		return isOrgAdmin, err
 	}
 
 	for _, ap := range aps {
-		if ap.RoleName == "ADMIN" && ap.Scope == "ORGANIZATION" {
+		if strings.ToLower(ap.RoleName) == "admin" && strings.ToLower(ap.Scope) == "organization" {
 			isOrgAdmin = true
 			break
 		}
