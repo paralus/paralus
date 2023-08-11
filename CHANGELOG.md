@@ -1,4 +1,12 @@
-## [](https://github.com/paralus/paralus/compare/v0.2.3...v) (2023-05-02)
+## [0.2.4](https://github.com/paralus/paralus/compare/v0.2.3...v0.2.4) (2023-08-11)
+
+### Bug Fixes
+
+* change relays annotation of Cluster to paralus.dev/relays ([#227](https://github.com/paralus/paralus/issues/227)) ([749dcb4](https://github.com/paralus/paralus/commit/749dcb46d4f82341c9e2f5168ef15ac71011694e))
+* cluster list API send internal error for non-exist project ([a30f80f](https://github.com/paralus/paralus/commit/a30f80f426f95327acf25ba095755fed19a566c6))
+* generate fixtures for download.yaml ([#236](https://github.com/paralus/paralus/issues/236)) ([f5e2e77](https://github.com/paralus/paralus/commit/f5e2e7739d66c73803b7a231961ce5d316eb2408))
+* fix for org admins to view secrets with org restrictions ([#235](https://github.com/paralus/paralus/issues/235)) ([2965dd9](https://github.com/paralus/paralus/commit/2965dd9fdf15d71f9b0fd18aa063daad505485a3))
+
 
 ### [0.2.3](https://github.com/paralus/paralus/compare/v0.2.2...v0.2.3) (2023-04-28)
 
