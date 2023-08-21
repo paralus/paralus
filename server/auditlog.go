@@ -19,9 +19,9 @@ func NewAuditLogServer(auditLogService q.AuditLogService) (v1.AuditLogServiceSer
 }
 
 func (a *auditLogServer) GetAuditLog(ctx context.Context, req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
-	return a.as.GetAuditLog(req)
+	return a.as.GetAuditLog(ctx, req)
 }
 
 func (a *auditLogServer) GetAuditLogByProjects(ctx context.Context, req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
-	return a.as.GetAuditLogByProjects(req)
+	return a.as.GetAuditLogByProjects(ctx, req)
 }

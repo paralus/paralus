@@ -32,7 +32,7 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 var (
-	filter_AuditLogService_GetAuditLog_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_AuditLogService_GetAuditLog_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "urlScope": 1}, Base: []int{1, 2, 3, 2, 0, 0}, Check: []int{0, 1, 1, 2, 4, 3}}
 )
 
 func request_AuditLogService_GetAuditLog_0(ctx context.Context, marshaler runtime.Marshaler, client AuditLogServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -199,7 +199,7 @@ func RegisterAuditLogServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 // RegisterAuditLogServiceHandlerFromEndpoint is same as RegisterAuditLogServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
 func RegisterAuditLogServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
-	conn, err := grpc.Dial(endpoint, opts...)
+	conn, err := grpc.DialContext(ctx, endpoint, opts...)
 	if err != nil {
 		return err
 	}

@@ -1,6 +1,6 @@
 module github.com/paralus/paralus
 
-go 1.17
+go 1.20
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
@@ -11,7 +11,6 @@ require (
 	github.com/dgraph-io/ristretto v0.1.0
 	github.com/elastic/go-elasticsearch v0.0.0
 	github.com/evanphx/json-patch v4.12.0+incompatible
-	github.com/fdaines/go-architect-lib v1.0.1
 	github.com/go-openapi/errors v0.20.2
 	github.com/go-openapi/runtime v0.23.1
 	github.com/go-openapi/strfmt v0.21.2
@@ -132,7 +131,6 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/crypto v0.3.0 // indirect
-	golang.org/x/mod v0.7.0 // indirect
 	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/oauth2 v0.2.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect

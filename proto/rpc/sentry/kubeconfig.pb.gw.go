@@ -140,7 +140,7 @@ func local_request_KubeConfigService_GetForUser_0(ctx context.Context, marshaler
 }
 
 var (
-	filter_KubeConfigService_GetForUser_1 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_KubeConfigService_GetForUser_1 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 2, 3, 2, 0, 0}, Check: []int{0, 1, 1, 2, 4, 3}}
 )
 
 func request_KubeConfigService_GetForUser_1(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -312,7 +312,7 @@ func local_request_KubeConfigService_RevokeKubeconfig_1(ctx context.Context, mar
 }
 
 var (
-	filter_KubeConfigService_GetOrganizationSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_KubeConfigService_GetOrganizationSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 2, 3, 2, 0, 0}, Check: []int{0, 1, 1, 2, 4, 3}}
 )
 
 func request_KubeConfigService_GetOrganizationSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -382,7 +382,7 @@ func local_request_KubeConfigService_GetOrganizationSetting_0(ctx context.Contex
 }
 
 var (
-	filter_KubeConfigService_GetUserSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_KubeConfigService_GetUserSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 2, 3, 2, 0, 0}, Check: []int{0, 1, 1, 2, 4, 3}}
 )
 
 func request_KubeConfigService_GetUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -452,7 +452,7 @@ func local_request_KubeConfigService_GetUserSetting_0(ctx context.Context, marsh
 }
 
 var (
-	filter_KubeConfigService_GetSSOUserSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_KubeConfigService_GetSSOUserSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 2, 3, 2, 0, 0}, Check: []int{0, 1, 1, 2, 4, 3}}
 )
 
 func request_KubeConfigService_GetSSOUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -1037,7 +1037,7 @@ func RegisterKubeConfigServiceHandlerServer(ctx context.Context, mux *runtime.Se
 // RegisterKubeConfigServiceHandlerFromEndpoint is same as RegisterKubeConfigServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
 func RegisterKubeConfigServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
-	conn, err := grpc.Dial(endpoint, opts...)
+	conn, err := grpc.DialContext(ctx, endpoint, opts...)
 	if err != nil {
 		return err
 	}

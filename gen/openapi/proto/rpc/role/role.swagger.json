@@ -105,6 +105,20 @@
             "type": "string"
           },
           {
+            "name": "metadata.labels",
+            "description": "Labels\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.annotations",
+            "description": "Annotations\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "metadata.project",
             "description": "Project\n\nProject of the resource",
             "in": "query",
@@ -289,6 +303,20 @@
           {
             "name": "metadata.description",
             "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.labels",
+            "description": "Labels\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.annotations",
+            "description": "Annotations\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
             "in": "query",
             "required": false,
             "type": "string"
@@ -637,6 +665,20 @@
             "type": "string"
           },
           {
+            "name": "metadata.labels",
+            "description": "Labels\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.annotations",
+            "description": "Annotations\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "metadata.project",
             "description": "Project\n\nProject of the resource",
             "in": "query",
@@ -956,6 +998,7 @@
         "details": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
         }
@@ -1143,6 +1186,7 @@
         "items": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v3Role",
             "readOnly": true
           },
@@ -1203,11 +1247,9 @@
   },
   "security": [
     {
-      "BasicAuth": []
-    },
-    {
       "ApiKeyAuth": [],
-      "ApiTokenAuth": []
+      "ApiTokenAuth": [],
+      "BasicAuth": []
     }
   ]
 }

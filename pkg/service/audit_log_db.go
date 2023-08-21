@@ -17,13 +17,13 @@ type auditLogDatabaseService struct {
 	tag string
 }
 
-func (a *auditLogDatabaseService) GetAuditLog(req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
+func (a *auditLogDatabaseService) GetAuditLog(ctx context.Context, req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
 	project, err := getProjectFromUrlScope(req.GetMetadata().UrlScope)
 	if err != nil {
 		return nil, err
 	}
 	req.Filter.Projects = []string{project}
-	return a.GetAuditLogByProjects(req)
+	return a.GetAuditLogByProjects(ctx, req)
 }
 
 func buildAggregators(aggr []models.AggregatorData) []*auditv1.GroupByType {
@@ -53,19 +53,26 @@ func buildDataSource(logs []models.AuditLog) (ds []*auditv1.DataSource) {
 	return ds
 }
 
-func (a *auditLogDatabaseService) GetAuditLogByProjects(req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
+func (a *auditLogDatabaseService) GetAuditLogByProjects(ctx context.Context, req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
 	err = validateQueryString(req.GetFilter().QueryString)
 	if err != nil {
 		return nil, err
 	}
-	ctx := context.Background()
+
+	//validate user authz with incoming request
+	if len(req.GetFilter().GetProjects()) > 0 {
+		if err := ValidateUserAuditReadRequest(ctx, req.GetFilter().GetProjects(), a.db); err != nil {
+			return nil, err
+		}
+	}
+
 	auditLogs, err := dao.GetAuditLogs(ctx, a.db, a.tag, req.Filter)
 	if err != nil {
 		return nil, err
 	}
 
 	// aggregations
-	_, err = dao.GetAuditLogAggregations(ctx, a.db, a.tag, "project", req.Filter)
+	projectAggr, err := dao.GetAuditLogAggregations(ctx, a.db, a.tag, "project", req.Filter)
 	if err != nil {
 		return nil, err
 	}
@@ -87,6 +94,9 @@ func (a *auditLogDatabaseService) GetAuditLogByProjects(req *v1.GetAuditLogSearc
 			},
 			GroupByUsername: &auditv1.AggregatorGroup{
 				Buckets: buildAggregators(usernameAggr),
+			},
+			GroupByProject: &auditv1.AggregatorGroup{
+				Buckets: buildAggregators(projectAggr),
 			},
 		},
 		Hits: &auditv1.Hits{Hits: buildDataSource(auditLogs)},

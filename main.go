@@ -397,7 +397,7 @@ func setup() {
 		}
 	case audit.ELASTICSEARCH:
 		// audit services
-		aus, err = service.NewAuditLogElasticSearchService(elasticSearchUrl, esIndexPrefix+"-*", "AuditLog API: ")
+		aus, err = service.NewAuditLogElasticSearchService(elasticSearchUrl, esIndexPrefix+"-*", "AuditLog API: ", db)
 		if err != nil {
 			if dev && strings.Contains(err.Error(), "connect: connection refused") {
 				// This is primarily from ES not being available. ES being
@@ -409,7 +409,7 @@ func setup() {
 				_log.Fatalw("unable to create auditLog service", "error", err)
 			}
 		}
-		ras, err = service.NewRelayAuditElasticSearchService(elasticSearchUrl, relayAuditsESIndexPrefix+"-*", "RelayAudit API: ")
+		ras, err = service.NewRelayAuditElasticSearchService(elasticSearchUrl, relayAuditsESIndexPrefix+"-*", "RelayAudit API: ", db)
 		if err != nil {
 			if dev && strings.Contains(err.Error(), "connect: connection refused") {
 				_log.Warn("unable to create relayAudit service: ", err)
@@ -417,7 +417,7 @@ func setup() {
 				_log.Fatalw("unable to create relayAudit service", "error", err)
 			}
 		}
-		rcs, err = service.NewAuditLogElasticSearchService(elasticSearchUrl, relayCommandsESIndexPrefix+"-*", "RelayCommand API: ")
+		rcs, err = service.NewAuditLogElasticSearchService(elasticSearchUrl, relayCommandsESIndexPrefix+"-*", "RelayCommand API: ", db)
 		if err != nil {
 			if dev && strings.Contains(err.Error(), "connect: connection refused") {
 				_log.Warn("unable to create auditLog service:", err)
@@ -555,7 +555,7 @@ func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
 		_log.Fatalw("unable to get create relay peer service")
 	}
 	clusterAuthzServer := server.NewClusterAuthzServer(bs, aps, gps, krs, kcs, kss, ns)
-	auditInfoServer := server.NewAuditInfoServer(bs, aps)
+	auditInfoServer := server.NewAuditInfoServer(bs, aps, pps)
 
 	s, err := grpc.NewSecureServerWithPEM(cert, key, ca)
 	if err != nil {
@@ -600,7 +600,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 
 	bootstrapServer := server.NewBootstrapServer(bs, kekFunc, cs)
 	kubeConfigServer := server.NewKubeConfigServer(bs, aps, gps, kss, krs, kekFunc, ks, os, ps, auditLogger)
-	auditInfoServer := server.NewAuditInfoServer(bs, aps)
+	auditInfoServer := server.NewAuditInfoServer(bs, aps, pps)
 	clusterAuthzServer := server.NewClusterAuthzServer(bs, aps, gps, krs, kcs, kss, ns)
 	kubectlClusterSettingsServer := server.NewKubectlClusterSettingsServer(bs, kcs)
 	crpc := server.NewClusterServer(cs, downloadData)

@@ -1,21 +1,33 @@
 package service
 
 import (
+	"context"
+	"errors"
+	"fmt"
+
+	"github.com/google/uuid"
+	"github.com/paralus/paralus/internal/dao"
 	v1 "github.com/paralus/paralus/proto/rpc/audit"
 	"github.com/uptrace/bun"
 )
 
 type AuditLogService interface {
-	GetAuditLog(req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error)
-	GetAuditLogByProjects(req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error)
+	GetAuditLog(ctx context.Context, req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error)
+	GetAuditLogByProjects(ctx context.Context, req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error)
 }
 
-func NewAuditLogElasticSearchService(url string, auditPattern string, logPrefix string) (AuditLogService, error) {
+// auditlogs permissions
+const (
+	OrgRelayAuditPermission     = "org.relayAudit.read"
+	ProjectRelayAuditPermission = "project.relayAudit.read"
+)
+
+func NewAuditLogElasticSearchService(url string, auditPattern string, logPrefix string, db *bun.DB) (AuditLogService, error) {
 	auditQuery, err := NewElasticSearchQuery(url, auditPattern, logPrefix)
 	if err != nil {
 		return nil, err
 	}
-	return &auditLogElasticSearchService{auditQuery: auditQuery}, nil
+	return &auditLogElasticSearchService{auditQuery: auditQuery, db: db}, nil
 }
 
 func NewAuditLogDatabaseService(db *bun.DB, tag string) (AuditLogService, error) {
@@ -23,18 +35,55 @@ func NewAuditLogDatabaseService(db *bun.DB, tag string) (AuditLogService, error)
 }
 
 type RelayAuditService interface {
-	GetRelayAudit(req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error)
-	GetRelayAuditByProjects(req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error)
+	GetRelayAudit(ctx context.Context, req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error)
+	GetRelayAuditByProjects(ctx context.Context, req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error)
 }
 
 func NewRelayAuditDatabaseService(db *bun.DB, tag string) (RelayAuditService, error) {
 	return &relayAuditDatabaseService{db: db, tag: tag}, nil
 }
 
-func NewRelayAuditElasticSearchService(url string, auditPattern string, logPrefix string) (RelayAuditService, error) {
+func NewRelayAuditElasticSearchService(url string, auditPattern string, logPrefix string, db *bun.DB) (RelayAuditService, error) {
 	relayQuery, err := NewElasticSearchQuery(url, auditPattern, logPrefix)
 	if err != nil {
 		return nil, err
 	}
-	return &relayAuditElasticSearchService{relayQuery: relayQuery}, nil
+	return &relayAuditElasticSearchService{relayQuery: relayQuery, db: db}, nil
+}
+
+func ValidateUserAuditReadRequest(ctx context.Context, projects []string, db *bun.DB) error {
+	var prerr error
+	//validate user authz with incoming request
+	sd, ok := GetSessionDataFromContext(ctx)
+	if !ok {
+		return errors.New("failed to get session data")
+	}
+	_log.Infow("fetching auditlogs", "account", sd)
+
+	sap, err := dao.GetAccountPermissions(ctx, db, uuid.MustParse(sd.Account), uuid.MustParse(sd.Organization), uuid.MustParse(sd.Partner))
+	if err != nil {
+		return err
+	}
+	matchesAll := true
+	for _, rproject := range projects {
+		rprojectid, err := dao.GetProjectId(ctx, db, rproject)
+		if err != nil {
+			return err
+		}
+		available := false
+		for _, ap := range sap {
+			if rprojectid == ap.ProjectId {
+				available = true
+				break
+			}
+		}
+		if !available {
+			matchesAll = false
+			prerr = errors.Join(prerr, fmt.Errorf("not authorized for project %s", rproject))
+		}
+	}
+	if !matchesAll {
+		return prerr
+	}
+	return prerr
 }

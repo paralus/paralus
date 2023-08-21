@@ -112,6 +112,7 @@
         "details": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
         }
@@ -152,42 +153,49 @@
         "clusterRoles": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/controllerStepObject"
           }
         },
         "clusterRoleBindings": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/controllerStepObject"
           }
         },
         "roles": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/controllerStepObject"
           }
         },
         "roleBindings": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/controllerStepObject"
           }
         },
         "deleteClusterRoleBindings": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/controllerStepObject"
           }
         },
         "deleteRoleBindings": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/controllerStepObject"
           }
         },
         "namespaces": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/controllerStepObject"
           }
         },
@@ -308,6 +316,7 @@
         "ownerReferences": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v1OwnerReference"
           },
           "title": "List of objects depended by this object. If ALL objects in the list have\nbeen deleted, this object will be garbage collected. If this object is managed by a controller,\nthen an entry in this list will point to this controller, with the controller field set to true.\nThere cannot be more than one managing controller.\n+optional\n+patchMergeKey=uid\n+patchStrategy=merge"
@@ -326,6 +335,7 @@
         "managedFields": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v1ManagedFieldsEntry"
           },
           "description": "ManagedFields maps workflow-id and version to the set of fields\nthat are managed by that workflow. This is mostly for internal\nhousekeeping, and users typically shouldn't need to set or\nunderstand this field. A workflow can be the user's name, a\ncontroller's name, or the name of a specific apply path like\n\"ci-cd\". The set of fields is always in the version that the\nworkflow used when modifying the object.\n\n+optional"
@@ -397,11 +407,9 @@
   },
   "security": [
     {
-      "BasicAuth": []
-    },
-    {
       "ApiKeyAuth": [],
-      "ApiTokenAuth": []
+      "ApiTokenAuth": [],
+      "BasicAuth": []
     }
   ]
 }

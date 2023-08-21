@@ -74,6 +74,8 @@ func (ac *authContext) authenticate(ctx context.Context, req *commonv3.IsRequest
 		res.Status = commonv3.RequestStatus_RequestAllowed
 		res.SessionData.Username = resp.Name
 		res.SessionData.Account = resp.AccountID.String()
+		res.SessionData.Organization = resp.OrganizationID.String()
+		res.SessionData.Partner = resp.PartnerID.String()
 	} else {
 
 		tsr := ac.kc.FrontendApi.ToSession(ctx).XSessionToken(req.GetXSessionToken()).Cookie(req.GetCookie())
@@ -91,6 +93,15 @@ func (ac *authContext) authenticate(ctx context.Context, req *commonv3.IsRequest
 		if session.GetActive() {
 			res.Status = commonv3.RequestStatus_RequestAllowed
 			res.SessionData.Account = session.Identity.GetId()
+			if session.Identity.HasMetadataPublic() {
+				m := session.Identity.MetadataPublic.(map[string]interface{})
+				if org, ok := m["Organization"].(string); ok {
+					res.SessionData.Organization = org
+				}
+				if part, ok := m["Partner"].(string); ok {
+					res.SessionData.Partner = part
+				}
+			}
 
 			t := session.Identity.Traits.(map[string]interface{})
 			res.SessionData.Username = t["email"].(string)

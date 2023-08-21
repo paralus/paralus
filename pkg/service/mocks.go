@@ -19,11 +19,11 @@ type mockAuthProvider struct {
 	d []string
 }
 
-func (m *mockAuthProvider) Create(ctx context.Context, pass string, traits map[string]interface{}, fr bool) (string, error) {
+func (m *mockAuthProvider) Create(ctx context.Context, pass string, traits map[string]interface{}, metadata map[string]interface{}) (string, error) {
 	m.c = append(m.c, traits)
 	return strings.Split(traits["email"].(string), "user-")[1], nil
 }
-func (m *mockAuthProvider) Update(ctx context.Context, id string, traits map[string]interface{}, fr bool) error {
+func (m *mockAuthProvider) Update(ctx context.Context, id string, traits map[string]interface{}, metadata map[string]interface{}) error {
 	m.u = append(m.u, ApUpdate{id: id, traits: traits})
 	return nil
 }

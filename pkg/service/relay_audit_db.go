@@ -14,9 +14,10 @@ import (
 type relayAuditDatabaseService struct {
 	db  *bun.DB
 	tag string
+	aps AccountPermissionService
 }
 
-func (ra *relayAuditDatabaseService) GetRelayAudit(req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
+func (ra *relayAuditDatabaseService) GetRelayAudit(ctx context.Context, req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
 	if err != nil {
 		return nil, err
 	}
@@ -25,22 +26,33 @@ func (ra *relayAuditDatabaseService) GetRelayAudit(req *v1.RelayAuditRequest) (r
 		return nil, err
 	}
 	req.Filter.Projects = []string{project}
-	return ra.GetRelayAuditByProjects(req)
+	return ra.GetRelayAuditByProjects(ctx, req)
 }
 
-func (ra *relayAuditDatabaseService) GetRelayAuditByProjects(req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
+func (ra *relayAuditDatabaseService) GetRelayAuditByProjects(ctx context.Context, req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
 	err = validateQueryString(req.GetFilter().QueryString)
 	if err != nil {
 		return &v1.RelayAuditResponse{}, err
 	}
 
-	ctx := context.Background()
+	//validate user authz with incoming request
+	if len(req.GetFilter().GetProjects()) > 0 {
+		if err := ValidateUserAuditReadRequest(ctx, req.GetFilter().GetProjects(), ra.db); err != nil {
+			return nil, err
+		}
+	}
+
 	auditLogs, err := dao.GetAuditLogs(ctx, ra.db, ra.tag, req.Filter)
 	if err != nil {
 		return nil, err
 	}
 
 	// aggregations
+	projectAggr, err := dao.GetAuditLogAggregations(ctx, ra.db, ra.tag, "project", req.Filter)
+	if err != nil {
+		return nil, err
+	}
+
 	clusterAggr, err := dao.GetAuditLogAggregations(ctx, ra.db, ra.tag, "cluster", req.Filter)
 	if err != nil {
 		return nil, err
@@ -68,6 +80,9 @@ func (ra *relayAuditDatabaseService) GetRelayAuditByProjects(req *v1.RelayAuditR
 
 	response := &auditv1.AuditResponse{
 		Aggregations: &auditv1.Aggregations{
+			GroupByProject: &auditv1.AggregatorGroup{
+				Buckets: buildAggregators(projectAggr),
+			},
 			GroupByCluster: &auditv1.AggregatorGroup{
 				Buckets: buildAggregators(clusterAggr),
 			},

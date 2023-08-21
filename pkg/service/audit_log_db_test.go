@@ -1,13 +1,16 @@
 package service
 
 import (
+	"context"
 	"encoding/json"
 	"regexp"
 	"testing"
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/google/uuid"
 	"github.com/paralus/paralus/pkg/audit"
+	"github.com/paralus/paralus/pkg/common"
 	eventv1 "github.com/paralus/paralus/proto/rpc/audit"
 	auditv1 "github.com/paralus/paralus/proto/types/audit"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
@@ -70,6 +73,13 @@ func testGetAuditLogForLastHour(tag string) func(t *testing.T) {
 			},
 		}
 
+		uuid := uuid.New().String()
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "sap"."account_id", "sap"."project_id", "sap"."group_id", "sap"."role_id", "sap"."role_name", "sap"."organization_id", "sap"."partner_id", "sap"."is_global", "sap"."scope", "sap"."permission_name", "sap"."base_url", "sap"."urls" FROM "sentry_account_permission" AS "sap" WHERE (account_id = '` + uuid + `') AND (organization_id = '` + uuid + `') AND (partner_id = '` + uuid + `')`)).
+			WillReturnRows(sqlmock.NewRows([]string{"account_id", "project_id", "permission_name"}).AddRow(uuid, uuid, "log.read"))
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "project"."id" FROM "authsrv_project" AS "project" WHERE (name = '` + project + `') AND (trash = FALSE)`)).
+			WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid))
+
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now())`)).
 			WillReturnRows(sqlmock.NewRows([]string{"tag", "time", "data"}).AddRow("system", time.Now(), auditrecord))
 
@@ -82,7 +92,21 @@ func testGetAuditLogForLastHour(tag string) func(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'type' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'type'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "type"))
 
-		res, err := as.GetAuditLogByProjects(req)
+		sd := commonv3.SessionData{
+			Account:      uuid,
+			Organization: uuid,
+			Partner:      uuid,
+			Username:     "user",
+			Project: &commonv3.ProjectData{
+				List: []*commonv3.ProjectRole{
+					{
+						Project: project,
+					},
+				},
+			},
+		}
+		ctx := context.WithValue(context.Background(), common.SessionDataKey, &sd)
+		res, err := as.GetAuditLogByProjects(ctx, req)
 		if err != nil {
 			t.Fatal("could not get audit logs:", err)
 		}
@@ -127,6 +151,13 @@ func testGetAuditLogForDay(tag string) func(t *testing.T) {
 			},
 		}
 
+		uuid := uuid.New().String()
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "sap"."account_id", "sap"."project_id", "sap"."group_id", "sap"."role_id", "sap"."role_name", "sap"."organization_id", "sap"."partner_id", "sap"."is_global", "sap"."scope", "sap"."permission_name", "sap"."base_url", "sap"."urls" FROM "sentry_account_permission" AS "sap" WHERE (account_id = '` + uuid + `') AND (organization_id = '` + uuid + `') AND (partner_id = '` + uuid + `')`)).
+			WillReturnRows(sqlmock.NewRows([]string{"account_id", "project_id", "permission_name"}).AddRow(uuid, uuid, "log.read"))
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "project"."id" FROM "authsrv_project" AS "project" WHERE (name = '` + project + `') AND (trash = FALSE)`)).
+			WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid))
+
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now())`)).
 			WillReturnRows(sqlmock.NewRows([]string{"tag", "time", "data"}).AddRow(tag, time.Now(), auditrecord).AddRow(tag, time.Now(), auditrecordtwo))
 
@@ -139,7 +170,21 @@ func testGetAuditLogForDay(tag string) func(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'type' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'type'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "type"))
 
-		res, err := as.GetAuditLog(req)
+		sd := commonv3.SessionData{
+			Organization: uuid,
+			Partner:      uuid,
+			Account:      uuid,
+			Username:     "user",
+			Project: &commonv3.ProjectData{
+				List: []*commonv3.ProjectRole{
+					{
+						Project: project,
+					},
+				},
+			},
+		}
+		ctx := context.WithValue(context.Background(), common.SessionDataKey, &sd)
+		res, err := as.GetAuditLog(ctx, req)
 		if err != nil {
 			t.Fatal("could not get audit logs:", err)
 		}
@@ -184,6 +229,13 @@ func testGetKubectlCommands(tag string) func(t *testing.T) {
 			},
 		}
 
+		uuid := uuid.New().String()
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "sap"."account_id", "sap"."project_id", "sap"."group_id", "sap"."role_id", "sap"."role_name", "sap"."organization_id", "sap"."partner_id", "sap"."is_global", "sap"."scope", "sap"."permission_name", "sap"."base_url", "sap"."urls" FROM "sentry_account_permission" AS "sap" WHERE (account_id = '` + uuid + `') AND (organization_id = '` + uuid + `') AND (partner_id = '` + uuid + `')`)).
+			WillReturnRows(sqlmock.NewRows([]string{"account_id", "project_id", "permission_name"}).AddRow(uuid, uuid, "log.read"))
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "project"."id" FROM "authsrv_project" AS "project" WHERE (name = '` + project + `') AND (trash = FALSE)`)).
+			WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid))
+
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now())`)).
 			WillReturnRows(sqlmock.NewRows([]string{"tag", "time", "data"}).AddRow(tag, time.Now(), auditrecord).AddRow(tag, time.Now(), auditrecordtwo))
 
@@ -196,7 +248,21 @@ func testGetKubectlCommands(tag string) func(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'type' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'type'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "type"))
 
-		res, err := as.GetAuditLog(req)
+		sd := commonv3.SessionData{
+			Organization: uuid,
+			Partner:      uuid,
+			Account:      uuid,
+			Username:     "user",
+			Project: &commonv3.ProjectData{
+				List: []*commonv3.ProjectRole{
+					{
+						Project: project,
+					},
+				},
+			},
+		}
+		ctx := context.WithValue(context.Background(), common.SessionDataKey, &sd)
+		res, err := as.GetAuditLog(ctx, req)
 		if err != nil {
 			t.Fatal("could not get audit logs:", err)
 		}

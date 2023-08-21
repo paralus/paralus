@@ -2,10 +2,15 @@ package service
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"regexp"
 	"strings"
 	"testing"
 
+	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/google/uuid"
+	"github.com/paralus/paralus/pkg/common"
 	v1 "github.com/paralus/paralus/proto/rpc/audit"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 )
@@ -85,8 +90,12 @@ func (m *mockElasticSearchQuery) Handle(msg bytes.Buffer) (map[string]interface{
 }
 
 func TestGetAuditLogByProjectsSimple(t *testing.T) {
+
+	db, mock := getDB(t)
+	defer db.Close()
+
 	esq := &mockElasticSearchQuery{}
-	al := &auditLogElasticSearchService{auditQuery: esq}
+	al := &auditLogElasticSearchService{auditQuery: esq, db: db}
 	req := v1.GetAuditLogSearchRequest{
 		Filter: &v1.AuditLogQueryFilter{
 			QueryString:   "query-string",
@@ -98,7 +107,25 @@ func TestGetAuditLogByProjectsSimple(t *testing.T) {
 			DashboardData: true,
 		},
 	}
-	_, err := al.GetAuditLogByProjects(&req)
+	uuid := uuid.New().String()
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "sap"."account_id", "sap"."project_id", "sap"."group_id", "sap"."role_id", "sap"."role_name", "sap"."organization_id", "sap"."partner_id", "sap"."is_global", "sap"."scope", "sap"."permission_name", "sap"."base_url", "sap"."urls" FROM "sentry_account_permission" AS "sap" WHERE (account_id = '` + uuid + `') AND (organization_id = '` + uuid + `') AND (partner_id = '` + uuid + `')`)).
+		WillReturnRows(sqlmock.NewRows([]string{"account_id", "project_id", "permission_name"}).AddRow(uuid, uuid, "log.read"))
+
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "project"."id" FROM "authsrv_project" AS "project" WHERE (name = '` + "project-one" + `') AND (trash = FALSE)`)).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid))
+
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "project"."id" FROM "authsrv_project" AS "project" WHERE (name = '` + "project-two" + `') AND (trash = FALSE)`)).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid))
+
+	sd := v3.SessionData{
+		Account:      uuid,
+		Organization: uuid,
+		Partner:      uuid,
+		Username:     "user",
+	}
+	ctx := context.WithValue(context.Background(), common.SessionDataKey, &sd)
+
+	_, err := al.GetAuditLogByProjects(ctx, &req)
 	if err != nil {
 		t.Error("unable to get audit logs")
 	}
@@ -117,15 +144,32 @@ func TestGetAuditLogByProjectsSimple(t *testing.T) {
 }
 
 func TestGetAuditLogByProjectsNoProject(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
 	esq := &mockElasticSearchQuery{}
-	al := &auditLogElasticSearchService{auditQuery: esq}
+	al := &auditLogElasticSearchService{auditQuery: esq, db: db}
 	req := v1.GetAuditLogSearchRequest{
 		Metadata: &v3.Metadata{UrlScope: "url/project"},
 		Filter: &v1.AuditLogQueryFilter{
 			QueryString: "query-string",
 		},
 	}
-	_, err := al.GetAuditLog(&req)
+	uuid := uuid.New().String()
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "sap"."account_id", "sap"."project_id", "sap"."group_id", "sap"."role_id", "sap"."role_name", "sap"."organization_id", "sap"."partner_id", "sap"."is_global", "sap"."scope", "sap"."permission_name", "sap"."base_url", "sap"."urls" FROM "sentry_account_permission" AS "sap" WHERE (account_id = '` + uuid + `') AND (organization_id = '` + uuid + `') AND (partner_id = '` + uuid + `')`)).
+		WillReturnRows(sqlmock.NewRows([]string{"account_id", "project_id", "permission_name"}).AddRow(uuid, uuid, "log.read"))
+
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "project"."id" FROM "authsrv_project" AS "project" WHERE (name = '` + "project" + `') AND (trash = FALSE)`)).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid))
+
+	sd := v3.SessionData{
+		Account:      uuid,
+		Organization: uuid,
+		Partner:      uuid,
+		Username:     "user",
+	}
+	ctx := context.WithValue(context.Background(), common.SessionDataKey, &sd)
+	_, err := al.GetAuditLog(ctx, &req)
 	if err != nil {
 		t.Error("unable to get audit logs", err)
 	}
