@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/paralus/paralus/pkg/common"
 	v1 "github.com/paralus/paralus/proto/rpc/audit"
 	"github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -34,7 +35,7 @@ func (ra *relayAuditElasticSearchService) GetRelayAuditByProjects(ctx context.Co
 	}
 	//validate user authz with incoming request
 	if len(req.GetFilter().GetProjects()) > 0 {
-		if err := ValidateUserAuditReadRequest(ctx, req.GetFilter().GetProjects(), ra.db); err != nil {
+		if err := ValidateUserAuditReadRequest(ctx, req.GetFilter().GetProjects(), ra.db, true); err != nil {
 			return nil, err
 		}
 	}
@@ -195,13 +196,21 @@ func (ra *relayAuditElasticSearchService) GetRelayAuditByProjects(ctx context.Co
 			}
 			m = append(m, t)
 		} else {
-
-			t := map[string]interface{}{
-				"terms": map[string]interface{}{
-					"json.project": req.Filter.Projects,
-				},
+			if req.AuditType == common.RelayAPIAuditType {
+				t := map[string]interface{}{
+					"terms": map[string]interface{}{
+						"json.pr": req.Filter.Projects,
+					},
+				}
+				m = append(m, t)
+			} else {
+				t := map[string]interface{}{
+					"terms": map[string]interface{}{
+						"json.project": req.Filter.Projects,
+					},
+				}
+				m = append(m, t)
 			}
-			m = append(m, t)
 		}
 	}
 	// query string

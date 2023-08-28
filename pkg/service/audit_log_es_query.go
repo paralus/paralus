@@ -55,7 +55,7 @@ func (a *auditLogElasticSearchService) GetAuditLogByProjects(ctx context.Context
 	}
 	//validate user authz with incoming request
 	if len(req.GetFilter().GetProjects()) > 0 {
-		if err := ValidateUserAuditReadRequest(ctx, req.GetFilter().GetProjects(), a.db); err != nil {
+		if err := ValidateUserAuditReadRequest(ctx, req.GetFilter().GetProjects(), a.db, false); err != nil {
 			return nil, err
 		}
 	}

@@ -37,7 +37,7 @@ func (ra *relayAuditDatabaseService) GetRelayAuditByProjects(ctx context.Context
 
 	//validate user authz with incoming request
 	if len(req.GetFilter().GetProjects()) > 0 {
-		if err := ValidateUserAuditReadRequest(ctx, req.GetFilter().GetProjects(), ra.db); err != nil {
+		if err := ValidateUserAuditReadRequest(ctx, req.GetFilter().GetProjects(), ra.db, true); err != nil {
 			return nil, err
 		}
 	}

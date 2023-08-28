@@ -20,6 +20,7 @@ type AuditLogService interface {
 const (
 	OrgRelayAuditPermission     = "org.relayAudit.read"
 	ProjectRelayAuditPermission = "project.relayAudit.read"
+	ProjectAuditLogPermission   = "project.auditLog.read"
 )
 
 func NewAuditLogElasticSearchService(url string, auditPattern string, logPrefix string, db *bun.DB) (AuditLogService, error) {
@@ -51,7 +52,7 @@ func NewRelayAuditElasticSearchService(url string, auditPattern string, logPrefi
 	return &relayAuditElasticSearchService{relayQuery: relayQuery, db: db}, nil
 }
 
-func ValidateUserAuditReadRequest(ctx context.Context, projects []string, db *bun.DB) error {
+func ValidateUserAuditReadRequest(ctx context.Context, projects []string, db *bun.DB, isRelayAudit bool) error {
 	var prerr error
 	//validate user authz with incoming request
 	sd, ok := GetSessionDataFromContext(ctx)
@@ -59,6 +60,24 @@ func ValidateUserAuditReadRequest(ctx context.Context, projects []string, db *bu
 		return errors.New("failed to get session data")
 	}
 	_log.Infow("fetching auditlogs", "account", sd)
+
+	// let's check if user has organization scoped roles associated
+	isOrgAdmin, err := dao.IsOrgAdmin(ctx, db, uuid.MustParse(sd.Account), uuid.MustParse(sd.Partner))
+	if err != nil {
+		return err
+	}
+	if isOrgAdmin {
+		return prerr
+	}
+
+	isOrgReadOnly, err := dao.IsOrgReadOnly(ctx, db, uuid.MustParse(sd.Account), uuid.MustParse(sd.Organization), uuid.MustParse(sd.Partner))
+	if err != nil {
+		return err
+	}
+
+	if isOrgReadOnly {
+		return prerr
+	}
 
 	sap, err := dao.GetAccountPermissions(ctx, db, uuid.MustParse(sd.Account), uuid.MustParse(sd.Organization), uuid.MustParse(sd.Partner))
 	if err != nil {
@@ -73,8 +92,17 @@ func ValidateUserAuditReadRequest(ctx context.Context, projects []string, db *bu
 		available := false
 		for _, ap := range sap {
 			if rprojectid == ap.ProjectId {
-				available = true
-				break
+				if isRelayAudit {
+					if ap.PermissionName == ProjectRelayAuditPermission {
+						available = true
+						break
+					}
+				} else {
+					if ap.PermissionName == ProjectAuditLogPermission {
+						available = true
+						break
+					}
+				}
 			}
 		}
 		if !available {
