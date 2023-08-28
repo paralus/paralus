@@ -58,7 +58,8 @@ func NewAuditInformationLookupClusterOK() *AuditInformationLookupClusterOK {
 	return &AuditInformationLookupClusterOK{}
 }
 
-/* AuditInformationLookupClusterOK describes a response with status code 200, with default header values.
+/*
+	AuditInformationLookupClusterOK describes a response with status code 200, with default header values.
 
 A successful response.
 */
@@ -90,7 +91,8 @@ func NewAuditInformationLookupClusterForbidden() *AuditInformationLookupClusterF
 	return &AuditInformationLookupClusterForbidden{}
 }
 
-/* AuditInformationLookupClusterForbidden describes a response with status code 403, with default header values.
+/*
+	AuditInformationLookupClusterForbidden describes a response with status code 403, with default header values.
 
 Returned when the user does not have permission to access the resource.
 */
@@ -120,7 +122,8 @@ func NewAuditInformationLookupClusterNotFound() *AuditInformationLookupClusterNo
 	return &AuditInformationLookupClusterNotFound{}
 }
 
-/* AuditInformationLookupClusterNotFound describes a response with status code 404, with default header values.
+/*
+	AuditInformationLookupClusterNotFound describes a response with status code 404, with default header values.
 
 Returned when the resource does not exist.
 */
@@ -152,7 +155,8 @@ func NewAuditInformationLookupClusterDefault(code int) *AuditInformationLookupCl
 	}
 }
 
-/* AuditInformationLookupClusterDefault describes a response with status code -1, with default header values.
+/*
+	AuditInformationLookupClusterDefault describes a response with status code -1, with default header values.
 
 An unexpected error response.
 */

@@ -64,7 +64,8 @@ func NewBootstrapGetBootstrapAgentsOK() *BootstrapGetBootstrapAgentsOK {
 	return &BootstrapGetBootstrapAgentsOK{}
 }
 
-/* BootstrapGetBootstrapAgentsOK describes a response with status code 200, with default header values.
+/*
+	BootstrapGetBootstrapAgentsOK describes a response with status code 200, with default header values.
 
 A successful response.
 */
@@ -96,7 +97,8 @@ func NewBootstrapGetBootstrapAgentsForbidden() *BootstrapGetBootstrapAgentsForbi
 	return &BootstrapGetBootstrapAgentsForbidden{}
 }
 
-/* BootstrapGetBootstrapAgentsForbidden describes a response with status code 403, with default header values.
+/*
+	BootstrapGetBootstrapAgentsForbidden describes a response with status code 403, with default header values.
 
 Returned when the user does not have permission to access the resource.
 */
@@ -126,7 +128,8 @@ func NewBootstrapGetBootstrapAgentsNotFound() *BootstrapGetBootstrapAgentsNotFou
 	return &BootstrapGetBootstrapAgentsNotFound{}
 }
 
-/* BootstrapGetBootstrapAgentsNotFound describes a response with status code 404, with default header values.
+/*
+	BootstrapGetBootstrapAgentsNotFound describes a response with status code 404, with default header values.
 
 Returned when the resource does not exist.
 */
@@ -156,7 +159,8 @@ func NewBootstrapGetBootstrapAgentsInternalServerError() *BootstrapGetBootstrapA
 	return &BootstrapGetBootstrapAgentsInternalServerError{}
 }
 
-/* BootstrapGetBootstrapAgentsInternalServerError describes a response with status code 500, with default header values.
+/*
+	BootstrapGetBootstrapAgentsInternalServerError describes a response with status code 500, with default header values.
 
 Returned for internal server error
 */
@@ -188,7 +192,8 @@ func NewBootstrapGetBootstrapAgentsDefault(code int) *BootstrapGetBootstrapAgent
 	}
 }
 
-/* BootstrapGetBootstrapAgentsDefault describes a response with status code -1, with default header values.
+/*
+	BootstrapGetBootstrapAgentsDefault describes a response with status code -1, with default header values.
 
 An unexpected error response.
 */

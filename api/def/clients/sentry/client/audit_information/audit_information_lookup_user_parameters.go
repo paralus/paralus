@@ -52,10 +52,12 @@ func NewAuditInformationLookupUserParamsWithHTTPClient(client *http.Client) *Aud
 	}
 }
 
-/* AuditInformationLookupUserParams contains all the parameters to send to the API endpoint
-   for the audit information lookup user operation.
+/*
+AuditInformationLookupUserParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the audit information lookup user operation.
+
+	Typically these are written to a http.Request.
 */
 type AuditInformationLookupUserParams struct {
 

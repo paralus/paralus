@@ -52,10 +52,12 @@ func NewBootstrapDeleteBootstrapAgentParamsWithHTTPClient(client *http.Client) *
 	}
 }
 
-/* BootstrapDeleteBootstrapAgentParams contains all the parameters to send to the API endpoint
-   for the bootstrap delete bootstrap agent operation.
+/*
+BootstrapDeleteBootstrapAgentParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the bootstrap delete bootstrap agent operation.
+
+	Typically these are written to a http.Request.
 */
 type BootstrapDeleteBootstrapAgentParams struct {
 

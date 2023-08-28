@@ -52,10 +52,12 @@ func NewClusterAuthorizationGetUserAuthorizationParamsWithHTTPClient(client *htt
 	}
 }
 
-/* ClusterAuthorizationGetUserAuthorizationParams contains all the parameters to send to the API endpoint
-   for the cluster authorization get user authorization operation.
+/*
+ClusterAuthorizationGetUserAuthorizationParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the cluster authorization get user authorization operation.
+
+	Typically these are written to a http.Request.
 */
 type ClusterAuthorizationGetUserAuthorizationParams struct {
 

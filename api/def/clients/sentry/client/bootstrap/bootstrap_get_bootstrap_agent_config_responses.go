@@ -64,7 +64,8 @@ func NewBootstrapGetBootstrapAgentConfigOK() *BootstrapGetBootstrapAgentConfigOK
 	return &BootstrapGetBootstrapAgentConfigOK{}
 }
 
-/* BootstrapGetBootstrapAgentConfigOK describes a response with status code 200, with default header values.
+/*
+	BootstrapGetBootstrapAgentConfigOK describes a response with status code 200, with default header values.
 
 A successful response.
 */
@@ -96,7 +97,8 @@ func NewBootstrapGetBootstrapAgentConfigForbidden() *BootstrapGetBootstrapAgentC
 	return &BootstrapGetBootstrapAgentConfigForbidden{}
 }
 
-/* BootstrapGetBootstrapAgentConfigForbidden describes a response with status code 403, with default header values.
+/*
+	BootstrapGetBootstrapAgentConfigForbidden describes a response with status code 403, with default header values.
 
 Returned when the user does not have permission to access the resource.
 */
@@ -126,7 +128,8 @@ func NewBootstrapGetBootstrapAgentConfigNotFound() *BootstrapGetBootstrapAgentCo
 	return &BootstrapGetBootstrapAgentConfigNotFound{}
 }
 
-/* BootstrapGetBootstrapAgentConfigNotFound describes a response with status code 404, with default header values.
+/*
+	BootstrapGetBootstrapAgentConfigNotFound describes a response with status code 404, with default header values.
 
 Returned when the resource does not exist.
 */
@@ -156,7 +159,8 @@ func NewBootstrapGetBootstrapAgentConfigInternalServerError() *BootstrapGetBoots
 	return &BootstrapGetBootstrapAgentConfigInternalServerError{}
 }
 
-/* BootstrapGetBootstrapAgentConfigInternalServerError describes a response with status code 500, with default header values.
+/*
+	BootstrapGetBootstrapAgentConfigInternalServerError describes a response with status code 500, with default header values.
 
 Returned for internal server error
 */
@@ -188,7 +192,8 @@ func NewBootstrapGetBootstrapAgentConfigDefault(code int) *BootstrapGetBootstrap
 	}
 }
 
-/* BootstrapGetBootstrapAgentConfigDefault describes a response with status code -1, with default header values.
+/*
+	BootstrapGetBootstrapAgentConfigDefault describes a response with status code -1, with default header values.
 
 An unexpected error response.
 */

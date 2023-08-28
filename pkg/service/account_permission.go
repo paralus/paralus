@@ -119,7 +119,7 @@ func (a *accountPermissionService) GetSSOAccount(ctx context.Context, accountID,
 }
 */
 
-//TODO: this needs to be revisited as sso users for oidc are stored in identities by kratos
+// TODO: this needs to be revisited as sso users for oidc are stored in identities by kratos
 func (a *accountPermissionService) GetSSOUsersGroupProjectRole(ctx context.Context, orgID string) ([]sentry.SSOAccountGroupProjectRoleData, error) {
 	ssos, err := dao.GetSSOUsersGroupProjectRole(ctx, a.db, uuid.MustParse(orgID))
 	if err != nil {

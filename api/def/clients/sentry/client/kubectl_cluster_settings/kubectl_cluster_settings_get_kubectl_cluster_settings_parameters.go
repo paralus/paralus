@@ -53,10 +53,12 @@ func NewKubectlClusterSettingsGetKubectlClusterSettingsParamsWithHTTPClient(clie
 	}
 }
 
-/* KubectlClusterSettingsGetKubectlClusterSettingsParams contains all the parameters to send to the API endpoint
-   for the kubectl cluster settings get kubectl cluster settings operation.
+/*
+KubectlClusterSettingsGetKubectlClusterSettingsParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the kubectl cluster settings get kubectl cluster settings operation.
+
+	Typically these are written to a http.Request.
 */
 type KubectlClusterSettingsGetKubectlClusterSettingsParams struct {
 

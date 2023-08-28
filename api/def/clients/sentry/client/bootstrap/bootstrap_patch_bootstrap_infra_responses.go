@@ -64,7 +64,8 @@ func NewBootstrapPatchBootstrapInfraOK() *BootstrapPatchBootstrapInfraOK {
 	return &BootstrapPatchBootstrapInfraOK{}
 }
 
-/* BootstrapPatchBootstrapInfraOK describes a response with status code 200, with default header values.
+/*
+	BootstrapPatchBootstrapInfraOK describes a response with status code 200, with default header values.
 
 A successful response.
 */
@@ -96,7 +97,8 @@ func NewBootstrapPatchBootstrapInfraForbidden() *BootstrapPatchBootstrapInfraFor
 	return &BootstrapPatchBootstrapInfraForbidden{}
 }
 
-/* BootstrapPatchBootstrapInfraForbidden describes a response with status code 403, with default header values.
+/*
+	BootstrapPatchBootstrapInfraForbidden describes a response with status code 403, with default header values.
 
 Returned when the user does not have permission to access the resource.
 */
@@ -126,7 +128,8 @@ func NewBootstrapPatchBootstrapInfraNotFound() *BootstrapPatchBootstrapInfraNotF
 	return &BootstrapPatchBootstrapInfraNotFound{}
 }
 
-/* BootstrapPatchBootstrapInfraNotFound describes a response with status code 404, with default header values.
+/*
+	BootstrapPatchBootstrapInfraNotFound describes a response with status code 404, with default header values.
 
 Returned when the resource does not exist.
 */
@@ -156,7 +159,8 @@ func NewBootstrapPatchBootstrapInfraInternalServerError() *BootstrapPatchBootstr
 	return &BootstrapPatchBootstrapInfraInternalServerError{}
 }
 
-/* BootstrapPatchBootstrapInfraInternalServerError describes a response with status code 500, with default header values.
+/*
+	BootstrapPatchBootstrapInfraInternalServerError describes a response with status code 500, with default header values.
 
 Returned for internal server error
 */
@@ -188,7 +192,8 @@ func NewBootstrapPatchBootstrapInfraDefault(code int) *BootstrapPatchBootstrapIn
 	}
 }
 
-/* BootstrapPatchBootstrapInfraDefault describes a response with status code -1, with default header values.
+/*
+	BootstrapPatchBootstrapInfraDefault describes a response with status code -1, with default header values.
 
 An unexpected error response.
 */
