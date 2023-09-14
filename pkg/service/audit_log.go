@@ -83,7 +83,6 @@ func ValidateUserAuditReadRequest(ctx context.Context, projects []string, db *bu
 	if err != nil {
 		return err
 	}
-	matchesAll := true
 	for _, rproject := range projects {
 		rprojectid, err := dao.GetProjectId(ctx, db, rproject)
 		if err != nil {
@@ -106,12 +105,8 @@ func ValidateUserAuditReadRequest(ctx context.Context, projects []string, db *bu
 			}
 		}
 		if !available {
-			matchesAll = false
 			prerr = errors.Join(prerr, fmt.Errorf("not authorized for project %s", rproject))
 		}
-	}
-	if !matchesAll {
-		return prerr
 	}
 	return prerr
 }

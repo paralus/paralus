@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	kclient "github.com/ory/kratos-client-go"
 	logv2 "github.com/paralus/paralus/pkg/log"
@@ -28,9 +27,9 @@ type kratosAuthProvider struct {
 }
 type AuthProvider interface {
 	// create new user
-	Create(context.Context, string, map[string]interface{}, map[string]interface{}) (string, error) // returns id,error
+	Create(context.Context, string, map[string]interface{}, IdentityPublicMetadata) (string, error) // returns id,error
 	// update user
-	Update(context.Context, string, map[string]interface{}, map[string]interface{}) error
+	Update(context.Context, string, map[string]interface{}, IdentityPublicMetadata) error
 	// get recovery link for user
 	GetRecoveryLink(context.Context, string) (string, error)
 	// delete user
@@ -45,7 +44,7 @@ func NewKratosAuthProvider(kc *kclient.APIClient) AuthProvider {
 	return &kratosAuthProvider{kc: kc}
 }
 
-func (k *kratosAuthProvider) Create(ctx context.Context, password string, traits map[string]interface{}, metadata map[string]interface{}) (string, error) {
+func (k *kratosAuthProvider) Create(ctx context.Context, password string, traits map[string]interface{}, metadata IdentityPublicMetadata) (string, error) {
 	cib := kclient.NewCreateIdentityBody("default", traits)
 
 	cib.Credentials = kclient.NewIdentityWithCredentials()
@@ -54,13 +53,7 @@ func (k *kratosAuthProvider) Create(ctx context.Context, password string, traits
 			Password: kclient.PtrString(password),
 		},
 	})
-	reset, _ := strconv.ParseBool(metadata["force_reset"].(string))
-	ipm := IdentityPublicMetadata{
-		ForceReset:   reset,
-		Organization: metadata["organization"].(string),
-		Partner:      metadata["partner"].(string),
-	}
-	cib.SetMetadataPublic(ipm)
+	cib.SetMetadataPublic(metadata)
 	ir, hr, err := k.kc.IdentityApi.CreateIdentity(ctx).CreateIdentityBody(*cib).Execute()
 	if err != nil {
 		_log.Error("failed to create identity ", hr)
@@ -69,7 +62,7 @@ func (k *kratosAuthProvider) Create(ctx context.Context, password string, traits
 	return ir.Id, nil
 }
 
-func (k *kratosAuthProvider) Update(ctx context.Context, id string, traits map[string]interface{}, metadata map[string]interface{}) error {
+func (k *kratosAuthProvider) Update(ctx context.Context, id string, traits map[string]interface{}, metadata IdentityPublicMetadata) error {
 	uib := kclient.NewUpdateIdentityBody("default", "active", traits)
 
 	ipm, err := k.GetPublicMetadata(ctx, id)
@@ -77,8 +70,7 @@ func (k *kratosAuthProvider) Update(ctx context.Context, id string, traits map[s
 		_log.Error("failed to get identity public metadata ", err)
 		return err
 	}
-	reset, _ := strconv.ParseBool(metadata["force_reset"].(string))
-	ipm.ForceReset = reset
+	ipm.ForceReset = metadata.ForceReset
 	uib.SetMetadataPublic(ipm)
 
 	_, hr, err := k.kc.IdentityApi.UpdateIdentity(ctx, id).UpdateIdentityBody(*uib).Execute()
