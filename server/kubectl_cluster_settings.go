@@ -62,7 +62,7 @@ func (s *kubectlClusterSettingsServer) UpdateKubectlClusterSettings(ctx context.
 		}
 	}
 
-	remoteAddr = "127.0.0.1" //default
+
 	if md, ok := metadata.FromIncomingContext(ctx); ok {
 		ra := md.Get("paralus-gateway-remote-addr")
 		if len(ra) > 0 {
@@ -112,7 +112,7 @@ func (s *kubectlClusterSettingsServer) UpdateKubectlClusterSettings(ctx context.
 	return &sentryrpc.UpdateKubectlClusterSettingsResponse{}, nil
 }
 
-// NewKubectlClusterSettingsServer returns new kubectl cluster setting server
+// NewKubectlClusterSettingsServer returns new kubectl cluster setting server.
 func NewKubectlClusterSettingsServer(bs service.BootstrapService, kcs service.KubectlClusterSettingsService) sentryrpc.KubectlClusterSettingsServiceServer {
 	return &kubectlClusterSettingsServer{bs, kcs}
 }

@@ -21,7 +21,7 @@ const (
 	organizationListKind = "OrganizationList"
 )
 
-// OrganizationService is the interface for organization operations
+// OrganizationService is the interface for organization operations.
 type OrganizationService interface {
 	// create organization
 	Create(ctx context.Context, organization *systemv3.Organization) (*systemv3.Organization, error)
@@ -37,26 +37,23 @@ type OrganizationService interface {
 	List(ctx context.Context, organization *systemv3.Organization) (*systemv3.OrganizationList, error)
 }
 
-// organizationService implements OrganizationService
+// organizationService implements OrganizationService.
 type organizationService struct {
 	db *bun.DB
 	al *zap.Logger
 }
 
-// NewOrganizationService return new organization service
+// NewOrganizationService return new organization service.
 func NewOrganizationService(db *bun.DB, al *zap.Logger) OrganizationService {
 	return &organizationService{db, al}
 }
 
 func (s *organizationService) Create(ctx context.Context, org *systemv3.Organization) (*systemv3.Organization, error) {
-
 	var partner models.Partner
 	_, err := dao.GetByName(ctx, s.db, org.Metadata.Partner, &partner)
 	if err != nil {
 		return &systemv3.Organization{}, err
 	}
-
-	//update default organization setting values
 	org.Spec.Settings = &systemv3.OrganizationSettings{
 		Lockout: &systemv3.Lockout{
 			Enabled:   true,
@@ -69,7 +66,7 @@ func (s *organizationService) Create(ctx context.Context, org *systemv3.Organiza
 	if err != nil {
 		return &systemv3.Organization{}, err
 	}
-	//convert v3 spec to internal models
+
 	organization := models.Organization{
 		Name:              org.GetMetadata().GetName(),
 		Description:       org.GetMetadata().GetDescription(),
@@ -99,7 +96,6 @@ func (s *organizationService) Create(ctx context.Context, org *systemv3.Organiza
 	}
 
 	if createdOrg, ok := entity.(*models.Organization); ok {
-		//update v3 spec
 		org.Metadata.Id = createdOrg.ID.String()
 
 		CreateOrganizationAuditEvent(ctx, s.al, AuditActionCreate, org.GetMetadata().GetName(), createdOrg.ID, nil, org.GetSpec().GetSettings())
@@ -109,7 +105,6 @@ func (s *organizationService) Create(ctx context.Context, org *systemv3.Organiza
 }
 
 func (s *organizationService) GetByID(ctx context.Context, id string) (*systemv3.Organization, error) {
-
 	organization := &systemv3.Organization{
 		ApiVersion: apiVersion,
 		Kind:       organizationKind,
@@ -129,7 +124,6 @@ func (s *organizationService) GetByID(ctx context.Context, id string) (*systemv3
 	}
 
 	if org, ok := entity.(*models.Organization); ok {
-
 		var partner models.Partner
 		_, err := dao.GetByID(ctx, s.db, org.PartnerId, &partner)
 		if err != nil {
@@ -142,7 +136,6 @@ func (s *organizationService) GetByID(ctx context.Context, id string) (*systemv3
 		}
 
 		return organization, nil
-
 	} else {
 		organization := &systemv3.Organization{
 			ApiVersion: apiVersion,
@@ -157,11 +150,9 @@ func (s *organizationService) GetByID(ctx context.Context, id string) (*systemv3
 
 		return organization, nil
 	}
-
 }
 
 func (s *organizationService) GetByName(ctx context.Context, name string) (*systemv3.Organization, error) {
-
 	organization := &systemv3.Organization{
 		ApiVersion: apiVersion,
 		Kind:       organizationKind,
@@ -175,7 +166,6 @@ func (s *organizationService) GetByName(ctx context.Context, name string) (*syst
 	}
 
 	if org, ok := entity.(*models.Organization); ok {
-
 		var partner models.Partner
 		_, err := dao.GetByID(ctx, s.db, org.PartnerId, &partner)
 		if err != nil {
@@ -192,7 +182,6 @@ func (s *organizationService) GetByName(ctx context.Context, name string) (*syst
 }
 
 func (s *organizationService) Update(ctx context.Context, organization *systemv3.Organization) (*systemv3.Organization, error) {
-
 	entity, err := dao.GetByName(ctx, s.db, organization.Metadata.Name, &models.Organization{})
 	if err != nil {
 		return &systemv3.Organization{}, err
@@ -208,7 +197,6 @@ func (s *organizationService) Update(ctx context.Context, organization *systemv3
 			return &systemv3.Organization{}, err
 		}
 
-		//update organization details
 		org.Name = organization.GetMetadata().GetName()
 		org.Description = organization.GetMetadata().GetDescription()
 		org.ModifiedAt = time.Now()
@@ -241,7 +229,6 @@ func (s *organizationService) Update(ctx context.Context, organization *systemv3
 }
 
 func (s *organizationService) Delete(ctx context.Context, organization *systemv3.Organization) (*systemv3.Organization, error) {
-
 	entity, err := dao.GetByName(ctx, s.db, organization.Metadata.Name, &models.Organization{})
 	if err != nil {
 		return &systemv3.Organization{}, err
@@ -252,8 +239,6 @@ func (s *organizationService) Delete(ctx context.Context, organization *systemv3
 		if err != nil {
 			return &systemv3.Organization{}, err
 		}
-
-		//update v3 status
 		organization.Metadata.Name = org.Name
 		organization.Metadata.ModifiedAt = timestamppb.New(org.ModifiedAt)
 
@@ -262,11 +247,9 @@ func (s *organizationService) Delete(ctx context.Context, organization *systemv3
 		CreateOrganizationAuditEvent(ctx, s.al, AuditActionDelete, organization.GetMetadata().GetName(), org.ID, &orgSettings, nil)
 	}
 	return organization, nil
-
 }
 
 func (s *organizationService) List(ctx context.Context, organization *systemv3.Organization) (*systemv3.OrganizationList, error) {
-
 	var organizations []*systemv3.Organization
 	organinzationList := &systemv3.OrganizationList{
 		ApiVersion: apiVersion,
@@ -321,13 +304,11 @@ func (s *organizationService) List(ctx context.Context, organization *systemv3.O
 				organizations = append(organizations, organization)
 			}
 
-			//update the list metadata and items response
 			organinzationList.Metadata = &v3.ListMetadata{
 				Count: int64(len(organizations)),
 			}
 			organinzationList.Items = organizations
 		}
-
 	} else {
 		return organinzationList, fmt.Errorf("missing partner in metadata")
 	}
@@ -335,7 +316,6 @@ func (s *organizationService) List(ctx context.Context, organization *systemv3.O
 }
 
 func prepareOrganizationResponse(organization *systemv3.Organization, org *models.Organization, partnerName string) (*systemv3.Organization, error) {
-
 	var settings systemv3.OrganizationSettings
 	if org.Settings != nil {
 		err := json.Unmarshal(org.Settings, &settings)

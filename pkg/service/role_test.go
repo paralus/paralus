@@ -77,6 +77,7 @@ func TestCreateRole(t *testing.T) {
 	}
 	performRoleBasicChecks(t, role, ruuid)
 }
+
 func TestCreateRoleNoBuiltinOverride(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
@@ -170,7 +171,6 @@ func TestCreateRoleWithOpsAllPermission(t *testing.T) {
 		t.Fatal("could not create group:", err)
 	}
 	performRoleBasicChecks(t, role, ruuid)
-
 }
 
 func TestCreateRoleWithPermissions(t *testing.T) {
@@ -206,7 +206,6 @@ func TestCreateRoleWithPermissions(t *testing.T) {
 		t.Fatal("could not create group:", err)
 	}
 	performRoleBasicChecks(t, role, ruuid)
-
 }
 
 func TestCreateRoleDuplicate(t *testing.T) {
@@ -347,7 +346,6 @@ func TestRoleDeleteNonExist(t *testing.T) {
 	if err == nil {
 		t.Error("deleted non existent role")
 	}
-
 }
 
 func TestRoleGetByName(t *testing.T) {

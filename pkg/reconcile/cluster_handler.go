@@ -21,7 +21,7 @@ const (
 	clusterEventHandleDuration = time.Second * 10
 )
 
-// ClusterEventHandler is the interface for handling cluster events
+// ClusterEventHandler is the interface for handling cluster events.
 type ClusterEventHandler interface {
 	// ClusterHook should be registred in cluster service to listen on
 	// Cluster create/update/delete
@@ -53,7 +53,7 @@ type clusterEventHandler struct {
 	pf cryptoutil.PasswordFunc
 }
 
-// NewClusterEventHandler returns new cluster event handler
+// NewClusterEventHandler returns new cluster event handler.
 func NewClusterEventHandler(cs service.ClusterService, db *bun.DB, bs service.BootstrapService, pf cryptoutil.PasswordFunc) ClusterEventHandler {
 	return &clusterEventHandler{
 		cs:  cs,
@@ -110,7 +110,6 @@ func (h *clusterEventHandler) runClusterWorker() {
 }
 
 func (h *clusterEventHandler) Handle(stop <-chan struct{}) {
-
 	for i := 0; i < numClusterWorkers; i++ {
 		go wait.Until(h.runClusterWorker, time.Second, stop)
 		go wait.Until(h.runClusterWorkloadWorker, time.Second, stop)
@@ -151,7 +150,6 @@ func (h *clusterEventHandler) handleClusterEvent(ev event.Resource) {
 			Metadata: &commonv3.Metadata{Id: ev.ID, Project: ev.ProjectID},
 		}, true)
 	} else {
-
 		cluster, err = h.cs.Get(ctx,
 			query.WithName(ev.Name),
 			query.WithPartnerID(ev.PartnerID),
@@ -165,7 +163,7 @@ func (h *clusterEventHandler) handleClusterEvent(ev event.Resource) {
 		return
 	}
 
-	//Update back the Ids
+	// Update back the Ids
 	cluster.Metadata.Project = ev.ProjectID
 	cluster.Metadata.Organization = ev.OrganizationID
 	cluster.Metadata.Partner = ev.PartnerID
@@ -188,7 +186,6 @@ func (h *clusterEventHandler) handleClusterEvent(ev event.Resource) {
 }
 
 func (h *clusterEventHandler) handleClusterWorkloadEvent(ev event.Resource) {
-
 	ctx, cancel := context.WithTimeout(context.Background(), clusterEventHandleDuration)
 	defer cancel()
 

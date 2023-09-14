@@ -11,7 +11,7 @@ import (
 )
 
 // SentryClient is the interface for accessing all the RPCs
-// exposed by Paralus Sentry
+// exposed by Paralus Sentry.
 type SentryClient interface {
 	Unhealthy()
 	Close() error
@@ -21,7 +21,7 @@ type SentryClient interface {
 }
 
 // SentryAuthorizationClient is the interface for accessing all the RPCs
-// exposed by Paralus Sentry for Authorization
+// exposed by Paralus Sentry for Authorization.
 type SentryAuthorizationClient interface {
 	Unhealthy()
 	Close() error
@@ -46,20 +46,20 @@ type sentryAuthorizationClient struct {
 
 var _ SentryAuthorizationClient = (*sentryAuthorizationClient)(nil)
 
-// SentryPool maintains pool of grpc connections to sentry service
+// SentryPool maintains pool of grpc connections to sentry service.
 type SentryPool interface {
 	Close()
 	NewClient(ctx context.Context) (SentryClient, error)
 }
 
 // SentryAuthorizationPool maintains pool of grpc connections to sentry
-// authorization service
+// authorization service.
 type SentryAuthorizationPool interface {
 	Close()
 	NewClient(ctx context.Context) (SentryAuthorizationClient, error)
 }
 
-// NewSentryPool new sentry pool
+// NewSentryPool new sentry pool.
 func NewSentryPool(addr string, maxConn int) SentryPool {
 	return &sentryPool{
 		GRPCPool: pool.NewGRPCPool(addr, maxConn, nil),
@@ -119,10 +119,10 @@ type options struct {
 	caCert  []byte
 }
 
-// Option is the functional argument for Pool options
+// Option is the functional argument for Pool options.
 type Option func(*options)
 
-// WithAddr sets address of the pool
+// WithAddr sets address of the pool.
 func WithAddr(addr string) Option {
 	return func(o *options) {
 		o.addr = addr
@@ -130,37 +130,36 @@ func WithAddr(addr string) Option {
 }
 
 // WithMaxConn sets maximum number of connections of the pool
-// if not set defaults to 10
+// if not set defaults to 10.
 func WithMaxConn(maxConn int) Option {
 	return func(o *options) {
 		o.maxConn = maxConn
 	}
 }
 
-// WithClientCertPEM sets PEM encoded client cert for pool
+// WithClientCertPEM sets PEM encoded client cert for pool.
 func WithClientCertPEM(cert []byte) Option {
 	return func(o *options) {
 		o.cert = cert
 	}
 }
 
-// WithClientKeyPEM sets PEM encoded client key for pool
+// WithClientKeyPEM sets PEM encoded client key for pool.
 func WithClientKeyPEM(key []byte) Option {
 	return func(o *options) {
 		o.key = key
 	}
 }
 
-// WithCaCertPEM sets PEM encoded CA cert for pool
+// WithCaCertPEM sets PEM encoded CA cert for pool.
 func WithCaCertPEM(caCert []byte) Option {
 	return func(o *options) {
 		o.caCert = caCert
 	}
 }
 
-// NewSentryAuthorizationPool new sentry authorization pool
+// NewSentryAuthorizationPool new sentry authorization pool.
 func NewSentryAuthorizationPool(opts ...Option) (SentryAuthorizationPool, error) {
-
 	pOpts := options{}
 	for _, opt := range opts {
 		opt(&pOpts)

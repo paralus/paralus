@@ -33,7 +33,6 @@ func TestUniqueScopedResourceQueue(t *testing.T) {
 				time.Sleep(time.Millisecond * 2)
 			}
 		}
-		//t.Log("exited gen1")
 	}(&wg)
 
 	go func(_wg *sync.WaitGroup) {
@@ -49,7 +48,6 @@ func TestUniqueScopedResourceQueue(t *testing.T) {
 				time.Sleep(time.Millisecond * 2)
 			}
 		}
-		//t.Log("exited gen2")
 	}(&wg)
 
 	go func(_wg *sync.WaitGroup) {
@@ -65,7 +63,6 @@ func TestUniqueScopedResourceQueue(t *testing.T) {
 				time.Sleep(time.Millisecond * 2)
 			}
 		}
-		//t.Log("exited gen3")
 	}(&wg)
 
 	for i := 0; i < numCon; i++ {
@@ -91,7 +88,6 @@ func TestUniqueScopedResourceQueue(t *testing.T) {
 					time.Sleep(time.Millisecond * 1)
 				}
 			}
-			//t.Log("exited ", idx)
 		}(i, &wg)
 	}
 
@@ -100,5 +96,4 @@ func TestUniqueScopedResourceQueue(t *testing.T) {
 	wg.Wait()
 
 	t.Log("gen1", gen1, "con1", con1, "gen2", gen2, "con2", con2, "gen3", gen3, "con3", con3)
-
 }

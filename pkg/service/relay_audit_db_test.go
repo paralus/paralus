@@ -14,7 +14,6 @@ import (
 )
 
 func TestRelayAuditLog(t *testing.T) {
-
 	testcases := []struct {
 		name string
 		run  func(t *testing.T)
@@ -42,7 +41,6 @@ func TestRelayAuditLog(t *testing.T) {
 
 func testGetRelayAuditLogForCluster(tag string) func(t *testing.T) {
 	return func(t *testing.T) {
-
 		db, mock := getDB(t)
 		defer db.Close()
 
@@ -105,7 +103,6 @@ func testGetRelayAuditLogForCluster(tag string) func(t *testing.T) {
 
 func testGetRelayAuditLogForKind(tag string) func(t *testing.T) {
 	return func(t *testing.T) {
-
 		db, mock := getDB(t)
 		defer db.Close()
 

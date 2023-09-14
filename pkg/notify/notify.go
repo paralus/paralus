@@ -19,7 +19,7 @@ import (
 var (
 	_log      = log.GetLogger()
 	_notifier Notifier
-	// ErrNotInitialized is returned when notifier is not initialized
+	// ErrNotInitialized is returned when notifier is not initialized.
 	ErrNotInitialized = errors.New("notifier not initialized")
 	once              = sync.Once{}
 )
@@ -28,14 +28,14 @@ const (
 	maxNotifyWorkers = 6
 )
 
-// Notifier is the interface for notifying cluster changes
+// Notifier is the interface for notifying cluster changes.
 type Notifier interface {
 	Start(stop <-chan struct{})
 	AddListener(c chan<- infrav3.Cluster, opts ...query.Option) error
 	RemoveListener(c chan<- infrav3.Cluster)
 }
 
-// New returns new notifier
+// New returns new notifier.
 func New(cs service.ClusterService) Notifier {
 	return &notifier{
 		ClusterService: cs,
@@ -70,14 +70,12 @@ type notifier struct {
 var _ Notifier = (*notifier)(nil)
 
 func (n *notifier) Start(stop <-chan struct{}) {
-
 	mChan := make(chan commonv3.Metadata, maxNotifyWorkers)
 	ctx, cancel := context.WithCancel(context.Background())
 
 	go func() {
 		<-stop
 		defer cancel()
-		//defer wq.ShutDown()
 	}()
 
 	// start cluster service listener
@@ -110,11 +108,9 @@ func (n *notifier) Start(stop <-chan struct{}) {
 	}
 
 	<-stop
-
 }
 
 func (n *notifier) AddListener(c chan<- infrav3.Cluster, opts ...query.Option) error {
-
 	matcher, err := match.New(opts...)
 	if err != nil {
 		return err
@@ -154,14 +150,13 @@ func (n *notifier) notifyListeners(c infrav3.Cluster) {
 	n.RUnlock()
 }
 
-// Init initializes the notifier at package level
+// Init initializes the notifier at package level.
 func Init(cs service.ClusterService) {
 	_notifier = New(cs)
 }
 
-// Start starts the notifier at package lvel
+// Start starts the notifier at package lvel.
 func Start(stop <-chan struct{}) error {
-
 	if _notifier == nil {
 		return ErrNotInitialized
 	}
@@ -173,7 +168,7 @@ func Start(stop <-chan struct{}) error {
 	return nil
 }
 
-// AddListener adds listerner to the notifier
+// AddListener adds listerner to the notifier.
 func AddListener(c chan<- infrav3.Cluster, opts ...query.Option) error {
 	if _notifier == nil {
 		return ErrNotInitialized
@@ -182,7 +177,7 @@ func AddListener(c chan<- infrav3.Cluster, opts ...query.Option) error {
 	return _notifier.AddListener(c, opts...)
 }
 
-// RemoveListener removes listener from notifier
+// RemoveListener removes listener from notifier.
 func RemoveListener(c chan<- infrav3.Cluster) error {
 	if _notifier == nil {
 		return ErrNotInitialized

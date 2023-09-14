@@ -5,16 +5,15 @@ import (
 	"fmt"
 
 	"github.com/paralus/paralus/pkg/controller/scheme"
+	clusterv2 "github.com/paralus/paralus/proto/types/controller"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/client/apiutil"
-
-	clusterv2 "github.com/paralus/paralus/proto/types/controller"
 	ctrlutil "sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
-// OwnsObject checks if the object is owned by the owner
+// OwnsObject checks if the object is owned by the owner.
 func OwnsObject(owner, object metav1.Object) bool {
 	ownerRef, err := newOwnerRef(owner)
 	if err != nil {
@@ -36,7 +35,7 @@ func OwnsObject(owner, object metav1.Object) bool {
 	return false
 }
 
-// Returns true if a and b point to the same object
+// Returns true if a and b point to the same object.
 func referSameObject(a, b metav1.OwnerReference) bool {
 	aGV, err := schema.ParseGroupVersion(a.APIVersion)
 	if err != nil {
@@ -75,9 +74,8 @@ func newOwnerRef(owner metav1.Object) (*metav1.OwnerReference, error) {
 }
 
 // SetOwnerReference sets owner reference for objects controlled
-// by paralus cluster controllers
+// by paralus cluster controllers.
 func SetOwnerReference(owner, object metav1.Object) error {
-
 	// Create a new ref
 	currentRef, err := newOwnerRef(owner)
 	if err != nil {

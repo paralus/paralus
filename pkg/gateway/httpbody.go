@@ -13,14 +13,14 @@ type httpBodyMarshaler struct {
 	runtime.Marshaler
 }
 
-// NewHTTPBodyMarshaler returns new http body marshaler
+// NewHTTPBodyMarshaler returns new http body marshaler.
 func NewHTTPBodyMarshaler() runtime.Marshaler {
 	return &httpBodyMarshaler{
 		Marshaler: &paralusJSON{},
 	}
 }
 
-// ContentType implementation to keep backwards compatibility with marshal interface
+// ContentType implementation to keep backwards compatibility with marshal interface.
 func (h *httpBodyMarshaler) ContentType(v interface{}) string {
 	return h.ContentTypeFromMessage(nil)
 }

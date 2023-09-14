@@ -1,15 +1,16 @@
 package authv3
 
 import (
-	"github.com/paralus/paralus/pkg/pool"
-	rpcv3 "github.com/paralus/paralus/proto/rpc/v3"
+	"context"
 
 	"context"
 
+	"github.com/paralus/paralus/pkg/pool"
+	rpcv3 "github.com/paralus/paralus/proto/rpc/v3"
 	grpcpool "github.com/processout/grpc-go-pool"
 )
 
-// AuthPoolClient is the interface for auth pool client
+// AuthPoolClient is the interface for auth pool client.
 type AuthPoolClient interface {
 	Unhealthy()
 	Close() error
@@ -23,7 +24,7 @@ type authPoolClient struct {
 
 var _ AuthPoolClient = (*authPoolClient)(nil)
 
-// AuthPool maintains pool of grpc connections to auth service
+// AuthPool maintains pool of grpc connections to auth service.
 type AuthPool interface {
 	Close()
 	NewClient(ctx context.Context) (AuthPoolClient, error)
@@ -52,7 +53,7 @@ func (p *authPool) NewClient(ctx context.Context) (AuthPoolClient, error) {
 	}, nil
 }
 
-// NewAuthPool returns auth pool
+// NewAuthPool returns auth pool.
 func NewAuthPool(addr string, maxConn int) AuthPool {
 	return &authPool{
 		GRPCPool: pool.NewGRPCPool(addr, maxConn, nil),

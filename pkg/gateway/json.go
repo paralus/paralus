@@ -11,18 +11,16 @@ const (
 	jsonContentType string = "application/json"
 )
 
-// paralusJSON is the paralus object to json marshaller
-type paralusJSON struct {
-}
+// paralusJSON is the paralus object to json marshaller.
+type paralusJSON struct{}
 
-// NewParalusJSON returns new grpc gateway paralus json marshaller
+// NewParalusJSON returns new grpc gateway paralus json marshaller.
 func NewParalusJSON() runtime.Marshaler {
 	return &paralusJSON{}
 }
 
 // Marshal marshals "v" into byte sequence.
 func (m *paralusJSON) Marshal(v interface{}) ([]byte, error) {
-
 	return json.Marshal(v)
 }
 
@@ -40,7 +38,6 @@ func (m *paralusJSON) NewDecoder(r io.Reader) runtime.Decoder {
 // NewEncoder returns an Encoder which writes bytes sequence into "w".
 func (m *paralusJSON) NewEncoder(w io.Writer) runtime.Encoder {
 	return json.NewEncoder(w)
-
 }
 
 // ContentType returns the Content-Type which this marshaler is responsible for.

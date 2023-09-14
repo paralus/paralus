@@ -21,7 +21,7 @@ type clusterServer struct {
 	downloadData common.DownloadData
 }
 
-// NewClusterServer returns new cluster server implementation
+// NewClusterServer returns new cluster server implementation.
 func NewClusterServer(es service.ClusterService, data *common.DownloadData) rpcv3.ClusterServiceServer {
 	return &clusterServer{
 		ClusterService: es,

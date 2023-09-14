@@ -25,14 +25,14 @@ import (
 // - Each relay object has a survey send chnl. Use this chnl to send survey requests.
 // - Each relay obect has a probe chnl. Use this chnl to send probe response
 
-// used for survey broadcasting
+// used for survey broadcasting.
 type surveyBroadCastRequest struct {
 	clustersni string
 	relayuuid  string // relay requsting the survey
 	ou         string
 }
 
-// used to maintain list of connected relays
+// used to maintain list of connected relays.
 type relayObject struct {
 	timeStamp         int64
 	refCnt            uint8
@@ -42,37 +42,37 @@ type relayObject struct {
 	surveyRequestChnl chan sentryrpc.PeerSurveyRequest
 }
 
-// relayPeerService relay peer service
+// relayPeerService relay peer service.
 type relayPeerService struct {
 	cert   []byte // rpc server certifciate
 	key    []byte // rpc server key
 	rootCA []byte // rpc rootCA to verify client certificates.
 	port   int
 
-	//ServiceUUID ...
+
 	ServiceUUID string
 
-	//relayMutex to syncrinise operations
+
 	relayMutex sync.RWMutex
 
-	//RelayMap list of active
+
 	RelayMap map[string]map[string]*relayObject
 
-	//SurveyBroadCast send survey request to all the relays
+
 	surveyBroadCast chan surveyBroadCastRequest
 
-	//SurveyCacheExpiry default expiry
+
 	surveyCacheExpiry time.Duration
 
-	//peerServiceCache stores peer dialin info
+
 	peerServiceCache *ristretto.Cache
 }
 
-var maxRelayIdle = 300 //5 min
+
 
 var _ sentryrpc.RelayPeerServiceServer = (*relayPeerService)(nil)
 
-//var _log = logv2.GetLogger()
+
 
 // initPeerServiceCache initialize the cache to store dialin cluster-connection
 // information of peers. When a dialin miss happens look into this cache
@@ -85,13 +85,13 @@ func initPeerServiceCache() (*ristretto.Cache, error) {
 	})
 }
 
-// insertPeerServiceCache inserts the value to cache
+// insertPeerServiceCache inserts the value to cache.
 func (s *relayPeerService) insertPeerServiceCache(key, value interface{}) bool {
 	return s.peerServiceCache.SetWithTTL(key, value, 100, s.surveyCacheExpiry)
 }
 
 // getPeerServiceCache get value from cache and if more than 1
-// rnadomly select the peer
+// rnadomly select the peer.
 func (s *relayPeerService) getPeerServiceCache(key interface{}) (string, bool) {
 	value, found := s.peerServiceCache.Get(key)
 	if found {
@@ -105,7 +105,7 @@ func (s *relayPeerService) getPeerServiceCache(key interface{}) (string, bool) {
 	return "", found
 }
 
-// NewRelayPeerService returns new placement server implementation
+// NewRelayPeerService returns new placement server implementation.
 func NewRelayPeerService() (sentryrpc.RelayPeerServiceServer, error) {
 	cache, err := initPeerServiceCache()
 	if err != nil {
@@ -156,19 +156,19 @@ func (s *relayPeerService) handleSurveyReq(req surveyBroadCastRequest) {
 
 	foundStale = false
 
-	//broadcast request to all connected relays
+
 	s.relayMutex.RLock()
 	now := time.Now().Unix()
 	if relayList, ok := s.RelayMap[req.ou]; ok {
 		for relayuuid, robj := range relayList {
-			if now > robj.timeStamp && (now-robj.timeStamp) > int64(maxRelayIdle) { //5min max toleration
-				//skip the relay that did not have heart beat for 5 mins
+
+				// skip the relay that did not have heart beat for 5 mins
 				foundStale = true
 				continue
 			}
 			if relayuuid != req.relayuuid {
 				relayids = append(relayids, relayuuid)
-				//wait max of 2 sec to send to chnl
+
 				tick := time.NewTicker(2 * time.Second)
 			handleSurveyReqBreak:
 				for {
@@ -187,17 +187,17 @@ func (s *relayPeerService) handleSurveyReq(req surveyBroadCastRequest) {
 
 	_log.Debugw("handleSurveyReq done broadcasting to relays, wait for response")
 
-	//now waiting for reply. Survey responses get cached
+
 	//poll the cache few times.
 	retry = 0
 	for {
 		connInfo = nil
-		//fecth response from cache
+
 		for _, rid := range relayids {
 			ckey := peerServiceCacheKey(req.clustersni, rid, req.ou)
 			ip, ok := s.getPeerServiceCache(ckey)
 			if ok {
-				//prepare the probe response
+
 				cinfo := &sentryrpc.RelayClusterConnectionInfo{
 					Relayuuid: rid,
 					Relayip:   ip,
@@ -214,16 +214,16 @@ func (s *relayPeerService) handleSurveyReq(req surveyBroadCastRequest) {
 
 			robj := s.getRelayObject(req.relayuuid, req.ou)
 			if robj != nil {
-				//send the probe response
+
 				robj.probeReplyChnl <- msg
 				s.putRelayObject(req.relayuuid, req.ou)
 			} else {
-				//response chnl not found
+
 				break
 			}
 		}
 
-		//retry 5 times: total 5 sec wait to get reply from all peers
+
 		retry++
 		if retry > 5 {
 			break
@@ -233,16 +233,16 @@ func (s *relayPeerService) handleSurveyReq(req surveyBroadCastRequest) {
 	}
 
 	if foundStale {
-		//remove inactive relays
+
 		s.relayMutex.Lock()
 		now := time.Now().Unix()
 		for _, relayList := range s.RelayMap {
 			for relayuuid, robj := range relayList {
-				if now > robj.timeStamp && (now-robj.timeStamp) > 300 { //5min max toleration
+
 					if robj.refCnt > 0 {
 						_log.Errorw("inactive relay has refcnt")
 					} else {
-						//delete the relay that did not have heart beat for 5 mins
+
 						delete(relayList, relayuuid)
 					}
 				}
@@ -250,10 +250,9 @@ func (s *relayPeerService) handleSurveyReq(req surveyBroadCastRequest) {
 		}
 		s.relayMutex.Unlock()
 	}
-
 }
 
-// maintains the timestamp of relays heart beat
+// maintains the timestamp of relays heart beat.
 func (s *relayPeerService) updateRelayIfExist(relayuuid, ou string) bool {
 	s.relayMutex.RLock()
 	defer s.relayMutex.RUnlock()
@@ -261,7 +260,7 @@ func (s *relayPeerService) updateRelayIfExist(relayuuid, ou string) bool {
 	if relayList, ok := s.RelayMap[ou]; ok {
 		if robj, found := relayList[relayuuid]; found {
 			if robj.ou == ou {
-				//update the time stamp
+
 				robj.timeStamp = time.Now().Unix()
 				return true
 			}
@@ -344,7 +343,7 @@ func getServiceIP() string {
 	return ""
 }
 
-// RelayPeerHelloRPC handles PeerHelloMsg
+// RelayPeerHelloRPC handles PeerHelloMsg.
 func (s *relayPeerService) RelayPeerHelloRPC(stream sentryrpc.RelayPeerService_RelayPeerHelloRPCServer) error {
 	_log.Infow("RelayPeerHelloRPC stream")
 	name, err := grpc.GetClientName(stream.Context())
@@ -382,7 +381,7 @@ func (s *relayPeerService) RelayPeerHelloRPC(stream sentryrpc.RelayPeerService_R
 	}
 }
 
-// relayPeerProbeSender send routine to handle sending probe messges
+// relayPeerProbeSender send routine to handle sending probe messges.
 func (s *relayPeerService) relayPeerProbeSender(ctx context.Context, stream sentryrpc.RelayPeerService_RelayPeerProbeRPCServer, relayuuid string, robj *relayObject) {
 	for {
 		select {
@@ -399,7 +398,7 @@ func (s *relayPeerService) relayPeerProbeSender(ctx context.Context, stream sent
 	}
 }
 
-// try to fill the response form cache
+// try to fill the response form cache.
 func (s *relayPeerService) tryResponseFromCache(relayuuid, clustersni, ou string) bool {
 	var relayids []string
 	var connInfo []*sentryrpc.RelayClusterConnectionInfo
@@ -416,7 +415,7 @@ func (s *relayPeerService) tryResponseFromCache(relayuuid, clustersni, ou string
 	s.relayMutex.RUnlock()
 
 	connInfo = nil
-	//fecth response from cache
+
 	for _, rid := range relayids {
 		ckey := peerServiceCacheKey(clustersni, rid, ou)
 		ip, ok := s.getPeerServiceCache(ckey)
@@ -445,7 +444,7 @@ func (s *relayPeerService) tryResponseFromCache(relayuuid, clustersni, ou string
 	return false
 }
 
-// RelayPeerProbeRPC handles PeerHelloMsg
+// RelayPeerProbeRPC handles PeerHelloMsg.
 func (s *relayPeerService) RelayPeerProbeRPC(stream sentryrpc.RelayPeerService_RelayPeerProbeRPCServer) error {
 	var initSend bool
 
@@ -474,19 +473,19 @@ func (s *relayPeerService) RelayPeerProbeRPC(stream sentryrpc.RelayPeerService_R
 			return err
 		}
 
-		//got a probe request
+
 		clustersni := in.GetClustersni()
 		relayuuid := in.GetRelayuuid()
 
 		_log.Debugw("RelayPeerProbeRPC recvd values", "relayuuid", relayuuid, "clustersni", clustersni)
 
 		if clustersni == "" && relayuuid != "" {
-			//init dummy probe
+
 			if !initSend {
-				//Get the relay object for relayuuid
+
 				robj := s.getRelayObject(relayuuid, ou)
 				if robj != nil {
-					//start the send handler for this relay
+
 					go s.relayPeerProbeSender(ctx, stream, relayuuid, robj)
 					initSend = true
 					_log.Debug("RelayPeerProbeRPC init done")
@@ -499,7 +498,7 @@ func (s *relayPeerService) RelayPeerProbeRPC(stream sentryrpc.RelayPeerService_R
 		go func() {
 			if clustersni != "" && relayuuid != "" {
 				if !s.tryResponseFromCache(relayuuid, clustersni, ou) {
-					//did not find in cache, trigger survey to all relays
+
 					surveyreq := surveyBroadCastRequest{
 						clustersni: clustersni,
 						relayuuid:  relayuuid,
@@ -509,12 +508,10 @@ func (s *relayPeerService) RelayPeerProbeRPC(stream sentryrpc.RelayPeerService_R
 				}
 			}
 		}()
-
 	}
-
 }
 
-// relayPeerSurveySender send routine to handle sending probe messges
+// relayPeerSurveySender send routine to handle sending probe messges.
 func (s *relayPeerService) relayPeerSurveySender(ctx context.Context, stream sentryrpc.RelayPeerService_RelayPeerSurveyRPCServer, relayuuid string, robj *relayObject) {
 	_log.Debugw("started relayPeerSurveySender")
 	for {
@@ -533,7 +530,7 @@ func (s *relayPeerService) relayPeerSurveySender(ctx context.Context, stream sen
 	}
 }
 
-// RelayPeerSurveyRPC handles relay survey rpc
+// RelayPeerSurveyRPC handles relay survey rpc.
 func (s *relayPeerService) RelayPeerSurveyRPC(stream sentryrpc.RelayPeerService_RelayPeerSurveyRPCServer) error {
 	var initSend bool
 
@@ -568,7 +565,7 @@ func (s *relayPeerService) RelayPeerSurveyRPC(stream sentryrpc.RelayPeerService_
 
 		if clustersni == "" && relayuuid != "" {
 			if !initSend {
-				//Get the relay object for relayuuid
+
 				robj := s.getRelayObject(relayuuid, ou)
 				if robj != nil {
 					go s.relayPeerSurveySender(ctx, stream, relayuuid, robj)
@@ -579,16 +576,14 @@ func (s *relayPeerService) RelayPeerSurveyRPC(stream sentryrpc.RelayPeerService_
 			continue
 		}
 
-		//insert response to cache
+
 		if clustersni != "" && relayuuid != "" && relayip != "" {
 			ckey := peerServiceCacheKey(clustersni, relayuuid, ou)
 			if !s.insertPeerServiceCache(ckey, relayip) {
 				_log.Errorw("failed to insert into cache")
 			}
 		}
-
 	}
-
 }
 
 func peerServiceCacheKey(clustersni, relayuuid, ou string) string {

@@ -13,7 +13,7 @@ type auditLogServer struct {
 
 var _ v1.AuditLogServiceServer = (*auditLogServer)(nil)
 
-// NewAuditServer returns new placement server implementation
+// NewAuditServer returns new placement server implementation.
 func NewAuditLogServer(auditLogService q.AuditLogService) (v1.AuditLogServiceServer, error) {
 	return &auditLogServer{as: auditLogService}, nil
 }

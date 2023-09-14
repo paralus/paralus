@@ -15,9 +15,9 @@ import (
 )
 
 var (
-	// ErrInvalidAPIKey is returned when api key is invalid
+	// ErrInvalidAPIKey is returned when api key is invalid.
 	ErrInvalidAPIKey = errors.New("invalid api key")
-	// ErrInvalidSignature is returns when signature is invalid
+	// ErrInvalidSignature is returns when signature is invalid.
 	ErrInvalidSignature = errors.New("invalid signature")
 )
 
@@ -75,7 +75,6 @@ func (ac *authContext) authenticate(ctx context.Context, req *commonv3.IsRequest
 		res.SessionData.Username = resp.Name
 		res.SessionData.Account = resp.AccountID.String()
 	} else {
-
 		tsr := ac.kc.FrontendApi.ToSession(ctx).XSessionToken(req.GetXSessionToken()).Cookie(req.GetCookie())
 		session, _, err := ac.kc.FrontendApi.ToSessionExecute(tsr)
 		if err != nil {
@@ -119,7 +118,7 @@ func (ac *authContext) authenticate(ctx context.Context, req *commonv3.IsRequest
 	return true, nil
 }
 
-// authorize performs authorization of the request
+// authorize performs authorization of the request.
 func (ac *authContext) authorize(ctx context.Context, req *commonv3.IsRequestAllowedRequest, res *commonv3.IsRequestAllowedResponse) error {
 	// user,namespace,project,org,url(perm),method
 	// ones that don't have value should be "*"

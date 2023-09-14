@@ -6,7 +6,7 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-// options holds audit options
+// options holds audit options.
 type AuditOptions struct {
 	LogPath    string
 	MaxSizeMB  int

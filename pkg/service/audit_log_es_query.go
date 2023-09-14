@@ -88,7 +88,6 @@ func (a *auditLogElasticSearchService) GetAuditLogByProjects(req *v1.GetAuditLog
 		},
 	}
 
-	//aggregations
 	agg, _ := query["aggs"].(map[string]interface{})
 	if req.GetFilter().DashboardData {
 		agg["group_by_project"] = map[string]interface{}{
@@ -117,8 +116,6 @@ func (a *auditLogElasticSearchService) GetAuditLogByProjects(req *v1.GetAuditLog
 	q, _ := query["query"].(map[string]interface{})
 	b, _ := q["bool"].(map[string]interface{})
 	m, _ := b["must"].([]map[string]interface{})
-
-	//Results not required in case of dashboard - only aggregations required
 	if req.GetFilter().DashboardData {
 		query["size"] = 0
 	}

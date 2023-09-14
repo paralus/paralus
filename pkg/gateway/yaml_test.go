@@ -58,5 +58,4 @@ func TestYamlMarshaller(t *testing.T) {
 	}
 
 	t.Log(bb2.String())
-
 }

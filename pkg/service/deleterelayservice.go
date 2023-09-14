@@ -3,14 +3,12 @@ package service
 import (
 	"context"
 
-	"k8s.io/client-go/tools/clientcmd"
-
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/clientcmd"
 )
 
 func DeleteRelayAgent(ctx context.Context, kubeConfig []byte, namespace string) bool {
-
 	config, err := clientcmd.NewClientConfigFromBytes(kubeConfig)
 	if err != nil {
 		_log.Errorf("Unable to build kube configuration %s", err.Error())

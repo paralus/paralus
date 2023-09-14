@@ -15,7 +15,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// ApiKeyService is the interface for api key operations
+// ApiKeyService is the interface for api key operations.
 type ApiKeyService interface {
 	// create api key
 	Create(ctx context.Context, req *rpcv3.ApiKeyRequest) (*models.ApiKey, error)
@@ -29,13 +29,13 @@ type ApiKeyService interface {
 	List(ctx context.Context, req *rpcv3.ApiKeyRequest) (*rpcv3.UserListApiKeysResponse, error)
 }
 
-// apiKeyService implements ApiKeyService
+// apiKeyService implements ApiKeyService.
 type apiKeyService struct {
 	db *bun.DB
 	al *zap.Logger
 }
 
-// NewApiKeyService return new api key service
+// NewApiKeyService return new api key service.
 func NewApiKeyService(db *bun.DB, al *zap.Logger) ApiKeyService {
 	return &apiKeyService{db, al}
 }

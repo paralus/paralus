@@ -26,7 +26,7 @@ var (
 	ma      = meta.NewAccessor()
 )
 
-// Handler is the interface for working with steps
+// Handler is the interface for working with steps.
 type Handler interface {
 	// Handle executes the step
 	Handle(ctx context.Context, owner metav1.Object, step clusterv2.StepTemplate) (status clusterv2.StepStatus)
@@ -40,7 +40,7 @@ type handler struct {
 	apply.Applier
 }
 
-// NewHandler returns object handler that handles step object
+// NewHandler returns object handler that handles step object.
 func NewHandler(a apply.Applier) Handler {
 	return &handler{a}
 }
@@ -196,9 +196,7 @@ func (h *handler) deleteStep(ctx context.Context, owner metav1.Object, step clus
 			if err != nil {
 				return err
 			}
-
 		}
-
 	}
 
 	if step.JobTemplate != nil {
@@ -221,7 +219,6 @@ func (h *handler) HandleDelete(ctx context.Context, owner metav1.Object, stage c
 			log.Info("unable to delete step", "name", step.Name, "error", err)
 			return err
 		}
-
 	}
 
 	return nil
@@ -303,5 +300,4 @@ func (h *handler) Handle(ctx context.Context, owner metav1.Object, step clusterv
 	status.State = string(clusterv2.StepExecuted)
 
 	return
-
 }

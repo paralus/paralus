@@ -26,7 +26,7 @@ const (
 	projectListKind = "ProjectList"
 )
 
-// ProjectService is the interface for project operations
+// ProjectService is the interface for project operations.
 type ProjectService interface {
 	// create project
 	Create(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error)
@@ -40,10 +40,9 @@ type ProjectService interface {
 	Delete(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error)
 	// list projects
 	List(ctx context.Context, project *systemv3.Project) (*systemv3.ProjectList, error)
-	//TODO Associate project with groups, user, roles
 }
 
-// projectService implements ProjectService
+// projectService implements ProjectService.
 type projectService struct {
 	db  *bun.DB
 	azc AuthzService
@@ -51,13 +50,12 @@ type projectService struct {
 	dev bool
 }
 
-// NewProjectService return new project service
+// NewProjectService return new project service.
 func NewProjectService(db *bun.DB, azc AuthzService, al *zap.Logger, dev bool) ProjectService {
 	return &projectService{db: db, azc: azc, al: al, dev: dev}
 }
 
 func (s *projectService) Create(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error) {
-
 	if project.Metadata.Organization == "" {
 		return nil, fmt.Errorf("missing organization in metadata")
 	}
@@ -77,8 +75,6 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 	if p != nil {
 		return nil, fmt.Errorf("project '%v' already exists", project.GetMetadata().GetName())
 	}
-
-	//convert v3 spec to internal models
 	proj := models.Project{
 		Name:           project.GetMetadata().GetName(),
 		Description:    project.GetMetadata().GetDescription(),
@@ -101,9 +97,7 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 		return &systemv3.Project{}, err
 	}
 
-	//update v3 spec
 	if createdProject, ok := entity.(*models.Project); ok {
-
 		project, err = s.createGroupRoleRelations(ctx, tx, project, parsedIds{Id: createdProject.ID, Partner: createdProject.PartnerId, Organization: createdProject.OrganizationId})
 		if err != nil {
 			tx.Rollback()
@@ -130,11 +124,9 @@ func (s *projectService) Create(ctx context.Context, project *systemv3.Project) 
 	}
 
 	return project, nil
-
 }
 
 func (s *projectService) GetByID(ctx context.Context, id string) (*systemv3.Project, error) {
-
 	project := &systemv3.Project{
 		ApiVersion: apiVersion,
 		Kind:       projectKind,
@@ -153,7 +145,6 @@ func (s *projectService) GetByID(ctx context.Context, id string) (*systemv3.Proj
 	}
 
 	if proj, ok := entity.(*models.Project); ok {
-
 		project.Metadata = &v3.Metadata{
 			Name:         proj.Name,
 			Description:  proj.Description,
@@ -169,11 +160,9 @@ func (s *projectService) GetByID(ctx context.Context, id string) (*systemv3.Proj
 		return project, nil
 	}
 	return project, nil
-
 }
 
 func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.Project, error) {
-
 	project := &systemv3.Project{
 		ApiVersion: apiVersion,
 		Kind:       projectKind,
@@ -188,7 +177,6 @@ func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.
 	}
 
 	if proj, ok := entity.(*models.Project); ok {
-
 		var org models.Organization
 		_, err := dao.GetByID(ctx, s.db, proj.OrganizationId, &org)
 		if err != nil {
@@ -228,24 +216,20 @@ func (s *projectService) GetByName(ctx context.Context, name string) (*systemv3.
 		return project, nil
 	}
 	return project, nil
-
 }
 
 func (s *projectService) Update(ctx context.Context, project *systemv3.Project) (*systemv3.Project, error) {
-
 	entity, err := dao.GetByName(ctx, s.db, project.Metadata.Name, &models.Project{})
 	if err != nil {
 		return &systemv3.Project{}, err
 	}
 
 	if proj, ok := entity.(*models.Project); ok {
-
 		tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 		if err != nil {
 			return &systemv3.Project{}, err
 		}
 
-		//update project details
 		proj.Description = project.Metadata.Description
 		proj.Default = project.Spec.Default
 		proj.ModifiedAt = time.Now()
@@ -287,8 +271,6 @@ func (s *projectService) Update(ctx context.Context, project *systemv3.Project) 
 		if err != nil {
 			return nil, err
 		}
-
-		//update spec and status
 		project.Spec = &systemv3.ProjectSpec{
 			Default:               proj.Default,
 			ProjectNamespaceRoles: pnr,
@@ -313,7 +295,6 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 		return &systemv3.Project{}, err
 	}
 	if proj, ok := entity.(*models.Project); ok {
-
 		tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 		if err != nil {
 			return &systemv3.Project{}, err
@@ -350,7 +331,7 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 			tx.Rollback()
 			return &systemv3.Project{}, err
 		}
-		//update v3 spec
+
 		project.Metadata.Id = proj.ID.String()
 		project.Metadata.Name = proj.Name
 
@@ -368,7 +349,6 @@ func (s *projectService) Delete(ctx context.Context, project *systemv3.Project) 
 }
 
 func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*systemv3.ProjectList, error) {
-
 	username := ""
 	if !s.dev {
 		sd, ok := GetSessionDataFromContext(ctx)
@@ -411,7 +391,6 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 					return &systemv3.ProjectList{}, err
 				}
 			}
-
 		} else {
 			_, err = dao.List(ctx, s.db, uuid.NullUUID{UUID: part.ID, Valid: true}, uuid.NullUUID{UUID: org.ID, Valid: true}, &projs)
 			if err != nil {
@@ -451,19 +430,16 @@ func (s *projectService) List(ctx context.Context, project *systemv3.Project) (*
 			}
 			projects = append(projects, project)
 		}
-
-		//update the list metadata and items response
 		projectList.Metadata = &v3.ListMetadata{
 			Count: int64(len(projects)),
 		}
 		projectList.Items = projects
 		return projectList, nil
-
 	}
 	return projectList, fmt.Errorf("missing organization id in metadata")
 }
 
-// Map roles to groups
+// Map roles to groups.
 func (s *projectService) createGroupRoleRelations(ctx context.Context, db bun.IDB, project *systemv3.Project, ids parsedIds) (*systemv3.Project, error) {
 	projectNamespaceRoles := project.GetSpec().GetProjectNamespaceRoles()
 
@@ -558,7 +534,6 @@ func (s *projectService) createGroupRoleRelations(ctx context.Context, db bun.ID
 				return project, fmt.Errorf("other scoped roles are not handled")
 			}
 		}
-
 	}
 	if len(pgrs) > 0 {
 		_, err := dao.Create(ctx, db, &pgrs)
@@ -622,7 +597,7 @@ func (s *projectService) deleteProjectAccountRelations(ctx context.Context, db b
 	return project, nil
 }
 
-// Update the users(account) mapped to each project
+// Update the users(account) mapped to each project.
 func (s *projectService) createProjectAccountRelations(ctx context.Context, db bun.IDB, projectId uuid.UUID, project *systemv3.Project) (*systemv3.Project, error) {
 	var parrs []models.ProjectAccountResourcerole
 	var panrs []models.ProjectAccountNamespaceRole

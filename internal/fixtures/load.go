@@ -3,29 +3,26 @@ package fixtures
 import (
 	"bytes"
 	"context"
+	"crypto/x509/pkix"
 	"encoding/json"
 	"io/ioutil"
 	"text/template"
 
-	"crypto/x509/pkix"
-
 	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
 	"github.com/paralus/paralus/pkg/service"
-	"github.com/rs/xid"
-	"sigs.k8s.io/yaml"
-
-	"github.com/paralus/paralus/pkg/log"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	sentry "github.com/paralus/paralus/proto/types/sentry"
+	"github.com/rs/xid"
 	"github.com/shurcooL/httpfs/vfsutil"
+	"sigs.k8s.io/yaml"
 )
 
 var _log = log.GetLogger()
 
 var (
-	// RelayTemplate is the template for rendering download yaml
+	// RelayTemplate is the template for rendering download yaml.
 	RelayTemplate *template.Template
-	// RelayAgentTemplate is the template for rendering download yaml
+	// RelayAgentTemplate is the template for rendering download yaml.
 	RelayAgentTemplate *template.Template
 )
 
@@ -33,10 +30,11 @@ var (
 // Changes to the below code will affect the default template
 // and risks CA cert update. Once the template certs are
 // updated following situation will arise.
-// - Existing relay connections will fail, need to restart
-//   agents to re-bootstrap.
-// - Existing kubeconfig will fail, need to download new
-//   kubeconfig to continue
+//   - Existing relay connections will fail, need to restart
+//     agents to re-bootstrap.
+//   - Existing kubeconfig will fail, need to download new
+//     kubeconfig to continue
+//
 // This can cause issues in the case of production clusters
 // Take extra caution while modifying the code to avoid
 // unintended side effects.
@@ -111,13 +109,12 @@ func loadAgentTemplates(ctx context.Context, bs service.BootstrapService, d map[
 		if err != nil {
 			return err
 		}
-
 	}
 
 	return nil
 }
 
-// Load loads fixtures
+// Load loads fixtures.
 func Load(ctx context.Context, bs service.BootstrapService, d map[string]interface{}, pf cryptoutil.PasswordFunc) error {
 	err := loadAgentTemplates(ctx, bs, d, pf)
 	if err != nil {

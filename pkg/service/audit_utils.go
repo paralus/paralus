@@ -128,7 +128,6 @@ func CreateUserLoginAuditEvent(ctx context.Context, al *zap.Logger, action strin
 	if err := audit.CreateV1Event(al, sd, detail, fmt.Sprintf("user.%s.success", action), ""); err != nil {
 		_log.Warn("unable to create audit event", err)
 	}
-
 }
 
 func CreateGroupAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, action string, name string, id uuid.UUID, usersBefore, usersAfter, rolesBefore, rolesAfter []uuid.UUID) {
@@ -220,7 +219,6 @@ func CreateGroupAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, acti
 			_log.Warn("unable to create audit event", err)
 		}
 	}
-
 }
 
 func CreateRoleAuditEvent(ctx context.Context, al *zap.Logger, action string, name string, id uuid.UUID, permissions []string) {
@@ -326,7 +324,6 @@ func CreateOrganizationAuditEvent(ctx context.Context, al *zap.Logger, action st
 		settingsBefore.Lockout.Enabled != settingsAfter.Lockout.Enabled ||
 		settingsBefore.Lockout.PeriodMin != settingsAfter.Lockout.PeriodMin ||
 		settingsBefore.Lockout.Attempts != settingsAfter.Lockout.Attempts {
-
 		enabled := "false"
 		detail := &audit.EventDetail{
 			Message: fmt.Sprintf("Lockout settings updated for organization %s", name),
@@ -481,7 +478,7 @@ func CreateClusterAuditEvent(ctx context.Context, al *zap.Logger, action string,
 	}
 }
 
-// TODO: figure out how this is to be added
+// TODO: figure out how this is to be added.
 func CreateLocationAuditEvent(ctx context.Context, al *zap.Logger, action string, name string, id uuid.UUID) {
 	sd, ok := GetSessionDataFromContext(ctx)
 	if !ok {

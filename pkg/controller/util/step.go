@@ -13,7 +13,7 @@ const (
 )
 
 // SetNamespace is a utility function setting namespace for a step objects
-// it preserves namespace if already set for selective resources
+// it preserves namespace if already set for selective resources.
 func SetNamespace(so *clusterv2.StepObject, namespace string) error {
 	accessor, err := so.Accessor()
 	if err != nil {

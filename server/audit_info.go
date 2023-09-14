@@ -6,10 +6,9 @@ import (
 	"strings"
 
 	"github.com/paralus/paralus/pkg/query"
-	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
-
 	"github.com/paralus/paralus/pkg/sentry/kubeconfig"
 	"github.com/paralus/paralus/pkg/service"
+	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
 )
 
 type auditInfoServer struct {
@@ -19,13 +18,12 @@ type auditInfoServer struct {
 
 var _ sentryrpc.AuditInformationServiceServer = (*auditInfoServer)(nil)
 
-// NewAuditInfoServer returns new Audit Information Server
+// NewAuditInfoServer returns new Audit Information Server.
 func NewAuditInfoServer(bs service.BootstrapService, aps service.AccountPermissionService) sentryrpc.AuditInformationServiceServer {
 	return &auditInfoServer{bs: bs, aps: aps}
 }
 
 func (s *auditInfoServer) LookupUser(ctx context.Context, req *sentryrpc.LookupUserRequest) (*sentryrpc.LookupUserResponse, error) {
-
 	attrs := kubeconfig.GetCNAttributes(req.UserCN)
 
 	_log.Infow("lookupUser", "attrs", attrs)
@@ -61,7 +59,6 @@ func (s *auditInfoServer) LookupUser(ctx context.Context, req *sentryrpc.LookupU
 }
 
 func (s *auditInfoServer) LookupCluster(ctx context.Context, req *sentryrpc.LookupClusterRequest) (*sentryrpc.LookupClusterResponse, error) {
-
 	strs := strings.SplitN(req.ClusterSNI, ".", 2)
 	if len(strs) != 2 {
 		return nil, fmt.Errorf("invalid cluster SNI %s", req.ClusterSNI)

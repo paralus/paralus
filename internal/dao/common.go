@@ -34,7 +34,7 @@ func GetX(ctx context.Context, db bun.IDB, field string, value interface{}, enti
 	return entity, nil
 }
 
-// M for multi ;)
+// M for multi ;).
 func GetM(ctx context.Context, db bun.IDB, checks map[string]interface{}, entity interface{}) (interface{}, error) {
 	// Can we get the checks directly from entity and create an upsert sort of func?
 	q := db.NewSelect().Model(entity)
@@ -189,7 +189,7 @@ func DeleteX(ctx context.Context, db bun.IDB, field string, value interface{}, e
 	return err
 }
 
-// DeleteR delete and returns the changed items
+// DeleteR delete and returns the changed items.
 func DeleteR(ctx context.Context, db bun.IDB, id uuid.UUID, entity interface{}) error {
 	_, err := db.NewUpdate().
 		Model(entity).
@@ -202,7 +202,7 @@ func DeleteR(ctx context.Context, db bun.IDB, id uuid.UUID, entity interface{}) 
 	return err
 }
 
-// DeleteXR delete with selector and returns the changed items
+// DeleteXR delete with selector and returns the changed items.
 func DeleteXR(ctx context.Context, db bun.IDB, field string, value interface{}, entity interface{}) error {
 	_, err := db.NewUpdate().
 		Model(entity).
@@ -215,7 +215,7 @@ func DeleteXR(ctx context.Context, db bun.IDB, field string, value interface{}, 
 	return err
 }
 
-// HardDeleteAll deletes all records in a table (primarily for use in scripts)
+// HardDeleteAll deletes all records in a table (primarily for use in scripts).
 func HardDeleteAll(ctx context.Context, db bun.IDB, entity interface{}) error {
 	_, err := db.NewDelete().
 		Model(entity).
@@ -242,7 +242,8 @@ func ListFiltered(ctx context.Context, db bun.IDB,
 	partnerId uuid.NullUUID, organizationId uuid.NullUUID,
 	projectId uuid.NullUUID, entities interface{},
 	query string, orderBy string, order string,
-	limit int, offset int) (interface{}, error) {
+	limit int, offset int,
+) (interface{}, error) {
 	sq := db.NewSelect().Model(entities)
 	if query != "" {
 		sq = sq.Where("name ILIKE ?", "%"+query+"%") // XXX: ILIKE is not-standard

@@ -2,7 +2,6 @@ package server
 
 import (
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
-
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

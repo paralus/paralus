@@ -7,9 +7,8 @@ import (
 	"net"
 )
 
-//ClientTLSConfig sets tls config
+// ClientTLSConfig sets tls config.
 func ClientTLSConfig(tlsCrt string, tlsKey string, rootCA string, addr string) (*tls.Config, error) {
-
 	cert, err := tls.LoadX509KeyPair(tlsCrt, tlsKey)
 	if err != nil {
 		return nil, err
@@ -41,7 +40,8 @@ func ClientTLSConfig(tlsCrt string, tlsKey string, rootCA string, addr string) (
 		MinVersion:             tls.VersionTLS12,
 		CipherSuites: []uint16{
 			tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
-			tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256},
+			tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+		},
 		PreferServerCipherSuites: true,
 	}, nil
 }

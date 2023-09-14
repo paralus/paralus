@@ -5,11 +5,9 @@ import (
 	kjson "k8s.io/apimachinery/pkg/runtime/serializer/json"
 )
 
-var (
-	dmf = kjson.DefaultMetaFactory
-)
+var dmf = kjson.DefaultMetaFactory
 
-// GetGVK returns GroupVersionKind of json serialized k8s object
+// GetGVK returns GroupVersionKind of json serialized k8s object.
 func GetGVK(b []byte) (*schema.GroupVersionKind, error) {
 	return dmf.Interpret(b)
 }

@@ -27,7 +27,7 @@ const (
 	groupListKind = "GroupList"
 )
 
-// GroupService is the interface for group operations
+// GroupService is the interface for group operations.
 type GroupService interface {
 	// create group
 	Create(context.Context, *userv3.Group) (*userv3.Group, error)
@@ -43,19 +43,19 @@ type GroupService interface {
 	List(context.Context, ...query.Option) (*userv3.GroupList, error)
 }
 
-// groupService implements GroupService
+// groupService implements GroupService.
 type groupService struct {
 	db  *bun.DB
 	azc AuthzService
 	al  *zap.Logger
 }
 
-// NewGroupService return new group service
+// NewGroupService return new group service.
 func NewGroupService(db *bun.DB, azc AuthzService, al *zap.Logger) GroupService {
 	return &groupService{db: db, azc: azc, al: al}
 }
 
-// deleteGroupRoleRelaitons deletes existing group-role relations
+// deleteGroupRoleRelaitons deletes existing group-role relations.
 func (s *groupService) deleteGroupRoleRelaitons(ctx context.Context, db bun.IDB, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, []uuid.UUID, error) {
 	// TODO: single delete command
 	ids := []uuid.UUID{}
@@ -94,7 +94,7 @@ func (s *groupService) deleteGroupRoleRelaitons(ctx context.Context, db bun.IDB,
 	return group, ids, nil
 }
 
-// Map roles to groups
+// Map roles to groups.
 func (s *groupService) createGroupRoleRelations(ctx context.Context, db bun.IDB, group *userv3.Group, ids parsedIds) (*userv3.Group, []uuid.UUID, error) {
 	projectNamespaceRoles := group.GetSpec().GetProjectNamespaceRoles()
 
@@ -290,7 +290,7 @@ func (s *groupService) deleteGroupAccountRelations(ctx context.Context, db bun.I
 	return group, ids, nil
 }
 
-// Update the users(account) mapped to each group
+// Update the users(account) mapped to each group.
 func (s *groupService) createGroupAccountRelations(ctx context.Context, db bun.IDB, groupId uuid.UUID, group *userv3.Group) (*userv3.Group, []uuid.UUID, error) {
 	var grpaccs []models.GroupAccount
 	var ugs []*authzv1.UserGroup
@@ -334,7 +334,7 @@ func (s *groupService) createGroupAccountRelations(ctx context.Context, db bun.I
 	return group, uids, nil
 }
 
-// TODO: move this to utils, make it accept two strings (names)
+// TODO: move this to utils, make it accept two strings (names).
 func (s *groupService) getPartnerOrganization(ctx context.Context, db bun.IDB, group *userv3.Group) (uuid.UUID, uuid.UUID, error) {
 	partner := group.GetMetadata().GetPartner()
 	org := group.GetMetadata().GetOrganization()
@@ -347,7 +347,6 @@ func (s *groupService) getPartnerOrganization(ctx context.Context, db bun.IDB, g
 		return partnerId, uuid.Nil, err
 	}
 	return partnerId, organizationId, nil
-
 }
 
 func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
@@ -359,7 +358,7 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 	if g != nil {
 		return nil, fmt.Errorf("group '%v' already exists", group.GetMetadata().GetName())
 	}
-	//convert v3 spec to internal models
+
 	grp := models.Group{
 		Name:           group.GetMetadata().GetName(),
 		Description:    group.GetMetadata().GetDescription(),
@@ -382,7 +381,6 @@ func (s *groupService) Create(ctx context.Context, group *userv3.Group) (*userv3
 		return &userv3.Group{}, err
 	}
 
-	//update v3 spec
 	if grp, ok := entity.(*models.Group); ok {
 		// we can get previous group using the id, find users/roles from that and delete those
 		group, usersAfter, err := s.createGroupAccountRelations(ctx, tx, grp.ID, group)
@@ -461,7 +459,6 @@ func (s *groupService) GetByID(ctx context.Context, group *userv3.Group) (*userv
 		return s.toV3Group(ctx, s.db, group, grp)
 	}
 	return group, nil
-
 }
 
 func (s *groupService) GetByName(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
@@ -479,7 +476,6 @@ func (s *groupService) GetByName(ctx context.Context, group *userv3.Group) (*use
 		return s.toV3Group(ctx, s.db, group, grp)
 	}
 	return group, nil
-
 }
 
 func (s *groupService) Update(ctx context.Context, group *userv3.Group) (*userv3.Group, error) {
@@ -564,7 +560,6 @@ func (s *groupService) Delete(ctx context.Context, group *userv3.Group) (*userv3
 		return &userv3.Group{}, err
 	}
 	if grp, ok := entity.(*models.Group); ok {
-
 		tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 		if err != nil {
 			return &userv3.Group{}, err
@@ -649,7 +644,6 @@ func (s *groupService) List(ctx context.Context, opts ...query.Option) (*userv3.
 			groups = append(groups, entry)
 		}
 
-		//update the list metadata and items response
 		groupList.Metadata = &v3.ListMetadata{
 			Count: int64(len(groups)),
 		}

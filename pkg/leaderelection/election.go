@@ -8,11 +8,9 @@ import (
 	rl "k8s.io/client-go/tools/leaderelection/resourcelock"
 )
 
-var (
-	_log = log.GetLogger()
-)
+var _log = log.GetLogger()
 
-// Run runs leader election and calls onStarted when runner becomes leader
+// Run runs leader election and calls onStarted when runner becomes leader.
 func Run(lock rl.Interface, onStarted func(stop <-chan struct{}), stop <-chan struct{}) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -36,7 +34,6 @@ func Run(lock rl.Interface, onStarted func(stop <-chan struct{}), stop <-chan st
 			},
 		},
 	})
-
 	if err != nil {
 		return err
 	}
@@ -47,5 +44,4 @@ func Run(lock rl.Interface, onStarted func(stop <-chan struct{}), stop <-chan st
 	<-stop
 
 	return nil
-
 }

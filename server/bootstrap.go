@@ -5,11 +5,12 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/paralus/paralus/pkg/service"
-
 	"github.com/paralus/paralus/pkg/gateway"
 	"github.com/paralus/paralus/pkg/log"
 	"github.com/paralus/paralus/pkg/query"
+	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
+	"github.com/paralus/paralus/pkg/sentry/util"
+	"github.com/paralus/paralus/pkg/service"
 	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
@@ -17,9 +18,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
-
-	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
-	"github.com/paralus/paralus/pkg/sentry/util"
 )
 
 var _log = log.GetLogger()
@@ -124,7 +122,6 @@ func (s *bootstrapServer) DeleteBootstrapAgent(ctx context.Context, in *sentry.B
 }
 
 func (s *bootstrapServer) UpdateBootstrapAgent(ctx context.Context, in *sentry.BootstrapAgent) (ret *sentry.BootstrapAgent, err error) {
-
 	templateRef, err := util.GetTemplateScope(in.Spec.TemplateRef)
 	if err != nil {
 		return
@@ -214,7 +211,8 @@ func (s *bootstrapServer) RegisterBootstrapAgent(ctx context.Context, in *sentry
 		agent = &sentry.BootstrapAgent{
 			Metadata: &commonv3.Metadata{
 				Name: in.Name,
-			}, Spec: &sentry.BootstrapAgentSpec{Token: in.Token,
+			}, Spec: &sentry.BootstrapAgentSpec{
+				Token:       in.Token,
 				TemplateRef: template.Metadata.Name,
 			},
 		}
@@ -226,7 +224,7 @@ func (s *bootstrapServer) RegisterBootstrapAgent(ctx context.Context, in *sentry
 		}
 	} else {
 		if err != nil {
-			//agent is nil
+
 			_log.Error(err.Error())
 			return
 		}
@@ -295,7 +293,7 @@ func (s *bootstrapServer) GetBootstrapAgentConfig(ctx context.Context, in *sentr
 	return nil, nil
 }
 
-// NewBootstrapServer return new bootstrap server
+// NewBootstrapServer return new bootstrap server.
 func NewBootstrapServer(bs service.BootstrapService, f cryptoutil.PasswordFunc, cs service.ClusterService) sentryrpc.BootstrapServiceServer {
 	return &bootstrapServer{bs, f, cs}
 }

@@ -51,21 +51,21 @@ import (
 )
 
 const (
-	// application
+	// application.
 	rpcPortEnv   = "RPC_PORT"
 	apiPortEnv   = "API_PORT"
 	debugPortEnv = "DEBUG_PORT"
 	apiAddrEnv   = "API_ADDR"
 	devEnv       = "DEV"
 
-	// db
+	// db.
 	dbDSNEnv      = "DSN"
 	dbAddrEnv     = "DB_ADDR"
 	dbNameEnv     = "DB_NAME"
 	dbUserEnv     = "DB_USER"
 	dbPasswordEnv = "DB_PASSWORD"
 
-	// relay
+	// relay.
 	sentryPeeringHostEnv      = "SENTRY_PEERING_HOST"
 	coreRelayConnectorHostEnv = "CORE_RELAY_CONNECTOR_HOST"
 	coreRelayUserHostEnv      = "CORE_RELAY_USER_HOST"
@@ -73,7 +73,7 @@ const (
 	bootstrapKEKEnv           = "BOOTSTRAP_KEK"
 	relayImageEnv             = "RELAY_IMAGE"
 
-	// audit
+	// audit.
 	auditLogStorageEnv         = "AUDIT_LOG_STORAGE"
 	auditFileEnv               = "AUDIT_LOG_FILE"
 	esEndPointEnv              = "ES_END_POINT"
@@ -81,18 +81,18 @@ const (
 	relayAuditESIndexPrefixEnv = "RELAY_AUDITS_ES_INDEX_PREFIX"
 	relayCommandESIndexPrefix  = "RELAY_COMMANDS_ES_INDEX_PREFIX"
 
-	// cd relay
+	// cd relay.
 	coreCDRelayUserHostEnv      = "CORE_CD_RELAY_USER_HOST"
 	coreCDRelayConnectorHostEnv = "CORE_CD_RELAY_CONNECTOR_HOST"
 	schedulerNamespaceEnv       = "SCHEDULER_NAMESPACE"
 
-	// kratos
+	// kratos.
 	kratosAddrEnv       = "KRATOS_ADDR"
 	kratosPublicAddrEnv = "KRATOS_PUB_ADDR"
 )
 
 var (
-	// application
+	// application.
 	rpcPort             int
 	apiPort             int
 	debugPort           int
@@ -101,7 +101,7 @@ var (
 	rpcRelayPeeringPort int
 	_log                = log.GetLogger()
 
-	// db
+	// db.
 	dbDSN      string
 	dbAddr     string
 	dbName     string
@@ -110,14 +110,14 @@ var (
 	db         *bun.DB
 	gormDb     *gorm.DB
 
-	// relay
+	// relay.
 	sentryPeeringHost      string
 	coreRelayConnectorHost string
 	coreRelayUserHost      string
 	bootstrapKEK           string
 	relayImage             string
 
-	// audit
+	// audit.
 	auditLogStorage            string
 	auditFile                  string
 	elasticSearchUrl           string
@@ -126,19 +126,19 @@ var (
 	relayCommandsESIndexPrefix string
 	auditLogger                *zap.Logger
 
-	// cd relay
+	// cd relay.
 	coreCDRelayUserHost      string
 	coreCDRelayConnectorHost string
 	schedulerNamespace       string
 	sentryBootstrapAddr      string
 
-	// kratos
+	// kratos.
 	kratosAddr       string
 	kratosPublicAddr string
 	kc               *kclient.APIClient
 	akc              *kclient.APIClient
 
-	// services
+	// services.
 	ps    service.PartnerService
 	os    service.OrganizationService
 	pps   service.ProjectService
@@ -355,7 +355,7 @@ func setup() {
 	is = service.NewIdpService(db, apiAddr, auditLogger)
 	oidcs = service.NewOIDCProviderService(db, sentryBootstrapAddr, auditLogger)
 
-	//sentry related services
+
 	bs = service.NewBootstrapService(db)
 	krs = service.NewKubeconfigRevocationService(db, auditLogger)
 	kss = service.NewKubeconfigSettingService(db)
@@ -444,7 +444,6 @@ func setup() {
 }
 
 func run() {
-
 	ctx := signals.SetupSignalHandler()
 
 	notify.Start(ctx.Done())
@@ -537,7 +536,6 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 	if err != nil {
 		_log.Fatalw("unable to start gateway", "error", err)
 	}
-
 }
 
 func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
@@ -560,7 +558,6 @@ func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
 	s, err := grpc.NewSecureServerWithPEM(cert, key, ca)
 	if err != nil {
 		_log.Fatalw("cannot grpc secure server failed", "error", err)
-
 	}
 
 	go func() {
@@ -586,7 +583,6 @@ func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
 	if err = s.Serve(l); err != nil {
 		_log.Fatalw("failed to serve relay peer service", "error", err)
 	}
-
 }
 
 func runRPC(wg *sync.WaitGroup, ctx context.Context) {
@@ -635,7 +631,7 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 		ExcludeRPCMethods: []string{
 			"/paralus.dev.sentry.rpc.BootstrapService/GetBootstrapAgentTemplate",
 			"/paralus.dev.sentry.rpc.BootstrapService/RegisterBootstrapAgent",
-			"/paralus.dev.sentry.rpc.KubeConfigService/GetForClusterWebSession", //TODO: enable auth from prompt
+			"/paralus.dev.sentry.rpc.KubeConfigService/GetForClusterWebSession", // TODO: enable auth from prompt
 			"/paralus.dev.rpc.auth.v3.AuthService/IsRequestAllowed",
 			"/paralus.dev.rpc.user.v3.UserService/AuditLogWebhook",
 		},
@@ -691,13 +687,12 @@ func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	if err != nil {
 		_log.Fatalw("unable to start rpc server", "error", err)
 	}
-
 }
 
 func runEventHandlers(wg *sync.WaitGroup, ctx context.Context) {
 	defer wg.Done()
 
-	//TODO: need to add a bunch of other handlers with gitops
+	// TODO: need to add a bunch of other handlers with gitops
 	ceh := reconcile.NewClusterEventHandler(cs, db, bs, kekFunc)
 	_log.Infow("starting cluster event handler")
 	go ceh.Handle(ctx.Done())

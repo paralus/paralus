@@ -8,13 +8,11 @@ import (
 	"os"
 	"testing"
 
+	cruntime "github.com/paralus/paralus/pkg/controller/runtime"
+	clusterv2 "github.com/paralus/paralus/proto/types/controller"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
-
-	cruntime "github.com/paralus/paralus/pkg/controller/runtime"
-	clusterv2 "github.com/paralus/paralus/proto/types/controller"
-
 	"sigs.k8s.io/yaml"
 )
 
@@ -49,7 +47,6 @@ func getObject(name string) ctrlclient.Object {
 }
 
 func TestApplier(t *testing.T) {
-
 	applier, err := NewDynamicApplier()
 	if err != nil {
 		t.Error(err)
@@ -175,7 +172,6 @@ func TestApplier(t *testing.T) {
 	// jb, _ := GetPreviousConfig(o4)
 
 	// t.Log(string(jb))
-
 }
 
 func TestApplyForPod(t *testing.T) {
@@ -199,7 +195,6 @@ func TestApplyForPod(t *testing.T) {
 		t.Error(err)
 		return
 	}
-
 }
 
 func TestApplyDeployment(t *testing.T) {
@@ -223,7 +218,6 @@ func TestApplyDeployment(t *testing.T) {
 		t.Error(err)
 		return
 	}
-
 }
 
 func TestServiceApply(t *testing.T) {

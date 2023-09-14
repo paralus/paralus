@@ -13,7 +13,7 @@ type locationServer struct {
 	ms service.MetroService
 }
 
-// NewLocationServer returns new location server implementation
+// NewLocationServer returns new location server implementation.
 func NewLocationServer(ms service.MetroService) systemrpc.LocationServiceServer {
 	return &locationServer{ms}
 }
@@ -27,7 +27,6 @@ func (s *locationServer) CreateLocation(ctx context.Context, p *infrav3.Location
 }
 
 func (s *locationServer) GetLocation(ctx context.Context, p *infrav3.Location) (*infrav3.Location, error) {
-
 	partner, err := s.ms.GetByName(ctx, p.Metadata.Name)
 	if err != nil {
 		id, err := uuid.Parse(p.Metadata.Id)

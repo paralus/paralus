@@ -9,9 +9,8 @@ import (
 )
 
 // Node Hash should take Labels into the hash calculation since it can be
-// set from either side: From core or from cluster
+// set from either side: From core or from cluster.
 func GetNodeHashFrom(labels map[string]string, taints []*corev1.Taint, unscheduleable bool) (string, error) {
-	//add sorted labels
 	labelsKeys := make([]string, 0)
 	for k := range labels {
 		labelsKeys = append(labelsKeys, k)
@@ -21,7 +20,7 @@ func GetNodeHashFrom(labels map[string]string, taints []*corev1.Taint, unschedul
 	for _, k := range labelsKeys {
 		finalLabelsAsString += fmt.Sprintf("%s:%s,", k, labels[k])
 	}
-	//add sorted taints
+
 	taintKeys := make([]string, 0)
 	taintMap := make(map[string]corev1.Taint)
 	for _, taint := range taints {

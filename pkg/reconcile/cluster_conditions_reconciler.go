@@ -29,12 +29,12 @@ type clusterConditionReconciler struct {
 	/*ps models.PlacementService*/
 }
 
-// ClusterConditionReconciler is the interface for reconciling cluster conditions
+// ClusterConditionReconciler is the interface for reconciling cluster conditions.
 type ClusterConditionReconciler interface {
 	Reconcile(ctx context.Context, cluster *infrav3.Cluster) error
 }
 
-// NewClusterConditionReconciler returns cluster condition reconciler
+// NewClusterConditionReconciler returns cluster condition reconciler.
 func NewClusterConditionReconciler(cs service.ClusterService) ClusterConditionReconciler {
 	return &clusterConditionReconciler{cs: cs}
 }
@@ -88,7 +88,6 @@ func mergeClusterConditions(conditions []infrav3.ClusterCondition) []infrav3.Clu
 }
 
 func shouldUpdateClusterStatus(current, modified *infrav3.Cluster) bool {
-
 	// check if any of the modified conditions are different from
 	// current conditions
 	for _, modifiedCondition := range modified.Spec.ClusterData.ClusterStatus.Conditions {

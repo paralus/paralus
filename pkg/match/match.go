@@ -6,12 +6,12 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 )
 
-// Matcher is the interface for matching objects which implement Metadata interface
+// Matcher is the interface for matching objects which implement Metadata interface.
 type Matcher interface {
 	Match(meta commonv3.Metadata) bool
 }
 
-// New returns new matcher for options
+// New returns new matcher for options.
 func New(opts ...query.Option) (Matcher, error) {
 	options := &commonv3.QueryOptions{}
 	for _, opt := range opts {
@@ -30,7 +30,6 @@ func New(opts ...query.Option) (Matcher, error) {
 		selector:     selector,
 		name:         options.Name,
 	}, nil
-
 }
 
 type matcher struct {
@@ -44,7 +43,6 @@ type matcher struct {
 var _ Matcher = (*matcher)(nil)
 
 func (m *matcher) Match(meta commonv3.Metadata) bool {
-
 	if meta.GetPartner() != m.partner {
 		return false
 	}

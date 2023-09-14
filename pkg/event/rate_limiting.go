@@ -24,7 +24,7 @@ func keyToResource(k string) Resource {
 	return r
 }
 
-// NewRateLimitngQueue returns new rate limiting resource event queue
+// NewRateLimitngQueue returns new rate limiting resource event queue.
 func NewRateLimitngQueue(numWorkers int, stop <-chan struct{}) (inChan chan<- Resource, outChan <-chan Resource) {
 	in := make(chan Resource, numWorkers)
 	out := make(chan Resource, numWorkers)
@@ -33,8 +33,6 @@ func NewRateLimitngQueue(numWorkers int, stop <-chan struct{}) (inChan chan<- Re
 		time.Millisecond*10,
 		time.Millisecond*50,
 	))
-
-	//q := workqueue.NewRateLimitingQueue(workqueue.DefaultControllerRateLimiter())
 
 	rq := &rateLimitingQueue{
 		q:   q,
@@ -47,7 +45,6 @@ func NewRateLimitngQueue(numWorkers int, stop <-chan struct{}) (inChan chan<- Re
 }
 
 func (rq *rateLimitingQueue) run(stop <-chan struct{}) {
-
 	go func() {
 	enqueueLoop:
 		for {
@@ -56,13 +53,11 @@ func (rq *rateLimitingQueue) run(stop <-chan struct{}) {
 				break enqueueLoop
 			case r := <-rq.in:
 				key := resourceToKey(r)
-				//rq.q.Add(key)
+
 				rq.q.Add(key)
 				_log.Debugw("enqueued", "key", key, "len", rq.q.Len())
-
 			}
 		}
-
 	}()
 
 	go func() {
@@ -93,7 +88,6 @@ func (rq *rateLimitingQueue) run(stop <-chan struct{}) {
 	go func() {
 		<-stop
 		rq.q.ShutDown()
-
 	}()
 
 	return

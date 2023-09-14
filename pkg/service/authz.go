@@ -307,7 +307,7 @@ func (s *authzService) DeleteUserGroups(ctx context.Context, p *authzpbv1.UserGr
 	return &authzpbv1.BoolReply{Res: res}, nil
 }
 
-// NOTE: might need identifier per permission in list if inheritance is needed
+// NOTE: might need identifier per permission in list if inheritance is needed.
 func (s *authzService) ListRolePermissionMappings(ctx context.Context, p *authzpbv1.FilteredRolePermissionMapping) (*authzpbv1.RolePermissionMappingList, error) {
 	// TODO: Change list of urls to permissions  (many to one)
 	return s.toRolePermissionMappingList(s.enforcer.GetFilteredNamedGroupingPolicy(roleGtype, 0, p.GetRole())), nil

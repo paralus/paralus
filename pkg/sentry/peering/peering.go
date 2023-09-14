@@ -21,11 +21,9 @@ import (
 	"github.com/rs/xid"
 )
 
-var (
-	_log = log.GetLogger()
-)
+var _log = log.GetLogger()
 
-//RelayClusterConnectionInfo relay conn info
+// RelayClusterConnectionInfo relay conn info.
 type RelayClusterConnectionInfo struct {
 	Relayuuid string
 	Relayip   string
@@ -45,13 +43,13 @@ func InitPeerCache(evict OnEvict) (*ristretto.Cache, error) {
 	})
 }
 
-// InsertPeerCache inserts the value to cache
+// InsertPeerCache inserts the value to cache.
 func InsertPeerCache(cache *ristretto.Cache, expiry time.Duration, key, value interface{}) bool {
 	return cache.SetWithTTL(key, value, 100, expiry)
 }
 
 // GetPeerCache get value from cache and if more than 1
-// rnadomly select the peer
+// rnadomly select the peer.
 func GetPeerCache(cache *ristretto.Cache, key interface{}) (string, bool) {
 	value, found := cache.Get(key)
 	if found {
@@ -72,7 +70,7 @@ func GetPeerCache(cache *ristretto.Cache, key interface{}) (string, bool) {
 	return "", found
 }
 
-// sends periodic heartbeats to core service
+// sends periodic heartbeats to core service.
 func helloRPCSend(ctx context.Context, stream sentryrpc.RelayPeerService_RelayPeerHelloRPCClient, interval time.Duration, relayUUID string, ip func() string) {
 	_log.Infow("send first hello")
 	msg := &sentryrpc.PeerHelloRequest{
@@ -106,9 +104,8 @@ helloRPCSendLoop:
 	_log.Debugw("Exit: helloRPCSendLoop")
 }
 
-//ClientHelloRPC will handle periodic heartbeat messages between relay and the core service.
+// ClientHelloRPC will handle periodic heartbeat messages between relay and the core service.
 func ClientHelloRPC(ctx context.Context, stream sentryrpc.RelayPeerService_RelayPeerHelloRPCClient, interval time.Duration, relayUUID string, ip func() string) {
-
 	go helloRPCSend(ctx, stream, interval, relayUUID, ip)
 
 	for {
@@ -127,7 +124,7 @@ func ClientHelloRPC(ctx context.Context, stream sentryrpc.RelayPeerService_Relay
 	_log.Debugw("stopping helloRPC routine")
 }
 
-//send loop of probe rpc. recvs clustersni from PeerProbeChanel and sends to core service
+// send loop of probe rpc. recvs clustersni from PeerProbeChanel and sends to core service.
 func probeRPCSend(ctx context.Context, stream sentryrpc.RelayPeerService_RelayPeerProbeRPCClient, relayUUID string, peerProbeChanel chan string) {
 probeRPCSendLoop:
 	for {
@@ -152,7 +149,6 @@ probeRPCSendLoop:
 			stream.CloseSend()
 			break probeRPCSendLoop
 		}
-
 	}
 	_log.Debugw("exit: probeRPCSendLoop")
 }
@@ -163,7 +159,6 @@ probeRPCSendLoop:
 // will send that message to probe core service. When a probe response
 // get inserted to peerCache.
 func ClientProbeRPC(ctx context.Context, stream sentryrpc.RelayPeerService_RelayPeerProbeRPCClient, pcache *ristretto.Cache, relayUUID string, expiry time.Duration, peerProbeChanel chan string, ip func() string) {
-	//send message with empty cluster sni to init the chanl
 	msg := &sentryrpc.PeerProbeRequest{
 		Relayuuid:  relayUUID,
 		Clustersni: "",
@@ -178,8 +173,7 @@ func ClientProbeRPC(ctx context.Context, stream sentryrpc.RelayPeerService_Relay
 
 	go probeRPCSend(ctx, stream, relayUUID, peerProbeChanel)
 
-	//probe response recv loop will process the response
-	//and push it into peer cache
+	// and push it into peer cache
 	for {
 		resp, err := stream.Recv()
 		if err != nil {
@@ -191,22 +185,22 @@ func ClientProbeRPC(ctx context.Context, stream sentryrpc.RelayPeerService_Relay
 		items := resp.GetItems()
 		if clustersni != "" && items != nil && len(items) > 0 {
 			cachevalue := []RelayClusterConnectionInfo{}
-			//prepare cachevalue
+
 			for _, item := range items {
-				matched, err := regexp.Match(relayUUID, []byte(item.Relayuuid))
+				matched, err := regexp.MatchString(relayUUID, item.Relayuuid)
 				if err == nil && matched {
 					_log.Errorw("skip duplicate probe resp",
 						"relayuuid", relayUUID,
 						"recvd-relayuuid", item.Relayuuid,
 					)
-					//uuid is same as this relay skip this entry
+
 					continue
 				}
 
 				ipAddr := ip()
 				if ipAddr != "" && ipAddr == item.Relayip {
 					_log.Errorw("skip duplicate probe resp", "ip address", item.Relayip)
-					//ip is same as this relay skip this entry
+
 					continue
 				}
 
@@ -219,7 +213,7 @@ func ClientProbeRPC(ctx context.Context, stream sentryrpc.RelayPeerService_Relay
 				"key", clustersni,
 				"value", cachevalue,
 			)
-			//insert to peer cache
+
 			if !InsertPeerCache(pcache, expiry, clustersni, cachevalue) {
 				_log.Errorw(
 					"failed cache probeRPC response",
@@ -250,7 +244,6 @@ func ClientSurveyRPC(ctx context.Context, stream sentryrpc.RelayPeerService_Rela
 
 	relayIP = ip()
 
-	//Send a empty clustersni meesage to init the channel
 	msg := &sentryrpc.PeerSurveyResponse{
 		Relayuuid:  relayUUID,
 		Relayip:    relayIP,
@@ -275,9 +268,7 @@ func ClientSurveyRPC(ctx context.Context, stream sentryrpc.RelayPeerService_Rela
 		}
 	}()
 
-	//survey request recv loop will process the survey requests
 	for {
-
 		surveyReq, err := stream.Recv()
 		if err != nil {
 			stream.CloseSend()
@@ -292,8 +283,6 @@ func ClientSurveyRPC(ctx context.Context, stream sentryrpc.RelayPeerService_Rela
 			)
 			continue
 		}
-
-		//lookup the local dialin table for connections\
 		cnt := dialinlookup(clustersni)
 		_log.Infow(
 			"survey lookup",
@@ -326,7 +315,6 @@ func ClientSurveyRPC(ctx context.Context, stream sentryrpc.RelayPeerService_Rela
 				break
 			}
 		}
-
 	}
 
 	_log.Debug(
@@ -334,7 +322,7 @@ func ClientSurveyRPC(ctx context.Context, stream sentryrpc.RelayPeerService_Rela
 	)
 }
 
-// GetPeeringServerCreds returns peering cert, key, ca
+// GetPeeringServerCreds returns peering cert, key, ca.
 func GetPeeringServerCreds(ctx context.Context, bs service.BootstrapService, rpcPort int, host string) (cert, key, ca []byte, err error) {
 	nctx, cancel := context.WithTimeout(ctx, time.Second*10)
 	defer cancel()

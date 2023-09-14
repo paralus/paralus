@@ -16,7 +16,7 @@ type groupServer struct {
 	service.GroupService
 }
 
-// NewGroupServer returns new group server implementation
+// NewGroupServer returns new group server implementation.
 func NewGroupServer(ps service.GroupService) rpcv3.GroupServiceServer {
 	return &groupServer{ps}
 }

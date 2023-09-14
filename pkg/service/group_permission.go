@@ -11,7 +11,7 @@ import (
 	"github.com/uptrace/bun"
 )
 
-// GroupPermissionService is the interface for group permission operations
+// GroupPermissionService is the interface for group permission operations.
 type GroupPermissionService interface {
 	GetGroupPermissions(ctx context.Context, groupNames []string, orgID, partnerID string) ([]sentry.GroupPermission, error)
 	GetGroupProjectsByPermission(ctx context.Context, groupNames []string, orgID, partnerID string, permission string) ([]sentry.GroupPermission, error)
@@ -19,12 +19,12 @@ type GroupPermissionService interface {
 	GetProjectByGroup(ctx context.Context, groupNames []string, orgID, partnerID string) ([]sentry.GroupPermission, error)
 }
 
-// groupPermissionService implements GroupPermissionService
+// groupPermissionService implements GroupPermissionService.
 type groupPermissionService struct {
 	db *bun.DB
 }
 
-// NewKubeconfigRevocation return new kubeconfig revocation service
+// NewKubeconfigRevocation return new kubeconfig revocation service.
 func NewGroupPermissionService(db *bun.DB) GroupPermissionService {
 	return &groupPermissionService{db}
 }

@@ -15,18 +15,18 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// KubeconfigSettingService is the interface for kube config setting operations
+// KubeconfigSettingService is the interface for kube config setting operations.
 type KubeconfigSettingService interface {
 	Get(ctx context.Context, orgID string, accountID string, isSSO bool) (*sentry.KubeconfigSetting, error)
 	Patch(ctx context.Context, ks *sentry.KubeconfigSetting) error
 }
 
-// kubeconfigSettingService implements KubeconfigSettingService
+// kubeconfigSettingService implements KubeconfigSettingService.
 type kubeconfigSettingService struct {
 	db *bun.DB
 }
 
-// NewKubeconfigSettingService return new kubeconfig setting service
+// NewKubeconfigSettingService return new kubeconfig setting service.
 func NewKubeconfigSettingService(db *bun.DB) KubeconfigSettingService {
 	return &kubeconfigSettingService{db}
 }

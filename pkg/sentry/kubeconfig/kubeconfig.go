@@ -10,21 +10,19 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/paralus/paralus/internal/constants"
 	"github.com/paralus/paralus/pkg/log"
 	"github.com/paralus/paralus/pkg/query"
+	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
+	"github.com/paralus/paralus/pkg/sentry/util"
+	"github.com/paralus/paralus/pkg/service"
 	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
 	rpcv3 "github.com/paralus/paralus/proto/rpc/user"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	sentry "github.com/paralus/paralus/proto/types/sentry"
 	"go.uber.org/zap"
-
 	clientcmdapiv1 "k8s.io/client-go/tools/clientcmd/api/v1"
 	"sigs.k8s.io/yaml"
-
-	"github.com/paralus/paralus/internal/constants"
-	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
-	"github.com/paralus/paralus/pkg/sentry/util"
-	"github.com/paralus/paralus/pkg/service"
 )
 
 const (
@@ -34,7 +32,7 @@ const (
 
 var _log = log.GetLogger()
 
-// GetUserCN returns user cn from attrs
+// GetUserCN returns user cn from attrs.
 func GetUserCN(attrs map[string]string) string {
 	var keys []string
 	for key := range attrs {
@@ -53,7 +51,7 @@ func GetUserCN(attrs map[string]string) string {
 	return strings.TrimRight(sb.String(), "/")
 }
 
-// GetUserAttrs returns attrs from cn
+// GetUserAttrs returns attrs from cn.
 func GetUserAttrs(cn string) map[string]string {
 	attrs := strings.Split(cn, "/")
 	ret := make(map[string]string)
@@ -111,7 +109,7 @@ func getProjectsForAccount(ctx context.Context, accountID, orgID, partnerID stri
 	return projects, isOrgScope, nil
 }
 
-// GetConfigForUser returns YAML encoding of kubeconfig
+// GetConfigForUser returns YAML encoding of kubeconfig.
 func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, req *sentryrpc.GetForUserRequest, pf cryptoutil.PasswordFunc, kss service.KubeconfigSettingService, ksvc service.ApiKeyService, os service.OrganizationService, ps service.PartnerService, al *zap.Logger) ([]byte, error) {
 	opts := req.Opts
 	if opts.Selector != "" {
@@ -165,15 +163,12 @@ func GetConfigForUser(ctx context.Context, bs service.BootstrapService, aps serv
 		_log.Errorw("error getting account data", "error", err.Error())
 		return nil, fmt.Errorf("account information not present in request")
 	}
-
-	//validate if organization id or name is given, should support both
 	if opts.Organization == "" {
 		_log.Errorw("error getting organization data", "error", err.Error())
 		return nil, fmt.Errorf("organization information is missing in request")
 	}
 	oid, err := uuid.Parse(opts.Organization)
 	if err != nil {
-		//looks like name is provided, fetch org id
 		org, err := os.GetByName(ctx, opts.Organization)
 		if err != nil {
 			_log.Errorw("error getting organization data", "error", err.Error())
@@ -357,7 +352,6 @@ func getCertValidity(ctx context.Context, orgID, accountID string, isSSO bool, k
 }
 
 func getConfig(username, namespace, certCN, serverHost string, bootstrapInfra *sentry.BootstrapInfra, bootstrapAgents []*sentry.BootstrapAgent, pf cryptoutil.PasswordFunc, certValidity time.Duration, clusterName string) (*clientcmdapiv1.Config, error) {
-
 	if namespace == "" {
 		namespace = "default"
 	}
@@ -452,7 +446,7 @@ func getConfig(username, namespace, certCN, serverHost string, bootstrapInfra *s
 	return config, nil
 }
 
-// GetConfigForCluster returns YAML encoded kubeconfig
+// GetConfigForCluster returns YAML encoded kubeconfig.
 func GetConfigForCluster(ctx context.Context, bs service.BootstrapService, req *sentryrpc.GetForClusterRequest, pf cryptoutil.PasswordFunc, kss service.KubeconfigSettingService, sessionType string) ([]byte, error) {
 	opts := req.Opts
 	if opts.Selector != "" {
@@ -563,11 +557,9 @@ func GetConfigForCluster(ctx context.Context, bs service.BootstrapService, req *
 		return nil, err
 	}
 	return yaml.JSONToYAML(jb)
-
 }
 
 func getUserConfig(ctx context.Context, opts commonv3.QueryOptions, username, namespace, certCN, serverHost string, bootstrapInfra *sentry.BootstrapInfra, bootstrapAgents []*sentry.BootstrapAgent, pf cryptoutil.PasswordFunc, certValidity time.Duration, bs service.BootstrapService) (*clientcmdapiv1.Config, error) {
-
 	if namespace == "" {
 		namespace = "default"
 	}
@@ -637,7 +629,6 @@ func getUserConfig(ctx context.Context, opts commonv3.QueryOptions, username, na
 		if ba.Spec.TemplateRef != "paralus-core-relay-agent" && ba.Spec.TemplateRef != "paralus-core-cd-relay-agent" {
 			// handle custome relay network
 		} else {
-
 			host := strings.ReplaceAll(serverHost, "*", ba.Metadata.Name)
 
 			clusters = append(clusters, clientcmdapiv1.NamedCluster{

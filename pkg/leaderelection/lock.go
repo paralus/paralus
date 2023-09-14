@@ -5,9 +5,8 @@ import (
 	rl "k8s.io/client-go/tools/leaderelection/resourcelock"
 )
 
-// NewLock returns new resource lock
+// NewLock returns new resource lock.
 func NewLock(lockName, lockNamespace, id string) (rl.Interface, error) {
-
 	config, err := GetConfig()
 	if err != nil {
 		return nil, err
@@ -27,7 +26,7 @@ func NewLock(lockName, lockNamespace, id string) (rl.Interface, error) {
 	)
 }
 
-// NewConfigMapLock returns new lock backed by ConfigMap
+// NewConfigMapLock returns new lock backed by ConfigMap.
 func NewConfigMapLock(lockName, lockNamespace, id string) (rl.Interface, error) {
 	config, err := GetConfig()
 	if err != nil {
@@ -46,5 +45,4 @@ func NewConfigMapLock(lockName, lockNamespace, id string) (rl.Interface, error) 
 		nil,
 		rl.ResourceLockConfig{Identity: id},
 	)
-
 }

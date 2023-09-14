@@ -14,7 +14,7 @@ type projectServer struct {
 	service.ProjectService
 }
 
-// NewProjectServer returns new project server implementation
+// NewProjectServer returns new project server implementation.
 func NewProjectServer(ps service.ProjectService) systemrpc.ProjectServiceServer {
 	return &projectServer{ps}
 }
@@ -42,7 +42,6 @@ func (s *projectServer) GetProjects(ctx context.Context, req *systempbv3.Project
 }
 
 func (s *projectServer) GetProject(ctx context.Context, req *systempbv3.Project) (*systempbv3.Project, error) {
-
 	resp, err := s.GetByName(ctx, req.Metadata.Name)
 	return updateProjectStatus(req, resp, err), err
 }

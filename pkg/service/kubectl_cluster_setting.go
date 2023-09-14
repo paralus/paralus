@@ -14,18 +14,18 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// KubectlClusterSettingsService is the interface for kubectl cluster setting operations
+// KubectlClusterSettingsService is the interface for kubectl cluster setting operations.
 type KubectlClusterSettingsService interface {
 	Get(ctx context.Context, orgID string, clusterID string) (*sentry.KubectlClusterSettings, error)
 	Patch(ctx context.Context, kc *sentry.KubectlClusterSettings) error
 }
 
-// kubectlClusterSettingsService implements KubectlClusterSettingsService
+// kubectlClusterSettingsService implements KubectlClusterSettingsService.
 type kubectlClusterSettingsService struct {
 	db *bun.DB
 }
 
-// NewKubectlClusterSettingsService return new kubectl cluster setting service
+// NewKubectlClusterSettingsService return new kubectl cluster setting service.
 func NewkubectlClusterSettingsService(db *bun.DB) KubectlClusterSettingsService {
 	return &kubectlClusterSettingsService{db}
 }

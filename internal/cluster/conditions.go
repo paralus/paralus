@@ -10,22 +10,22 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// ClusterConditionFunc is the function signature for creating new cluster condition
+// ClusterConditionFunc is the function signature for creating new cluster condition.
 type ClusterConditionFunc func(status commonv3.ParalusConditionStatus, reason string) *infrav3.ClusterCondition
 
-// ClusterConditionReadyFunc checks if condition type is ready
+// ClusterConditionReadyFunc checks if condition type is ready.
 type ClusterConditionReadyFunc func(c *infrav3.Cluster) bool
 
-// NamespaceConditionFunc is the function signature for creating new cluster namespace condition
+// NamespaceConditionFunc is the function signature for creating new cluster namespace condition.
 type NamespaceConditionFunc func(status commonv3.ParalusConditionStatus, reason string) *scheduler.ClusterNamespaceCondition
 
-// NamespaceConditionReadyFunc checks if condition type is ready
+// NamespaceConditionReadyFunc checks if condition type is ready.
 type NamespaceConditionReadyFunc func(n *scheduler.ClusterNamespace) bool
 
-// NamespaceConfitionReasonFunc returns condition status reason
+// NamespaceConfitionReasonFunc returns condition status reason.
 type NamespaceConfitionReasonFunc func(n *scheduler.ClusterNamespace) string
 
-// ClusterConditionCooledDownFunc checks if condition type is in retry and last updated has passed
+// ClusterConditionCooledDownFunc checks if condition type is in retry and last updated has passed.
 type ClusterConditionCooledDownFunc func(c *infrav3.Cluster, passed time.Duration) bool
 
 var (
@@ -72,7 +72,7 @@ var (
 	IsClusterDeleteCooledDown         ClusterConditionCooledDownFunc = isClusterCooledDown(infrav3.ClusterConditionType_ClusterDelete)
 )
 
-// DefaultClusterConditions is the default cluster conditions list
+// DefaultClusterConditions is the default cluster conditions list.
 var DefaultClusterConditions = func() []*infrav3.ClusterCondition {
 	var conditions []*infrav3.ClusterCondition
 
@@ -100,7 +100,7 @@ func newClusterCondition(conditionType infrav3.ClusterConditionType) func(status
 	}
 }
 
-// SetClusterCondition sets condition in cluster conditions
+// SetClusterCondition sets condition in cluster conditions.
 var SetClusterCondition = func(c *infrav3.Cluster, condtition *infrav3.ClusterCondition) {
 	for i, ec := range c.Spec.ClusterData.ClusterStatus.Conditions {
 		if ec.Type == condtition.Type {
@@ -108,7 +108,6 @@ var SetClusterCondition = func(c *infrav3.Cluster, condtition *infrav3.ClusterCo
 			break
 		}
 	}
-
 }
 
 func isClusterCondition(conditionStatus commonv3.ParalusConditionStatus, conditionTypes ...infrav3.ClusterConditionType) func(c *infrav3.Cluster) bool {

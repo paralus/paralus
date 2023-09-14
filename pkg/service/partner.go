@@ -15,7 +15,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// PartnerService is the interface for partner operations
+// PartnerService is the interface for partner operations.
 type PartnerService interface {
 	// create partner
 	Create(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error)
@@ -31,24 +31,23 @@ type PartnerService interface {
 	GetOnlyPartner(ctx context.Context) (*systemv3.Partner, error)
 }
 
-// partnerService implements PartnerService
+// partnerService implements PartnerService.
 type partnerService struct {
 	db *bun.DB
 	al *zap.Logger
 }
 
-// NewPartnerService return new partner service
+// NewPartnerService return new partner service.
 func NewPartnerService(db *bun.DB, al *zap.Logger) PartnerService {
 	return &partnerService{db, al}
 }
 
 func (s *partnerService) Create(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error) {
-
 	var sb []byte
 	if partner.GetSpec().GetSettings() != nil {
 		sb = json.RawMessage(partner.GetSpec().GetSettings().String())
 	}
-	//convert v3 spec to internal models
+
 	part := models.Partner{
 		Name:                      partner.GetMetadata().GetName(),
 		Description:               partner.GetMetadata().GetDescription(),
@@ -75,7 +74,6 @@ func (s *partnerService) Create(ctx context.Context, partner *systemv3.Partner) 
 	}
 
 	if createdPartner, ok := entity.(*models.Partner); ok {
-		//update v3 spec
 		partner.Metadata.Id = createdPartner.ID.String()
 		partner.Metadata.ModifiedAt = timestamppb.New(createdPartner.ModifiedAt)
 
@@ -83,11 +81,9 @@ func (s *partnerService) Create(ctx context.Context, partner *systemv3.Partner) 
 	}
 
 	return partner, nil
-
 }
 
 func (s *partnerService) GetByID(ctx context.Context, id string) (*systemv3.Partner, error) {
-
 	partner := &systemv3.Partner{
 		ApiVersion: apiVersion,
 		Kind:       partnerKind,
@@ -106,7 +102,6 @@ func (s *partnerService) GetByID(ctx context.Context, id string) (*systemv3.Part
 	}
 
 	if part, ok := entity.(*models.Partner); ok {
-
 		partner.Metadata = &v3.Metadata{
 			Name:        part.Name,
 			Description: part.Description,
@@ -124,11 +119,9 @@ func (s *partnerService) GetByID(ctx context.Context, id string) (*systemv3.Part
 			OpsHost:           part.OpsHost,
 			FavIconLink:       part.FavIconLink,
 			IsTOTPEnabled:     part.IsTOTPEnabled,
-			Settings:          nil, //TODO
 		}
 
 		return partner, nil
-
 	} else {
 		partner := &systemv3.Partner{
 			ApiVersion: apiVersion,
@@ -145,11 +138,9 @@ func (s *partnerService) GetByID(ctx context.Context, id string) (*systemv3.Part
 
 		return partner, nil
 	}
-
 }
 
 func (s *partnerService) GetByName(ctx context.Context, name string) (*systemv3.Partner, error) {
-
 	partner := &systemv3.Partner{
 		ApiVersion: apiVersion,
 		Kind:       partnerKind,
@@ -164,7 +155,6 @@ func (s *partnerService) GetByName(ctx context.Context, name string) (*systemv3.
 	}
 
 	if part, ok := entity.(*models.Partner); ok {
-
 		partner.Metadata = &v3.Metadata{
 			Name:        part.Name,
 			Id:          part.ID.String(),
@@ -183,7 +173,6 @@ func (s *partnerService) GetByName(ctx context.Context, name string) (*systemv3.
 			OpsHost:           part.OpsHost,
 			FavIconLink:       part.FavIconLink,
 			IsTOTPEnabled:     part.IsTOTPEnabled,
-			Settings:          nil, //TODO
 		}
 
 		return partner, nil
@@ -204,11 +193,9 @@ func (s *partnerService) GetByName(ctx context.Context, name string) (*systemv3.
 
 		return partner, nil
 	}
-
 }
 
 func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error) {
-
 	entity, err := dao.GetByName(ctx, s.db, partner.Metadata.Name, &models.Partner{})
 	if err != nil {
 		return &systemv3.Partner{}, err
@@ -220,7 +207,6 @@ func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) 
 	}
 
 	if part, ok := entity.(*models.Partner); ok {
-		//update partner details
 		part.Name = partner.GetMetadata().Name
 		part.Description = partner.GetMetadata().GetDescription()
 		part.Settings = sb
@@ -237,17 +223,13 @@ func (s *partnerService) Update(ctx context.Context, partner *systemv3.Partner) 
 		part.IsTOTPEnabled = partner.GetSpec().GetIsTOTPEnabled()
 		part.ModifiedAt = time.Now()
 
-		//Update the partner details
 		_, err = dao.Update(ctx, s.db, part.ID, part)
 		if err != nil {
 			return &systemv3.Partner{}, err
 		}
-
-		//update metadata and status
 		partner.Metadata.ModifiedAt = timestamppb.New(part.ModifiedAt)
 
 		CreatePartnerAuditEvent(ctx, s.al, AuditActionUpdate, partner.GetMetadata().GetName(), part.ID)
-
 	}
 
 	return partner, nil
@@ -270,7 +252,6 @@ func (s *partnerService) Delete(ctx context.Context, partner *systemv3.Partner) 
 	}
 
 	return partner, nil
-
 }
 
 func (s *partnerService) GetOnlyPartner(ctx context.Context) (partner *systemv3.Partner, err error) {

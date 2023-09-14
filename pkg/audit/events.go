@@ -13,22 +13,20 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-var (
-	_log = logv2.GetLogger()
-)
+var _log = logv2.GetLogger()
 
 type (
-	// EventVersion is the version of event
+	// EventVersion is the version of event.
 	EventVersion string
-	// EventOrigin is the origin of the event
+	// EventOrigin is the origin of the event.
 	EventOrigin string
-	// EventCategory is the category of the event
+	// EventCategory is the category of the event.
 	EventCategory string
-	// EventTopic is the topic to which event has to be published
+	// EventTopic is the topic to which event has to be published.
 	EventTopic string
 )
 
-// Audit events constants
+// Audit events constants.
 const (
 	RawLogsEventsTopic EventTopic    = "dp-raw-logs-events"
 	VersionV1          EventVersion  = "1.0"
@@ -37,12 +35,12 @@ const (
 	AuditCategory      EventCategory = "AUDIT"
 )
 
-// EventActorAccount Event's initiator account
+// EventActorAccount Event's initiator account.
 type EventActorAccount struct {
 	Username string `json:"username"`
 }
 
-// EventActor Event's initiator
+// EventActor Event's initiator.
 type EventActor struct {
 	Type string `json:"type"`
 	// Add org and partner id once we have multi-org support
@@ -52,7 +50,7 @@ type EventActor struct {
 	Groups  []string          `json:"groups"`
 }
 
-// EventClient Event's client
+// EventClient Event's client.
 type EventClient struct {
 	Type      string `json:"type"`
 	IP        string `json:"ip"`
@@ -60,13 +58,13 @@ type EventClient struct {
 	Host      string `json:"host"`
 }
 
-// EventDetail Event's detail
+// EventDetail Event's detail.
 type EventDetail struct {
 	Message string            `json:"message"`
 	Meta    map[string]string `json:"meta"`
 }
 
-// Event is struct to hold event data
+// Event is struct to hold event data.
 type Event struct {
 	Version   EventVersion  `json:"version"`
 	Category  EventCategory `json:"category"`
@@ -92,75 +90,74 @@ type createEventOptions struct {
 	groups    []string
 }
 
-// WithVersion sets version for audit event
+// WithVersion sets version for audit event.
 func WithVersion(version EventVersion) CreateEventOption {
 	return func(opts *createEventOptions) {
 		opts.version = version
 	}
 }
 
-// WithOrigin sets origin for audit event
+// WithOrigin sets origin for audit event.
 func WithOrigin(origin EventOrigin) CreateEventOption {
 	return func(opts *createEventOptions) {
 		opts.origin = origin
 	}
 }
 
-// WithCategory sets category for audit event
+// WithCategory sets category for audit event.
 func WithCategory(category EventCategory) CreateEventOption {
 	return func(opts *createEventOptions) {
 		opts.category = category
 	}
 }
 
-// WithTopic sets topic for audit event
+// WithTopic sets topic for audit event.
 func WithTopic(topic EventTopic) CreateEventOption {
 	return func(opts *createEventOptions) {
 		opts.topic = topic
 	}
 }
 
-// WithProject sets project id for audit event
+// WithProject sets project id for audit event.
 func WithProject(project string) CreateEventOption {
 	return func(opts *createEventOptions) {
 		opts.project = project
 	}
 }
 
-// WithContext sets context for audit event
+// WithContext sets context for audit event.
 func WithContext(ctx context.Context) CreateEventOption {
 	return func(opts *createEventOptions) {
 		opts.ctx = ctx
 	}
 }
 
-// WithAccountID sets account id for audit event
+// WithAccountID sets account id for audit event.
 func WithAccountID(accountID string) CreateEventOption {
 	return func(opts *createEventOptions) {
 		opts.accountID = accountID
 	}
 }
 
-// WithUsername sets username for audit event
+// WithUsername sets username for audit event.
 func WithUsername(username string) CreateEventOption {
 	return func(opts *createEventOptions) {
 		opts.username = username
 	}
 }
 
-// WithGroups sets groups for audit event
+// WithGroups sets groups for audit event.
 func WithGroups(groups []string) CreateEventOption {
 	return func(opts *createEventOptions) {
 		opts.groups = groups
 	}
 }
 
-// CreateEventOption is the functional arg for creating audit event
+// CreateEventOption is the functional arg for creating audit event.
 type CreateEventOption func(opts *createEventOptions)
 
-// CreateEvent creates an event
+// CreateEvent creates an event.
 func CreateEvent(al *zap.Logger, event *Event, opts ...CreateEventOption) error {
-
 	cOpts := createEventOptions{}
 	for _, opt := range opts {
 		opt(&cOpts)

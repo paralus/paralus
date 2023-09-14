@@ -14,7 +14,6 @@ import (
 )
 
 func CreateCluster(ctx context.Context, tx bun.IDB, cluster *models.Cluster) error {
-
 	clstrToken := &models.ClusterToken{
 		OrganizationId: cluster.OrganizationId,
 		PartnerId:      cluster.PartnerId,
@@ -50,7 +49,6 @@ func CreateCluster(ctx context.Context, tx bun.IDB, cluster *models.Cluster) err
 }
 
 func UpdateCluster(ctx context.Context, db bun.IDB, c *models.Cluster) error {
-
 	_, err := dao.Update(ctx, db, c.ID, c)
 	if err != nil {
 		return err
@@ -60,7 +58,6 @@ func UpdateCluster(ctx context.Context, db bun.IDB, c *models.Cluster) error {
 }
 
 func UpdateClusterAnnotations(ctx context.Context, db bun.IDB, c *models.Cluster) error {
-
 	_, err := db.NewUpdate().Model((*models.Cluster)(nil)).
 		Set("annotations = ?", c.Annotations).
 		Where("id = ?", c.ID).Exec(ctx)
@@ -72,7 +69,6 @@ func UpdateClusterAnnotations(ctx context.Context, db bun.IDB, c *models.Cluster
 }
 
 func GetCluster(ctx context.Context, db bun.IDB, cluster *models.Cluster) (*models.Cluster, error) {
-
 	if cluster.ID != uuid.Nil {
 		_, err := dao.GetByID(ctx, db, cluster.ID, cluster)
 		if err != nil {
@@ -98,7 +94,6 @@ func DeleteCluster(ctx context.Context, db bun.IDB, c *models.Cluster) error {
 }
 
 func ListClusters(ctx context.Context, db bun.IDB, qo commonv3.QueryOptions) (clusters []models.Cluster, err error) {
-
 	pid := uuid.NullUUID{UUID: uuid.MustParse(qo.Partner), Valid: true}
 	oid := uuid.NullUUID{UUID: uuid.MustParse(qo.Organization), Valid: true}
 	prid := uuid.NullUUID{UUID: uuid.MustParse(qo.Project), Valid: true}

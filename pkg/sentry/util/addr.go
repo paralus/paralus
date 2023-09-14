@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// ParseAddr parses addr into host and port
+// ParseAddr parses addr into host and port.
 func ParseAddr(addr string) (host string, port int32) {
 	idx := strings.Index(addr, ":")
 	if idx >= 0 {

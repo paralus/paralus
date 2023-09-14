@@ -194,7 +194,6 @@ func main() {
 	us := service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, nil, common.CliConfigDownloadData{}, auditLogger, true)
 	prs := service.NewProjectService(db, as, auditLogger, true)
 
-	//check if there are role permissions already present
 	existingPermissions := &[]models.ResourceRolePermission{}
 	_, err = dao.ListAll(context.Background(), db, existingPermissions)
 	if err != nil {
@@ -204,8 +203,6 @@ func main() {
 		fmt.Println("resource permissions already exists! cannot invoke initialize again")
 		return
 	}
-
-	//add resource permissions
 	err = addResourcePermissions(db, path.Join("scripts", "initialize", "permissions", "base"))
 	if err != nil {
 		log.Fatal("Error running from base directory ", err)
@@ -247,7 +244,6 @@ func main() {
 		}
 	}
 
-	//default "All Local Users" group should be created
 	localUsersGrp, err := gs.Create(context.Background(), &userv3.Group{
 		Metadata: &commonv3.Metadata{
 			Name:         "All Local Users",
@@ -262,8 +258,6 @@ func main() {
 	if err != nil {
 		log.Fatal("unable to create default group", err)
 	}
-
-	//default "Organization Admins" group should be created
 	admingrp, err := gs.Create(context.Background(), &userv3.Group{
 		Metadata: &commonv3.Metadata{
 			Name:         "Organization Admins",
@@ -283,8 +277,6 @@ func main() {
 	if err != nil {
 		log.Fatal("unable to create default group", err)
 	}
-
-	//default project with name "default" should be created with default flag true
 	prs.Create(context.Background(), &systemv3.Project{
 		Metadata: &commonv3.Metadata{
 			Name:         "default",

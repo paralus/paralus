@@ -1,6 +1,6 @@
 package main
 
-//sentry
+// sentry
 //go:generate go run cmd/generate-enum/main.go BootstrapInfraType $PWD/proto/types/sentry
 //go:generate go run cmd/generate-enum/main.go BootstrapAgentType $PWD/proto/types/sentry
 //go:generate go run cmd/generate-enum/main.go BootstrapAgentMode $PWD/proto/types/sentry

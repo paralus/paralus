@@ -58,15 +58,15 @@ type ClusterService interface {
 	Delete(ctx context.Context, cluster *infrav3.Cluster) error
 	// list cluster
 	List(ctx context.Context, opts ...query.Option) (*infrav3.ClusterList, error)
-	//update cluster status
+
 	UpdateClusterConditionStatus(ctx context.Context, current *infrav3.Cluster) error
 	// update cluster annotations
 	UpdateClusterAnnotations(ctx context.Context, cluster *infrav3.Cluster) error
-	//listen clusters
+
 	ListenClusters(ctx context.Context, mChan chan<- commonv3.Metadata)
-	//Get cluster projects
+
 	GetClusterProjects(ctx context.Context, cluster *infrav3.Cluster) ([]models.ProjectCluster, error)
-	//Validate and update cluster status
+
 	UpdateStatus(ctx context.Context, current *infrav3.Cluster, opts ...query.Option) error
 	// Create bootstrap agent for cluster
 	CreateBootstrapAgentForCluster(ctx context.Context, cluster *infrav3.Cluster) error
@@ -74,11 +74,11 @@ type ClusterService interface {
 	GetRelaysConfigForCluster(ctx context.Context, cluster *infrav3.Cluster) ([]common.Relay, error)
 	// Update projects for bootstrap agents for cluster
 	UpdateProjectsForBootstrapAgentForCluster(ctx context.Context, cluster *infrav3.Cluster) error
-	//Add event handlers
+
 	AddEventHandler(evh event.Handler)
 }
 
-// clusterService implements ClusterService
+// clusterService implements ClusterService.
 type clusterService struct {
 	db              *bun.DB
 	downloadData    common.DownloadData
@@ -87,7 +87,7 @@ type clusterService struct {
 	al              *zap.Logger
 }
 
-// NewClusterService return new cluster service
+// NewClusterService return new cluster service.
 func NewClusterService(db *bun.DB, data *common.DownloadData, bs BootstrapService, al *zap.Logger) ClusterService {
 	return &clusterService{db: db, downloadData: *data, bs: bs, al: al}
 }
@@ -306,7 +306,6 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 }
 
 func (s *clusterService) Select(ctx context.Context, cluster *infrav3.Cluster, isExtended bool) (*infrav3.Cluster, error) {
-
 	clstr := &infrav3.Cluster{
 		ApiVersion: constants.ApiVersion,
 		Kind:       constants.ClusterKind,
@@ -350,7 +349,7 @@ func (s *clusterService) Select(ctx context.Context, cluster *infrav3.Cluster, i
 		metro = entity.(*models.Metro)
 	}
 
-	//TODO: Get cluster workload information
+	// TODO: Get cluster workload information
 	clstr = s.prepareClusterResponse(ctx, clstr, c, metro, projects, isExtended)
 
 	return clstr, nil
@@ -405,7 +404,6 @@ func (s *clusterService) Get(ctx context.Context, opts ...query.Option) (*infrav
 }
 
 func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infrav3.Cluster, c *models.Cluster, metro *models.Metro, projects []models.ProjectCluster, isExtended bool) *infrav3.Cluster {
-
 	var part models.Partner
 	_, err := dao.GetNameById(ctx, s.db, c.PartnerId, &part)
 	if err != nil {
@@ -494,7 +492,6 @@ func (s *clusterService) prepareClusterResponse(ctx context.Context, clstr *infr
 }
 
 func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (*infrav3.Cluster, error) {
-
 	projectName := cluster.Metadata.Project
 	var errormsg string
 
@@ -549,7 +546,6 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 	clusterLabels[constants.ClusterLabelKey] = cluster.Metadata.Name
 	lbsBytes, _ := json.Marshal(clusterLabels)
 
-	//update editable fields
 	cdb.ModifiedAt = time.Now()
 	cdb.OverrideSelector = cluster.Spec.OverrideSelector
 	cdb.ShareMode = cluster.Spec.ShareMode.String()
@@ -559,8 +555,6 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 		annBytes, _ := json.Marshal(cluster.Metadata.Annotations)
 		cdb.Annotations = json.RawMessage(annBytes)
 	}
-
-	//location of cluster is updated
 	if cluster.Spec.Metro != nil && cdb.MetroId.String() != cluster.Spec.Metro.Id {
 		metro := &models.Metro{}
 		if cluster.Spec.Metro.Name != "" {
@@ -602,7 +596,6 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 				cdb.Conditions = json.RawMessage(cndBytes)
 			}
 		}
-
 	}
 	err = cdao.UpdateCluster(ctx, s.db, cdb)
 	if err != nil {
@@ -646,7 +639,6 @@ func (s *clusterService) Update(ctx context.Context, cluster *infrav3.Cluster) (
 }
 
 func (s *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) error {
-
 	projectName := cluster.Metadata.Project
 	cluster, err := s.Get(ctx, func(qo *commonv3.QueryOptions) {
 		qo.Name = cluster.Metadata.Name
@@ -694,11 +686,9 @@ func (s *clusterService) Delete(ctx context.Context, cluster *infrav3.Cluster) e
 		CreateClusterAuditEvent(ctx, s.al, AuditActionDelete, cluster.GetMetadata().GetName(), id, projectName)
 	}
 	return nil
-
 }
 
 func (cs *clusterService) deleteCluster(ctx context.Context, clusterId, projectId string) error {
-
 	c := models.Cluster{
 		ID:        uuid.MustParse(clusterId),
 		ProjectId: uuid.MustParse(projectId),
@@ -711,7 +701,6 @@ func (cs *clusterService) deleteCluster(ctx context.Context, clusterId, projectI
 }
 
 func (cs *clusterService) List(ctx context.Context, opts ...query.Option) (*infrav3.ClusterList, error) {
-
 	queryOptions := commonv3.QueryOptions{}
 	for _, opt := range opts {
 		opt(&queryOptions)
@@ -764,7 +753,7 @@ func (cs *clusterService) List(ctx context.Context, opts ...query.Option) (*infr
 			}
 			metro = entity.(*models.Metro)
 		}
-		//TODO: workload related stuff pending
+		// TODO: workload related stuff pending
 		cluster := cs.prepareClusterResponse(ctx, &infrav3.Cluster{}, &clstr, metro, projects, false)
 		items = append(items, cluster)
 	}
@@ -775,7 +764,6 @@ func (cs *clusterService) List(ctx context.Context, opts ...query.Option) (*infr
 }
 
 func (s *clusterService) UpdateClusterConditionStatus(ctx context.Context, current *infrav3.Cluster) error {
-
 	existing, err := s.Get(ctx, func(qo *commonv3.QueryOptions) {
 		qo.ClusterID = current.Metadata.Id
 		qo.Name = current.Metadata.Name
@@ -797,8 +785,6 @@ func (s *clusterService) UpdateClusterConditionStatus(ctx context.Context, curre
 
 	_log.Debugw("updated cluster conditions", "name", existing.Spec.ClusterData.ClusterStatus.Conditions)
 	_log.Debugw("updated cluster object", "name", existing.Metadata.Name)
-
-	//update the cluster
 	_, err = s.Update(ctx, existing)
 	if err != nil {
 		return err
@@ -850,21 +836,17 @@ listenerLoop:
 			if err != nil {
 				_log.Infow("unable to unmarshal cluster notification", "error", err)
 				continue
-
 			}
 
 			select {
 			case mChan <- meta:
 			default:
 			}
-
 		}
 	}
-
 }
 
 func (s *clusterService) GetClusterProjects(ctx context.Context, cluster *infrav3.Cluster) ([]models.ProjectCluster, error) {
-
 	id, err := uuid.Parse(cluster.Metadata.Id)
 	if err != nil {
 		id = uuid.Nil
@@ -919,7 +901,7 @@ func (s *clusterService) UpdateStatus(ctx context.Context, current *infrav3.Clus
 	return nil
 }
 
-// CreateForCluster creates bootstrap agent for cluster
+// CreateForCluster creates bootstrap agent for cluster.
 func (s *clusterService) CreateBootstrapAgentForCluster(ctx context.Context, cluster *infrav3.Cluster) error {
 	var relays []common.Relay
 
@@ -945,7 +927,6 @@ func (s *clusterService) CreateBootstrapAgentForCluster(ctx context.Context, clu
 				err = errors.Wrap(err, "unable to get bootstrap agent")
 				return err
 			}
-
 		}
 
 		if !found {
@@ -1007,7 +988,7 @@ func (s *clusterService) CreateBootstrapAgentForCluster(ctx context.Context, clu
 	return nil
 }
 
-// GetRelayAgentsForCluster creates bootstrap agent for cluster
+// GetRelayAgentsForCluster creates bootstrap agent for cluster.
 func (s *clusterService) GetRelaysConfigForCluster(ctx context.Context, cluster *infrav3.Cluster) ([]common.Relay, error) {
 	var relays []common.Relay
 
@@ -1056,9 +1037,8 @@ func (s *clusterService) GetRelaysConfigForCluster(ctx context.Context, cluster 
 	return relays, nil
 }
 
-// UpdateProjectsForCluster updates projects for bootstrap agent for cluster
+// UpdateProjectsForCluster updates projects for bootstrap agent for cluster.
 func (s *clusterService) UpdateProjectsForBootstrapAgentForCluster(ctx context.Context, cluster *infrav3.Cluster) error {
-
 	resp, err := s.bs.SelectBootstrapAgentTemplates(ctx, query.WithOptions(&commonv3.QueryOptions{
 		GlobalScope: true,
 		Selector:    "paralus.dev/defaultRelay=true",
@@ -1069,7 +1049,6 @@ func (s *clusterService) UpdateProjectsForBootstrapAgentForCluster(ctx context.C
 
 	// create bootstrap agent
 	for _, bat := range resp.Items {
-
 		agent := &sentry.BootstrapAgent{
 			Metadata: &commonv3.Metadata{
 				Id:           cluster.Metadata.Id,
@@ -1099,7 +1078,6 @@ func (s *clusterService) UpdateProjectsForBootstrapAgentForCluster(ctx context.C
 		if err != nil {
 			return err
 		}
-
 	}
 	return nil
 }

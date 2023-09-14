@@ -110,5 +110,4 @@ func TestLeaderElectionConfigMapRun(t *testing.T) {
 
 	time.Sleep(time.Second * 20)
 	close(stop1)
-
 }

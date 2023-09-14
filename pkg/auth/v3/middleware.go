@@ -26,7 +26,7 @@ type authMiddleware struct {
 }
 
 // NewAuthMiddleware creates as a middleware for the HTTP server which
-// does the auth and authz by talking to kratos server and casbin
+// does the auth and authz by talking to kratos server and casbin.
 func NewAuthMiddleware(al *zap.Logger, opt Option) negroni.Handler {
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(getDSN())))
 	return &authMiddleware{
@@ -153,14 +153,14 @@ func serveHTTP(opt Option,
 }
 
 // ServeHTTP function is called by the HTTP server to invoke the
-// middleware
+// middleware.
 func (am *authMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	serveHTTP(am.opt, am.db, am.ac.IsRequestAllowed, rw, r, next)
 }
 
 // ServeHTTP function is called by the HTTP server to invoke the
 // middleware.  Same as previous ServeHTTP, but uses
-// remoteAuthMiddleware instead of authMiddleware
+// remoteAuthMiddleware instead of authMiddleware.
 func (am *remoteAuthMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	serveHTTP(
 		am.opt,

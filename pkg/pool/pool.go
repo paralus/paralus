@@ -11,12 +11,12 @@ import (
 	"google.golang.org/grpc/keepalive"
 )
 
-// grpc pool constants
+// grpc pool constants.
 const (
 	DefaultMaxPoolConn = 20
 )
 
-// GRPCPool holds all the shared state for GRPC pool
+// GRPCPool holds all the shared state for GRPC pool.
 type GRPCPool struct {
 	capacity int
 	creds    credentials.TransportCredentials
@@ -25,7 +25,7 @@ type GRPCPool struct {
 	m sync.Mutex
 }
 
-// NewGRPCPool returns new auth pool
+// NewGRPCPool returns new auth pool.
 func NewGRPCPool(addr string, maxConnections int, creds credentials.TransportCredentials) *GRPCPool {
 	// min number of connections for grpc across all services is
 	// set to 20; any service creating a connection pool size < 20
@@ -36,7 +36,7 @@ func NewGRPCPool(addr string, maxConnections int, creds credentials.TransportCre
 	return &GRPCPool{addr: addr, capacity: maxConnections, creds: creds}
 }
 
-// GetConnection returns new connection from grpc pool
+// GetConnection returns new connection from grpc pool.
 func (gp *GRPCPool) GetConnection(ctx context.Context) (*grpcpool.ClientConn, error) {
 	nCtx, cancel := context.WithTimeout(ctx, time.Second*10)
 	defer cancel()
@@ -65,7 +65,7 @@ func (gp *GRPCPool) GetConnection(ctx context.Context) (*grpcpool.ClientConn, er
 	return cc, nil
 }
 
-// newPool returns new grpc connection pool for given host port and capacity
+// newPool returns new grpc connection pool for given host port and capacity.
 func newPool(target string, capacity int) (*grpcpool.Pool, error) {
 	pool, err := grpcpool.New(func() (*grpc.ClientConn, error) {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
@@ -86,7 +86,7 @@ func newPool(target string, capacity int) (*grpcpool.Pool, error) {
 	return pool, err
 }
 
-// newSecurePool returns new grpc connection pool for given host port and credentials
+// newSecurePool returns new grpc connection pool for given host port and credentials.
 func newSecurePool(target string, capacity int, creds credentials.TransportCredentials) (*grpcpool.Pool, error) {
 	pool, err := grpcpool.New(func() (*grpc.ClientConn, error) {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
@@ -106,5 +106,4 @@ func newSecurePool(target string, capacity int, creds credentials.TransportCrede
 		return cc, err
 	}, 1, capacity, time.Second*60)
 	return pool, err
-
 }

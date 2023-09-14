@@ -11,7 +11,7 @@ import (
 )
 
 func GetUserType(ctx context.Context, db bun.IDB, id uuid.UUID) (string, error) {
-	var user = models.KratosIdentities{}
+	user := models.KratosIdentities{}
 	q := db.NewSelect().Model(&user)
 	q.Relation("IdentityCredential").
 		Relation("IdentityCredential.IdentityCredentialType")
@@ -24,7 +24,7 @@ func GetUserType(ctx context.Context, db bun.IDB, id uuid.UUID) (string, error) 
 }
 
 func GetGroups(ctx context.Context, db bun.IDB, id uuid.UUID) ([]models.Group, error) {
-	var entities = []models.Group{}
+	entities := []models.Group{}
 	err := db.NewSelect().Model(&entities).
 		Join(`JOIN authsrv_groupaccount ON authsrv_groupaccount.group_id="group".id`).
 		Where("authsrv_groupaccount.account_id = ?", id).
@@ -36,7 +36,7 @@ func GetGroups(ctx context.Context, db bun.IDB, id uuid.UUID) ([]models.Group, e
 func GetUserRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.ProjectNamespaceRole, error) {
 	// Could possibly union them later for some speedup
 	// TODO filter by org and partner
-	var r = []*userv3.ProjectNamespaceRole{}
+	r := []*userv3.ProjectNamespaceRole{}
 	err := db.NewSelect().Table("authsrv_accountresourcerole").
 		ColumnExpr("authsrv_resourcerole.name as role").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_accountresourcerole.role_id`).
@@ -48,7 +48,7 @@ func GetUserRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Proj
 		return nil, err
 	}
 
-	var pr = []*userv3.ProjectNamespaceRole{}
+	pr := []*userv3.ProjectNamespaceRole{}
 	err = db.NewSelect().Table("authsrv_projectaccountresourcerole").
 		ColumnExpr("distinct authsrv_resourcerole.name as role, authsrv_project.name as project").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountresourcerole.role_id`).
@@ -62,7 +62,7 @@ func GetUserRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Proj
 		return nil, err
 	}
 
-	var pnr = []*userv3.ProjectNamespaceRole{}
+	pnr := []*userv3.ProjectNamespaceRole{}
 	err = db.NewSelect().Table("authsrv_projectaccountnamespacerole").
 		ColumnExpr("authsrv_resourcerole.name as role, authsrv_project.name as project, namespace").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectaccountnamespacerole.role_id`).
@@ -121,7 +121,6 @@ func GetQueryFilteredUsers(ctx context.Context, db bun.IDB, partner, org, group,
 		acc = append(acc, a.AccountId)
 	}
 	return acc, nil
-
 }
 
 func listFilteredUsersQuery(
@@ -167,7 +166,7 @@ func listFilteredUsersQuery(
 	return q
 }
 
-// ListFilteredUsers will return the list of users fileterd by query
+// ListFilteredUsers will return the list of users fileterd by query.
 func ListFilteredUsers(
 	ctx context.Context,
 	db bun.IDB,
@@ -183,7 +182,6 @@ func ListFilteredUsers(
 	q := db.NewSelect().Model(&users)
 	listFilteredUsersQuery(q, fusers, query, utype, orderBy, order, limit, offset)
 
-	//restrict oidc users, this is required as kratos creates entry with credential type password for oidc users as well
 	if utype == KratosPasswordType {
 		var ssousers []models.KratosIdentities
 		oq := db.NewSelect().Model(&ssousers).
@@ -207,7 +205,7 @@ func ListFilteredUsers(
 	return users, nil
 }
 
-// ListFilteredUsersWithGroup is ListFilteredUsers but with Group fileter as well
+// ListFilteredUsersWithGroup is ListFilteredUsers but with Group fileter as well.
 func ListFilteredUsersWithGroup(
 	ctx context.Context,
 	db bun.IDB,

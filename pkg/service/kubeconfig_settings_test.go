@@ -62,7 +62,6 @@ func TestGetKubeconfigSetting(t *testing.T) {
 }
 
 func TestGetKubeconfigSettingInvalidId(t *testing.T) {
-
 	ouuid := uuid.New().String()
 	acuuid := uuid.UUID.String(uuid.New())
 
@@ -170,5 +169,4 @@ func TestUpdateKubeconfigSetting(t *testing.T) {
 			performkubeconfigSettingBasicChecks(t, kss, uuuid, ouuid, acuuid, tc.validity_seconds, tc.sa_validity_seconds, true, true)
 		})
 	}
-
 }

@@ -16,7 +16,6 @@ import (
 const project = "projectone"
 
 func TestAuditLog(t *testing.T) {
-
 	testcases := []struct {
 		name string
 		run  func(t *testing.T)
@@ -48,7 +47,6 @@ func TestAuditLog(t *testing.T) {
 
 func testGetAuditLogForLastHour(tag string) func(t *testing.T) {
 	return func(t *testing.T) {
-
 		db, mock := getDB(t)
 		defer db.Close()
 
@@ -105,7 +103,6 @@ func testGetAuditLogForLastHour(tag string) func(t *testing.T) {
 
 func testGetAuditLogForDay(tag string) func(t *testing.T) {
 	return func(t *testing.T) {
-
 		db, mock := getDB(t)
 		defer db.Close()
 
@@ -162,7 +159,6 @@ func testGetAuditLogForDay(tag string) func(t *testing.T) {
 
 func testGetKubectlCommands(tag string) func(t *testing.T) {
 	return func(t *testing.T) {
-
 		db, mock := getDB(t)
 		defer db.Close()
 

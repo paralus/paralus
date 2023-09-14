@@ -15,12 +15,12 @@ const (
 	csrType = "CERTIFICATE REQUEST"
 )
 
-// EncodeCSR encodes DER encoded CSR to PEM
+// EncodeCSR encodes DER encoded CSR to PEM.
 func EncodeCSR(csr []byte) []byte {
 	return pem.EncodeToMemory(&pem.Block{Type: csrType, Bytes: csr})
 }
 
-// DecodeCSR decodes PEM encoded CSR
+// DecodeCSR decodes PEM encoded CSR.
 func DecodeCSR(csr []byte) (cr *x509.CertificateRequest, err error) {
 	var p *pem.Block
 	p, err = decodePEM(csr)
@@ -41,7 +41,7 @@ func DecodeCSR(csr []byte) (cr *x509.CertificateRequest, err error) {
 	return
 }
 
-// CreateCSR creates csr for commonName
+// CreateCSR creates csr for commonName.
 func CreateCSR(subject pkix.Name, privKey crypto.PrivateKey) ([]byte, error) {
 	req := &x509.CertificateRequest{
 		Subject: subject,
@@ -59,5 +59,4 @@ func CreateCSR(subject pkix.Name, privKey crypto.PrivateKey) ([]byte, error) {
 	}
 
 	return EncodeCSR(b), nil
-
 }

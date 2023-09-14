@@ -11,17 +11,17 @@ import (
 )
 
 const (
-	// DefaultLimit is the default limit if no limit is set in query options
+	// DefaultLimit is the default limit if no limit is set in query options.
 	DefaultLimit = 10
-	// MaxLimit is the max limit for page size
+	// MaxLimit is the max limit for page size.
 	MaxLimit = 50
-	// MaxOffset is the max offset
+	// MaxOffset is the max offset.
 	MaxOffset = 100000
-	// DefaultOrderBy is the default column used to order results
+	// DefaultOrderBy is the default column used to order results.
 	DefaultOrderBy = "created_at"
 	orderASC       = "ASC"
 	orderDESC      = "DESC"
-	// DefaultOrder is the order of the results
+	// DefaultOrder is the order of the results.
 	DefaultOrder = orderASC
 )
 
@@ -53,17 +53,17 @@ const (
 
 var (
 	// ErrNoName is returned when name is not set in query option
-	// trying to build query for get/update/delete
+	// trying to build query for get/update/delete.
 	ErrNoName     = errors.New("name not set in options")
 	ErrNoNameOrID = errors.New("neither name nor id is set in options")
 )
 
-// Option is the functional query option signature
+// Option is the functional query option signature.
 type Option func(*commonv3.QueryOptions)
 
 type setOption func(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.SelectQuery, error)
 
-// WithMeta sets meta in query options
+// WithMeta sets meta in query options.
 func WithMeta(o *commonv3.Metadata) Option {
 	return func(opts *commonv3.QueryOptions) {
 		opts.Name = o.GetName()
@@ -77,7 +77,7 @@ func WithMeta(o *commonv3.Metadata) Option {
 	}
 }
 
-// WithOptions copies options to query options
+// WithOptions copies options to query options.
 func WithOptions(in *commonv3.QueryOptions) Option {
 	return func(opts *commonv3.QueryOptions) {
 		*opts = *in
@@ -86,14 +86,14 @@ func WithOptions(in *commonv3.QueryOptions) Option {
 	}
 }
 
-// WithIgnoreScopeDefault ignores default values for scope when building queries
+// WithIgnoreScopeDefault ignores default values for scope when building queries.
 func WithIgnoreScopeDefault() Option {
 	return func(opts *commonv3.QueryOptions) {
 		opts.IgnoreScopeDefault = true
 	}
 }
 
-// WithExtended sets extended in query options
+// WithExtended sets extended in query options.
 func WithExtended() Option {
 	return func(opts *commonv3.QueryOptions) {
 		opts.Extended = true
@@ -101,7 +101,7 @@ func WithExtended() Option {
 }
 
 // WithGlobalScope should be used to query resources in global scope
-// partnerID, orgID, projectID = 0, 0, 0
+// partnerID, orgID, projectID = 0, 0, 0.
 func WithGlobalScope() Option {
 	return func(opts *commonv3.QueryOptions) {
 		opts.GlobalScope = true
@@ -138,7 +138,7 @@ func Paginate(q *bun.SelectQuery, opts *commonv3.QueryOptions) *bun.SelectQuery 
 	return q
 }
 
-// Select builds query for selecting resources
+// Select builds query for selecting resources.
 func Select(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.SelectQuery, error) {
 	var err error
 	q, err = setRequestMeta(q, opts)
@@ -151,23 +151,20 @@ func Select(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.SelectQuery, 
 		return nil, err
 	}
 
-	//q = Order(q, opts)
-
 	return q, nil
 }
 
-// GetAccountID returns account ID from QueryOptions
+// GetAccountID returns account ID from QueryOptions.
 func GetAccountID(opts *commonv3.QueryOptions) (string, error) {
 	switch {
 	case opts.GlobalScope:
 		return "", nil
 	default:
 		return opts.Account, nil
-
 	}
 }
 
-// GetOrganizationID returns organization id from QueryOptions
+// GetOrganizationID returns organization id from QueryOptions.
 func GetOrganizationID(opts *commonv3.QueryOptions) (string, error) {
 	switch {
 	case opts.GlobalScope:
@@ -191,7 +188,6 @@ func setRequestMeta(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.Selec
 	}
 
 	return q, nil
-
 }
 
 func setProject(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.SelectQuery, error) {
@@ -205,7 +201,6 @@ func setProject(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.SelectQue
 }
 
 func setOrganization(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.SelectQuery, error) {
-
 	id := opts.Organization
 
 	if !opts.GlobalScope && id != "" {
@@ -213,7 +208,6 @@ func setOrganization(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.Sele
 	}
 
 	return q, nil
-
 }
 
 func setPartner(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.SelectQuery, error) {
@@ -227,62 +221,60 @@ func setPartner(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.SelectQue
 	return q, nil
 }
 
-// WithName sets name in query options
+// WithName sets name in query options.
 func WithName(name string) Option {
 	return func(opts *commonv3.QueryOptions) {
 		opts.Name = name
 	}
 }
 
-// WithSelector sets selector in query options
+// WithSelector sets selector in query options.
 func WithSelector(selector string) Option {
 	return func(opts *commonv3.QueryOptions) {
 		opts.Selector = selector
 	}
 }
 
-// WithDeleted sets deleted in query options
+// WithDeleted sets deleted in query options.
 func WithDeleted() Option {
 	return func(opts *commonv3.QueryOptions) {
 		opts.Deleted = true
 	}
 }
 
-// WithPartnerID sets partner id in query options
+// WithPartnerID sets partner id in query options.
 func WithPartnerID(partnerID string) Option {
 	return func(opts *commonv3.QueryOptions) {
 		opts.Partner = partnerID
 	}
 }
 
-// WithOrganizationID sets organization id in query options
+// WithOrganizationID sets organization id in query options.
 func WithOrganizationID(organizationID string) Option {
 	return func(opts *commonv3.QueryOptions) {
 		opts.Organization = organizationID
 	}
 }
 
-// WithProjectID sets project id in query options
+// WithProjectID sets project id in query options.
 func WithProjectID(projectID string) Option {
 	return func(opts *commonv3.QueryOptions) {
 		opts.Project = projectID
 	}
 }
 
-// GetClusterID returns cluster ID from QueryOptions
+// GetClusterID returns cluster ID from QueryOptions.
 func GetClusterID(opts *commonv3.QueryOptions) (string, error) {
 	switch {
 	case opts.GlobalScope:
 		return "", nil
 	default:
 		return opts.ClusterID, nil
-
 	}
 }
 
-// Get builds query for getting resource
+// Get builds query for getting resource.
 func Get(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.SelectQuery, error) {
-
 	var err error
 	if !opts.GlobalScope {
 		q, err = setRequestMeta(q, opts)
@@ -305,9 +297,8 @@ func Get(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.SelectQuery, err
 	return q, nil
 }
 
-// Update builds query for updating resource
+// Update builds query for updating resource.
 func Update(uq *bun.UpdateQuery, opts *commonv3.QueryOptions) (*bun.UpdateQuery, error) {
-
 	uq = uq.Set(modifiedAtQ, time.Now())
 	if opts.DisplayName != "" {
 		uq = uq.Set(displayNameQ, opts.DisplayName)
@@ -322,7 +313,7 @@ func Update(uq *bun.UpdateQuery, opts *commonv3.QueryOptions) (*bun.UpdateQuery,
 	return uq, nil
 }
 
-// Delete builds query for deleting resource
+// Delete builds query for deleting resource.
 func Delete(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.UpdateQuery, error) {
 	var err error
 	q, err = Get(q, opts)

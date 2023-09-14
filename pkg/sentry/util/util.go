@@ -27,7 +27,7 @@ func stripCtlFromBytes(inputStr string) string {
 	return ret
 }
 
-// SanitizeUsername sanitizes username as a k8s name
+// SanitizeUsername sanitizes username as a k8s name.
 func SanitizeUsername(username string) (name string) {
 	name = strings.ToLower(username)
 	name = stripCtlFromBytes(name)
@@ -50,7 +50,7 @@ const (
 	organizationPrefixLen = len(organizationPrefix)
 )
 
-// GetTemplateScope returns template scope from url
+// GetTemplateScope returns template scope from url.
 func GetTemplateScope(templateScope string) (scope string, err error) {
 	if strings.HasPrefix(templateScope, templatePrefix) {
 		scope = templateScope[templatePrefixLen:]
@@ -61,12 +61,12 @@ func GetTemplateScope(templateScope string) (scope string, err error) {
 	return
 }
 
-// ToTemplateScope converts scope into template scope
+// ToTemplateScope converts scope into template scope.
 func ToTemplateScope(scope string) string {
 	return fmt.Sprintf("%s%s", templatePrefix, scope)
 }
 
-// GetClusterScope returns cluster scope from url
+// GetClusterScope returns cluster scope from url.
 func GetClusterScope(clusterScope string) (scope string, err error) {
 	if strings.HasPrefix(clusterScope, clusterPrefix) {
 		scope = clusterScope[clusterPrefixLen:]
@@ -77,12 +77,12 @@ func GetClusterScope(clusterScope string) (scope string, err error) {
 	return
 }
 
-// ToClusterScope converts scope into cluster scope
+// ToClusterScope converts scope into cluster scope.
 func ToClusterScope(scope string) string {
 	return fmt.Sprintf("%s%s", clusterPrefix, scope)
 }
 
-// GetUserScope returns user scope from url
+// GetUserScope returns user scope from url.
 func GetUserScope(userScope string) (scope string, err error) {
 	if strings.HasPrefix(userScope, ssoUserPrefix) {
 		scope = userScope[ssoUserPrefixLen:]
@@ -97,12 +97,12 @@ func GetUserScope(userScope string) (scope string, err error) {
 	return
 }
 
-// ToUserScope converts scope into user scope
+// ToUserScope converts scope into user scope.
 func ToUserScope(scope string) string {
 	return fmt.Sprintf("%s%s", userPrefix, scope)
 }
 
-// GetOrganizationScope returns organization scope from url
+// GetOrganizationScope returns organization scope from url.
 func GetOrganizationScope(organizationScope string) (scope string, err error) {
 	if strings.HasPrefix(organizationScope, organizationPrefix) {
 		scope = organizationScope[organizationPrefixLen:]
@@ -113,7 +113,7 @@ func GetOrganizationScope(organizationScope string) (scope string, err error) {
 	return
 }
 
-// ToOrganizationScope converts scope into organization scope
+// ToOrganizationScope converts scope into organization scope.
 func ToOrganizationScope(scope string) string {
 	return fmt.Sprintf("%s%s", organizationPrefix, scope)
 }

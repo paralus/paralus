@@ -15,7 +15,6 @@ func TestServicePatch(t *testing.T) {
 		return
 	}
 	t.Log(string(b))
-
 }
 
 func TestServicePatch1(t *testing.T) {

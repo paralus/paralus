@@ -10,11 +10,10 @@ import (
 	"strings"
 	"time"
 
-	"google.golang.org/grpc/peer"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/keepalive"
+	"google.golang.org/grpc/peer"
 )
 
 var (
@@ -29,11 +28,11 @@ var (
 		}),
 	}
 
-	// ErrInvalidClient is returned when client cert is not present in peer context
+	// ErrInvalidClient is returned when client cert is not present in peer context.
 	ErrInvalidClient = errors.New("client has not presented certificate")
 )
 
-// NewSecureServerWithPEM creates a secure gRPC service with give PEM encoded cert, key and ca
+// NewSecureServerWithPEM creates a secure gRPC service with give PEM encoded cert, key and ca.
 func NewSecureServerWithPEM(cert, key, ca []byte, opts ...grpc.ServerOption) (*grpc.Server, error) {
 	certificate, err := tls.X509KeyPair(cert, key)
 	if err != nil {
@@ -54,7 +53,7 @@ func NewSecureServerWithPEM(cert, key, ca []byte, opts ...grpc.ServerOption) (*g
 	return grpc.NewServer(opts...), nil
 }
 
-// NewSecureServer returns new grpc server given cert path, key path and ca path
+// NewSecureServer returns new grpc server given cert path, key path and ca path.
 func NewSecureServer(certPath, keyPath, caPath string, opts ...grpc.ServerOption) (*grpc.Server, error) {
 	certificate, err := tls.LoadX509KeyPair(certPath, keyPath)
 	if err != nil {
@@ -81,13 +80,13 @@ func NewSecureServer(certPath, keyPath, caPath string, opts ...grpc.ServerOption
 	return grpc.NewServer(opts...), nil
 }
 
-// NewServer returns new unsecured grpc server
+// NewServer returns new unsecured grpc server.
 func NewServer(opts ...grpc.ServerOption) (*grpc.Server, error) {
 	opts = append(opts, serverDefaultOpts...)
 	return grpc.NewServer(opts...), nil
 }
 
-// GetClientName returns client CommonName from client cert
+// GetClientName returns client CommonName from client cert.
 func GetClientName(ctx context.Context) (string, error) {
 	if p, ok := peer.FromContext(ctx); ok {
 		tlsInfo := p.AuthInfo.(credentials.TLSInfo)
@@ -96,10 +95,9 @@ func GetClientName(ctx context.Context) (string, error) {
 		}
 	}
 	return "", ErrInvalidClient
-
 }
 
-// GetClientOU returns client Organization Unit from client cert
+// GetClientOU returns client Organization Unit from client cert.
 func GetClientOU(ctx context.Context) (string, error) {
 	if p, ok := peer.FromContext(ctx); ok {
 		tlsInfo := p.AuthInfo.(credentials.TLSInfo)

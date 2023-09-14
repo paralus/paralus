@@ -16,19 +16,19 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// KubeconfigRevocation is the interface for bootstrap operations
+// KubeconfigRevocation is the interface for bootstrap operations.
 type KubeconfigRevocationService interface {
 	Get(ctx context.Context, orgID string, accountID string, isSSOUser bool) (*sentry.KubeconfigRevocation, error)
 	Patch(ctx context.Context, kr *sentry.KubeconfigRevocation) error
 }
 
-// bootstrapService implements BootstrapService
+// bootstrapService implements BootstrapService.
 type kubeconfigRevocationService struct {
 	db *bun.DB
 	al *zap.Logger
 }
 
-// NewKubeconfigRevocation return new kubeconfig revocation service
+// NewKubeconfigRevocation return new kubeconfig revocation service.
 func NewKubeconfigRevocationService(db *bun.DB, al *zap.Logger) KubeconfigRevocationService {
 	return &kubeconfigRevocationService{db, al}
 }

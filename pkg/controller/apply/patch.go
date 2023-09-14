@@ -6,14 +6,11 @@ import (
 
 	"github.com/paralus/paralus/pkg/controller/scheme"
 	"github.com/paralus/paralus/pkg/controller/util"
-	sp "k8s.io/apimachinery/pkg/util/strategicpatch"
-
 	"k8s.io/apimachinery/pkg/types"
+	sp "k8s.io/apimachinery/pkg/util/strategicpatch"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
-
-//var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 var (
 	patchLog = logf.Log.WithName("cluster-v2-patch")
@@ -77,9 +74,8 @@ func (p *patch) Type() types.PatchType {
 	return types.MergePatchType
 }
 
-// NewPatch prepres patch for current runtime Object
+// NewPatch prepres patch for current runtime Object.
 func NewPatch(current client.Object) client.Patch {
-
 	return &patch{
 		current: current,
 	}
@@ -111,14 +107,13 @@ func (p *patchStatus) Data(current client.Object) ([]byte, error) {
 	}
 
 	return sp.StrategicMergePatch(oBuf.Bytes(), pb, p.statusObj)
-
 }
 
 func (p *patchStatus) Type() types.PatchType {
 	return types.MergePatchType
 }
 
-// NewStatus returns new path for status objects
+// NewStatus returns new path for status objects.
 func NewStatus(original client.Object, statusObj interface{}) client.Patch {
 	return &patchStatus{
 		o:         original,

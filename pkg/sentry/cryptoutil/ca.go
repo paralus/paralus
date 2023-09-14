@@ -17,7 +17,7 @@ func getSerialNumber() *big.Int {
 }
 
 // GenerateCA Generates PEM encoded CA Certificate and Private key
-// PasswordFunc should return non zero value to encrypt the PEM encoded private key
+// PasswordFunc should return non zero value to encrypt the PEM encoded private key.
 func GenerateCA(subject pkix.Name, f PasswordFunc) (cert, key []byte, err error) {
 	var caCert *x509.Certificate
 	var privKey *ecdsa.PrivateKey

@@ -19,5 +19,4 @@ func TestLogger(t *testing.T) {
 	time.Sleep(time.Second)
 	log.Infow("test ingo", "key", "value")
 	log.Debugw("test debug", "key", "value")
-
 }

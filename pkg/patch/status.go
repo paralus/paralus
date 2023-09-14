@@ -9,10 +9,10 @@ import (
 )
 
 type clusterConditions struct {
-	Conditions []*infrav3.ClusterCondition `json:"conditions" patchStrategy:"merge" patchMergeKey:"type"`
+	Conditions []*infrav3.ClusterCondition `json:"conditions" patchMergeKey:"type" patchStrategy:"merge"`
 }
 
-// ClusterStatus patches existing cluster status with current
+// ClusterStatus patches existing cluster status with current.
 func ClusterStatus(existing, current *infrav3.ClusterStatus) error {
 	eb, err := json.Marshal(clusterConditions{Conditions: existing.Conditions})
 	if err != nil {
@@ -46,7 +46,7 @@ func ClusterStatus(existing, current *infrav3.ClusterStatus) error {
 	return nil
 }
 
-// ClusterNodeStatus patches existing cluster node status with current
+// ClusterNodeStatus patches existing cluster node status with current.
 func ClusterNodeStatus(existing, current *infrav3.ClusterNodeStatus) error {
 	eb, err := json.Marshal(existing)
 	if err != nil {
@@ -76,7 +76,7 @@ func ClusterNodeStatus(existing, current *infrav3.ClusterNodeStatus) error {
 	return nil
 }
 
-// NamespaceStatus patches existing namespace status with current
+// NamespaceStatus patches existing namespace status with current.
 func NamespaceStatus(existing, current *scheduler.ClusterNamespaceStatus) error {
 	eb, err := json.Marshal(existing)
 	if err != nil {

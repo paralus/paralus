@@ -7,7 +7,6 @@ import (
 
 func TestEncryptDecryptPrivateKey(t *testing.T) {
 	privKey, err := GenerateECDSAPrivateKey()
-
 	if err != nil {
 		t.Error(err)
 		return
@@ -32,5 +31,4 @@ func TestEncryptDecryptPrivateKey(t *testing.T) {
 	if !reflect.DeepEqual(privKey1, privKey) {
 		t.Error("expected same key")
 	}
-
 }

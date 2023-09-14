@@ -188,7 +188,6 @@ func TestOidcProviderUpdate(t *testing.T) {
 }
 
 func TestOidcProviderUpdateInvalidUrl(t *testing.T) {
-
 	tt := []struct {
 		name       string
 		IssuerUrl  string
@@ -288,7 +287,6 @@ func TestOidcProviderList(t *testing.T) {
 		AddRow(pruuid2, "provider_name-"+pruuid2, issuerUrl2))
 
 	providerList, err := ops.List(context.Background())
-
 	if err != nil {
 		t.Fatal("could not list oidc provider:", err, pruuid)
 	}

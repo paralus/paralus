@@ -12,22 +12,21 @@ import (
 )
 
 var (
-	// ErrInvalidToken is returned when token is invalid
+	// ErrInvalidToken is returned when token is invalid.
 	ErrInvalidToken = errors.New("invalid token")
-	// ErrUsedToken is returned when token has been registered
+	// ErrUsedToken is returned when token has been registered.
 	ErrUsedToken = errors.New("used token")
 )
 
-// CreateToken creates a token for given cluster name
+// CreateToken creates a token for given cluster name.
 func CreateToken(ctx context.Context, db bun.IDB, token *models.ClusterToken) error {
 	token.Name = xid.New().String()
 	_, err := dao.Create(ctx, db, token)
 	return err
 }
 
-// registerToken registers the cluster token
+// registerToken registers the cluster token.
 func RegisterToken(ctx context.Context, db bun.IDB, token string) (*models.ClusterToken, error) {
-
 	entity, err := dao.GetX(ctx, db, "name", token, &models.ClusterToken{})
 	if err != nil {
 		return nil, ErrInvalidToken

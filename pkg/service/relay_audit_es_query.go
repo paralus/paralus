@@ -32,7 +32,7 @@ func (ra *relayAuditElasticSearchService) GetRelayAuditByProjects(req *v1.RelayA
 	var buf bytes.Buffer
 	var r map[string]interface{}
 	res = &v1.RelayAuditResponse{}
-	//Handle defaults value
+
 	query := map[string]interface{}{
 		"_source": []string{"json"},
 		"size":    500,
@@ -74,8 +74,6 @@ func (ra *relayAuditElasticSearchService) GetRelayAuditByProjects(req *v1.RelayA
 			},
 		},
 	}
-
-	//aggregations
 	agg, _ := query["aggs"].(map[string]interface{})
 	if req.GetFilter().DashboardData {
 		agg["group_by_cluster"] = map[string]interface{}{
@@ -97,12 +95,12 @@ func (ra *relayAuditElasticSearchService) GetRelayAuditByProjects(req *v1.RelayA
 					},
 				},
 				//----------Trend not added in current Dashboard - might be useful later------
-				//"group_by_time": map[string]interface{}{
+				// "group_by_time": map[string]interface{}{
 				//	"date_histogram": map[string]interface{}{
 				//		"field":    "ts",
 				//		"interval": "1h",
 				//	},
-				//},
+				// },
 			},
 		}
 	}
@@ -112,7 +110,6 @@ func (ra *relayAuditElasticSearchService) GetRelayAuditByProjects(req *v1.RelayA
 	b, _ := q["bool"].(map[string]interface{})
 	m, _ := b["must"].([]map[string]interface{})
 
-	//Results not required in case of dashboard - only aggregations required
 	if req.GetFilter().DashboardData {
 		query["size"] = 0
 	}
@@ -185,7 +182,6 @@ func (ra *relayAuditElasticSearchService) GetRelayAuditByProjects(req *v1.RelayA
 			}
 			m = append(m, t)
 		} else {
-
 			t := map[string]interface{}{
 				"terms": map[string]interface{}{
 					"json.project": req.Filter.Projects,

@@ -5,26 +5,21 @@ import (
 	"errors"
 
 	"github.com/paralus/paralus/pkg/controller/scheme"
+	"github.com/paralus/paralus/pkg/controller/util"
 	apiv2 "github.com/paralus/paralus/proto/types/controller"
 	rbacv1 "k8s.io/api/rbac/v1"
 	apixv1beta1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
-	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/runtime/schema"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-
-	"github.com/paralus/paralus/pkg/controller/util"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-var (
-	// ErrInvalidObject is returned for invalid object
-	ErrInvalidObject = errors.New("object interface not implemented")
-)
+// ErrInvalidObject is returned for invalid object.
+var ErrInvalidObject = errors.New("object interface not implemented")
 
-// FromObject creates step object from runtime object
+// FromObject creates step object from runtime object.
 func FromObject(ro runtime.Object) (*apiv2.StepObject, error) {
-
 	var so apiv2.StepObject
 	var err error
 
@@ -49,9 +44,8 @@ func FromObject(ro runtime.Object) (*apiv2.StepObject, error) {
 	return &so, nil
 }
 
-// SetNamespace sets namespace for runtime object
+// SetNamespace sets namespace for runtime object.
 func SetNamespace(ro runtime.Object, namespace string) error {
-
 	switch ro.(type) {
 	case *apixv1beta1.CustomResourceDefinition:
 	case *rbacv1.ClusterRole:
@@ -85,14 +79,12 @@ func SetNamespace(ro runtime.Object, namespace string) error {
 			return nil
 		}
 		return ErrInvalidObject
-
 	}
 	return nil
 }
 
-// ToObject converts step object to runtime object
+// ToObject converts step object to runtime object.
 func ToObject(so *apiv2.StepObject) (o runtime.Object, gvk *schema.GroupVersionKind, err error) {
-
 	accessor, err := so.Accessor()
 	if err != nil {
 		return
@@ -112,9 +104,8 @@ func ToObject(so *apiv2.StepObject) (o runtime.Object, gvk *schema.GroupVersionK
 	return o, gvk, err
 }
 
-// ToStructuredObject converts unstructured object to structured object
+// ToStructuredObject converts unstructured object to structured object.
 func ToStructuredObject(obj runtime.Object) runtime.Object {
-
 	if _, ok := obj.(*unstructured.Unstructured); ok {
 		bb := new(bytes.Buffer)
 		err := scheme.Serializer.Encode(obj, bb)
@@ -127,7 +118,6 @@ func ToStructuredObject(obj runtime.Object) runtime.Object {
 			return obj
 		}
 		return o
-
 	}
 
 	return obj
@@ -136,7 +126,7 @@ func ToStructuredObject(obj runtime.Object) runtime.Object {
 // ToUnstructuredObject converts step object to unstructured object,
 // this is useful for preserving original json serialized input in step object.
 // Note: while patching k8s resources, we should preserve the user input, as
-// patching can remove fields; which are represented as null values in the patch
+// patching can remove fields; which are represented as null values in the patch.
 func ToUnstructuredObject(so *apiv2.StepObject) (*unstructured.Unstructured, *schema.GroupVersionKind, error) {
 	var o runtime.Object
 	var err error
@@ -147,22 +137,22 @@ func ToUnstructuredObject(so *apiv2.StepObject) (*unstructured.Unstructured, *sc
 	return o.(*unstructured.Unstructured), gvk, err
 }
 
-// PatchMeta is the metadata to be added while patching
+// PatchMeta is the metadata to be added while patching.
 type PatchMeta struct {
 	Annotations map[string]string
 }
 
-// PatchOption is the functional patch option
+// PatchOption is the functional patch option.
 type PatchOption func(*PatchMeta)
 
-// AddAnnotations adds annotations to object
+// AddAnnotations adds annotations to object.
 func AddAnnotations(annotations map[string]string) PatchOption {
 	return func(m *PatchMeta) {
 		m.Annotations = annotations
 	}
 }
 
-// Patch patches the step object with give step object
+// Patch patches the step object with give step object.
 func Patch(input *apiv2.StepObject, with *apiv2.StepObject, opts ...PatchOption) error {
 	pm := &PatchMeta{}
 	for _, opt := range opts {
@@ -201,7 +191,6 @@ func Patch(input *apiv2.StepObject, with *apiv2.StepObject, opts ...PatchOption)
 		}
 
 		input.Raw = fb
-
 	}
 
 	if pm.Annotations != nil {

@@ -43,7 +43,6 @@ func CreateOperatorBootstrap(ctx context.Context, db bun.Tx, bootstrap *models.C
 }
 
 func GetOperatorBootstrap(ctx context.Context, db bun.IDB, clusterid string) (*models.ClusterOperatorBootstrap, error) {
-
 	var bootstrap models.ClusterOperatorBootstrap
 	entity, err := dao.GetX(ctx, db, "clusterid", clusterid, bootstrap)
 	if err != nil {
@@ -52,5 +51,4 @@ func GetOperatorBootstrap(ctx context.Context, db bun.IDB, clusterid string) (*m
 	}
 
 	return entity.(*models.ClusterOperatorBootstrap), err
-
 }

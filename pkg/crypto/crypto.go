@@ -27,7 +27,7 @@ func DecryptAES(key []byte, ct string) (string, error) {
 	}
 	pt := make([]byte, len(ciphertext))
 	c.Decrypt(pt, ciphertext)
-	s := string(pt[:])
+	s := string(pt)
 	return s, nil
 }
 

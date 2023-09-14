@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/paralus/paralus/pkg/controller/scheme"
-
 	apiv2 "github.com/paralus/paralus/proto/types/controller"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"

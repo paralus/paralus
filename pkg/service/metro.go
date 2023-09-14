@@ -13,7 +13,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// MetroService is the interface for metro operations
+// MetroService is the interface for metro operations.
 type MetroService interface {
 	// create metro
 	Create(ctx context.Context, metro *infrav3.Location) (*infrav3.Location, error)
@@ -31,25 +31,23 @@ type MetroService interface {
 	List(ctx context.Context, partner string) (*infrav3.LocationList, error)
 }
 
-// metroService implements MetroService
+// metroService implements MetroService.
 type metroService struct {
 	db *bun.DB
 }
 
-// NewProjectService return new project service
+// NewProjectService return new project service.
 func NewMetroService(db *bun.DB) MetroService {
 	return &metroService{db}
 }
 
 func (s *metroService) Create(ctx context.Context, metro *infrav3.Location) (*infrav3.Location, error) {
-
 	var part models.Partner
 	_, err := dao.GetByName(ctx, s.db, metro.Metadata.Partner, &part)
 	if err != nil {
 		return nil, err
 	}
 
-	//convert v3 spec to internal models
 	metrodb := models.Metro{
 		Name:           metro.Spec.Name,
 		CreatedAt:      time.Now(),
@@ -71,11 +69,9 @@ func (s *metroService) Create(ctx context.Context, metro *infrav3.Location) (*in
 	}
 
 	return metro, nil
-
 }
 
 func (s *metroService) GetByName(ctx context.Context, name string) (*infrav3.Location, error) {
-
 	var metro infrav3.Location
 
 	entity, err := dao.GetByName(ctx, s.db, name, &models.Metro{})
@@ -101,7 +97,6 @@ func (s *metroService) GetByName(ctx context.Context, name string) (*infrav3.Loc
 			},
 		}
 		return location, nil
-
 	}
 	return &metro, nil
 }
@@ -115,7 +110,6 @@ func (s *metroService) GetById(ctx context.Context, id uuid.UUID) (*infrav3.Loca
 	}
 
 	if metrodb, ok := entity.(*models.Metro); ok {
-
 		location := &infrav3.Location{
 			Metadata: &commonv3.Metadata{
 				Name:       metrodb.Name,
@@ -134,20 +128,17 @@ func (s *metroService) GetById(ctx context.Context, id uuid.UUID) (*infrav3.Loca
 		}
 
 		return location, nil
-
 	}
 	return &location, nil
 }
 
 func (s *metroService) Update(ctx context.Context, metro *infrav3.Location) (*infrav3.Location, error) {
-
 	entity, err := dao.GetByName(ctx, s.db, metro.Metadata.Name, &models.Metro{})
 	if err != nil {
 		return metro, err
 	}
 
 	if metrodb, ok := entity.(*models.Metro); ok {
-		//update metro details
 		metrodb.City = metro.Spec.City
 		metrodb.Country = metro.Spec.Country
 		metrodb.State = metro.Spec.State
@@ -167,7 +158,6 @@ func (s *metroService) Update(ctx context.Context, metro *infrav3.Location) (*in
 }
 
 func (s *metroService) Delete(ctx context.Context, metro *infrav3.Location) (*infrav3.Location, error) {
-
 	entity, err := dao.GetByName(ctx, s.db, metro.Metadata.Name, &models.Metro{})
 	if err != nil {
 		return metro, err
@@ -200,7 +190,6 @@ func (s *metroService) List(ctx context.Context, partner string) (*infrav3.Locat
 
 	if metrodbs, ok := entities.(*[]models.Metro); ok {
 		for _, metrodb := range *metrodbs {
-
 			metro := &infrav3.Metro{
 				Name:        metrodb.Name,
 				City:        metrodb.City,

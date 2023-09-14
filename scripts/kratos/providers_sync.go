@@ -17,14 +17,14 @@ import (
 type Provider struct {
 	Id              string                 `bun:"name"`
 	Provider        string                 `bun:"provider_name,notnull"`
-	MapperURL       string                 `bun:"mapper_url" yaml:"mapper_url"`
-	ClientId        string                 `bun:"client_id,notnull" yaml:"client_id"`
+	MapperURL       string                 `bun:"mapper_url"            yaml:"mapper_url"`
+	ClientId        string                 `bun:"client_id,notnull"     yaml:"client_id"`
 	ClientSecret    string                 `bun:"client_secret,notnull" yaml:"client_secret"`
 	Scope           []string               `bun:"scopes,array,notnull"`
-	IssuerURL       string                 `bun:"issuer_url,notnull" yaml:"issuer_url"`
-	AuthURL         string                 `bun:"auth_url" yaml:"auth_url,omitempty"`
-	TokenURL        string                 `bun:"token_url" yaml:"token_url,omitempty"`
-	RequestedClaims map[string]interface{} `bun:"type:jsonb" yaml:"requested_claims,omitempty"`
+	IssuerURL       string                 `bun:"issuer_url,notnull"    yaml:"issuer_url"`
+	AuthURL         string                 `bun:"auth_url"              yaml:"auth_url,omitempty"`
+	TokenURL        string                 `bun:"token_url"             yaml:"token_url,omitempty"`
+	RequestedClaims map[string]interface{} `bun:"type:jsonb"            yaml:"requested_claims,omitempty"`
 }
 
 type Config struct {
@@ -53,7 +53,7 @@ func sync(ctx context.Context, db *bun.DB, path string) error {
 	if err != nil {
 		return fmt.Errorf("failed to marshal: %s", err)
 	}
-	err = os.WriteFile(path, d, 0644)
+	err = os.WriteFile(path, d, 0o644)
 	if err != nil {
 		return fmt.Errorf("failed to write data: %s", err)
 	}
@@ -102,5 +102,4 @@ listen:
 			log.Info("Synchronized successfully")
 		}
 	}
-
 }

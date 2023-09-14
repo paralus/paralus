@@ -16,7 +16,6 @@ import (
 )
 
 func CreateOrUpdateBootstrapInfra(ctx context.Context, db bun.IDB, infra *models.BootstrapInfra) error {
-
 	_, err := db.NewInsert().On("CONFLICT (name) DO UPDATE").
 		Set("ca_cert = ?", infra.CaCert).
 		Set("ca_key = ?", infra.CaKey).
@@ -27,7 +26,6 @@ func CreateOrUpdateBootstrapInfra(ctx context.Context, db bun.IDB, infra *models
 }
 
 func CreateOrUpdateBootstrapAgentTemplate(ctx context.Context, db bun.IDB, template *models.BootstrapAgentTemplate) error {
-
 	_, err := db.NewInsert().On("CONFLICT (name) DO UPDATE").
 		Set("infra_ref = ?", template.InfraRef).
 		Set("ignore_multiple_register = ?", template.IgnoreMultipleRegister).
@@ -63,7 +61,6 @@ func SelectBootstrapAgentTemplates(ctx context.Context, db bun.IDB, opts *common
 }
 
 func DeleteBootstrapAgentTempate(ctx context.Context, db bun.IDB, opts *commonv3.QueryOptions, infraRef string) error {
-
 	q, err := query.Delete(db.NewSelect().Model((*models.BootstrapAgentTemplate)(nil)), opts)
 	if err != nil {
 		return err
@@ -106,7 +103,6 @@ func GetBootstrapAgents(ctx context.Context, db bun.IDB, opts *commonv3.QueryOpt
 }
 
 func SelectBootstrapAgents(ctx context.Context, db bun.IDB, templateRef string, opts *commonv3.QueryOptions) (ret []models.BootstrapAgent, count int, err error) {
-
 	q, err := query.Select(db.NewSelect().Model(&ret), opts)
 	if err != nil {
 		return
@@ -179,7 +175,6 @@ func getBootstrapAgentTemplate(ctx context.Context, db bun.IDB, name string) (*m
 }
 
 func DeleteBootstrapAgent(ctx context.Context, db bun.IDB, templateRef string, opts *commonv3.QueryOptions) error {
-
 	dq := db.NewDelete().Model((*models.BootstrapAgent)(nil)).Where("name = ?", opts.ID)
 	if templateRef != "" {
 		dq = dq.Where("template_ref = ?", templateRef)
@@ -191,7 +186,6 @@ func DeleteBootstrapAgent(ctx context.Context, db bun.IDB, templateRef string, o
 func UpdateBootstrapAgent(ctx context.Context, db bun.IDB, ba *models.BootstrapAgent, opts *commonv3.QueryOptions) error {
 	_, err := db.NewUpdate().Model(ba).Where("id = ?", ba.ID).Returning("*").Exec(ctx)
 	return err
-
 }
 
 func GetBootstrapAgentForToken(ctx context.Context, db bun.IDB, token string) (*models.BootstrapAgent, error) {
@@ -201,7 +195,6 @@ func GetBootstrapAgentForToken(ctx context.Context, db bun.IDB, token string) (*
 }
 
 func GetBootstrapAgentTemplateForHost(ctx context.Context, db bun.IDB, host string) (*models.BootstrapAgentTemplate, error) {
-
 	bat := models.BootstrapAgentTemplate{}
 	err := db.NewSelect().Model(&bat).
 		ColumnExpr("bat.*").
@@ -237,7 +230,7 @@ func GetBootstrapAgentForClusterID(ctx context.Context, db bun.IDB, clusterID st
 	return &ba, nil
 }
 
-// updateBootstrapAgentDeleteAt builds query for deleting resource
+// updateBootstrapAgentDeleteAt builds query for deleting resource.
 func UpdateBootstrapAgentDeleteAt(ctx context.Context, db bun.IDB, templateRef string) error {
 	var toBeDeletedAgent *models.BootstrapAgent
 	_, err := GetX(ctx, db, "template_ref", templateRef, &toBeDeletedAgent)
@@ -274,7 +267,7 @@ func UpdateBootstrapAgentTempateDeleteAt(ctx context.Context, db bun.IDB, opts *
 	return err
 }
 
-// updateBootstrapInfraDeleteAt builds query for deleting resource
+// updateBootstrapInfraDeleteAt builds query for deleting resource.
 func UpdateBootstrapInfraDeleteAt(ctx context.Context, db bun.IDB, opts *commonv3.QueryOptions) error {
 	q, err := query.Update(db.NewUpdate().Model((*models.BootstrapInfra)(nil)), opts)
 	if err != nil {

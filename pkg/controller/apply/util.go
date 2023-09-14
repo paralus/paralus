@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"reflect"
 
-	v1 "k8s.io/api/core/v1"
-
+	cruntime "github.com/paralus/paralus/pkg/controller/runtime"
 	"github.com/paralus/paralus/pkg/controller/scheme"
 	clusterv2 "github.com/paralus/paralus/proto/types/controller"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-
-	cruntime "github.com/paralus/paralus/pkg/controller/runtime"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
@@ -23,14 +21,10 @@ var (
 	ErrNoSelfLink = errors.New("selfLink was empty, can't make reference")
 )
 
-var (
-	// ErrNoPreviousConfig is returned when no previous configuration is found in the annotations
-	ErrNoPreviousConfig = errors.New("last applied configuration not found")
-)
+// ErrNoPreviousConfig is returned when no previous configuration is found in the annotations.
+var ErrNoPreviousConfig = errors.New("last applied configuration not found")
 
-var (
-	emptyGVK = schema.GroupVersionKind{}
-)
+var emptyGVK = schema.GroupVersionKind{}
 
 func getBytes(o runtime.Object, withOriginal bool) ([]byte, error) {
 	do := o.DeepCopyObject()
@@ -44,10 +38,9 @@ func getBytes(o runtime.Object, withOriginal bool) ([]byte, error) {
 		}
 	}
 	return runtime.Encode(unstructured.UnstructuredJSONScheme, o)
-
 }
 
-// GetOriginalConfig returns previous config of the object
+// GetOriginalConfig returns previous config of the object.
 func GetOriginalConfig(o runtime.Object) ([]byte, error) {
 	if mo, ok := o.(metav1.Object); ok {
 		annotations := mo.GetAnnotations()
@@ -60,7 +53,7 @@ func GetOriginalConfig(o runtime.Object) ([]byte, error) {
 	return nil, nil
 }
 
-// GetGVK returns group version kind of a runtime object
+// GetGVK returns group version kind of a runtime object.
 func GetGVK(obj runtime.Object) (schema.GroupVersionKind, error) {
 	gvks, _, err := scheme.Scheme.ObjectKinds(obj)
 	if err != nil {
@@ -69,13 +62,12 @@ func GetGVK(obj runtime.Object) (schema.GroupVersionKind, error) {
 	return gvks[0], nil
 }
 
-// updateObject updates current object with modified object
+// updateObject updates current object with modified object.
 func updateObject(current, modified runtime.Object) error {
 	if reflect.TypeOf(current) != reflect.TypeOf(modified) {
 		current = cruntime.ToStructuredObject(current)
 		modified = cruntime.ToStructuredObject(modified)
 
-		//return fmt.Errorf("current %T and modified %T of different types", current, modified)
 	}
 
 	switch current.(type) {

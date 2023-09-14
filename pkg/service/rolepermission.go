@@ -19,7 +19,7 @@ const (
 	rolepermissionListKind = "RolePermissionList"
 )
 
-// RolepermissionService is the interface for rolepermission operations
+// RolepermissionService is the interface for rolepermission operations.
 type RolepermissionService interface {
 	// get rolepermission by name
 	GetByName(context.Context, *rolev3.RolePermission) (*rolev3.RolePermission, error)
@@ -27,12 +27,12 @@ type RolepermissionService interface {
 	List(context.Context, ...query.Option) (*rolev3.RolePermissionList, error)
 }
 
-// rolepermissionService implements RolepermissionService
+// rolepermissionService implements RolepermissionService.
 type rolepermissionService struct {
 	db *bun.DB
 }
 
-// NewRolepermissionService return new rolepermission service
+// NewRolepermissionService return new rolepermission service.
 func NewRolepermissionService(db *bun.DB) RolepermissionService {
 	return &rolepermissionService{db: db}
 }
@@ -62,7 +62,6 @@ func (s *rolepermissionService) GetByName(ctx context.Context, rolepermission *r
 		return rolepermission, nil
 	}
 	return rolepermission, nil
-
 }
 
 func (s *rolepermissionService) List(ctx context.Context, opts ...query.Option) (*rolev3.RolePermissionList, error) {
@@ -84,7 +83,7 @@ func (s *rolepermissionService) List(ctx context.Context, opts ...query.Option) 
 		if err != nil {
 			return rolepermissionList, err
 		}
-		//fetch project scoped permissions for namespace selector
+
 		if strings.ToLower(queryOptions.Selector) == namespaceScope {
 			rps, err := dao.GetRolePermissionsByScope(ctx, s.db, projectScope)
 			if err != nil {
@@ -105,7 +104,6 @@ func (s *rolepermissionService) List(ctx context.Context, opts ...query.Option) 
 			rolepermissions = append(rolepermissions, entry)
 		}
 
-		//update the list metadata and items response
 		rolepermissionList.Metadata = &v3.ListMetadata{
 			Count: int64(len(rolepermissions)),
 		}
@@ -121,7 +119,6 @@ func (s *rolepermissionService) List(ctx context.Context, opts ...query.Option) 
 			rolepermissions = append(rolepermissions, entry)
 		}
 
-		//update the list metadata and items response
 		rolepermissionList.Metadata = &v3.ListMetadata{
 			Count: int64(len(rolepermissions)),
 		}

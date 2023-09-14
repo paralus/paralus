@@ -8,50 +8,50 @@ import (
 
 // +kubebuilder:object:generate=false
 
-// NewNamespaceConditionFunc is the function signature for creating new namespace condition
+// NewNamespaceConditionFunc is the function signature for creating new namespace condition.
 type NewNamespaceConditionFunc func(status ConditionStatus, reason string) *NamespaceCondition
 
 // +kubebuilder:object:generate=false
 
-// NewTaskletConditionFunc is the function signature for creating new tasklet condition
+// NewTaskletConditionFunc is the function signature for creating new tasklet condition.
 type NewTaskletConditionFunc func(status ConditionStatus, reason string) *TaskletCondition
 
 // +kubebuilder:object:generate=false
 
-// NewTaskConditionFunc is the function signature for creating new task condition
+// NewTaskConditionFunc is the function signature for creating new task condition.
 type NewTaskConditionFunc func(status ConditionStatus, reason string) *TaskCondition
 
 // +kubebuilder:object:generate=false
 
-// NamespaceConditionFunc checks if condition type is complete
+// NamespaceConditionFunc checks if condition type is complete.
 type NamespaceConditionFunc func(n *Namespace) bool
 
 // +kubebuilder:object:generate=false
 
-// TaskletConditionFunc checks if condition type is complete
+// TaskletConditionFunc checks if condition type is complete.
 type TaskletConditionFunc func(t *Tasklet) bool
 
 // +kubebuilder:object:generate=false
 
-// TaskConditionFunc checks if condition type is complete
+// TaskConditionFunc checks if condition type is complete.
 type TaskConditionFunc func(t *Task) bool
 
 // +kubebuilder:object:generate=false
 
-// GetTaskConditionReasonFunc returns the reason of the task condition
+// GetTaskConditionReasonFunc returns the reason of the task condition.
 type GetTaskConditionReasonFunc func(t *Task) string
 
 // +kubebuilder:object:generate=false
 
-// GetTaskletConditionReasonFunc returns the reason of the tasklet condition
+// GetTaskletConditionReasonFunc returns the reason of the tasklet condition.
 type GetTaskletConditionReasonFunc func(t *Tasklet) string
 
 // +kubebuilder:object:generate=false
 
-// GetNamespaceConditionReasonFunc returns the reason for namespace condition
+// GetNamespaceConditionReasonFunc returns the reason for namespace condition.
 type GetNamespaceConditionReasonFunc func(n *Namespace) string
 
-// utility methods for creating/checking conditions
+// utility methods for creating/checking conditions.
 var (
 	NewNamespaceUpsert     NewNamespaceConditionFunc = newNamespaceCondition(NamespaceUpsert)
 	NewNamespaceInit       NewNamespaceConditionFunc = newNamespaceCondition(NamespaceInit)
@@ -124,7 +124,6 @@ func getTaskletConditionReason(conditionStatus ConditionStatus, conditionTypes .
 						return condition.Reason
 					}
 				}
-
 			}
 		}
 		return ""
@@ -139,7 +138,6 @@ func getTaskConditionReason(conditionStatus ConditionStatus, conditionTypes ...T
 					if condition.Status == string(conditionStatus) {
 						return condition.Reason
 					}
-
 				}
 			}
 		}
@@ -156,7 +154,6 @@ func getNamespaceConditionReason(conditionStatus ConditionStatus, conditionTypes
 					if condition.Status == string(conditionStatus) {
 						return condition.Reason
 					}
-
 				}
 			}
 		}
@@ -165,7 +162,7 @@ func getNamespaceConditionReason(conditionStatus ConditionStatus, conditionTypes
 	}
 }
 
-// SetNamespaceCondition sets namespace condition
+// SetNamespaceCondition sets namespace condition.
 func SetNamespaceCondition(n *Namespace, condition NamespaceCondition) {
 	found := false
 	for i := range n.Status.Conditions {
@@ -179,7 +176,7 @@ func SetNamespaceCondition(n *Namespace, condition NamespaceCondition) {
 	}
 }
 
-// SetTaskletCondition sets tasklet condition
+// SetTaskletCondition sets tasklet condition.
 func SetTaskletCondition(t *Tasklet, condition TaskletCondition) {
 	found := false
 	for i := range t.Status.Conditions {
@@ -193,7 +190,7 @@ func SetTaskletCondition(t *Tasklet, condition TaskletCondition) {
 	}
 }
 
-// SetTaskCondition sets task condition
+// SetTaskCondition sets task condition.
 func SetTaskCondition(t *Task, condition TaskCondition) {
 	found := false
 	for i := range t.Status.Conditions {
