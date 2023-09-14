@@ -3,8 +3,6 @@ package authv3
 import (
 	"context"
 
-	"context"
-
 	"github.com/paralus/paralus/pkg/pool"
 	rpcv3 "github.com/paralus/paralus/proto/rpc/v3"
 	grpcpool "github.com/processout/grpc-go-pool"

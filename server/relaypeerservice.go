@@ -161,7 +161,7 @@ func (s *relayPeerService) handleSurveyReq(req surveyBroadCastRequest) {
 	now := time.Now().Unix()
 	if relayList, ok := s.RelayMap[req.ou]; ok {
 		for relayuuid, robj := range relayList {
-
+			if now > robj.timeStamp && (now-robj.timeStamp) > int64(maxRelayIdle) { //5min max toleration
 				// skip the relay that did not have heart beat for 5 mins
 				foundStale = true
 				continue

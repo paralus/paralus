@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"text/template"
 
+	"github.com/paralus/paralus/pkg/log"
 	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
 	"github.com/paralus/paralus/pkg/service"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
