@@ -108,14 +108,8 @@ func TestGetAuditLogByProjectsSimple(t *testing.T) {
 		},
 	}
 	uuid := uuid.New().String()
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "sap"."account_id", "sap"."project_id", "sap"."group_id", "sap"."role_id", "sap"."role_name", "sap"."organization_id", "sap"."partner_id", "sap"."is_global", "sap"."scope", "sap"."permission_name", "sap"."base_url", "sap"."urls" FROM "sentry_account_permission" AS "sap" WHERE (account_id = '` + uuid + `') AND (organization_id = '` + uuid + `') AND (partner_id = '` + uuid + `')`)).
-		WillReturnRows(sqlmock.NewRows([]string{"account_id", "project_id", "permission_name"}).AddRow(uuid, uuid, "log.read"))
-
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "project"."id" FROM "authsrv_project" AS "project" WHERE (name = '` + "project-one" + `') AND (trash = FALSE)`)).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid))
-
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "project"."id" FROM "authsrv_project" AS "project" WHERE (name = '` + "project-two" + `') AND (trash = FALSE)`)).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid))
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "sap"."account_id", "sap"."project_id", "sap"."group_id", "sap"."role_id", "sap"."role_name", "sap"."organization_id", "sap"."partner_id", "sap"."is_global", "sap"."scope", "sap"."permission_name", "sap"."base_url", "sap"."urls" FROM "sentry_account_permission" AS "sap" WHERE (account_id = '` + uuid + `') AND (partner_id = '` + uuid + `') AND (lower(role_name) = 'admin') AND (lower(scope) = 'organization')`)).
+		WillReturnRows(sqlmock.NewRows([]string{"account_id", "role_name", "scope"}).AddRow(uuid, "admin", "organization"))
 
 	sd := v3.SessionData{
 		Account:      uuid,
@@ -156,11 +150,8 @@ func TestGetAuditLogByProjectsNoProject(t *testing.T) {
 		},
 	}
 	uuid := uuid.New().String()
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "sap"."account_id", "sap"."project_id", "sap"."group_id", "sap"."role_id", "sap"."role_name", "sap"."organization_id", "sap"."partner_id", "sap"."is_global", "sap"."scope", "sap"."permission_name", "sap"."base_url", "sap"."urls" FROM "sentry_account_permission" AS "sap" WHERE (account_id = '` + uuid + `') AND (organization_id = '` + uuid + `') AND (partner_id = '` + uuid + `')`)).
-		WillReturnRows(sqlmock.NewRows([]string{"account_id", "project_id", "permission_name"}).AddRow(uuid, uuid, "log.read"))
-
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "project"."id" FROM "authsrv_project" AS "project" WHERE (name = '` + "project" + `') AND (trash = FALSE)`)).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid))
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "sap"."account_id", "sap"."project_id", "sap"."group_id", "sap"."role_id", "sap"."role_name", "sap"."organization_id", "sap"."partner_id", "sap"."is_global", "sap"."scope", "sap"."permission_name", "sap"."base_url", "sap"."urls" FROM "sentry_account_permission" AS "sap" WHERE (account_id = '` + uuid + `') AND (partner_id = '` + uuid + `') AND (lower(role_name) = 'admin') AND (lower(scope) = 'organization')`)).
+		WillReturnRows(sqlmock.NewRows([]string{"account_id", "role_name", "scope"}).AddRow(uuid, "admin", "organization"))
 
 	sd := v3.SessionData{
 		Account:      uuid,
