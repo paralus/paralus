@@ -101,7 +101,7 @@ func local_request_LocationService_CreateLocation_0(ctx context.Context, marshal
 }
 
 var (
-	filter_LocationService_GetLocations_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_LocationService_GetLocations_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1}, Base: []int{1, 2, 3, 2, 0, 0}, Check: []int{0, 1, 1, 2, 4, 3}}
 )
 
 func request_LocationService_GetLocations_0(ctx context.Context, marshaler runtime.Marshaler, client LocationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -171,7 +171,7 @@ func local_request_LocationService_GetLocations_0(ctx context.Context, marshaler
 }
 
 var (
-	filter_LocationService_GetLocation_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "name": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
+	filter_LocationService_GetLocation_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "name": 2}, Base: []int{1, 4, 5, 6, 2, 0, 4, 0, 0, 0}, Check: []int{0, 1, 1, 1, 2, 5, 2, 7, 3, 4}}
 )
 
 func request_LocationService_GetLocation_0(ctx context.Context, marshaler runtime.Marshaler, client LocationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -349,7 +349,7 @@ func local_request_LocationService_UpdateLocation_0(ctx context.Context, marshal
 }
 
 var (
-	filter_LocationService_DeleteLocation_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "name": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
+	filter_LocationService_DeleteLocation_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "name": 2}, Base: []int{1, 4, 5, 6, 2, 0, 4, 0, 0, 0}, Check: []int{0, 1, 1, 1, 2, 5, 2, 7, 3, 4}}
 )
 
 func request_LocationService_DeleteLocation_0(ctx context.Context, marshaler runtime.Marshaler, client LocationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -575,7 +575,7 @@ func RegisterLocationServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 // RegisterLocationServiceHandlerFromEndpoint is same as RegisterLocationServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
 func RegisterLocationServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
-	conn, err := grpc.Dial(endpoint, opts...)
+	conn, err := grpc.DialContext(ctx, endpoint, opts...)
 	if err != nil {
 		return err
 	}

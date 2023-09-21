@@ -258,6 +258,20 @@
             "type": "string"
           },
           {
+            "name": "metadata.labels",
+            "description": "Labels\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.annotations",
+            "description": "Annotations\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "metadata.organization",
             "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
@@ -700,6 +714,20 @@
           {
             "name": "metadata.description",
             "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.labels",
+            "description": "Labels\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.annotations",
+            "description": "Annotations\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1305,6 +1333,20 @@
             "type": "string"
           },
           {
+            "name": "metadata.labels",
+            "description": "Labels\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.annotations",
+            "description": "Annotations\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "metadata.organization",
             "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
@@ -1764,6 +1806,20 @@
             "type": "string"
           },
           {
+            "name": "labels",
+            "description": "labels only used for update queries to set labels (READONLY)\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "annotations",
+            "description": "annotations only used for update queries to set annotations (READONLY)\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "count",
             "in": "query",
             "required": false,
@@ -1948,6 +2004,7 @@
         "details": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
         }
@@ -2215,6 +2272,7 @@
         "nodes": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v3ClusterNode"
           },
           "description": "Override selector of the cluster",
@@ -2223,6 +2281,7 @@
         "projects": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v3ProjectCluster"
           },
           "description": "Override selector of the cluster",
@@ -2262,6 +2321,7 @@
         "items": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v3Cluster",
             "readOnly": true
           },
@@ -2304,6 +2364,7 @@
         "taints": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v1Taint"
           }
         }
@@ -2327,6 +2388,7 @@
         "conditions": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v1NodeCondition"
           }
         },
@@ -2345,6 +2407,7 @@
         "ips": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v3ClusterNodeIP"
           }
         }
@@ -2407,6 +2470,7 @@
         "conditions": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v3ClusterCondition"
           },
           "description": "Override selector of the cluster",
@@ -2792,11 +2856,9 @@
   },
   "security": [
     {
-      "BasicAuth": []
-    },
-    {
       "ApiKeyAuth": [],
-      "ApiTokenAuth": []
+      "ApiTokenAuth": [],
+      "BasicAuth": []
     }
   ]
 }

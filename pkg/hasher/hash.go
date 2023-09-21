@@ -47,7 +47,7 @@ func GetHash(o interface{}) (string, error) {
 
 }
 
-//Add adds object hash to rutime object
+// Add adds object hash to rutime object
 func Add(o metav1.Object) error {
 
 	hash, err := GetHash(o)

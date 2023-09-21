@@ -54,10 +54,12 @@ func NewBootstrapPatchBootstrapAgentTemplateParamsWithHTTPClient(client *http.Cl
 	}
 }
 
-/* BootstrapPatchBootstrapAgentTemplateParams contains all the parameters to send to the API endpoint
-   for the bootstrap patch bootstrap agent template operation.
+/*
+BootstrapPatchBootstrapAgentTemplateParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the bootstrap patch bootstrap agent template operation.
+
+	Typically these are written to a http.Request.
 */
 type BootstrapPatchBootstrapAgentTemplateParams struct {
 

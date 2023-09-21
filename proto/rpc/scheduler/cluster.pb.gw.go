@@ -102,7 +102,7 @@ func local_request_ClusterService_CreateCluster_0(ctx context.Context, marshaler
 }
 
 var (
-	filter_ClusterService_GetClusters_0 = &utilities.DoubleArray{Encoding: map[string]int{"project": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_ClusterService_GetClusters_0 = &utilities.DoubleArray{Encoding: map[string]int{"project": 0}, Base: []int{1, 2, 0, 0}, Check: []int{0, 1, 2, 2}}
 )
 
 func request_ClusterService_GetClusters_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -172,7 +172,7 @@ func local_request_ClusterService_GetClusters_0(ctx context.Context, marshaler r
 }
 
 var (
-	filter_ClusterService_GetCluster_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "project": 1, "name": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
+	filter_ClusterService_GetCluster_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "project": 1, "name": 2}, Base: []int{1, 4, 5, 6, 2, 0, 4, 0, 0, 0}, Check: []int{0, 1, 1, 1, 2, 5, 2, 7, 3, 4}}
 )
 
 func request_ClusterService_GetCluster_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -350,7 +350,7 @@ func local_request_ClusterService_UpdateCluster_0(ctx context.Context, marshaler
 }
 
 var (
-	filter_ClusterService_DeleteCluster_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "project": 1, "name": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
+	filter_ClusterService_DeleteCluster_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "project": 1, "name": 2}, Base: []int{1, 4, 5, 6, 2, 0, 4, 0, 0, 0}, Check: []int{0, 1, 1, 1, 2, 5, 2, 7, 3, 4}}
 )
 
 func request_ClusterService_DeleteCluster_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -440,7 +440,7 @@ func local_request_ClusterService_DeleteCluster_0(ctx context.Context, marshaler
 }
 
 var (
-	filter_ClusterService_DownloadCluster_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "project": 1, "name": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
+	filter_ClusterService_DownloadCluster_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "project": 1, "name": 2}, Base: []int{1, 4, 5, 6, 2, 0, 4, 0, 0, 0}, Check: []int{0, 1, 1, 1, 2, 5, 2, 7, 3, 4}}
 )
 
 func request_ClusterService_DownloadCluster_0(ctx context.Context, marshaler runtime.Marshaler, client ClusterServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -691,7 +691,7 @@ func RegisterClusterServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 // RegisterClusterServiceHandlerFromEndpoint is same as RegisterClusterServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
 func RegisterClusterServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
-	conn, err := grpc.Dial(endpoint, opts...)
+	conn, err := grpc.DialContext(ctx, endpoint, opts...)
 	if err != nil {
 		return err
 	}

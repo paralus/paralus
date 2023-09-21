@@ -63,7 +63,7 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -71,7 +71,7 @@
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -79,35 +79,49 @@
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.labels",
+            "description": "Labels\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.annotations",
+            "description": "Annotations\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -202,7 +216,102 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/sentryBootstrapInfra"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "BootstrapInfra",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/sentryBootstrapInfraSpec"
+                },
+                "status": {
+                  "$ref": "#/definitions/sentryBootstrapInfraStatus"
+                }
+              },
+              "required": [
+                "project"
+              ]
             }
           }
         ],
@@ -243,21 +352,21 @@
         "parameters": [
           {
             "name": "q",
-            "description": "query for filtering.",
+            "description": "query for filtering",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "name",
-            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID).",
+            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "selector",
-            "description": "selector is used to filter the labels of a resource.",
+            "description": "selector is used to filter the labels of a resource",
             "in": "query",
             "required": false,
             "type": "string"
@@ -294,7 +403,21 @@
           },
           {
             "name": "displayName",
-            "description": "displayName only used for update queries to set displayName (READONLY).",
+            "description": "displayName only used for update queries to set displayName (READONLY)",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "labels",
+            "description": "labels only used for update queries to set labels (READONLY)\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "annotations",
+            "description": "annotations only used for update queries to set annotations (READONLY)\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
             "in": "query",
             "required": false,
             "type": "string"
@@ -322,14 +445,14 @@
           },
           {
             "name": "ignoreScopeDefault",
-            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID.",
+            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "globalScope",
-            "description": "globalScope sets partnerID,organizationID,projectID = 0.",
+            "description": "globalScope sets partnerID,organizationID,projectID = 0",
             "in": "query",
             "required": false,
             "type": "boolean"
@@ -360,7 +483,7 @@
           },
           {
             "name": "urlScope",
-            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value).",
+            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value)",
             "in": "query",
             "required": false,
             "type": "string"
@@ -419,7 +542,7 @@
           },
           {
             "name": "type",
-            "description": "generic way to specify a type of resource, mainly for use in users endpoint.",
+            "description": "generic way to specify a type of resource, mainly for use in users endpoint",
             "in": "query",
             "required": false,
             "type": "string"
@@ -469,7 +592,7 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -477,7 +600,7 @@
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -485,35 +608,49 @@
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.labels",
+            "description": "Labels\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.annotations",
+            "description": "Annotations\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -645,7 +782,102 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/sentryBootstrapAgentTemplate"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "BootstrapAgentTemplate",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/sentryBootstrapAgentTemplateSpec"
+                },
+                "status": {
+                  "$ref": "#/definitions/sentryBootstrapAgentTemplateStatus"
+                }
+              },
+              "required": [
+                "project"
+              ]
             }
           }
         ],
@@ -696,7 +928,42 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/sentryBootstrapAgent"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "BootstrapAgent",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "$ref": "#/definitions/v3Metadata",
+                  "description": "Metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "agentMode": {
+                      "$ref": "#/definitions/sentryBootstrapAgentMode"
+                    }
+                  }
+                },
+                "status": {
+                  "$ref": "#/definitions/sentryBootStrapAgentStatus"
+                }
+              }
             }
           }
         ],
@@ -751,7 +1018,7 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -759,7 +1026,7 @@
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -767,35 +1034,49 @@
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.labels",
+            "description": "Labels\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.annotations",
+            "description": "Annotations\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -925,7 +1206,7 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -933,7 +1214,7 @@
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -941,35 +1222,49 @@
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.labels",
+            "description": "Labels\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.annotations",
+            "description": "Annotations\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1102,7 +1397,110 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/sentryBootstrapAgent"
+              "type": "object",
+              "properties": {
+                "apiVersion": {
+                  "type": "string",
+                  "default": "infra.k8smgmt.io/v3",
+                  "description": "API Version of the resource",
+                  "title": "API Version",
+                  "readOnly": true
+                },
+                "kind": {
+                  "type": "string",
+                  "default": "BootstrapAgent",
+                  "description": "Kind of the resource",
+                  "title": "Kind",
+                  "readOnly": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "name": "some-name",
+                    "project": "defaultproject"
+                  },
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "display name of the resource",
+                      "title": "Display Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "description of the resource",
+                      "title": "Description"
+                    },
+                    "labels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "labels of the resource",
+                      "title": "Labels"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "annotations of the resource",
+                      "title": "Annotations"
+                    },
+                    "project": {
+                      "type": "string",
+                      "description": "Project of the resource",
+                      "title": "Project"
+                    },
+                    "organization": {
+                      "type": "string",
+                      "description": "Organization to which the resource belongs",
+                      "title": "Organization"
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "Partner to which the resource belongs",
+                      "title": "Partner"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "urlScope": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    },
+                    "modifiedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "readOnly": true
+                    }
+                  },
+                  "description": "metadata of the resource",
+                  "title": "Metadata"
+                },
+                "spec": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "agentMode": {
+                      "$ref": "#/definitions/sentryBootstrapAgentMode"
+                    }
+                  }
+                },
+                "status": {
+                  "$ref": "#/definitions/sentryBootStrapAgentStatus"
+                }
+              },
+              "required": [
+                "project"
+              ]
             }
           }
         ],
@@ -1157,7 +1555,7 @@
           },
           {
             "name": "apiVersion",
-            "description": "API Version. API Version of the resource",
+            "description": "API Version\n\nAPI Version of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -1165,7 +1563,7 @@
           },
           {
             "name": "kind",
-            "description": "Kind. Kind of the resource",
+            "description": "Kind\n\nKind of the resource",
             "in": "query",
             "required": false,
             "type": "string",
@@ -1173,35 +1571,49 @@
           },
           {
             "name": "metadata.displayName",
-            "description": "Display Name. display name of the resource",
+            "description": "Display Name\n\ndisplay name of the resource",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.description",
-            "description": "Description. description of the resource",
+            "description": "Description\n\ndescription of the resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.labels",
+            "description": "Labels\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "metadata.annotations",
+            "description": "Annotations\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.project",
-            "description": "Project. Project of the resource",
+            "description": "Project\n\nProject of the resource",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "metadata.organization",
-            "description": "Organization. Organization to which the resource belongs",
+            "description": "Organization\n\nOrganization to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "metadata.partner",
-            "description": "Partner. Partner to which the resource belongs",
+            "description": "Partner\n\nPartner to which the resource belongs",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1326,21 +1738,21 @@
           },
           {
             "name": "opts.q",
-            "description": "query for filtering.",
+            "description": "query for filtering",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "opts.name",
-            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID).",
+            "description": "name is unique ID of a resource along with (partnerID, organizationID,\nprojectID)",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "opts.selector",
-            "description": "selector is used to filter the labels of a resource.",
+            "description": "selector is used to filter the labels of a resource",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1377,7 +1789,21 @@
           },
           {
             "name": "opts.displayName",
-            "description": "displayName only used for update queries to set displayName (READONLY).",
+            "description": "displayName only used for update queries to set displayName (READONLY)",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.labels",
+            "description": "labels only used for update queries to set labels (READONLY)\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "opts.annotations",
+            "description": "annotations only used for update queries to set annotations (READONLY)\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1405,14 +1831,14 @@
           },
           {
             "name": "opts.ignoreScopeDefault",
-            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID.",
+            "description": "ignoreScopeDefault ignores default values for partnerID, organizationID and\nprojectID",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
             "name": "opts.globalScope",
-            "description": "globalScope sets partnerID,organizationID,projectID = 0.",
+            "description": "globalScope sets partnerID,organizationID,projectID = 0",
             "in": "query",
             "required": false,
             "type": "boolean"
@@ -1443,7 +1869,7 @@
           },
           {
             "name": "opts.urlScope",
-            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value).",
+            "description": "urlScope is supposed to be passed in the URL as kind/HashID(value)",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1502,7 +1928,7 @@
           },
           {
             "name": "opts.type",
-            "description": "generic way to specify a type of resource, mainly for use in users endpoint.",
+            "description": "generic way to specify a type of resource, mainly for use in users endpoint",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1600,6 +2026,7 @@
         "details": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
         }
@@ -1704,6 +2131,7 @@
         "items": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/sentryBootstrapAgent"
           }
         }
@@ -1798,6 +2226,7 @@
         "items": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/sentryBootstrapAgentTemplate"
           }
         }
@@ -1827,6 +2256,7 @@
         "hosts": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/sentryBootstrapTemplateHost"
           }
         },
@@ -2166,11 +2596,9 @@
   },
   "security": [
     {
-      "BasicAuth": []
-    },
-    {
       "ApiKeyAuth": [],
-      "ApiTokenAuth": []
+      "ApiTokenAuth": [],
+      "BasicAuth": []
     }
   ]
 }

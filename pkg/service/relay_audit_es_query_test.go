@@ -1,10 +1,15 @@
 package service
 
 import (
+	"context"
 	"encoding/json"
+	"regexp"
 	"strings"
 	"testing"
 
+	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/google/uuid"
+	"github.com/paralus/paralus/pkg/common"
 	v1 "github.com/paralus/paralus/proto/rpc/audit"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 )
@@ -85,8 +90,11 @@ type rmd struct {
 }
 
 func TestGetRelayAuditLogByProjectsSimple(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
 	esq := &mockElasticSearchQuery{}
-	al := &relayAuditElasticSearchService{relayQuery: esq}
+	al := &relayAuditElasticSearchService{relayQuery: esq, db: db}
 	req := v1.RelayAuditRequest{
 		Filter: &v1.RelayAuditQueryFilter{
 			QueryString:   "query-string",
@@ -102,7 +110,18 @@ func TestGetRelayAuditLogByProjectsSimple(t *testing.T) {
 			DashboardData: true,
 		},
 	}
-	_, err := al.GetRelayAuditByProjects(&req)
+	uuid := uuid.New().String()
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "sap"."account_id", "sap"."project_id", "sap"."group_id", "sap"."role_id", "sap"."role_name", "sap"."organization_id", "sap"."partner_id", "sap"."is_global", "sap"."scope", "sap"."permission_name", "sap"."base_url", "sap"."urls" FROM "sentry_account_permission" AS "sap" WHERE (account_id = '` + uuid + `') AND (partner_id = '` + uuid + `') AND (lower(role_name) = 'admin') AND (lower(scope) = 'organization')`)).
+		WillReturnRows(sqlmock.NewRows([]string{"account_id", "role_name", "scope"}).AddRow(uuid, "admin", "organization"))
+
+	sd := v3.SessionData{
+		Account:      uuid,
+		Organization: uuid,
+		Partner:      uuid,
+		Username:     "user",
+	}
+	ctx := context.WithValue(context.Background(), common.SessionDataKey, &sd)
+	_, err := al.GetRelayAuditByProjects(ctx, &req)
 	if err != nil {
 		t.Error("unable to get audit logs")
 	}
@@ -121,15 +140,29 @@ func TestGetRelayAuditLogByProjectsSimple(t *testing.T) {
 }
 
 func TestGetRelayAuditLogByProjectsNoProject(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
 	esq := &mockElasticSearchQuery{}
-	al := &relayAuditElasticSearchService{relayQuery: esq}
+	al := &relayAuditElasticSearchService{relayQuery: esq, db: db}
 	req := v1.RelayAuditRequest{
 		Metadata: &v3.Metadata{UrlScope: "url/project"},
 		Filter: &v1.RelayAuditQueryFilter{
 			QueryString: "query-string",
 		},
 	}
-	_, err := al.GetRelayAudit(&req)
+	uuid := uuid.New().String()
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "sap"."account_id", "sap"."project_id", "sap"."group_id", "sap"."role_id", "sap"."role_name", "sap"."organization_id", "sap"."partner_id", "sap"."is_global", "sap"."scope", "sap"."permission_name", "sap"."base_url", "sap"."urls" FROM "sentry_account_permission" AS "sap" WHERE (account_id = '` + uuid + `') AND (partner_id = '` + uuid + `') AND (lower(role_name) = 'admin') AND (lower(scope) = 'organization')`)).
+		WillReturnRows(sqlmock.NewRows([]string{"account_id", "role_name", "scope"}).AddRow(uuid, "admin", "organization"))
+
+	sd := v3.SessionData{
+		Account:      uuid,
+		Organization: uuid,
+		Partner:      uuid,
+		Username:     "user",
+	}
+	ctx := context.WithValue(context.Background(), common.SessionDataKey, &sd)
+	_, err := al.GetRelayAudit(ctx, &req)
 	if err != nil {
 		t.Error("unable to get audit logs", err)
 	}

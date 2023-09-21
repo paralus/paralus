@@ -64,7 +64,8 @@ func NewBootstrapGetBootstrapAgentOK() *BootstrapGetBootstrapAgentOK {
 	return &BootstrapGetBootstrapAgentOK{}
 }
 
-/* BootstrapGetBootstrapAgentOK describes a response with status code 200, with default header values.
+/*
+	BootstrapGetBootstrapAgentOK describes a response with status code 200, with default header values.
 
 A successful response.
 */
@@ -96,7 +97,8 @@ func NewBootstrapGetBootstrapAgentForbidden() *BootstrapGetBootstrapAgentForbidd
 	return &BootstrapGetBootstrapAgentForbidden{}
 }
 
-/* BootstrapGetBootstrapAgentForbidden describes a response with status code 403, with default header values.
+/*
+	BootstrapGetBootstrapAgentForbidden describes a response with status code 403, with default header values.
 
 Returned when the user does not have permission to access the resource.
 */
@@ -126,7 +128,8 @@ func NewBootstrapGetBootstrapAgentNotFound() *BootstrapGetBootstrapAgentNotFound
 	return &BootstrapGetBootstrapAgentNotFound{}
 }
 
-/* BootstrapGetBootstrapAgentNotFound describes a response with status code 404, with default header values.
+/*
+	BootstrapGetBootstrapAgentNotFound describes a response with status code 404, with default header values.
 
 Returned when the resource does not exist.
 */
@@ -156,7 +159,8 @@ func NewBootstrapGetBootstrapAgentInternalServerError() *BootstrapGetBootstrapAg
 	return &BootstrapGetBootstrapAgentInternalServerError{}
 }
 
-/* BootstrapGetBootstrapAgentInternalServerError describes a response with status code 500, with default header values.
+/*
+	BootstrapGetBootstrapAgentInternalServerError describes a response with status code 500, with default header values.
 
 Returned for internal server error
 */
@@ -188,7 +192,8 @@ func NewBootstrapGetBootstrapAgentDefault(code int) *BootstrapGetBootstrapAgentD
 	}
 }
 
-/* BootstrapGetBootstrapAgentDefault describes a response with status code -1, with default header values.
+/*
+	BootstrapGetBootstrapAgentDefault describes a response with status code -1, with default header values.
 
 An unexpected error response.
 */

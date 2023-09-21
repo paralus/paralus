@@ -67,7 +67,7 @@ func local_request_PartnerService_CreatePartner_0(ctx context.Context, marshaler
 }
 
 var (
-	filter_PartnerService_GetPartner_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_PartnerService_GetPartner_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 2, 3, 2, 0, 0}, Check: []int{0, 1, 1, 2, 4, 3}}
 )
 
 func request_PartnerService_GetPartner_0(ctx context.Context, marshaler runtime.Marshaler, client PartnerServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -223,7 +223,7 @@ func local_request_PartnerService_UpdatePartner_0(ctx context.Context, marshaler
 }
 
 var (
-	filter_PartnerService_DeletePartner_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
+	filter_PartnerService_DeletePartner_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 2, 3, 2, 0, 0}, Check: []int{0, 1, 1, 2, 4, 3}}
 )
 
 func request_PartnerService_DeletePartner_0(ctx context.Context, marshaler runtime.Marshaler, client PartnerServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -429,7 +429,7 @@ func RegisterPartnerServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 // RegisterPartnerServiceHandlerFromEndpoint is same as RegisterPartnerServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
 func RegisterPartnerServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
-	conn, err := grpc.Dial(endpoint, opts...)
+	conn, err := grpc.DialContext(ctx, endpoint, opts...)
 	if err != nil {
 		return err
 	}

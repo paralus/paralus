@@ -36,7 +36,7 @@ type ClientService interface {
 }
 
 /*
-  AuditInformationLookupCluster audit information lookup cluster API
+AuditInformationLookupCluster audit information lookup cluster API
 */
 func (a *Client) AuditInformationLookupCluster(params *AuditInformationLookupClusterParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*AuditInformationLookupClusterOK, error) {
 	// TODO: Validate the params before sending
@@ -74,7 +74,7 @@ func (a *Client) AuditInformationLookupCluster(params *AuditInformationLookupClu
 }
 
 /*
-  AuditInformationLookupUser audit information lookup user API
+AuditInformationLookupUser audit information lookup user API
 */
 func (a *Client) AuditInformationLookupUser(params *AuditInformationLookupUserParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*AuditInformationLookupUserOK, error) {
 	// TODO: Validate the params before sending

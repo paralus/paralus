@@ -34,7 +34,7 @@ type ClientService interface {
 }
 
 /*
-  ClusterAuthorizationGetUserAuthorization cluster authorization get user authorization API
+ClusterAuthorizationGetUserAuthorization cluster authorization get user authorization API
 */
 func (a *Client) ClusterAuthorizationGetUserAuthorization(params *ClusterAuthorizationGetUserAuthorizationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ClusterAuthorizationGetUserAuthorizationOK, error) {
 	// TODO: Validate the params before sending

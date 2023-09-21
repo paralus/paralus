@@ -13,7 +13,6 @@ import (
 	"github.com/paralus/paralus/pkg/common"
 	"github.com/paralus/paralus/pkg/query"
 	userrpcv3 "github.com/paralus/paralus/proto/rpc/user"
-	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	userv3 "github.com/paralus/paralus/proto/types/userpb/v3"
 )
@@ -474,7 +473,7 @@ func TestUserGetInfo(t *testing.T) {
 	user := &userv3.User{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + fakeuuuid},
 	}
-	ctx := context.WithValue(context.Background(), common.SessionDataKey, &commonv3.SessionData{Username: "user-" + uuuid})
+	ctx := context.WithValue(context.Background(), common.SessionDataKey, &v3.SessionData{Username: "user-" + uuuid})
 	userinfo, err := us.GetUserInfo(ctx, user)
 
 	if err != nil {
@@ -647,7 +646,7 @@ func TestUserList(t *testing.T) {
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"max"}).
 				AddRow(authenticated))
 
-			qo := &commonv3.QueryOptions{
+			qo := &v3.QueryOptions{
 				Q:            tc.q,
 				Limit:        tc.limit,
 				Offset:       tc.offset,
@@ -711,7 +710,7 @@ func TestUserDelete(t *testing.T) {
 	user := &userv3.User{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
 	}
-	ctx := context.WithValue(context.Background(), common.SessionDataKey, &commonv3.SessionData{Username: "not-user-" + uuuid})
+	ctx := context.WithValue(context.Background(), common.SessionDataKey, &v3.SessionData{Username: "not-user-" + uuuid})
 	_, err := us.Delete(ctx, user)
 	if err != nil {
 		t.Fatal("could not delete user:", err)
@@ -742,7 +741,7 @@ func TestUserDeleteSelf(t *testing.T) {
 	user := &userv3.User{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
 	}
-	ctx := context.WithValue(context.Background(), common.SessionDataKey, &commonv3.SessionData{Username: "user-" + uuuid})
+	ctx := context.WithValue(context.Background(), common.SessionDataKey, &v3.SessionData{Username: "user-" + uuuid})
 	_, err := us.Delete(ctx, user)
 	if err == nil {
 		t.Fatal("user able to delete their own account")

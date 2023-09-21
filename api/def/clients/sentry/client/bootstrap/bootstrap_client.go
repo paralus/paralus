@@ -56,7 +56,7 @@ type ClientService interface {
 }
 
 /*
-  BootstrapCreateBootstrapAgent bootstrap create bootstrap agent API
+BootstrapCreateBootstrapAgent bootstrap create bootstrap agent API
 */
 func (a *Client) BootstrapCreateBootstrapAgent(params *BootstrapCreateBootstrapAgentParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BootstrapCreateBootstrapAgentOK, error) {
 	// TODO: Validate the params before sending
@@ -94,7 +94,7 @@ func (a *Client) BootstrapCreateBootstrapAgent(params *BootstrapCreateBootstrapA
 }
 
 /*
-  BootstrapDeleteBootstrapAgent bootstrap delete bootstrap agent API
+BootstrapDeleteBootstrapAgent bootstrap delete bootstrap agent API
 */
 func (a *Client) BootstrapDeleteBootstrapAgent(params *BootstrapDeleteBootstrapAgentParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BootstrapDeleteBootstrapAgentOK, error) {
 	// TODO: Validate the params before sending
@@ -132,7 +132,7 @@ func (a *Client) BootstrapDeleteBootstrapAgent(params *BootstrapDeleteBootstrapA
 }
 
 /*
-  BootstrapGetBootstrapAgent bootstrap get bootstrap agent API
+BootstrapGetBootstrapAgent bootstrap get bootstrap agent API
 */
 func (a *Client) BootstrapGetBootstrapAgent(params *BootstrapGetBootstrapAgentParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BootstrapGetBootstrapAgentOK, error) {
 	// TODO: Validate the params before sending
@@ -170,7 +170,7 @@ func (a *Client) BootstrapGetBootstrapAgent(params *BootstrapGetBootstrapAgentPa
 }
 
 /*
-  BootstrapGetBootstrapAgentConfig bootstrap get bootstrap agent config API
+BootstrapGetBootstrapAgentConfig bootstrap get bootstrap agent config API
 */
 func (a *Client) BootstrapGetBootstrapAgentConfig(params *BootstrapGetBootstrapAgentConfigParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BootstrapGetBootstrapAgentConfigOK, error) {
 	// TODO: Validate the params before sending
@@ -208,7 +208,7 @@ func (a *Client) BootstrapGetBootstrapAgentConfig(params *BootstrapGetBootstrapA
 }
 
 /*
-  BootstrapGetBootstrapAgentTemplate bootstrap get bootstrap agent template API
+BootstrapGetBootstrapAgentTemplate bootstrap get bootstrap agent template API
 */
 func (a *Client) BootstrapGetBootstrapAgentTemplate(params *BootstrapGetBootstrapAgentTemplateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BootstrapGetBootstrapAgentTemplateOK, error) {
 	// TODO: Validate the params before sending
@@ -246,7 +246,7 @@ func (a *Client) BootstrapGetBootstrapAgentTemplate(params *BootstrapGetBootstra
 }
 
 /*
-  BootstrapGetBootstrapAgentTemplates bootstrap get bootstrap agent templates API
+BootstrapGetBootstrapAgentTemplates bootstrap get bootstrap agent templates API
 */
 func (a *Client) BootstrapGetBootstrapAgentTemplates(params *BootstrapGetBootstrapAgentTemplatesParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BootstrapGetBootstrapAgentTemplatesOK, error) {
 	// TODO: Validate the params before sending
@@ -284,7 +284,7 @@ func (a *Client) BootstrapGetBootstrapAgentTemplates(params *BootstrapGetBootstr
 }
 
 /*
-  BootstrapGetBootstrapAgents bootstrap get bootstrap agents API
+BootstrapGetBootstrapAgents bootstrap get bootstrap agents API
 */
 func (a *Client) BootstrapGetBootstrapAgents(params *BootstrapGetBootstrapAgentsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BootstrapGetBootstrapAgentsOK, error) {
 	// TODO: Validate the params before sending
@@ -322,7 +322,7 @@ func (a *Client) BootstrapGetBootstrapAgents(params *BootstrapGetBootstrapAgents
 }
 
 /*
-  BootstrapGetBootstrapInfra bootstrap get bootstrap infra API
+BootstrapGetBootstrapInfra bootstrap get bootstrap infra API
 */
 func (a *Client) BootstrapGetBootstrapInfra(params *BootstrapGetBootstrapInfraParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BootstrapGetBootstrapInfraOK, error) {
 	// TODO: Validate the params before sending
@@ -360,7 +360,7 @@ func (a *Client) BootstrapGetBootstrapInfra(params *BootstrapGetBootstrapInfraPa
 }
 
 /*
-  BootstrapPatchBootstrapAgentTemplate bootstrap patch bootstrap agent template API
+BootstrapPatchBootstrapAgentTemplate bootstrap patch bootstrap agent template API
 */
 func (a *Client) BootstrapPatchBootstrapAgentTemplate(params *BootstrapPatchBootstrapAgentTemplateParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BootstrapPatchBootstrapAgentTemplateOK, error) {
 	// TODO: Validate the params before sending
@@ -398,7 +398,7 @@ func (a *Client) BootstrapPatchBootstrapAgentTemplate(params *BootstrapPatchBoot
 }
 
 /*
-  BootstrapPatchBootstrapInfra bootstrap patch bootstrap infra API
+BootstrapPatchBootstrapInfra bootstrap patch bootstrap infra API
 */
 func (a *Client) BootstrapPatchBootstrapInfra(params *BootstrapPatchBootstrapInfraParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BootstrapPatchBootstrapInfraOK, error) {
 	// TODO: Validate the params before sending
@@ -436,7 +436,7 @@ func (a *Client) BootstrapPatchBootstrapInfra(params *BootstrapPatchBootstrapInf
 }
 
 /*
-  BootstrapRegisterBootstrapAgent bootstrap register bootstrap agent API
+BootstrapRegisterBootstrapAgent bootstrap register bootstrap agent API
 */
 func (a *Client) BootstrapRegisterBootstrapAgent(params *BootstrapRegisterBootstrapAgentParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BootstrapRegisterBootstrapAgentOK, error) {
 	// TODO: Validate the params before sending
@@ -474,7 +474,7 @@ func (a *Client) BootstrapRegisterBootstrapAgent(params *BootstrapRegisterBootst
 }
 
 /*
-  BootstrapUpdateBootstrapAgent bootstrap update bootstrap agent API
+BootstrapUpdateBootstrapAgent bootstrap update bootstrap agent API
 */
 func (a *Client) BootstrapUpdateBootstrapAgent(params *BootstrapUpdateBootstrapAgentParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BootstrapUpdateBootstrapAgentOK, error) {
 	// TODO: Validate the params before sending

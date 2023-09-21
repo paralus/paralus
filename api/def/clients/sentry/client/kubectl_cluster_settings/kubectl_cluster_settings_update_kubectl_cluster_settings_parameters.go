@@ -54,10 +54,12 @@ func NewKubectlClusterSettingsUpdateKubectlClusterSettingsParamsWithHTTPClient(c
 	}
 }
 
-/* KubectlClusterSettingsUpdateKubectlClusterSettingsParams contains all the parameters to send to the API endpoint
-   for the kubectl cluster settings update kubectl cluster settings operation.
+/*
+KubectlClusterSettingsUpdateKubectlClusterSettingsParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the kubectl cluster settings update kubectl cluster settings operation.
+
+	Typically these are written to a http.Request.
 */
 type KubectlClusterSettingsUpdateKubectlClusterSettingsParams struct {
 

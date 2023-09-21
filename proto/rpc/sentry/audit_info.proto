@@ -81,6 +81,7 @@ message LookupClusterRequest {
 message LookupClusterResponse {
     string name = 1;
     string displayName = 2;
+    string project = 3;
 }
 
 service AuditInformationService {

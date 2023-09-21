@@ -122,7 +122,7 @@ func local_request_GroupService_CreateGroup_0(ctx context.Context, marshaler run
 }
 
 var (
-	filter_GroupService_GetGroups_0 = &utilities.DoubleArray{Encoding: map[string]int{"partner": 0, "organization": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
+	filter_GroupService_GetGroups_0 = &utilities.DoubleArray{Encoding: map[string]int{"partner": 0, "organization": 1}, Base: []int{1, 2, 4, 0, 0, 0, 0}, Check: []int{0, 1, 1, 2, 2, 3, 3}}
 )
 
 func request_GroupService_GetGroups_0(ctx context.Context, marshaler runtime.Marshaler, client GroupServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -212,7 +212,7 @@ func local_request_GroupService_GetGroups_0(ctx context.Context, marshaler runti
 }
 
 var (
-	filter_GroupService_GetGroup_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "organization": 2, "name": 3}, Base: []int{1, 1, 1, 2, 3, 0, 0, 0}, Check: []int{0, 1, 2, 2, 2, 3, 4, 5}}
+	filter_GroupService_GetGroup_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "organization": 2, "name": 3}, Base: []int{1, 6, 7, 8, 9, 2, 0, 4, 0, 6, 0, 0, 0, 0}, Check: []int{0, 1, 1, 1, 1, 2, 6, 2, 8, 2, 10, 3, 4, 5}}
 )
 
 func request_GroupService_GetGroup_0(ctx context.Context, marshaler runtime.Marshaler, client GroupServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -430,7 +430,7 @@ func local_request_GroupService_UpdateGroup_0(ctx context.Context, marshaler run
 }
 
 var (
-	filter_GroupService_DeleteGroup_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "organization": 2, "name": 3}, Base: []int{1, 1, 1, 2, 3, 0, 0, 0}, Check: []int{0, 1, 2, 2, 2, 3, 4, 5}}
+	filter_GroupService_DeleteGroup_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "organization": 2, "name": 3}, Base: []int{1, 6, 7, 8, 9, 2, 0, 4, 0, 6, 0, 0, 0, 0}, Check: []int{0, 1, 1, 1, 1, 2, 6, 2, 8, 2, 10, 3, 4, 5}}
 )
 
 func request_GroupService_DeleteGroup_0(ctx context.Context, marshaler runtime.Marshaler, client GroupServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -676,7 +676,7 @@ func RegisterGroupServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 // RegisterGroupServiceHandlerFromEndpoint is same as RegisterGroupServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
 func RegisterGroupServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
-	conn, err := grpc.Dial(endpoint, opts...)
+	conn, err := grpc.DialContext(ctx, endpoint, opts...)
 	if err != nil {
 		return err
 	}

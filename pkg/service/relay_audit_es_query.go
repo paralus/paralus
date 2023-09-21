@@ -2,17 +2,21 @@ package service
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 
+	"github.com/paralus/paralus/pkg/common"
 	v1 "github.com/paralus/paralus/proto/rpc/audit"
+	"github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
 type relayAuditElasticSearchService struct {
+	db         *bun.DB
 	relayQuery ElasticSearchQuery
 }
 
-func (ra *relayAuditElasticSearchService) GetRelayAudit(req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
+func (ra *relayAuditElasticSearchService) GetRelayAudit(ctx context.Context, req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
 	if err != nil {
 		return nil, err
 	}
@@ -21,14 +25,21 @@ func (ra *relayAuditElasticSearchService) GetRelayAudit(req *v1.RelayAuditReques
 		return nil, err
 	}
 	req.Filter.Projects = []string{project}
-	return ra.GetRelayAuditByProjects(req)
+	return ra.GetRelayAuditByProjects(ctx, req)
 }
 
-func (ra *relayAuditElasticSearchService) GetRelayAuditByProjects(req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
+func (ra *relayAuditElasticSearchService) GetRelayAuditByProjects(ctx context.Context, req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
 	err = validateQueryString(req.GetFilter().QueryString)
 	if err != nil {
 		return &v1.RelayAuditResponse{}, err
 	}
+	//validate user authz with incoming request
+	if len(req.GetFilter().GetProjects()) > 0 {
+		if err := ValidateUserAuditReadRequest(ctx, req.GetFilter().GetProjects(), ra.db, true); err != nil {
+			return nil, err
+		}
+	}
+
 	var buf bytes.Buffer
 	var r map[string]interface{}
 	res = &v1.RelayAuditResponse{}
@@ -185,13 +196,21 @@ func (ra *relayAuditElasticSearchService) GetRelayAuditByProjects(req *v1.RelayA
 			}
 			m = append(m, t)
 		} else {
-
-			t := map[string]interface{}{
-				"terms": map[string]interface{}{
-					"json.project": req.Filter.Projects,
-				},
+			if req.AuditType == common.RelayAPIAuditType {
+				t := map[string]interface{}{
+					"terms": map[string]interface{}{
+						"json.pr": req.Filter.Projects,
+					},
+				}
+				m = append(m, t)
+			} else {
+				t := map[string]interface{}{
+					"terms": map[string]interface{}{
+						"json.project": req.Filter.Projects,
+					},
+				}
+				m = append(m, t)
 			}
-			m = append(m, t)
 		}
 	}
 	// query string

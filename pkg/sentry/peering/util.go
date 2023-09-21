@@ -7,7 +7,7 @@ import (
 	"net"
 )
 
-//ClientTLSConfig sets tls config
+// ClientTLSConfig sets tls config
 func ClientTLSConfig(tlsCrt string, tlsKey string, rootCA string, addr string) (*tls.Config, error) {
 
 	cert, err := tls.LoadX509KeyPair(tlsCrt, tlsKey)

@@ -58,7 +58,8 @@ func NewClusterAuthorizationGetUserAuthorizationOK() *ClusterAuthorizationGetUse
 	return &ClusterAuthorizationGetUserAuthorizationOK{}
 }
 
-/* ClusterAuthorizationGetUserAuthorizationOK describes a response with status code 200, with default header values.
+/*
+	ClusterAuthorizationGetUserAuthorizationOK describes a response with status code 200, with default header values.
 
 A successful response.
 */
@@ -90,7 +91,8 @@ func NewClusterAuthorizationGetUserAuthorizationForbidden() *ClusterAuthorizatio
 	return &ClusterAuthorizationGetUserAuthorizationForbidden{}
 }
 
-/* ClusterAuthorizationGetUserAuthorizationForbidden describes a response with status code 403, with default header values.
+/*
+	ClusterAuthorizationGetUserAuthorizationForbidden describes a response with status code 403, with default header values.
 
 Returned when the user does not have permission to access the resource.
 */
@@ -120,7 +122,8 @@ func NewClusterAuthorizationGetUserAuthorizationNotFound() *ClusterAuthorization
 	return &ClusterAuthorizationGetUserAuthorizationNotFound{}
 }
 
-/* ClusterAuthorizationGetUserAuthorizationNotFound describes a response with status code 404, with default header values.
+/*
+	ClusterAuthorizationGetUserAuthorizationNotFound describes a response with status code 404, with default header values.
 
 Returned when the resource does not exist.
 */
@@ -152,7 +155,8 @@ func NewClusterAuthorizationGetUserAuthorizationDefault(code int) *ClusterAuthor
 	}
 }
 
-/* ClusterAuthorizationGetUserAuthorizationDefault describes a response with status code -1, with default header values.
+/*
+	ClusterAuthorizationGetUserAuthorizationDefault describes a response with status code -1, with default header values.
 
 An unexpected error response.
 */

@@ -28,11 +28,21 @@ func GetAuditLogAggregations(ctx context.Context, db *bun.DB, tag, field string,
 				Where("tag = ?", tag).GroupExpr("data->>'un'")
 		}
 	case "project":
-		sq.ColumnExpr("data->>'project' as key").
-			Where("tag = ?", tag).GroupExpr("data->>'project'")
+		if tag != audit.KUBECTL_API {
+			sq.ColumnExpr("data->>'project' as key").
+				Where("tag = ?", tag).GroupExpr("data->>'project'")
+		} else {
+			sq.ColumnExpr("data->>'pr' as key").
+				Where("tag = ?", tag).GroupExpr("data->>'pr'")
+		}
 	case "cluster":
-		sq.ColumnExpr("data->>'cn' as key").
-			Where("tag = ?", tag).GroupExpr("data->>'cn'")
+		if tag != audit.KUBECTL_API {
+			sq.ColumnExpr("data->'detail'->'meta'->>'cluster_name' as key").
+				Where("tag = ?", tag).GroupExpr("data->'detail'->'meta'->>'cluster_name'")
+		} else {
+			sq.ColumnExpr("data->>'cn' as key").
+				Where("tag = ?", tag).GroupExpr("data->>'cn'")
+		}
 	case "namespace":
 		sq.ColumnExpr("data->>'n' as key").
 			Where("tag = ?", tag).GroupExpr("data->>'n'")
@@ -75,11 +85,9 @@ func buildRelayAuditQuery(query *bun.SelectQuery, filters query.QueryFilters) *b
 	if filters.GetUser() != "" {
 		query.Where("data->>'un' = ?", filters.GetUser())
 	}
-
 	if filters.GetKind() != "" {
 		query.Where("data->>'k' = ?", filters.GetKind())
 	}
-
 	if filters.GetMethod() != "" {
 		query.Where("data->>'m' = ?", filters.GetMethod())
 	}
@@ -92,6 +100,11 @@ func buildRelayAuditQuery(query *bun.SelectQuery, filters query.QueryFilters) *b
 	if filters.GetTimefrom() != "" {
 		diff := strings.Split(filters.GetTimefrom(), "-")[1]
 		query.Where("time between now() - interval ? and now()", diff)
+	}
+	if len(filters.GetProjects()) > 0 {
+		for _, project := range filters.GetProjects() {
+			query.Where("data->>'pr' = ?", project)
+		}
 	}
 	return query
 }
@@ -109,6 +122,10 @@ func buildQuery(query *bun.SelectQuery, filters query.QueryFilters) *bun.SelectQ
 
 	if filters.GetUser() != "" {
 		query.Where("data->'actor'->'account'->>'username' = ?", filters.GetUser())
+	}
+
+	if filters.GetCluster() != "" {
+		query.Where("data->'detail'->'meta'->>'cluster_name' = ?", filters.GetCluster())
 	}
 
 	if filters.GetClient() != "" {

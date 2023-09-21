@@ -35,4 +35,5 @@ type KratosIdentities struct {
 	StateChangedAt     time.Time                 `bun:"state_changed_at,notnull,default:current_timestamp"`
 	NId                uuid.UUID                 `bun:"nid,type:uuid,pk"`
 	IdentityCredential KratosIdentityCredentials `bun:"rel:has-one,join:id=identity_id"`
+	MetadataPublic     map[string]interface{}    `bun:"metadata_public,type:jsonb"`
 }

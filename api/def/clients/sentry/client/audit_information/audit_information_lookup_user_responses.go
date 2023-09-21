@@ -58,7 +58,8 @@ func NewAuditInformationLookupUserOK() *AuditInformationLookupUserOK {
 	return &AuditInformationLookupUserOK{}
 }
 
-/* AuditInformationLookupUserOK describes a response with status code 200, with default header values.
+/*
+	AuditInformationLookupUserOK describes a response with status code 200, with default header values.
 
 A successful response.
 */
@@ -90,7 +91,8 @@ func NewAuditInformationLookupUserForbidden() *AuditInformationLookupUserForbidd
 	return &AuditInformationLookupUserForbidden{}
 }
 
-/* AuditInformationLookupUserForbidden describes a response with status code 403, with default header values.
+/*
+	AuditInformationLookupUserForbidden describes a response with status code 403, with default header values.
 
 Returned when the user does not have permission to access the resource.
 */
@@ -120,7 +122,8 @@ func NewAuditInformationLookupUserNotFound() *AuditInformationLookupUserNotFound
 	return &AuditInformationLookupUserNotFound{}
 }
 
-/* AuditInformationLookupUserNotFound describes a response with status code 404, with default header values.
+/*
+	AuditInformationLookupUserNotFound describes a response with status code 404, with default header values.
 
 Returned when the resource does not exist.
 */
@@ -152,7 +155,8 @@ func NewAuditInformationLookupUserDefault(code int) *AuditInformationLookupUserD
 	}
 }
 
-/* AuditInformationLookupUserDefault describes a response with status code -1, with default header values.
+/*
+	AuditInformationLookupUserDefault describes a response with status code -1, with default header values.
 
 An unexpected error response.
 */

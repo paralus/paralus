@@ -2,19 +2,22 @@ package service
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"strings"
 
 	v1 "github.com/paralus/paralus/proto/rpc/audit"
+	"github.com/uptrace/bun"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
 type auditLogElasticSearchService struct {
+	db         *bun.DB
 	auditQuery ElasticSearchQuery
 }
 
-func (a *auditLogElasticSearchService) GetAuditLog(req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
+func (a *auditLogElasticSearchService) GetAuditLog(ctx context.Context, req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
 	if err != nil {
 		return nil, err
 	}
@@ -23,7 +26,7 @@ func (a *auditLogElasticSearchService) GetAuditLog(req *v1.GetAuditLogSearchRequ
 		return nil, err
 	}
 	req.Filter.Projects = []string{project}
-	return a.GetAuditLogByProjects(req)
+	return a.GetAuditLogByProjects(ctx, req)
 }
 
 func validateQueryString(queryString string) error {
@@ -45,10 +48,16 @@ func getProjectFromUrlScope(urlScope string) (string, error) {
 	return s[1], nil
 }
 
-func (a *auditLogElasticSearchService) GetAuditLogByProjects(req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
+func (a *auditLogElasticSearchService) GetAuditLogByProjects(ctx context.Context, req *v1.GetAuditLogSearchRequest) (res *v1.GetAuditLogSearchResponse, err error) {
 	err = validateQueryString(req.GetFilter().QueryString)
 	if err != nil {
 		return nil, err
+	}
+	//validate user authz with incoming request
+	if len(req.GetFilter().GetProjects()) > 0 {
+		if err := ValidateUserAuditReadRequest(ctx, req.GetFilter().GetProjects(), a.db, false); err != nil {
+			return nil, err
+		}
 	}
 	res = &v1.GetAuditLogSearchResponse{
 		Result: &structpb.Struct{},

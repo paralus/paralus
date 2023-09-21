@@ -36,7 +36,7 @@ type ClientService interface {
 }
 
 /*
-  KubectlClusterSettingsGetKubectlClusterSettings kubectl cluster settings get kubectl cluster settings API
+KubectlClusterSettingsGetKubectlClusterSettings kubectl cluster settings get kubectl cluster settings API
 */
 func (a *Client) KubectlClusterSettingsGetKubectlClusterSettings(params *KubectlClusterSettingsGetKubectlClusterSettingsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*KubectlClusterSettingsGetKubectlClusterSettingsOK, error) {
 	// TODO: Validate the params before sending
@@ -74,7 +74,7 @@ func (a *Client) KubectlClusterSettingsGetKubectlClusterSettings(params *Kubectl
 }
 
 /*
-  KubectlClusterSettingsUpdateKubectlClusterSettings kubectl cluster settings update kubectl cluster settings API
+KubectlClusterSettingsUpdateKubectlClusterSettings kubectl cluster settings update kubectl cluster settings API
 */
 func (a *Client) KubectlClusterSettingsUpdateKubectlClusterSettings(params *KubectlClusterSettingsUpdateKubectlClusterSettingsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*KubectlClusterSettingsUpdateKubectlClusterSettingsOK, error) {
 	// TODO: Validate the params before sending
