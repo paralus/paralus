@@ -70,7 +70,6 @@ func getAuthzLabels(userName, saValidityDuration string) map[string]string {
 }
 
 func getAccountProjectNamespace(ctx context.Context, projectID, accountID string, pns service.NamespaceService) ([]string, error) {
-
 	apns, err := pns.GetAccountProjectNamespaces(ctx, uuid.MustParse(projectID), uuid.MustParse(accountID))
 	if err != nil {
 		return nil, err
@@ -80,7 +79,6 @@ func getAccountProjectNamespace(ctx context.Context, projectID, accountID string
 }
 
 func getGroupAccountProjectNamespace(ctx context.Context, projectID, accountID string, apn service.NamespaceService) ([]string, error) {
-
 	apns, err := apn.GetGroupProjectNamespaces(ctx, uuid.MustParse(projectID), uuid.MustParse(accountID))
 	if err != nil {
 		return nil, err
@@ -167,7 +165,6 @@ func getClusterRole(permission string) (cr *rbacv1.ClusterRole, err error) {
 	}
 
 	if cr != nil {
-
 	}
 
 	return
@@ -336,7 +333,6 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 		kubeSetting = &sentry.KubeconfigSetting{
 			SaValiditySeconds: defaultSaValiditySeconds,
 		}
-
 	} else if err != nil {
 		_log.Errorf("unable to fetch k8s service as per org level kubectl settings for orgID:%s %v", orgID, cnAttr.IsSSO)
 		return nil, fmt.Errorf("unable to fetch k8s service %s", err.Error())
@@ -497,7 +493,6 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 
 		for _, project := range projects {
 			namespaces, err := ns.GetProjectNamespaces(ctx, uuid.MustParse(project))
-
 			if err != nil {
 				_log.Infow("error ", err.Error())
 			}
@@ -508,7 +503,6 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 		}
 		return nsl, nil
 	}()
-
 	if err != nil {
 		_log.Debugw("unable to get project namespaces", "error", err)
 		return nil, err
@@ -573,7 +567,6 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 			break
 		}
 		for _, permission := range permissions {
-
 			rp := sentry.GetKubeConfigPermissionPrivilege(permission)
 			if rp > rolePrevilage {
 				rolePrevilage = rp
@@ -610,7 +603,6 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 				}
 			}
 		}
-
 	}
 
 	// add authz labels
@@ -781,7 +773,6 @@ func verifyClusterKubectlSettings(ctx context.Context, bs service.BootstrapServi
 	kc, err := kcs.Get(ctx, orgID, clusterID)
 	if err == constants.ErrNotFound {
 		// no settings found, hence there is no restriction.
-		return nil //allow
 	} else if err != nil {
 		return err
 	}
@@ -790,7 +781,6 @@ func verifyClusterKubectlSettings(ctx context.Context, bs service.BootstrapServi
 		// backward compatibility treat "" as terminal session for old kubeconfigs
 		if kc.DisableCLIKubectl {
 			_log.Infow("kubectl cli is not authorized for ", "cnAttr", cnAttr)
-			return fmt.Errorf("kubectl cli is not authorized") //deny
 		}
 		return nil // allow
 	}
@@ -798,7 +788,6 @@ func verifyClusterKubectlSettings(ctx context.Context, bs service.BootstrapServi
 	if cnAttr.SessionType == kubeconfig.WebShell {
 		if kc.DisableWebKubectl {
 			_log.Infow("browser based kubectl is not authorized for ", "cnAttr", cnAttr)
-			return fmt.Errorf("browser based kubectl is not authorized") //deny
 		}
 		return nil // allow
 	}
@@ -818,7 +807,6 @@ func verifyKubectlSettings(cnAttr kubeconfig.CNAttributes, ks *sentry.Kubeconfig
 		// backward compatibility treat "" as terminal session for old kubeconfigs
 		if ks.DisableCLIKubectl {
 			_log.Infow("kubectl cli is not authorized for ", "cnAttr", cnAttr, " by ", level, "config")
-			return fmt.Errorf("kubectl cli is not authorized" + " by " + level + "config") //deny
 		}
 		return nil // allow
 	}
@@ -826,7 +814,6 @@ func verifyKubectlSettings(cnAttr kubeconfig.CNAttributes, ks *sentry.Kubeconfig
 	if cnAttr.SessionType == kubeconfig.WebShell {
 		if ks.DisableWebKubectl {
 			_log.Infow("browser based kubectl is not authorized for ", "cnAttr", cnAttr, " by ", level, "config")
-			return fmt.Errorf("browser based kubectl is not authorized" + " by " + level + "config") //deny
 		}
 		return nil // allow
 	}

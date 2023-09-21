@@ -10,9 +10,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 )
 
-var (
-	accessorLog = ctrl.Log.WithName("accessor")
-)
+var accessorLog = ctrl.Log.WithName("accessor")
 
 const (
 	apiVersion        = "apiVersion"
@@ -33,14 +31,12 @@ const (
 	emptyArray        = "[]"
 )
 
-var (
-	// ErrNoMetadata is returned when metadata field is not present in the object
-	ErrNoMetadata = errors.New("metadata filed not present")
-)
+// ErrNoMetadata is returned when metadata field is not present in the object.
+var ErrNoMetadata = errors.New("metadata filed not present")
 
 // +kubebuilder:object:generate=false
 
-// Accessor is the interface for accessing k8s fields from step object
+// Accessor is the interface for accessing k8s fields from step object.
 type Accessor interface {
 	// Kind returns the kind of the step object
 	Kind() (string, error)
@@ -119,12 +115,10 @@ func ensureKeys(obj *fastjson.Object, keys ...string) error {
 func ensureKeysWithDefaultValue(obj *fastjson.Object, value *fastjson.Value, keys ...string) error {
 	var err error
 	if obj.Get(keys[0]) == nil || obj.Get(keys[0]).Type() == fastjson.TypeNull {
-		//If this is the last leg of the keys, set the default value (which would be either Array or Object
 		if len(keys) == 1 {
 			obj.Set(keys[0], value)
 		} else {
-			//For any node above the leaf node, we must create an empty object only.
-			//Currently we don't support setting raw on a path which has an array in the middle of the path
+			// Currently we don't support setting raw on a path which has an array in the middle of the path
 			obj.Set(keys[0], fastjson.MustParse(emptyObject))
 		}
 	}
@@ -295,7 +289,6 @@ func (a *accessor) SetName(k string) error {
 
 func (a *accessor) Labels() (map[string]string, error) {
 	if ok := a.Exists(metadata, labels); ok {
-
 		if a.Get(metadata, labels).Type() == fastjson.TypeNull {
 			return map[string]string{}, nil
 		}
@@ -383,7 +376,6 @@ func (a *accessor) SetAnnotations(ants map[string]string) error {
 	}
 
 	for k, v := range ants {
-
 		sb := new(strings.Builder)
 		sb.WriteString(`"`)
 		sb.WriteString(v)

@@ -20,15 +20,19 @@ func NewOIDCServer(providerSvc service.OIDCProviderService) rpcv3.OIDCProviderSe
 func (s *oidcProvider) CreateOIDCProvider(ctx context.Context, p *systemv3.OIDCProvider) (*systemv3.OIDCProvider, error) {
 	return s.Create(ctx, p)
 }
+
 func (s *oidcProvider) GetOIDCProvider(ctx context.Context, p *systemv3.OIDCProvider) (*systemv3.OIDCProvider, error) {
 	return s.GetByName(ctx, p)
 }
+
 func (s *oidcProvider) ListOIDCProvider(ctx context.Context, p *emptypb.Empty) (*systemv3.OIDCProviderList, error) {
 	return s.List(ctx)
 }
+
 func (s *oidcProvider) UpdateOIDCProvider(ctx context.Context, p *systemv3.OIDCProvider) (*systemv3.OIDCProvider, error) {
 	return s.Update(ctx, p)
 }
+
 func (s *oidcProvider) DeleteOIDCProvider(ctx context.Context, p *systemv3.OIDCProvider) (*emptypb.Empty, error) {
 	// TODO: if successful return 204 NO CONTENT
 	return &emptypb.Empty{}, s.Delete(ctx, p)

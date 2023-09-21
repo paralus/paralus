@@ -24,17 +24,13 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
-var (
-	applyLog = logf.Log.WithName("cluster-v2-apply")
-)
+var applyLog = logf.Log.WithName("cluster-v2-apply")
 
-var (
-	crdv1beta1GVK = schema.GroupVersionKind{
-		Group:   apixv1beta1.SchemeGroupVersion.Group,
-		Version: apixv1beta1.SchemeGroupVersion.Version,
-		Kind:    "CustomResourceDefinition",
-	}
-)
+var crdv1beta1GVK = schema.GroupVersionKind{
+	Group:   apixv1beta1.SchemeGroupVersion.Group,
+	Version: apixv1beta1.SchemeGroupVersion.Version,
+	Kind:    "CustomResourceDefinition",
+}
 
 var knownApplyUpdateGroups = func() map[string]struct{} {
 	return map[string]struct{}{
@@ -42,7 +38,7 @@ var knownApplyUpdateGroups = func() map[string]struct{} {
 	}
 }()
 
-// isApplyUpdate checks if object should be updated for apply operation
+// isApplyUpdate checks if object should be updated for apply operation.
 func isApplyUpdate(o runtime.Object) bool {
 	group := o.GetObjectKind().GroupVersionKind().Group
 	if _, ok := knownApplyUpdateGroups[group]; ok {
@@ -51,7 +47,7 @@ func isApplyUpdate(o runtime.Object) bool {
 	return false
 }
 
-// Options are the options for apply operation
+// Options are the options for apply operation.
 type Options struct {
 	// if UseUpdate is set, then update is used instead of patch
 	UseUpdate bool
@@ -60,11 +56,11 @@ type Options struct {
 	DontCreate bool
 }
 
-// Option is the functional apply options
+// Option is the functional apply options.
 type Option func(*Options)
 
 // WithUseUpdate sets if update should be used instead of patch for apply
-// operation
+// operation.
 func WithUseUpdate(o runtime.Object) Option {
 	return func(opts *Options) {
 		opts.UseUpdate = isApplyUpdate(o)
@@ -72,21 +68,21 @@ func WithUseUpdate(o runtime.Object) Option {
 }
 
 // WithForceUseUpdate sets if update should be used instead of patch for apply
-// operation, irrespective of whether the object is of paralus domain or not
+// operation, irrespective of whether the object is of paralus domain or not.
 func WithForceUseUpdate() Option {
 	return func(opts *Options) {
 		opts.UseUpdate = true
 	}
 }
 
-// WithDontCreate sets DontCreate flag
+// WithDontCreate sets DontCreate flag.
 func WithDontCreate() Option {
 	return func(opts *Options) {
 		opts.DontCreate = true
 	}
 }
 
-// Applier is the interface for applying patch to runtime objects
+// Applier is the interface for applying patch to runtime objects.
 type Applier interface {
 	Apply(ctx context.Context, obj ctrlclient.Object, opts ...Option) error
 	ApplyStatus(ctx context.Context, obj ctrlclient.Object, statusObj interface{}) error
@@ -98,13 +94,13 @@ type applier struct {
 	ctrlclient.Client
 }
 
-// NewApplier returns new applier
+// NewApplier returns new applier.
 func NewApplier(client ctrlclient.Client) Applier {
 	return &applier{false, client}
 }
 
 // NewDynamicApplier returns a new applier whose client is dynamically refreshed
-// when new CRDs are installed
+// when new CRDs are installed.
 func NewDynamicApplier() (Applier, error) {
 	c, err := client.New()
 	if err != nil {
@@ -115,7 +111,6 @@ func NewDynamicApplier() (Applier, error) {
 }
 
 func isCRD(gvk schema.GroupVersionKind) bool {
-	//applyLog.Info("is crd", "gvk", gvk)
 	switch gvk {
 	case crdv1beta1GVK:
 		return true
@@ -124,7 +119,7 @@ func isCRD(gvk schema.GroupVersionKind) bool {
 }
 
 func (a *applier) Apply(ctx context.Context, obj ctrlclient.Object, opts ...Option) error {
-	var applyOpts = new(Options)
+	applyOpts := new(Options)
 	for _, f := range opts {
 		f(applyOpts)
 	}
@@ -142,12 +137,10 @@ func (a *applier) Apply(ctx context.Context, obj ctrlclient.Object, opts ...Opti
 	var err error
 
 	if mo, ok := obj.(metav1.Object); ok {
-
 		objectKey = ctrlclient.ObjectKey{
 			Name:      mo.GetName(),
 			Namespace: mo.GetNamespace(),
 		}
-
 	}
 
 	gvk, err = GetGVK(obj)
@@ -161,8 +154,6 @@ func (a *applier) Apply(ctx context.Context, obj ctrlclient.Object, opts ...Opti
 		err = fmt.Errorf("unable to create new object %s", err.Error())
 		return err
 	}
-
-	//refresh client before applying a unknow object
 	if !util.KnownObject(gvk) && a.dynamic {
 		c, err := client.New()
 		if err != nil {
@@ -189,7 +180,6 @@ func (a *applier) Apply(ctx context.Context, obj ctrlclient.Object, opts ...Opti
 				}
 
 				if a.dynamic && isCRD(gvk) {
-
 					// wait until the crds are sync
 					// TODO : what happens when you get an error ???
 					err = a.pollCRDUntilEstablished(ctx, 180*time.Second, obj, objectKey)
@@ -228,7 +218,6 @@ func (a *applier) Apply(ctx context.Context, obj ctrlclient.Object, opts ...Opti
 			if err != nil {
 				err = fmt.Errorf("unable to patch step object %s", err.Error())
 				return err
-
 			}
 		}
 
@@ -240,7 +229,6 @@ func (a *applier) Apply(ctx context.Context, obj ctrlclient.Object, opts ...Opti
 
 func (a *applier) pollCRDUntilEstablished(ctx context.Context, timeout time.Duration, obj ctrlclient.Object, objectKey types.NamespacedName) error {
 	return wait.PollImmediate(time.Second, timeout, func() (bool, error) {
-
 		crd := &apixv1beta1.CustomResourceDefinition{}
 		err := scheme.Scheme.Convert(obj, crd, nil)
 		if err != nil {

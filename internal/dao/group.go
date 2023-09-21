@@ -9,9 +9,9 @@ import (
 	"github.com/uptrace/bun"
 )
 
-// GetUsers gets the list of users in a given group
+// GetUsers gets the list of users in a given group.
 func GetUsers(ctx context.Context, db bun.IDB, id uuid.UUID) ([]models.KratosIdentities, error) {
-	var entities = []models.KratosIdentities{}
+	entities := []models.KratosIdentities{}
 	err := db.NewSelect().Model(&entities).
 		Join(`JOIN authsrv_groupaccount ON identities.id=authsrv_groupaccount.account_id`).
 		Where(`authsrv_groupaccount.group_id = ?`, id).
@@ -22,7 +22,7 @@ func GetUsers(ctx context.Context, db bun.IDB, id uuid.UUID) ([]models.KratosIde
 
 func GetGroupRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.ProjectNamespaceRole, error) {
 	// Could possibly union them later for some speedup
-	var r = []*userv3.ProjectNamespaceRole{}
+	r := []*userv3.ProjectNamespaceRole{}
 	err := db.NewSelect().Table("authsrv_grouprole").
 		ColumnExpr("authsrv_resourcerole.name as role, authsrv_group.name as group").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_grouprole.role_id`).
@@ -35,7 +35,7 @@ func GetGroupRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Pro
 		return nil, err
 	}
 
-	var pr = []*userv3.ProjectNamespaceRole{}
+	pr := []*userv3.ProjectNamespaceRole{}
 	err = db.NewSelect().Table("authsrv_projectgrouprole").
 		ColumnExpr("authsrv_resourcerole.name as role, authsrv_project.name as project, authsrv_group.name as group").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgrouprole.role_id`).
@@ -50,7 +50,7 @@ func GetGroupRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Pro
 		return nil, err
 	}
 
-	var pnr = []*userv3.ProjectNamespaceRole{}
+	pnr := []*userv3.ProjectNamespaceRole{}
 	err = db.NewSelect().Table("authsrv_projectgroupnamespacerole").
 		ColumnExpr("authsrv_resourcerole.name as role, authsrv_project.name as project, namespace, authsrv_group.name as group").
 		Join(`JOIN authsrv_resourcerole ON authsrv_resourcerole.id=authsrv_projectgroupnamespacerole.role_id`).

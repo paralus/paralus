@@ -131,7 +131,7 @@ func TestCreateUserWithRole(t *testing.T) {
 				role.Project = &pruuid
 			}
 			if tc.namespace {
-				var ns = "ns"
+				ns := "ns"
 				role.Namespace = &ns
 			}
 			mock.ExpectQuery(fmt.Sprintf(`INSERT INTO "%v"`, tc.dbname)).
@@ -267,7 +267,7 @@ func TestUpdateUserWithIdpGroupPassed(t *testing.T) {
 	// 	WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
 	mock.ExpectCommit()
 
-	var ns = "ns"
+	ns := "ns"
 	user := &userv3.User{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
 		Spec: &userv3.UserSpec{
@@ -310,7 +310,7 @@ func TestUpdateUserWithIdpGroupFetched(t *testing.T) {
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
 	mock.ExpectCommit()
 
-	var ns = "ns"
+	ns := "ns"
 	user := &userv3.User{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
 		Spec: &userv3.UserSpec{
@@ -476,7 +476,6 @@ func TestUserGetInfo(t *testing.T) {
 	}
 	ctx := context.WithValue(context.Background(), common.SessionDataKey, &commonv3.SessionData{Username: "user-" + uuuid})
 	userinfo, err := us.GetUserInfo(ctx, user)
-
 	if err != nil {
 		t.Fatal("could not get user:", err)
 	}
@@ -505,7 +504,6 @@ func TestUserGetInfo(t *testing.T) {
 	if len(*userinfo.Spec.Permissions[0].Scope) == 0 {
 		t.Errorf("incorrect scope for permissions; expected '%v', got '%v'", fakescope, *userinfo.Spec.Permissions[0].Scope)
 	}
-
 }
 
 func TestUserGetById(t *testing.T) {
@@ -683,7 +681,6 @@ func TestUserList(t *testing.T) {
 			}
 
 			performBasicAuthProviderChecks(t, *ap, 0, 0, 0, 0)
-
 		})
 	}
 }
@@ -719,6 +716,7 @@ func TestUserDelete(t *testing.T) {
 
 	performBasicAuthProviderChecks(t, *ap, 0, 0, 0, 1)
 }
+
 func TestUserDeleteSelf(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
@@ -877,25 +875,20 @@ func TestCreateLoginAuditLog(t *testing.T) {
 			mazc := mockAuthzClient{}
 			us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
 			if tc.invalid {
-
 				uid := uuid.New().String()
 				// without regexp QuoteMeta, getting mismatch actual and required SQL queries
 				mock.ExpectQuery(regexp.QuoteMeta(`SELECT traits ->> 'email' as name FROM "identities" WHERE (id = ('` + uid + `'))`)).
 					WithArgs().WillReturnRows(sqlmock.NewRows([]string{"traits"}).AddRow([]byte(`{"email":"johndoe@provider.com"}`)))
-
 			} else {
 				mock.ExpectQuery(regexp.QuoteMeta(`SELECT traits ->> 'email' as name FROM "identities" WHERE (id = ('` + tc.uuid + `'))`)).
 					WithArgs().WillReturnRows(sqlmock.NewRows([]string{"traits"}).AddRow([]byte(`{"email":"johndoe@provider.com"}`)))
-
 			}
 
 			audreq := &userrpcv3.UserLoginAuditRequest{UserId: tc.uuid}
 			_, err := us.CreateLoginAuditLog(context.TODO(), audreq)
 			if tc.shouldHaveError && err == nil {
-
 				t.Error("could not add audit log", err)
 			}
 		})
 	}
-
 }

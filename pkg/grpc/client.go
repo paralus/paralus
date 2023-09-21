@@ -13,18 +13,16 @@ import (
 	"google.golang.org/grpc/keepalive"
 )
 
-var (
-	clientDefaultOpts = []grpc.DialOption{
-		grpc.WithBlock(),
-		grpc.WithKeepaliveParams(keepalive.ClientParameters{
-			Time:                time.Second * 30,
-			Timeout:             time.Second * 30,
-			PermitWithoutStream: true,
-		}),
-	}
-)
+var clientDefaultOpts = []grpc.DialOption{
+	grpc.WithBlock(),
+	grpc.WithKeepaliveParams(keepalive.ClientParameters{
+		Time:                time.Second * 30,
+		Timeout:             time.Second * 30,
+		PermitWithoutStream: true,
+	}),
+}
 
-// NewSecureClientConn returns new grpc client connection given server host, server port and transport credentials
+// NewSecureClientConn returns new grpc client connection given server host, server port and transport credentials.
 func NewSecureClientConn(ctx context.Context, addr string, creds credentials.TransportCredentials, opts ...grpc.DialOption) (*grpc.ClientConn, error) {
 	nctx, cancel := context.WithTimeout(ctx, time.Second*30)
 	defer cancel()
@@ -35,7 +33,7 @@ func NewSecureClientConn(ctx context.Context, addr string, creds credentials.Tra
 	return grpc.DialContext(nctx, addr, opts...)
 }
 
-// NewClientConn returns new grpc client connection given server host and server port
+// NewClientConn returns new grpc client connection given server host and server port.
 func NewClientConn(ctx context.Context, addr string, opts ...grpc.DialOption) (*grpc.ClientConn, error) {
 	nctx, cancel := context.WithTimeout(ctx, time.Second*30)
 	defer cancel()
@@ -74,12 +72,13 @@ func newClientTLSConfig(certPEM []byte, keyPEM []byte, caCertPEM []byte, addr st
 		MinVersion:             tls.VersionTLS12,
 		CipherSuites: []uint16{
 			tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
-			tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256},
+			tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+		},
 		PreferServerCipherSuites: true,
 	}, nil
 }
 
-// NewClientTransportCredentials returns grpc client transport credentials
+// NewClientTransportCredentials returns grpc client transport credentials.
 func NewClientTransportCredentials(cert, key, caCert []byte, addr string) (credentials.TransportCredentials, error) {
 	tlsConfig, err := newClientTLSConfig(cert, key, caCert, addr)
 	if err != nil {
@@ -105,25 +104,24 @@ func NewGrpcClientClientConn(ctx context.Context, serverHost string, serverPort 
 	return cc, err
 }
 
-// NewGrpcClientClientConn returns new grpc client connection given server host and server port
+// NewGrpcClientClientConn returns new grpc client connection given server host and server port.
 func NewGrpcClientClientConnWithTimeout(ctx context.Context, serverHost string, serverPort int, timeoutInMins time.Duration) (*grpc.ClientConn, error) {
 	// resolve every 30 seconds
-	//resolver, _ := naming.NewDNSResolverWithFreq(time.Second * 30)
-	//serverBalancer := grpc.RoundRobin(resolver)
+
+
 	to := time.Duration(timeoutInMins)
 	cc, err := grpc.DialContext(
 		ctx,
 		fmt.Sprintf("%s:%d", serverHost, serverPort),
 		grpc.WithInsecure(),
-		//grpc.WithTransportCredentials(creds),
-		//grpc.WithBackoffConfig(grpc.DefaultBackoffConfig),
+
+
 		grpc.WithBlock(),
 		grpc.WithKeepaliveParams(keepalive.ClientParameters{
 			Time:                time.Second * 30,
 			Timeout:             time.Minute * to,
 			PermitWithoutStream: true,
 		}),
-		//grpc.WithBalancer(serverBalancer),
 	)
 
 	return cc, err

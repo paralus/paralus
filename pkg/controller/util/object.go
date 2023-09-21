@@ -7,7 +7,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-// NewObject returns new object of given GVK
+// NewObject returns new object of given GVK.
 func NewObject(gvk schema.GroupVersionKind) (o client.Object, err error) {
 	return &unstructured.Unstructured{Object: map[string]interface{}{
 		"kind":       gvk.Kind,
@@ -15,7 +15,7 @@ func NewObject(gvk schema.GroupVersionKind) (o client.Object, err error) {
 	}}, nil
 }
 
-// KnownObject returns true if the object GVK is in scheme
+// KnownObject returns true if the object GVK is in scheme.
 func KnownObject(gvk schema.GroupVersionKind) bool {
 	return scheme.Scheme.Recognizes(gvk)
 }

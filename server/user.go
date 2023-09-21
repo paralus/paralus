@@ -18,10 +18,11 @@ type userServer struct {
 	ks service.ApiKeyService
 }
 
-// NewUserServer returns new user server implementation
+// NewUserServer returns new user server implementation.
 func NewUserServer(ps service.UserService, as service.ApiKeyService) rpcv3.UserServiceServer {
 	return &userServer{us: ps, ks: as}
 }
+
 func updateUserStatus(req *userpbv3.User, resp *userpbv3.User, err error) *userpbv3.User {
 	if err != nil {
 		req.Status = &v3.Status{
@@ -121,7 +122,6 @@ func (s *userServer) UserDeleteApiKeys(ctx context.Context, req *rpcv3.ApiKeyReq
 
 func (s *userServer) UserForgotPassword(ctx context.Context, req *rpcv3.UserForgotPasswordRequest) (*rpcv3.UserForgotPasswordResponse, error) {
 	return s.us.ForgotPassword(ctx, req)
-
 }
 
 func (s *userServer) AuditLogWebhook(ctx context.Context, req *rpcv3.UserLoginAuditRequest) (*rpcv3.UserLoginAuditResponse, error) {

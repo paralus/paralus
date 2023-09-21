@@ -8,7 +8,7 @@ import (
 )
 
 // UserClient is the interface for accessing all User & Group RPCs
-// exposed by Paralus Base
+// exposed by Paralus Base.
 type UGClient interface {
 	Unhealthy()
 	Close() error
@@ -22,13 +22,13 @@ type ugClient struct {
 
 var _ UGClient = (*ugClient)(nil)
 
-// UGPool maintains pool of grpc connections to system base services
+// UGPool maintains pool of grpc connections to system base services.
 type UGPool interface {
 	Close()
 	NewClient(ctx context.Context) (UGClient, error)
 }
 
-// NewUGPool new user group pool
+// NewUGPool new user group pool.
 func NewUGPool(addr string, maxConn int) UGPool {
 	return &ugPool{
 		GRPCPool: pool.NewGRPCPool(addr, maxConn, nil),
@@ -64,10 +64,10 @@ type options struct {
 	caCert  []byte
 }
 
-// Option is the functional argument for Pool options
+// Option is the functional argument for Pool options.
 type Option func(*options)
 
-// WithAddr sets address of the pool
+// WithAddr sets address of the pool.
 func WithAddr(addr string) Option {
 	return func(o *options) {
 		o.addr = addr
@@ -75,28 +75,28 @@ func WithAddr(addr string) Option {
 }
 
 // WithMaxConn sets maximum number of connections of the pool
-// if not set defaults to 10
+// if not set defaults to 10.
 func WithMaxConn(maxConn int) Option {
 	return func(o *options) {
 		o.maxConn = maxConn
 	}
 }
 
-// WithClientCertPEM sets PEM encoded client cert for pool
+// WithClientCertPEM sets PEM encoded client cert for pool.
 func WithClientCertPEM(cert []byte) Option {
 	return func(o *options) {
 		o.cert = cert
 	}
 }
 
-// WithClientKeyPEM sets PEM encoded client key for pool
+// WithClientKeyPEM sets PEM encoded client key for pool.
 func WithClientKeyPEM(key []byte) Option {
 	return func(o *options) {
 		o.key = key
 	}
 }
 
-// WithCaCertPEM sets PEM encoded CA cert for pool
+// WithCaCertPEM sets PEM encoded CA cert for pool.
 func WithCaCertPEM(caCert []byte) Option {
 	return func(o *options) {
 		o.caCert = caCert

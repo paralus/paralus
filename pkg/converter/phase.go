@@ -5,19 +5,19 @@ import (
 )
 
 var (
-	// namespace gvk
+	// namespace gvk.
 	namespaceGVK = schema.GroupVersionKind{Version: "v1", Kind: "Namespace"}
 	placementGVK = schema.GroupVersionKind{Group: "config.paralus.dev", Version: "v2", Kind: "Placement"}
 
-	// namespace post install gvks
+	// namespace post install gvks.
 	limitRangeGVK    = schema.GroupVersionKind{Version: "v1", Kind: "LimitRange"}
 	resourceQuotaGVK = schema.GroupVersionKind{Version: "v1", Kind: "ResourceQuota"}
 
-	// task init gvks
+	// task init gvks.
 	serviceAccountGVK = schema.GroupVersionKind{Version: "v1", Kind: "ServiceAccount"}
 )
 
-// IsListGVK checks if gvk is of List Kind
+// IsListGVK checks if gvk is of List Kind.
 func IsListGVK(gvk schema.GroupVersionKind) bool {
 	switch gvk.Group {
 	case "":
@@ -30,7 +30,7 @@ func IsListGVK(gvk schema.GroupVersionKind) bool {
 }
 
 // IsTaskInitGVK checks if given gvk should go into init phase
-// of a Task
+// of a Task.
 func IsTaskInitGVK(gvk schema.GroupVersionKind) bool {
 	switch gvk.Group {
 	case "rbac.authorization.k8s.io", "scheduling.k8s.io",
@@ -49,7 +49,7 @@ func IsTaskInitGVK(gvk schema.GroupVersionKind) bool {
 }
 
 // IsTaskletInitGVK checks if given gvk should go into init phase of a
-// Tasklet
+// Tasklet.
 func IsTaskletInitGVK(gvk schema.GroupVersionKind) bool {
 	switch gvk.Group {
 	case "":
@@ -65,7 +65,7 @@ func IsTaskletInitGVK(gvk schema.GroupVersionKind) bool {
 }
 
 // IsTaskletInstallGVK checks if given gvk should go into install phase of
-// a Tasklet
+// a Tasklet.
 func IsTaskletInstallGVK(gvk schema.GroupVersionKind) bool {
 	switch gvk.Group {
 	case "apps", "batch":
@@ -85,7 +85,7 @@ func IsTaskletInstallGVK(gvk schema.GroupVersionKind) bool {
 }
 
 // IsTaskletPostInstallGVK checks if given gvk should go into post install phase
-// of a TaskSet
+// of a TaskSet.
 func IsTaskletPostInstallGVK(gvk schema.GroupVersionKind) bool {
 	switch gvk.Group {
 	case "autoscaling":
@@ -99,7 +99,7 @@ func IsTaskletPostInstallGVK(gvk schema.GroupVersionKind) bool {
 	return false
 }
 
-// IsNamespaceGVK checks if given gvk is namespace
+// IsNamespaceGVK checks if given gvk is namespace.
 func IsNamespaceGVK(gvk schema.GroupVersionKind) bool {
 	switch gvk {
 	case namespaceGVK:
@@ -108,7 +108,7 @@ func IsNamespaceGVK(gvk schema.GroupVersionKind) bool {
 	return false
 }
 
-// IsNamespacePostCreate checks if given gvk should go into namespace post install
+// IsNamespacePostCreate checks if given gvk should go into namespace post install.
 func IsNamespacePostCreate(gvk schema.GroupVersionKind) bool {
 	// switch gvk {
 	// case limitRangeGVK, resourceQuotaGVK:
@@ -117,7 +117,7 @@ func IsNamespacePostCreate(gvk schema.GroupVersionKind) bool {
 	return false
 }
 
-// IsPlacementGVK checks gvk is placement
+// IsPlacementGVK checks gvk is placement.
 func IsPlacementGVK(gvk schema.GroupVersionKind) bool {
 	switch gvk {
 	case placementGVK:
@@ -126,7 +126,7 @@ func IsPlacementGVK(gvk schema.GroupVersionKind) bool {
 	return false
 }
 
-// IsPlacementGVK checks gvk is placement
+// IsPlacementGVK checks gvk is placement.
 func IsIngressGVK(gvk schema.GroupVersionKind) bool {
 	switch gvk.Group {
 	case "networking.k8s.io":

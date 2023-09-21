@@ -10,10 +10,9 @@ import (
 	logv2 "github.com/paralus/paralus/pkg/log"
 	"github.com/paralus/paralus/pkg/service"
 	"github.com/uptrace/bun"
-	"go.uber.org/zap"
-
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
+	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

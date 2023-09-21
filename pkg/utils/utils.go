@@ -66,7 +66,7 @@ func Diff(before, after []string) ([]string, []string, []string) {
 	return cu, uu, du
 }
 
-// Given two lists, return newly created, unchanged and deleted items
+// Given two lists, return newly created, unchanged and deleted items.
 func DiffU(before, after []uuid.UUID) ([]uuid.UUID, []uuid.UUID, []uuid.UUID) {
 	cu := []uuid.UUID{}
 	uu := []uuid.UUID{}

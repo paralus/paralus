@@ -17,16 +17,16 @@ const (
 )
 
 // PasswordFunc is the signature for passing password while
-// PEM encoding/decoding private keys
+// PEM encoding/decoding private keys.
 type PasswordFunc func() ([]byte, error)
 
-// NoPassword should be used when the private key need not be encrypted
+// NoPassword should be used when the private key need not be encrypted.
 var NoPassword = func() ([]byte, error) {
 	return nil, nil
 }
 
 // EncodePrivateKey PEM encodes private key
-// when password is not empty private key is encrypted with password
+// when password is not empty private key is encrypted with password.
 func EncodePrivateKey(privKey crypto.PrivateKey, f PasswordFunc) ([]byte, error) {
 	password, err := f()
 	if err != nil {
@@ -75,13 +75,11 @@ func EncodePrivateKey(privKey crypto.PrivateKey, f PasswordFunc) ([]byte, error)
 		return pem.EncodeToMemory(p), nil
 	default:
 		return nil, fmt.Errorf("unsupported private key %T", privKey)
-
 	}
-
 }
 
 // DecodePrivateKey decodes PEM encoded private key
-// when PasswordFunc is provied private key is decrypted with password
+// when PasswordFunc is provied private key is decrypted with password.
 func DecodePrivateKey(privKey []byte, f PasswordFunc) (crypto.PrivateKey, error) {
 	p, err := decodePEM(privKey)
 	if err != nil {
@@ -114,10 +112,9 @@ func DecodePrivateKey(privKey []byte, f PasswordFunc) (crypto.PrivateKey, error)
 	default:
 		return nil, fmt.Errorf("type %s is not suported", p.Type)
 	}
-
 }
 
-// DecryptPrivateKeyAsPem returns a decrypted private key in PEM encoding
+// DecryptPrivateKeyAsPem returns a decrypted private key in PEM encoding.
 func DecryptPrivateKeyAsPem(privKey []byte, f PasswordFunc) ([]byte, error) {
 	pk, err := DecodePrivateKey(privKey, f)
 	if err != nil {
@@ -127,7 +124,7 @@ func DecryptPrivateKeyAsPem(privKey []byte, f PasswordFunc) ([]byte, error) {
 	return EncodePrivateKey(pk, NoPassword)
 }
 
-// GenerateECDSAPrivateKey generates new ECDSA private key
+// GenerateECDSAPrivateKey generates new ECDSA private key.
 func GenerateECDSAPrivateKey() (*ecdsa.PrivateKey, error) {
 	ecKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	if err != nil {
@@ -135,5 +132,4 @@ func GenerateECDSAPrivateKey() (*ecdsa.PrivateKey, error) {
 	}
 
 	return ecKey, err
-
 }

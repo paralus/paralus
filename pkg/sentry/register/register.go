@@ -10,23 +10,19 @@ import (
 	"os"
 	"strings"
 
+	bootstrapclientv2 "github.com/paralus/paralus/api/def/clients/sentry/client"
+	bootstrapapiv2 "github.com/paralus/paralus/api/def/clients/sentry/client/bootstrap"
+	"github.com/paralus/paralus/pkg/log"
 	"github.com/paralus/paralus/pkg/sentry/cryptoutil"
+	"github.com/paralus/paralus/pkg/sentry/util"
 	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	"github.com/paralus/paralus/proto/types/sentry"
 	"github.com/pkg/errors"
 	"github.com/rs/xid"
-
-	bootstrapclientv2 "github.com/paralus/paralus/api/def/clients/sentry/client"
-	bootstrapapiv2 "github.com/paralus/paralus/api/def/clients/sentry/client/bootstrap"
-
-	"github.com/paralus/paralus/pkg/log"
-	"github.com/paralus/paralus/pkg/sentry/util"
 )
 
-var (
-	_log = log.GetLogger()
-)
+var _log = log.GetLogger()
 
 const (
 	schemeHTTP  = "http"
@@ -37,7 +33,7 @@ const (
 	modeClient = "client"
 )
 
-// Config is the config used for client registration
+// Config is the config used for client registration.
 type Config struct {
 	// TemplateToken is token of the template the client is registering to
 	TemplateToken string
@@ -100,7 +96,6 @@ type Config struct {
 }
 
 func registerHTTP(ctx context.Context, config *Config) error {
-
 	tc := &bootstrapclientv2.TransportConfig{
 		Host:     config.Addr,
 		BasePath: "/",
@@ -145,7 +140,6 @@ func registerHTTP(ctx context.Context, config *Config) error {
 		},
 		HTTPClient: httpClient,
 	}, nil)
-
 	if err != nil {
 		fmt.Println(err)
 		return err
@@ -271,7 +265,6 @@ func prepareConfig(config *Config) error {
 		}
 
 		config.PrivateKey = key
-
 	}
 
 	if config.ClientID == "" {
@@ -299,7 +292,7 @@ func prepareConfig(config *Config) error {
 	return nil
 }
 
-// Register registers in bootstrap service
+// Register registers in bootstrap service.
 func Register(ctx context.Context, config *Config) error {
 	err := prepareConfig(config)
 	if err != nil {

@@ -5,7 +5,7 @@ import (
 
 	apiv2 "github.com/paralus/paralus/proto/types/controller"
 	// DO NOT UPDATE
-	// API Extensions v1 is not available in k8s v1.14.x
+	// API Extensions v1 is not available in k8s v1.14.x.
 	apixv1beta1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
 	kjson "k8s.io/apimachinery/pkg/runtime/serializer/json"
@@ -15,15 +15,14 @@ import (
 type addToScheme func(s *runtime.Scheme) error
 
 var (
-	// Scheme is the runtime scheme
+	// Scheme is the runtime scheme.
 	Scheme *runtime.Scheme
 
-	// Serializer is the JSON serializer for handling runtime objects
+	// Serializer is the JSON serializer for handling runtime objects.
 	Serializer runtime.Serializer
 )
 
 func init() {
-
 	var once sync.Once
 
 	once.Do(func() {
@@ -42,5 +41,4 @@ func init() {
 
 		Serializer = kjson.NewSerializer(kjson.DefaultMetaFactory, Scheme, Scheme, false)
 	})
-
 }

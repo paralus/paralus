@@ -1,12 +1,11 @@
 package controller
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"os"
 	"reflect"
 	"testing"
-
-	"encoding/json"
 
 	"github.com/valyala/fastjson"
 	"sigs.k8s.io/yaml"
@@ -119,7 +118,6 @@ func TestAccessorSetRaw(t *testing.T) {
 	so.Raw = a.Bytes()
 
 	t.Log(string(so.Raw))
-
 }
 
 func TestAccessor(t *testing.T) {
@@ -227,5 +225,4 @@ func TestAccessor(t *testing.T) {
 	}
 	ann, _ := a.Annotations()
 	t.Log(ann)
-
 }

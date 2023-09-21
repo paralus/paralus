@@ -5,10 +5,8 @@ import (
 	"text/template"
 )
 
-var (
-	// DownloadTemplate is the template for rendering download yaml
-	DownloadTemplate *template.Template
-)
+// DownloadTemplate is the template for rendering download yaml.
+var DownloadTemplate *template.Template
 
 func init() {
 	f, err := Fixtures.Open("download.yaml")

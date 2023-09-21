@@ -35,7 +35,6 @@ func getExV1Beta1DeploymentState(d *exv1beta1.Deployment) (state clusterv2.StepO
 				replicasFailure = true
 				replicaFailureMessage = condition.Message
 			}
-
 		}
 	}
 
@@ -58,11 +57,9 @@ func getExV1Beta1DeploymentState(d *exv1beta1.Deployment) (state clusterv2.StepO
 		reason = progressMessage
 		return
 	}
-
 }
 
 func getAppsV1DeploymentState(d *appsv1.Deployment) (state clusterv2.StepObjectState, reason string) {
-
 	var available bool
 	var progressing bool = true
 	var replicasFailure bool
@@ -74,21 +71,18 @@ func getAppsV1DeploymentState(d *appsv1.Deployment) (state clusterv2.StepObjectS
 				available = true
 			}
 			availableMessage = condition.Message
-
 		}
 		if condition.Type == appsv1.DeploymentProgressing {
 			if condition.Status != corev1.ConditionTrue {
 				progressing = false
 			}
 			progressMessage = condition.Message
-
 		}
 		if condition.Type == appsv1.DeploymentReplicaFailure {
 			if condition.Status == corev1.ConditionTrue {
 				replicasFailure = true
 				replicaFailureMessage = condition.Message
 			}
-
 		}
 	}
 
@@ -110,13 +104,10 @@ func getAppsV1DeploymentState(d *appsv1.Deployment) (state clusterv2.StepObjectS
 		state = clusterv2.StepObjectCreated
 		reason = progressMessage
 		return
-
 	}
-
 }
 
 func getStatefulSetState(s *appsv1.StatefulSet) (state clusterv2.StepObjectState, reason string) {
-
 	if s.Status.ReadyReplicas == *s.Spec.Replicas {
 		state = clusterv2.StepObjectComplete
 		reason = "all required replicas ready"
@@ -177,7 +168,7 @@ func getPersistentVolumeClaimState(pvc *corev1.PersistentVolumeClaim) (state clu
 	return
 }
 
-// ObjectState returns the object state of runtime object
+// ObjectState returns the object state of runtime object.
 func ObjectState(o runtime.Object) (state clusterv2.StepObjectState, reason string) {
 	switch o.(type) {
 	case *exv1beta1.Deployment:
@@ -206,7 +197,7 @@ func ObjectState(o runtime.Object) (state clusterv2.StepObjectState, reason stri
 	return
 }
 
-// JobState returns the job state
+// JobState returns the job state.
 func JobState(o runtime.Object) (state clusterv2.StepJobState, reason string) {
 	j := o.(*batchv1.Job)
 	for _, condition := range j.Status.Conditions {

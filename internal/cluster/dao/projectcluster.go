@@ -32,7 +32,7 @@ func DeleteProjectsForCluster(ctx context.Context, db bun.IDB, clusterID uuid.UU
 	return dao.DeleteX(ctx, db, "cluster_id", clusterID, &models.ProjectCluster{})
 }
 
-// Check if the project in scope is owner of the cluster
+// Check if the project in scope is owner of the cluster.
 func ValidateClusterAccess(ctx context.Context, db bun.IDB, opts commonv3.QueryOptions) (bool, error) {
 	var _c models.Cluster
 	q, err := query.Select(db.NewSelect().Model(&_c), &opts)

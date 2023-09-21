@@ -9,7 +9,7 @@ import (
 	"github.com/uptrace/bun"
 )
 
-// NamespaceService is the interface for namespace operations
+// NamespaceService is the interface for namespace operations.
 type NamespaceService interface {
 	// GetProjectNamespaces
 	GetProjectNamespaces(ctx context.Context, projectID uuid.UUID) ([]string, error)
@@ -17,18 +17,17 @@ type NamespaceService interface {
 	GetGroupProjectNamespaces(ctx context.Context, projectID uuid.UUID, accountID uuid.UUID) ([]string, error)
 }
 
-// namespaceService implements NamespaceService
+// namespaceService implements NamespaceService.
 type namespaceService struct {
 	db *bun.DB
 }
 
-// NewNamespaceService return new namespace service
+// NewNamespaceService return new namespace service.
 func NewNamespaceService(db *bun.DB) NamespaceService {
 	return &namespaceService{db}
 }
 
 func (s *namespaceService) GetProjectNamespaces(ctx context.Context, projectID uuid.UUID) ([]string, error) {
-
 	cns, err := dao.GetProjectNamespaces(ctx, s.db, projectID)
 	if err != nil {
 		return nil, err

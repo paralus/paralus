@@ -3,10 +3,9 @@ package server
 import (
 	"context"
 
-	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
-
 	"github.com/paralus/paralus/pkg/sentry/authz"
 	"github.com/paralus/paralus/pkg/service"
+	sentryrpc "github.com/paralus/paralus/proto/rpc/sentry"
 )
 
 type clusterAuthzServer struct {
@@ -19,7 +18,7 @@ type clusterAuthzServer struct {
 	ns  service.NamespaceService
 }
 
-// GetUserAuthorization return authorization profile of user for a given cluster
+// GetUserAuthorization return authorization profile of user for a given cluster.
 func (s *clusterAuthzServer) GetUserAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRequest) (*sentryrpc.GetUserAuthorizationResponse, error) {
 	resp, err := authz.GetAuthorization(ctx, req, s.bs, s.aps, s.gps, s.krs, s.kcs, s.kss, s.ns)
 	if err != nil {
@@ -29,7 +28,7 @@ func (s *clusterAuthzServer) GetUserAuthorization(ctx context.Context, req *sent
 	return resp, nil
 }
 
-// NewClusterAuthzServer returns New ClusterAuthzServer
+// NewClusterAuthzServer returns New ClusterAuthzServer.
 func NewClusterAuthzServer(bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, krs service.KubeconfigRevocationService, kcs service.KubectlClusterSettingsService, kss service.KubeconfigSettingService, ns service.NamespaceService) sentryrpc.ClusterAuthorizationServiceServer {
 	return &clusterAuthzServer{
 		bs:  bs,

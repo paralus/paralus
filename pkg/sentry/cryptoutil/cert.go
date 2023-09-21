@@ -10,7 +10,7 @@ const (
 	certType = "CERTIFICATE"
 )
 
-// EncodeCert encodes the DER encoded cert to PEM
+// EncodeCert encodes the DER encoded cert to PEM.
 func EncodeCert(cert []byte) []byte {
 	return pem.EncodeToMemory(&pem.Block{
 		Type:  certType,
@@ -18,7 +18,7 @@ func EncodeCert(cert []byte) []byte {
 	})
 }
 
-// DecodeCert decodes PEM encoded cert
+// DecodeCert decodes PEM encoded cert.
 func DecodeCert(cert []byte) (c *x509.Certificate, err error) {
 	var p *pem.Block
 	p, err = decodePEM(cert)

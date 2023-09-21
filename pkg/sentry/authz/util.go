@@ -6,7 +6,6 @@ import (
 	"github.com/shurcooL/httpfs/vfsutil"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
-
 	"sigs.k8s.io/yaml"
 )
 
@@ -27,52 +26,52 @@ const (
 	writeAccessClusterRoleName = "write-access-cluster-role"
 )
 
-// GetDefaultClusterRole returns default cluster role for relay user
+// GetDefaultClusterRole returns default cluster role for relay user.
 func GetDefaultClusterRole() (*rbacv1.ClusterRole, error) {
 	return getClusterRoleFromFile(defaultClusterRolePath)
 }
 
-// GetDefaultRole return default role for relay user
+// GetDefaultRole return default role for relay user.
 func GetDefaultRole() (*rbacv1.Role, error) {
 	return getRoleFromFile(defaultRolePath)
 }
 
-// GetFullAccessClusterRole gets cluster role with full access
+// GetFullAccessClusterRole gets cluster role with full access.
 func GetFullAccessClusterRole() (*rbacv1.ClusterRole, error) {
 	return getClusterRoleFromFile(fullAccessClusterRolePath)
 }
 
-// GetReadNamespaceClusterRole gets cluster role with read access
+// GetReadNamespaceClusterRole gets cluster role with read access.
 func GetReadNamespaceClusterRole() (*rbacv1.ClusterRole, error) {
 	return getClusterRoleFromFile(readNamespaceClusterRolePath)
 }
 
-// GetWriteNamespaceClusterRole gets cluster role with write access
+// GetWriteNamespaceClusterRole gets cluster role with write access.
 func GetWriteNamespaceClusterRole() (*rbacv1.ClusterRole, error) {
 	return getClusterRoleFromFile(writeNamespaceClusterRolePath)
 }
 
-// GetReadClusterScopeClusterRole gets cluster role with read access
+// GetReadClusterScopeClusterRole gets cluster role with read access.
 func GetReadClusterScopeClusterRole() (*rbacv1.ClusterRole, error) {
 	return getClusterRoleFromFile(readClusterScopeClusterRolePath)
 }
 
-// GetWriteClusterScopeClusterRole gets cluster role with write access
+// GetWriteClusterScopeClusterRole gets cluster role with write access.
 func GetWriteClusterScopeClusterRole() (*rbacv1.ClusterRole, error) {
 	return getClusterRoleFromFile(writeClusterScopeClusterRolePath)
 }
 
-// GetReadNamespaceRole gets cluster role with read access
+// GetReadNamespaceRole gets cluster role with read access.
 func GetReadNamespaceRole() (*rbacv1.Role, error) {
 	return getRoleFromFile(readNamespaceRolePath)
 }
 
-// GetWriteNamespaceRole gets cluster role with write access
+// GetWriteNamespaceRole gets cluster role with write access.
 func GetWriteNamespaceRole() (*rbacv1.Role, error) {
 	return getRoleFromFile(writeNamespaceRolePath)
 }
 
-// GetNamespace gets namespace
+// GetNamespace gets namespace.
 func GetNamespace() (*corev1.Namespace, error) {
 	return getNameSpaceFromFile(nameSpacePath)
 }

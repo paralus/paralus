@@ -51,7 +51,6 @@ func getJSONBytes(name string) []byte {
 }
 
 func BenchmarkStepObjectJSONUnmarshal(b *testing.B) {
-
 	jb := getJSONBytes("pod.yaml")
 
 	for i := 0; i < b.N; i++ {
@@ -62,5 +61,4 @@ func BenchmarkStepObjectJSONUnmarshal(b *testing.B) {
 			return
 		}
 	}
-
 }

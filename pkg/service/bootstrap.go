@@ -21,7 +21,7 @@ import (
 
 var KEKFunc cryptoutil.PasswordFunc
 
-// BootstrapService is the interface for bootstrap operations
+// BootstrapService is the interface for bootstrap operations.
 type BootstrapService interface {
 	// bootstrap infra methods
 	PatchBootstrapInfra(ctx context.Context, infra *sentry.BootstrapInfra) error
@@ -45,12 +45,12 @@ type BootstrapService interface {
 	PatchBootstrapAgent(ctx context.Context, ba *sentry.BootstrapAgent, templateRef string, opts ...query.Option) error
 }
 
-// bootstrapService implements BootstrapService
+// bootstrapService implements BootstrapService.
 type bootstrapService struct {
 	db *bun.DB
 }
 
-// NewBootstrapService return new bootstrap service
+// NewBootstrapService return new bootstrap service.
 func NewBootstrapService(db *bun.DB) BootstrapService {
 	return &bootstrapService{db}
 }
@@ -60,7 +60,6 @@ func (s *bootstrapService) PatchBootstrapInfra(ctx context.Context, infra *sentr
 }
 
 func (s *bootstrapService) GetBootstrapInfra(ctx context.Context, name string) (*sentry.BootstrapInfra, error) {
-
 	var bi models.BootstrapInfra
 	_, err := dao.GetByName(ctx, s.db, name, &bi)
 	if err != nil {
@@ -341,7 +340,6 @@ func (s *bootstrapService) DeleteBootstrapAgent(ctx context.Context, templateRef
 }
 
 func (s *bootstrapService) PatchBootstrapAgent(ctx context.Context, ba *sentry.BootstrapAgent, templateRef string, opts ...query.Option) error {
-
 	queryOptions := &commonv3.QueryOptions{}
 	for _, opt := range opts {
 		opt(queryOptions)
@@ -392,7 +390,6 @@ func (s *bootstrapService) GetBootstrapAgentTemplateForHost(ctx context.Context,
 	}
 
 	return prepareTemplateResponse(bat), nil
-
 }
 
 func (s *bootstrapService) GetBootstrapAgentCountForClusterID(ctx context.Context, clusterID string, orgID string) (int, error) {

@@ -237,14 +237,12 @@ func (s *oidcProvider) GetByName(ctx context.Context, provider *systemv3.OIDCPro
 
 	entity := &models.OIDCProvider{}
 	_, err := dao.GetByName(ctx, s.db, name, entity)
-
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return &systemv3.OIDCProvider{}, status.Errorf(codes.InvalidArgument, "OIDC PROVIDER %q NOT EXIST", name)
 		} else {
 			return &systemv3.OIDCProvider{}, status.Errorf(codes.Internal, codes.Internal.String())
 		}
-
 	}
 
 	rclaims, _ := structpb.NewStruct(entity.RequestedClaims)

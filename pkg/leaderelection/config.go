@@ -26,6 +26,6 @@ var (
 	//
 	// * In-cluster config if running in cluster
 	//
-	// * $HOME/.kube/config if exists
+	// * $HOME/.kube/config if exists.
 	GetConfig = config.GetConfig
 )

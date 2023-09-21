@@ -29,7 +29,7 @@ func getClause(operator selection.Operator, opts *commonv3.QueryOptions) string 
 	}
 }
 
-// FilterLabels adds query filter for labels based on the selector
+// FilterLabels adds query filter for labels based on the selector.
 func FilterLabels(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.SelectQuery, error) {
 	sel, err := labels.Parse(opts.Selector)
 	if err != nil {
@@ -99,7 +99,6 @@ func FilterLabels(q *bun.SelectQuery, opts *commonv3.QueryOptions) (*bun.SelectQ
 		default:
 			continue
 		}
-
 	}
 
 	return q, nil

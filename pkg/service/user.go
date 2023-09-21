@@ -9,10 +9,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	bun "github.com/uptrace/bun"
-	"go.uber.org/zap"
-	"google.golang.org/protobuf/types/known/timestamppb"
-
 	"github.com/paralus/paralus/internal/dao"
 	"github.com/paralus/paralus/internal/models"
 	providers "github.com/paralus/paralus/internal/provider/kratos"
@@ -24,6 +20,9 @@ import (
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	userv3 "github.com/paralus/paralus/proto/types/userpb/v3"
+	bun "github.com/uptrace/bun"
+	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 const (
@@ -31,7 +30,7 @@ const (
 	userListKind = "UserList"
 )
 
-// GroupService is the interface for group operations
+// GroupService is the interface for group operations.
 type UserService interface {
 	// create user
 	Create(context.Context, *userv3.User) (*userv3.User, error)
@@ -76,7 +75,7 @@ type userTraits struct {
 	IdpGroups []string `json:"idp_groups"`
 }
 
-// FIXME: find a better way to do this
+// FIXME: find a better way to do this.
 type parsedIds struct {
 	Id           uuid.UUID
 	Partner      uuid.UUID
@@ -119,7 +118,7 @@ func getUserTraits(traits map[string]interface{}) userTraits {
 	}
 }
 
-// Map roles to accounts
+// Map roles to accounts.
 func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, user *userv3.User, ids parsedIds) (*userv3.User, []uuid.UUID, error) {
 	projectNamespaceRoles := user.GetSpec().GetProjectNamespaceRoles()
 
@@ -129,7 +128,6 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 	var ps []*authzv1.Policy
 	var rids []uuid.UUID
 	for _, pnr := range projectNamespaceRoles {
-		//if this is derived from group, do not persist a direct project resource role assoc
 		if len(pnr.GetGroup()) > 0 {
 			continue
 		}
@@ -305,7 +303,7 @@ func (s *userService) createUserRoleRelations(ctx context.Context, db bun.IDB, u
 	return user, rids, nil
 }
 
-// Update the groups mapped to each user(account)
+// Update the groups mapped to each user(account).
 func (s *userService) createGroupAccountRelations(ctx context.Context, db bun.IDB, userId uuid.UUID, usr *userv3.User) (*userv3.User, []uuid.UUID, error) {
 	var grpaccs []models.GroupAccount
 	var ugs []*authzv1.UserGroup
@@ -399,7 +397,7 @@ func (s *userService) deleteGroupAccountRelations(ctx context.Context, db bun.ID
 	return usr, ids, nil
 }
 
-// FIXME: make this generic
+// FIXME: make this generic.
 func (s *userService) getPartnerOrganization(ctx context.Context, db bun.IDB, user *userv3.User) (uuid.UUID, uuid.UUID, error) {
 	partner := user.GetMetadata().GetPartner()
 	org := user.GetMetadata().GetOrganization()
@@ -412,7 +410,6 @@ func (s *userService) getPartnerOrganization(ctx context.Context, db bun.IDB, us
 		return partnerId, uuid.Nil, err
 	}
 	return partnerId, organizationId, nil
-
 }
 
 func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.User, error) {
@@ -544,7 +541,6 @@ func (s *userService) GetByID(ctx context.Context, user *userv3.User) (*userv3.U
 		return user, nil
 	}
 	return user, fmt.Errorf("unabele to fetch user '%v'", id)
-
 }
 
 func (s *userService) GetByName(ctx context.Context, user *userv3.User) (*userv3.User, error) {
@@ -602,7 +598,6 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 
 	roleMap := map[string][]string{}
 	if usr, ok := entity.(*models.KratosIdentities); ok {
-
 		user, err := s.identitiesModelToUser(ctx, s.db, user, usr)
 		if err != nil {
 			return &userv3.UserInfo{}, err
@@ -654,7 +649,6 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 					Scope:       &scope,
 				},
 			)
-
 		}
 		userinfo.Spec.Permissions = permissions
 		return userinfo, nil
@@ -780,11 +774,9 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 
 		CreateUserAuditEvent(ctx, s.al, s.db, AuditActionUpdate, user.GetMetadata().GetName(), usr.ID, rolesBefore, rolesAfter, groupsBefore, groupsAfter)
 		return user, nil
-
 	} else {
 		return &userv3.User{}, fmt.Errorf("unable to update user '%v'", name)
 	}
-
 }
 
 func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3.UserDeleteApiKeysResponse, error) {
@@ -805,7 +797,6 @@ func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3
 	}
 
 	if usr, ok := entity.(*models.KratosIdentities); ok {
-
 		tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
 		if err != nil {
 			return &userrpcv3.UserDeleteApiKeysResponse{}, err
@@ -839,7 +830,6 @@ func (s *userService) Delete(ctx context.Context, user *userv3.User) (*userrpcv3
 		return &userrpcv3.UserDeleteApiKeysResponse{}, nil
 	}
 	return &userrpcv3.UserDeleteApiKeysResponse{}, fmt.Errorf("unable to delete user '%v'", user.Metadata.Name)
-
 }
 
 func (s *userService) List(ctx context.Context, opts ...query.Option) (*userv3.UserList, error) {
@@ -1010,7 +1000,6 @@ func (s *userService) RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiK
 
 	DownloadCliConfigAuditEvent(ctx, s.al, AuditActionDownload, req.Username)
 	return cliConfig, nil
-
 }
 
 func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, traits string) error {

@@ -24,7 +24,7 @@ const (
 	roleListKind = "RoleList"
 )
 
-// RoleService is the interface for role operations
+// RoleService is the interface for role operations.
 type RoleService interface {
 	// create role
 	Create(context.Context, *rolev3.Role) (*rolev3.Role, error)
@@ -40,14 +40,14 @@ type RoleService interface {
 	List(context.Context, *rolev3.Role) (*rolev3.RoleList, error)
 }
 
-// roleService implements RoleService
+// roleService implements RoleService.
 type roleService struct {
 	db  *bun.DB
 	azc AuthzService
 	al  *zap.Logger
 }
 
-// NewRoleService return new role service
+// NewRoleService return new role service.
 func NewRoleService(db *bun.DB, azc AuthzService, al *zap.Logger) RoleService {
 	return &roleService{db: db, azc: azc, al: al}
 }
@@ -64,7 +64,6 @@ func (s *roleService) getPartnerOrganization(ctx context.Context, db bun.IDB, ro
 		return partnerId, uuid.Nil, err
 	}
 	return partnerId, organizationId, nil
-
 }
 
 func (s *roleService) deleteRolePermissionMapping(ctx context.Context, db bun.IDB, rleId uuid.UUID, role *rolev3.Role) (*rolev3.Role, error) {
@@ -138,14 +137,11 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		return nil, fmt.Errorf("unknown scope '%v'", scope)
 	}
 
-	//validate namespaced permissions for dynamic role of scope namespace, either one of the permissions should be present as part of namespaced roles
 	if scope == "namespace" {
 		if !utils.Contains(role.Spec.Rolepermissions, namespaceR) && !utils.Contains(role.Spec.Rolepermissions, namespaceW) {
 			return nil, fmt.Errorf("insufficient permissions, either '%v' / '%v' should be present ", namespaceR, namespaceW)
 		}
 	}
-
-	//validate basic mandatory permissions that should be part of all custom roles
 	if len(role.Spec.Rolepermissions) > 0 &&
 		!utils.Contains(role.Spec.Rolepermissions, opsAll) &&
 		(!utils.Contains(role.Spec.Rolepermissions, partnerR) ||
@@ -184,7 +180,6 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		return &rolev3.Role{}, err
 	}
 
-	//update v3 spec
 	if createdRole, ok := entity.(*models.Role); ok {
 		role, err = s.createRolePermissionMapping(ctx, tx, role, parsedIds{Id: createdRole.ID, Partner: partnerId, Organization: organizationId})
 		if err != nil {
@@ -205,7 +200,6 @@ func (s *roleService) Create(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 
 	tx.Rollback()
 	return &rolev3.Role{}, fmt.Errorf("unable to create role '%v'", role.GetMetadata().GetName())
-
 }
 
 func (s *roleService) GetByID(ctx context.Context, role *rolev3.Role) (*rolev3.Role, error) {
@@ -227,7 +221,6 @@ func (s *roleService) GetByID(ctx context.Context, role *rolev3.Role) (*rolev3.R
 		return role, nil
 	}
 	return role, nil
-
 }
 
 func (s *roleService) GetByName(ctx context.Context, role *rolev3.Role) (*rolev3.Role, error) {
@@ -250,7 +243,6 @@ func (s *roleService) GetByName(ctx context.Context, role *rolev3.Role) (*rolev3
 		return nil, fmt.Errorf("unable to find role")
 	}
 	return role, nil
-
 }
 
 func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Role, error) {
@@ -265,14 +257,11 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		return role, fmt.Errorf("unable to find role '%v'", name)
 	}
 
-	//validate namespaced permissions for dynamic role of scope namespace, either one of the permissions should be present as part of namespaced roles
 	if role.GetSpec().GetScope() == "namespace" {
 		if !utils.Contains(role.Spec.Rolepermissions, namespaceR) && !utils.Contains(role.Spec.Rolepermissions, namespaceW) {
 			return nil, fmt.Errorf("insufficient permissions, either '%v' / '%v' should be present ", namespaceR, namespaceW)
 		}
 	}
-
-	//validate basic mandatory permissions that should be part of all custom roles
 	if !utils.Contains(role.Spec.Rolepermissions, opsAll) &&
 		(!utils.Contains(role.Spec.Rolepermissions, partnerR) ||
 			!utils.Contains(role.Spec.Rolepermissions, organizationR)) {
@@ -283,7 +272,7 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 		if rle.Builtin {
 			return role, fmt.Errorf("builtin role '%v' cannot be updated", name)
 		}
-		//update role details
+
 		rle.Name = role.Metadata.Name
 		rle.Description = role.Metadata.Description
 		rle.Scope = role.Spec.Scope
@@ -312,8 +301,6 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 			tx.Rollback()
 			return &rolev3.Role{}, err
 		}
-
-		//update spec and status
 		role.Spec = &rolev3.RoleSpec{
 			IsGlobal: rle.IsGlobal,
 			Scope:    rle.Scope,
@@ -444,13 +431,11 @@ func (s *roleService) List(ctx context.Context, role *rolev3.Role) (*rolev3.Role
 				roles = append(roles, entry)
 			}
 
-			//update the list metadata and items response
 			roleList.Metadata = &v3.ListMetadata{
 				Count: int64(len(roles)),
 			}
 			roleList.Items = roles
 		}
-
 	} else {
 		return roleList, fmt.Errorf("missing organization id in metadata")
 	}

@@ -13,13 +13,13 @@ import (
 )
 
 const (
-	// ObjectHash is the hash of the object processed by Paralus
+	// ObjectHash is the hash of the object processed by Paralus.
 	ObjectHash = "paralus.dev/object-hash"
 )
 
 var json = k8sapijson.CaseSensitiveJsonIterator()
 
-// GetHash returns the hash of spec/data for a kubernetes style object
+// GetHash returns the hash of spec/data for a kubernetes style object.
 func GetHash(o interface{}) (string, error) {
 	var b []byte
 	var err error
@@ -44,12 +44,10 @@ func GetHash(o interface{}) (string, error) {
 	h.Write(bb.Bytes())
 
 	return fmt.Sprintf("%x", h.Sum(nil)), nil
-
 }
 
-//Add adds object hash to rutime object
+// Add adds object hash to rutime object.
 func Add(o metav1.Object) error {
-
 	hash, err := GetHash(o)
 	if err != nil {
 		return err
@@ -66,9 +64,8 @@ func Add(o metav1.Object) error {
 }
 
 // Node Hash should take Labels into the hash calculation since it can be
-// set from either side: From core or from cluster
+// set from either side: From core or from cluster.
 func GetNodeHashFrom(labels map[string]string, taints []v1.Taint, unscheduleable bool) (string, error) {
-	//add sorted labels
 	labelsKeys := make([]string, 0)
 	for k := range labels {
 		labelsKeys = append(labelsKeys, k)
@@ -78,7 +75,7 @@ func GetNodeHashFrom(labels map[string]string, taints []v1.Taint, unscheduleable
 	for _, k := range labelsKeys {
 		finalLabelsAsString += fmt.Sprintf("%s:%s,", k, labels[k])
 	}
-	//add sorted taints
+
 	taintKeys := make([]string, 0)
 	taintMap := make(map[string]v1.Taint)
 	for _, taint := range taints {

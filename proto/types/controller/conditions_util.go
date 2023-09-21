@@ -18,9 +18,11 @@ type taskletConditionCheckOptions struct {
 	shortCircuit    bool
 }
 
-type namespaceConditionCheckOption func(*namespaceConditionCheckOptions)
-type taskConditionCheckOption func(*taskConditionCheckOptions)
-type taskletConditionCheckOption func(*taskletConditionCheckOptions)
+type (
+	namespaceConditionCheckOption func(*namespaceConditionCheckOptions)
+	taskConditionCheckOption      func(*taskConditionCheckOptions)
+	taskletConditionCheckOption   func(*taskletConditionCheckOptions)
+)
 
 func withNamespaceConditionStatus(status ConditionStatus) namespaceConditionCheckOption {
 	return func(opts *namespaceConditionCheckOptions) {
@@ -77,7 +79,6 @@ func withTaskletConditionShortCircuit() taskletConditionCheckOption {
 }
 
 func checkNamespaceConditions(opts ...namespaceConditionCheckOption) NamespaceConditionFunc {
-
 	checkOpts := new(namespaceConditionCheckOptions)
 	for _, opt := range opts {
 		opt(checkOpts)
@@ -110,12 +111,10 @@ func checkNamespaceConditions(opts ...namespaceConditionCheckOption) NamespaceCo
 			}
 		}
 		return false
-
 	}
 }
 
 func checkTaskConditions(opts ...taskConditionCheckOption) TaskConditionFunc {
-
 	checkOpts := new(taskConditionCheckOptions)
 	for _, opt := range opts {
 		opt(checkOpts)
@@ -148,12 +147,10 @@ func checkTaskConditions(opts ...taskConditionCheckOption) TaskConditionFunc {
 			}
 		}
 		return false
-
 	}
 }
 
 func checkTaskletConditions(opts ...taskletConditionCheckOption) TaskletConditionFunc {
-
 	checkOpts := new(taskletConditionCheckOptions)
 	for _, opt := range opts {
 		opt(checkOpts)
@@ -186,11 +183,10 @@ func checkTaskletConditions(opts ...taskletConditionCheckOption) TaskletConditio
 			}
 		}
 		return false
-
 	}
 }
 
-// exported namespace condition utils
+// exported namespace condition utils.
 var (
 	IsNamespaceUpserted NamespaceConditionFunc = checkNamespaceConditions(
 		withNamespaceConditionStatus(Complete),
@@ -236,7 +232,7 @@ var (
 	)
 )
 
-// exported task condition utils
+// exported task condition utils.
 var (
 	IsTaskUpserted TaskConditionFunc = checkTaskConditions(
 		withTaskConditionStatus(Complete),
@@ -280,7 +276,7 @@ var (
 	)
 )
 
-// exported tasklet utils
+// exported tasklet utils.
 var (
 	IsTaskletUpserted TaskletConditionFunc = checkTaskletConditions(
 		withTaskletConditionStatus(Complete),

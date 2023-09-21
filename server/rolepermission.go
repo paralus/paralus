@@ -14,7 +14,7 @@ type rolepermissionServer struct {
 	service.RolepermissionService
 }
 
-// NewRolePermissionServer returns new role server implementation
+// NewRolePermissionServer returns new role server implementation.
 func NewRolePermissionServer(ps service.RolepermissionService) rpcv3.RolepermissionServiceServer {
 	return &rolepermissionServer{ps}
 }

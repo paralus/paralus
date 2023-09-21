@@ -16,5 +16,7 @@ type QueryFilters interface {
 	GetProjects() []string
 }
 
-var _ QueryFilters = (*v1.AuditLogQueryFilter)(nil)
-var _ QueryFilters = (*v1.RelayAuditQueryFilter)(nil)
+var (
+	_ QueryFilters = (*v1.AuditLogQueryFilter)(nil)
+	_ QueryFilters = (*v1.RelayAuditQueryFilter)(nil)
+)

@@ -78,7 +78,6 @@ func TestConfigMap(t *testing.T) {
 		t.Error(err)
 		return
 	}
-
 }
 
 func TestUnstructured(t *testing.T) {
@@ -93,7 +92,6 @@ func TestUnstructured(t *testing.T) {
 		t.Error(err)
 		return
 	}
-
 }
 
 func TestStructuredPatch(t *testing.T) {
@@ -152,7 +150,6 @@ func TestStructuredPatch(t *testing.T) {
 	} else {
 		t.Error("exptected appsv1.Deployment got, ", reflect.TypeOf(ro))
 	}
-
 }
 
 func TestUnstructuredPatch(t *testing.T) {
@@ -173,7 +170,6 @@ func TestUnstructuredPatch(t *testing.T) {
 		t.Error(err)
 		return
 	}
-
 }
 
 func TestPartialPath(t *testing.T) {
@@ -195,8 +191,6 @@ func TestPartialPath(t *testing.T) {
 	// 	return
 	// }
 
-	//t.Log(string(so.Raw))
-
 	so1, err := loadStepObject("./testdata/statefulset.yaml")
 	if err != nil {
 		t.Error(err)
@@ -216,5 +210,4 @@ func TestPartialPath(t *testing.T) {
 	}
 
 	t.Log(string(so1.Raw))
-
 }

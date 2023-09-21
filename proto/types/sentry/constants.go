@@ -1,11 +1,11 @@
 package sentry
 
-// paralus specific annotations/labels keys
+// paralus specific annotations/labels keys.
 const (
 	ConfigV2Group = "config.paralus.dev/v2"
 )
 
-// kubectl/kubeconfig permissions
+// kubectl/kubeconfig permissions.
 const (
 	KubeconfigReadPermission        = "kubeconfig.read"
 	KubectlFullAccessPermission     = "kubectl.fullaccess"
@@ -15,7 +15,7 @@ const (
 	KubectlNamespaceWritePermission = "kubectl.namespace.write"
 )
 
-// GetKubeConfigClusterPermissions list of kubeconfig permissions
+// GetKubeConfigClusterPermissions list of kubeconfig permissions.
 func GetKubeConfigClusterPermissions() []string {
 	return []string{
 		KubeconfigReadPermission,
@@ -25,7 +25,7 @@ func GetKubeConfigClusterPermissions() []string {
 	}
 }
 
-// GetKubeConfigNameSpacePermissions list of kubeconfig permissions
+// GetKubeConfigNameSpacePermissions list of kubeconfig permissions.
 func GetKubeConfigNameSpacePermissions() []string {
 	return []string{
 		KubectlNamespaceReadPermission,
@@ -33,7 +33,7 @@ func GetKubeConfigNameSpacePermissions() []string {
 	}
 }
 
-// GetKubeConfigPermissionIsRead is read permission
+// GetKubeConfigPermissionIsRead is read permission.
 func GetKubeConfigPermissionIsRead(permission string) bool {
 	switch permission {
 	case KubeconfigReadPermission:
@@ -46,7 +46,7 @@ func GetKubeConfigPermissionIsRead(permission string) bool {
 	return false
 }
 
-// GetKubeConfigPermissionprivilege privilege order
+// GetKubeConfigPermissionprivilege privilege order.
 func GetKubeConfigPermissionPrivilege(permission string) int {
 	switch permission {
 	case KubeconfigReadPermission:
@@ -65,16 +65,16 @@ func GetKubeConfigPermissionPrivilege(permission string) int {
 	return -1
 }
 
-// kubeconfig setting scope
+// kubeconfig setting scope.
 const (
 	KubeconfigSettingOrganizationScope = "ORGANIZATION"
 	KubeconfigSettingUserScope         = "USER"
 )
 
-// Kind is kind of resource
+// Kind is kind of resource.
 type Kind = string
 
-// available config kinds
+// available config kinds.
 const (
 	PartnerKind Kind = "Partner"
 )

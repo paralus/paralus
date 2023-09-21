@@ -12,7 +12,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// AccountPermissionService is the interface for account permission operations
+// AccountPermissionService is the interface for account permission operations.
 type AccountPermissionService interface {
 	GetAccountPermissions(ctx context.Context, accountID string, orgID, partnerID string) ([]sentry.AccountPermission, error)
 	IsPartnerSuperAdmin(ctx context.Context, accountID, partnerID string) (isPartnerAdmin, isSuperAdmin bool, err error)
@@ -27,12 +27,12 @@ type AccountPermissionService interface {
 	IsSSOAccount(ctx context.Context, accountID string) (bool, error)
 }
 
-// accountPermissionService implements AccountPermissionService
+// accountPermissionService implements AccountPermissionService.
 type accountPermissionService struct {
 	db *bun.DB
 }
 
-// NewKubeconfigRevocation return new kubeconfig revocation service
+// NewKubeconfigRevocation return new kubeconfig revocation service.
 func NewAccountPermissionService(db *bun.DB) AccountPermissionService {
 	return &accountPermissionService{db}
 }
@@ -119,7 +119,7 @@ func (a *accountPermissionService) GetSSOAccount(ctx context.Context, accountID,
 }
 */
 
-//TODO: this needs to be revisited as sso users for oidc are stored in identities by kratos
+// TODO: this needs to be revisited as sso users for oidc are stored in identities by kratos.
 func (a *accountPermissionService) GetSSOUsersGroupProjectRole(ctx context.Context, orgID string) ([]sentry.SSOAccountGroupProjectRoleData, error) {
 	ssos, err := dao.GetSSOUsersGroupProjectRole(ctx, a.db, uuid.MustParse(orgID))
 	if err != nil {

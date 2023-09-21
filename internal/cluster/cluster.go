@@ -20,7 +20,7 @@ var _log = log.GetLogger()
 
 // GetClusterGeneration() looks up the cluster type and attempt to covert it into
 // the cluster generation.
-// Return error in case the type string is not recognized
+// Return error in case the type string is not recognized.
 func GetClusterGeneration(clusterType string) (constants.ClusterGeneration, error) {
 	if clusterType == "" {
 		return constants.Cluster_V2, nil
@@ -81,7 +81,6 @@ func ExtractV2ClusterLabels(edgeDataLabels, clusterV2Labels map[string]string, e
 }
 
 func GetClusterOperatorYaml(ctx context.Context, data *common.DownloadData, cluster *infrav3.Cluster) (string, error) {
-
 	_log.Infow("printing cluster in GetClusterOperatorYaml", "cluster", cluster)
 
 	bb := new(bytes.Buffer)

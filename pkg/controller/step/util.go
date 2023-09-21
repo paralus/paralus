@@ -7,6 +7,5 @@ import (
 func isHardFailure(err error) {
 	switch {
 	case apierrs.IsBadRequest(err), apierrs.IsInvalid(err):
-
 	}
 }

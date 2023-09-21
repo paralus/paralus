@@ -24,7 +24,7 @@ const (
 	clusterCoolDown = time.Minute
 )
 
-// ClusterReconciler reconciles cluster state
+// ClusterReconciler reconciles cluster state.
 type ClusterReconciler interface {
 	Reconcile(ctx context.Context, cluster *infrav3.Cluster) error
 }
@@ -36,13 +36,12 @@ type clusterReconciler struct {
 	pf cryptoutil.PasswordFunc
 }
 
-// NewClusterReconciler returns new cluster reconciler
+// NewClusterReconciler returns new cluster reconciler.
 func NewClusterReconciler(cs service.ClusterService, db *bun.DB, bs service.BootstrapService, pf cryptoutil.PasswordFunc) ClusterReconciler {
 	return &clusterReconciler{cs: cs, db: db, bs: bs, pf: pf}
 }
 
 func (r *clusterReconciler) Reconcile(ctx context.Context, cluster *infrav3.Cluster) error {
-
 	switch {
 	case canReconcileClusterDelete(cluster):
 		return r.handleClusterDelete(ctx, cluster)
@@ -75,9 +74,8 @@ func canReconcileClusterBootstrapAgent(c *infrav3.Cluster) bool {
 	}
 }
 
-// DeleteForCluster delete bootstrap agent
+// DeleteForCluster delete bootstrap agent.
 func (r *clusterReconciler) deleteBootstrapAgentForCluster(ctx context.Context, cluster *infrav3.Cluster) error {
-
 	resp, err := r.bs.SelectBootstrapAgentTemplates(ctx, query.WithOptions(&ctypesv3.QueryOptions{
 		GlobalScope: true,
 		Selector:    "paralus.dev/defaultRelay=true",
@@ -87,7 +85,6 @@ func (r *clusterReconciler) deleteBootstrapAgentForCluster(ctx context.Context, 
 	}
 
 	for _, bat := range resp.Items {
-
 		agent := &sentry.BootstrapAgent{
 			Metadata: &ctypesv3.Metadata{
 				Id:           cluster.Metadata.Id,
@@ -167,7 +164,8 @@ func (r *clusterReconciler) handleClusterDelete(ctx context.Context, cluster *in
 				ClusterData: &infrav3.ClusterData{
 					ClusterStatus: &infrav3.ClusterStatus{
 						Conditions: []*infrav3.ClusterCondition{
-							clstrutil.NewClusterDelete(constants.Success, "cluster deleted")},
+							clstrutil.NewClusterDelete(constants.Success, "cluster deleted"),
+						},
 					},
 				},
 			},
@@ -185,7 +183,8 @@ func (r *clusterReconciler) handleClusterDelete(ctx context.Context, cluster *in
 				ClusterData: &infrav3.ClusterData{
 					ClusterStatus: &infrav3.ClusterStatus{
 						Conditions: []*infrav3.ClusterCondition{
-							clstrutil.NewClusterDelete(constants.Retry, reason)},
+							clstrutil.NewClusterDelete(constants.Retry, reason),
+						},
 					},
 				},
 			},
@@ -229,13 +228,14 @@ func (r *clusterReconciler) handleClusterBootstrapAgent(ctx context.Context, clu
 				ClusterData: &infrav3.ClusterData{
 					ClusterStatus: &infrav3.ClusterStatus{
 						Conditions: []*infrav3.ClusterCondition{
-							clstrutil.NewClusterBootstrapAgent(constants.Success, "bootstrap agent created")},
+							clstrutil.NewClusterBootstrapAgent(constants.Success, "bootstrap agent created"),
+						},
 					},
 				},
 			},
 		}, query.WithMeta(cluster.Metadata))
 
-		//update relays to annotations
+		// update relays to annotations
 		if err == nil {
 			err = r.cs.UpdateClusterAnnotations(ctx, cluster)
 		}
@@ -252,7 +252,8 @@ func (r *clusterReconciler) handleClusterBootstrapAgent(ctx context.Context, clu
 				ClusterData: &infrav3.ClusterData{
 					ClusterStatus: &infrav3.ClusterStatus{
 						Conditions: []*infrav3.ClusterCondition{
-							clstrutil.NewClusterBootstrapAgent(constants.Retry, reason)},
+							clstrutil.NewClusterBootstrapAgent(constants.Retry, reason),
+						},
 					},
 				},
 			},

@@ -13,7 +13,7 @@ type errorBody struct {
 	Err string `json:"error,omitempty"`
 }
 
-// customErrorHandler implements custom grpc error handler
+// customErrorHandler implements custom grpc error handler.
 func customErrorHandler(ctx context.Context, _ *runtime.ServeMux, marshaler runtime.Marshaler, w http.ResponseWriter, _ *http.Request, err error) {
 	const fallback = `{"error": "failed to marshal error message"}`
 

@@ -27,7 +27,7 @@ func (a *auditLogDatabaseService) GetAuditLog(req *v1.GetAuditLogSearchRequest) 
 }
 
 func buildAggregators(aggr []models.AggregatorData) []*auditv1.GroupByType {
-	var groups = make([]*auditv1.GroupByType, 0)
+	groups := make([]*auditv1.GroupByType, 0)
 	for _, agg := range aggr {
 		groups = append(groups, &auditv1.GroupByType{
 			DocCount: int32(agg.Count),

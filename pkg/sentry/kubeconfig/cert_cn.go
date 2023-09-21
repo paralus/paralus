@@ -3,34 +3,34 @@ package kubeconfig
 import "strings"
 
 const (
-	// AccountIDAttrCN is accountID attribute key of CN
+	// AccountIDAttrCN is accountID attribute key of CN.
 	AccountIDAttrCN = "a"
-	// PartnerIDAttrCN is partnerID attribute key of CN
+	// PartnerIDAttrCN is partnerID attribute key of CN.
 	PartnerIDAttrCN = "p"
-	// OrganizationIDAttrCN is organizationID attribute key of CN
+	// OrganizationIDAttrCN is organizationID attribute key of CN.
 	OrganizationIDAttrCN = "o"
-	// IsSSOAttrCN is accountID isSSO attribute key of CN
+	// IsSSOAttrCN is accountID isSSO attribute key of CN.
 	IsSSOAttrCN = "is"
-	// EnforceSessionAttrCN is enforeSession attribute key of CN
+	// EnforceSessionAttrCN is enforeSession attribute key of CN.
 	EnforceSessionAttrCN = "es"
-	// UsernameAttrCN is username attribute key of CN
+	// UsernameAttrCN is username attribute key of CN.
 	UsernameAttrCN = "u"
-	// SessionTypeCN type of kubcel session cli/web/system
+	// SessionTypeCN type of kubcel session cli/web/system.
 	SessionTypeCN = "st"
-	// SystemUserCN is system user attribute key of CN
+	// SystemUserCN is system user attribute key of CN.
 	SystemUserCN = "su"
 
-	// TerminalShell is the session originated for a terminal based kubectl cli
+	// TerminalShell is the session originated for a terminal based kubectl cli.
 	TerminalShell = "ts"
-	// WebShell is the session originated for browser based kubectl
+	// WebShell is the session originated for browser based kubectl.
 	WebShell = "ws"
-	// ParalusSystem is the session originated for paralus system controller purpose e.g. native helm
+	// ParalusSystem is the session originated for paralus system controller purpose e.g. native helm.
 	ParalusSystem = "rs"
-	// RelayNetwork is the session originated for custom relay network (non-core-relay)
+	// RelayNetwork is the session originated for custom relay network (non-core-relay).
 	RelayNetworkCN = "rn"
 )
 
-// CNAttributes are the attributes encoded in CommonName of kubeconfig cert
+// CNAttributes are the attributes encoded in CommonName of kubeconfig cert.
 type CNAttributes struct {
 	AccountID      string
 	PartnerID      string
@@ -43,7 +43,7 @@ type CNAttributes struct {
 	RelayNetwork   bool
 }
 
-// GetCNAttributes gets attributes from CN
+// GetCNAttributes gets attributes from CN.
 func GetCNAttributes(cn string) (cnAttr CNAttributes) {
 	attrs := strings.Split(cn, "/")
 	for _, attr := range attrs {
@@ -75,7 +75,7 @@ func GetCNAttributes(cn string) (cnAttr CNAttributes) {
 	return
 }
 
-// GetSessionTypeString get type description
+// GetSessionTypeString get type description.
 func GetSessionTypeString(t string) string {
 	switch t {
 	case TerminalShell:
@@ -89,7 +89,7 @@ func GetSessionTypeString(t string) string {
 	}
 }
 
-// GetCN returns CommonName using CNAttributes
+// GetCN returns CommonName using CNAttributes.
 func (cn *CNAttributes) GetCN() string {
 	sb := new(strings.Builder)
 
@@ -111,7 +111,6 @@ func (cn *CNAttributes) GetCN() string {
 	sb.WriteString(cn.PartnerID)
 	sb.WriteRune('/')
 
-	//username
 	sb.WriteString(UsernameAttrCN)
 	sb.WriteRune('=')
 	sb.WriteString(cn.Username)
@@ -150,7 +149,7 @@ func (cn *CNAttributes) GetCN() string {
 	return sb.String()
 }
 
-// GetStringFromBool returns string value of bool
+// GetStringFromBool returns string value of bool.
 func GetStringFromBool(val bool) string {
 	if val {
 		return "true"
@@ -158,7 +157,7 @@ func GetStringFromBool(val bool) string {
 	return "false"
 }
 
-// GetBoolFromString returns bool values of string
+// GetBoolFromString returns bool values of string.
 func GetBoolFromString(s string) bool {
 	if s == "true" {
 		return true

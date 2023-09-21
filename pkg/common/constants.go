@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// environment variables for configuration
+// environment variables for configuration.
 const (
 	Production               = "PRODUCTION"
 	ServerPort               = "SERVER_PORT"
@@ -18,21 +18,21 @@ const (
 	ClusterSchedulerPort     = "CLUSTER_SCHEDULER_PORT"
 )
 
-// workload prefixes
+// workload prefixes.
 const (
 	NamespacePrefix = "ns"
 )
 
-// paralus constant
+// paralus constant.
 const (
 	HeartBeatInterval = time.Second * 30
 	SessionID         = "sessionid"
 )
 
 const (
-	// LOCAL_ACCOUNT is AccountType enum value for local users
+	// LOCAL_ACCOUNT is AccountType enum value for local users.
 	ACCOUNT_TYPE_LOCAL = "LOCAL"
-	// SSO_ACCOUNT is AccountType enum value for SSO users
+	// SSO_ACCOUNT is AccountType enum value for SSO users.
 	ACCOUNT_TYPE_SSO = "SSO"
 )
 
@@ -40,7 +40,7 @@ const (
 	MaxDials = 2
 )
 
-// audit
+// audit.
 const (
 	EventDocType           = "event"
 	AlertDocType           = "alert"
@@ -50,10 +50,12 @@ const (
 	RelayCommandsAuditType = "RelayCommands"
 )
 
-var SessionDataKey contextKey
-var SessionInternalKey contextKey
+var (
+	SessionDataKey     contextKey
+	SessionInternalKey contextKey
+)
 
-// Regex
+// Regex.
 var (
 	PrjNameRX = regexp.MustCompile(`^[a-zA-Z][-a-zA-Z0-9]*[a-zA-Z0-9]$`)
 )

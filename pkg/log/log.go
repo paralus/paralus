@@ -7,10 +7,10 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-// Level is the level of logging for logger
+// Level is the level of logging for logger.
 type level string
 
-// LogLevel constants
+// LogLevel constants.
 const (
 	Debug level = "debug"
 	Info  level = "info"
@@ -54,12 +54,12 @@ func newConfig(l level) zap.Config {
 	}
 }
 
-// Logger is a wrapper around zap sugared logger
+// Logger is a wrapper around zap sugared logger.
 type Logger struct {
 	*zap.SugaredLogger
 }
 
-// ChangeLevel changes the log level of logger
+// ChangeLevel changes the log level of logger.
 func (lg *Logger) ChangeLevel(lc <-chan string) {
 	for {
 		select {
@@ -76,10 +76,12 @@ func (lg *Logger) ChangeLevel(lc <-chan string) {
 	}
 }
 
-var zl *Logger
-var lo sync.Once
+var (
+	zl *Logger
+	lo sync.Once
+)
 
-// GetLogger return instance of logger
+// GetLogger return instance of logger.
 func GetLogger() *Logger {
 	if zl == nil {
 		lo.Do(func() {
@@ -91,7 +93,6 @@ func GetLogger() *Logger {
 			zl = &Logger{
 				SugaredLogger: z.Sugar(),
 			}
-
 		})
 	}
 	return zl

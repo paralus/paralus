@@ -7,7 +7,7 @@ import (
 )
 
 // IsGatewayRequest returns true if the request is originated from
-// Paralus Gateway
+// Paralus Gateway.
 func IsGatewayRequest(ctx context.Context) bool {
 	if md, ok := metadata.FromIncomingContext(ctx); ok {
 		if vals := md.Get(GatewayRequest); vals != nil {

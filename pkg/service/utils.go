@@ -20,7 +20,6 @@ func getPartnerOrganization(ctx context.Context, db bun.IDB, partner, org string
 		return partnerId, uuid.Nil, err
 	}
 	return partnerId, organizationId, nil
-
 }
 
 func GetSessionDataFromContext(ctx context.Context) (*commonv3.SessionData, bool) {

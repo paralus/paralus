@@ -11,7 +11,7 @@ import (
 
 func GetRolePermissions(ctx context.Context, db bun.IDB, id uuid.UUID) ([]models.ResourcePermission, error) {
 	// TODO: filter by parter and org
-	var r = []models.ResourcePermission{}
+	r := []models.ResourcePermission{}
 	err := db.NewSelect().Table("authsrv_resourcepermission").
 		ColumnExpr("authsrv_resourcepermission.name as name").
 		Join(`JOIN authsrv_resourcerolepermission ON authsrv_resourcerolepermission.resource_permission_id=authsrv_resourcepermission.id`).
@@ -27,7 +27,7 @@ func GetRolePermissions(ctx context.Context, db bun.IDB, id uuid.UUID) ([]models
 
 func GetRolePermissionsByScope(ctx context.Context, db bun.IDB, scope string) ([]models.ResourcePermission, error) {
 	// Could possibly union them later for some speedup
-	var r = []models.ResourcePermission{}
+	r := []models.ResourcePermission{}
 	err := db.NewSelect().Table("authsrv_resourcepermission").
 		ColumnExpr("authsrv_resourcepermission.name as name, authsrv_resourcepermission.scope as scope").
 		Where("scope = ?", strings.ToUpper(scope)).
@@ -40,7 +40,7 @@ func GetRolePermissionsByScope(ctx context.Context, db bun.IDB, scope string) ([
 }
 
 func GetRolePermissionsByNames(ctx context.Context, db bun.IDB, permissions ...string) ([]models.ResourcePermission, error) {
-	var r = []models.ResourcePermission{}
+	r := []models.ResourcePermission{}
 	err := db.NewSelect().Table("authsrv_resourcepermission").
 		ColumnExpr("authsrv_resourcepermission.name as name, authsrv_resourcepermission.description as description, authsrv_resourcepermission.scope as scope").
 		Where("name IN (?)", bun.In(permissions)).

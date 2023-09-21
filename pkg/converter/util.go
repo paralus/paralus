@@ -24,17 +24,17 @@ func ConvertToObject(data []byte, dest interface{}) interface{} {
 	return dest
 }
 
-// ToRuntimeObject converts JSON bytes into runtime object of latest version
+// ToRuntimeObject converts JSON bytes into runtime object of latest version.
 func ToRuntimeObject(gvk schema.GroupVersionKind, b []byte) (runtime.Object, error) {
 	return toRuntimeObject(gvk, b)
 }
 
-// ToStepTemplate converts runtime.Object to StepTemplate
+// ToStepTemplate converts runtime.Object to StepTemplate.
 func ToStepTemplate(o runtime.Object) (apiv2.StepTemplate, error) {
 	return toStepTemplate(o)
 }
 
-// ToStepTemplate converts runtime.Object to StepTemplate
+// ToStepTemplate converts runtime.Object to StepTemplate.
 func StepObjectToStepTemplate(so apiv2.StepObject) (apiv2.StepTemplate, error) {
 	return stepObjectToStepTemplate(so)
 }

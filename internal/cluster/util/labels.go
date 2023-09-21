@@ -95,7 +95,6 @@ func SanitizeLabelValues(labelValue string) string {
 	// Remove all extra spaces between words
 	// replace spaces and / to -
 
-	//For now just make the value lower cased and replace / with -; add more as we discover conditions
 	labelValue = strings.TrimSpace(labelValue)
 	space := regexp.MustCompile(`\s+`)
 	labelValue = space.ReplaceAllString(labelValue, "-")

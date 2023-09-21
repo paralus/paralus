@@ -8,7 +8,7 @@ import (
 )
 
 // SchedulerClient is the interface for accessing all the RPCs
-// exposed by Cluster Scheduler
+// exposed by Cluster Scheduler.
 type SchedulerClient interface {
 	Unhealthy()
 	Close() error
@@ -22,13 +22,13 @@ type schedulerClient struct {
 
 var _ SchedulerClient = (*schedulerClient)(nil)
 
-// SchedulerPool maintains pool of grpc connections to scheduler service
+// SchedulerPool maintains pool of grpc connections to scheduler service.
 type SchedulerPool interface {
 	Close()
 	NewClient(ctx context.Context) (SchedulerClient, error)
 }
 
-// NewSchedulerPool new scheduler pool
+// NewSchedulerPool new scheduler pool.
 func NewSchedulerPool(addr string, maxConn int) SchedulerPool {
 	return &schedulerPool{
 		GRPCPool: pool.NewGRPCPool(addr, maxConn, nil),

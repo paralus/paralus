@@ -97,7 +97,6 @@ func (s *kubeConfigServer) RevokeKubeconfig(ctx context.Context, req *sentryrpc.
 func (s *kubeConfigServer) GetOrganizationSetting(ctx context.Context, req *sentryrpc.GetKubeconfigSettingRequest) (*sentryrpc.GetKubeconfigSettingResponse, error) {
 	opts := req.Opts
 	orgID, err := util.GetOrganizationScope(opts.UrlScope)
-
 	if err != nil {
 		return nil, err
 	}
@@ -146,7 +145,6 @@ func (s *kubeConfigServer) GetUserSetting(ctx context.Context, req *sentryrpc.Ge
 		DisableCLIKubectl:           ks.DisableCLIKubectl,
 	}
 	return resp, nil
-
 }
 
 func (s *kubeConfigServer) UpdateOrganizationSetting(ctx context.Context, req *sentryrpc.UpdateKubeconfigSettingRequest) (*sentryrpc.UpdateKubeconfigSettingResponse, error) {
@@ -205,9 +203,10 @@ func (s *kubeConfigServer) UpdateUserSetting(ctx context.Context, req *sentryrpc
 	return &sentryrpc.UpdateKubeconfigSettingResponse{}, nil
 }
 
-// NewKubeConfigServer returns new kube config server
+// NewKubeConfigServer returns new kube config server.
 func NewKubeConfigServer(bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, kss service.KubeconfigSettingService,
-	krs service.KubeconfigRevocationService, pf cryptoutil.PasswordFunc, ksvc service.ApiKeyService, os service.OrganizationService, ps service.PartnerService, al *zap.Logger) sentryrpc.KubeConfigServiceServer {
+	krs service.KubeconfigRevocationService, pf cryptoutil.PasswordFunc, ksvc service.ApiKeyService, os service.OrganizationService, ps service.PartnerService, al *zap.Logger,
+) sentryrpc.KubeConfigServiceServer {
 	return &kubeConfigServer{bs, aps, gps, kss, krs, pf, ksvc, os, ps, al}
 }
 
@@ -249,6 +248,7 @@ func (s *kubeConfigServer) RevokeKubeconfigSSO(ctx context.Context, req *sentryr
 	*/
 	return &sentryrpc.RevokeKubeconfigResponse{}, nil
 }
+
 func (s *kubeConfigServer) GetSSOUserSetting(ctx context.Context, req *sentryrpc.GetKubeconfigSettingRequest) (*sentryrpc.GetKubeconfigSettingResponse, error) {
 	opts := req.Opts
 	accountID, err := util.GetUserScope(opts.UrlScope)

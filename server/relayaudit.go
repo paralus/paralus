@@ -16,7 +16,7 @@ type relayAuditServer struct {
 
 var _ v1.RelayAuditServiceServer = (*relayAuditServer)(nil)
 
-// NewAuditServer returns new placement server implementation
+// NewAuditServer returns new placement server implementation.
 func NewRelayAuditServer(relayAuditService q.RelayAuditService, relayCommandAuditService q.AuditLogService) (v1.RelayAuditServiceServer, error) {
 	return &relayAuditServer{
 		rs: relayAuditService,

@@ -3,11 +3,10 @@ package util
 import (
 	"fmt"
 
-	clusterv2 "github.com/paralus/paralus/proto/types/controller"
-	apixv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
-
 	jp "github.com/evanphx/json-patch"
 	"github.com/paralus/paralus/pkg/controller/scheme"
+	clusterv2 "github.com/paralus/paralus/proto/types/controller"
+	apixv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	jmp "k8s.io/apimachinery/pkg/util/jsonmergepatch"
 	mp "k8s.io/apimachinery/pkg/util/mergepatch"
@@ -28,12 +27,12 @@ func isKnowMergePatchGroup(gvk schema.GroupVersionKind) bool {
 	return false
 }
 
-// IsStrategicMergePatch returns true if gvk is present in the registered scheme
+// IsStrategicMergePatch returns true if gvk is present in the registered scheme.
 func IsStrategicMergePatch(gvk schema.GroupVersionKind) bool {
 	return scheme.Scheme.Recognizes(gvk) && !isKnowMergePatchGroup(gvk)
 }
 
-// CreateStrategicMergePatch creates strategic merge patch for original and modified
+// CreateStrategicMergePatch creates strategic merge patch for original and modified.
 func CreateStrategicMergePatch(gvk schema.GroupVersionKind, original, current, modified []byte) ([]byte, error) {
 	obj, err := scheme.Scheme.New(gvk)
 	if err != nil {
@@ -51,7 +50,6 @@ func CreateStrategicMergePatch(gvk schema.GroupVersionKind, original, current, m
 		mp.RequireKeyUnchanged("apiVersion"),
 		mp.RequireKeyUnchanged("kind"),
 		mp.RequireMetadataKeyUnchanged("name"))
-
 	if err != nil {
 		err = fmt.Errorf("unable to create strategic merge patch %s", err.Error())
 	}
@@ -59,7 +57,7 @@ func CreateStrategicMergePatch(gvk schema.GroupVersionKind, original, current, m
 	return ret, err
 }
 
-// ApplyStrategicMergePatch applies strategic merge patch on original
+// ApplyStrategicMergePatch applies strategic merge patch on original.
 func ApplyStrategicMergePatch(gvk schema.GroupVersionKind, original, patch []byte) ([]byte, error) {
 	obj, err := scheme.Scheme.New(gvk)
 	if err != nil {
@@ -73,7 +71,7 @@ func ApplyStrategicMergePatch(gvk schema.GroupVersionKind, original, patch []byt
 	return fb, nil
 }
 
-// CreateJSONMergePatch creates JSON merge patch between original, current and modified
+// CreateJSONMergePatch creates JSON merge patch between original, current and modified.
 func CreateJSONMergePatch(original, current, modified []byte) ([]byte, error) {
 	ret, err := jmp.CreateThreeWayJSONMergePatch(original, modified, current,
 		mp.RequireKeyUnchanged("apiVersion"),
@@ -85,7 +83,7 @@ func CreateJSONMergePatch(original, current, modified []byte) ([]byte, error) {
 	return ret, err
 }
 
-// ApplyJSONMergePatch applies JSON merge patch onto the original document
+// ApplyJSONMergePatch applies JSON merge patch onto the original document.
 func ApplyJSONMergePatch(original, patch []byte) ([]byte, error) {
 	fb, err := jp.MergePatch(original, patch)
 	if err != nil {

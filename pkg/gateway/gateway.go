@@ -5,20 +5,18 @@ import (
 	"errors"
 	"net/http"
 
-	"google.golang.org/grpc"
-
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"google.golang.org/grpc"
 )
 
-// ErrNoHandlers returned when not handlers are passed to gateway
+// ErrNoHandlers returned when not handlers are passed to gateway.
 var ErrNoHandlers = errors.New("no handlers defined")
 
-// HandlerFromEndpoint defines the function for registering grpc gateway handlers to grpc endpoint
+// HandlerFromEndpoint defines the function for registering grpc gateway handlers to grpc endpoint.
 type HandlerFromEndpoint func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error)
 
-// NewGateway returns new grpc gateway
+// NewGateway returns new grpc gateway.
 func NewGateway(ctx context.Context, endpoint string, serveMuxOptions []runtime.ServeMuxOption, handlers ...HandlerFromEndpoint) (http.Handler, error) {
-
 	paralusJSON := NewParalusJSON()
 	paralusYAML := NewParalusYAML()
 	httpBody := NewHTTPBodyMarshaler()

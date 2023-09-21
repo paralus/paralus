@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	runtimeutil "github.com/paralus/paralus/pkg/controller/runtime"
-
 	"github.com/paralus/paralus/pkg/log"
 	controllerv2 "github.com/paralus/paralus/proto/types/controller"
 	corev1 "k8s.io/api/core/v1"
@@ -22,7 +21,7 @@ const (
 )
 
 var (
-	// ErrInvalidObject is retuned for invalid object
+	// ErrInvalidObject is retuned for invalid object.
 	ErrInvalidObject = errors.New("object does not support object interface")
 	json             = k8sapijson.CaseSensitiveJsonIterator()
 	dmf              = kjson.DefaultMetaFactory
@@ -44,7 +43,6 @@ func addIngressAnnotations(annotations map[string]string, name string, orgId, pa
 }
 
 func addDebugLabels(stepTemplate *controllerv2.StepTemplate, debugLabels []byte) error {
-
 	if stepTemplate.Object != nil {
 		accessor, err := stepTemplate.Object.Accessor()
 		if err != nil {
@@ -68,7 +66,6 @@ func addDebugLabels(stepTemplate *controllerv2.StepTemplate, debugLabels []byte)
 		}
 
 		stepTemplate.Object.Raw = accessor.Bytes()
-
 	}
 
 	return nil
@@ -89,7 +86,6 @@ func getDebugLabelsMap(orgID, partnerID, projectID string, name string, isSystem
 }
 
 func resourceToStepTemplate(resource []byte) (sts []controllerv2.StepTemplate, err error) {
-
 	so := &controllerv2.StepObject{Raw: resource}
 	var accessor controllerv2.Accessor
 	var gvk schema.GroupVersionKind
@@ -112,8 +108,7 @@ func resourceToStepTemplate(resource []byte) (sts []controllerv2.StepTemplate, e
 		}
 		if list, ok := ro.(*corev1.List); ok {
 			for _, item := range list.Items {
-
-				var lso = &controllerv2.StepObject{Raw: item.Raw}
+				lso := &controllerv2.StepObject{Raw: item.Raw}
 				var la controllerv2.Accessor
 				var ln string
 				var lgvk schema.GroupVersionKind
@@ -157,7 +152,7 @@ func resourceToStepTemplate(resource []byte) (sts []controllerv2.StepTemplate, e
 }
 
 // toRuntimeObject converts JSON bytes into runtime object of
-// latest version
+// latest version.
 func toRuntimeObject(gvk schema.GroupVersionKind, b []byte) (runtime.Object, error) {
 	var sa controllerv2.StepObject
 
@@ -172,7 +167,6 @@ func toRuntimeObject(gvk schema.GroupVersionKind, b []byte) (runtime.Object, err
 	}
 
 	return ro, nil
-
 }
 
 func toStepTemplate(o runtime.Object) (controllerv2.StepTemplate, error) {

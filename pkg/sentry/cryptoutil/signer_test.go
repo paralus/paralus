@@ -33,7 +33,6 @@ func TestSigner(t *testing.T) {
 	csr, err := CreateCSR(pkix.Name{
 		CommonName: "test-token",
 	}, privKey)
-
 	if err != nil {
 		t.Error(err)
 		return
@@ -46,5 +45,4 @@ func TestSigner(t *testing.T) {
 	}
 
 	t.Log(string(signed))
-
 }

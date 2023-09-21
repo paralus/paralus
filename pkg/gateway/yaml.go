@@ -13,11 +13,10 @@ const (
 	yamlContentType string = "application/yaml"
 )
 
-// paralusJSON is the paralus object to YAML marshaller
-type paralusYAML struct {
-}
+// paralusJSON is the paralus object to YAML marshaller.
+type paralusYAML struct{}
 
-// NewParalusYAML returns new grpc gateway yaml marshaller
+// NewParalusYAML returns new grpc gateway yaml marshaller.
 func NewParalusYAML() runtime.Marshaler {
 	return &paralusYAML{}
 }

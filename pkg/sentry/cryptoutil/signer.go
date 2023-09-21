@@ -15,12 +15,12 @@ const (
 	defaultCertValidity = time.Hour * 24 * 365 * 10
 )
 
-// Signer is the interface for signing pem encoded CSR
+// Signer is the interface for signing pem encoded CSR.
 type Signer interface {
 	Sign(csr []byte) ([]byte, error)
 }
 
-// Options is the options used to construct signer
+// Options is the options used to construct signer.
 type options struct {
 	IsClient           bool
 	IsServer           bool
@@ -31,52 +31,52 @@ type options struct {
 	IPAddress          []string
 }
 
-// Option is the functional arg for setting options
+// Option is the functional arg for setting options.
 type Option func(*options)
 
-// WithClient is used to sign client certs
+// WithClient is used to sign client certs.
 func WithClient() Option {
 	return func(o *options) {
 		o.IsClient = true
 	}
 }
 
-// WithServer is used to sign server certs
+// WithServer is used to sign server certs.
 func WithServer() Option {
 	return func(o *options) {
 		o.IsServer = true
 	}
 }
 
-// WithCAKeyDecrypt passes the password function to decrypt ca key
+// WithCAKeyDecrypt passes the password function to decrypt ca key.
 func WithCAKeyDecrypt(pf PasswordFunc) Option {
 	return func(o *options) {
 		o.CAKeyDecrypt = pf
 	}
 }
 
-// WithCSRSubjectValidate is used to validate subject of CSR
+// WithCSRSubjectValidate is used to validate subject of CSR.
 func WithCSRSubjectValidate(svf SubjectValidateFunc) Option {
 	return func(o *options) {
 		o.CSRSubjectValidate = append(o.CSRSubjectValidate, svf)
 	}
 }
 
-// WithCertValidity makes the issued certificate expire after the duration
+// WithCertValidity makes the issued certificate expire after the duration.
 func WithCertValidity(d time.Duration) Option {
 	return func(o *options) {
 		o.CertValidity = d
 	}
 }
 
-// WithAltName adds subject alt name to the signed certificate
+// WithAltName adds subject alt name to the signed certificate.
 func WithAltName(dns string) Option {
 	return func(o *options) {
 		o.AltNames = append(o.AltNames, dns)
 	}
 }
 
-// WithIPAddress adds ip address to the signed certificate
+// WithIPAddress adds ip address to the signed certificate.
 func WithIPAddress(ip string) Option {
 	return func(o *options) {
 		o.IPAddress = append(o.IPAddress, ip)
@@ -106,7 +106,7 @@ func (s *signer) Sign(csr []byte) ([]byte, error) {
 		Subject:      cr.Subject,
 		NotBefore:    time.Now(),
 		NotAfter:     time.Now().Add(s.opts.CertValidity),
-		//ExtKeyUsage:  []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth},
+		// ExtKeyUsage:  []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth},
 		KeyUsage: x509.KeyUsageDigitalSignature | x509.KeyUsageKeyEncipherment,
 	}
 
@@ -139,15 +139,15 @@ func (s *signer) Sign(csr []byte) ([]byte, error) {
 	return EncodeCert(b), nil
 }
 
-// SubjectValidateFunc validates the subject of CSR before signing the request
+// SubjectValidateFunc validates the subject of CSR before signing the request.
 type SubjectValidateFunc func(subject pkix.Name) error
 
-// NoSubjectValidate ignores subject validation of CSR
+// NoSubjectValidate ignores subject validation of CSR.
 var NoSubjectValidate = func(subject pkix.Name) error {
 	return nil
 }
 
-// CNShouldBe validates if CommonName of CSR is same as the passed CN
+// CNShouldBe validates if CommonName of CSR is same as the passed CN.
 var CNShouldBe = func(cn string) SubjectValidateFunc {
 	return func(subject pkix.Name) error {
 		if subject.CommonName != cn {
@@ -157,7 +157,7 @@ var CNShouldBe = func(cn string) SubjectValidateFunc {
 	}
 }
 
-// CNShouldBeStar validates if CommonName of CSR is same as the passed CN *.domain
+// CNShouldBeStar validates if CommonName of CSR is same as the passed CN *.domain.
 var CNShouldBeStar = func(cn string) SubjectValidateFunc {
 	return func(subject pkix.Name) error {
 		if subject.CommonName[0] != '*' && subject.CommonName != cn {
@@ -173,9 +173,8 @@ var CNShouldBeStar = func(cn string) SubjectValidateFunc {
 	}
 }
 
-// NewSigner return a CSR signer for given PEM encoded CA cert and key
+// NewSigner return a CSR signer for given PEM encoded CA cert and key.
 func NewSigner(cert, key []byte, opts ...Option) (Signer, error) {
-
 	signerOpts := &options{}
 	for _, opt := range opts {
 		opt(signerOpts)
