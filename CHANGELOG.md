@@ -1,3 +1,16 @@
+## [0.2.5](https://github.com/paralus/paralus/compare/v0.2.4...v0.2.5) (2023-09-25)
+
+### Features
+
+* changes to view auditlogs by project role users ([#225](https://github.com/paralus/paralus/issues/225)) ([1b7a9a1](https://github.com/paralus/paralus/commit/1b7a9a1fa32efbaa7a4c4024145adda260a96d3e))
+
+### ⚠ BREAKING CHANGES
+
+Prior to v0.2.4, users will not have org, partner metadata information in kratos identities which will impact audit logs screens, apply below migrations if you are upgrading paralus
+
+update identities set metadata_public = jsonb_set(metadata_public, '{organization}', '"replace-with-your-organization-id"', true);
+update identities set metadata_public = jsonb_set(metadata_public, '{partner}', '"replace-with-your-partner-id"', true);
+
 ## [0.2.4](https://github.com/paralus/paralus/compare/v0.2.3...v0.2.4) (2023-08-11)
 
 ### Bug Fixes
@@ -115,7 +128,9 @@
 ### Added
 - Initial release
 
-[Unreleased]: https://github.com/paralus/paralus/compare/v0.2.3...HEAD
+[Unreleased]: https://github.com/paralus/paralus/compare/v0.2.5...HEAD
+[0.2.5]: https://github.com/paralus/paralus/compare/v0.2.4...v0.2.5
+[0.2.4]: https://github.com/paralus/paralus/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/paralus/paralus/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/paralus/paralus/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/paralus/paralus/compare/v0.2.0...v0.2.1
