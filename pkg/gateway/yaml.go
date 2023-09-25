@@ -13,7 +13,7 @@ const (
 	yamlContentType string = "application/yaml"
 )
 
-// paralusJSON is the paralus object to YAML marshaller
+// paralusYAML is the paralus object to YAML marshaller
 type paralusYAML struct {
 }
 
