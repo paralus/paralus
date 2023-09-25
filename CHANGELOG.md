@@ -1,6 +1,6 @@
 ## [0.2.5](https://github.com/paralus/paralus/compare/v0.2.4...v0.2.5) (2023-09-25)
 
-## Added
+### Features
 
 * changes to view auditlogs by project role users ([#225](https://github.com/paralus/paralus/issues/225)) ([1b7a9a1](https://github.com/paralus/paralus/commit/1b7a9a1fa32efbaa7a4c4024145adda260a96d3e))
 
