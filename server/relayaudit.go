@@ -24,17 +24,9 @@ func NewRelayAuditServer(relayAuditService q.RelayAuditService, relayCommandAudi
 	}, nil
 }
 
-func (r *relayAuditServer) GetRelayAPIAudit(ctx context.Context, req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
-	return r.rs.GetRelayAudit(req)
-}
-
-func (r *relayAuditServer) GetRelayAPIAuditByProjects(ctx context.Context, req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
-	return r.rs.GetRelayAuditByProjects(req)
-}
-
 func (r *relayAuditServer) GetRelayAudit(ctx context.Context, req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
 	if req.AuditType == ec.RelayAPIAuditType {
-		res, err = r.rs.GetRelayAudit(req)
+		res, err = r.rs.GetRelayAudit(ctx, req)
 		if err != nil {
 			return nil, err
 		}
@@ -44,7 +36,7 @@ func (r *relayAuditServer) GetRelayAudit(ctx context.Context, req *v1.RelayAudit
 		if err != nil {
 			return nil, err
 		}
-		auditRes, err := r.al.GetAuditLog(auditReq)
+		auditRes, err := r.al.GetAuditLog(ctx, auditReq)
 		if err != nil {
 			return nil, err
 		}
@@ -58,7 +50,7 @@ func (r *relayAuditServer) GetRelayAudit(ctx context.Context, req *v1.RelayAudit
 
 func (r *relayAuditServer) GetRelayAuditByProjects(ctx context.Context, req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {
 	if req.AuditType == ec.RelayAPIAuditType {
-		res, err = r.rs.GetRelayAuditByProjects(req)
+		res, err = r.rs.GetRelayAuditByProjects(ctx, req)
 		if err != nil {
 			return nil, err
 		}
@@ -68,7 +60,7 @@ func (r *relayAuditServer) GetRelayAuditByProjects(ctx context.Context, req *v1.
 		if err != nil {
 			return nil, err
 		}
-		auditRes, err := r.al.GetAuditLogByProjects(auditReq)
+		auditRes, err := r.al.GetAuditLogByProjects(ctx, auditReq)
 		if err != nil {
 			return nil, err
 		}

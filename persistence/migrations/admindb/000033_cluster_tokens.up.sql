@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS cluster_tokens (
     id uuid NOT NULL default uuid_generate_v4(),
-    name varchar NOT NULL,
+    name varchar PRIMARY KEY,
     organization_id uuid not null,
     partner_id uuid not null,
     project_id uuid not null,
@@ -14,7 +14,3 @@ CREATE TABLE IF NOT EXISTS cluster_tokens (
     token_type varchar NOT NULL,
     state varchar NOT NULL
 );
-
-ALTER TABLE cluster_tokens OWNER TO admindbuser;
-
-ALTER TABLE ONLY cluster_tokens ADD CONSTRAINT cluster_tokens_pkey PRIMARY KEY (name);

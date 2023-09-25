@@ -15,6 +15,7 @@ message Aggregations {
     AggregatorGroup group_by_kind = 4;
     AggregatorGroup group_by_method = 5;
     AggregatorGroup group_by_namespace = 6;
+    AggregatorGroup group_by_project = 7;
 }
 
 message AggregatorGroup {
@@ -69,6 +70,7 @@ message Data {
     string un = 26;
     string url = 27;
     int32 w = 28;
+    string pr = 29;
 }
 
 message Actor {

@@ -58,7 +58,8 @@ func NewKubectlClusterSettingsGetKubectlClusterSettingsOK() *KubectlClusterSetti
 	return &KubectlClusterSettingsGetKubectlClusterSettingsOK{}
 }
 
-/* KubectlClusterSettingsGetKubectlClusterSettingsOK describes a response with status code 200, with default header values.
+/*
+	KubectlClusterSettingsGetKubectlClusterSettingsOK describes a response with status code 200, with default header values.
 
 A successful response.
 */
@@ -90,7 +91,8 @@ func NewKubectlClusterSettingsGetKubectlClusterSettingsForbidden() *KubectlClust
 	return &KubectlClusterSettingsGetKubectlClusterSettingsForbidden{}
 }
 
-/* KubectlClusterSettingsGetKubectlClusterSettingsForbidden describes a response with status code 403, with default header values.
+/*
+	KubectlClusterSettingsGetKubectlClusterSettingsForbidden describes a response with status code 403, with default header values.
 
 Returned when the user does not have permission to access the resource.
 */
@@ -120,7 +122,8 @@ func NewKubectlClusterSettingsGetKubectlClusterSettingsNotFound() *KubectlCluste
 	return &KubectlClusterSettingsGetKubectlClusterSettingsNotFound{}
 }
 
-/* KubectlClusterSettingsGetKubectlClusterSettingsNotFound describes a response with status code 404, with default header values.
+/*
+	KubectlClusterSettingsGetKubectlClusterSettingsNotFound describes a response with status code 404, with default header values.
 
 Returned when the resource does not exist.
 */
@@ -152,7 +155,8 @@ func NewKubectlClusterSettingsGetKubectlClusterSettingsDefault(code int) *Kubect
 	}
 }
 
-/* KubectlClusterSettingsGetKubectlClusterSettingsDefault describes a response with status code -1, with default header values.
+/*
+	KubectlClusterSettingsGetKubectlClusterSettingsDefault describes a response with status code -1, with default header values.
 
 An unexpected error response.
 */

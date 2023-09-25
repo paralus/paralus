@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	kr "github.com/paralus/paralus/internal/provider/kratos"
+	providers "github.com/paralus/paralus/internal/provider/kratos"
 	types "github.com/paralus/paralus/proto/types/authz"
 )
 
@@ -19,11 +19,11 @@ type mockAuthProvider struct {
 	d []string
 }
 
-func (m *mockAuthProvider) Create(ctx context.Context, pass string, traits map[string]interface{}, fr bool) (string, error) {
+func (m *mockAuthProvider) Create(ctx context.Context, pass string, traits map[string]interface{}, metadata providers.IdentityPublicMetadata) (string, error) {
 	m.c = append(m.c, traits)
 	return strings.Split(traits["email"].(string), "user-")[1], nil
 }
-func (m *mockAuthProvider) Update(ctx context.Context, id string, traits map[string]interface{}, fr bool) error {
+func (m *mockAuthProvider) Update(ctx context.Context, id string, traits map[string]interface{}, metadata providers.IdentityPublicMetadata) error {
 	m.u = append(m.u, ApUpdate{id: id, traits: traits})
 	return nil
 }
@@ -36,8 +36,8 @@ func (m *mockAuthProvider) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
-func (m *mockAuthProvider) GetPublicMetadata(context.Context, string) (*kr.IdentityPublicMetadata, error) {
-	return &kr.IdentityPublicMetadata{}, nil
+func (m *mockAuthProvider) GetPublicMetadata(context.Context, string) (*providers.IdentityPublicMetadata, error) {
+	return &providers.IdentityPublicMetadata{}, nil
 }
 
 type mockAuthzClient struct {

@@ -121,6 +121,7 @@
         "details": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
         }
@@ -142,6 +143,9 @@
           "type": "string"
         },
         "displayName": {
+          "type": "string"
+        },
+        "project": {
           "type": "string"
         }
       }
@@ -187,11 +191,9 @@
   },
   "security": [
     {
-      "BasicAuth": []
-    },
-    {
       "ApiKeyAuth": [],
-      "ApiTokenAuth": []
+      "ApiTokenAuth": [],
+      "BasicAuth": []
     }
   ]
 }

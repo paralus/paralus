@@ -39,6 +39,7 @@
         "details": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
         }
@@ -99,6 +100,7 @@
         "list": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v3ProjectRole"
           }
         }
@@ -224,6 +226,7 @@
         "namespaces": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/v3NamespaceData"
           }
         },

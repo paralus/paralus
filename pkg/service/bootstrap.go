@@ -298,6 +298,7 @@ func (s *bootstrapService) GetBootstrapAgent(ctx context.Context, templateRef st
 	if err != nil {
 		return nil, err
 	}
+
 	return prepareAgentResponse(ba), nil
 }
 

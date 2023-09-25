@@ -32,6 +32,8 @@ import (
 	bun "github.com/uptrace/bun"
 	"github.com/uptrace/bun/driver/pgdriver"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -718,6 +720,9 @@ func (cs *clusterService) List(ctx context.Context, opts ...query.Option) (*infr
 	var proj models.Project
 	_, err := dao.GetByName(ctx, cs.db, queryOptions.Project, &proj)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, status.Error(codes.NotFound, "no clusters found")
+		}
 		return nil, err
 	}
 
@@ -997,7 +1002,7 @@ func (s *clusterService) CreateBootstrapAgentForCluster(ctx context.Context, clu
 	if cluster.Metadata.Annotations == nil {
 		cluster.Metadata.Annotations = make(map[string]string)
 	}
-	cluster.Metadata.Annotations["relays"] = string(relaysBytes)
+	cluster.Metadata.Annotations["paralus.dev/relays"] = string(relaysBytes)
 
 	return nil
 }

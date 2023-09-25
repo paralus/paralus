@@ -28,7 +28,7 @@ func isKnowMergePatchGroup(gvk schema.GroupVersionKind) bool {
 	return false
 }
 
-// IsStrategicMergePatch returns true if gvk is present in the registerd scheme
+// IsStrategicMergePatch returns true if gvk is present in the registered scheme
 func IsStrategicMergePatch(gvk schema.GroupVersionKind) bool {
 	return scheme.Scheme.Recognizes(gvk) && !isKnowMergePatchGroup(gvk)
 }
@@ -59,7 +59,7 @@ func CreateStrategicMergePatch(gvk schema.GroupVersionKind, original, current, m
 	return ret, err
 }
 
-// ApplyStrategicMergePatch applies strategic merge patch on orginal
+// ApplyStrategicMergePatch applies strategic merge patch on original
 func ApplyStrategicMergePatch(gvk schema.GroupVersionKind, original, patch []byte) ([]byte, error) {
 	obj, err := scheme.Scheme.New(gvk)
 	if err != nil {

@@ -105,7 +105,7 @@ func RegisterRolepermissionServiceHandlerServer(ctx context.Context, mux *runtim
 // RegisterRolepermissionServiceHandlerFromEndpoint is same as RegisterRolepermissionServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
 func RegisterRolepermissionServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
-	conn, err := grpc.Dial(endpoint, opts...)
+	conn, err := grpc.DialContext(ctx, endpoint, opts...)
 	if err != nil {
 		return err
 	}

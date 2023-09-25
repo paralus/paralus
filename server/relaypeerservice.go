@@ -25,14 +25,14 @@ import (
 // - Each relay object has a survey send chnl. Use this chnl to send survey requests.
 // - Each relay obect has a probe chnl. Use this chnl to send probe response
 
-//used for survey broadcasting
+// used for survey broadcasting
 type surveyBroadCastRequest struct {
 	clustersni string
 	relayuuid  string // relay requsting the survey
 	ou         string
 }
 
-//used to maintain list of connected relays
+// used to maintain list of connected relays
 type relayObject struct {
 	timeStamp         int64
 	refCnt            uint8
@@ -42,7 +42,7 @@ type relayObject struct {
 	surveyRequestChnl chan sentryrpc.PeerSurveyRequest
 }
 
-//relayPeerService relay peer service
+// relayPeerService relay peer service
 type relayPeerService struct {
 	cert   []byte // rpc server certifciate
 	key    []byte // rpc server key
@@ -138,7 +138,7 @@ func RunRelaySurveyHandler(stop <-chan struct{}, svc interface{}) {
 	}
 }
 
-//process the survey request.
+// process the survey request.
 func (s *relayPeerService) handleSurveyReq(req surveyBroadCastRequest) {
 	// Get All relay objects
 	// Send survey request to all.
@@ -253,7 +253,7 @@ func (s *relayPeerService) handleSurveyReq(req surveyBroadCastRequest) {
 
 }
 
-//maintains the timestamp of relays heart beat
+// maintains the timestamp of relays heart beat
 func (s *relayPeerService) updateRelayIfExist(relayuuid, ou string) bool {
 	s.relayMutex.RLock()
 	defer s.relayMutex.RUnlock()
@@ -332,7 +332,7 @@ func (s *relayPeerService) handleHelloRequest(relayuuid, relayip, ou string) {
 	s.insertRelayObject(robj, relayuuid, ou)
 }
 
-//getServiceIP ..
+// getServiceIP ..
 func getServiceIP() string {
 	name, err := os.Hostname()
 	if err == nil {
@@ -344,7 +344,7 @@ func getServiceIP() string {
 	return ""
 }
 
-//RelayPeerHelloRPC handles PeerHelloMsg
+// RelayPeerHelloRPC handles PeerHelloMsg
 func (s *relayPeerService) RelayPeerHelloRPC(stream sentryrpc.RelayPeerService_RelayPeerHelloRPCServer) error {
 	_log.Infow("RelayPeerHelloRPC stream")
 	name, err := grpc.GetClientName(stream.Context())
@@ -382,7 +382,7 @@ func (s *relayPeerService) RelayPeerHelloRPC(stream sentryrpc.RelayPeerService_R
 	}
 }
 
-//relayPeerProbeSender send routine to handle sending probe messges
+// relayPeerProbeSender send routine to handle sending probe messges
 func (s *relayPeerService) relayPeerProbeSender(ctx context.Context, stream sentryrpc.RelayPeerService_RelayPeerProbeRPCServer, relayuuid string, robj *relayObject) {
 	for {
 		select {
@@ -399,7 +399,7 @@ func (s *relayPeerService) relayPeerProbeSender(ctx context.Context, stream sent
 	}
 }
 
-//try to fill the response form cache
+// try to fill the response form cache
 func (s *relayPeerService) tryResponseFromCache(relayuuid, clustersni, ou string) bool {
 	var relayids []string
 	var connInfo []*sentryrpc.RelayClusterConnectionInfo
@@ -445,7 +445,7 @@ func (s *relayPeerService) tryResponseFromCache(relayuuid, clustersni, ou string
 	return false
 }
 
-//RelayPeerProbeRPC handles PeerHelloMsg
+// RelayPeerProbeRPC handles PeerHelloMsg
 func (s *relayPeerService) RelayPeerProbeRPC(stream sentryrpc.RelayPeerService_RelayPeerProbeRPCServer) error {
 	var initSend bool
 
@@ -495,7 +495,7 @@ func (s *relayPeerService) RelayPeerProbeRPC(stream sentryrpc.RelayPeerService_R
 			continue
 		}
 
-		// find respone either from cache or via survey
+		// find response either from cache or via survey
 		go func() {
 			if clustersni != "" && relayuuid != "" {
 				if !s.tryResponseFromCache(relayuuid, clustersni, ou) {
@@ -514,7 +514,7 @@ func (s *relayPeerService) RelayPeerProbeRPC(stream sentryrpc.RelayPeerService_R
 
 }
 
-//relayPeerSurveySender send routine to handle sending probe messges
+// relayPeerSurveySender send routine to handle sending probe messges
 func (s *relayPeerService) relayPeerSurveySender(ctx context.Context, stream sentryrpc.RelayPeerService_RelayPeerSurveyRPCServer, relayuuid string, robj *relayObject) {
 	_log.Debugw("started relayPeerSurveySender")
 	for {
@@ -533,7 +533,7 @@ func (s *relayPeerService) relayPeerSurveySender(ctx context.Context, stream sen
 	}
 }
 
-//RelayPeerSurveyRPC handles relay survey rpc
+// RelayPeerSurveyRPC handles relay survey rpc
 func (s *relayPeerService) RelayPeerSurveyRPC(stream sentryrpc.RelayPeerService_RelayPeerSurveyRPCServer) error {
 	var initSend bool
 

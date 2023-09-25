@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS authsrv_resourcepermission (
-    id uuid NOT NULL default uuid_generate_v4(),
+    id uuid default uuid_generate_v4() PRIMARY KEY,
     name character varying(256) NOT NULL,
     scope character varying(256) NOT NULL,
     base_url character varying(256) NOT NULL,
@@ -11,10 +11,6 @@ CREATE TABLE IF NOT EXISTS authsrv_resourcepermission (
     resource_action_urls jsonb NOT NULL
 );
 
-ALTER TABLE authsrv_resourcepermission OWNER TO admindbuser;
+CREATE INDEX IF NOT EXISTS authsrv_resourcepermission_name_97f09d50 ON authsrv_resourcepermission USING btree (name);
 
-ALTER TABLE ONLY authsrv_resourcepermission ADD CONSTRAINT authsrv_resourcepermission_pkey PRIMARY KEY (id);
-
-CREATE INDEX authsrv_resourcepermission_name_97f09d50 ON authsrv_resourcepermission USING btree (name);
-
-CREATE INDEX authsrv_resourcepermission_name_97f09d50_like ON authsrv_resourcepermission USING btree (name varchar_pattern_ops);
+CREATE INDEX IF NOT EXISTS authsrv_resourcepermission_name_97f09d50_like ON authsrv_resourcepermission USING btree (name varchar_pattern_ops);

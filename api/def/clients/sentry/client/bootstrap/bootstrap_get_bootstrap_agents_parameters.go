@@ -53,10 +53,12 @@ func NewBootstrapGetBootstrapAgentsParamsWithHTTPClient(client *http.Client) *Bo
 	}
 }
 
-/* BootstrapGetBootstrapAgentsParams contains all the parameters to send to the API endpoint
-   for the bootstrap get bootstrap agents operation.
+/*
+BootstrapGetBootstrapAgentsParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the bootstrap get bootstrap agents operation.
+
+	Typically these are written to a http.Request.
 */
 type BootstrapGetBootstrapAgentsParams struct {
 

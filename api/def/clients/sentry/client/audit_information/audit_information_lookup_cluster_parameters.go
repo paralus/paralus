@@ -52,10 +52,12 @@ func NewAuditInformationLookupClusterParamsWithHTTPClient(client *http.Client) *
 	}
 }
 
-/* AuditInformationLookupClusterParams contains all the parameters to send to the API endpoint
-   for the audit information lookup cluster operation.
+/*
+AuditInformationLookupClusterParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the audit information lookup cluster operation.
+
+	Typically these are written to a http.Request.
 */
 type AuditInformationLookupClusterParams struct {
 

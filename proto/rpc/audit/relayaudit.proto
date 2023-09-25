@@ -94,20 +94,6 @@ message RelayAuditResponse {
 }
 
 service RelayAuditService {
-  rpc GetRelayAPIAudit(RelayAuditRequest)
-      returns (RelayAuditResponse) {
-    option (google.api.http) = {
-      get : "/event/v1/{metadata.urlScope=project/*}/relayaudit"
-    };
-  };
-
-  rpc GetRelayAPIAuditByProjects(RelayAuditRequest)
-      returns (RelayAuditResponse) {
-    option (google.api.http) = {
-      get : "/event/v1/relayaudit"
-    };
-  };
-
   rpc GetRelayAudit(RelayAuditRequest)
       returns (RelayAuditResponse) {
     option (google.api.http) = {

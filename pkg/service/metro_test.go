@@ -106,7 +106,7 @@ func TestMetroDeleteNonExist(t *testing.T) {
 	}
 	_, err := ps.Delete(context.Background(), metro)
 	if err == nil {
-		t.Fatal("deleted non existant metro")
+		t.Fatal("deleted non existent metro")
 	}
 }
 

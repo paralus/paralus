@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/paralus/paralus/internal/models"
@@ -211,21 +212,47 @@ func IsOrgAdmin(ctx context.Context, db bun.IDB, accountID, partnerID uuid.UUID)
 	err = db.NewSelect().Model(&aps).
 		Where("account_id = ?", accountID).
 		Where("partner_id = ?", partnerID).
-		Where("role_name = ?", "ADMIN").
-		Where("scope = ?", "ORGANIZATION").
+		Where("lower(role_name) = ?", "admin").
+		Where("lower(scope) = ?", "organization").
 		Scan(ctx)
 	if err != nil {
 		return isOrgAdmin, err
 	}
 
 	for _, ap := range aps {
-		if ap.RoleName == "ADMIN" && ap.Scope == "ORGANIZATION" {
+		if strings.ToLower(ap.RoleName) == "admin" && strings.ToLower(ap.Scope) == "organization" {
 			isOrgAdmin = true
 			break
 		}
 	}
 
 	return isOrgAdmin, nil
+}
+
+func IsOrgReadOnly(ctx context.Context, db bun.IDB, accountID, organizationID uuid.UUID, partnerID uuid.UUID) (isOrgReadOnly bool, err error) {
+	var aps []models.AccountPermission
+
+	isOrgReadOnly = false
+
+	err = db.NewSelect().Model(&aps).
+		Where("account_id = ?", accountID).
+		Where("organization_id = ?", organizationID).
+		Where("partner_id = ?", partnerID).
+		Where("lower(role_name) = ?", "admin_read_only").
+		Where("lower(scope) = ?", "organization").
+		Scan(ctx)
+	if err != nil {
+		return isOrgReadOnly, err
+	}
+
+	for _, ap := range aps {
+		if strings.ToLower(ap.RoleName) == "admin_read_only" && strings.ToLower(ap.Scope) == "organization" {
+			isOrgReadOnly = true
+			break
+		}
+	}
+
+	return isOrgReadOnly, nil
 }
 
 func GetAccountBasics(ctx context.Context, db bun.IDB, accountID uuid.UUID) (*models.Account, error) {

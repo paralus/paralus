@@ -75,196 +75,15 @@
             "type": "string"
           },
           {
-            "name": "metadata.project",
-            "description": "Project\n\nProject of the resource",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "metadata.organization",
-            "description": "Organization\n\nOrganization to which the resource belongs",
+            "name": "metadata.labels",
+            "description": "Labels\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "metadata.partner",
-            "description": "Partner\n\nPartner to which the resource belongs",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.id",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.urlScope",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.createdAt",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "name": "metadata.modifiedAt",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "name": "filter.type",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.user",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.client",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.timefrom",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.portal",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.cluster",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.namespace",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.kind",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.method",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.projects",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "filter.queryString",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.dashboardData",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "filter.clusterNames",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "auditType",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "RelayAuditService"
-        ]
-      }
-    },
-    "/event/v1/relayaudit": {
-      "get": {
-        "operationId": "RelayAuditService_GetRelayAPIAuditByProjects",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1RelayAuditResponse"
-            }
-          },
-          "403": {
-            "description": "Returned when the user does not have permission to access the resource.",
-            "schema": {}
-          },
-          "404": {
-            "description": "Returned when the resource does not exist.",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/googlerpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "metadata.name",
-            "description": "Name\n\nname of the resource",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "metadata.displayName",
-            "description": "Display Name\n\ndisplay name of the resource",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.description",
-            "description": "Description\n\ndescription of the resource",
+            "name": "metadata.annotations",
+            "description": "Annotations\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
             "in": "query",
             "required": false,
             "type": "string"
@@ -472,197 +291,15 @@
             "type": "string"
           },
           {
-            "name": "metadata.project",
-            "description": "Project\n\nProject of the resource",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "metadata.organization",
-            "description": "Organization\n\nOrganization to which the resource belongs",
+            "name": "metadata.labels",
+            "description": "Labels\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "metadata.partner",
-            "description": "Partner\n\nPartner to which the resource belongs",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.id",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.createdAt",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "name": "metadata.modifiedAt",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "name": "filter.type",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.user",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.client",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.timefrom",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.portal",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.cluster",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.namespace",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.kind",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.method",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.projects",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "filter.queryString",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter.dashboardData",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "filter.clusterNames",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "auditType",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "RelayAuditService"
-        ]
-      }
-    },
-    "/event/v1/{metadata.urlScope}/relayaudit": {
-      "get": {
-        "operationId": "RelayAuditService_GetRelayAPIAudit",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1RelayAuditResponse"
-            }
-          },
-          "403": {
-            "description": "Returned when the user does not have permission to access the resource.",
-            "schema": {}
-          },
-          "404": {
-            "description": "Returned when the resource does not exist.",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/googlerpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "metadata.urlScope",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "project/[^/]+"
-          },
-          {
-            "name": "metadata.name",
-            "description": "Name\n\nname of the resource",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "metadata.displayName",
-            "description": "Display Name\n\ndisplay name of the resource",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "metadata.description",
-            "description": "Description\n\ndescription of the resource",
+            "name": "metadata.annotations",
+            "description": "Annotations\n\nThis is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
             "in": "query",
             "required": false,
             "type": "string"
@@ -821,6 +458,7 @@
         "details": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
         }
@@ -1001,11 +639,9 @@
   },
   "security": [
     {
-      "BasicAuth": []
-    },
-    {
       "ApiKeyAuth": [],
-      "ApiTokenAuth": []
+      "ApiTokenAuth": [],
+      "BasicAuth": []
     }
   ]
 }

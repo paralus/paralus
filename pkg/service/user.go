@@ -433,7 +433,11 @@ func (s *userService) Create(ctx context.Context, user *userv3.User) (*userv3.Us
 		"email":      user.GetMetadata().GetName(), // can be just username for API access
 		"first_name": user.GetSpec().GetFirstName(),
 		"last_name":  user.GetSpec().GetLastName(),
-	}, user.Spec.ForceReset)
+	}, providers.IdentityPublicMetadata{
+		ForceReset:   user.GetSpec().GetForceReset(),
+		Organization: organizationId.String(),
+		Partner:      partnerId.String(),
+	})
 	if err != nil {
 		return &userv3.User{}, err
 	}
@@ -707,7 +711,9 @@ func (s *userService) UpdateForceResetFlag(ctx context.Context, username string)
 	}
 
 	if usr, ok := entity.(*models.KratosIdentities); ok {
-		err = s.ap.Update(ctx, usr.ID.String(), usr.Traits, false)
+		err = s.ap.Update(ctx, usr.ID.String(), usr.Traits, providers.IdentityPublicMetadata{
+			ForceReset: false,
+		})
 		if err != nil {
 			return err
 		}
@@ -734,7 +740,11 @@ func (s *userService) Update(ctx context.Context, user *userv3.User) (*userv3.Us
 				"email":      user.GetMetadata().GetName(),
 				"first_name": user.GetSpec().GetFirstName(),
 				"last_name":  user.GetSpec().GetLastName(),
-			}, user.Spec.ForceReset)
+			}, providers.IdentityPublicMetadata{
+				ForceReset:   user.GetSpec().ForceReset,
+				Organization: organizationId.String(),
+				Partner:      partnerId.String(),
+			})
 			if err != nil {
 				return &userv3.User{}, err
 			}

@@ -28,7 +28,7 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 			}
 		}
 
-		// We have to get the value of org, and project (namespace in
+		// We have to get the value of org and project (namespace in
 		// future) as we will be using this inorder to authorize the
 		// user's access to different resources
 		var org string
@@ -124,7 +124,6 @@ func (ac authContext) NewAuthUnaryInterceptor(opt Option) grpc.UnaryServerInterc
 			sd.ClientIp = ip
 			sd.ClientHost = host
 			sd.ClientUa = ua
-			_log.Debug("session data ", sd)
 			ctx := context.WithValue(ctx, common.SessionDataKey, sd)
 			return handler(ctx, req)
 		case commonv3.RequestStatus_RequestMethodOrURLNotAllowed:

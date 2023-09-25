@@ -64,7 +64,8 @@ func NewBootstrapPatchBootstrapAgentTemplateOK() *BootstrapPatchBootstrapAgentTe
 	return &BootstrapPatchBootstrapAgentTemplateOK{}
 }
 
-/* BootstrapPatchBootstrapAgentTemplateOK describes a response with status code 200, with default header values.
+/*
+	BootstrapPatchBootstrapAgentTemplateOK describes a response with status code 200, with default header values.
 
 A successful response.
 */
@@ -96,7 +97,8 @@ func NewBootstrapPatchBootstrapAgentTemplateForbidden() *BootstrapPatchBootstrap
 	return &BootstrapPatchBootstrapAgentTemplateForbidden{}
 }
 
-/* BootstrapPatchBootstrapAgentTemplateForbidden describes a response with status code 403, with default header values.
+/*
+	BootstrapPatchBootstrapAgentTemplateForbidden describes a response with status code 403, with default header values.
 
 Returned when the user does not have permission to access the resource.
 */
@@ -126,7 +128,8 @@ func NewBootstrapPatchBootstrapAgentTemplateNotFound() *BootstrapPatchBootstrapA
 	return &BootstrapPatchBootstrapAgentTemplateNotFound{}
 }
 
-/* BootstrapPatchBootstrapAgentTemplateNotFound describes a response with status code 404, with default header values.
+/*
+	BootstrapPatchBootstrapAgentTemplateNotFound describes a response with status code 404, with default header values.
 
 Returned when the resource does not exist.
 */
@@ -156,7 +159,8 @@ func NewBootstrapPatchBootstrapAgentTemplateInternalServerError() *BootstrapPatc
 	return &BootstrapPatchBootstrapAgentTemplateInternalServerError{}
 }
 
-/* BootstrapPatchBootstrapAgentTemplateInternalServerError describes a response with status code 500, with default header values.
+/*
+	BootstrapPatchBootstrapAgentTemplateInternalServerError describes a response with status code 500, with default header values.
 
 Returned for internal server error
 */
@@ -188,7 +192,8 @@ func NewBootstrapPatchBootstrapAgentTemplateDefault(code int) *BootstrapPatchBoo
 	}
 }
 
-/* BootstrapPatchBootstrapAgentTemplateDefault describes a response with status code -1, with default header values.
+/*
+	BootstrapPatchBootstrapAgentTemplateDefault describes a response with status code -1, with default header values.
 
 An unexpected error response.
 */

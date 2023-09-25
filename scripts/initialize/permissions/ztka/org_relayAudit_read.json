@@ -9,7 +9,7 @@
     }
   ],
   "resource_action_urls": [],
-  "base_url": "/event/v1/relayaudit",
+  "base_url": "/event/v1/audit/relay",
   "description": "Permission to view kubectl audit logs",
   "authenticated": true,
   "scope": "ORGANIZATION"

@@ -15,13 +15,14 @@ import (
 type auditInfoServer struct {
 	bs  service.BootstrapService
 	aps service.AccountPermissionService
+	prs service.ProjectService
 }
 
 var _ sentryrpc.AuditInformationServiceServer = (*auditInfoServer)(nil)
 
 // NewAuditInfoServer returns new Audit Information Server
-func NewAuditInfoServer(bs service.BootstrapService, aps service.AccountPermissionService) sentryrpc.AuditInformationServiceServer {
-	return &auditInfoServer{bs: bs, aps: aps}
+func NewAuditInfoServer(bs service.BootstrapService, aps service.AccountPermissionService, prs service.ProjectService) sentryrpc.AuditInformationServiceServer {
+	return &auditInfoServer{bs: bs, aps: aps, prs: prs}
 }
 
 func (s *auditInfoServer) LookupUser(ctx context.Context, req *sentryrpc.LookupUserRequest) (*sentryrpc.LookupUserResponse, error) {
@@ -82,7 +83,16 @@ func (s *auditInfoServer) LookupCluster(ctx context.Context, req *sentryrpc.Look
 		return nil, err
 	}
 
+	project, err := s.prs.GetByID(ctx, ba.Metadata.Project)
+	if err != nil {
+		_log.Warnw("unable to get project name", "id", ba.Metadata.Project, "error", err)
+		return nil, err
+	}
+
+	_log.Infow("project name in lookup cluster", "project", project.Metadata.Name)
+
 	return &sentryrpc.LookupClusterResponse{
-		Name: ba.Metadata.Labels["paralus.dev/clusterName"],
+		Name:    ba.Metadata.Labels["paralus.dev/clusterName"],
+		Project: project.Metadata.Name,
 	}, nil
 }

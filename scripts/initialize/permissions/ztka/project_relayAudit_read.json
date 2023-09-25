@@ -9,7 +9,7 @@
     }
   ],
   "resource_action_urls": [],
-  "base_url": "/event/v1/project/:project_id/relayaudit",
+  "base_url": "/event/v1/project/:project_id/audit/relay",
   "description": "View project kubectl audit log information",
   "authenticated": true,
   "scope": "PROJECT"

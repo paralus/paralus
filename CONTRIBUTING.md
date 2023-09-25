@@ -71,22 +71,12 @@ docker run --network host \
     -it postgres
 ```
 
-##### Elasticsearch
-
-```bash
-docker run --network host \
-    -v elastic-data:/usr/share/elasticsearch/data \
-    -e "discovery.type=single-node" \
-    -e "xpack.security.enabled=false" \
-    -it docker.elastic.co/elasticsearch/elasticsearch:8.0.0
-```
-
 #### Create the initial db and user
 
 ```sql
-create database admindb;
-CREATE ROLE admindbuser WITH LOGIN PASSWORD '<your_password>';
-GRANT ALL PRIVILEGES ON DATABASE admindb to admindbuser;
+create database <db_name>;
+CREATE ROLE <db_user> WITH LOGIN PASSWORD '<your_password>';
+GRANT ALL PRIVILEGES ON DATABASE <db_name> to <db_user>;
 ```
 
 #### Ory Kratos
@@ -98,7 +88,7 @@ documentation.
 Perform the Kratos migrations:
 
 ```bash
-export DSN='postgres://<user>:<pass>@<host>:<port>/admindb?sslmode=disable'
+export DSN='postgres://<db_user>:<db_password>@<host>:<port>/<db_name>?sslmode=disable'
 kratos -c <kratos-config> migrate sql -e --yes
 ```
 
@@ -124,7 +114,7 @@ You can refer to the [guide](https://github.com/golang-migrate/migrate/tree/mast
 _It is required to perform Kratos migrations before this step._
 
 ```shell
-export POSTGRESQL_URL='postgres://<user>:<pass>@<host>:<port>/admindb?sslmode=disable'
+export POSTGRESQL_URL='postgres://<db_user>:<db_password>@<host>:<port>/<db_name>?sslmode=disable'
 migrate -path ./persistence/migrations/admindb -database "$POSTGRESQL_URL" up
 ```
 
@@ -150,7 +140,104 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 ```
 - Run `make build-proto` to regenerate proto artifacts
 
-## DCO Sign off
+# Commit Message Guidelines
+
+Paralus uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+
+## Commit Message Format
+
+Each commit message consists of a **header**, a **body** and a **footer**. The header has a special format that includes a type, a scope and a subject:
+
+```
+<type>(<scope>): <subject>
+<BLANK LINE>
+<body>
+<BLANK LINE>
+<footer>
+```
+
+Samples:
+
+```
+build(deps): update kratos sdk to v0.11.0
+```
+
+```
+feat: support SAML based IdP
+
+New support for SAML based IdP. More deatils about how to configure SAML IdP is availble at paralus.io/docs/saml
+
+Closes #111
+```
+
+```
+fix(core): incorrect status code for user API
+
+Fix incorrect 500 HTTP status code for user GET API request with invalid parameters.
+
+Closes #89
+```
+
+## Message Header
+
+The header is mandatory and the scope of the header is optional.
+
+Any line of the commit message cannot be longer 100 characters! This allows the message to be easier to read on GitHub as well as in various git tools.
+
+### Type
+
+Must be one of the following:
+
+- **build**: Changes that affect the build system or external dependencies (example scopes: go, npm).
+- **chore**: Routing changes such as version update in docs, update changelog.
+- **ci**: Changes to CI configuration files and scripts.
+- **docs**: Documentation changes.
+- **feat**: A new feature.
+- **fix**: A bug fix.
+- **perf**: A code that improves performance.
+- **refactor**: A code change that neither fixes a bug nor adds a feature.
+- **revert**: Reverts a previous commit.
+- **style**: Changes that do not affect the meaning of the code (white-space, formatting etc).
+- **test**: Adding missing tests or correcting existing tests.
+
+### Scope
+
+Scope is an optional in commit message. The following is the list of supported scopes:
+  ```
+  TBD
+  ```
+
+### Subject
+
+The subject contains a succinct description of the change:
+
+  - use the imperative, present tense: "change" not "changed" nor "changes"
+  - don't capitalize the first letter
+  - no dot (.) at the end
+  
+## Message Body
+
+Just as in the subject, use the imperative, present tense: "change" not "changed" nor "changes". The body should include the motivation for the change and contrast this with previous behavior.
+
+## Message Footer
+
+The footer should contain any information about Breaking Changes and is also the place to reference GitHub issues that this commit **Closes**.
+
+**Breaking Changes** should start with the word `BREAKING CHANGE: ` with a space. The rest of the commit message is then the description of the change, justification and migration notes.
+
+Closed bugs should be listed on a separate line in the footer prefixed with "Closes" keyword like this:
+
+```
+Closes #177
+```
+
+or in case of multiple issues:
+
+```
+Closes #177, #200, #251
+```
+
+# DCO Sign off
 
 All authors to the project retain copyright to their work. However, to ensure
 that they are only submitting work that they have rights to, we are requiring
@@ -211,6 +298,6 @@ By making a contribution to this project, I certify that:
     this project or the open source license(s) involved.
 ```
 
-## Need Help?
+# Need Help?
 
 If you are interested to contribute to core but are stuck with any of the steps, feel free to reach out to us. Please [create an issue](https://github.com/paralus/paralus/issues/new) in this repository describing your issue and we'll take it up from there.

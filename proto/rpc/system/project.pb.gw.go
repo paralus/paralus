@@ -121,7 +121,7 @@ func local_request_ProjectService_CreateProject_0(ctx context.Context, marshaler
 }
 
 var (
-	filter_ProjectService_GetProjects_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "organization": 2}, Base: []int{1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 2, 3, 4}}
+	filter_ProjectService_GetProjects_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "organization": 2}, Base: []int{1, 4, 5, 6, 2, 0, 4, 0, 0, 0}, Check: []int{0, 1, 1, 1, 2, 5, 2, 7, 3, 4}}
 )
 
 func request_ProjectService_GetProjects_0(ctx context.Context, marshaler runtime.Marshaler, client ProjectServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -211,7 +211,7 @@ func local_request_ProjectService_GetProjects_0(ctx context.Context, marshaler r
 }
 
 var (
-	filter_ProjectService_GetProject_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "organization": 2, "name": 3}, Base: []int{1, 1, 1, 2, 3, 0, 0, 0}, Check: []int{0, 1, 2, 2, 2, 3, 4, 5}}
+	filter_ProjectService_GetProject_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "organization": 2, "name": 3}, Base: []int{1, 6, 7, 8, 9, 2, 0, 4, 0, 6, 0, 0, 0, 0}, Check: []int{0, 1, 1, 1, 1, 2, 6, 2, 8, 2, 10, 3, 4, 5}}
 )
 
 func request_ProjectService_GetProject_0(ctx context.Context, marshaler runtime.Marshaler, client ProjectServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -429,7 +429,7 @@ func local_request_ProjectService_UpdateProject_0(ctx context.Context, marshaler
 }
 
 var (
-	filter_ProjectService_DeleteProject_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "organization": 2, "name": 3}, Base: []int{1, 1, 1, 2, 3, 0, 0, 0}, Check: []int{0, 1, 2, 2, 2, 3, 4, 5}}
+	filter_ProjectService_DeleteProject_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "partner": 1, "organization": 2, "name": 3}, Base: []int{1, 6, 7, 8, 9, 2, 0, 4, 0, 6, 0, 0, 0, 0}, Check: []int{0, 1, 1, 1, 1, 2, 6, 2, 8, 2, 10, 3, 4, 5}}
 )
 
 func request_ProjectService_DeleteProject_0(ctx context.Context, marshaler runtime.Marshaler, client ProjectServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -675,7 +675,7 @@ func RegisterProjectServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 // RegisterProjectServiceHandlerFromEndpoint is same as RegisterProjectServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
 func RegisterProjectServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
-	conn, err := grpc.Dial(endpoint, opts...)
+	conn, err := grpc.DialContext(ctx, endpoint, opts...)
 	if err != nil {
 		return err
 	}

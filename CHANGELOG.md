@@ -1,10 +1,27 @@
-# Changelog
+## [0.2.4](https://github.com/paralus/paralus/compare/v0.2.3...v0.2.4) (2023-08-11)
 
-All notable changes to this project will be documented in this file.
+### Bug Fixes
 
-## Unreleased
+* change relays annotation of Cluster to paralus.dev/relays ([#227](https://github.com/paralus/paralus/issues/227)) ([749dcb4](https://github.com/paralus/paralus/commit/749dcb46d4f82341c9e2f5168ef15ac71011694e))
+* cluster list API send internal error for non-exist project ([a30f80f](https://github.com/paralus/paralus/commit/a30f80f426f95327acf25ba095755fed19a566c6))
+* generate fixtures for download.yaml ([#236](https://github.com/paralus/paralus/issues/236)) ([f5e2e77](https://github.com/paralus/paralus/commit/f5e2e7739d66c73803b7a231961ce5d316eb2408))
+* fix for org admins to view secrets with org restrictions ([#235](https://github.com/paralus/paralus/issues/235)) ([2965dd9](https://github.com/paralus/paralus/commit/2965dd9fdf15d71f9b0fd18aa063daad505485a3))
+
+
+### [0.2.3](https://github.com/paralus/paralus/compare/v0.2.2...v0.2.3) (2023-04-28)
+
+
+### Bug Fixes
+
+* incorrect number of wg.add ([#203](https://github.com/paralus/paralus/issues/203)) ([da418fd](https://github.com/paralus/paralus/commit/da418fd3d583ef3cf0a49e22b566b1ac020beb12))
+* re-running admindb migration fails ([#205](https://github.com/paralus/paralus/issues/205)) ([d88c82e](https://github.com/paralus/paralus/commit/d88c82e0df7c6cb959d800ba87f5eee565f0dc31))
+* remove references to admindbuser user in admindb migrations ([#200](https://github.com/paralus/paralus/issues/200)) ([e203d15](https://github.com/paralus/paralus/commit/e203d15b8f0bcd8feba189324aa9545ed637b0fc))
 
 ## [0.2.2] - 2023-03-31
+
+## Breaking Change
+
+- Okta JSONNet mapper configuration for SSO login got changed to support multiple groups. This may impact the existing Okta user logins configured with paralus versions prior to v0.2.1. As a workaround use [pinned Okta mapper URL](https://raw.githubusercontent.com/paralus/paralus/v0.2.1/_kratos/oidc-mappers/okta.jsonnet) to your existing Okta OIdC configuration.
 
 ## Added
 - Support more than one IdP groups mapping from [akshay196](https://github.com/akshay196)
@@ -98,7 +115,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Initial release
 
-[Unreleased]: https://github.com/paralus/paralus/compare/v0.2.2...HEAD
+[Unreleased]: https://github.com/paralus/paralus/compare/v0.2.3...HEAD
+[0.2.3]: https://github.com/paralus/paralus/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/paralus/paralus/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/paralus/paralus/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/paralus/paralus/compare/v0.1.9...v0.2.0

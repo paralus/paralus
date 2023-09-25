@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS sentry_kubeconfig_setting (
-    id uuid NOT NULL default uuid_generate_v4(),
+    id uuid default uuid_generate_v4() PRIMARY KEY,
     organization_id uuid NOT NULL,
     partner_id uuid NOT NULL,
     account_id uuid NOT NULL,
@@ -16,12 +16,6 @@ CREATE TABLE IF NOT EXISTS sentry_kubeconfig_setting (
     disable_web_kubectl boolean default false,
     disable_cli_kubectl boolean default false,
     enable_privaterelay boolean default false,
-    enforce_orgadmin_secret_access boolean default false
+    enforce_orgadmin_secret_access boolean default false,
+    CONSTRAINT sentry_kubeconfig_setting_acc_org_sso_key UNIQUE (organization_id, account_id, is_sso_user)
 );
-
-ALTER TABLE sentry_kubeconfig_setting OWNER TO admindbuser;
-
-ALTER TABLE ONLY sentry_kubeconfig_setting ADD CONSTRAINT sentry_kubeconfig_setting_pkey PRIMARY KEY (id);
-
-ALTER TABLE ONLY sentry_kubeconfig_setting
-    ADD CONSTRAINT sentry_kubeconfig_setting_acc_org_sso_key UNIQUE (organization_id, account_id, is_sso_user);

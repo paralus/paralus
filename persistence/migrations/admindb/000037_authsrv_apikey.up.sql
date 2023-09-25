@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS authsrv_apikey (
-    id uuid NOT NULL default uuid_generate_v4(),
+    id uuid default uuid_generate_v4() PRIMARY KEY,
     name varchar NOT NULL,
     description varchar NOT NULL,
     created_at timestamp WITH time zone NOT NULL,
@@ -12,7 +12,3 @@ CREATE TABLE IF NOT EXISTS authsrv_apikey (
     secret_migration varchar NOT NULL,
     secret text not null
 );
-
-ALTER TABLE authsrv_apikey OWNER TO admindbuser;
-
-ALTER TABLE ONLY authsrv_apikey ADD CONSTRAINT authsrv_apikey_pkey PRIMARY KEY (id);

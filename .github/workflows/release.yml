@@ -1,46 +1,45 @@
-name: Create, publish container image
+name: Create, publish, sign and verify container image
 
 on:
   push:
-    branches: [ main ]
     tags: [ 'v*.*.*' ]
+
 env:
   REGISTRY: docker.io
   IMAGE_NAME: paralusio/paralus
 
 jobs:
 
-  build-push:
+  build-push-sign-verify:
     strategy:
       matrix:
-        go-version: [1.17.x]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version-file: 'go.mod'
 
-      # Sanity check before publishing
       - name: Create k8s Kind Cluster
         uses: helm/kind-action@v1.2.0
 
+      # Sanity check before publishing
       - name: Test all
         run: go test -v ./...
 
       - name: Log in to the Container registry
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.REGISTRY_USERNAME }}
@@ -48,17 +47,13 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@507c2f2dc502c992ad446e3d7a5dfbe311567a96
+        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=tag
-            type=ref,event=pr
-            type=sha
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        id: build
+        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09
         with:
           context: .
           platforms: linux/amd64,linux/arm64
@@ -68,17 +63,13 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker (paralus-init)
         id: meta-init
-        uses: docker/metadata-action@507c2f2dc502c992ad446e3d7a5dfbe311567a96
+        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init
-          tags: |
-            type=ref,event=branch
-            type=ref,event=tag
-            type=ref,event=pr
-            type=sha
 
       - name: Build and push Docker image (paralus-init)
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        id: build-init
+        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09
         with:
           context: .
           file: ./Dockerfile.initialize
@@ -89,17 +80,13 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker (kratos-sync)
         id: meta-sync
-        uses: docker/metadata-action@507c2f2dc502c992ad446e3d7a5dfbe311567a96
+        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934
         with:
           images: ${{ env.REGISTRY }}/paralusio/kratos-synchronizer
-          tags: |
-            type=ref,event=branch
-            type=ref,event=tag
-            type=ref,event=pr
-            type=sha
 
       - name: Build and push Docker image (kratos-sync)
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        id: build-sync
+        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09
         with:
           context: .
           file: ./Dockerfile.synchronizer
@@ -107,3 +94,28 @@ jobs:
           push: true
           tags: ${{ steps.meta-sync.outputs.tags }}
           labels: ${{ steps.meta-sync.outputs.labels }}
+      
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.1.2
+
+      - name: Check Cosign
+        run: cosign version
+
+      - name: Sign Published Docker image using Cosign
+        run: |
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init@${{ steps.build-init.outputs.digest }}  \
+            ${{ env.REGISTRY }}/paralusio/kratos-synchronizer@${{ steps.build-sync.outputs.digest }}
+        env:
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        
+      - name: Verify Cosign Signature
+        run: |
+          cosign verify --key env://COSIGN_PUBLIC_KEY \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-init:${{ github.ref_name }}  \
+            ${{ env.REGISTRY }}/paralusio/kratos-synchronizer:${{ github.ref_name }}
+        env:
+          COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }}
