@@ -4,7 +4,7 @@
 
 * changes to view auditlogs by project role users ([#225](https://github.com/paralus/paralus/issues/225)) ([1b7a9a1](https://github.com/paralus/paralus/commit/1b7a9a1fa32efbaa7a4c4024145adda260a96d3e))
 
-## Breaking Change
+### ⚠ BREAKING CHANGES
 
 Prior to v0.2.4, users will not have org, partner metadata information in kratos identities which will impact audit logs screens, apply below migrations if you are upgrading paralus
 
