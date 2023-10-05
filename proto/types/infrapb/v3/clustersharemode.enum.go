@@ -4,6 +4,7 @@ package infrav3
 import (
 	bytes "bytes"
 	driver "database/sql/driver"
+	"fmt"
 )
 
 // Scan converts database string to ClusterShareMode
@@ -31,6 +32,27 @@ func (e *ClusterShareMode) UnmarshalJSON(b []byte) error {
 	if b != nil {
 		*e = ClusterShareMode(ClusterShareMode_value[string(b[1:len(b)-1])])
 	}
+	return nil
+}
+
+// MarshalYAML implements the yaml.Marshaler interface
+func (e ClusterShareMode) MarshalYAML() (interface{}, error) {
+	return ClusterShareMode_name[int32(e)], nil
+}
+
+// UnmarshalYAML implements the yaml.Unmarshaler interface
+func (e *ClusterShareMode) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var name string
+	if err := unmarshal(&name); err != nil {
+		return err
+	}
+
+	value, ok := ClusterShareMode_value[name]
+	if !ok {
+		return fmt.Errorf("invalid ClusterShareMode: %s", name)
+	}
+
+	*e = ClusterShareMode(value)
 	return nil
 }
 

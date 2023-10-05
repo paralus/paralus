@@ -4,6 +4,7 @@ package sentry
 import (
 	bytes "bytes"
 	driver "database/sql/driver"
+	"fmt"
 )
 
 // Scan converts database string to BootstrapAgentMode
@@ -31,6 +32,27 @@ func (e *BootstrapAgentMode) UnmarshalJSON(b []byte) error {
 	if b != nil {
 		*e = BootstrapAgentMode(BootstrapAgentMode_value[string(b[1:len(b)-1])])
 	}
+	return nil
+}
+
+// MarshalYAML implements the yaml.Marshaler interface
+func (e BootstrapAgentMode) MarshalYAML() (interface{}, error) {
+	return BootstrapAgentMode_name[int32(e)], nil
+}
+
+// UnmarshalYAML implements the yaml.Unmarshaler interface
+func (e *BootstrapAgentMode) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var name string
+	if err := unmarshal(&name); err != nil {
+		return err
+	}
+
+	value, ok := BootstrapAgentMode_value[name]
+	if !ok {
+		return fmt.Errorf("invalid BootstrapAgentMode: %s", name)
+	}
+
+	*e = BootstrapAgentMode(value)
 	return nil
 }
 

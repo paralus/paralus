@@ -14,6 +14,7 @@ package {{ .PackageName }}
 import (
 	driver "database/sql/driver"
 	bytes "bytes"
+	"fmt"
 )
 
 // Scan converts database string to {{ .EnumName }}
@@ -44,8 +45,29 @@ func (e *{{ .EnumName }}) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
+// MarshalYAML implements the yaml.Marshaler interface 
+func (e {{ .EnumName }}) MarshalYAML() (interface{}, error) {
+	return {{ .EnumName }}_name[int32(e)], nil
+}
+
+// UnmarshalYAML implements the yaml.Unmarshaler interface
+func (e *{{ .EnumName }}) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var name string
+	if err := unmarshal(&name); err != nil {
+		return err
+	}
+
+	value, ok := {{ .EnumName }}_value[name]
+	if !ok {
+		return fmt.Errorf("invalid {{ .EnumName }}: %s", name)
+	}
+
+	*e = {{ .EnumName }}(value)
+	return nil
+}
+
 // implement proto enum interface
-func (e {{ .EnumName }}) IsEnum()  {
+func (e {{ .EnumName }}) IsEnum() {
 }
 
 `

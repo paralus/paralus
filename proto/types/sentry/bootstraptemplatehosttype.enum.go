@@ -4,6 +4,7 @@ package sentry
 import (
 	bytes "bytes"
 	driver "database/sql/driver"
+	"fmt"
 )
 
 // Scan converts database string to BootstrapTemplateHostType
@@ -31,6 +32,27 @@ func (e *BootstrapTemplateHostType) UnmarshalJSON(b []byte) error {
 	if b != nil {
 		*e = BootstrapTemplateHostType(BootstrapTemplateHostType_value[string(b[1:len(b)-1])])
 	}
+	return nil
+}
+
+// MarshalYAML implements the yaml.Marshaler interface
+func (e BootstrapTemplateHostType) MarshalYAML() (interface{}, error) {
+	return BootstrapTemplateHostType_name[int32(e)], nil
+}
+
+// UnmarshalYAML implements the yaml.Unmarshaler interface
+func (e *BootstrapTemplateHostType) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var name string
+	if err := unmarshal(&name); err != nil {
+		return err
+	}
+
+	value, ok := BootstrapTemplateHostType_value[name]
+	if !ok {
+		return fmt.Errorf("invalid BootstrapTemplateHostType: %s", name)
+	}
+
+	*e = BootstrapTemplateHostType(value)
 	return nil
 }
 

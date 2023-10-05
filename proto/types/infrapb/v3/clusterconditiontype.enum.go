@@ -4,6 +4,7 @@ package infrav3
 import (
 	bytes "bytes"
 	driver "database/sql/driver"
+	"fmt"
 )
 
 // Scan converts database string to ClusterConditionType
@@ -37,6 +38,27 @@ func (e *ClusterConditionType) UnmarshalJSON(b []byte) error {
 		}
 		*e = ClusterConditionType(ClusterConditionType_value[string(b[1:length])])
 	}
+	return nil
+}
+
+// MarshalYAML implements the yaml.Marshaler interface
+func (e ClusterConditionType) MarshalYAML() (interface{}, error) {
+	return ClusterConditionType_name[int32(e)], nil
+}
+
+// UnmarshalYAML implements the yaml.Unmarshaler interface
+func (e *ClusterConditionType) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var name string
+	if err := unmarshal(&name); err != nil {
+		return err
+	}
+
+	value, ok := ClusterConditionType_value[name]
+	if !ok {
+		return fmt.Errorf("invalid ClusterConditionType: %s", name)
+	}
+
+	*e = ClusterConditionType(value)
 	return nil
 }
 
