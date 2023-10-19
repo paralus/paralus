@@ -7,7 +7,7 @@ require (
 	github.com/casbin/casbin/v2 v2.40.6
 	github.com/casbin/gorm-adapter/v3 v3.4.6
 	github.com/cloudflare/cfssl v0.0.0-20190726000631-633726f6bcb7
-	github.com/crewjam/saml v0.4.13
+	github.com/crewjam/saml v0.4.14
 	github.com/dgraph-io/ristretto v0.1.0
 	github.com/elastic/go-elasticsearch v0.0.0
 	github.com/evanphx/json-patch v4.12.0+incompatible
@@ -116,7 +116,7 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	github.com/russellhaering/goxmldsig v1.2.0 // indirect
+	github.com/russellhaering/goxmldsig v1.3.0 // indirect
 	github.com/segmentio/asm v1.1.3 // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
@@ -130,14 +130,13 @@ require (
 	go.mongodb.org/mongo-driver v1.8.3 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	golang.org/x/crypto v0.3.0 // indirect
-	golang.org/x/net v0.7.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
+	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/oauth2 v0.2.0 // indirect
-	golang.org/x/sys v0.5.0 // indirect
-	golang.org/x/term v0.5.0 // indirect
-	golang.org/x/text v0.7.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/term v0.13.0 // indirect
+	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect
-	golang.org/x/tools v0.4.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.2.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
