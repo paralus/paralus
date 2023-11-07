@@ -1,6 +1,6 @@
 # Paralus Maintainers
 
-[GOVERNANCE.md](/paralus/GOVERNANCE.md) describes the Paralus governance.
+[GOVERNANCE.md](GOVERNANCE.md) describes the Paralus governance.
 
 ## Maintainers
 
