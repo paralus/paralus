@@ -51,11 +51,11 @@ Installing and setting up Paralus takes less time than it takes to brew a (good)
 - Tweet [@paralus_](https://twitter.com/paralus_/) on Twitter.
 - Create [GitHub Issues](https://github.com/paralus/paralus/issues) to report bugs or request features.
 
-Participation in Paralus project is governed by the CNCF [Code of Conduct](/paralus/CODE_OF_CONDUCT.md).
+Participation in Paralus project is governed by the CNCF [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Contributing
 
-We 💖 our contributors! Have a look at our [contributor guidelines](https://github.com/paralus/paralus/blob/main/CONTRIBUTING.md) to get started.
+We 💖 our contributors! Have a look at our [contributor guidelines](CONTRIBUTING.md) to get started.
 
 If you’re looking to add a new feature or functionality, create a [new Issue](https://github.com/paralus/paralus/issues).
 
@@ -63,4 +63,4 @@ You're also very welcome to look at the existing issues. If there’s something 
 
 ## Authors
 
-This project is maintained & supported by [Rafay](https://rafay.co). Meet the [maintainers](/paralus/MAINTAINERS.md) of Paralus.
+This project is maintained & supported by [Rafay](https://rafay.co). Meet the [maintainers](MAINTAINERS.md) of Paralus.
