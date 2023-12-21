@@ -1,8 +1,14 @@
 ## Unreleased
 
+## [0.2.6](https://github.com/paralus/paralus/compare/v0.2.5...v0.2.6) (2023-12-21)
+
 ### Added
 
-* mapper for keycloak
+* mapper for keycloak ([01d9160](https://github.com/paralus/paralus/commit/01d91606a6e08c806e6b929d205817362fd57805))
+
+### Bug Fixes
+
+* added yaml marshal/unmarshal for enums ([#34](https://github.com/paralus/cli/issues/34)) ([35da062](https://github.com/paralus/paralus/commit/35da06272f8abe9e4e8ed6a8806d62e65fa7eeab))
 
 ## [0.2.5](https://github.com/paralus/paralus/compare/v0.2.4...v0.2.5) (2023-09-25)
 
@@ -134,7 +140,8 @@ update identities set metadata_public = jsonb_set(metadata_public, '{partner}', 
 ### Added
 - Initial release
 
-[Unreleased]: https://github.com/paralus/paralus/compare/v0.2.5...HEAD
+[Unreleased]: https://github.com/paralus/paralus/compare/v0.2.6...HEAD
+[0.2.6]: https://github.com/paralus/paralus/compare/v0.2.5...v0.2.6
 [0.2.5]: https://github.com/paralus/paralus/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/paralus/paralus/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/paralus/paralus/compare/v0.2.2...v0.2.3
