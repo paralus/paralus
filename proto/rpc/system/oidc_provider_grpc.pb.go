@@ -8,11 +8,11 @@ package systemv3
 
 import (
 	context "context"
+	v31 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -34,9 +34,9 @@ const (
 type OIDCProviderServiceClient interface {
 	CreateOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v3.OIDCProvider, error)
 	GetOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v3.OIDCProvider, error)
-	ListOIDCProvider(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v3.OIDCProviderList, error)
+	ListOIDCProvider(ctx context.Context, in *v31.Empty, opts ...grpc.CallOption) (*v3.OIDCProviderList, error)
 	UpdateOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v3.OIDCProvider, error)
-	DeleteOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v31.Empty, error)
 }
 
 type oIDCProviderServiceClient struct {
@@ -65,7 +65,7 @@ func (c *oIDCProviderServiceClient) GetOIDCProvider(ctx context.Context, in *v3.
 	return out, nil
 }
 
-func (c *oIDCProviderServiceClient) ListOIDCProvider(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v3.OIDCProviderList, error) {
+func (c *oIDCProviderServiceClient) ListOIDCProvider(ctx context.Context, in *v31.Empty, opts ...grpc.CallOption) (*v3.OIDCProviderList, error) {
 	out := new(v3.OIDCProviderList)
 	err := c.cc.Invoke(ctx, OIDCProviderService_ListOIDCProvider_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -83,8 +83,8 @@ func (c *oIDCProviderServiceClient) UpdateOIDCProvider(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *oIDCProviderServiceClient) DeleteOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *oIDCProviderServiceClient) DeleteOIDCProvider(ctx context.Context, in *v3.OIDCProvider, opts ...grpc.CallOption) (*v31.Empty, error) {
+	out := new(v31.Empty)
 	err := c.cc.Invoke(ctx, OIDCProviderService_DeleteOIDCProvider_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -98,9 +98,9 @@ func (c *oIDCProviderServiceClient) DeleteOIDCProvider(ctx context.Context, in *
 type OIDCProviderServiceServer interface {
 	CreateOIDCProvider(context.Context, *v3.OIDCProvider) (*v3.OIDCProvider, error)
 	GetOIDCProvider(context.Context, *v3.OIDCProvider) (*v3.OIDCProvider, error)
-	ListOIDCProvider(context.Context, *emptypb.Empty) (*v3.OIDCProviderList, error)
+	ListOIDCProvider(context.Context, *v31.Empty) (*v3.OIDCProviderList, error)
 	UpdateOIDCProvider(context.Context, *v3.OIDCProvider) (*v3.OIDCProvider, error)
-	DeleteOIDCProvider(context.Context, *v3.OIDCProvider) (*emptypb.Empty, error)
+	DeleteOIDCProvider(context.Context, *v3.OIDCProvider) (*v31.Empty, error)
 }
 
 // UnimplementedOIDCProviderServiceServer should be embedded to have forward compatible implementations.
@@ -113,13 +113,13 @@ func (UnimplementedOIDCProviderServiceServer) CreateOIDCProvider(context.Context
 func (UnimplementedOIDCProviderServiceServer) GetOIDCProvider(context.Context, *v3.OIDCProvider) (*v3.OIDCProvider, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOIDCProvider not implemented")
 }
-func (UnimplementedOIDCProviderServiceServer) ListOIDCProvider(context.Context, *emptypb.Empty) (*v3.OIDCProviderList, error) {
+func (UnimplementedOIDCProviderServiceServer) ListOIDCProvider(context.Context, *v31.Empty) (*v3.OIDCProviderList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOIDCProvider not implemented")
 }
 func (UnimplementedOIDCProviderServiceServer) UpdateOIDCProvider(context.Context, *v3.OIDCProvider) (*v3.OIDCProvider, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOIDCProvider not implemented")
 }
-func (UnimplementedOIDCProviderServiceServer) DeleteOIDCProvider(context.Context, *v3.OIDCProvider) (*emptypb.Empty, error) {
+func (UnimplementedOIDCProviderServiceServer) DeleteOIDCProvider(context.Context, *v3.OIDCProvider) (*v31.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteOIDCProvider not implemented")
 }
 
@@ -171,7 +171,7 @@ func _OIDCProviderService_GetOIDCProvider_Handler(srv interface{}, ctx context.C
 }
 
 func _OIDCProviderService_ListOIDCProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(v31.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -183,7 +183,7 @@ func _OIDCProviderService_ListOIDCProvider_Handler(srv interface{}, ctx context.
 		FullMethod: OIDCProviderService_ListOIDCProvider_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OIDCProviderServiceServer).ListOIDCProvider(ctx, req.(*emptypb.Empty))
+		return srv.(OIDCProviderServiceServer).ListOIDCProvider(ctx, req.(*v31.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

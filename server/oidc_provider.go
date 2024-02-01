@@ -5,8 +5,8 @@ import (
 
 	"github.com/paralus/paralus/pkg/service"
 	rpcv3 "github.com/paralus/paralus/proto/rpc/system"
+	"github.com/paralus/paralus/proto/types/commonpb/v3"
 	systemv3 "github.com/paralus/paralus/proto/types/systempb/v3"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type oidcProvider struct {
@@ -23,13 +23,13 @@ func (s *oidcProvider) CreateOIDCProvider(ctx context.Context, p *systemv3.OIDCP
 func (s *oidcProvider) GetOIDCProvider(ctx context.Context, p *systemv3.OIDCProvider) (*systemv3.OIDCProvider, error) {
 	return s.GetByName(ctx, p)
 }
-func (s *oidcProvider) ListOIDCProvider(ctx context.Context, p *emptypb.Empty) (*systemv3.OIDCProviderList, error) {
+func (s *oidcProvider) ListOIDCProvider(ctx context.Context, p *commonv3.Empty) (*systemv3.OIDCProviderList, error) {
 	return s.List(ctx)
 }
 func (s *oidcProvider) UpdateOIDCProvider(ctx context.Context, p *systemv3.OIDCProvider) (*systemv3.OIDCProvider, error) {
 	return s.Update(ctx, p)
 }
-func (s *oidcProvider) DeleteOIDCProvider(ctx context.Context, p *systemv3.OIDCProvider) (*emptypb.Empty, error) {
+func (s *oidcProvider) DeleteOIDCProvider(ctx context.Context, p *systemv3.OIDCProvider) (*commonv3.Empty, error) {
 	// TODO: if successful return 204 NO CONTENT
-	return &emptypb.Empty{}, s.Delete(ctx, p)
+	return &commonv3.Empty{}, s.Delete(ctx, p)
 }

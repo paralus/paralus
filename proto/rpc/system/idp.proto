@@ -3,8 +3,8 @@ package paralus.dev.rpc.system.v3;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
+import "proto/types/commonpb/v3/common.proto";
 import "proto/types/systempb/v3/idp.proto";
-import "google/protobuf/empty.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {
@@ -85,7 +85,7 @@ service IdpService {
     };
   };
 
-  rpc ListIdps(google.protobuf.Empty) returns (paralus.dev.types.system.v3.IdpList) {
+  rpc ListIdps(paralus.dev.types.common.v3.Empty) returns (paralus.dev.types.system.v3.IdpList) {
     option (google.api.http) = {
       get : "/auth/v3/sso/idp"
     };
@@ -98,7 +98,7 @@ service IdpService {
     };
   };
 
-  rpc DeleteIdp(paralus.dev.types.system.v3.Idp) returns (google.protobuf.Empty) {
+  rpc DeleteIdp(paralus.dev.types.system.v3.Idp) returns (paralus.dev.types.common.v3.Empty) {
     option (google.api.http) = {
       delete : "/auth/v3/sso/idp/{metadata.name}"
     };
