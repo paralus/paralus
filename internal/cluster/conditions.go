@@ -38,6 +38,7 @@ var (
 	NewClusterAuxiliaryTaskSync ClusterConditionFunc = newClusterCondition(infrav3.ClusterConditionType_ClusterAuxiliaryTaskSync)
 	NewClusterBootstrapAgent    ClusterConditionFunc = newClusterCondition(infrav3.ClusterConditionType_ClusterBootstrapAgent)
 	NewClusterDelete            ClusterConditionFunc = newClusterCondition(infrav3.ClusterConditionType_ClusterDelete)
+	NewClusterHealth            ClusterConditionFunc = newClusterCondition(infrav3.ClusterConditionType_ClusterHealth)
 
 	IsClusterBootstrapAgentPending ClusterConditionReadyFunc = isClusterCondition(constants.Pending, infrav3.ClusterConditionType_ClusterBootstrapAgent)
 	IsClusterBootstrapAgentRetry   ClusterConditionReadyFunc = isClusterCondition(constants.Retry, infrav3.ClusterConditionType_ClusterBootstrapAgent)
@@ -53,6 +54,9 @@ var (
 	IsClusterDeleteRetry           ClusterConditionReadyFunc = isClusterCondition(constants.Retry, infrav3.ClusterConditionType_ClusterDelete)
 	IsClusterDeleted               ClusterConditionReadyFunc = isClusterCondition(constants.Success, infrav3.ClusterConditionType_ClusterDelete)
 	IsClusterDeleteNotSet          ClusterConditionReadyFunc = isClusterCondition(constants.NotSet, infrav3.ClusterConditionType_ClusterDelete)
+	IsClusterHealthy               ClusterConditionReadyFunc = isClusterCondition(constants.Healthy, infrav3.ClusterConditionType_ClusterHealth)
+	IsClusterUnhealthy             ClusterConditionReadyFunc = isClusterCondition(constants.Unhealthy, infrav3.ClusterConditionType_ClusterHealth)
+	IsClusterDisconnected          ClusterConditionReadyFunc = isClusterCondition(constants.Disconnected, infrav3.ClusterConditionType_ClusterHealth)
 
 	NewNamespaceAssigned  NamespaceConditionFunc = newNamespaceCondition(scheduler.ClusterNamespaceConditionType_ClusterNamespaceAssigned)
 	NewNamespaceConverged NamespaceConditionFunc = newNamespaceCondition(scheduler.ClusterNamespaceConditionType_ClusterNamespaceConverged)

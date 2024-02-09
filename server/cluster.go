@@ -13,6 +13,7 @@ import (
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	infrapbv3 "github.com/paralus/paralus/proto/types/infrapb/v3"
+	infrav3 "github.com/paralus/paralus/proto/types/infrapb/v3"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -99,10 +100,28 @@ func (s *clusterServer) DownloadCluster(ctx context.Context, cluster *infrapbv3.
 	}, nil
 }
 
-func (s *clusterServer) UpdateClusterStatus(ctx context.Context, cluster *infrapbv3.Cluster) (*infrapbv3.Cluster, error) {
-	err := s.UpdateClusterConditionStatus(ctx, cluster)
+func (s *clusterServer) UpdateClusterStatus(ctx context.Context, request *rpcv3.UpdateClusterStatusRequest) (*rpcv3.UpdateClusterStatusResponse, error) {
+	err := s.UpdateClusterConditionStatus(ctx, &infrav3.Cluster{
+		Metadata: request.Metadata,
+		Spec: &infrav3.ClusterSpec{
+			ClusterData: &infrav3.ClusterData{
+				ClusterStatus: request.ClusterStatus,
+			},
+		},
+	})
 	if err != nil {
-		return updateClusterStatus(cluster, cluster, err), err
+		return nil, err
 	}
-	return cluster, nil
+	return &rpcv3.UpdateClusterStatusResponse{}, nil
+}
+
+func (s *clusterServer) GetClusterStatus(ctx context.Context, request *rpcv3.GetClusterStatusRequest) (*rpcv3.GetClusterStatusResponse, error) {
+	cluster, err := s.Get(ctx, query.WithMeta(request.Metadata))
+	if err != nil {
+		return nil, err
+	}
+	return &rpcv3.GetClusterStatusResponse{
+		Metadata:      cluster.GetMetadata(),
+		ClusterStatus: cluster.GetSpec().GetClusterData().GetClusterStatus(),
+	}, nil
 }

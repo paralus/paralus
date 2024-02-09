@@ -13,6 +13,12 @@
         "PUT",
         "DELETE"
       ]
+    },
+    {
+      "url": "/:metadata.name/status",
+      "methods": [
+        "PUT"
+      ]
     }
   ],
   "resource_action_urls": [],

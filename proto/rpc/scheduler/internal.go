@@ -7,50 +7,50 @@ import (
 	grpcpool "github.com/processout/grpc-go-pool"
 )
 
-// SchedulerClient is the interface for accessing all the RPCs
-// exposed by Cluster Scheduler
-type SchedulerClient interface {
+// ClusterClient is the interface for accessing all the RPCs
+// exposed by Cluster service
+type ClusterClient interface {
 	Unhealthy()
 	Close() error
 	ClusterServiceClient
 }
 
-type schedulerClient struct {
+type clusterClient struct {
 	*grpcpool.ClientConn
 	*clusterServiceClient
 }
 
-var _ SchedulerClient = (*schedulerClient)(nil)
+var _ ClusterClient = (*clusterClient)(nil)
 
-// SchedulerPool maintains pool of grpc connections to scheduler service
-type SchedulerPool interface {
+// ClusterPool maintains pool of grpc connections to cluster service
+type ClusterPool interface {
 	Close()
-	NewClient(ctx context.Context) (SchedulerClient, error)
+	NewClient(ctx context.Context) (ClusterClient, error)
 }
 
-// NewSchedulerPool new scheduler pool
-func NewSchedulerPool(addr string, maxConn int) SchedulerPool {
-	return &schedulerPool{
+// NewClusterPool new cluster pool
+func NewClusterPool(addr string, maxConn int) ClusterPool {
+	return &clusterPool{
 		GRPCPool: pool.NewGRPCPool(addr, maxConn, nil),
 	}
 }
 
-type schedulerPool struct {
+type clusterPool struct {
 	*pool.GRPCPool
 }
 
-func (p *schedulerPool) Close() {
+func (p *clusterPool) Close() {
 	if p.GRPCPool != nil {
 		p.GRPCPool.Close()
 	}
 }
 
-func (p *schedulerPool) NewClient(ctx context.Context) (SchedulerClient, error) {
+func (p *clusterPool) NewClient(ctx context.Context) (ClusterClient, error) {
 	cc, err := p.GetConnection(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &schedulerClient{
+	return &clusterClient{
 		cc,
 		&clusterServiceClient{cc.ClientConn},
 	}, nil
