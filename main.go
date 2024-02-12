@@ -556,6 +556,7 @@ func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
 	}
 	clusterAuthzServer := server.NewClusterAuthzServer(bs, aps, gps, krs, kcs, kss, ns)
 	auditInfoServer := server.NewAuditInfoServer(bs, aps, pps)
+	crpc := server.NewClusterServer(cs, downloadData)
 
 	s, err := grpc.NewSecureServerWithPEM(cert, key, ca)
 	if err != nil {
@@ -573,6 +574,7 @@ func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
 	sentryrpc.RegisterRelayPeerServiceServer(s, relayPeerService)
 	sentryrpc.RegisterClusterAuthorizationServiceServer(s, clusterAuthzServer)
 	sentryrpc.RegisterAuditInformationServiceServer(s, auditInfoServer)
+	schedulerrpc.RegisterClusterServiceServer(s, crpc)
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", rpcRelayPeeringPort))
 	if err != nil {
