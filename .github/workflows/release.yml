@@ -32,7 +32,7 @@ jobs:
           go-version-file: 'go.mod'
 
       - name: Create k8s Kind Cluster
-        uses: helm/kind-action@v1.2.0
+        uses: helm/kind-action@v1.9.0
 
       # Sanity check before publishing
       - name: Test all
