@@ -1,8 +1,8 @@
 syntax = "proto3";
 package paralus.dev.types.common.v3;
 
-import "google/protobuf/timestamp.proto";
 import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 // ParalusTypeMeta is the type meta for paralus resources
@@ -314,3 +314,6 @@ message HttpBody {
   // The HTTP request/response body as raw binary.
   bytes data = 2;
 }
+
+// Empty is an empty message
+message Empty {}

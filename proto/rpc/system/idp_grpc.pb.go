@@ -8,11 +8,11 @@ package systemv3
 
 import (
 	context "context"
+	v31 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -34,9 +34,9 @@ const (
 type IdpServiceClient interface {
 	CreateIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v3.Idp, error)
 	GetIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v3.Idp, error)
-	ListIdps(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v3.IdpList, error)
+	ListIdps(ctx context.Context, in *v31.Empty, opts ...grpc.CallOption) (*v3.IdpList, error)
 	UpdateIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v3.Idp, error)
-	DeleteIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v31.Empty, error)
 }
 
 type idpServiceClient struct {
@@ -65,7 +65,7 @@ func (c *idpServiceClient) GetIdp(ctx context.Context, in *v3.Idp, opts ...grpc.
 	return out, nil
 }
 
-func (c *idpServiceClient) ListIdps(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v3.IdpList, error) {
+func (c *idpServiceClient) ListIdps(ctx context.Context, in *v31.Empty, opts ...grpc.CallOption) (*v3.IdpList, error) {
 	out := new(v3.IdpList)
 	err := c.cc.Invoke(ctx, IdpService_ListIdps_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -83,8 +83,8 @@ func (c *idpServiceClient) UpdateIdp(ctx context.Context, in *v3.Idp, opts ...gr
 	return out, nil
 }
 
-func (c *idpServiceClient) DeleteIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *idpServiceClient) DeleteIdp(ctx context.Context, in *v3.Idp, opts ...grpc.CallOption) (*v31.Empty, error) {
+	out := new(v31.Empty)
 	err := c.cc.Invoke(ctx, IdpService_DeleteIdp_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -98,9 +98,9 @@ func (c *idpServiceClient) DeleteIdp(ctx context.Context, in *v3.Idp, opts ...gr
 type IdpServiceServer interface {
 	CreateIdp(context.Context, *v3.Idp) (*v3.Idp, error)
 	GetIdp(context.Context, *v3.Idp) (*v3.Idp, error)
-	ListIdps(context.Context, *emptypb.Empty) (*v3.IdpList, error)
+	ListIdps(context.Context, *v31.Empty) (*v3.IdpList, error)
 	UpdateIdp(context.Context, *v3.Idp) (*v3.Idp, error)
-	DeleteIdp(context.Context, *v3.Idp) (*emptypb.Empty, error)
+	DeleteIdp(context.Context, *v3.Idp) (*v31.Empty, error)
 }
 
 // UnimplementedIdpServiceServer should be embedded to have forward compatible implementations.
@@ -113,13 +113,13 @@ func (UnimplementedIdpServiceServer) CreateIdp(context.Context, *v3.Idp) (*v3.Id
 func (UnimplementedIdpServiceServer) GetIdp(context.Context, *v3.Idp) (*v3.Idp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetIdp not implemented")
 }
-func (UnimplementedIdpServiceServer) ListIdps(context.Context, *emptypb.Empty) (*v3.IdpList, error) {
+func (UnimplementedIdpServiceServer) ListIdps(context.Context, *v31.Empty) (*v3.IdpList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListIdps not implemented")
 }
 func (UnimplementedIdpServiceServer) UpdateIdp(context.Context, *v3.Idp) (*v3.Idp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateIdp not implemented")
 }
-func (UnimplementedIdpServiceServer) DeleteIdp(context.Context, *v3.Idp) (*emptypb.Empty, error) {
+func (UnimplementedIdpServiceServer) DeleteIdp(context.Context, *v3.Idp) (*v31.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteIdp not implemented")
 }
 
@@ -171,7 +171,7 @@ func _IdpService_GetIdp_Handler(srv interface{}, ctx context.Context, dec func(i
 }
 
 func _IdpService_ListIdps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(v31.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -183,7 +183,7 @@ func _IdpService_ListIdps_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: IdpService_ListIdps_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IdpServiceServer).ListIdps(ctx, req.(*emptypb.Empty))
+		return srv.(IdpServiceServer).ListIdps(ctx, req.(*v31.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

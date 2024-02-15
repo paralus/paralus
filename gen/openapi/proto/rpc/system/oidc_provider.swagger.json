@@ -355,8 +355,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "type": "object",
-              "properties": {}
+              "$ref": "#/definitions/v3Empty"
             }
           },
           "204": {
@@ -839,6 +838,10 @@
       ],
       "default": "StatusNotSet",
       "title": "$title: ConditionStatus\n$description: status of a condition for a resource"
+    },
+    "v3Empty": {
+      "type": "object",
+      "title": "Empty is an empty message"
     },
     "v3ListMetadata": {
       "type": "object",
