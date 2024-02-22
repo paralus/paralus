@@ -1,4 +1,5 @@
-CREATE OR REPLACE VIEW sentry_account_permission AS
+DROP VIEW IF EXISTS sentry_account_permission;
+CREATE VIEW sentry_account_permission AS
 SELECT
     apr.account_id,
     apr.group_id,

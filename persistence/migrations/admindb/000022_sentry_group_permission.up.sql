@@ -1,4 +1,5 @@
-CREATE OR REPLACE VIEW sentry_group_permission AS
+DROP VIEW IF EXISTS sentry_group_permission;
+CREATE VIEW sentry_group_permission AS
 SELECT
     gpr.group_id,
     gpr.project_id,
