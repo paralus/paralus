@@ -1,5 +1,17 @@
 ## Unreleased
 
+## [0.2.7](https://github.com/paralus/paralus/compare/v0.2.6...v0.2.7) (2024-02-28)
+
+### Features
+
+* Ability to regularly check in on the target cluster connection status ([#245](https://github.com/paralus/paralus/issues/245)) ([0cd2a35](https://github.com/paralus/paralus/commit/0cd2a35ab52b9f86d69b385ef183187c5e224cf3))
+
+### Bug Fixes
+
+* add custom Empty instead of google.protobuf.Empty ([#291](https://github.com/paralus/paralus/issues/291)) ([56fdc1c](https://github.com/paralus/paralus/commit/56fdc1c27bb6e66905826ee69649e1343ceeb2a7))
+* migration error on Postgresql version below 14 ([#295](https://github.com/paralus/paralus/issues/295)) ([8b54b40](https://github.com/paralus/paralus/commit/8b54b4067337cd11a640af921cba333eb2f3d2a0))
+
+
 ## [0.2.6](https://github.com/paralus/paralus/compare/v0.2.5...v0.2.6) (2023-12-21)
 
 ### Added
@@ -140,7 +152,8 @@ update identities set metadata_public = jsonb_set(metadata_public, '{partner}', 
 ### Added
 - Initial release
 
-[Unreleased]: https://github.com/paralus/paralus/compare/v0.2.6...HEAD
+[Unreleased]: https://github.com/paralus/paralus/compare/v0.2.7...HEAD
+[0.2.7]: https://github.com/paralus/paralus/compare/v0.2.6...v0.2.7
 [0.2.6]: https://github.com/paralus/paralus/compare/v0.2.5...v0.2.6
 [0.2.5]: https://github.com/paralus/paralus/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/paralus/paralus/compare/v0.2.3...v0.2.4
