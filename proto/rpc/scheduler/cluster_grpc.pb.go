@@ -21,12 +21,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ClusterService_CreateCluster_FullMethodName   = "/paralus.dev.rpc.v3.ClusterService/CreateCluster"
-	ClusterService_GetClusters_FullMethodName     = "/paralus.dev.rpc.v3.ClusterService/GetClusters"
-	ClusterService_GetCluster_FullMethodName      = "/paralus.dev.rpc.v3.ClusterService/GetCluster"
-	ClusterService_UpdateCluster_FullMethodName   = "/paralus.dev.rpc.v3.ClusterService/UpdateCluster"
-	ClusterService_DeleteCluster_FullMethodName   = "/paralus.dev.rpc.v3.ClusterService/DeleteCluster"
-	ClusterService_DownloadCluster_FullMethodName = "/paralus.dev.rpc.v3.ClusterService/DownloadCluster"
+	ClusterService_CreateCluster_FullMethodName       = "/paralus.dev.rpc.v3.ClusterService/CreateCluster"
+	ClusterService_GetClusters_FullMethodName         = "/paralus.dev.rpc.v3.ClusterService/GetClusters"
+	ClusterService_GetCluster_FullMethodName          = "/paralus.dev.rpc.v3.ClusterService/GetCluster"
+	ClusterService_UpdateCluster_FullMethodName       = "/paralus.dev.rpc.v3.ClusterService/UpdateCluster"
+	ClusterService_DeleteCluster_FullMethodName       = "/paralus.dev.rpc.v3.ClusterService/DeleteCluster"
+	ClusterService_DownloadCluster_FullMethodName     = "/paralus.dev.rpc.v3.ClusterService/DownloadCluster"
+	ClusterService_UpdateClusterStatus_FullMethodName = "/paralus.dev.rpc.v3.ClusterService/UpdateClusterStatus"
+	ClusterService_GetClusterStatus_FullMethodName    = "/paralus.dev.rpc.v3.ClusterService/GetClusterStatus"
 )
 
 // ClusterServiceClient is the client API for ClusterService service.
@@ -39,6 +41,8 @@ type ClusterServiceClient interface {
 	UpdateCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v3.Cluster, error)
 	DeleteCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*DeleteClusterResponse, error)
 	DownloadCluster(ctx context.Context, in *v3.Cluster, opts ...grpc.CallOption) (*v31.HttpBody, error)
+	UpdateClusterStatus(ctx context.Context, in *UpdateClusterStatusRequest, opts ...grpc.CallOption) (*UpdateClusterStatusResponse, error)
+	GetClusterStatus(ctx context.Context, in *GetClusterStatusRequest, opts ...grpc.CallOption) (*GetClusterStatusResponse, error)
 }
 
 type clusterServiceClient struct {
@@ -103,6 +107,24 @@ func (c *clusterServiceClient) DownloadCluster(ctx context.Context, in *v3.Clust
 	return out, nil
 }
 
+func (c *clusterServiceClient) UpdateClusterStatus(ctx context.Context, in *UpdateClusterStatusRequest, opts ...grpc.CallOption) (*UpdateClusterStatusResponse, error) {
+	out := new(UpdateClusterStatusResponse)
+	err := c.cc.Invoke(ctx, ClusterService_UpdateClusterStatus_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *clusterServiceClient) GetClusterStatus(ctx context.Context, in *GetClusterStatusRequest, opts ...grpc.CallOption) (*GetClusterStatusResponse, error) {
+	out := new(GetClusterStatusResponse)
+	err := c.cc.Invoke(ctx, ClusterService_GetClusterStatus_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ClusterServiceServer is the server API for ClusterService service.
 // All implementations should embed UnimplementedClusterServiceServer
 // for forward compatibility
@@ -113,6 +135,8 @@ type ClusterServiceServer interface {
 	UpdateCluster(context.Context, *v3.Cluster) (*v3.Cluster, error)
 	DeleteCluster(context.Context, *v3.Cluster) (*DeleteClusterResponse, error)
 	DownloadCluster(context.Context, *v3.Cluster) (*v31.HttpBody, error)
+	UpdateClusterStatus(context.Context, *UpdateClusterStatusRequest) (*UpdateClusterStatusResponse, error)
+	GetClusterStatus(context.Context, *GetClusterStatusRequest) (*GetClusterStatusResponse, error)
 }
 
 // UnimplementedClusterServiceServer should be embedded to have forward compatible implementations.
@@ -136,6 +160,12 @@ func (UnimplementedClusterServiceServer) DeleteCluster(context.Context, *v3.Clus
 }
 func (UnimplementedClusterServiceServer) DownloadCluster(context.Context, *v3.Cluster) (*v31.HttpBody, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DownloadCluster not implemented")
+}
+func (UnimplementedClusterServiceServer) UpdateClusterStatus(context.Context, *UpdateClusterStatusRequest) (*UpdateClusterStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateClusterStatus not implemented")
+}
+func (UnimplementedClusterServiceServer) GetClusterStatus(context.Context, *GetClusterStatusRequest) (*GetClusterStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetClusterStatus not implemented")
 }
 
 // UnsafeClusterServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -257,6 +287,42 @@ func _ClusterService_DownloadCluster_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ClusterService_UpdateClusterStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateClusterStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClusterServiceServer).UpdateClusterStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClusterService_UpdateClusterStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClusterServiceServer).UpdateClusterStatus(ctx, req.(*UpdateClusterStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClusterService_GetClusterStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetClusterStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClusterServiceServer).GetClusterStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClusterService_GetClusterStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClusterServiceServer).GetClusterStatus(ctx, req.(*GetClusterStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ClusterService_ServiceDesc is the grpc.ServiceDesc for ClusterService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -287,6 +353,14 @@ var ClusterService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DownloadCluster",
 			Handler:    _ClusterService_DownloadCluster_Handler,
+		},
+		{
+			MethodName: "UpdateClusterStatus",
+			Handler:    _ClusterService_UpdateClusterStatus_Handler,
+		},
+		{
+			MethodName: "GetClusterStatus",
+			Handler:    _ClusterService_GetClusterStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

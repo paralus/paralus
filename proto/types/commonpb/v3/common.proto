@@ -300,6 +300,9 @@ enum ParalusConditionStatus {
   Expired = 8;
   Stopping = 9;
   Submitted = 10;
+  Healthy = 11;
+  Unhealthy = 12;
+  Disconnected = 13;
 }
 
 // HttpBody represents arbitrary HTTP Body. It should only be used for
