@@ -4,6 +4,7 @@ package infrav3
 import (
 	bytes "bytes"
 	driver "database/sql/driver"
+	"fmt"
 )
 
 // Scan converts database string to ClusterTokenState
@@ -31,6 +32,27 @@ func (e *ClusterTokenState) UnmarshalJSON(b []byte) error {
 	if b != nil {
 		*e = ClusterTokenState(ClusterTokenState_value[string(b[1:len(b)-1])])
 	}
+	return nil
+}
+
+// MarshalYAML implements the yaml.Marshaler interface
+func (e ClusterTokenState) MarshalYAML() (interface{}, error) {
+	return ClusterTokenState_name[int32(e)], nil
+}
+
+// UnmarshalYAML implements the yaml.Unmarshaler interface
+func (e *ClusterTokenState) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var name string
+	if err := unmarshal(&name); err != nil {
+		return err
+	}
+
+	value, ok := ClusterTokenState_value[name]
+	if !ok {
+		return fmt.Errorf("invalid ClusterTokenState: %s", name)
+	}
+
+	*e = ClusterTokenState(value)
 	return nil
 }
 

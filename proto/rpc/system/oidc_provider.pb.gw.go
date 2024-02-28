@@ -15,6 +15,7 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
+	"github.com/paralus/paralus/proto/types/commonpb/v3"
 	systemv3_0 "github.com/paralus/paralus/proto/types/systempb/v3"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -22,7 +23,6 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // Suppress "imported and not used" errors
@@ -138,7 +138,7 @@ func local_request_OIDCProviderService_GetOIDCProvider_0(ctx context.Context, ma
 }
 
 func request_OIDCProviderService_ListOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, client OIDCProviderServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq commonv3.Empty
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.ListOIDCProvider(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -147,7 +147,7 @@ func request_OIDCProviderService_ListOIDCProvider_0(ctx context.Context, marshal
 }
 
 func local_request_OIDCProviderService_ListOIDCProvider_0(ctx context.Context, marshaler runtime.Marshaler, server OIDCProviderServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq commonv3.Empty
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.ListOIDCProvider(ctx, &protoReq)

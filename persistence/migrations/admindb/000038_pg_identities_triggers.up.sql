@@ -1,4 +1,5 @@
-CREATE OR REPLACE FUNCTION identities_after_change() RETURNS TRIGGER AS $$
+DROP FUNCTION IF EXISTS identities_after_change() CASCADE;
+CREATE FUNCTION identities_after_change() RETURNS TRIGGER AS $$
   DECLARE
   row RECORD;
   output TEXT;
@@ -16,7 +17,8 @@ CREATE OR REPLACE FUNCTION identities_after_change() RETURNS TRIGGER AS $$
   END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE TRIGGER trigger_identities_update
+DROP TRIGGER IF EXISTS trigger_identities_update ON identities;
+CREATE TRIGGER trigger_identities_update
   AFTER INSERT OR UPDATE OR DELETE
   ON identities
   FOR EACH ROW

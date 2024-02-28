@@ -1,4 +1,5 @@
-CREATE OR REPLACE VIEW sentry_ssoaccount_group_project_roles AS
+DROP VIEW IF EXISTS sentry_ssoaccount_group_project_roles;
+CREATE VIEW sentry_ssoaccount_group_project_roles AS
 SELECT
     a.id,
     a.username,

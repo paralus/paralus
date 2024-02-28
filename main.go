@@ -163,9 +163,9 @@ var (
 	ras   service.RelayAuditService
 	rcs   service.AuditLogService
 
-	schedulerPool schedulerrpc.SchedulerPool
-	schedulerAddr string
-	downloadData  *common.DownloadData
+	clusterPool  schedulerrpc.ClusterPool
+	infraAddr    string
+	downloadData *common.DownloadData
 
 	kekFunc = func() ([]byte, error) {
 		if len(bootstrapKEK) == 0 {
@@ -331,7 +331,7 @@ func setup() {
 	}
 	as = service.NewAuthzService(db, enforcer)
 
-	schedulerPool = schedulerrpc.NewSchedulerPool(schedulerAddr, 5*goruntime.NumCPU())
+	clusterPool = schedulerrpc.NewClusterPool(infraAddr, 5*goruntime.NumCPU())
 
 	ps = service.NewPartnerService(db, auditLogger)
 	os = service.NewOrganizationService(db, auditLogger)
@@ -556,6 +556,7 @@ func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
 	}
 	clusterAuthzServer := server.NewClusterAuthzServer(bs, aps, gps, krs, kcs, kss, ns)
 	auditInfoServer := server.NewAuditInfoServer(bs, aps, pps)
+	crpc := server.NewClusterServer(cs, downloadData)
 
 	s, err := grpc.NewSecureServerWithPEM(cert, key, ca)
 	if err != nil {
@@ -573,6 +574,7 @@ func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
 	sentryrpc.RegisterRelayPeerServiceServer(s, relayPeerService)
 	sentryrpc.RegisterClusterAuthorizationServiceServer(s, clusterAuthzServer)
 	sentryrpc.RegisterAuditInformationServiceServer(s, auditInfoServer)
+	schedulerrpc.RegisterClusterServiceServer(s, crpc)
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", rpcRelayPeeringPort))
 	if err != nil {
@@ -591,7 +593,7 @@ func runRelayPeerRPC(wg *sync.WaitGroup, ctx context.Context) {
 
 func runRPC(wg *sync.WaitGroup, ctx context.Context) {
 	defer wg.Done()
-	defer schedulerPool.Close()
+	defer clusterPool.Close()
 	defer db.Close()
 
 	partnerServer := server.NewPartnerServer(ps)

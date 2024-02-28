@@ -4,6 +4,7 @@ package commonv3
 import (
 	bytes "bytes"
 	driver "database/sql/driver"
+	"fmt"
 )
 
 // Scan converts database string to ParalusConditionStatus
@@ -37,6 +38,27 @@ func (e *ParalusConditionStatus) UnmarshalJSON(b []byte) error {
 		}
 		*e = ParalusConditionStatus(ParalusConditionStatus_value[string(b[1:length])])
 	}
+	return nil
+}
+
+// MarshalYAML implements the yaml.Marshaler interface
+func (e ParalusConditionStatus) MarshalYAML() (interface{}, error) {
+	return ParalusConditionStatus_name[int32(e)], nil
+}
+
+// UnmarshalYAML implements the yaml.Unmarshaler interface
+func (e *ParalusConditionStatus) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var name string
+	if err := unmarshal(&name); err != nil {
+		return err
+	}
+
+	value, ok := ParalusConditionStatus_value[name]
+	if !ok {
+		return fmt.Errorf("invalid ParalusConditionStatus: %s", name)
+	}
+
+	*e = ParalusConditionStatus(value)
 	return nil
 }
 

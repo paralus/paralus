@@ -1,4 +1,5 @@
-CREATE OR REPLACE VIEW sentry_bootstrap_template_host AS
+DROP VIEW IF EXISTS sentry_bootstrap_template_host;
+CREATE VIEW sentry_bootstrap_template_host AS
 SELECT
     a.name,
     split_part((h::jsonb) ->> 'host', ':', 1) AS host

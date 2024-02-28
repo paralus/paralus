@@ -18,6 +18,22 @@ message RegisterClusterResponse {
 
 message DeleteClusterResponse {}
 
+message UpdateClusterStatusRequest {
+  paralus.dev.types.common.v3.Metadata metadata = 1;
+  paralus.dev.types.infra.v3.ClusterStatus clusterStatus = 2;
+}
+
+message UpdateClusterStatusResponse {}
+
+message GetClusterStatusRequest {
+  paralus.dev.types.common.v3.Metadata metadata = 1;
+}
+
+message GetClusterStatusResponse {
+  paralus.dev.types.common.v3.Metadata metadata = 1;
+  paralus.dev.types.infra.v3.ClusterStatus clusterStatus = 2;
+}
+
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {
     title : "Cluster Service"
@@ -135,6 +151,21 @@ service ClusterService {
         returns (paralus.dev.types.common.v3.HttpBody) {
         option (google.api.http) = {
         get : "/infra/v3/project/{metadata.project}/cluster/{metadata.name}/download"
+        };
+    };
+
+    rpc UpdateClusterStatus(UpdateClusterStatusRequest)
+        returns (UpdateClusterStatusResponse) {
+        option (google.api.http) = {
+            put : "/infra/v3/project/{metadata.project}/cluster/{metadata.name}/status"
+            body : "*"
+        };
+    };
+
+    rpc GetClusterStatus(GetClusterStatusRequest)
+        returns (GetClusterStatusResponse) {
+        option (google.api.http) = {
+            get : "/infra/v3/project/{metadata.project}/cluster/{metadata.name}/status"
         };
     };
   

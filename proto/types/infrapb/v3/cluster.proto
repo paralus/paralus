@@ -302,6 +302,7 @@ enum ClusterConditionType {
     ClusterAuxiliaryTaskSync = 7;
     ClusterBootstrapAgent = 8;
     ClusterDelete = 9;
+    ClusterHealth = 10;
 }
 
 enum ClusterShareMode {
