@@ -13,4 +13,5 @@ const (
 	partnerR       = "partner.read"
 	organizationR  = "organization.read"
 	opsAll         = "ops_star.all"
+	cliConfigR     = "cli.config.read"
 )

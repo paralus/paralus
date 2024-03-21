@@ -1,0 +1,15 @@
+{
+    "name": "cli.config.read",
+    "resource_urls": [
+      {
+        "url": "/cli/config",
+        "methods": [
+          "GET"
+        ]
+      }
+    ],
+    "base_url": "/auth/v3",
+    "description": "Download cli configuration",
+    "authenticated": true,
+    "scope": "PROJECT"
+  }
