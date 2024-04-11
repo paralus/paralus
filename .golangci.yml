@@ -5,3 +5,4 @@ linters:
     - govet
     - staticcheck
     - unused
+    - ineffassign
