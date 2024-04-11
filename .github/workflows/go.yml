@@ -33,3 +33,24 @@ jobs:
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
+  
+  golangci-lint:
+            strategy:
+              matrix:
+                os: [ubuntu-latest]
+            runs-on: ${{ matrix.os }}
+            steps:
+            - name: checkout the code
+              uses: actions/checkout@v4
+
+            - name: Set up Go
+              uses: actions/setup-go@v5
+              with:
+                go-version: '1.20'
+                cache: false
+
+            - name: golangci-lint
+              uses: golangci/golangci-lint-action@v4
+              with:
+                version: v1.54
+                #it looks for .golangci.yml file in the root folder by default
