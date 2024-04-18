@@ -9,4 +9,4 @@ linters:
     # - staticcheck
     # - unused
     # - ineffassign
-    # - whitespace
+    - misspell
