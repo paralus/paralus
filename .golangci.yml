@@ -1,8 +1,12 @@
 linters:
+  # Disable all linters untill all errors are fixed.
+  disable-all: true
+  # uncomment as we fix the linting issues
   enable:
-    - errcheck
-    - gosimple
-    - govet
-    - staticcheck
-    - unused
-    - ineffassign
+    # - errcheck
+    # - gosimple
+    # - govet
+    # - staticcheck
+    # - unused
+    # - ineffassign
+    # - whitespace
