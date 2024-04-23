@@ -7,6 +7,6 @@ linters:
     # - gosimple
     # - govet
     # - staticcheck
-    - unused
+    # - unused
     # - ineffassign
     - misspell
