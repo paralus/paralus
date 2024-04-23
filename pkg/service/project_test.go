@@ -32,11 +32,29 @@ func TestCreateProject(t *testing.T) {
 	mock.ExpectBegin()
 	mock.ExpectQuery(`INSERT INTO "authsrv_project"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
+	mock.ExpectQuery(`SELECT (.+) FROM "authsrv_resourcerole"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "scope", "name"}).
+		AddRow(puuid, "project", "PROJECT_READ_ONLY"))
+	mock.ExpectQuery(`SELECT (.+) FROM "authsrv_group"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
+	mock.ExpectQuery(`INSERT INTO "authsrv_projectgrouprole"`).
+		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(puuid))
 	mock.ExpectCommit()
 
+	name := "project-" + puuid
+	group := "group1"
+
 	project := &systemv3.Project{
-		Metadata: &v3.Metadata{Id: puuid, Name: "project-" + puuid, Organization: "orgname"},
-		Spec:     &systemv3.ProjectSpec{},
+		Metadata: &v3.Metadata{Id: puuid, Name: name, Organization: "orgname"},
+		Spec: &systemv3.ProjectSpec{
+			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{
+				{
+					Role:    "PROJECT_READ_ONLY",
+					Project: &name,
+					Group:   &group,
+				},
+			},
+		},
 	}
 	project, err := ps.Create(context.Background(), project)
 	if err != nil {
