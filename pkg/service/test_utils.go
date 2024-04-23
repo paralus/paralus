@@ -153,13 +153,6 @@ func addUserGroupMappingsUpdateExpectation(mock sqlmock.Sqlmock, account string)
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
 }
 
-func addUserIdFetchExpectation(mock sqlmock.Sqlmock) string {
-	uid := uuid.New().String()
-	mock.ExpectQuery(`SELECT "identities"."id" FROM "identities" WHERE .*traits ->> 'email' = 'user-` + uid + `'`).
-		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "traits"}).AddRow(uid, []byte(`{"email":"user-`+uid+`", "first_name": "John", "last_name": "Doe", "description": "The OG user."}`)))
-	return uid
-}
-
 func addUserFetchExpectation(mock sqlmock.Sqlmock) string {
 	uid := uuid.New().String()
 	mock.ExpectQuery(`SELECT "identities"."id".* FROM "identities" WHERE .*traits ->> 'email' = 'user-` + uid + `'`).

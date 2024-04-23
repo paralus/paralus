@@ -108,7 +108,6 @@ var (
 	dbUser     string
 	dbPassword string
 	db         *bun.DB
-	gormDb     *gorm.DB
 
 	// relay
 	sentryPeeringHost      string
@@ -129,7 +128,6 @@ var (
 	// cd relay
 	coreCDRelayUserHost      string
 	coreCDRelayConnectorHost string
-	schedulerNamespace       string
 	sentryBootstrapAddr      string
 
 	// kratos
@@ -268,7 +266,6 @@ func setup() {
 	coreCDRelayConnectorHost = viper.GetString(coreCDRelayConnectorHostEnv)
 	coreCDRelayUserHost = viper.GetString(coreCDRelayUserHostEnv)
 	relayImage = viper.GetString(relayImageEnv)
-	schedulerNamespace = viper.GetString(schedulerNamespaceEnv)
 	sentryBootstrapAddr = viper.GetString(sentryBootstrapEnv)
 
 	auditLogStorage = viper.GetString(auditLogStorageEnv)

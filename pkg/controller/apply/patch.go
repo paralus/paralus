@@ -10,14 +10,9 @@ import (
 
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
 //var json = jsoniter.ConfigCompatibleWithStandardLibrary
-
-var (
-	patchLog = logf.Log.WithName("cluster-v2-patch")
-)
 
 type patch struct {
 	current client.Object

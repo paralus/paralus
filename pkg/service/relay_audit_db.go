@@ -14,7 +14,6 @@ import (
 type relayAuditDatabaseService struct {
 	db  *bun.DB
 	tag string
-	aps AccountPermissionService
 }
 
 func (ra *relayAuditDatabaseService) GetRelayAudit(ctx context.Context, req *v1.RelayAuditRequest) (res *v1.RelayAuditResponse, err error) {

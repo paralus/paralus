@@ -1590,25 +1590,6 @@ func findMapInSliceBasedOnKeyValue(m []interface{}, key string, value interface{
 	return nil, 0, false, nil
 }
 
-// This function takes a JSON map and sorts all the lists that should be merged
-// by key. This is needed by tests because in JSON, list order is significant,
-// but in Strategic Merge Patch, merge lists do not have significant order.
-// Sorting the lists allows for order-insensitive comparison of patched maps.
-func sortMergeListsByName(mapJSON []byte, schema LookupPatchMeta) ([]byte, error) {
-	var m map[string]interface{}
-	err := json.Unmarshal(mapJSON, &m)
-	if err != nil {
-		return nil, mergepatch.ErrBadJSONDoc
-	}
-
-	newM, err := sortMergeListsByNameMap(m, schema)
-	if err != nil {
-		return nil, err
-	}
-
-	return json.Marshal(newM)
-}
-
 // Function sortMergeListsByNameMap recursively sorts the merge lists by its mergeKey in a map.
 func sortMergeListsByNameMap(s map[string]interface{}, schema LookupPatchMeta) (map[string]interface{}, error) {
 	newS := map[string]interface{}{}

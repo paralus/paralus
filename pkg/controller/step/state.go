@@ -165,18 +165,6 @@ func getJobState(j *batchv1.Job) (state clusterv2.StepObjectState, reason string
 	return
 }
 
-func getPersistentVolumeClaimState(pvc *corev1.PersistentVolumeClaim) (state clusterv2.StepObjectState, reason string) {
-	if pvc.Status.Phase == corev1.ClaimBound {
-		state = clusterv2.StepObjectComplete
-		reason = "claim bound"
-		return
-	}
-
-	state = clusterv2.StepObjectCreated
-	reason = "in progress"
-	return
-}
-
 // ObjectState returns the object state of runtime object
 func ObjectState(o runtime.Object) (state clusterv2.StepObjectState, reason string) {
 	switch o.(type) {
