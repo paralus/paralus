@@ -3,8 +3,6 @@ package apply
 import (
 	"context"
 	"fmt"
-	"net/url"
-	"strings"
 	"time"
 
 	"github.com/paralus/paralus/pkg/controller/client"
@@ -13,7 +11,6 @@ import (
 	clusterv2 "github.com/paralus/paralus/proto/types/controller"
 	apixv1beta1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	apierrs "k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -268,54 +265,6 @@ func (a *applier) pollCRDUntilEstablished(ctx context.Context, timeout time.Dura
 
 		return false, nil
 	})
-}
-
-func getGVKIfNotFound(obj runtime.Object) (schema.GroupVersionKind, error) {
-	currentGVK := obj.GetObjectKind().GroupVersionKind()
-	formedGVK := schema.GroupVersionKind{}
-
-	kind := currentGVK.Kind
-	if len(kind) == 0 {
-		gvks, _, err := scheme.Scheme.ObjectKinds(obj)
-		if err != nil {
-			return formedGVK, err
-		}
-		kind = gvks[0].Kind
-	}
-
-	var listMeta metav1.Common
-	objectMeta, err := meta.Accessor(obj)
-	if err != nil {
-		listMeta, err = meta.CommonAccessor(obj)
-		if err != nil {
-			return formedGVK, err
-		}
-	} else {
-		listMeta = objectMeta
-	}
-
-	version := currentGVK.GroupVersion().String()
-	if len(version) == 0 {
-		selfLink := listMeta.GetSelfLink()
-		if len(selfLink) == 0 {
-			return formedGVK, ErrNoSelfLink
-		}
-		selfLinkURL, err := url.Parse(selfLink)
-		if err != nil {
-			return formedGVK, err
-		}
-		// example paths: /<prefix>/<version>/*
-		parts := strings.Split(selfLinkURL.Path, "/")
-		if len(parts) < 3 {
-			return formedGVK, fmt.Errorf("unexpected self link format: '%v'; got version '%v'", selfLink, version)
-		}
-		version = parts[2]
-	}
-
-	formedGVK.Kind = kind
-	formedGVK.Version = version
-
-	return formedGVK, nil
 }
 
 func (a *applier) ApplyStatus(ctx context.Context, obj ctrlclient.Object, statusObj interface{}) error {

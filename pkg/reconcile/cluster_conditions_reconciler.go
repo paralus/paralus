@@ -10,20 +10,6 @@ import (
 
 var _log = log.GetLogger()
 
-const (
-	_bpInprogress int = iota
-	_bpFailed
-)
-
-type blueprintError struct {
-	errorType int
-	reason    string
-}
-
-func (e blueprintError) Error() string {
-	return e.reason
-}
-
 type clusterConditionReconciler struct {
 	cs service.ClusterService
 	/*ps models.PlacementService*/
@@ -65,26 +51,6 @@ func (r *clusterConditionReconciler) Reconcile(ctx context.Context, cluster *inf
 	}
 
 	return nil
-}
-
-func mergeClusterConditions(conditions []infrav3.ClusterCondition) []infrav3.ClusterCondition {
-	condMap := map[infrav3.ClusterConditionType]infrav3.ClusterCondition{}
-	var retConditions []infrav3.ClusterCondition
-
-	for _, cond := range conditions {
-		if ec, ok := condMap[cond.Type]; ok {
-			ec.Reason = ec.Reason + ", " + cond.Reason
-			condMap[cond.Type] = ec
-		} else {
-			condMap[cond.Type] = cond
-		}
-	}
-
-	for _, cond := range condMap {
-		retConditions = append(retConditions, cond)
-	}
-
-	return retConditions
 }
 
 func shouldUpdateClusterStatus(current, modified *infrav3.Cluster) bool {

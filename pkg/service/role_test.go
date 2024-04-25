@@ -26,28 +26,6 @@ func performRoleBasicChecks(t *testing.T, role *rolev3.Role, ruuid string) {
 	}
 }
 
-func performRoleBasicAuthzChecks(t *testing.T, mazc mockAuthzClient, ruuid string) {
-	if len(mazc.drpm) > 0 {
-		if mazc.drpm[len(mazc.drpm)-1].Role != "role-"+ruuid {
-			t.Errorf("incorrect role sent to authz; expected '%v' got '%v'", "role-"+ruuid, mazc.drpm[len(mazc.drpm)-1].Role)
-		}
-	}
-	if len(mazc.crpm) > 0 {
-		if len(mazc.crpm[len(mazc.crpm)-1].RolePermissionMappingList) != 1 {
-			t.Errorf("invalid number of roles sent to authz; expected 1, got '%v'", len(mazc.crpm[len(mazc.crpm)-1].RolePermissionMappingList))
-		}
-		if mazc.crpm[len(mazc.crpm)-1].RolePermissionMappingList[0].Role != "role-"+ruuid {
-			t.Errorf("incorrect role sent to authz; expected '%v' got '%v'", "role-"+ruuid, mazc.crpm[len(mazc.crpm)-1].RolePermissionMappingList[0].Role)
-		}
-		if len(mazc.crpm[len(mazc.crpm)-1].RolePermissionMappingList[0].Permission) != 1 {
-			t.Errorf("incorrect number of permissions sent to authz; expected '1', got '%v'", len(mazc.crpm[len(mazc.crpm)-1].RolePermissionMappingList[0].Permission))
-		}
-		if mazc.crpm[len(mazc.crpm)-1].RolePermissionMappingList[0].Permission[0] != "ops_star.all" {
-			t.Errorf("incorrect permissions sent to authz; expected 'ops_star.all', got '%v'", mazc.crpm[len(mazc.crpm)-1].RolePermissionMappingList[0].Permission[0])
-		}
-	}
-}
-
 func TestCreateRole(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()

@@ -44,10 +44,6 @@ type relayObject struct {
 
 // relayPeerService relay peer service
 type relayPeerService struct {
-	cert   []byte // rpc server certifciate
-	key    []byte // rpc server key
-	rootCA []byte // rpc rootCA to verify client certificates.
-	port   int
 
 	//ServiceUUID ...
 	ServiceUUID string

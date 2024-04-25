@@ -7,11 +7,6 @@ import (
 
 	"github.com/valyala/fastjson"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	ctrl "sigs.k8s.io/controller-runtime"
-)
-
-var (
-	accessorLog = ctrl.Log.WithName("accessor")
 )
 
 const (

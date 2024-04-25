@@ -7,14 +7,9 @@ import (
 	"strings"
 	"time"
 
-	logv2 "github.com/paralus/paralus/pkg/log"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
-)
-
-var (
-	_log = logv2.GetLogger()
 )
 
 type (
