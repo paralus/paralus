@@ -69,114 +69,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "apiVersion": {
-                  "type": "string",
-                  "default": "system.k8smgmt.io/v3",
-                  "description": "API Version of the resource",
-                  "title": "API Version",
-                  "readOnly": true
-                },
-                "kind": {
-                  "type": "string",
-                  "default": "Organization",
-                  "description": "Kind of the resource",
-                  "title": "Kind",
-                  "readOnly": true
-                },
-                "metadata": {
-                  "type": "object",
-                  "example": {
-                    "name": "some-name",
-                    "project": "defaultproject"
-                  },
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "description": "name of the resource",
-                      "title": "Name"
-                    },
-                    "displayName": {
-                      "type": "string",
-                      "description": "display name of the resource",
-                      "title": "Display Name"
-                    },
-                    "description": {
-                      "type": "string",
-                      "description": "description of the resource",
-                      "title": "Description"
-                    },
-                    "labels": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "labels of the resource",
-                      "title": "Labels"
-                    },
-                    "annotations": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "annotations of the resource",
-                      "title": "Annotations"
-                    },
-                    "project": {
-                      "type": "string",
-                      "description": "Project of the resource",
-                      "title": "Project"
-                    },
-                    "organization": {
-                      "type": "string",
-                      "description": "Organization to which the resource belongs",
-                      "title": "Organization"
-                    },
-                    "id": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "urlScope": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    },
-                    "modifiedAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    }
-                  },
-                  "description": "metadata of the resource",
-                  "title": "Metadata"
-                },
-                "spec": {
-                  "$ref": "#/definitions/v3OrganizationSpec",
-                  "description": "Spec of the resource",
-                  "title": "Spec"
-                },
-                "status": {
-                  "$ref": "#/definitions/commonv3Status",
-                  "description": "Status of the resource",
-                  "title": "Status",
-                  "readOnly": true
-                }
-              },
-              "description": "Organization",
-              "title": "Organization",
-              "required": [
-                "apiVersion",
-                "kind",
-                "metadata",
-                "spec",
-                "name",
-                "project"
-              ]
+              "$ref": "#/definitions/OrganizationServiceCreateOrganizationBody"
             }
           }
         ],
@@ -829,108 +722,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "apiVersion": {
-                  "type": "string",
-                  "default": "system.k8smgmt.io/v3",
-                  "description": "API Version of the resource",
-                  "title": "API Version",
-                  "readOnly": true
-                },
-                "kind": {
-                  "type": "string",
-                  "default": "Organization",
-                  "description": "Kind of the resource",
-                  "title": "Kind",
-                  "readOnly": true
-                },
-                "metadata": {
-                  "type": "object",
-                  "example": {
-                    "name": "some-name",
-                    "project": "defaultproject"
-                  },
-                  "properties": {
-                    "displayName": {
-                      "type": "string",
-                      "description": "display name of the resource",
-                      "title": "Display Name"
-                    },
-                    "description": {
-                      "type": "string",
-                      "description": "description of the resource",
-                      "title": "Description"
-                    },
-                    "labels": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "labels of the resource",
-                      "title": "Labels"
-                    },
-                    "annotations": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "annotations of the resource",
-                      "title": "Annotations"
-                    },
-                    "project": {
-                      "type": "string",
-                      "description": "Project of the resource",
-                      "title": "Project"
-                    },
-                    "organization": {
-                      "type": "string",
-                      "description": "Organization to which the resource belongs",
-                      "title": "Organization"
-                    },
-                    "id": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "urlScope": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    },
-                    "modifiedAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    }
-                  },
-                  "description": "metadata of the resource",
-                  "title": "Metadata"
-                },
-                "spec": {
-                  "$ref": "#/definitions/v3OrganizationSpec",
-                  "description": "Spec of the resource",
-                  "title": "Spec"
-                },
-                "status": {
-                  "$ref": "#/definitions/commonv3Status",
-                  "description": "Status of the resource",
-                  "title": "Status",
-                  "readOnly": true
-                }
-              },
-              "description": "Organization",
-              "title": "Organization",
-              "required": [
-                "apiVersion",
-                "kind",
-                "metadata",
-                "spec",
-                "project"
-              ]
+              "$ref": "#/definitions/OrganizationServiceUpdateOrganizationBody"
             }
           }
         ],
@@ -1239,6 +1031,220 @@
     }
   },
   "definitions": {
+    "OrganizationServiceCreateOrganizationBody": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "system.k8smgmt.io/v3",
+          "description": "API Version of the resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "Organization",
+          "description": "Kind of the resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "type": "object",
+          "example": {
+            "name": "some-name",
+            "project": "defaultproject"
+          },
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "name of the resource",
+              "title": "Name"
+            },
+            "displayName": {
+              "type": "string",
+              "description": "display name of the resource",
+              "title": "Display Name"
+            },
+            "description": {
+              "type": "string",
+              "description": "description of the resource",
+              "title": "Description"
+            },
+            "labels": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "labels of the resource",
+              "title": "Labels"
+            },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "annotations of the resource",
+              "title": "Annotations"
+            },
+            "project": {
+              "type": "string",
+              "description": "Project of the resource",
+              "title": "Project"
+            },
+            "organization": {
+              "type": "string",
+              "description": "Organization to which the resource belongs",
+              "title": "Organization"
+            },
+            "id": {
+              "type": "string",
+              "readOnly": true
+            },
+            "urlScope": {
+              "type": "string",
+              "readOnly": true
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            },
+            "modifiedAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            }
+          },
+          "description": "metadata of the resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3OrganizationSpec",
+          "description": "Spec of the resource",
+          "title": "Spec"
+        },
+        "status": {
+          "$ref": "#/definitions/commonv3Status",
+          "description": "Status of the resource",
+          "title": "Status",
+          "readOnly": true
+        }
+      },
+      "description": "Organization",
+      "title": "Organization",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec",
+        "name",
+        "project"
+      ]
+    },
+    "OrganizationServiceUpdateOrganizationBody": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "system.k8smgmt.io/v3",
+          "description": "API Version of the resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "Organization",
+          "description": "Kind of the resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "type": "object",
+          "example": {
+            "name": "some-name",
+            "project": "defaultproject"
+          },
+          "properties": {
+            "displayName": {
+              "type": "string",
+              "description": "display name of the resource",
+              "title": "Display Name"
+            },
+            "description": {
+              "type": "string",
+              "description": "description of the resource",
+              "title": "Description"
+            },
+            "labels": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "labels of the resource",
+              "title": "Labels"
+            },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "annotations of the resource",
+              "title": "Annotations"
+            },
+            "project": {
+              "type": "string",
+              "description": "Project of the resource",
+              "title": "Project"
+            },
+            "organization": {
+              "type": "string",
+              "description": "Organization to which the resource belongs",
+              "title": "Organization"
+            },
+            "id": {
+              "type": "string",
+              "readOnly": true
+            },
+            "urlScope": {
+              "type": "string",
+              "readOnly": true
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            },
+            "modifiedAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            }
+          },
+          "description": "metadata of the resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3OrganizationSpec",
+          "description": "Spec of the resource",
+          "title": "Spec"
+        },
+        "status": {
+          "$ref": "#/definitions/commonv3Status",
+          "description": "Status of the resource",
+          "title": "Status",
+          "readOnly": true
+        }
+      },
+      "description": "Organization",
+      "title": "Organization",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec",
+        "project"
+      ]
+    },
     "commonv3Status": {
       "type": "object",
       "properties": {

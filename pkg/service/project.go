@@ -488,7 +488,7 @@ func (s *projectService) createGroupRoleRelations(ctx context.Context, db bun.ID
 		}
 
 		grp := pnr.Group
-		entity, err = dao.GetIdByName(ctx, s.db, *grp, &models.Group{})
+		entity, err = dao.GetIdByName(ctx, s.db, grp, &models.Group{})
 		if err != nil {
 			return &systemv3.Project{}, fmt.Errorf("unable to find group '%v'", grp)
 		}

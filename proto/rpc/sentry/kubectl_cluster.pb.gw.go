@@ -35,11 +35,7 @@ func request_KubectlClusterSettingsService_UpdateKubectlClusterSettings_0(ctx co
 	var protoReq UpdateKubectlClusterSettingsRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -69,11 +65,7 @@ func local_request_KubectlClusterSettingsService_UpdateKubectlClusterSettings_0(
 	var protoReq UpdateKubectlClusterSettingsRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -100,7 +92,7 @@ func local_request_KubectlClusterSettingsService_UpdateKubectlClusterSettings_0(
 }
 
 var (
-	filter_KubectlClusterSettingsService_GetKubectlClusterSettings_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 2, 3, 2, 0, 0}, Check: []int{0, 1, 1, 2, 4, 3}}
+	filter_KubectlClusterSettingsService_GetKubectlClusterSettings_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
 func request_KubectlClusterSettingsService_GetKubectlClusterSettings_0(ctx context.Context, marshaler runtime.Marshaler, client KubectlClusterSettingsServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -231,21 +223,21 @@ func RegisterKubectlClusterSettingsServiceHandlerServer(ctx context.Context, mux
 // RegisterKubectlClusterSettingsServiceHandlerFromEndpoint is same as RegisterKubectlClusterSettingsServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
 func RegisterKubectlClusterSettingsServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
-	conn, err := grpc.DialContext(ctx, endpoint, opts...)
+	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
 	}
 	defer func() {
 		if err != nil {
 			if cerr := conn.Close(); cerr != nil {
-				grpclog.Infof("Failed to close conn to %s: %v", endpoint, cerr)
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
 			}
 			return
 		}
 		go func() {
 			<-ctx.Done()
 			if cerr := conn.Close(); cerr != nil {
-				grpclog.Infof("Failed to close conn to %s: %v", endpoint, cerr)
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
 			}
 		}()
 	}()

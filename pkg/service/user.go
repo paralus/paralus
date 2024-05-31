@@ -654,7 +654,7 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 					Namespace:   p.Namespace,
 					Role:        p.Role,
 					Permissions: rps,
-					Scope:       &scope,
+					Scope:       scope,
 				},
 			)
 
@@ -972,7 +972,15 @@ func (s *userService) RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiK
 	ap, err := dao.GetDefaultAccountProject(ctx, s.db, uuid.MustParse(req.Id))
 	if err != nil {
 		_log.Debug("unable to fetch account permissions for default project, looking further..")
-		ap, err = dao.GetAccountProjectByPermission(ctx, s.db, uuid.MustParse(req.Id), cliConfigR)
+		organizationID := ap.OrganizationId
+		if len(req.OrganizationId) > 0 {
+			organizationID = uuid.MustParse(req.OrganizationId)
+		}
+		partnerID := ap.PartnerId
+		if len(req.PartnerId) > 0 {
+			partnerID = uuid.MustParse(req.PartnerId)
+		}
+		ap, err = dao.GetAccountProjectByPermission(ctx, s.db, uuid.MustParse(req.Id), organizationID, partnerID, cliConfigR)
 		if err != nil {
 			return nil, err
 		}

@@ -49,12 +49,12 @@ message ProjectNamespaceRole {
       description : "Project, role and namespace pairing for permission"
     }
   };
-  optional string project = 1
+  string project = 1
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Project"
         description : "Project"
       } ];
-  optional string namespace = 2
+  string namespace = 2
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Namespace"
         description : "Namespace"
@@ -64,7 +64,7 @@ message ProjectNamespaceRole {
         title : "Role"
         description : "Role"
       } ];
-  optional string group = 4
+  string group = 4
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Group"
         description : "Group"
@@ -78,12 +78,12 @@ message Permission {
       description : "Permissions"
     }
   };
-  optional string project = 1
+  string project = 1
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Project"
         description : "Project"
       } ];
-  optional string namespace = 2
+  string namespace = 2
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Namespace"
         description : "Namespace"
@@ -98,7 +98,7 @@ message Permission {
         title : "Permissions"
         description : "Permissions provided by role"
       } ];
-  optional string scope = 5
+  string scope = 5
     [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       title : "Scope"
       description : "Scope holds information about org wide, project or namespace access"

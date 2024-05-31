@@ -67,6 +67,8 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 message ApiKeyRequest {
   string username = 1;
   string id = 2;
+  string organization_id = 3;
+  string partner_id = 4;
 }
 
 message ApiKeyResponse {

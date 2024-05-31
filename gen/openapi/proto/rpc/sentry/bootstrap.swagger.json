@@ -216,102 +216,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "apiVersion": {
-                  "type": "string",
-                  "default": "infra.k8smgmt.io/v3",
-                  "description": "API Version of the resource",
-                  "title": "API Version",
-                  "readOnly": true
-                },
-                "kind": {
-                  "type": "string",
-                  "default": "BootstrapInfra",
-                  "description": "Kind of the resource",
-                  "title": "Kind",
-                  "readOnly": true
-                },
-                "metadata": {
-                  "type": "object",
-                  "example": {
-                    "name": "some-name",
-                    "project": "defaultproject"
-                  },
-                  "properties": {
-                    "displayName": {
-                      "type": "string",
-                      "description": "display name of the resource",
-                      "title": "Display Name"
-                    },
-                    "description": {
-                      "type": "string",
-                      "description": "description of the resource",
-                      "title": "Description"
-                    },
-                    "labels": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "labels of the resource",
-                      "title": "Labels"
-                    },
-                    "annotations": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "annotations of the resource",
-                      "title": "Annotations"
-                    },
-                    "project": {
-                      "type": "string",
-                      "description": "Project of the resource",
-                      "title": "Project"
-                    },
-                    "organization": {
-                      "type": "string",
-                      "description": "Organization to which the resource belongs",
-                      "title": "Organization"
-                    },
-                    "partner": {
-                      "type": "string",
-                      "description": "Partner to which the resource belongs",
-                      "title": "Partner"
-                    },
-                    "id": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "urlScope": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    },
-                    "modifiedAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    }
-                  },
-                  "description": "metadata of the resource",
-                  "title": "Metadata"
-                },
-                "spec": {
-                  "$ref": "#/definitions/sentryBootstrapInfraSpec"
-                },
-                "status": {
-                  "$ref": "#/definitions/sentryBootstrapInfraStatus"
-                }
-              },
-              "required": [
-                "project"
-              ]
+              "$ref": "#/definitions/BootstrapServicePatchBootstrapInfraBody"
             }
           }
         ],
@@ -782,102 +687,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "apiVersion": {
-                  "type": "string",
-                  "default": "infra.k8smgmt.io/v3",
-                  "description": "API Version of the resource",
-                  "title": "API Version",
-                  "readOnly": true
-                },
-                "kind": {
-                  "type": "string",
-                  "default": "BootstrapAgentTemplate",
-                  "description": "Kind of the resource",
-                  "title": "Kind",
-                  "readOnly": true
-                },
-                "metadata": {
-                  "type": "object",
-                  "example": {
-                    "name": "some-name",
-                    "project": "defaultproject"
-                  },
-                  "properties": {
-                    "displayName": {
-                      "type": "string",
-                      "description": "display name of the resource",
-                      "title": "Display Name"
-                    },
-                    "description": {
-                      "type": "string",
-                      "description": "description of the resource",
-                      "title": "Description"
-                    },
-                    "labels": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "labels of the resource",
-                      "title": "Labels"
-                    },
-                    "annotations": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "annotations of the resource",
-                      "title": "Annotations"
-                    },
-                    "project": {
-                      "type": "string",
-                      "description": "Project of the resource",
-                      "title": "Project"
-                    },
-                    "organization": {
-                      "type": "string",
-                      "description": "Organization to which the resource belongs",
-                      "title": "Organization"
-                    },
-                    "partner": {
-                      "type": "string",
-                      "description": "Partner to which the resource belongs",
-                      "title": "Partner"
-                    },
-                    "id": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "urlScope": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    },
-                    "modifiedAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    }
-                  },
-                  "description": "metadata of the resource",
-                  "title": "Metadata"
-                },
-                "spec": {
-                  "$ref": "#/definitions/sentryBootstrapAgentTemplateSpec"
-                },
-                "status": {
-                  "$ref": "#/definitions/sentryBootstrapAgentTemplateStatus"
-                }
-              },
-              "required": [
-                "project"
-              ]
+              "$ref": "#/definitions/BootstrapServicePatchBootstrapAgentTemplateBody"
             }
           }
         ],
@@ -928,42 +738,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "apiVersion": {
-                  "type": "string",
-                  "default": "infra.k8smgmt.io/v3",
-                  "description": "API Version of the resource",
-                  "title": "API Version",
-                  "readOnly": true
-                },
-                "kind": {
-                  "type": "string",
-                  "default": "BootstrapAgent",
-                  "description": "Kind of the resource",
-                  "title": "Kind",
-                  "readOnly": true
-                },
-                "metadata": {
-                  "$ref": "#/definitions/v3Metadata",
-                  "description": "Metadata of the resource",
-                  "title": "Metadata"
-                },
-                "spec": {
-                  "type": "object",
-                  "properties": {
-                    "token": {
-                      "type": "string"
-                    },
-                    "agentMode": {
-                      "$ref": "#/definitions/sentryBootstrapAgentMode"
-                    }
-                  }
-                },
-                "status": {
-                  "$ref": "#/definitions/sentryBootStrapAgentStatus"
-                }
-              }
+              "$ref": "#/definitions/BootstrapServiceCreateBootstrapAgentBody"
             }
           }
         ],
@@ -1397,110 +1172,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "apiVersion": {
-                  "type": "string",
-                  "default": "infra.k8smgmt.io/v3",
-                  "description": "API Version of the resource",
-                  "title": "API Version",
-                  "readOnly": true
-                },
-                "kind": {
-                  "type": "string",
-                  "default": "BootstrapAgent",
-                  "description": "Kind of the resource",
-                  "title": "Kind",
-                  "readOnly": true
-                },
-                "metadata": {
-                  "type": "object",
-                  "example": {
-                    "name": "some-name",
-                    "project": "defaultproject"
-                  },
-                  "properties": {
-                    "displayName": {
-                      "type": "string",
-                      "description": "display name of the resource",
-                      "title": "Display Name"
-                    },
-                    "description": {
-                      "type": "string",
-                      "description": "description of the resource",
-                      "title": "Description"
-                    },
-                    "labels": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "labels of the resource",
-                      "title": "Labels"
-                    },
-                    "annotations": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "annotations of the resource",
-                      "title": "Annotations"
-                    },
-                    "project": {
-                      "type": "string",
-                      "description": "Project of the resource",
-                      "title": "Project"
-                    },
-                    "organization": {
-                      "type": "string",
-                      "description": "Organization to which the resource belongs",
-                      "title": "Organization"
-                    },
-                    "partner": {
-                      "type": "string",
-                      "description": "Partner to which the resource belongs",
-                      "title": "Partner"
-                    },
-                    "id": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "urlScope": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    },
-                    "modifiedAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    }
-                  },
-                  "description": "metadata of the resource",
-                  "title": "Metadata"
-                },
-                "spec": {
-                  "type": "object",
-                  "properties": {
-                    "token": {
-                      "type": "string"
-                    },
-                    "agentMode": {
-                      "$ref": "#/definitions/sentryBootstrapAgentMode"
-                    }
-                  }
-                },
-                "status": {
-                  "$ref": "#/definitions/sentryBootStrapAgentStatus"
-                }
-              },
-              "required": [
-                "project"
-              ]
+              "$ref": "#/definitions/BootstrapServiceUpdateBootstrapAgentBody"
             }
           }
         ],
@@ -1981,28 +1653,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "templateName": {
-                  "type": "string"
-                },
-                "token": {
-                  "type": "string"
-                },
-                "csr": {
-                  "type": "string",
-                  "format": "byte"
-                },
-                "ipAddress": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "fingerprint": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/BootstrapServiceRegisterBootstrapAgentBody"
             }
           }
         ],
@@ -2013,6 +1664,370 @@
     }
   },
   "definitions": {
+    "BootstrapServiceCreateBootstrapAgentBody": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "infra.k8smgmt.io/v3",
+          "description": "API Version of the resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "BootstrapAgent",
+          "description": "Kind of the resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3Metadata",
+          "description": "Metadata of the resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "token": {
+              "type": "string"
+            },
+            "agentMode": {
+              "$ref": "#/definitions/sentryBootstrapAgentMode"
+            }
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/sentryBootStrapAgentStatus"
+        }
+      }
+    },
+    "BootstrapServicePatchBootstrapAgentTemplateBody": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "infra.k8smgmt.io/v3",
+          "description": "API Version of the resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "BootstrapAgentTemplate",
+          "description": "Kind of the resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "type": "object",
+          "example": {
+            "name": "some-name",
+            "project": "defaultproject"
+          },
+          "properties": {
+            "displayName": {
+              "type": "string",
+              "description": "display name of the resource",
+              "title": "Display Name"
+            },
+            "description": {
+              "type": "string",
+              "description": "description of the resource",
+              "title": "Description"
+            },
+            "labels": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "labels of the resource",
+              "title": "Labels"
+            },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "annotations of the resource",
+              "title": "Annotations"
+            },
+            "project": {
+              "type": "string",
+              "description": "Project of the resource",
+              "title": "Project"
+            },
+            "organization": {
+              "type": "string",
+              "description": "Organization to which the resource belongs",
+              "title": "Organization"
+            },
+            "partner": {
+              "type": "string",
+              "description": "Partner to which the resource belongs",
+              "title": "Partner"
+            },
+            "id": {
+              "type": "string",
+              "readOnly": true
+            },
+            "urlScope": {
+              "type": "string",
+              "readOnly": true
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            },
+            "modifiedAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            }
+          },
+          "description": "metadata of the resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/sentryBootstrapAgentTemplateSpec"
+        },
+        "status": {
+          "$ref": "#/definitions/sentryBootstrapAgentTemplateStatus"
+        }
+      },
+      "required": [
+        "project"
+      ]
+    },
+    "BootstrapServicePatchBootstrapInfraBody": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "infra.k8smgmt.io/v3",
+          "description": "API Version of the resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "BootstrapInfra",
+          "description": "Kind of the resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "type": "object",
+          "example": {
+            "name": "some-name",
+            "project": "defaultproject"
+          },
+          "properties": {
+            "displayName": {
+              "type": "string",
+              "description": "display name of the resource",
+              "title": "Display Name"
+            },
+            "description": {
+              "type": "string",
+              "description": "description of the resource",
+              "title": "Description"
+            },
+            "labels": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "labels of the resource",
+              "title": "Labels"
+            },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "annotations of the resource",
+              "title": "Annotations"
+            },
+            "project": {
+              "type": "string",
+              "description": "Project of the resource",
+              "title": "Project"
+            },
+            "organization": {
+              "type": "string",
+              "description": "Organization to which the resource belongs",
+              "title": "Organization"
+            },
+            "partner": {
+              "type": "string",
+              "description": "Partner to which the resource belongs",
+              "title": "Partner"
+            },
+            "id": {
+              "type": "string",
+              "readOnly": true
+            },
+            "urlScope": {
+              "type": "string",
+              "readOnly": true
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            },
+            "modifiedAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            }
+          },
+          "description": "metadata of the resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/sentryBootstrapInfraSpec"
+        },
+        "status": {
+          "$ref": "#/definitions/sentryBootstrapInfraStatus"
+        }
+      },
+      "required": [
+        "project"
+      ]
+    },
+    "BootstrapServiceRegisterBootstrapAgentBody": {
+      "type": "object",
+      "properties": {
+        "templateName": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "csr": {
+          "type": "string",
+          "format": "byte"
+        },
+        "ipAddress": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "fingerprint": {
+          "type": "string"
+        }
+      }
+    },
+    "BootstrapServiceUpdateBootstrapAgentBody": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "infra.k8smgmt.io/v3",
+          "description": "API Version of the resource",
+          "title": "API Version",
+          "readOnly": true
+        },
+        "kind": {
+          "type": "string",
+          "default": "BootstrapAgent",
+          "description": "Kind of the resource",
+          "title": "Kind",
+          "readOnly": true
+        },
+        "metadata": {
+          "type": "object",
+          "example": {
+            "name": "some-name",
+            "project": "defaultproject"
+          },
+          "properties": {
+            "displayName": {
+              "type": "string",
+              "description": "display name of the resource",
+              "title": "Display Name"
+            },
+            "description": {
+              "type": "string",
+              "description": "description of the resource",
+              "title": "Description"
+            },
+            "labels": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "labels of the resource",
+              "title": "Labels"
+            },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "annotations of the resource",
+              "title": "Annotations"
+            },
+            "project": {
+              "type": "string",
+              "description": "Project of the resource",
+              "title": "Project"
+            },
+            "organization": {
+              "type": "string",
+              "description": "Organization to which the resource belongs",
+              "title": "Organization"
+            },
+            "partner": {
+              "type": "string",
+              "description": "Partner to which the resource belongs",
+              "title": "Partner"
+            },
+            "id": {
+              "type": "string",
+              "readOnly": true
+            },
+            "urlScope": {
+              "type": "string",
+              "readOnly": true
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            },
+            "modifiedAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            }
+          },
+          "description": "metadata of the resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "token": {
+              "type": "string"
+            },
+            "agentMode": {
+              "$ref": "#/definitions/sentryBootstrapAgentMode"
+            }
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/sentryBootStrapAgentStatus"
+        }
+      },
+      "required": [
+        "project"
+      ]
+    },
     "googlerpcStatus": {
       "type": "object",
       "properties": {
