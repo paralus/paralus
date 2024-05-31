@@ -1,16 +1,10 @@
 package client
 
 import (
-	"time"
-
 	"github.com/paralus/paralus/pkg/controller/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/apiutil"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
-)
-
-var (
-	defaultResyncInterval = time.Second * 30
 )
 
 // New returns new kubernetes client

@@ -21,11 +21,10 @@ var (
 
 // uniqueQueue is the containing type for set-style / unique queues
 type uniqueQueue struct {
-	in       <-chan Resource
-	out      chan<- Resource
-	inBuffer map[Resource]struct{}
-	exists   sync.Map
-	buffer   chan Resource
+	in     <-chan Resource
+	out    chan<- Resource
+	exists sync.Map
+	buffer chan Resource
 }
 
 // NewUniqueQueue returns a queue for events which ensures that events in the queue are unique

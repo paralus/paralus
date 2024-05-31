@@ -79,12 +79,6 @@ func GetUserRoles(ctx context.Context, db bun.IDB, id uuid.UUID) ([]*userv3.Proj
 	return append(append(r, pr...), pnr...), err
 }
 
-type userProjectnamesaceRole struct {
-	AccountId uuid.UUID `bun:"account_id,type:uuid"`
-	Role      string    `bun:"role,type:string"`
-	Project   *string   `bun:"project,type:string"`
-}
-
 func GetQueryFilteredUsers(ctx context.Context, db bun.IDB, partner, org, group, role uuid.UUID, projects []uuid.UUID) ([]uuid.UUID, error) {
 	p := []models.AccountPermission{}
 	q := db.NewSelect().Model(&p).ColumnExpr("DISTINCT account_id")

@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"fmt"
-	"sort"
 	"time"
 
 	"github.com/paralus/paralus/internal/constants"
@@ -209,18 +208,6 @@ func (s *kubeConfigServer) UpdateUserSetting(ctx context.Context, req *sentryrpc
 func NewKubeConfigServer(bs service.BootstrapService, aps service.AccountPermissionService, gps service.GroupPermissionService, kss service.KubeconfigSettingService,
 	krs service.KubeconfigRevocationService, pf cryptoutil.PasswordFunc, ksvc service.ApiKeyService, os service.OrganizationService, ps service.PartnerService, al *zap.Logger) sentryrpc.KubeConfigServiceServer {
 	return &kubeConfigServer{bs, aps, gps, kss, krs, pf, ksvc, os, ps, al}
-}
-
-func checkOrgAdmin(groups []string) bool {
-	orgGrp := "Organization Admins"
-	sort.Strings(groups)
-	indx := sort.SearchStrings(groups, orgGrp)
-	if indx < len(groups) {
-		if groups[indx] == orgGrp {
-			return true
-		}
-	}
-	return false
 }
 
 func (s *kubeConfigServer) RevokeKubeconfigSSO(ctx context.Context, req *sentryrpc.RevokeKubeconfigRequest) (*sentryrpc.RevokeKubeconfigResponse, error) {

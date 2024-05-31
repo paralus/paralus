@@ -21,10 +21,6 @@ const (
 	readNamespaceRolePath            = "role_read_access.yaml"
 	writeNamespaceRolePath           = "role_write_access.yaml"
 	nameSpacePath                    = "namespace.yaml"
-
-	fullAccessClusterRoleName  = "full-access-cluster-role"
-	readAccessClusterRoleName  = "read-access-cluster-role"
-	writeAccessClusterRoleName = "write-access-cluster-role"
 )
 
 // GetDefaultClusterRole returns default cluster role for relay user

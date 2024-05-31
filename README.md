@@ -50,7 +50,7 @@ Installing and setting up Paralus takes less time than it takes to brew a (good)
 - Join our [Slack workspace](https://join.slack.com/t/paralus/shared_invite/zt-1a9x6y729-ySmAq~I3tjclEG7nDoXB0A) to get help and to discuss features.
 - Tweet [@paralus_](https://twitter.com/paralus_/) on Twitter.
 - Create [GitHub Issues](https://github.com/paralus/paralus/issues) to report bugs or request features.
-- Join our Paralus Community Meeting where we share the latest project news, demos, answer questions, and triage issues.
+- Join our Paralus Community Meeting where we share the latest project news, demos, answer questions, and triage issues. Add to your calendar by importing [ics file](community-meetings.ics).
   - 🗓️ 2nd and 4th Tuesday
   - ⏰ 20:30 IST | 10:00 EST | 07:00 PST
   - 🔗 [Zoom](https://paralus.io/meeting)

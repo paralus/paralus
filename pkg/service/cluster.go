@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -38,8 +37,6 @@ import (
 )
 
 var _log = log.GetLogger()
-
-var clusterNodeSyncMutexMap = make(map[string]*sync.Mutex)
 
 const (
 	clusterNotifyChan = "cluster:notify"

@@ -493,13 +493,12 @@ func (s *projectService) createGroupRoleRelations(ctx context.Context, db bun.ID
 			return &systemv3.Project{}, fmt.Errorf("unable to find group '%v'", grp)
 		}
 		var grpId uuid.UUID
-		var grpName string
 		if g, ok := entity.(*models.Group); ok {
 			grpId = g.ID
-			grpName = g.Name
 		} else {
 			return &systemv3.Project{}, fmt.Errorf("unable to find group '%v'", grp)
 		}
+		grpName := grp
 
 		org := project.Metadata.Organization
 		switch scope {

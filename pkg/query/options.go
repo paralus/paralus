@@ -41,16 +41,6 @@ const (
 	idQ          = "id = ?"
 )
 
-const (
-	scopeOrganization = "organization"
-	scopePartner      = "partner"
-	scopeProject      = "project"
-	scopeProjects     = "projects"
-	scopeUser         = "user"
-	scopeCluster      = "cluster"
-	scopeSSOUser      = "ssouser"
-)
-
 var (
 	// ErrNoName is returned when name is not set in query option
 	// trying to build query for get/update/delete

@@ -9,10 +9,6 @@ var (
 	namespaceGVK = schema.GroupVersionKind{Version: "v1", Kind: "Namespace"}
 	placementGVK = schema.GroupVersionKind{Group: "config.paralus.dev", Version: "v2", Kind: "Placement"}
 
-	// namespace post install gvks
-	limitRangeGVK    = schema.GroupVersionKind{Version: "v1", Kind: "LimitRange"}
-	resourceQuotaGVK = schema.GroupVersionKind{Version: "v1", Kind: "ResourceQuota"}
-
 	// task init gvks
 	serviceAccountGVK = schema.GroupVersionKind{Version: "v1", Kind: "ServiceAccount"}
 )

@@ -12,20 +12,6 @@ import (
 	rolev3 "github.com/paralus/paralus/proto/types/rolepb/v3"
 )
 
-func performRolePermissionBasicChecks(t *testing.T, role *rolev3.RolePermission, ruuid string) {
-	_, err := uuid.Parse(role.GetMetadata().GetOrganization())
-	if err == nil {
-		t.Error("org in metadata should be name not id")
-	}
-	_, err = uuid.Parse(role.GetMetadata().GetPartner())
-	if err == nil {
-		t.Error("partner in metadata should be name not id")
-	}
-	if role.GetMetadata().GetId() != ruuid {
-		t.Error("invalid uuid returned")
-	}
-}
-
 func TestRolePermissionList(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
