@@ -28,37 +28,6 @@ func performUserBasicChecks(t *testing.T, user *userv3.User, uuuid string) {
 	}
 }
 
-func performUserBasicAuthzChecks(t *testing.T, mazc mockAuthzClient, uuuid string, roles []*userv3.ProjectNamespaceRole) {
-	if len(mazc.cp) > 0 {
-		for i, u := range mazc.cp[len(mazc.cp)-1].Policies {
-			if u.Sub != "u:user-"+uuuid {
-				t.Errorf("invalid sub in policy sent to authz; expected '%v', got '%v'", "u:user-"+uuuid, u.Sub)
-			}
-			if u.Obj != roles[i].Role {
-				t.Errorf("invalid obj in policy sent to authz; expected '%v', got '%v'", roles[i].Role, u.Obj)
-			}
-			if roles[i].Namespace != "" {
-				if u.Ns != fmt.Sprint(roles[i].Namespace) {
-					t.Errorf("invalid ns in policy sent to authz; expected '%v', got '%v'", fmt.Sprint(roles[i].Namespace), u.Ns)
-				}
-			} else {
-				if u.Ns != "*" {
-					t.Errorf("invalid ns in policy sent to authz; expected '%v', got '%v'", "*", u.Ns)
-				}
-			}
-			if roles[i].Project != "" {
-				if u.Proj != roles[i].Project {
-					t.Errorf("invalid proj in policy sent to authz; expected '%v', got '%v'", roles[i].Project, u.Proj)
-				}
-			} else {
-				if u.Proj != "*" {
-					t.Errorf("invalid proj in policy sent to authz; expected '%v', got '%v'", "*", u.Proj)
-				}
-			}
-		}
-	}
-}
-
 func TestCreateUser(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
