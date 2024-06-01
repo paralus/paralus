@@ -42,7 +42,7 @@ Paralus can be easily integrated with your pre-existing RBAC configuration and y
 Installing and setting up Paralus takes less time than it takes to brew a (good) cup of coffee! You'll find the instructions here:
 
 - [Docs](https://www.paralus.io/docs/)
-- [Installation](https://www.paralus.io/docs/installation/)
+- [Installation](https://www.paralus.io/docs/Installation/)
 
 ## 🤗 Community & Support
 
