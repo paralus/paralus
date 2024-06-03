@@ -46,8 +46,8 @@ func performGroupBasicAuthzChecks(t *testing.T, mazc mockAuthzClient, guuid stri
 			if u.Obj != roles[i].Role {
 				t.Errorf("invalid obj in policy sent to authz; expected '%v', got '%v'", roles[i].Role, u.Obj)
 			}
-			if roles[i].Namespace != nil {
-				if u.Ns != fmt.Sprint(*roles[i].Namespace) {
+			if roles[i].Namespace != "" {
+				if u.Ns != fmt.Sprint(roles[i].Namespace) {
 					t.Errorf("invalid ns in policy sent to authz; expected '%v', got '%v'", fmt.Sprint(roles[i].Namespace), u.Ns)
 				}
 			} else {
@@ -55,8 +55,8 @@ func performGroupBasicAuthzChecks(t *testing.T, mazc mockAuthzClient, guuid stri
 					t.Errorf("invalid ns in policy sent to authz; expected '%v', got '%v'", "*", u.Ns)
 				}
 			}
-			if roles[i].Project != nil {
-				if u.Proj != *roles[i].Project {
+			if roles[i].Project != "" {
+				if u.Proj != roles[i].Project {
 					t.Errorf("invalid proj in policy sent to authz; expected '%v', got '%v'", roles[i].Project, u.Proj)
 				}
 			} else {
@@ -229,7 +229,7 @@ func TestCreateGroupNoUsersWithRoles(t *testing.T) {
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(guuid))
 			mock.ExpectQuery(`SELECT "resourcerole"."id".* FROM "authsrv_resourcerole" AS "resourcerole"`).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name", "scope"}).AddRow(pruuid, "role-name", tc.scope))
-			if tc.roles[0].Project != nil {
+			if tc.roles[0].Project != "" {
 				mock.ExpectQuery(`SELECT "project"."id" FROM "authsrv_project" AS "project"`).
 					WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(pruuid))
 			}
@@ -277,10 +277,10 @@ func TestCreateGroupWithUsersWithRoles(t *testing.T) {
 		shouldfail bool
 	}{
 		{"just role", []string{"user-" + uuid.New().String()}, []*userv3.ProjectNamespaceRole{{Role: uuid.New().String()}}, "authsrv_grouprole", "system", false},
-		{"just project", []string{"user-" + uuid.New().String()}, []*userv3.ProjectNamespaceRole{{Project: &projectid}}, "authsrv_grouprole", "system", true},                                    // no role creation without role
-		{"just namespace", []string{"user-" + uuid.New().String()}, []*userv3.ProjectNamespaceRole{{Namespace: &namespaceid}}, "authsrv_projectgrouprole", "project", true},                      // no role creation without role,
-		{"project and namespace", []string{"user-" + uuid.New().String()}, []*userv3.ProjectNamespaceRole{{Project: &projectid, Namespace: &namespaceid}}, "authsrv_grouprole", "project", true}, // no role creation without role,
-		{"project and role", []string{"user-" + uuid.New().String()}, []*userv3.ProjectNamespaceRole{{Project: &projectid, Role: uuid.New().String()}}, "authsrv_projectgrouprole", "project", false},
+		{"just project", []string{"user-" + uuid.New().String()}, []*userv3.ProjectNamespaceRole{{Project: projectid}}, "authsrv_grouprole", "system", true},                                   // no role creation without role
+		{"just namespace", []string{"user-" + uuid.New().String()}, []*userv3.ProjectNamespaceRole{{Namespace: namespaceid}}, "authsrv_projectgrouprole", "project", true},                     // no role creation without role,
+		{"project and namespace", []string{"user-" + uuid.New().String()}, []*userv3.ProjectNamespaceRole{{Project: projectid, Namespace: namespaceid}}, "authsrv_grouprole", "project", true}, // no role creation without role,
+		{"project and role", []string{"user-" + uuid.New().String()}, []*userv3.ProjectNamespaceRole{{Project: projectid, Role: uuid.New().String()}}, "authsrv_projectgrouprole", "project", false},
 		// {"project role namespace", []string{"user-" + uuid.New().String()}, []*userv3.ProjectNamespaceRole{{Project: &projectid, Namespace: &namespaceid, Role: uuid.New().String()}}, "authsrv_projectgroupnamespacerole", false},
 	}
 	for _, tc := range tt {
@@ -310,7 +310,7 @@ func TestCreateGroupWithUsersWithRoles(t *testing.T) {
 
 			mock.ExpectQuery(`SELECT "resourcerole"."id".* FROM "authsrv_resourcerole" AS "resourcerole"`).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name", "scope"}).AddRow(pruuid, "role-name", tc.scope))
-			if tc.roles[0].Project != nil {
+			if tc.roles[0].Project != "" {
 				mock.ExpectQuery(`SELECT "project"."id" FROM "authsrv_project" AS "project"`).
 					WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(pruuid))
 			}
@@ -390,7 +390,7 @@ func TestUpdateGroupWithUsersWithRoles(t *testing.T) {
 			addGroupRoleMappingsUpdateExpectation(mock, guuid)
 			mock.ExpectQuery(`SELECT "resourcerole"."id".* FROM "authsrv_resourcerole" AS "resourcerole"`).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id", "name", "scope"}).AddRow(pruuid, "role-name", tc.scope))
-			if tc.roles[0].Project != nil {
+			if tc.roles[0].Project != "" {
 				mock.ExpectQuery(`SELECT "project"."id" FROM "authsrv_project" AS "project"`).
 					WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(pruuid))
 			}

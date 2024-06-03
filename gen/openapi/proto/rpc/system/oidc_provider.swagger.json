@@ -638,111 +638,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "apiVersion": {
-                  "type": "string",
-                  "default": "system.k8smgmt.io/v3",
-                  "description": "API Version of the OIDCProvider resource",
-                  "title": "API Version"
-                },
-                "kind": {
-                  "type": "string",
-                  "default": "OIDCProvider",
-                  "description": "Kind of the OIDCProvider resource",
-                  "title": "Kind"
-                },
-                "metadata": {
-                  "type": "object",
-                  "example": {
-                    "name": "some-name",
-                    "project": "defaultproject"
-                  },
-                  "properties": {
-                    "displayName": {
-                      "type": "string",
-                      "description": "display name of the resource",
-                      "title": "Display Name"
-                    },
-                    "description": {
-                      "type": "string",
-                      "description": "description of the resource",
-                      "title": "Description"
-                    },
-                    "labels": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "labels of the resource",
-                      "title": "Labels"
-                    },
-                    "annotations": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "annotations of the resource",
-                      "title": "Annotations"
-                    },
-                    "project": {
-                      "type": "string",
-                      "description": "Project of the resource",
-                      "title": "Project"
-                    },
-                    "organization": {
-                      "type": "string",
-                      "description": "Organization to which the resource belongs",
-                      "title": "Organization"
-                    },
-                    "partner": {
-                      "type": "string",
-                      "description": "Partner to which the resource belongs",
-                      "title": "Partner"
-                    },
-                    "id": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "urlScope": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    },
-                    "modifiedAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    }
-                  },
-                  "description": "metadata of the resource",
-                  "title": "Metadata"
-                },
-                "spec": {
-                  "$ref": "#/definitions/v3OIDCProviderSpec",
-                  "description": "Spec of the OIDCProvider resource",
-                  "title": "Spec"
-                },
-                "status": {
-                  "$ref": "#/definitions/commonv3Status",
-                  "description": "Status of the resource",
-                  "title": "Status",
-                  "readOnly": true
-                }
-              },
-              "description": "Open Id Connect Provider",
-              "title": "OIDCProvider",
-              "required": [
-                "apiVersion",
-                "kind",
-                "metadata",
-                "spec",
-                "project"
-              ]
+              "$ref": "#/definitions/OIDCProviderServiceUpdateOIDCProviderBody"
             }
           }
         ],
@@ -753,6 +649,113 @@
     }
   },
   "definitions": {
+    "OIDCProviderServiceUpdateOIDCProviderBody": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "system.k8smgmt.io/v3",
+          "description": "API Version of the OIDCProvider resource",
+          "title": "API Version"
+        },
+        "kind": {
+          "type": "string",
+          "default": "OIDCProvider",
+          "description": "Kind of the OIDCProvider resource",
+          "title": "Kind"
+        },
+        "metadata": {
+          "type": "object",
+          "example": {
+            "name": "some-name",
+            "project": "defaultproject"
+          },
+          "properties": {
+            "displayName": {
+              "type": "string",
+              "description": "display name of the resource",
+              "title": "Display Name"
+            },
+            "description": {
+              "type": "string",
+              "description": "description of the resource",
+              "title": "Description"
+            },
+            "labels": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "labels of the resource",
+              "title": "Labels"
+            },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "annotations of the resource",
+              "title": "Annotations"
+            },
+            "project": {
+              "type": "string",
+              "description": "Project of the resource",
+              "title": "Project"
+            },
+            "organization": {
+              "type": "string",
+              "description": "Organization to which the resource belongs",
+              "title": "Organization"
+            },
+            "partner": {
+              "type": "string",
+              "description": "Partner to which the resource belongs",
+              "title": "Partner"
+            },
+            "id": {
+              "type": "string",
+              "readOnly": true
+            },
+            "urlScope": {
+              "type": "string",
+              "readOnly": true
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            },
+            "modifiedAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            }
+          },
+          "description": "metadata of the resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3OIDCProviderSpec",
+          "description": "Spec of the OIDCProvider resource",
+          "title": "Spec"
+        },
+        "status": {
+          "$ref": "#/definitions/commonv3Status",
+          "description": "Status of the resource",
+          "title": "Status",
+          "readOnly": true
+        }
+      },
+      "description": "Open Id Connect Provider",
+      "title": "OIDCProvider",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec",
+        "project"
+      ]
+    },
     "commonv3Status": {
       "type": "object",
       "properties": {
@@ -826,7 +829,7 @@
         "NULL_VALUE"
       ],
       "default": "NULL_VALUE",
-      "description": "`NullValue` is a singleton enumeration to represent the null value for the\n`Value` type union.\n\n The JSON representation for `NullValue` is JSON `null`.\n\n - NULL_VALUE: Null value."
+      "description": "`NullValue` is a singleton enumeration to represent the null value for the\n`Value` type union.\n\nThe JSON representation for `NullValue` is JSON `null`.\n\n - NULL_VALUE: Null value."
     },
     "v3ConditionStatus": {
       "type": "string",

@@ -199,7 +199,7 @@ message UserSpec {
         description : "Flag to show if phone number of the user was verified"
         read_only : true
       } ];
-  optional string recoveryUrl = 11
+  string recoveryUrl = 11
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Recovery Url",
         description : "Initial signup URL returned after user creation"

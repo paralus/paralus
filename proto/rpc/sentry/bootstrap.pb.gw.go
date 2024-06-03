@@ -37,11 +37,7 @@ func request_BootstrapService_PatchBootstrapInfra_0(ctx context.Context, marshal
 	var protoReq sentry_0.BootstrapInfra
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -71,11 +67,7 @@ func local_request_BootstrapService_PatchBootstrapInfra_0(ctx context.Context, m
 	var protoReq sentry_0.BootstrapInfra
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -102,7 +94,7 @@ func local_request_BootstrapService_PatchBootstrapInfra_0(ctx context.Context, m
 }
 
 var (
-	filter_BootstrapService_GetBootstrapInfra_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 2, 3, 2, 0, 0}, Check: []int{0, 1, 1, 2, 4, 3}}
+	filter_BootstrapService_GetBootstrapInfra_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
 func request_BootstrapService_GetBootstrapInfra_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -175,11 +167,7 @@ func request_BootstrapService_PatchBootstrapAgentTemplate_0(ctx context.Context,
 	var protoReq sentry_0.BootstrapAgentTemplate
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -209,11 +197,7 @@ func local_request_BootstrapService_PatchBootstrapAgentTemplate_0(ctx context.Co
 	var protoReq sentry_0.BootstrapAgentTemplate
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -240,7 +224,7 @@ func local_request_BootstrapService_PatchBootstrapAgentTemplate_0(ctx context.Co
 }
 
 var (
-	filter_BootstrapService_GetBootstrapAgentTemplate_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 2, 3, 2, 0, 0}, Check: []int{0, 1, 1, 2, 4, 3}}
+	filter_BootstrapService_GetBootstrapAgentTemplate_0 = &utilities.DoubleArray{Encoding: map[string]int{"metadata": 0, "name": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
 func request_BootstrapService_GetBootstrapAgentTemplate_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -349,11 +333,7 @@ func request_BootstrapService_RegisterBootstrapAgent_0(ctx context.Context, mars
 	var protoReq RegisterAgentRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -383,11 +363,7 @@ func local_request_BootstrapService_RegisterBootstrapAgent_0(ctx context.Context
 	var protoReq RegisterAgentRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -414,7 +390,7 @@ func local_request_BootstrapService_RegisterBootstrapAgent_0(ctx context.Context
 }
 
 var (
-	filter_BootstrapService_GetBootstrapAgentConfig_0 = &utilities.DoubleArray{Encoding: map[string]int{"spec": 0, "templateRef": 1, "metadata": 2, "name": 3}, Base: []int{1, 4, 3, 5, 6, 2, 0, 0, 5, 0, 0}, Check: []int{0, 1, 1, 1, 1, 2, 6, 3, 4, 9, 5}}
+	filter_BootstrapService_GetBootstrapAgentConfig_0 = &utilities.DoubleArray{Encoding: map[string]int{"spec": 0, "templateRef": 1, "metadata": 2, "name": 3}, Base: []int{1, 1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 1, 4, 3, 5}}
 )
 
 func request_BootstrapService_GetBootstrapAgentConfig_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -507,11 +483,7 @@ func request_BootstrapService_CreateBootstrapAgent_0(ctx context.Context, marsha
 	var protoReq sentry_0.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -541,11 +513,7 @@ func local_request_BootstrapService_CreateBootstrapAgent_0(ctx context.Context, 
 	var protoReq sentry_0.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -572,7 +540,7 @@ func local_request_BootstrapService_CreateBootstrapAgent_0(ctx context.Context, 
 }
 
 var (
-	filter_BootstrapService_GetBootstrapAgent_0 = &utilities.DoubleArray{Encoding: map[string]int{"spec": 0, "templateRef": 1, "metadata": 2, "name": 3}, Base: []int{1, 4, 3, 5, 6, 2, 0, 0, 5, 0, 0}, Check: []int{0, 1, 1, 1, 1, 2, 6, 3, 4, 9, 5}}
+	filter_BootstrapService_GetBootstrapAgent_0 = &utilities.DoubleArray{Encoding: map[string]int{"spec": 0, "templateRef": 1, "metadata": 2, "name": 3}, Base: []int{1, 1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 1, 4, 3, 5}}
 )
 
 func request_BootstrapService_GetBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -662,7 +630,7 @@ func local_request_BootstrapService_GetBootstrapAgent_0(ctx context.Context, mar
 }
 
 var (
-	filter_BootstrapService_GetBootstrapAgents_0 = &utilities.DoubleArray{Encoding: map[string]int{"templateScope": 0}, Base: []int{1, 2, 0, 0}, Check: []int{0, 1, 2, 2}}
+	filter_BootstrapService_GetBootstrapAgents_0 = &utilities.DoubleArray{Encoding: map[string]int{"templateScope": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
 func request_BootstrapService_GetBootstrapAgents_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -732,7 +700,7 @@ func local_request_BootstrapService_GetBootstrapAgents_0(ctx context.Context, ma
 }
 
 var (
-	filter_BootstrapService_DeleteBootstrapAgent_0 = &utilities.DoubleArray{Encoding: map[string]int{"spec": 0, "templateRef": 1, "metadata": 2, "name": 3}, Base: []int{1, 4, 3, 5, 6, 2, 0, 0, 5, 0, 0}, Check: []int{0, 1, 1, 1, 1, 2, 6, 3, 4, 9, 5}}
+	filter_BootstrapService_DeleteBootstrapAgent_0 = &utilities.DoubleArray{Encoding: map[string]int{"spec": 0, "templateRef": 1, "metadata": 2, "name": 3}, Base: []int{1, 1, 1, 1, 2, 0, 0}, Check: []int{0, 1, 2, 1, 4, 3, 5}}
 )
 
 func request_BootstrapService_DeleteBootstrapAgent_0(ctx context.Context, marshaler runtime.Marshaler, client BootstrapServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -825,11 +793,7 @@ func request_BootstrapService_UpdateBootstrapAgent_0(ctx context.Context, marsha
 	var protoReq sentry_0.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -869,11 +833,7 @@ func local_request_BootstrapService_UpdateBootstrapAgent_0(ctx context.Context, 
 	var protoReq sentry_0.BootstrapAgent
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -1221,21 +1181,21 @@ func RegisterBootstrapServiceHandlerServer(ctx context.Context, mux *runtime.Ser
 // RegisterBootstrapServiceHandlerFromEndpoint is same as RegisterBootstrapServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
 func RegisterBootstrapServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
-	conn, err := grpc.DialContext(ctx, endpoint, opts...)
+	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
 	}
 	defer func() {
 		if err != nil {
 			if cerr := conn.Close(); cerr != nil {
-				grpclog.Infof("Failed to close conn to %s: %v", endpoint, cerr)
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
 			}
 			return
 		}
 		go func() {
 			<-ctx.Done()
 			if cerr := conn.Close(); cerr != nil {
-				grpclog.Infof("Failed to close conn to %s: %v", endpoint, cerr)
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
 			}
 		}()
 	}()

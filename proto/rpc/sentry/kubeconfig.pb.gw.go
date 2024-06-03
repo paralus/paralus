@@ -140,7 +140,7 @@ func local_request_KubeConfigService_GetForUser_0(ctx context.Context, marshaler
 }
 
 var (
-	filter_KubeConfigService_GetForUser_1 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 2, 3, 2, 0, 0}, Check: []int{0, 1, 1, 2, 4, 3}}
+	filter_KubeConfigService_GetForUser_1 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
 func request_KubeConfigService_GetForUser_1(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -213,11 +213,7 @@ func request_KubeConfigService_RevokeKubeconfig_0(ctx context.Context, marshaler
 	var protoReq RevokeKubeconfigRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -230,11 +226,7 @@ func local_request_KubeConfigService_RevokeKubeconfig_0(ctx context.Context, mar
 	var protoReq RevokeKubeconfigRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -247,11 +239,7 @@ func request_KubeConfigService_RevokeKubeconfig_1(ctx context.Context, marshaler
 	var protoReq RevokeKubeconfigRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -281,11 +269,7 @@ func local_request_KubeConfigService_RevokeKubeconfig_1(ctx context.Context, mar
 	var protoReq RevokeKubeconfigRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -312,7 +296,7 @@ func local_request_KubeConfigService_RevokeKubeconfig_1(ctx context.Context, mar
 }
 
 var (
-	filter_KubeConfigService_GetOrganizationSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 2, 3, 2, 0, 0}, Check: []int{0, 1, 1, 2, 4, 3}}
+	filter_KubeConfigService_GetOrganizationSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
 func request_KubeConfigService_GetOrganizationSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -382,7 +366,7 @@ func local_request_KubeConfigService_GetOrganizationSetting_0(ctx context.Contex
 }
 
 var (
-	filter_KubeConfigService_GetUserSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 2, 3, 2, 0, 0}, Check: []int{0, 1, 1, 2, 4, 3}}
+	filter_KubeConfigService_GetUserSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
 func request_KubeConfigService_GetUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -452,7 +436,7 @@ func local_request_KubeConfigService_GetUserSetting_0(ctx context.Context, marsh
 }
 
 var (
-	filter_KubeConfigService_GetSSOUserSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 2, 3, 2, 0, 0}, Check: []int{0, 1, 1, 2, 4, 3}}
+	filter_KubeConfigService_GetSSOUserSetting_0 = &utilities.DoubleArray{Encoding: map[string]int{"opts": 0, "urlScope": 1}, Base: []int{1, 1, 1, 0}, Check: []int{0, 1, 2, 3}}
 )
 
 func request_KubeConfigService_GetSSOUserSetting_0(ctx context.Context, marshaler runtime.Marshaler, client KubeConfigServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -525,11 +509,7 @@ func request_KubeConfigService_UpdateOrganizationSetting_0(ctx context.Context, 
 	var protoReq UpdateKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -559,11 +539,7 @@ func local_request_KubeConfigService_UpdateOrganizationSetting_0(ctx context.Con
 	var protoReq UpdateKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -593,11 +569,7 @@ func request_KubeConfigService_UpdateUserSetting_0(ctx context.Context, marshale
 	var protoReq UpdateKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -627,11 +599,7 @@ func local_request_KubeConfigService_UpdateUserSetting_0(ctx context.Context, ma
 	var protoReq UpdateKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -661,11 +629,7 @@ func request_KubeConfigService_UpdateSSOUserSetting_0(ctx context.Context, marsh
 	var protoReq UpdateKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -695,11 +659,7 @@ func local_request_KubeConfigService_UpdateSSOUserSetting_0(ctx context.Context,
 	var protoReq UpdateKubeconfigSettingRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -1037,21 +997,21 @@ func RegisterKubeConfigServiceHandlerServer(ctx context.Context, mux *runtime.Se
 // RegisterKubeConfigServiceHandlerFromEndpoint is same as RegisterKubeConfigServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
 func RegisterKubeConfigServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
-	conn, err := grpc.DialContext(ctx, endpoint, opts...)
+	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
 	}
 	defer func() {
 		if err != nil {
 			if cerr := conn.Close(); cerr != nil {
-				grpclog.Infof("Failed to close conn to %s: %v", endpoint, cerr)
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
 			}
 			return
 		}
 		go func() {
 			<-ctx.Done()
 			if cerr := conn.Close(); cerr != nil {
-				grpclog.Infof("Failed to close conn to %s: %v", endpoint, cerr)
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
 			}
 		}()
 	}()

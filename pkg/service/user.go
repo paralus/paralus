@@ -22,7 +22,6 @@ import (
 	userrpcv3 "github.com/paralus/paralus/proto/rpc/user"
 	authzv1 "github.com/paralus/paralus/proto/types/authz"
 	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
-	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	userv3 "github.com/paralus/paralus/proto/types/userpb/v3"
 )
 
@@ -511,7 +510,7 @@ func (s *userService) identitiesModelToUser(ctx context.Context, db bun.IDB, use
 	roles = append(roles, allAssociatedRoles...)
 	user.ApiVersion = apiVersion
 	user.Kind = userKind
-	user.Metadata = &v3.Metadata{
+	user.Metadata = &commonv3.Metadata{
 		Name:       traits.Email,
 		Labels:     labels,
 		ModifiedAt: timestamppb.New(usr.UpdatedAt),
@@ -655,7 +654,7 @@ func (s *userService) GetUserInfo(ctx context.Context, user *userv3.User) (*user
 					Namespace:   p.Namespace,
 					Role:        p.Role,
 					Permissions: rps,
-					Scope:       &scope,
+					Scope:       scope,
 				},
 			)
 
@@ -857,12 +856,12 @@ func (s *userService) List(ctx context.Context, opts ...query.Option) (*userv3.U
 	userList := &userv3.UserList{
 		ApiVersion: apiVersion,
 		Kind:       userListKind,
-		Metadata: &v3.ListMetadata{
+		Metadata: &commonv3.ListMetadata{
 			Count: 0,
 		},
 	}
 
-	queryOptions := v3.QueryOptions{}
+	queryOptions := commonv3.QueryOptions{}
 	for _, opt := range opts {
 		opt(&queryOptions)
 	}
@@ -960,7 +959,7 @@ func (s *userService) List(ctx context.Context, opts ...query.Option) (*userv3.U
 	}
 
 	// update the list metadata and items response
-	userList.Metadata = &v3.ListMetadata{
+	userList.Metadata = &commonv3.ListMetadata{
 		Count: int64(len(users)),
 	}
 	userList.Items = users
@@ -972,7 +971,19 @@ func (s *userService) RetrieveCliConfig(ctx context.Context, req *userrpcv3.ApiK
 	// get the default project associated to this account
 	ap, err := dao.GetDefaultAccountProject(ctx, s.db, uuid.MustParse(req.Id))
 	if err != nil {
-		return nil, err
+		_log.Debug("unable to fetch account permissions for default project, looking further..")
+		organizationID := ap.OrganizationId
+		if len(req.OrganizationId) > 0 {
+			organizationID = uuid.MustParse(req.OrganizationId)
+		}
+		partnerID := ap.PartnerId
+		if len(req.PartnerId) > 0 {
+			partnerID = uuid.MustParse(req.PartnerId)
+		}
+		ap, err = dao.GetAccountProjectByPermission(ctx, s.db, uuid.MustParse(req.Id), organizationID, partnerID, cliConfigR)
+		if err != nil {
+			return nil, err
+		}
 	}
 	// fetch the metadata information required to populate cli config
 	var proj models.Project
@@ -1063,7 +1074,7 @@ func (s *userService) UpdateIdpUserGroupPolicy(ctx context.Context, op, id, trai
 		}
 	}
 	user = &userv3.User{
-		Metadata: &v3.Metadata{
+		Metadata: &commonv3.Metadata{
 			Name: userInfo.Email,
 		},
 		Spec: &userv3.UserSpec{

@@ -88,8 +88,10 @@ func (s *userServer) DownloadCliConfig(ctx context.Context, req *rpcv3.CliConfig
 		return nil, fmt.Errorf("unable to retrieve session data")
 	}
 	request := &rpcv3.ApiKeyRequest{
-		Username: sessData.Username,
-		Id:       sessData.Account,
+		Username:       sessData.Username,
+		Id:             sessData.Account,
+		OrganizationId: sessData.Organization,
+		PartnerId:      sessData.Partner,
 	}
 	cliConfig, err := s.us.RetrieveCliConfig(ctx, request)
 	if err != nil {

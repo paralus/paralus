@@ -60,9 +60,9 @@ func idname(uid string, resource string) string {
 	return resource + "-" + uid
 }
 
-func idnamea(uid string, resource string) *string {
+func idnamea(uid string, resource string) string {
 	name := resource + "-" + uid
-	return &name
+	return name
 }
 
 func addFetchEmptyExpecteation(mock sqlmock.Sqlmock, resource string) {

@@ -453,101 +453,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "apiVersion": {
-                  "type": "string",
-                  "default": "system.k8smgmt.io/v3",
-                  "description": "API Version of the group resource",
-                  "title": "API Version"
-                },
-                "kind": {
-                  "type": "string",
-                  "default": "Group",
-                  "description": "Kind of the group resource",
-                  "title": "Kind"
-                },
-                "metadata": {
-                  "type": "object",
-                  "example": {
-                    "name": "some-name",
-                    "project": "defaultproject"
-                  },
-                  "properties": {
-                    "displayName": {
-                      "type": "string",
-                      "description": "display name of the resource",
-                      "title": "Display Name"
-                    },
-                    "description": {
-                      "type": "string",
-                      "description": "description of the resource",
-                      "title": "Description"
-                    },
-                    "labels": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "labels of the resource",
-                      "title": "Labels"
-                    },
-                    "annotations": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "annotations of the resource",
-                      "title": "Annotations"
-                    },
-                    "project": {
-                      "type": "string",
-                      "description": "Project of the resource",
-                      "title": "Project"
-                    },
-                    "id": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "urlScope": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    },
-                    "modifiedAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    }
-                  },
-                  "description": "metadata of the resource",
-                  "title": "Metadata"
-                },
-                "spec": {
-                  "$ref": "#/definitions/v3GroupSpec",
-                  "description": "Metadata of the group resource",
-                  "title": "Metadata"
-                },
-                "status": {
-                  "$ref": "#/definitions/commonv3Status",
-                  "description": "Status of the resource",
-                  "title": "Status",
-                  "readOnly": true
-                }
-              },
-              "description": "Group",
-              "title": "Group",
-              "required": [
-                "apiVersion",
-                "kind",
-                "metadata",
-                "spec",
-                "project"
-              ]
+              "$ref": "#/definitions/GroupServiceUpdateGroupBody"
             }
           }
         ],
@@ -608,107 +514,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "apiVersion": {
-                  "type": "string",
-                  "default": "system.k8smgmt.io/v3",
-                  "description": "API Version of the group resource",
-                  "title": "API Version"
-                },
-                "kind": {
-                  "type": "string",
-                  "default": "Group",
-                  "description": "Kind of the group resource",
-                  "title": "Kind"
-                },
-                "metadata": {
-                  "type": "object",
-                  "example": {
-                    "name": "some-name",
-                    "project": "defaultproject"
-                  },
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "description": "name of the resource",
-                      "title": "Name"
-                    },
-                    "displayName": {
-                      "type": "string",
-                      "description": "display name of the resource",
-                      "title": "Display Name"
-                    },
-                    "description": {
-                      "type": "string",
-                      "description": "description of the resource",
-                      "title": "Description"
-                    },
-                    "labels": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "labels of the resource",
-                      "title": "Labels"
-                    },
-                    "annotations": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      },
-                      "description": "annotations of the resource",
-                      "title": "Annotations"
-                    },
-                    "project": {
-                      "type": "string",
-                      "description": "Project of the resource",
-                      "title": "Project"
-                    },
-                    "id": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "urlScope": {
-                      "type": "string",
-                      "readOnly": true
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    },
-                    "modifiedAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "readOnly": true
-                    }
-                  },
-                  "description": "metadata of the resource",
-                  "title": "Metadata"
-                },
-                "spec": {
-                  "$ref": "#/definitions/v3GroupSpec",
-                  "description": "Metadata of the group resource",
-                  "title": "Metadata"
-                },
-                "status": {
-                  "$ref": "#/definitions/commonv3Status",
-                  "description": "Status of the resource",
-                  "title": "Status",
-                  "readOnly": true
-                }
-              },
-              "description": "Group",
-              "title": "Group",
-              "required": [
-                "apiVersion",
-                "kind",
-                "metadata",
-                "spec",
-                "name",
-                "project"
-              ]
+              "$ref": "#/definitions/GroupServiceCreateGroupBody"
             }
           }
         ],
@@ -951,6 +757,206 @@
     }
   },
   "definitions": {
+    "GroupServiceCreateGroupBody": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "system.k8smgmt.io/v3",
+          "description": "API Version of the group resource",
+          "title": "API Version"
+        },
+        "kind": {
+          "type": "string",
+          "default": "Group",
+          "description": "Kind of the group resource",
+          "title": "Kind"
+        },
+        "metadata": {
+          "type": "object",
+          "example": {
+            "name": "some-name",
+            "project": "defaultproject"
+          },
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "name of the resource",
+              "title": "Name"
+            },
+            "displayName": {
+              "type": "string",
+              "description": "display name of the resource",
+              "title": "Display Name"
+            },
+            "description": {
+              "type": "string",
+              "description": "description of the resource",
+              "title": "Description"
+            },
+            "labels": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "labels of the resource",
+              "title": "Labels"
+            },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "annotations of the resource",
+              "title": "Annotations"
+            },
+            "project": {
+              "type": "string",
+              "description": "Project of the resource",
+              "title": "Project"
+            },
+            "id": {
+              "type": "string",
+              "readOnly": true
+            },
+            "urlScope": {
+              "type": "string",
+              "readOnly": true
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            },
+            "modifiedAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            }
+          },
+          "description": "metadata of the resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3GroupSpec",
+          "description": "Metadata of the group resource",
+          "title": "Metadata"
+        },
+        "status": {
+          "$ref": "#/definitions/commonv3Status",
+          "description": "Status of the resource",
+          "title": "Status",
+          "readOnly": true
+        }
+      },
+      "description": "Group",
+      "title": "Group",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec",
+        "name",
+        "project"
+      ]
+    },
+    "GroupServiceUpdateGroupBody": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "default": "system.k8smgmt.io/v3",
+          "description": "API Version of the group resource",
+          "title": "API Version"
+        },
+        "kind": {
+          "type": "string",
+          "default": "Group",
+          "description": "Kind of the group resource",
+          "title": "Kind"
+        },
+        "metadata": {
+          "type": "object",
+          "example": {
+            "name": "some-name",
+            "project": "defaultproject"
+          },
+          "properties": {
+            "displayName": {
+              "type": "string",
+              "description": "display name of the resource",
+              "title": "Display Name"
+            },
+            "description": {
+              "type": "string",
+              "description": "description of the resource",
+              "title": "Description"
+            },
+            "labels": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "labels of the resource",
+              "title": "Labels"
+            },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "annotations of the resource",
+              "title": "Annotations"
+            },
+            "project": {
+              "type": "string",
+              "description": "Project of the resource",
+              "title": "Project"
+            },
+            "id": {
+              "type": "string",
+              "readOnly": true
+            },
+            "urlScope": {
+              "type": "string",
+              "readOnly": true
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            },
+            "modifiedAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            }
+          },
+          "description": "metadata of the resource",
+          "title": "Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v3GroupSpec",
+          "description": "Metadata of the group resource",
+          "title": "Metadata"
+        },
+        "status": {
+          "$ref": "#/definitions/commonv3Status",
+          "description": "Status of the resource",
+          "title": "Status",
+          "readOnly": true
+        }
+      },
+      "description": "Group",
+      "title": "Group",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec",
+        "project"
+      ]
+    },
     "commonv3Status": {
       "type": "object",
       "properties": {

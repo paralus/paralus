@@ -309,7 +309,7 @@ retry:
 			Password:  p,
 			Groups:    []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
 			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{
-				{Role: "ADMIN", Group: &admingrp.Metadata.Name},
+				{Role: "ADMIN", Group: admingrp.Metadata.Name},
 			},
 			ForceReset: true,
 		},

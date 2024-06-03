@@ -50,8 +50,8 @@ func TestCreateProject(t *testing.T) {
 			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{
 				{
 					Role:    "PROJECT_READ_ONLY",
-					Project: &name,
-					Group:   &group,
+					Project: name,
+					Group:   group,
 				},
 			},
 		},
@@ -118,7 +118,7 @@ func TestCreateProjectFull(t *testing.T) {
 		Metadata: &v3.Metadata{Id: puuid, Name: "project-" + puuid, Organization: "orgname"},
 		Spec: &systemv3.ProjectSpec{
 			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{
-				{Project: &te[0], Namespace: &te[1], Group: &te[2], Role: te[3]},
+				{Project: te[0], Namespace: te[1], Group: te[2], Role: te[3]},
 			},
 			UserRoles: []*userv3.UserRole{
 				{User: te[4], Role: te[3]},
@@ -360,11 +360,11 @@ func TestProjectList(t *testing.T) {
 	if pl.Items[0].Metadata.Name != "project-"+uid {
 		t.Errorf("incorrect project name; expected '%v', got '%v'", "project-"+uid, pl.Items[0].Metadata.Name)
 	}
-	if *pl.Items[0].Spec.ProjectNamespaceRoles[0].Project != "test-project1" {
-		t.Errorf("incorrect projectnamespacerole; expected '%v', got '%v'", "test-project1", *pl.Items[0].Spec.ProjectNamespaceRoles[0].Project)
+	if pl.Items[0].Spec.ProjectNamespaceRoles[0].Project != "test-project1" {
+		t.Errorf("incorrect projectnamespacerole; expected '%v', got '%v'", "test-project1", pl.Items[0].Spec.ProjectNamespaceRoles[0].Project)
 	}
-	if *pl.Items[0].Spec.ProjectNamespaceRoles[1].Namespace != "test-namespace2" {
-		t.Errorf("incorrect projectnamespacerole; expected '%v', got '%v'", "test-namespace2", *pl.Items[0].Spec.ProjectNamespaceRoles[1].Namespace)
+	if pl.Items[0].Spec.ProjectNamespaceRoles[1].Namespace != "test-namespace2" {
+		t.Errorf("incorrect projectnamespacerole; expected '%v', got '%v'", "test-namespace2", pl.Items[0].Spec.ProjectNamespaceRoles[1].Namespace)
 	}
 	if pl.Items[0].Spec.UserRoles[0].User != "test-user3" {
 		t.Errorf("incorrect userrole; expected '%v', got '%v'", "test-user3", pl.Items[0].Spec.UserRoles[0].User)
@@ -419,12 +419,12 @@ func TestProjectListNonDev(t *testing.T) {
 		t.Errorf("incorrect project name; expected '%v', got '%v'", "project-"+uid, pl.Items[0].Metadata.Name)
 	}
 
-	if *pl.Items[0].Spec.ProjectNamespaceRoles[0].Project != "test-project1" {
-		t.Errorf("incorrect projectnamespacerole; expected '%v', got '%v'", "test-project1", *pl.Items[0].Spec.ProjectNamespaceRoles[0].Project)
+	if pl.Items[0].Spec.ProjectNamespaceRoles[0].Project != "test-project1" {
+		t.Errorf("incorrect projectnamespacerole; expected '%v', got '%v'", "test-project1", pl.Items[0].Spec.ProjectNamespaceRoles[0].Project)
 	}
 
-	if *pl.Items[0].Spec.ProjectNamespaceRoles[1].Namespace != "test-namespace2" {
-		t.Errorf("incorrect projectnamespacerole; expected '%v', got '%v'", "test-namespace2", *pl.Items[0].Spec.ProjectNamespaceRoles[1].Namespace)
+	if pl.Items[0].Spec.ProjectNamespaceRoles[1].Namespace != "test-namespace2" {
+		t.Errorf("incorrect projectnamespacerole; expected '%v', got '%v'", "test-namespace2", pl.Items[0].Spec.ProjectNamespaceRoles[1].Namespace)
 	}
 
 	if pl.Items[0].Spec.UserRoles[0].User != "test-user3" {

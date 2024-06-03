@@ -96,11 +96,11 @@ func TestCreateUserWithRole(t *testing.T) {
 			}
 			if tc.project {
 				pruuid := addFetchIdExpectation(mock, "project")
-				role.Project = &pruuid
+				role.Project = pruuid
 			}
 			if tc.namespace {
 				var ns = "ns"
-				role.Namespace = &ns
+				role.Namespace = ns
 			}
 			mock.ExpectQuery(fmt.Sprintf(`INSERT INTO "%v"`, tc.dbname)).
 				WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(uuid.New().String()))
@@ -156,7 +156,7 @@ func TestUpdateUser(t *testing.T) {
 	var ns string = "ns"
 	user := &userv3.User{
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
-		Spec:     &userv3.UserSpec{ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: idnamea(pruuid, "project"), Namespace: &ns, Role: idname(ruuid, "role")}}},
+		Spec:     &userv3.UserSpec{ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: idnamea(pruuid, "project"), Namespace: ns, Role: idname(ruuid, "role")}}},
 	}
 	user, err := us.Update(context.Background(), user)
 	if err != nil {
@@ -197,7 +197,7 @@ func TestUpdateUserWithGroup(t *testing.T) {
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
 		Spec: &userv3.UserSpec{
 			Groups:                []string{"group"},
-			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: idnamea(pruuid, "project"), Namespace: &ns, Role: idname(ruuid, "role")}},
+			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: idnamea(pruuid, "project"), Namespace: ns, Role: idname(ruuid, "role")}},
 		},
 	}
 	user, err := us.Update(context.Background(), user)
@@ -240,7 +240,7 @@ func TestUpdateUserWithIdpGroupPassed(t *testing.T) {
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
 		Spec: &userv3.UserSpec{
 			IdpGroups:             []string{"group"},
-			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: idnamea(pruuid, "project"), Namespace: &ns, Role: idname(ruuid, "role")}},
+			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: idnamea(pruuid, "project"), Namespace: ns, Role: idname(ruuid, "role")}},
 		},
 	}
 	user, err := us.Update(context.Background(), user)
@@ -283,7 +283,7 @@ func TestUpdateUserWithIdpGroupFetched(t *testing.T) {
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
 		Spec: &userv3.UserSpec{
 			IdpGroups:             []string{"group"},
-			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: idnamea(pruuid, "project"), Namespace: &ns, Role: idname(ruuid, "role")}},
+			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: idnamea(pruuid, "project"), Namespace: ns, Role: idname(ruuid, "role")}},
 		},
 	}
 	user, err := us.Update(context.Background(), user)
@@ -322,7 +322,7 @@ func TestUpdateUserInvalid(t *testing.T) {
 		Metadata: &v3.Metadata{Partner: "partner-" + puuid, Organization: "org-" + ouuid, Name: "user-" + uuuid},
 		Spec: &userv3.UserSpec{
 			IdpGroups:             []string{"unnecessary"},
-			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: idnamea(pruuid, "project"), Namespace: &ns, Role: idname(ruuid, "role")}},
+			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{{Project: idnamea(pruuid, "project"), Namespace: ns, Role: idname(ruuid, "role")}},
 		},
 	}
 	user, err := us.Update(context.Background(), user)
@@ -470,8 +470,8 @@ func TestUserGetInfo(t *testing.T) {
 	if len(userinfo.Spec.Permissions[0].Permissions) != 2 {
 		t.Errorf("incorrect number of permissions; expected '%v', got '%v'", 2, len(userinfo.Spec.Permissions[0].Permissions))
 	}
-	if len(*userinfo.Spec.Permissions[0].Scope) == 0 {
-		t.Errorf("incorrect scope for permissions; expected '%v', got '%v'", fakescope, *userinfo.Spec.Permissions[0].Scope)
+	if len(userinfo.Spec.Permissions[0].Scope) == 0 {
+		t.Errorf("incorrect scope for permissions; expected '%v', got '%v'", fakescope, userinfo.Spec.Permissions[0].Scope)
 	}
 
 }

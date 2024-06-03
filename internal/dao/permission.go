@@ -113,6 +113,26 @@ func GetAccountProjectsByPermission(ctx context.Context, db bun.IDB, accountID, 
 	return aps, err
 }
 
+func GetAccountProjectByPermission(ctx context.Context, db bun.IDB, accountID, organizationID, partnerID uuid.UUID, permission string) (models.AccountPermission, error) {
+	var aps models.AccountPermission
+
+	sq := db.NewSelect().Model(&aps).
+		Where("account_id = ?", accountID).
+		Where("permission_name = ?", permission)
+
+	if partnerID != uuid.Nil {
+		sq.Where("partner_id = ?", partnerID)
+	}
+
+	if organizationID != uuid.Nil {
+		sq.Where("organization_id = ?", organizationID)
+	}
+
+	err := sq.Limit(1).Scan(ctx)
+
+	return aps, err
+}
+
 func GetDefaultAccountProject(ctx context.Context, db bun.IDB, accountID uuid.UUID) (models.AccountPermission, error) {
 	var aps models.AccountPermission
 

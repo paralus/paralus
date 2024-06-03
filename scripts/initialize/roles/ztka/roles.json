@@ -76,7 +76,8 @@
             "cluster.write",
             "hub.openapi.explorer.read",
             "project.read",
-            "project.write"
+            "project.write",
+            "cli.config.read"
         ],
         "PROJECT_READ_ONLY": [
             "console.all",
@@ -89,7 +90,8 @@
             "v2debug.read",
             "kubectl.cluster.read",
             "cluster.read",
-            "hub.openapi.explorer.read"
+            "hub.openapi.explorer.read",
+            "cli.config.read"
         ],
         "CLUSTER_ADMIN": [
             "console.all",
@@ -104,7 +106,8 @@
             "kubectl.clustersettings.write",
             "kubectl.cluster.read",
             "cluster.read",
-            "kubectl.fullaccess"
+            "kubectl.fullaccess",
+            "cli.config.read"
         ]
     },
     "NAMESPACE": {
@@ -117,7 +120,8 @@
             "kubeconfig.read",
             "v2debug.read",
             "kubectl.namespace.read",
-            "kubectl.namespace.write"
+            "kubectl.namespace.write",
+            "cli.config.read"
         ],
         "NAMESPACE_READ_ONLY": [
             "partner.read",
@@ -126,7 +130,8 @@
             "cluster.read",
             "kubeconfig.read",
             "v2debug.read",
-            "kubectl.namespace.read"
+            "kubectl.namespace.read",
+            "cli.config.read"
         ]
     }
 }
