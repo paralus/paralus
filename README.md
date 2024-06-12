@@ -5,6 +5,7 @@
 ![go](https://img.shields.io/github/go-mod/go-version/paralus/paralus?color=%2300ADD8&logo=go&logoColor=%2300ADD8)
 ![license](https://img.shields.io/github/license/paralus/paralus?color=%23D22128&label=License&logo=apache&logoColor=%23D22128)
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/6823/badge)](https://bestpractices.coreinfrastructure.org/projects/6823)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fparalus%2Fparalus.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fparalus%2Fparalus?ref=badge_shield)
 <a href="https://join.slack.com/t/paralus/shared_invite/zt-1a9x6y729-ySmAq~I3tjclEG7nDoXB0A" target="_blank">
 <img src="https://img.shields.io/badge/Community-%20Slack-blue.svg?logo=slack&&logoColor=%23FFA500&color=%23FFA500" />
 </a>
@@ -69,3 +70,7 @@ You're also very welcome to look at the existing issues. If there’s something 
 ## Authors
 
 This project is maintained & supported by [Rafay](https://rafay.co). Meet the [maintainers](MAINTAINERS.md) of Paralus.
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fparalus%2Fparalus.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fparalus%2Fparalus?ref=badge_large)
