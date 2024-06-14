@@ -1,5 +1,16 @@
 ## Unreleased
 
+## [0.2.8](https://github.com/paralus/paralus/compare/v0.2.7...v0.2.8) (2024-06-14)
+
+### Bug Fixes
+
+* unable to create/update project when roles specified ([#314](https://github.com/paralus/paralus/issues/314)) ([ccec5c3](https://github.com/paralus/paralus/commit/ccec5c3c1899eba36f48a33b61403a8a0f8ff845))
+
+* adding permissions for cli.config.read and code fix for non admin users ([#274](https://github.com/paralus/paralus/issues/274)) ([dd56358](https://github.com/paralus/paralus/commit/dd563582d0c461c6b31392c10548a4bc0816a12e))
+
+* linting(fixes): unused func/var/methods removed ([#184](https://github.com/paralus/paralus/issues/184)) ([ca4e2c6](https://github.com/paralus/paralus/commit/ca4e2c61313168ac7beeb76b88350524f00a8467))
+
+
 ## [0.2.7](https://github.com/paralus/paralus/compare/v0.2.6...v0.2.7) (2024-02-28)
 
 ### Features
