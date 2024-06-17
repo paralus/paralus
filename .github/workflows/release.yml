@@ -53,7 +53,7 @@ jobs:
 
       - name: Build and push Docker image
         id: build
-        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0
+        uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25
         with:
           context: .
           platforms: linux/amd64,linux/arm64
@@ -69,7 +69,7 @@ jobs:
 
       - name: Build and push Docker image (paralus-init)
         id: build-init
-        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0
+        uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25
         with:
           context: .
           file: ./Dockerfile.initialize
@@ -86,7 +86,7 @@ jobs:
 
       - name: Build and push Docker image (kratos-sync)
         id: build-sync
-        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0
+        uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25
         with:
           context: .
           file: ./Dockerfile.synchronizer
