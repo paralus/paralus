@@ -237,6 +237,22 @@ or in case of multiple issues:
 Closes #177, #200, #251
 ```
 
+# GitHub Labels
+GitHub labels are used for management of GitHub issues and pull requests.
+
+## List of labels
+| Name                            | Description                                                                                         |
+| ------------                    | -----------                                                                                         |
+| needs-triage                    | Indicates an issue or PR lacks a triage/foo label and requires one.                                 |
+| triage/accepted                 | Indicates an issue or PR is ready to be actively worked on.                                         |
+| priority/awaiting-more-evidence | Lowest priority. Possibly useful, but not yet enough support to actually get it done.               |
+| priority/backlog                | Higher priority than priority/awaiting-more-evidence.                                               |
+| priority/critical-urgent        | Highest priority. Must be actively worked on as someone's top priority right now.                   |
+| priority/important-longterm     | Important over the long term, but may not be staffed and/or may need multiple releases to complete. |
+| priority/important-soon         | Must be staffed and worked on either currently, or very soon, ideally in time for the next release. |
+|                                 |                                                                                                     |
+
+*Note:* These labels are copied from [Kubernetes label documentation](https://github.com/kubernetes/test-infra/blob/master/label_sync/labels.yaml).
 # DCO Sign off
 
 All authors to the project retain copyright to their work. However, to ensure
