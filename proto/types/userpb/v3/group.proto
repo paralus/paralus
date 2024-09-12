@@ -125,7 +125,7 @@ message GroupSpec {
   string type = 3
       [ (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         title : "Type"
-        description : "Type of group"
+        description : "Type of group, defaults to `SYSYTEM`"
       } ];
 }
 

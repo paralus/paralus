@@ -30,6 +30,9 @@ func updateGroupStatus(req *userpbv3.Group, resp *userpbv3.Group, err error) *us
 		}
 		return req
 	}
+	if req.Spec.Type == "" {
+		req.Spec.Type = "SYSTEM"
+	}
 	resp.Status = &v3.Status{ConditionStatus: v3.ConditionStatus_StatusOK}
 	return resp
 }
