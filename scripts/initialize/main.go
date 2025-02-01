@@ -77,13 +77,29 @@ func addResourcePermissions(db *bun.DB, basePath string) error {
 			if err != nil {
 				log.Fatal(err)
 			}
-			items = append(items, data)
+			existing := &models.ResourcePermission{}
+			err = db.NewSelect().Model(existing).Where("name = ?", data.Name).Scan(context.Background())
+			if err != nil && err != sql.ErrNoRows {
+				log.Fatal("Error verifying existing resource permissions ", err)
+			}
+			if err == sql.ErrNoRows {
+				_, err = dao.Create(context.Background(), db, &data)
+				if err != nil {
+					log.Fatal("Error inserting resource permissions ", err)
+				}
+
+			} else {
+				_, err = db.NewUpdate().Model(&data).Where("name = ?", data.Name).Exec(context.Background())
+				if err != nil {
+					log.Fatal("Error updating resource permissions ", err)
+				}
+
+			}
+
 		}
 	}
 
-	fmt.Println("Adding", len(items), "resource permissions")
-	_, err = dao.Create(context.Background(), db, &items)
-	return err
+	return nil
 }
 
 func main() {
@@ -193,17 +209,6 @@ func main() {
 	gs := service.NewGroupService(db, as, auditLogger)
 	us := service.NewUserService(providers.NewKratosAuthProvider(kc), db, as, nil, common.CliConfigDownloadData{}, auditLogger, true)
 	prs := service.NewProjectService(db, as, auditLogger, true)
-
-	//check if there are role permissions already present
-	existingPermissions := &[]models.ResourceRolePermission{}
-	_, err = dao.ListAll(context.Background(), db, existingPermissions)
-	if err != nil {
-		log.Fatal("Error verifying existing role permissions ", err)
-	}
-	if len(*existingPermissions) > 0 {
-		fmt.Println("resource permissions already exists! cannot invoke initialize again")
-		return
-	}
 
 	//add resource permissions
 	err = addResourcePermissions(db, path.Join("scripts", "initialize", "permissions", "base"))
