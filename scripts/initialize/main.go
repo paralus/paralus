@@ -58,7 +58,6 @@ const (
 )
 
 func addResourcePermissions(db *bun.DB, basePath string) error {
-	var items []models.ResourcePermission
 
 	files, err := ioutil.ReadDir(basePath)
 	if err != nil {
@@ -70,28 +69,27 @@ func addResourcePermissions(db *bun.DB, basePath string) error {
 			if err != nil {
 				log.Fatal(err)
 			}
-			// It has ResourceRefId, but that does not seem to be used in the old implementation
-			// Also, why do we need two items?
+
 			var data models.ResourcePermission
 			err = json.Unmarshal(content, &data)
 			if err != nil {
-				log.Fatal(err)
+				return fmt.Errorf("failed to unmarshal permissions from %s: %v", file.Name(), err)
 			}
 			existing := &models.ResourcePermission{}
 			err = db.NewSelect().Model(existing).Where("name = ?", data.Name).Scan(context.Background())
 			if err != nil && err != sql.ErrNoRows {
-				log.Fatal("Error verifying existing resource permissions ", err)
+				return fmt.Errorf("Error verifying existing resource permissions ", err)
 			}
 			if err == sql.ErrNoRows {
 				_, err = dao.Create(context.Background(), db, &data)
 				if err != nil {
-					log.Fatal("Error inserting resource permissions ", err)
+					return fmt.Errorf("failed to create permission %s: %v", data.Name, err)
 				}
 
 			} else {
 				_, err = db.NewUpdate().Model(&data).Where("name = ?", data.Name).Exec(context.Background())
 				if err != nil {
-					log.Fatal("Error updating resource permissions ", err)
+					return fmt.Errorf("failed to update permission %s: %v", data.Name, err)
 				}
 
 			}
