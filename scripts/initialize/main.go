@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"strings"
 	"time"
 
 	kclient "github.com/ory/kratos-client-go"
@@ -98,6 +99,37 @@ func addResourcePermissions(db *bun.DB, basePath string) error {
 	}
 
 	return nil
+}
+
+func createDefaultGroup(ctx context.Context, gs service.GroupService, name, partner, org, desc string, groupType string, role []*userv3.ProjectNamespaceRole) (*userv3.Group, error) {
+	existingGroup, err := gs.GetByName(ctx, &userv3.Group{
+		Metadata: &commonv3.Metadata{
+			Name:         name,
+			Partner:      partner,
+			Organization: org,
+		},
+	})
+	if err != nil && !strings.Contains(err.Error(), "not found") && !strings.Contains(err.Error(), "no rows in result set") {
+		return nil, fmt.Errorf("unable to get default group %s: %w", name, err)
+	}
+	if err == nil {
+		return existingGroup, nil
+	}
+	if existingGroup == nil || strings.Contains(err.Error(), "not found") || strings.Contains(err.Error(), "no rows in result set") {
+		return gs.Create(ctx, &userv3.Group{
+			Metadata: &commonv3.Metadata{
+				Name:         name,
+				Partner:      partner,
+				Organization: org,
+				Description:  desc,
+			},
+			Spec: &userv3.GroupSpec{
+				Type:                  groupType,
+				ProjectNamespaceRoles: role,
+			},
+		})
+	}
+	return nil, err
 }
 
 func main() {
@@ -217,116 +249,193 @@ func main() {
 	if err != nil {
 		log.Fatal("Error running from ztka directory ", err)
 	}
-
-	// Create partner
-	_, err = ps.Create(context.Background(), &systemv3.Partner{
-		Metadata: &commonv3.Metadata{Name: *partner, Description: *partnerDesc},
-		Spec:     &systemv3.PartnerSpec{Host: *partnerHost},
-	})
+	/// Modify partner creation
+	_, err = ps.GetByName(context.Background(), *partner)
 	if err != nil {
-		log.Fatal("unable to create partner", err)
-	}
-	_, err = os.Create(context.Background(), &systemv3.Organization{
-		Metadata: &commonv3.Metadata{Name: *org, Partner: *partner, Description: *orgDesc},
-		Spec:     &systemv3.OrganizationSpec{Active: true},
-	})
-	if err != nil {
-		log.Fatal("unable to create organization", err)
+		if strings.Contains(err.Error(), "sql: no rows in result set") || strings.Contains(err.Error(), "not found") {
+			_, err = ps.Create(context.Background(), &systemv3.Partner{
+				Metadata: &commonv3.Metadata{
+					Name:        *partner,
+					Description: *partnerDesc,
+				},
+				Spec: &systemv3.PartnerSpec{
+					Host: *partnerHost,
+				},
+			})
+			if err != nil {
+				log.Fatal("unable to create partner:", err)
+			}
+		} else {
+			log.Fatal("error checking partner existence:", err)
+		}
 	}
 
+	_, err = os.GetByName(context.Background(), *org)
+	if err != nil {
+		if strings.Contains(err.Error(), "sql: no rows in result set") || strings.Contains(err.Error(), "not found") {
+			_, err = os.Create(context.Background(), &systemv3.Organization{
+				Metadata: &commonv3.Metadata{
+					Name:        *org,
+					Partner:     *partner,
+					Description: *orgDesc,
+				},
+				Spec: &systemv3.OrganizationSpec{
+					Active: true,
+				},
+			})
+			if err != nil {
+				log.Fatal("unable to create org:", err)
+			}
+		} else {
+			log.Fatal("error checking org existence:", err)
+		}
+	}
 	// this is used to figure out if the request originated internally so as to not override `builtin`
 	internalCtx := context.WithValue(context.Background(), common.SessionInternalKey, true)
 	for scope := range data {
 		for name := range data[scope] {
 			perms := data[scope][name]
 			fmt.Println(scope, name, len(perms))
-			_, err := rs.Create(internalCtx, &rolev3.Role{
-				Metadata: &commonv3.Metadata{Name: name, Partner: *partner, Organization: *org, Description: roleDesc[name]},
-				Spec:     &rolev3.RoleSpec{IsGlobal: true, Scope: scope, Rolepermissions: perms, Builtin: true},
-			})
+			roleToCheck := &rolev3.Role{
+				Metadata: &commonv3.Metadata{
+					Name:         name,
+					Partner:      *partner,
+					Organization: *org,
+				},
+			}
+			existingRole, err := rs.GetByName(internalCtx, roleToCheck)
+
+			// Detailed error handling
 			if err != nil {
-				log.Fatalf("unable to create rolepermission %s %s: %s", scope, name, err)
+				if strings.Contains(err.Error(), "not found") ||
+					strings.Contains(err.Error(), "unable to get partner and org id") || strings.Contains(err.Error(), "no rows in result set") {
+					// Create role if not found
+					_, createErr := rs.Create(internalCtx, &rolev3.Role{
+						Metadata: &commonv3.Metadata{
+							Name:         name,
+							Partner:      *partner,
+							Organization: *org,
+							Description:  roleDesc[name],
+						},
+						Spec: &rolev3.RoleSpec{
+							IsGlobal:        true,
+							Scope:           scope,
+							Rolepermissions: perms,
+							Builtin:         true,
+						},
+					})
+					if createErr != nil {
+						log.Fatal("unable to create role:", createErr)
+					}
+					continue
+				}
+				// Other unexpected errors
+				log.Fatal("error getting role:", err)
+			}
+
+			// Update non-builtin roles
+			if existingRole != nil && !existingRole.Spec.Builtin {
+				existingRole.Spec.Rolepermissions = perms
+				_, err := rs.Update(internalCtx, existingRole)
+				if err != nil {
+					log.Fatal("unable to update role:", err)
+				}
 			}
 		}
 	}
-
 	//default "All Local Users" group should be created
-	localUsersGrp, err := gs.Create(context.Background(), &userv3.Group{
-		Metadata: &commonv3.Metadata{
-			Name:         "All Local Users",
-			Partner:      *partner,
-			Organization: *org,
-			Description:  "Default group for all local users",
-		},
-		Spec: &userv3.GroupSpec{
-			Type: "DEFAULT_USERS",
-		},
-	})
+	localUsersGrp, err := createDefaultGroup(
+		context.Background(),
+		gs,
+		"All Local Users",
+		*partner,
+		*org,
+		"Default group for all local users",
+		"DEFAULT_USERS",
+		nil,
+	)
 	if err != nil {
-		log.Fatal("unable to create default group", err)
+		log.Fatal("unable to handle default users group:", err)
 	}
 
-	//default "Organization Admins" group should be created
-	admingrp, err := gs.Create(context.Background(), &userv3.Group{
-		Metadata: &commonv3.Metadata{
-			Name:         "Organization Admins",
-			Partner:      *partner,
-			Organization: *org,
-			Description:  "Default organization admin group",
-		},
-		Spec: &userv3.GroupSpec{
-			Type: "DEFAULT_ADMINS",
-			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{
-				{
-					Role: "ADMIN",
-				},
+	admingrp, err := createDefaultGroup(
+		context.Background(),
+		gs,
+		"Organization Admins",
+		*partner,
+		*org,
+		"Default organization admin group",
+		"DEFAULT_ADMINS",
+		[]*userv3.ProjectNamespaceRole{
+			{
+				Role: "ADMIN",
 			},
 		},
-	})
+	)
 	if err != nil {
-		log.Fatal("unable to create default group", err)
+		log.Fatal("unable to handle admin group:", err)
 	}
 
-	//default project with name "default" should be created with default flag true
-	prs.Create(context.Background(), &systemv3.Project{
-		Metadata: &commonv3.Metadata{
-			Name:         "default",
-			Description:  "Default project",
-			Partner:      *partner,
-			Organization: *org,
-		},
-		Spec: &systemv3.ProjectSpec{
-			Default: true,
-		},
-	})
-
+	existingProject, err := prs.GetByName(context.Background(), "default")
+	if err != nil && !strings.Contains(err.Error(), "not found") && !strings.Contains(err.Error(), "no rows in result set") {
+		log.Fatal("unable to get project", err)
+	}
+	if existingProject == nil {
+		//default project with name "default" should be created with default flag true
+		_, err := prs.Create(context.Background(), &systemv3.Project{
+			Metadata: &commonv3.Metadata{
+				Name:         "default",
+				Description:  "Default project",
+				Partner:      *partner,
+				Organization: *org,
+			},
+			Spec: &systemv3.ProjectSpec{
+				Default: true,
+			},
+		})
+		if err != nil {
+			log.Fatal("unable to create project", err)
+		}
+	}
 	p := utils.GetRandomPassword(8)
 retry:
 	numOfRetries := 0
 	// should we directly interact with kratos and create a user with a password?
-	_, err = us.Create(context.Background(), &userv3.User{
-		Metadata: &commonv3.Metadata{Name: *oae, Partner: *partner, Organization: *org},
-		Spec: &userv3.UserSpec{
-			FirstName: *oafn,
-			LastName:  *oaln,
-			Password:  p,
-			Groups:    []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
-			ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{
-				{Role: "ADMIN", Group: admingrp.Metadata.Name},
-			},
-			ForceReset: true,
+	existingUser, err := us.GetByName(context.Background(), &userv3.User{
+		Metadata: &commonv3.Metadata{
+			Name:         *oae,
+			Partner:      *partner,
+			Organization: *org,
 		},
 	})
+	if err != nil && !strings.Contains(err.Error(), "not found") && !strings.Contains(err.Error(), "no rows in result set") {
+		log.Fatal("unable to get user", err)
+	}
+	if existingUser == nil {
+		_, err = us.Create(context.Background(), &userv3.User{
+			Metadata: &commonv3.Metadata{Name: *oae, Partner: *partner, Organization: *org},
+			Spec: &userv3.UserSpec{
+				FirstName: *oafn,
+				LastName:  *oaln,
+				Password:  p,
+				Groups:    []string{admingrp.Metadata.Name, localUsersGrp.Metadata.Name},
+				ProjectNamespaceRoles: []*userv3.ProjectNamespaceRole{
+					{Role: "ADMIN", Group: admingrp.Metadata.Name},
+				},
+				ForceReset: true,
+			},
+		})
 
-	if err != nil {
-		fmt.Println("err:", err)
-		numOfRetries = +1
-		if numOfRetries > 20 {
-			log.Fatal("unable to bind user to role", err)
+		if err != nil {
+			fmt.Println("err:", err)
+			numOfRetries = +1
+			if numOfRetries > 20 {
+				log.Fatal("unable to bind user to role", err)
+			}
+			fmt.Println("retrying in 10s, waiting for kratos to be up ... ")
+			time.Sleep(10 * time.Second)
+			goto retry
 		}
-		fmt.Println("retrying in 10s, waiting for kratos to be up ... ")
-		time.Sleep(10 * time.Second)
-		goto retry
 	}
 	fmt.Printf("Org Admin default password: %s\n", p)
 }
