@@ -250,45 +250,31 @@ func main() {
 		log.Fatal("Error running from ztka directory ", err)
 	}
 	/// Modify partner creation
-	_, err = ps.GetByName(context.Background(), *partner)
+	_, err = ps.Upsert(context.Background(), &systemv3.Partner{
+		Metadata: &commonv3.Metadata{
+			Name:        *partner,
+			Description: *partnerDesc,
+		},
+		Spec: &systemv3.PartnerSpec{
+			Host: *partnerHost,
+		},
+	})
 	if err != nil {
-		if strings.Contains(err.Error(), "sql: no rows in result set") || strings.Contains(err.Error(), "not found") {
-			_, err = ps.Create(context.Background(), &systemv3.Partner{
-				Metadata: &commonv3.Metadata{
-					Name:        *partner,
-					Description: *partnerDesc,
-				},
-				Spec: &systemv3.PartnerSpec{
-					Host: *partnerHost,
-				},
-			})
-			if err != nil {
-				log.Fatal("unable to create partner:", err)
-			}
-		} else {
-			log.Fatal("error checking partner existence:", err)
-		}
+		log.Fatal("unable to create partner:", err)
 	}
 
-	_, err = os.GetByName(context.Background(), *org)
+	_, err = os.Upsert(context.Background(), &systemv3.Organization{
+		Metadata: &commonv3.Metadata{
+			Name:        *org,
+			Description: *orgDesc,
+			Partner:     *partner,
+		},
+		Spec: &systemv3.OrganizationSpec{
+			Active: true,
+		},
+	})
 	if err != nil {
-		if strings.Contains(err.Error(), "sql: no rows in result set") || strings.Contains(err.Error(), "not found") {
-			_, err = os.Create(context.Background(), &systemv3.Organization{
-				Metadata: &commonv3.Metadata{
-					Name:        *org,
-					Partner:     *partner,
-					Description: *orgDesc,
-				},
-				Spec: &systemv3.OrganizationSpec{
-					Active: true,
-				},
-			})
-			if err != nil {
-				log.Fatal("unable to create org:", err)
-			}
-		} else {
-			log.Fatal("error checking org existence:", err)
-		}
+		log.Fatal("unable to create org:", err)
 	}
 	// this is used to figure out if the request originated internally so as to not override `builtin`
 	internalCtx := context.WithValue(context.Background(), common.SessionInternalKey, true)

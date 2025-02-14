@@ -3,11 +3,13 @@ package service
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/paralus/paralus/internal/dao"
 	"github.com/paralus/paralus/internal/models"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	systemv3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	bun "github.com/uptrace/bun"
@@ -29,6 +31,8 @@ type PartnerService interface {
 	Delete(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error)
 	// list partner
 	GetOnlyPartner(ctx context.Context) (*systemv3.Partner, error)
+	// Upsert partner
+	Upsert(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error)
 }
 
 // partnerService implements PartnerService
@@ -313,4 +317,74 @@ func (s *partnerService) GetOnlyPartner(ctx context.Context) (partner *systemv3.
 		}
 	}
 	return partner, err
+}
+
+func (s *partnerService) Upsert(ctx context.Context, partner *systemv3.Partner) (*systemv3.Partner, error) {
+	// Convert settings to JSON if needed
+	sb, err := json.Marshal(map[string]interface{}{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal settings: %v", err)
+	}
+
+	p := models.Partner{
+		Name:                      partner.GetMetadata().GetName(),
+		Description:               partner.GetMetadata().GetDescription(),
+		Trash:                     false,
+		Settings:                  sb,
+		Host:                      partner.GetSpec().GetHost(),
+		Domain:                    partner.GetSpec().GetDomain(),
+		TosLink:                   partner.GetSpec().GetTosLink(),
+		LogoLink:                  partner.GetSpec().GetLogoLink(),
+		NotificationEmail:         partner.GetSpec().GetNotificationEmail(),
+		HelpdeskEmail:             partner.GetSpec().GetHelpdeskEmail(),
+		ProductName:               partner.GetSpec().GetProductName(),
+		SupportTeamName:           partner.GetSpec().GetSupportTeamName(),
+		OpsHost:                   partner.GetSpec().GetOpsHost(),
+		FavIconLink:               partner.GetSpec().GetFavIconLink(),
+		IsTOTPEnabled:             partner.GetSpec().GetIsTOTPEnabled(),
+		IsSyntheticPartnerEnabled: false,
+		CreatedAt:                 time.Now(),
+		ModifiedAt:                time.Now(),
+	}
+
+	sf, err := s.db.NewInsert().
+		Model(&p).
+		On("CONFLICT (name) WHERE trash IS FALSE DO UPDATE").
+		Set("description = EXCLUDED.description").
+		Set("host = EXCLUDED.host").
+		Set("domain = EXCLUDED.domain").
+		Set("tos_link = EXCLUDED.tos_link").
+		Set("logo_link = EXCLUDED.logo_link").
+		Set("notification_email = EXCLUDED.notification_email").
+		Set("support_team_name = EXCLUDED.support_team_name").
+		Set("ops_host = EXCLUDED.ops_host").
+		Set("fav_icon_link = EXCLUDED.fav_icon_link").
+		Set("is_totp_enabled = EXCLUDED.is_totp_enabled").
+		Set("modified_at = EXCLUDED.modified_at").
+		Exec(ctx)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to upsert partner: %v", err)
+	}
+	fmt.Println(sf)
+
+	return &systemv3.Partner{
+		Metadata: &commonv3.Metadata{
+			Name:        p.Name,
+			Description: p.Description,
+		},
+		Spec: &systemv3.PartnerSpec{
+			Host:              p.Host,
+			Domain:            p.Domain,
+			TosLink:           p.TosLink,
+			LogoLink:          p.LogoLink,
+			NotificationEmail: p.NotificationEmail,
+			HelpdeskEmail:     p.HelpdeskEmail,
+			ProductName:       p.ProductName,
+			SupportTeamName:   p.SupportTeamName,
+			OpsHost:           p.OpsHost,
+			FavIconLink:       p.FavIconLink,
+			IsTOTPEnabled:     p.IsTOTPEnabled,
+		},
+	}, nil
 }
