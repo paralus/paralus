@@ -12,6 +12,7 @@ import (
 	"github.com/paralus/paralus/internal/models"
 	"github.com/paralus/paralus/pkg/utils"
 	authzv1 "github.com/paralus/paralus/proto/types/authz"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	rolev3 "github.com/paralus/paralus/proto/types/rolepb/v3"
 	bun "github.com/uptrace/bun"
@@ -38,6 +39,8 @@ type RoleService interface {
 	Delete(context.Context, *rolev3.Role) (*rolev3.Role, error)
 	// list roles
 	List(context.Context, *rolev3.Role) (*rolev3.RoleList, error)
+	//Upsert
+	Upsert(context.Context, *rolev3.Role) (*rolev3.Role, error)
 }
 
 // roleService implements RoleService
@@ -455,4 +458,55 @@ func (s *roleService) List(ctx context.Context, role *rolev3.Role) (*rolev3.Role
 		return roleList, fmt.Errorf("missing organization id in metadata")
 	}
 	return roleList, nil
+}
+
+func (s *roleService) Upsert(ctx context.Context, role *rolev3.Role) (*rolev3.Role, error) {
+	partnerId, organizationId, err := s.getPartnerOrganization(ctx, s.db, role)
+	if err != nil {
+		return nil, fmt.Errorf("unable to get partner and org id")
+	}
+
+	rle := models.Role{
+		Name:           role.GetMetadata().GetName(),
+		Description:    role.GetMetadata().GetDescription(),
+		CreatedAt:      time.Now(),
+		ModifiedAt:     time.Now(),
+		Trash:          false,
+		OrganizationId: organizationId,
+		PartnerId:      partnerId,
+		IsGlobal:       role.GetSpec().GetIsGlobal(),
+		Builtin:        role.GetSpec().GetBuiltin(),
+		Scope:          strings.ToLower(role.GetSpec().GetScope()),
+	}
+
+	_, err = s.db.NewInsert().
+		Model(&rle).
+		On("CONFLICT (id) DO UPDATE").
+		Set("description = EXCLUDED.description").
+		Set("scope = EXCLUDED.scope").
+		Set("is_global = EXCLUDED.is_global").
+		Set("builtin = EXCLUDED.builtin").
+		Set("modified_at = EXCLUDED.modified_at").
+		Set("name = EXCLUDED.name").
+		Set("organization_id = EXCLUDED.organization_id").
+		Set("partner_id = EXCLUDED.partner_id").
+		Exec(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to upsert role: %v", err)
+	}
+
+	return &rolev3.Role{
+		Metadata: &commonv3.Metadata{
+			Name:         rle.Name,
+			Description:  rle.Description,
+			Partner:      role.GetMetadata().GetPartner(),
+			Organization: role.GetMetadata().GetOrganization(),
+		},
+		Spec: &rolev3.RoleSpec{
+			Scope:           rle.Scope,
+			IsGlobal:        rle.IsGlobal,
+			Builtin:         rle.Builtin,
+			Rolepermissions: role.GetSpec().GetRolepermissions(),
+		},
+	}, nil
 }
