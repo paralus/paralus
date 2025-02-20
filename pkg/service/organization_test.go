@@ -7,6 +7,7 @@ import (
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/google/uuid"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	systemv3 "github.com/paralus/paralus/proto/types/systempb/v3"
 )
@@ -179,5 +180,123 @@ func TestOrganizationUpdate(t *testing.T) {
 	_, err := ps.Update(context.Background(), organization)
 	if err != nil {
 		t.Fatal("could not update organization:", err)
+	}
+}
+
+func TestOrganizationUpsert(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
+	os := NewOrganizationService(db, getLogger())
+	orgID := uuid.New().String()
+	partnerID := uuid.New().String()
+	partnerName := "test-partner"
+
+	// Create test organization
+	organization := &systemv3.Organization{
+		Metadata: &commonv3.Metadata{
+			Name:        "org-" + orgID,
+			Description: "Test Organization Description",
+			Partner:     partnerName,
+		},
+		Spec: &systemv3.OrganizationSpec{
+			BillingAddress:    "123 Test St",
+			Active:            true,
+			Approved:          true,
+			Type:              "Enterprise",
+			AddressLine1:      "123 Main St",
+			AddressLine2:      "Suite 100",
+			City:              "San Francisco",
+			Country:           "USA",
+			Phone:             "555-1234",
+			State:             "CA",
+			Zipcode:           "94105",
+			IsPrivate:         true,
+			IsTotpEnabled:     true,
+			AreClustersShared: false,
+		},
+	}
+
+	// Mock GetByName query for partner
+	mock.ExpectQuery(`SELECT .* FROM "authsrv_partner" AS "partner" WHERE`).
+		WithArgs().
+		WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).
+			AddRow(partnerID, partnerName))
+
+	// Expect upsert query with ON CONFLICT clause for new insert
+	mock.ExpectQuery(`INSERT INTO "authsrv_organization"`).
+		WithArgs().
+		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(orgID))
+
+	// Test insert
+	result, err := os.Upsert(context.Background(), organization)
+	if err != nil {
+		t.Fatal("could not upsert organization:", err)
+	}
+
+	// Verify result
+	if result.GetMetadata().GetName() != organization.GetMetadata().GetName() {
+		t.Error("invalid name returned")
+	}
+	if result.GetMetadata().GetPartner() != organization.GetMetadata().GetPartner() {
+		t.Error("invalid partner returned")
+	}
+	if result.GetSpec().GetActive() != organization.GetSpec().GetActive() {
+		t.Error("invalid active status returned")
+	}
+
+	// Test update of existing organization
+	updatedOrg := &systemv3.Organization{
+		Metadata: &commonv3.Metadata{
+			Name:        "org-" + orgID,
+			Description: "Updated Organization Description",
+			Partner:     partnerName,
+		},
+		Spec: &systemv3.OrganizationSpec{
+			BillingAddress:    "456 Updated St",
+			Active:            false,
+			Approved:          false,
+			Type:              "SMB",
+			AddressLine1:      "456 Second St",
+			AddressLine2:      "Floor 2",
+			City:              "New York",
+			Country:           "USA",
+			Phone:             "555-5678",
+			State:             "NY",
+			Zipcode:           "10001",
+			IsPrivate:         false,
+			IsTotpEnabled:     false,
+			AreClustersShared: true,
+		},
+	}
+
+	// Mock GetByName query for partner on update
+	mock.ExpectQuery(`SELECT .* FROM "authsrv_partner" AS "partner" WHERE`).
+		WithArgs().
+		WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).
+			AddRow(partnerID, partnerName))
+
+	// Expect upsert query with ON CONFLICT clause for update
+	mock.ExpectQuery(`INSERT INTO "authsrv_organization" .* ON CONFLICT \(name, partner_id\) DO UPDATE SET`).
+		WithArgs().
+		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(orgID))
+
+	// Test update via upsert
+	result, err = os.Upsert(context.Background(), updatedOrg)
+	if err != nil {
+		t.Fatal("could not upsert (update) organization:", err)
+	}
+
+	// Verify update result
+	if result.GetMetadata().GetDescription() != updatedOrg.GetMetadata().GetDescription() {
+		t.Error("invalid description returned after update")
+	}
+	if result.GetSpec().GetActive() != updatedOrg.GetSpec().GetActive() {
+		t.Error("invalid active status returned after update")
+	}
+
+	// Verify all expectations were met
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
 	}
 }

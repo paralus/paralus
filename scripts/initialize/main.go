@@ -282,50 +282,24 @@ func main() {
 		for name := range data[scope] {
 			perms := data[scope][name]
 			fmt.Println(scope, name, len(perms))
-			roleToCheck := &rolev3.Role{
+			role := &rolev3.Role{
 				Metadata: &commonv3.Metadata{
 					Name:         name,
 					Partner:      *partner,
 					Organization: *org,
+					Description:  roleDesc[name],
+				},
+				Spec: &rolev3.RoleSpec{
+					IsGlobal:        true,
+					Scope:           scope,
+					Rolepermissions: perms,
+					Builtin:         true,
 				},
 			}
-			existingRole, err := rs.GetByName(internalCtx, roleToCheck)
 
-			// Detailed error handling
+			_, err := rs.Upsert(internalCtx, role)
 			if err != nil {
-				if strings.Contains(err.Error(), "not found") ||
-					strings.Contains(err.Error(), "unable to get partner and org id") || strings.Contains(err.Error(), "no rows in result set") {
-					// Create role if not found
-					_, createErr := rs.Create(internalCtx, &rolev3.Role{
-						Metadata: &commonv3.Metadata{
-							Name:         name,
-							Partner:      *partner,
-							Organization: *org,
-							Description:  roleDesc[name],
-						},
-						Spec: &rolev3.RoleSpec{
-							IsGlobal:        true,
-							Scope:           scope,
-							Rolepermissions: perms,
-							Builtin:         true,
-						},
-					})
-					if createErr != nil {
-						log.Fatal("unable to create role:", createErr)
-					}
-					continue
-				}
-				// Other unexpected errors
-				log.Fatal("error getting role:", err)
-			}
-
-			// Update non-builtin roles
-			if existingRole != nil && !existingRole.Spec.Builtin {
-				existingRole.Spec.Rolepermissions = perms
-				_, err := rs.Update(internalCtx, existingRole)
-				if err != nil {
-					log.Fatal("unable to update role:", err)
-				}
+				log.Fatalf("unable to upsert role %s: %v", name, err)
 			}
 		}
 	}
@@ -383,10 +357,9 @@ func main() {
 			log.Fatal("unable to create project", err)
 		}
 	}
-	p := utils.GetRandomPassword(8)
 retry:
 	numOfRetries := 0
-	// should we directly interact with kratos and create a user with a password?
+	// Check if user exists in this specific organization and partner
 	existingUser, err := us.GetByName(context.Background(), &userv3.User{
 		Metadata: &commonv3.Metadata{
 			Name:         *oae,
@@ -394,12 +367,21 @@ retry:
 			Organization: *org,
 		},
 	})
-	if err != nil && !strings.Contains(err.Error(), "not found") && !strings.Contains(err.Error(), "no rows in result set") {
+
+	// Only consider it an existing user if the error is not "not found"
+	isNewUser := err != nil && (strings.Contains(err.Error(), "not found") || strings.Contains(err.Error(), "no rows in result set"))
+	if err != nil && !isNewUser {
 		log.Fatal("unable to get user", err)
 	}
-	if existingUser == nil {
+
+	if existingUser == nil || isNewUser {
+		p := utils.GetRandomPassword(8)
 		_, err = us.Create(context.Background(), &userv3.User{
-			Metadata: &commonv3.Metadata{Name: *oae, Partner: *partner, Organization: *org},
+			Metadata: &commonv3.Metadata{
+				Name:         *oae,
+				Partner:      *partner,
+				Organization: *org,
+			},
 			Spec: &userv3.UserSpec{
 				FirstName: *oafn,
 				LastName:  *oaln,
@@ -414,7 +396,7 @@ retry:
 
 		if err != nil {
 			fmt.Println("err:", err)
-			numOfRetries = +1
+			numOfRetries++
 			if numOfRetries > 20 {
 				log.Fatal("unable to bind user to role", err)
 			}
@@ -422,6 +404,8 @@ retry:
 			time.Sleep(10 * time.Second)
 			goto retry
 		}
+		fmt.Printf("Org Admin default password: %s\n", p)
+	} else {
+		fmt.Println("User already exists in this organization and partner, password remains unchanged")
 	}
-	fmt.Printf("Org Admin default password: %s\n", p)
 }

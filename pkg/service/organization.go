@@ -439,6 +439,9 @@ func (s *organizationService) Upsert(ctx context.Context, organization *systemv3
 	if err != nil {
 		return nil, fmt.Errorf("failed to upsert organization: %v", err)
 	}
+	orgSettings := systemv3.OrganizationSettings{}
+	_ = json.Unmarshal(org.Settings, &orgSettings)
+	CreateOrganizationAuditEvent(ctx, s.al, AuditActionUpsert, organization.GetMetadata().GetName(), org.ID, nil, &orgSettings)
 
 	return &systemv3.Organization{
 		Metadata: &commonv3.Metadata{

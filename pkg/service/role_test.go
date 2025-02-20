@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -424,5 +425,96 @@ func TestRoleList(t *testing.T) {
 	}
 	if rolelist.Items[0].Metadata.Name != "role-"+ruuid1 || rolelist.Items[1].Metadata.Name != "role-"+ruuid2 {
 		t.Errorf("incorrect role names returned when listing")
+	}
+}
+
+func TestRoleUpsert(t *testing.T) {
+	db, mock := getDB(t)
+	defer db.Close()
+
+	rs := NewRoleService(db, getLogger())
+	roleID := uuid.New().String()
+	partnerID := uuid.New().String()
+	orgID := uuid.New().String()
+
+	// Create test role
+	role := &rolev3.Role{
+		Metadata: &v3.Metadata{
+			Name:        "role-" + roleID,
+			Description: "Test Role Description",
+		},
+		Spec: &rolev3.RoleSpec{
+			IsGlobal: true,
+			Builtin:  false,
+			Scope:    "NAMESPACE",
+		},
+	}
+
+	// Mock getPartnerOrganization query (simplified since it's tested elsewhere)
+	mock.ExpectQuery(`SELECT .* FROM "authsrv_partner"`).
+		WithArgs().
+		WillReturnRows(sqlmock.NewRows([]string{"id", "organization_id"}).
+			AddRow(partnerID, orgID))
+
+	// Expect upsert query with ON CONFLICT clause for new insert
+	mock.ExpectQuery(`INSERT INTO "authsrv_role"`).
+		WithArgs().
+		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(roleID))
+
+	// Test insert
+	result, err := rs.Upsert(context.Background(), role)
+	if err != nil {
+		t.Fatal("could not upsert role:", err)
+	}
+
+	// Verify result
+	if result.GetMetadata().GetName() != role.GetMetadata().GetName() {
+		t.Error("invalid name returned")
+	}
+	if result.GetSpec().GetIsGlobal() != role.GetSpec().GetIsGlobal() {
+		t.Error("invalid isGlobal returned")
+	}
+
+	// Test update of existing role
+	updatedRole := &rolev3.Role{
+		Metadata: &v3.Metadata{
+			Name:        "role-" + roleID,
+			Description: "Updated Role Description",
+		},
+		Spec: &rolev3.RoleSpec{
+			IsGlobal: false,
+			Builtin:  true,
+			Scope:    "CLUSTER",
+		},
+	}
+
+	// Mock getPartnerOrganization query for update (simplified)
+	mock.ExpectQuery(`SELECT .* FROM "authsrv_partner"`).
+		WithArgs().
+		WillReturnRows(sqlmock.NewRows([]string{"id", "organization_id"}).
+			AddRow(partnerID, orgID))
+
+	// Expect upsert query with ON CONFLICT clause for update
+	mock.ExpectQuery(`INSERT INTO "authsrv_role" .* ON CONFLICT \(id\) DO UPDATE SET`).
+		WithArgs().
+		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(roleID))
+
+	// Test update via upsert
+	result, err = rs.Upsert(context.Background(), updatedRole)
+	if err != nil {
+		t.Fatal("could not upsert (update) role:", err)
+	}
+
+	// Verify update result
+	if result.GetMetadata().GetDescription() != updatedRole.GetMetadata().GetDescription() {
+		t.Error("invalid description returned after update")
+	}
+	if result.GetSpec().GetScope() != strings.ToLower(updatedRole.GetSpec().GetScope()) {
+		t.Error("invalid scope returned after update")
+	}
+
+	// Verify all expectations were met
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
 	}
 }

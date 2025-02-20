@@ -347,7 +347,7 @@ func (s *partnerService) Upsert(ctx context.Context, partner *systemv3.Partner) 
 		ModifiedAt:                time.Now(),
 	}
 
-	sf, err := s.db.NewInsert().
+	_, err = s.db.NewInsert().
 		Model(&p).
 		On("CONFLICT (name) WHERE trash IS FALSE DO UPDATE").
 		Set("description = EXCLUDED.description").
@@ -366,7 +366,7 @@ func (s *partnerService) Upsert(ctx context.Context, partner *systemv3.Partner) 
 	if err != nil {
 		return nil, fmt.Errorf("failed to upsert partner: %v", err)
 	}
-	fmt.Println(sf)
+	CreatePartnerAuditEvent(ctx, s.al, AuditActionUpsert, partner.GetMetadata().GetName(), p.ID)
 
 	return &systemv3.Partner{
 		Metadata: &commonv3.Metadata{
