@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/paralus/paralus/internal/dao"
 	"github.com/paralus/paralus/internal/models"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	v3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	systemv3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	bun "github.com/uptrace/bun"
@@ -35,6 +36,8 @@ type OrganizationService interface {
 	Delete(ctx context.Context, organization *systemv3.Organization) (*systemv3.Organization, error)
 	// list organization
 	List(ctx context.Context, organization *systemv3.Organization) (*systemv3.OrganizationList, error)
+	// Upsert Organization
+	Upsert(ctx context.Context, organization *systemv3.Organization) (*systemv3.Organization, error)
 }
 
 // organizationService implements OrganizationService
@@ -370,4 +373,84 @@ func prepareOrganizationResponse(organization *systemv3.Organization, org *model
 	}
 
 	return organization, nil
+}
+
+func (s *organizationService) Upsert(ctx context.Context, organization *systemv3.Organization) (*systemv3.Organization, error) {
+	// First get the partner
+	var partner models.Partner
+	_, err := dao.GetByName(ctx, s.db, organization.GetMetadata().GetPartner(), &partner)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get partner: %v", err)
+	}
+
+	sb, err := json.Marshal(map[string]interface{}{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal settings: %v", err)
+	}
+
+	org := models.Organization{
+		Name:              organization.GetMetadata().GetName(),
+		Description:       organization.GetMetadata().GetDescription(),
+		Trash:             false,
+		Settings:          json.RawMessage(sb),
+		BillingAddress:    organization.GetSpec().GetBillingAddress(),
+		PartnerId:         partner.ID, // Now using the correct partner ID
+		Active:            organization.GetSpec().GetActive(),
+		Approved:          organization.GetSpec().GetApproved(),
+		Type:              organization.GetSpec().GetType(),
+		AddressLine1:      organization.GetSpec().GetAddressLine1(),
+		AddressLine2:      organization.GetSpec().GetAddressLine2(),
+		City:              organization.GetSpec().GetCity(),
+		Country:           organization.GetSpec().GetCountry(),
+		Phone:             organization.GetSpec().GetPhone(),
+		State:             organization.GetSpec().GetState(),
+		Zipcode:           organization.GetSpec().GetZipcode(),
+		IsPrivate:         organization.GetSpec().GetIsPrivate(),
+		IsTOTPEnabled:     organization.GetSpec().GetIsTotpEnabled(),
+		AreClustersShared: organization.GetSpec().GetAreClustersShared(),
+		CreatedAt:         time.Now(),
+		ModifiedAt:        time.Now(),
+	}
+
+	_, err = s.db.NewInsert().
+		Model(&org).
+		On("CONFLICT (name, partner_id) DO UPDATE").
+		Set("description = EXCLUDED.description").
+		Set("modified_at = EXCLUDED.modified_at").
+		Set("trash = EXCLUDED.trash").
+		Set("settings = EXCLUDED.settings").
+		Set("billing_address = EXCLUDED.billing_address").
+		Set("active = EXCLUDED.active").
+		Set("approved = EXCLUDED.approved").
+		Set("type = EXCLUDED.type").
+		Set("address_line1 = EXCLUDED.address_line1").
+		Set("address_line2 = EXCLUDED.address_line2").
+		Set("city = EXCLUDED.city").
+		Set("country = EXCLUDED.country").
+		Set("phone = EXCLUDED.phone").
+		Set("state = EXCLUDED.state").
+		Set("zipcode = EXCLUDED.zipcode").
+		Set("is_totp_enabled = EXCLUDED.is_totp_enabled").
+		Set("are_clusters_shared = EXCLUDED.are_clusters_shared").
+		Set("psps_enabled = EXCLUDED.psps_enabled").
+		Set("custom_psps_enabled = EXCLUDED.custom_psps_enabled").
+		Set("default_blueprints_enabled = EXCLUDED.default_blueprints_enabled").
+		Exec(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to upsert organization: %v", err)
+	}
+	orgSettings := systemv3.OrganizationSettings{}
+	_ = json.Unmarshal(org.Settings, &orgSettings)
+	CreateOrganizationAuditEvent(ctx, s.al, AuditActionUpsert, organization.GetMetadata().GetName(), org.ID, nil, &orgSettings)
+
+	return &systemv3.Organization{
+		Metadata: &commonv3.Metadata{
+			Name:        org.Name,
+			Description: org.Description,
+			Partner:     partner.Name,
+		},
+		Spec: &systemv3.OrganizationSpec{
+			Active: org.Active,
+		},
+	}, nil
 }

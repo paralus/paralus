@@ -68,4 +68,5 @@ You're also very welcome to look at the existing issues. If there’s something 
 
 ## Authors
 
+
 This project is maintained & supported by [Rafay](https://rafay.co). Meet the [maintainers](MAINTAINERS.md) of Paralus.
