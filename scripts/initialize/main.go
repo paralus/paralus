@@ -79,7 +79,7 @@ func addResourcePermissions(db *bun.DB, basePath string) error {
 			existing := &models.ResourcePermission{}
 			err = db.NewSelect().Model(existing).Where("name = ?", data.Name).Scan(context.Background())
 			if err != nil && err != sql.ErrNoRows {
-				return fmt.Errorf("Error verifying existing resource permissions ", err)
+				return fmt.Errorf("Error verifying existing resource permissions: %v ", err)
 			}
 			if err == sql.ErrNoRows {
 				_, err = dao.Create(context.Background(), db, &data)

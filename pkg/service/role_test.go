@@ -432,7 +432,7 @@ func TestRoleUpsert(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
 
-	rs := NewRoleService(db, getLogger())
+	rs := NewRoleService(db, &mazc, getLogger())
 	roleID := uuid.New().String()
 	partnerID := uuid.New().String()
 	orgID := uuid.New().String()
