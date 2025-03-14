@@ -431,6 +431,7 @@ func TestRoleList(t *testing.T) {
 func TestRoleUpsert(t *testing.T) {
 	db, mock := getDB(t)
 	defer db.Close()
+	mazc := mockAuthzClient{}
 
 	rs := NewRoleService(db, &mazc, getLogger())
 	roleID := uuid.New().String()
