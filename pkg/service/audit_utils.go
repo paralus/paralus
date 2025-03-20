@@ -20,6 +20,7 @@ const (
 	AuditActionDelete   = "delete"
 	AuditActionUpdate   = "update"
 	AuditActionDownload = "download"
+	AuditActionUpsert   = "upsert"
 )
 
 func CreateUserAuditEvent(ctx context.Context, al *zap.Logger, db bun.IDB, action string, name string, id uuid.UUID, rolesBefore, rolesAfter, groupsBefore, groupsAfter []uuid.UUID) {
