@@ -1,5 +1,15 @@
 ## Unreleased
 
+## [v0.2.9](https://github.com/paralus/paralus/compare/v0.2.8...v0.2.9) (2025-05-23)
+
+### Enhancements
+
+* updated main.go script to reinitialize the permissions when the are existing or there is any update ([#307](https://github.com/paralus/paralus/issues/307)) ([7a4895a](https://github.com/paralus/paralus/commit/7a4895a5b23469cec6b3bcfba7e864494dcdd6b9))
+
+### Bug Fixes
+
+* added support for Dockerfile.initialize to download kratos arm64 compatible binaries ([#375](https://github.com/paralus/paralus/pull/375)) ([26fb10c](https://github.com/paralus/paralus/commit/26fb10cc02c7f569e0e03b5a0a44c88c1dfa4cfe))
+
 ## [0.2.8](https://github.com/paralus/paralus/compare/v0.2.7...v0.2.8) (2024-06-14)
 
 ### Bug Fixes
