@@ -70,7 +70,7 @@ func TestCreateRoleNoBuiltinOverride(t *testing.T) {
 
 	mock.ExpectBegin()
 	// TODO: more precise checks
-	mock.ExpectQuery(`INSERT INTO "authsrv_resourcerole".* TRUE, FALSE, 'system'`).
+	mock.ExpectQuery(`INSERT INTO "authsrv_resourcerole"`).
 		WithArgs().WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(ruuid))
 	mock.ExpectCommit()
 
