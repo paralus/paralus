@@ -1,23 +1,26 @@
 FROM golang:1.23.1 as build
 LABEL description="Build container"
-
 ENV CGO_ENABLED 0
 WORKDIR /build
 
-RUN wget -O kratos.tar.gz -q https://github.com/ory/kratos/releases/download/v0.11.1/kratos_0.11.1-linux_64bit.tar.gz && tar -xf kratos.tar.gz
-RUN wget -O migrate.tar.gz -q https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz && tar -xf migrate.tar.gz
+ARG TARGETARCH=amd64
+
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+        wget -O kratos.tar.gz -q https://github.com/ory/kratos/releases/download/v0.11.1/kratos_0.11.1-linux_arm64.tar.gz; \
+        wget -O migrate.tar.gz -q https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-arm64.tar.gz; \
+    else \
+        wget -O kratos.tar.gz -q https://github.com/ory/kratos/releases/download/v0.11.1/kratos_0.11.1-linux_64bit.tar.gz; \
+        wget -O migrate.tar.gz -q https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz; \
+    fi && tar -xf kratos.tar.gz && tar -xf migrate.tar.gz
 
 COPY . /build
 RUN go build -ldflags "-s" -o paralus-init scripts/initialize/main.go
 
 FROM alpine:latest as runtime
 LABEL description="Run container"
-
 WORKDIR /usr/bin
 COPY --from=build /build/paralus-init /usr/bin/paralus-init
 COPY --from=build /build/scripts/initialize/ /usr/bin/scripts/initialize/
-
 COPY --from=build /build/kratos /usr/bin/kratos
-
 COPY --from=build /build/migrate /usr/bin/migrate
 COPY ./persistence/migrations/admindb /data/migrations/admindb
