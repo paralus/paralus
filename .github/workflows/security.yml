@@ -25,7 +25,7 @@ jobs:
           docker build -f "Dockerfile" -t paralus:${{ github.sha }} .
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@0.30.0
         with:
           image-ref: paralus:${{ github.sha }}
           format: 'table'
@@ -52,7 +52,7 @@ jobs:
       # golang-migrate tracking issue - https://github.com/golang-migrate/migrate/issues/926
       # kratos tracking - https://ory-community.slack.com/archives/C012RJ2MQ1H/p1684750686065509
       - name: Run Trivy vulnerability scanner (paralus-init)
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@0.30.0
         with:
           image-ref: paralus-init:${{ github.sha }}
           format: 'table'
@@ -76,7 +76,7 @@ jobs:
           docker build -f "Dockerfile.synchronizer" -t kratos-synchronizer:${{ github.sha }} .
 
       - name: Run Trivy vulnerability scanner (kratos-sync)
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@0.30.0
         with:
           image-ref: kratos-synchronizer:${{ github.sha }}
           format: 'table'
