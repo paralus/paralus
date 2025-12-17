@@ -7,3 +7,4 @@ tmp
 audit.log
 buf.lock
 .vscode
+.env

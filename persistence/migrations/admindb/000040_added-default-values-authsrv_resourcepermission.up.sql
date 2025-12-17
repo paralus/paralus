@@ -1,0 +1,4 @@
+ALTER TABLE authsrv_resourcepermission
+ALTER COLUMN trash DROP DEFAULT,
+ALTER COLUMN created_at DROP DEFAULT,
+ALTER COLUMN modified_at DROP DEFAULT;
