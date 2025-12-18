@@ -13,6 +13,8 @@ services:
 
   kratos-migrate:
     image: oryd/kratos:v0.11.0
+    depends_on:
+    - postgresd
     environment:
       - DSN=postgres://$DB_USER:$DB_PASSWORD@postgresd:$DB_PORT/$DB_NAME?sslmode=disable&max_conns=20&max_idle_conns=4
     volumes:
