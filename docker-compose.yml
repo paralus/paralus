@@ -1,5 +1,5 @@
 services:
-  postgresd:
+  postgres:
     image: postgres:14.2
     container_name: paralus_postgres_14
     ports:
@@ -11,12 +11,22 @@ services:
       POSTGRES_DB: $DB_NAME
       POSTGRES_PASSWORD: $DB_PASSWORD
 
+  paralus:
+    container_name: paralus
+    image: zync07/paralus:latest
+    depends_on:
+      - postgres
+    ports:
+      - 10000:10000
+      - 11000:11000
+      - 10001:10001
+
   kratos-migrate:
     image: oryd/kratos:v0.11.0
     depends_on:
-    - postgresd
+      - postgres
     environment:
-      - DSN=postgres://$DB_USER:$DB_PASSWORD@postgresd:$DB_PORT/$DB_NAME?sslmode=disable&max_conns=20&max_idle_conns=4
+      - DSN=postgres://$DB_USER:$DB_PASSWORD@postgres:$DB_PORT/$DB_NAME?sslmode=disable&max_conns=20&max_idle_conns=4
     volumes:
       - type: bind
         source: ./_kratos
@@ -30,7 +40,7 @@ services:
         condition: service_completed_successfully
     image: migrate/migrate:v4.15.1
     restart: on-failure
-    command: -path=/migrations/admindb -database postgres://$DB_USER:$DB_PASSWORD@postgresd:$DB_PORT/$DB_NAME?sslmode=disable up
+    command: -path=/migrations/admindb -database postgres://$DB_USER:$DB_PASSWORD@postgres:$DB_PORT/$DB_NAME?sslmode=disable up
     volumes:
       - type: bind
         source: ./persistence/migrations/admindb
@@ -41,10 +51,10 @@ services:
       - kratos-migrate
     image: oryd/kratos:v0.11.0
     ports:
-      - '4433:4433' # public
-      - '4434:4434' # admin
+      - "4433:4433" # public
+      - "4434:4434" # admin
     environment:
-      - DSN=postgres://$DB_USER:$DB_PASSWORD@postgresd:$DB_PORT/$DB_NAME?sslmode=disable&max_conns=20&max_idle_conns=4
+      - DSN=postgres://$DB_USER:$DB_PASSWORD@postgres:$DB_PORT/$DB_NAME?sslmode=disable&max_conns=20&max_idle_conns=4
       - LOG_LEVEL=trace
     command: serve -c /etc/config/kratos/kratos.yml --dev --watch-courier
     volumes:
@@ -55,8 +65,8 @@ services:
   mailslurper:
     image: oryd/mailslurper:latest-smtps
     ports:
-      - '4436:4436'
-      - '4437:4437'
+      - "4436:4436"
+      - "4437:4437"
 
 volumes:
   paralus_db_data:
