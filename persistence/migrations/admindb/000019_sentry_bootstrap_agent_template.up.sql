@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS sentry_bootstrap_agent_template (
     infra_ref character varying(256) NOT NULL REFERENCES sentry_bootstrap_infra(name),
     -- paralus meta fields
     display_name character varying(256) NOT NULL,
-    created_at timestamp WITH time zone NOT NULL,
+    created_at timestamp WITH time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at timestamp WITH time zone,
     deleted_at timestamp with time zone,
     labels jsonb NOT NULL DEFAULT '{}' ::jsonb,

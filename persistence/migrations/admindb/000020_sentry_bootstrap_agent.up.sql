@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS sentry_bootstrap_agent (
     agent_mode character varying(512) NOT NULL,
     -- paralus meta fields
     display_name character varying(256) NOT NULL,
-    created_at timestamp WITH time zone NOT NULL,
+    created_at timestamp WITH time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at timestamp WITH time zone,
     deleted_at timestamp with time zone,
     labels jsonb NOT NULL DEFAULT '{}' ::jsonb,

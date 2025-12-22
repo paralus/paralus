@@ -2,9 +2,9 @@ CREATE TABLE IF NOT EXISTS authsrv_groupaccount (
     id uuid default uuid_generate_v4() PRIMARY KEY,
     name character varying(256) NOT NULL,
     description character varying(512) NOT NULL,
-    created_at timestamp with time zone NOT NULL,
-    modified_at timestamp with time zone NOT NULL,
-    trash boolean NOT NULL,
+    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    modified_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    trash boolean NOT NULL DEFAULT FALSE,
     account_id uuid NOT NULL,
     group_id uuid NOT NULL REFERENCES authsrv_group(id) DEFERRABLE INITIALLY DEFERRED,
     active boolean not null default true

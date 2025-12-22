@@ -2,9 +2,9 @@ CREATE TABLE IF NOT EXISTS authsrv_project (
     id uuid default uuid_generate_v4() PRIMARY KEY,
     name character varying(256) NOT NULL,
     description character varying(512) NOT NULL,
-    created_at timestamp with time zone NOT NULL,
-    modified_at timestamp with time zone NOT NULL,
-    trash boolean NOT NULL,
+    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    modified_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    trash boolean NOT NULL DEFAULT FALSE,
     organization_id uuid REFERENCES authsrv_organization(id) DEFERRABLE INITIALLY DEFERRED,
     partner_id uuid REFERENCES authsrv_partner(id) DEFERRABLE INITIALLY DEFERRED,
     "default" boolean NOT NULL

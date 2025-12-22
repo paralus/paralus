@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS cluster_clusters (
     metro_id uuid,
     name varchar NOT NULL,
     display_name varchar NOT NULL,
-    created_at timestamp WITH time zone NOT NULL,
+    created_at timestamp WITH time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at timestamp WITH time zone,
     trash boolean NOT NULL default false,
     deleted_at timestamp with time zone,

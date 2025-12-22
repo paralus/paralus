@@ -4,8 +4,8 @@ CREATE TABLE IF NOT EXISTS authsrv_oidc_provider (
     description character varying(512) NOT NULL,
     organization_id uuid REFERENCES authsrv_organization(id) DEFERRABLE INITIALLY DEFERRED,
     partner_id uuid NOT NULL REFERENCES authsrv_partner(id) DEFERRABLE INITIALLY DEFERRED,
-    created_at timestamp with time zone NOT NULL,
-    modified_at timestamp with time zone NOT NULL,
+    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    modified_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     provider_name character varying(256) NOT NULL,
     mapper_url character varying(256),
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS authsrv_oidc_provider (
     token_url character varying(256),
     requested_claims jsonb NOT NULL DEFAULT '{}' ::jsonb,
     predefined boolean default false,
-    trash boolean NOT NULL
+    trash boolean NOT NULL DEFAULT FALSE
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS authsrv_oidc_provider_issuer_url ON authsrv_oidc_provider (issuer_url) WHERE trash IS false;

@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS sentry_kubeconfig_setting (
     scope character varying(256) NOT NULL,
     validity_seconds integer NOT NULL DEFAULT 0,
     sa_validity_seconds integer NOT NULL DEFAULT 0,
-    created_at timestamp WITH time zone NOT NULL,
+    created_at timestamp WITH time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at timestamp WITH time zone,
     deleted_at timestamp WITH time zone,
     enforce_rsid boolean default false,
