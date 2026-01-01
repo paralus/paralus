@@ -77,9 +77,8 @@ func (ac *authContext) authenticate(ctx context.Context, req *commonv3.IsRequest
 		res.SessionData.Organization = resp.OrganizationID.String()
 		res.SessionData.Partner = resp.PartnerID.String()
 	} else {
-
-		tsr := ac.kc.FrontendApi.ToSession(ctx).XSessionToken(req.GetXSessionToken()).Cookie(req.GetCookie())
-		session, _, err := ac.kc.FrontendApi.ToSessionExecute(tsr)
+		tsr := ac.kc.FrontendAPI.ToSession(ctx).XSessionToken(req.GetXSessionToken()).Cookie(req.GetCookie())
+		session, _, err := ac.kc.FrontendAPI.ToSessionExecute(tsr)
 		if err != nil {
 			// '401 Unauthorized' if the credentials are invalid or no credentials were sent.
 			if strings.Contains(err.Error(), "401 Unauthorized") {

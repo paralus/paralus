@@ -54,7 +54,7 @@ func (k *kratosAuthProvider) Create(ctx context.Context, password string, traits
 		},
 	})
 	cib.SetMetadataPublic(metadata)
-	ir, hr, err := k.kc.IdentityApi.CreateIdentity(ctx).CreateIdentityBody(*cib).Execute()
+	ir, hr, err := k.kc.IdentityAPI.CreateIdentity(ctx).CreateIdentityBody(*cib).Execute()
 	if err != nil {
 		_log.Error("failed to create identity ", hr)
 		return "", err
@@ -73,7 +73,7 @@ func (k *kratosAuthProvider) Update(ctx context.Context, id string, traits map[s
 	ipm.ForceReset = metadata.ForceReset
 	uib.SetMetadataPublic(ipm)
 
-	_, hr, err := k.kc.IdentityApi.UpdateIdentity(ctx, id).UpdateIdentityBody(*uib).Execute()
+	_, hr, err := k.kc.IdentityAPI.UpdateIdentity(ctx, id).UpdateIdentityBody(*uib).Execute()
 	if err != nil {
 		_log.Error("failed to update identity ", hr)
 	}
@@ -82,7 +82,7 @@ func (k *kratosAuthProvider) Update(ctx context.Context, id string, traits map[s
 
 func (k *kratosAuthProvider) GetRecoveryLink(ctx context.Context, id string) (string, error) {
 	rlb := kclient.NewCreateRecoveryLinkForIdentityBody(id)
-	rl, _, err := k.kc.IdentityApi.CreateRecoveryLinkForIdentity(ctx).CreateRecoveryLinkForIdentityBody(*rlb).Execute()
+	rl, _, err := k.kc.IdentityAPI.CreateRecoveryLinkForIdentity(ctx).CreateRecoveryLinkForIdentityBody(*rlb).Execute()
 	if err != nil {
 		return "", err
 	}
@@ -90,7 +90,7 @@ func (k *kratosAuthProvider) GetRecoveryLink(ctx context.Context, id string) (st
 }
 
 func (k *kratosAuthProvider) Delete(ctx context.Context, id string) error {
-	hr, err := k.kc.IdentityApi.DeleteIdentity(ctx, id).Execute()
+	hr, err := k.kc.IdentityAPI.DeleteIdentity(ctx, id).Execute()
 	if err != nil {
 		fmt.Println(hr)
 	}
@@ -98,7 +98,7 @@ func (k *kratosAuthProvider) Delete(ctx context.Context, id string) error {
 }
 
 func (k *kratosAuthProvider) GetPublicMetadata(ctx context.Context, id string) (*IdentityPublicMetadata, error) {
-	identity, res, err := k.kc.IdentityApi.GetIdentity(ctx, id).Execute()
+	identity, res, err := k.kc.IdentityAPI.GetIdentity(ctx, id).Execute()
 	if err != nil {
 		return nil, err
 	}

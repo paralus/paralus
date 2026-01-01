@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/paralus/paralus/internal/dao"
@@ -231,11 +232,15 @@ func (s *authzService) Enforce(ctx context.Context, req *authzpbv1.EnforceReques
 		param = req.Params[index]
 		params = append(params, param)
 	}
-
+	log.Println("DEBUG #2")
+	log.Println("Req Params: ", req.Params)
 	res, err := s.enforcer.Enforce(params...)
 	if err != nil {
+		log.Println("THIS IS WHERE WE ARE GETTING FALSE BOOLEAN")
+		log.Println(err.Error())
 		return nil, status.Errorf(codes.InvalidArgument, err.Error())
 	}
+	log.Println("Boolean: ", res)
 
 	return &authzpbv1.BoolReply{Res: res}, nil
 }
