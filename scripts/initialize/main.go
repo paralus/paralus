@@ -297,7 +297,7 @@ func main() {
 				},
 			}
 
-			_, err := rs.Upsert(internalCtx, role)
+			_, err := rs.Create(internalCtx, role)
 			if err != nil {
 				log.Fatalf("unable to upsert role %s: %v", name, err)
 			}
