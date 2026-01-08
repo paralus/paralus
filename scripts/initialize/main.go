@@ -337,11 +337,14 @@ func main() {
 	}
 
 	existingProject, err := prs.GetByName(context.Background(), "default")
-	if err != nil && !strings.Contains(err.Error(), "not found") && !strings.Contains(err.Error(), "no rows in result set") {
+	fmt.Println(existingProject)
+	isNotFound := err != nil &&
+		(strings.Contains(err.Error(), "not found") ||
+			strings.Contains(err.Error(), "no rows in result set"))
+	if err != nil && !isNotFound {
 		log.Fatal("unable to get project", err)
 	}
-	if existingProject == nil {
-		//default project with name "default" should be created with default flag true
+	if isNotFound {
 		_, err := prs.Create(context.Background(), &systemv3.Project{
 			Metadata: &commonv3.Metadata{
 				Name:         "default",
