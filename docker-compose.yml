@@ -1,5 +1,5 @@
 services:
-  postgres:
+  postgresd:
     image: postgres:14.2
     container_name: paralus_postgres_14
     ports:
