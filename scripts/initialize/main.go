@@ -299,8 +299,13 @@ func main() {
 
 			_, err := rs.Create(internalCtx, role)
 			if err != nil {
-				log.Fatalf("unable to upsert role %s: %v", name, err)
+				if strings.Contains(err.Error(), "already exists") {
+					// role already present, safe to ignore
+					continue
+				}
+				log.Fatalf("unable to create role %s: %v", name, err)
 			}
+
 		}
 	}
 	//default "All Local Users" group should be created
