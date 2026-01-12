@@ -28,24 +28,8 @@ func CreateIdentityWithSession(c *ory.APIClient, email, password string) (*ory.S
 		_, password = RandomCredentials()
 	}
 
-	// flow, _, err := c.V0alpha2Api.InitializeSelfServiceRegistrationFlowWithoutBrowser(ctx).Execute()
-	// ExitOnError(err)
-
 	// Initialize a registration flow
 	flow, _, err := c.FrontendAPI.CreateNativeRegistrationFlow(ctx).Execute()
-
-	// result, res, err := c.V0alpha2Api.SubmitSelfServiceRegistrationFlow(ctx).Flow(flow.Id).SubmitSelfServiceRegistrationFlowBody(
-	// 	ory.SubmitSelfServiceRegistrationFlowWithPasswordMethodBodyAsSubmitSelfServiceRegistrationFlowBody(&ory.SubmitSelfServiceRegistrationFlowWithPasswordMethodBody{
-	// 		Method:   "password",
-	// 		Password: password,
-	// 		Traits: map[string]interface{}{
-	// 			"email":       email,
-	// 			"first_name":  "Jon",
-	// 			"last_name":   "Doe",
-	// 			"description": "nothing",
-	// 		},
-	// 	}),
-	// ).Execute()
 
 	result, res, err := c.FrontendAPI.UpdateRegistrationFlow(ctx).Flow(flow.Id).UpdateRegistrationFlowBody(
 		ory.UpdateRegistrationFlowWithPasswordMethodAsUpdateRegistrationFlowBody(

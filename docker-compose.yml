@@ -16,7 +16,7 @@ services:
     depends_on:
       - postgres
     environment:
-      - DSN=postgres://$DB_USER:$DB_PASSWORD@postgres:$DB_PORT/$DB_NAME?sslmode=disable&max_conns=20&max_idle_conns=4
+      - DSN=postgres://$DB_USER:$DB_PASSWORD@postgresd:$DB_PORT/$DB_NAME?sslmode=disable&max_conns=20&max_idle_conns=4
     volumes:
       - type: bind
         source: ./_kratos
@@ -30,7 +30,7 @@ services:
         condition: service_completed_successfully
     image: migrate/migrate:v4.15.1
     restart: on-failure
-    command: -path=/migrations/admindb -database postgres://$DB_USER:$DB_PASSWORD@postgres:$DB_PORT/$DB_NAME?sslmode=disable up
+    command: -path=/migrations/admindb -database postgres://$DB_USER:$DB_PASSWORD@postgresd:$DB_PORT/$DB_NAME?sslmode=disable up
     volumes:
       - type: bind
         source: ./persistence/migrations/admindb
@@ -44,7 +44,7 @@ services:
       - "4433:4433" # public
       - "4434:4434" # admin
     environment:
-      - DSN=postgres://$DB_USER:$DB_PASSWORD@postgres:$DB_PORT/$DB_NAME?sslmode=disable&max_conns=20&max_idle_conns=4
+      - DSN=postgres://$DB_USER:$DB_PASSWORD@postgresd:$DB_PORT/$DB_NAME?sslmode=disable&max_conns=20&max_idle_conns=4
       - LOG_LEVEL=trace
     command: serve -c /etc/config/kratos/kratos.yml --dev --watch-courier
     volumes:
