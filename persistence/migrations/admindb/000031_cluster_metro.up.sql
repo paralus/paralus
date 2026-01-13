@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS cluster_metro (
     name character varying(256) NOT NULL,
     created_at timestamp with time zone NOT NULL,
     modified_at timestamp with time zone NOT NULL,
-    trash boolean NOT NULL,
+    trash boolean NOT NULL default false,
     latitude character varying(16) NOT NULL,
     longitude character varying(16) NOT NULL,
     city character varying(64),

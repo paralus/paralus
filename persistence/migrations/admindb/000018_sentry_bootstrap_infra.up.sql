@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS sentry_bootstrap_infra (
     created_at timestamp WITH time zone NOT NULL,
     modified_at timestamp WITH time zone,
     deleted_at timestamp with time zone,
-    trash boolean NOT NULL,
+    trash boolean NOT NULL default false,
     labels jsonb NOT NULL DEFAULT '{}' ::jsonb,
     annotations jsonb NOT NULL DEFAULT '{}' ::jsonb,
     -- infra spec
