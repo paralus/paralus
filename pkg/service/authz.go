@@ -34,7 +34,6 @@ type authzService struct {
 
 func NewAuthzService(db *bun.DB, en *casbin.CachedEnforcer) AuthzService {
 	en.EnableCache(false) // disables caching in casbin
-	en.EnableAutoSave(true)
 	return &authzService{
 		db:           db,
 		enforcer:     en,
