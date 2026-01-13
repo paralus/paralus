@@ -6,10 +6,10 @@ CREATE TABLE IF NOT EXISTS sentry_bootstrap_infra (
     project_id uuid,
     -- paralus meta fields
     display_name character varying(256) NOT NULL,
-    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp WITH time zone NOT NULL,
     modified_at timestamp WITH time zone,
     deleted_at timestamp with time zone,
-    trash boolean NOT NULL default false,
+    trash boolean NOT NULL,
     labels jsonb NOT NULL DEFAULT '{}' ::jsonb,
     annotations jsonb NOT NULL DEFAULT '{}' ::jsonb,
     -- infra spec

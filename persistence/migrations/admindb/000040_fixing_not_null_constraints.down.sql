@@ -1,0 +1,126 @@
+ALTER TABLE authsrv_partner
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_organization
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_project
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_ssoaccount
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_group
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_resourcerole
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_resourcepermission
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_resourcerolepermission
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_projectaccountresourcerole
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_projectaccountnamespacerole
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_projectgroupnamespacerole
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_projectgrouprole
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_groupaccount
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_grouprole
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_accountresourcerole
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_template
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE sentry_bootstrap_infra
+    ALTER COLUMN created_at DROP DEFAULT;
+
+ALTER TABLE sentry_bootstrap_agent_template
+    ALTER COLUMN created_at DROP DEFAULT;
+
+ALTER TABLE sentry_bootstrap_agent
+    ALTER COLUMN created_at DROP DEFAULT;
+
+ALTER TABLE sentry_kubeconfig_revocation
+    ALTER COLUMN created_at DROP DEFAULT;
+
+ALTER TABLE sentry_kubeconfig_setting
+    ALTER COLUMN created_at DROP DEFAULT;
+
+ALTER TABLE sentry_kubectl_cluster_settings
+    ALTER COLUMN created_at DROP DEFAULT;
+
+ALTER TABLE authsrv_idp
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE authsrv_oidc_provider
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE cluster_metro
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE cluster_operator_bootstrap
+    ALTER COLUMN created_at DROP DEFAULT,
+    ALTER COLUMN modified_at DROP DEFAULT,
+    ALTER COLUMN trash DROP DEFAULT;
+
+ALTER TABLE cluster_tokens
+    ALTER COLUMN created_at DROP DEFAULT;
+
+ALTER TABLE cluster_clusters
+    ALTER COLUMN created_at DROP DEFAULT;
+
+ALTER TABLE authsrv_apikey
+    ALTER COLUMN created_at DROP DEFAULT;

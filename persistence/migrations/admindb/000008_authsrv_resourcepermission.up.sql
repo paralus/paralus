@@ -4,9 +4,9 @@ CREATE TABLE IF NOT EXISTS authsrv_resourcepermission (
     scope character varying(256) NOT NULL,
     base_url character varying(256) NOT NULL,
     description character varying(512) NOT NULL,
-    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    trash boolean NOT NULL DEFAULT FALSE,
+    created_at timestamp with time zone NOT NULL,
+    modified_at timestamp with time zone NOT NULL,
+    trash boolean NOT NULL,
     resource_urls jsonb NOT NULL,
     resource_action_urls jsonb NOT NULL
 );

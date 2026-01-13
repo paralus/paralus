@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS cluster_tokens (
     partner_id uuid not null,
     project_id uuid not null,
     display_name varchar NOT NULL,
-    created_at timestamp WITH time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp WITH time zone NOT NULL,
     modified_at timestamp WITH time zone,
     deleted_at timestamp with time zone,
     trash boolean NOT NULL default false,

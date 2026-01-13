@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS cluster_metro (
     id uuid default uuid_generate_v4() PRIMARY KEY,
     name character varying(256) NOT NULL,
-    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    trash boolean NOT NULL DEFAULT FALSE,
+    created_at timestamp with time zone NOT NULL,
+    modified_at timestamp with time zone NOT NULL,
+    trash boolean NOT NULL,
     latitude character varying(16) NOT NULL,
     longitude character varying(16) NOT NULL,
     city character varying(64),
