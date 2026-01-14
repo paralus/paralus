@@ -1,4 +1,4 @@
-FROM golang:1.24.0 AS build
+FROM golang:1.24.4 AS build
 LABEL description="Build container"
 
 ENV CGO_ENABLED 0

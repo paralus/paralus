@@ -1,6 +1,6 @@
 module github.com/paralus/paralus
 
-go 1.24.0
+go 1.24.4
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
@@ -131,7 +131,7 @@ require (
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/crypto v0.35.0 // indirect
 	golang.org/x/net v0.33.0 // indirect
-	golang.org/x/oauth2 v0.20.0 // indirect
+	golang.org/x/oauth2 v0.27.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/term v0.29.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
