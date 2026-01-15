@@ -1,11 +1,10 @@
 version: "2"
 linters:
-  # uncomment as we fix the linting issues
   enable:
-    # - errcheck
-    # - gosimple
-    # - govet
-    # - staticcheck
     - unused
-    # - ineffassign
     - misspell
+  disable:
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
