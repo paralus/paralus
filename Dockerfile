@@ -1,4 +1,4 @@
-FROM golang:1.24.4 AS build
+FROM golang:1.25.5 AS build
 LABEL description="Build container"
 
 ENV CGO_ENABLED 0
@@ -21,5 +21,3 @@ EXPOSE 10000
 EXPOSE 10001
 # HTTP port
 EXPOSE 11000
-
-CMD [ "/usr/bin/paralus" ]

@@ -1,4 +1,4 @@
-FROM golang:1.24.4 AS build
+FROM golang:1.25.5 AS build
 LABEL description="Build container"
 ENV CGO_ENABLED 0
 WORKDIR /build
@@ -24,5 +24,3 @@ COPY --from=build /build/scripts/initialize/ /usr/bin/scripts/initialize/
 COPY --from=build /build/kratos /usr/bin/kratos
 COPY --from=build /build/migrate /usr/bin/migrate
 COPY ./persistence/migrations/admindb /data/migrations/admindb
-
-CMD ["/usr/bin/paralus-init"]

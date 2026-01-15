@@ -1,6 +1,6 @@
 module github.com/paralus/paralus
 
-go 1.24.4
+go 1.25.5
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
