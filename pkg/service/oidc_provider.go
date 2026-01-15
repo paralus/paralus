@@ -242,7 +242,7 @@ func (s *oidcProvider) GetByName(ctx context.Context, provider *systemv3.OIDCPro
 		if errors.Is(err, sql.ErrNoRows) {
 			return &systemv3.OIDCProvider{}, status.Errorf(codes.InvalidArgument, "OIDC PROVIDER %q NOT EXIST", name)
 		} else {
-			return &systemv3.OIDCProvider{}, status.Errorf(codes.Internal, codes.Internal.String())
+			return &systemv3.OIDCProvider{}, status.Error(codes.Internal, codes.Internal.String())
 		}
 
 	}

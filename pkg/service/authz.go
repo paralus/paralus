@@ -133,7 +133,7 @@ func (s *authzService) fromPolicies(policies *authzpbv1.Policies) ([][]string, e
 		rule := []string{p.GetSub(), p.GetNs(), p.GetProj(), p.GetOrg(), p.GetObj()}
 		for _, field := range rule {
 			if field == "" {
-				return res, fmt.Errorf(fmt.Sprintf("index %d: policy elements do not meet definition", i))
+				return res, fmt.Errorf("index %d: policy elements do not meet definition", i)
 			}
 		}
 		res = append(res, rule)
@@ -165,7 +165,7 @@ func (s *authzService) fromUserGroups(ugs *authzpbv1.UserGroups) ([][]string, er
 		rule := []string{p.GetUser(), p.GetGrp()}
 		for _, field := range rule {
 			if field == "" {
-				return res, fmt.Errorf(fmt.Sprintf("index %d: request elements do not meet definition", i))
+				return res, fmt.Errorf("index %d: request elements do not meet definition", i)
 			}
 		}
 		res = append(res, rule)
@@ -212,7 +212,7 @@ func (s *authzService) fromRolePermissionMappingList(ctx context.Context, r *aut
 					rule := []string{rpm.url, mapping.GetRole(), method}
 					for _, field := range rule {
 						if field == "" {
-							return res, fmt.Errorf(fmt.Sprintf("index %d: mapping elements do not meet definition", i))
+							return res, fmt.Errorf("index %d: mapping elements do not meet definition", i)
 						}
 					}
 					rules = append(rules, rule)
@@ -233,7 +233,7 @@ func (s *authzService) Enforce(ctx context.Context, req *authzpbv1.EnforceReques
 	}
 	res, err := s.enforcer.Enforce(params...)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
 	return &authzpbv1.BoolReply{Res: res}, nil
@@ -249,13 +249,13 @@ func (s *authzService) CreatePolicies(ctx context.Context, p *authzpbv1.Policies
 	}
 	policies, err := s.fromPolicies(p)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
 	// err could be from db, policy assertions; dispatcher, watcher updates (not pertinent)
 	res, err := s.enforcer.AddPolicies(policies)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, err.Error())
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	// s.enforcer.InvalidateCache()
 	return &authzpbv1.BoolReply{Res: res}, nil
@@ -265,7 +265,7 @@ func (s *authzService) DeletePolicies(ctx context.Context, p *authzpbv1.Policy) 
 	// err could be from db, policy assertions, cache; dispatcher, watcher updates (not pertinent)
 	res, err := s.enforcer.RemoveFilteredPolicy(0, p.GetSub(), p.GetNs(), p.GetProj(), p.GetOrg(), p.GetObj())
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, err.Error())
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	// s.enforcer.InvalidateCache()
 	return &authzpbv1.BoolReply{Res: res}, nil
@@ -282,13 +282,13 @@ func (s *authzService) CreateUserGroups(ctx context.Context, p *authzpbv1.UserGr
 
 	ugs, err := s.fromUserGroups(p)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
 	// err could be from db, policy assertions; dispatcher, watcher updates (not pertinent)
 	res, err := s.enforcer.AddNamedGroupingPolicies(groupGtype, ugs)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, err.Error())
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	// s.enforcer.InvalidateCache()
@@ -299,7 +299,7 @@ func (s *authzService) DeleteUserGroups(ctx context.Context, p *authzpbv1.UserGr
 	// err could be from db, policy assertions, cache; dispatcher, watcher updates (not pertinent)
 	res, err := s.enforcer.RemoveFilteredNamedGroupingPolicy(groupGtype, 0, p.GetUser(), p.GetGrp())
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, err.Error())
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	// s.enforcer.InvalidateCache()
@@ -319,12 +319,12 @@ func (s *authzService) CreateRolePermissionMappings(ctx context.Context, p *auth
 
 	rpms, err := s.fromRolePermissionMappingList(ctx, p)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, err.Error())
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	res, err := s.enforcer.AddNamedGroupingPolicies(roleGtype, rpms)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, err.Error())
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	// s.enforcer.InvalidateCache()
@@ -334,7 +334,7 @@ func (s *authzService) CreateRolePermissionMappings(ctx context.Context, p *auth
 func (s *authzService) DeleteRolePermissionMappings(ctx context.Context, p *authzpbv1.FilteredRolePermissionMapping) (*authzpbv1.BoolReply, error) {
 	res, err := s.enforcer.RemoveFilteredNamedGroupingPolicy(roleGtype, 1, p.GetRole())
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, err.Error())
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	// s.enforcer.InvalidateCache()
