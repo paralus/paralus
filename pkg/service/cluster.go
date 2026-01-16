@@ -126,7 +126,7 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
 			Reason:          errormsg,
 		}
-		return cluster, fmt.Errorf(errormsg)
+		return cluster, errors.New(errormsg)
 	}
 	if len(cluster.Metadata.Name) > 63 {
 		errormsg = "maximum characters allowed for cluster name is 63. please try another name"
@@ -135,7 +135,7 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 			ConditionStatus: commonv3.ConditionStatus_StatusFailed,
 			Reason:          errormsg,
 		}
-		return cluster, fmt.Errorf(errormsg)
+		return cluster, errors.New(errormsg)
 	}
 
 	clusterPresent, err := dao.GetByNamePartnerOrg(ctx, s.db, cluster.Metadata.Name, uuid.NullUUID{UUID: proj.PartnerId, Valid: true},
@@ -144,7 +144,7 @@ func (s *clusterService) Create(ctx context.Context, cluster *infrav3.Cluster) (
 		_log.Infof("Skipping as first time cluster create ")
 	} else if clusterPresent != nil {
 		errormsg = "cluster name is already taken. please try another name"
-		return &infrav3.Cluster{}, fmt.Errorf(errormsg)
+		return &infrav3.Cluster{}, errors.New(errormsg)
 	}
 
 	metro := &models.Metro{}

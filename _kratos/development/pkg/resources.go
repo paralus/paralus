@@ -29,21 +29,21 @@ func CreateIdentityWithSession(c *ory.APIClient, email, password string) (*ory.S
 	}
 
 	// Initialize a registration flow
-	flow, _, err := c.V0alpha2Api.InitializeSelfServiceRegistrationFlowWithoutBrowser(ctx).Execute()
-	ExitOnError(err)
+	flow, _, err := c.FrontendAPI.CreateNativeRegistrationFlow(ctx).Execute()
 
-	// Submit the registration flow
-	result, res, err := c.V0alpha2Api.SubmitSelfServiceRegistrationFlow(ctx).Flow(flow.Id).SubmitSelfServiceRegistrationFlowBody(
-		ory.SubmitSelfServiceRegistrationFlowWithPasswordMethodBodyAsSubmitSelfServiceRegistrationFlowBody(&ory.SubmitSelfServiceRegistrationFlowWithPasswordMethodBody{
-			Method:   "password",
-			Password: password,
-			Traits: map[string]interface{}{
-				"email":       email,
-				"first_name":  "Jon",
-				"last_name":   "Doe",
-				"description": "nothing",
+	result, res, err := c.FrontendAPI.UpdateRegistrationFlow(ctx).Flow(flow.Id).UpdateRegistrationFlowBody(
+		ory.UpdateRegistrationFlowWithPasswordMethodAsUpdateRegistrationFlowBody(
+			&ory.UpdateRegistrationFlowWithPasswordMethod{
+				Method:   "password",
+				Password: password,
+				Traits: map[string]interface{}{
+					"email":       email,
+					"first_name":  "Jon",
+					"last_name":   "Doe",
+					"description": "nothing",
+				},
 			},
-		}),
+		),
 	).Execute()
 	SDKExitOnError(err, res)
 
@@ -58,11 +58,9 @@ func CreateIdentity(c *ory.APIClient) *ory.Identity {
 	ctx := context.Background()
 
 	email, _ := RandomCredentials()
-	identity, _, err := c.V0alpha2Api.AdminCreateIdentity(ctx).AdminCreateIdentityBody(ory.AdminCreateIdentityBody{
-		SchemaId: "default",
-		Traits: map[string]interface{}{
-			"email": email,
-		}}).Execute()
+
+	identity, _, err := c.IdentityAPI.CreateIdentity(ctx).CreateIdentityBody(*ory.NewCreateIdentityBody("default", map[string]interface{}{"email": email,}})).Execute()
 	ExitOnError(err)
+	
 	return identity
 }

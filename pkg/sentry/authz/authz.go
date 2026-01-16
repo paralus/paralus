@@ -2,6 +2,7 @@ package authz
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -818,7 +819,7 @@ func verifyKubectlSettings(cnAttr kubeconfig.CNAttributes, ks *sentry.Kubeconfig
 		// backward compatibility treat "" as terminal session for old kubeconfigs
 		if ks.DisableCLIKubectl {
 			_log.Infow("kubectl cli is not authorized for ", "cnAttr", cnAttr, " by ", level, "config")
-			return fmt.Errorf("kubectl cli is not authorized" + " by " + level + "config") //deny
+			return errors.New("kubectl cli is not authorized" + " by " + level + "config") //deny
 		}
 		return nil // allow
 	}
@@ -826,7 +827,7 @@ func verifyKubectlSettings(cnAttr kubeconfig.CNAttributes, ks *sentry.Kubeconfig
 	if cnAttr.SessionType == kubeconfig.WebShell {
 		if ks.DisableWebKubectl {
 			_log.Infow("browser based kubectl is not authorized for ", "cnAttr", cnAttr, " by ", level, "config")
-			return fmt.Errorf("browser based kubectl is not authorized" + " by " + level + "config") //deny
+			return errors.New("browser based kubectl is not authorized" + " by " + level + "config") //deny
 		}
 		return nil // allow
 	}

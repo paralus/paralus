@@ -1,4 +1,4 @@
-FROM golang:1.23.1 as build
+FROM golang:1.25.5 AS build
 LABEL description="Build container"
 
 ENV CGO_ENABLED 0
@@ -9,7 +9,7 @@ RUN go mod download
 COPY . .
 RUN make build
 
-FROM alpine:latest as runtime
+FROM alpine:latest AS runtime
 LABEL description="Run container"
 
 WORKDIR /usr/bin

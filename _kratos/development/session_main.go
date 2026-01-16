@@ -15,11 +15,9 @@ func toSession() *ory.Session {
 	email, password := pkg.RandomCredentials()
 	_, sessionToken := pkg.CreateIdentityWithSession(client, email, password)
 
-	session, res, err := client.V0alpha2Api.
-		ToSessionExecute(ory.
-			V0alpha2ApiApiToSessionRequest{}.
-			XSessionToken(sessionToken))
+	session, res, err := client.FrontendAPI.ToSessionExecute(ory.FrontendApiToSessionRequest{}.XSessionToken(sessionToken))
 	pkg.SDKExitOnError(err, res)
+
 	return session
 }
 

@@ -1,6 +1,6 @@
 module github.com/paralus/paralus
 
-go 1.23.1
+go 1.25.5
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
@@ -20,7 +20,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.20.0
 	github.com/json-iterator/go v1.1.12
-	github.com/ory/kratos-client-go v0.11.0
+	github.com/ory/kratos-client-go v1.3.8
 	github.com/pkg/errors v0.9.1
 	github.com/processout/grpc-go-pool v1.2.1
 	github.com/rs/xid v1.3.0
@@ -131,7 +131,7 @@ require (
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/crypto v0.35.0 // indirect
 	golang.org/x/net v0.33.0 // indirect
-	golang.org/x/oauth2 v0.20.0 // indirect
+	golang.org/x/oauth2 v0.27.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/term v0.29.0 // indirect
 	golang.org/x/text v0.22.0 // indirect

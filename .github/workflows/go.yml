@@ -2,12 +2,11 @@ name: Go
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-
   test:
     strategy:
       matrix:
@@ -20,7 +19,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           # Getting go version from the go.mod file
-          go-version-file: 'go.mod'
+          go-version-file: "go.mod"
 
       - name: Format
         run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
@@ -33,7 +32,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
-  
+
   golangci-lint:
     strategy:
       matrix:
@@ -47,9 +46,9 @@ jobs:
         uses: actions/setup-go@v5
         with:
           # Getting go version from the go.mod file
-          go-version-file: 'go.mod'
+          go-version-file: "go.mod"
 
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v9.2.0
         with:
           version: latest
