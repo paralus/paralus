@@ -1,6 +1,6 @@
 ## [v0.3.0](https://github.com/paralus/paralus/compare/v0.2.9...v0.3.0) (2026-01-14)
 
-### Enhancements
+### Dependencies
 
 - updated kratos client from `v0.11.0` to `v1.3.8`
 
