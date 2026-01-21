@@ -96,7 +96,7 @@ jobs:
           labels: ${{ steps.meta-sync.outputs.labels }}
       
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v3.8.2
+        uses: sigstore/cosign-installer@v4.0.0
 
       - name: Check Cosign
         run: cosign version
