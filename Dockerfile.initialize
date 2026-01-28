@@ -16,7 +16,7 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then \
 COPY . /build
 RUN go build -ldflags "-s" -o paralus-init scripts/initialize/main.go
 
-FROM alpine:latest AS runtime
+FROM alpine:3.23.3 AS runtime
 LABEL description="Run container"
 WORKDIR /usr/bin
 COPY --from=build /build/paralus-init /usr/bin/paralus-init
