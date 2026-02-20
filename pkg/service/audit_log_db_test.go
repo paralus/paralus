@@ -227,16 +227,16 @@ func testGetKubectlCommands(tag string) func(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "sap"."account_id", "sap"."project_id", "sap"."group_id", "sap"."role_id", "sap"."role_name", "sap"."organization_id", "sap"."partner_id", "sap"."is_global", "sap"."scope", "sap"."permission_name", "sap"."base_url", "sap"."urls" FROM "sentry_account_permission" AS "sap" WHERE (account_id = '` + uuid + `') AND (partner_id = '` + uuid + `') AND (lower(role_name) = 'admin') AND (lower(scope) = 'organization')`)).
 			WillReturnRows(sqlmock.NewRows([]string{"account_id", "role_name", "scope"}).AddRow(uuid, "admin", "organization"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now())`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE ((tag = '` + tag + `') OR (tag = 'kubectl_api' AND data->>'st' != 'browser shell')) AND ((data->>'project' = '` + project + `') OR (data->>'pr' = '` + project + `')) AND (time between now() - interval '` + timefrom + `' and now()) ORDER BY "time" desc`)).
 			WillReturnRows(sqlmock.NewRows([]string{"tag", "time", "data"}).AddRow(tag, time.Now(), auditrecord).AddRow(tag, time.Now(), auditrecordtwo))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'project' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'project'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, COALESCE(data->>'project', data->>'pr') as key FROM "audit_logs" WHERE ((tag = '` + tag + `') OR (tag = 'kubectl_api' AND data->>'st' != 'browser shell')) AND ((data->>'project' = '` + project + `') OR (data->>'pr' = '` + project + `')) AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY COALESCE(data->>'project', data->>'pr')`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "project"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->'actor'->'account'->>'username' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->'actor'->'account'->>'username'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, COALESCE(data->'actor'->'account'->>'username', data->>'un') as key FROM "audit_logs" WHERE ((tag = '` + tag + `') OR (tag = 'kubectl_api' AND data->>'st' != 'browser shell')) AND ((data->>'project' = '` + project + `') OR (data->>'pr' = '` + project + `')) AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY COALESCE(data->'actor'->'account'->>'username', data->>'un')`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "username"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'type' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'project' = '` + project + `') AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'type'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'type' as key FROM "audit_logs" WHERE ((tag = '` + tag + `') OR (tag = 'kubectl_api' AND data->>'st' != 'browser shell')) AND ((data->>'project' = '` + project + `') OR (data->>'pr' = '` + project + `')) AND (time between now() - interval '` + timefrom + `' and now()) GROUP BY data->>'type'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "type"))
 
 		sd := commonv3.SessionData{
