@@ -55,7 +55,7 @@ func testGetRelayAuditLogForCluster(tag string) func(t *testing.T) {
 		}
 
 		timefrom := "1h"
-		auditrecord := "{\"av\":\"flowcontrol.apiserver.k8s.io/v1beta2\",\"cn\":\"kind-2\",\"d\": 0.492472386,\"id\":\"cduajnic6p9tna60re3g\",\"k\":\"\",\"m\": \"GET\", \"n\": \"\", \"ns\": \"\", \"o\": \"9fcdf482-6191-44f1-987a-8469addf2566\", \"p\": \"ba184458-b899-4cf3-99fa-d77a21578ede\", \"q\": \"timeout=32s\", \"ra\": \"10.0.0.147\", \"sc\": 200, \"st\": \"browser shell\", \"ts\": \"2022-11-22T10:52:14.987Z\", \"un\": \"admin@paralus.local\", \"url\": \"/apis/flowcontrol.apiserver.k8s.io/v1beta2\", \"w\": 819 }\""
+		auditrecord := "{\"api_version\":\"flowcontrol.apiserver.k8s.io/v1beta2\",\"cluster_name\":\"kind-2\",\"duration\": 0.492472386,\"id\":\"cduajnic6p9tna60re3g\",\"kind\":\"\",\"method\": \"GET\", \"name\": \"\", \"namespace\": \"\", \"organization_id\": \"9fcdf482-6191-44f1-987a-8469addf2566\", \"partner_id\": \"ba184458-b899-4cf3-99fa-d77a21578ede\", \"query\": \"timeout=32s\", \"remote_addr\": \"10.0.0.147\", \"status_code\": 200, \"session_type\": \"browser shell\", \"timestamp\": \"2022-11-22T10:52:14.987Z\", \"username\": \"admin@paralus.local\", \"url\": \"/apis/flowcontrol.apiserver.k8s.io/v1beta2\", \"written\": 819 }\""
 
 		req := &eventv1.RelayAuditRequest{
 			Metadata: &commonv3.Metadata{
@@ -71,25 +71,25 @@ func testGetRelayAuditLogForCluster(tag string) func(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "sap"."account_id", "sap"."project_id", "sap"."group_id", "sap"."role_id", "sap"."role_name", "sap"."organization_id", "sap"."partner_id", "sap"."is_global", "sap"."scope", "sap"."permission_name", "sap"."base_url", "sap"."urls" FROM "sentry_account_permission" AS "sap" WHERE (account_id = '` + uuid + `') AND (partner_id = '` + uuid + `') AND (lower(role_name) = 'admin') AND (lower(scope) = 'organization')`)).
 			WillReturnRows(sqlmock.NewRows([]string{"account_id", "role_name", "scope"}).AddRow(uuid, "admin", "organization"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now())`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'cluster_name' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now())`)).
 			WillReturnRows(sqlmock.NewRows([]string{"tag", "time", "data"}).AddRow(tag, time.Now(), auditrecord))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'pr' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'pr' = '` + project + `') GROUP BY data->>'pr'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'project' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cluster_name' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'project' = '` + project + `') GROUP BY data->>'project'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "project"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'cn' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'pr' = '` + project + `') GROUP BY data->>'cn'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'cluster_name' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cluster_name' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'project' = '` + project + `') GROUP BY data->>'cluster_name'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "cluster"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'un' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'pr' = '` + project + `') GROUP BY data->>'un'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'username' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cluster_name' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'project' = '` + project + `') GROUP BY data->>'username'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "username"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'n' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'pr' = '` + project + `') GROUP BY data->>'n'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'namespace' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cluster_name' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'project' = '` + project + `') GROUP BY data->>'namespace'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "namespace"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'k' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'pr' = '` + project + `') GROUP BY data->>'k'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'kind' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cluster_name' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'project' = '` + project + `') GROUP BY data->>'kind'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "kind"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'m' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cn' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'pr' = '` + project + `') GROUP BY data->>'m'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'method' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'cluster_name' = '` + req.Filter.Cluster + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'project' = '` + project + `') GROUP BY data->>'method'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "method"))
 
 		sd := commonv3.SessionData{
@@ -132,8 +132,8 @@ func testGetRelayAuditLogForKind(tag string) func(t *testing.T) {
 		}
 
 		timefrom := "1d"
-		auditrecord := "{\"av\":\"flowcontrol.apiserver.k8s.io/v1beta2\",\"cn\":\"kind-2\",\"d\": 0.492472386,\"id\":\"cduajnic6p9tna60re3g\",\"k\":\"namespace\",\"m\": \"GET\", \"n\": \"\", \"ns\": \"\", \"o\": \"9fcdf482-6191-44f1-987a-8469addf2566\", \"p\": \"ba184458-b899-4cf3-99fa-d77a21578ede\", \"q\": \"timeout=32s\", \"ra\": \"10.0.0.147\", \"sc\": 200, \"st\": \"browser shell\", \"ts\": \"2022-11-22T10:52:14.987Z\", \"un\": \"admin@paralus.local\", \"url\": \"/apis/flowcontrol.apiserver.k8s.io/v1beta2\", \"w\": 819 }\""
-		auditrecordtwo := "{\"av\":\"flowcontrol.apiserver.k8s.io/v1beta2\",\"cn\":\"kind-2\",\"d\": 0.492472386,\"id\":\"cduajnic6p9tna60re3g\",\"k\":\"namespace\",\"m\": \"GET\", \"n\": \"\", \"ns\": \"\", \"o\": \"9fcdf482-6191-44f1-987a-8469addf2566\", \"p\": \"ba184458-b899-4cf3-99fa-d77a21578ede\", \"q\": \"timeout=32s\", \"ra\": \"10.0.0.147\", \"sc\": 200, \"st\": \"browser shell\", \"ts\": \"2022-11-22T10:52:14.987Z\", \"un\": \"admin@paralus.local\", \"url\": \"/apis/flowcontrol.apiserver.k8s.io/v1beta2\", \"w\": 819 }\""
+		auditrecord := "{\"api_version\":\"flowcontrol.apiserver.k8s.io/v1beta2\",\"cluster_name\":\"kind-2\",\"duration\": 0.492472386,\"id\":\"cduajnic6p9tna60re3g\",\"kind\":\"namespace\",\"method\": \"GET\", \"name\": \"\", \"namespace\": \"\", \"organization_id\": \"9fcdf482-6191-44f1-987a-8469addf2566\", \"partner_id\": \"ba184458-b899-4cf3-99fa-d77a21578ede\", \"query\": \"timeout=32s\", \"remote_addr\": \"10.0.0.147\", \"status_code\": 200, \"session_type\": \"browser shell\", \"timestamp\": \"2022-11-22T10:52:14.987Z\", \"username\": \"admin@paralus.local\", \"url\": \"/apis/flowcontrol.apiserver.k8s.io/v1beta2\", \"written\": 819 }\""
+		auditrecordtwo := "{\"api_version\":\"flowcontrol.apiserver.k8s.io/v1beta2\",\"cluster_name\":\"kind-2\",\"duration\": 0.492472386,\"id\":\"cduajnic6p9tna60re3g\",\"kind\":\"namespace\",\"method\": \"GET\", \"name\": \"\", \"namespace\": \"\", \"organization_id\": \"9fcdf482-6191-44f1-987a-8469addf2566\", \"partner_id\": \"ba184458-b899-4cf3-99fa-d77a21578ede\", \"query\": \"timeout=32s\", \"remote_addr\": \"10.0.0.147\", \"status_code\": 200, \"session_type\": \"browser shell\", \"timestamp\": \"2022-11-22T10:52:14.987Z\", \"username\": \"admin@paralus.local\", \"url\": \"/apis/flowcontrol.apiserver.k8s.io/v1beta2\", \"written\": 819 }\""
 
 		req := &eventv1.RelayAuditRequest{
 			Metadata: &commonv3.Metadata{
@@ -149,25 +149,25 @@ func testGetRelayAuditLogForKind(tag string) func(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "sap"."account_id", "sap"."project_id", "sap"."group_id", "sap"."role_id", "sap"."role_name", "sap"."organization_id", "sap"."partner_id", "sap"."is_global", "sap"."scope", "sap"."permission_name", "sap"."base_url", "sap"."urls" FROM "sentry_account_permission" AS "sap" WHERE (account_id = '` + uuid + `') AND (partner_id = '` + uuid + `') AND (lower(role_name) = 'admin') AND (lower(scope) = 'organization')`)).
 			WillReturnRows(sqlmock.NewRows([]string{"account_id", "role_name", "scope"}).AddRow(uuid, "admin", "organization"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now())`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "auditlog"."tag", "auditlog"."time", "auditlog"."data" FROM "audit_logs" AS "auditlog" WHERE (tag = '` + tag + `') AND (data->>'kind' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now())`)).
 			WillReturnRows(sqlmock.NewRows([]string{"tag", "time", "data"}).AddRow(tag, time.Now(), auditrecord).AddRow(tag, time.Now(), auditrecordtwo))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'pr' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'pr' = '` + project + `') GROUP BY data->>'pr'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'project' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'kind' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'project' = '` + project + `') GROUP BY data->>'project'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "project"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'cn' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'pr' = '` + project + `') GROUP BY data->>'cn'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'cluster_name' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'kind' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'project' = '` + project + `') GROUP BY data->>'cluster_name'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "cluster"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'un' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'pr' = '` + project + `') GROUP BY data->>'un'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'username' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'kind' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'project' = '` + project + `') GROUP BY data->>'username'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "username"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'n' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'pr' = '` + project + `') GROUP BY data->>'n'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'namespace' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'kind' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'project' = '` + project + `') GROUP BY data->>'namespace'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "namespace"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'k' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'pr' = '` + project + `') GROUP BY data->>'k'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'kind' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'kind' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'project' = '` + project + `') GROUP BY data->>'kind'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "kind"))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'m' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'k' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'pr' = '` + project + `') GROUP BY data->>'m'`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) as count, data->>'method' as key FROM "audit_logs" WHERE (tag = '` + tag + `') AND (data->>'kind' = '` + req.Filter.Kind + `') AND (time between now() - interval '` + timefrom + `' and now()) AND (data->>'project' = '` + project + `') GROUP BY data->>'method'`)).
 			WillReturnRows(sqlmock.NewRows([]string{"count", "key"}).AddRow(1, "method"))
 
 		sd := commonv3.SessionData{

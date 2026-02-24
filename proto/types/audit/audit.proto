@@ -1,7 +1,6 @@
 syntax = "proto3";
 package paralus.dev.types.audit.v1;
-
-import "google/protobuf/timestamp.proto";
+option go_package = "github.com/paralus/paralus/proto/types/audit;auditv1";
 
 message AuditResponse {
     Aggregations aggregations = 1;
@@ -51,26 +50,24 @@ message Data {
     string type = 9;
     string version = 10;
 
-    // below are for kubectl api, attribute names are maintained as below for consistency with es. need to be refactored to be more meaningful.
-    string av = 11;
-    string cn = 12;
-    double d = 13;
+    string api_version = 11;
+    string cluster_name = 12;
+    double duration = 13;
     string id = 14;
-    string k = 15;
-    string m = 16;
-    string n = 17;
-    string ns = 18;
-    string o = 19;
-    string p = 20;
-    string q = 21;
-    string ra = 22;
-    int32 sc = 23;
-    string st = 24;
+    string kind = 15;
+    string method = 16;
+    string name = 17;
+    string namespace = 18;
+    string organization_id = 19;
+    string partner_id = 20;
+    string query = 21;
+    string remote_addr = 22;
+    int32 status_code = 23;
+    string session_type = 24;
     string ts = 25;
-    string un = 26;
+    string username = 26;
     string url = 27;
-    int32 w = 28;
-    string pr = 29;
+    int32 written = 28;
 }
 
 message Actor {
