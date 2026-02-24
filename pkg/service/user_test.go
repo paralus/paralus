@@ -845,11 +845,9 @@ func TestCreateLoginAuditLog(t *testing.T) {
 			mazc := mockAuthzClient{}
 			us := NewUserService(ap, db, &mazc, nil, common.CliConfigDownloadData{}, getLogger(), true)
 			if tc.invalid {
-
-				uid := uuid.New().String()
 				// without regexp QuoteMeta, getting mismatch actual and required SQL queries
-				mock.ExpectQuery(regexp.QuoteMeta(`SELECT traits ->> 'email' as name FROM "identities" WHERE (id = ('` + uid + `'))`)).
-					WithArgs().WillReturnRows(sqlmock.NewRows([]string{"traits"}).AddRow([]byte(`{"email":"johndoe@provider.com"}`)))
+				mock.ExpectQuery(regexp.QuoteMeta(`SELECT traits ->> 'email' as name FROM "identities" WHERE (id = ('` + tc.uuid + `'))`)).
+					WithArgs().WillReturnError(fmt.Errorf("user not found"))
 
 			} else {
 				mock.ExpectQuery(regexp.QuoteMeta(`SELECT traits ->> 'email' as name FROM "identities" WHERE (id = ('` + tc.uuid + `'))`)).

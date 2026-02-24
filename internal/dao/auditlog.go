@@ -17,48 +17,106 @@ func GetAuditLogAggregations(ctx context.Context, db *bun.DB, tag, field string,
 
 	switch field {
 	case "type":
-		sq.ColumnExpr("data->>'type' as key").
-			Where("tag = ?", tag).GroupExpr("data->>'type'")
+		if tag == audit.KUBECTL_CMD {
+			sq.ColumnExpr("data->>'type' as key").
+				WhereGroup(" AND ", func(q *bun.SelectQuery) *bun.SelectQuery {
+					return q.Where("tag = ?", audit.KUBECTL_CMD).
+						WhereOr("tag = ? AND data->>'session_type' != 'browser shell'", audit.KUBECTL_API)
+				}).
+				GroupExpr("data->>'type'")
+		} else {
+			sq.ColumnExpr("data->>'type' as key").
+				Where("tag = ?", tag).GroupExpr("data->>'type'")
+		}
 	case "username":
-		if tag != audit.KUBECTL_API {
+		if tag == audit.KUBECTL_API {
+			sq.ColumnExpr("data->>'username' as key").
+				Where("tag = ?", tag).GroupExpr("data->>'username'")
+		} else if tag == audit.KUBECTL_CMD {
+			sq.ColumnExpr("COALESCE(data->'actor'->'account'->>'username', data->>'username') as key").
+				WhereGroup(" AND ", func(q *bun.SelectQuery) *bun.SelectQuery {
+					return q.Where("tag = ?", audit.KUBECTL_CMD).
+						WhereOr("tag = ? AND data->>'session_type' != 'browser shell'", audit.KUBECTL_API)
+				}).
+				GroupExpr("COALESCE(data->'actor'->'account'->>'username', data->>'username')")
+		} else {
 			sq.ColumnExpr("data->'actor'->'account'->>'username' as key").
 				Where("tag = ?", tag).GroupExpr("data->'actor'->'account'->>'username'")
-		} else {
-			sq.ColumnExpr("data->>'un' as key").
-				Where("tag = ?", tag).GroupExpr("data->>'un'")
 		}
 	case "project":
-		if tag != audit.KUBECTL_API {
+		if tag == audit.KUBECTL_API {
 			sq.ColumnExpr("data->>'project' as key").
 				Where("tag = ?", tag).GroupExpr("data->>'project'")
+		} else if tag == audit.KUBECTL_CMD {
+			sq.ColumnExpr("data->>'project' as key").
+				WhereGroup(" AND ", func(q *bun.SelectQuery) *bun.SelectQuery {
+					return q.Where("tag = ?", audit.KUBECTL_CMD).
+						WhereOr("tag = ? AND data->>'session_type' != 'browser shell'", audit.KUBECTL_API)
+				}).
+				GroupExpr("data->>'project'")
 		} else {
-			sq.ColumnExpr("data->>'pr' as key").
-				Where("tag = ?", tag).GroupExpr("data->>'pr'")
+			sq.ColumnExpr("data->>'project' as key").
+				Where("tag = ?", tag).GroupExpr("data->>'project'")
 		}
 	case "cluster":
-		if tag != audit.KUBECTL_API {
+		if tag == audit.KUBECTL_API {
+			sq.ColumnExpr("data->>'cluster_name' as key").
+				Where("tag = ?", tag).GroupExpr("data->>'cluster_name'")
+		} else if tag == audit.KUBECTL_CMD {
+			sq.ColumnExpr("COALESCE(data->'detail'->'meta'->>'cluster_name', data->>'cluster_name') as key").
+				WhereGroup(" AND ", func(q *bun.SelectQuery) *bun.SelectQuery {
+					return q.Where("tag = ?", audit.KUBECTL_CMD).
+						WhereOr("tag = ? AND data->>'session_type' != 'browser shell'", audit.KUBECTL_API)
+				}).
+				GroupExpr("COALESCE(data->'detail'->'meta'->>'cluster_name', data->>'cluster_name')")
+		} else {
 			sq.ColumnExpr("data->'detail'->'meta'->>'cluster_name' as key").
 				Where("tag = ?", tag).GroupExpr("data->'detail'->'meta'->>'cluster_name'")
-		} else {
-			sq.ColumnExpr("data->>'cn' as key").
-				Where("tag = ?", tag).GroupExpr("data->>'cn'")
 		}
 	case "namespace":
-		sq.ColumnExpr("data->>'n' as key").
-			Where("tag = ?", tag).GroupExpr("data->>'n'")
+		if tag == audit.KUBECTL_CMD {
+			sq.ColumnExpr("data->>'namespace' as key").
+				WhereGroup(" AND ", func(q *bun.SelectQuery) *bun.SelectQuery {
+					return q.Where("tag = ?", audit.KUBECTL_CMD).
+						WhereOr("tag = ? AND data->>'session_type' != 'browser shell'", audit.KUBECTL_API)
+				}).
+				GroupExpr("data->>'namespace'")
+		} else {
+			sq.ColumnExpr("data->>'namespace' as key").
+				Where("tag = ?", tag).GroupExpr("data->>'namespace'")
+		}
 	case "kind":
-		sq.ColumnExpr("data->>'k' as key").
-			Where("tag = ?", tag).GroupExpr("data->>'k'")
+		if tag == audit.KUBECTL_CMD {
+			sq.ColumnExpr("data->>'kind' as key").
+				WhereGroup(" AND ", func(q *bun.SelectQuery) *bun.SelectQuery {
+					return q.Where("tag = ?", audit.KUBECTL_CMD).
+						WhereOr("tag = ? AND data->>'session_type' != 'browser shell'", audit.KUBECTL_API)
+				}).
+				GroupExpr("data->>'kind'")
+		} else {
+			sq.ColumnExpr("data->>'kind' as key").
+				Where("tag = ?", tag).GroupExpr("data->>'kind'")
+		}
 	case "method":
-		sq.ColumnExpr("data->>'m' as key").
-			Where("tag = ?", tag).GroupExpr("data->>'m'")
+		if tag == audit.KUBECTL_CMD {
+			sq.ColumnExpr("data->>'method' as key").
+				WhereGroup(" AND ", func(q *bun.SelectQuery) *bun.SelectQuery {
+					return q.Where("tag = ?", audit.KUBECTL_CMD).
+						WhereOr("tag = ? AND data->>'session_type' != 'browser shell'", audit.KUBECTL_API)
+				}).
+				GroupExpr("data->>'method'")
+		} else {
+			sq.ColumnExpr("data->>'method' as key").
+				Where("tag = ?", tag).GroupExpr("data->>'method'")
+		}
 	}
 
-	// add filters
 	switch tag {
 	case audit.KUBECTL_API:
 		sq = buildRelayAuditQuery(sq, filters)
-	case audit.SYSTEM, audit.KUBECTL_CMD:
+	case audit.KUBECTL_CMD:
+		sq = buildRelayCommandQuery(sq, filters)
+	case audit.SYSTEM:
 		sq = buildQuery(sq, filters)
 	}
 
@@ -68,34 +126,96 @@ func GetAuditLogAggregations(ctx context.Context, db *bun.DB, tag, field string,
 
 func GetAuditLogs(ctx context.Context, db *bun.DB, tag string, filters query.QueryFilters) ([]models.AuditLog, error) {
 	var logs []models.AuditLog
-	sq := db.NewSelect().Model(&logs).
-		Where("tag = ?", tag)
+	sq := db.NewSelect().Model(&logs)
+
+	if tag == audit.KUBECTL_CMD {
+		sq.WhereGroup(" AND ", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Where("tag = ?", audit.KUBECTL_CMD).
+				WhereOr("tag = ? AND data->>'session_type' != 'browser shell'", audit.KUBECTL_API)
+		})
+	} else {
+		sq.Where("tag = ?", tag)
+	}
 
 	switch tag {
 	case audit.KUBECTL_API:
 		sq = buildRelayAuditQuery(sq, filters)
-	case audit.SYSTEM, audit.KUBECTL_CMD:
+	case audit.KUBECTL_CMD:
+		sq = buildRelayCommandQuery(sq, filters)
+	case audit.SYSTEM:
 		sq = buildQuery(sq, filters)
 	}
 	err := sq.Order("time desc").Scan(ctx)
 	return logs, err
 }
 
+func buildRelayCommandQuery(query *bun.SelectQuery, filters query.QueryFilters) *bun.SelectQuery {
+	if len(filters.GetProjects()) > 0 {
+		for _, project := range filters.GetProjects() {
+			query.Where("data->>'project' = ?", project)
+		}
+	}
+
+	if filters.GetUser() != "" {
+		query.WhereGroup(" AND ", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Where("data->'actor'->'account'->>'username' = ?", filters.GetUser()).
+				WhereOr("data->>'username' = ?", filters.GetUser())
+		})
+	}
+
+	if filters.GetKind() != "" {
+		query.Where("data->>'kind' = ?", filters.GetKind())
+	}
+
+	if filters.GetMethod() != "" {
+		query.Where("data->>'method' = ?", filters.GetMethod())
+	}
+
+	if filters.GetNamespace() != "" {
+		query.Where("data->>'namespace' = ?", filters.GetNamespace())
+	}
+
+	if filters.GetCluster() != "" {
+		query.WhereGroup(" AND ", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Where("data->'detail'->'meta'->>'cluster_name' = ?", filters.GetCluster()).
+				WhereOr("data->>'cluster_name' = ?", filters.GetCluster())
+		})
+	}
+
+	if filters.GetClient() != "" {
+		if filters.GetClient() == "KUBECTL" {
+			query.WhereGroup(" AND ", func(q *bun.SelectQuery) *bun.SelectQuery {
+				return q.Where("data->'client'->>'type' = ?", filters.GetClient()).
+					WhereOr("tag = ? AND data->>'session_type' != 'browser shell'", audit.KUBECTL_API)
+			})
+		} else {
+			query.Where("data->'client'->>'type' = ?", filters.GetClient())
+		}
+	}
+
+	if filters.GetTimefrom() != "" {
+		diff := strings.Split(filters.GetTimefrom(), "-")[1]
+		query.Where("time between now() - interval ? and now()", diff)
+	}
+
+	return query
+}
+
 func buildRelayAuditQuery(query *bun.SelectQuery, filters query.QueryFilters) *bun.SelectQuery {
 	if filters.GetUser() != "" {
-		query.Where("data->>'un' = ?", filters.GetUser())
+		query.Where("data->>'username' = ?", filters.GetUser())
 	}
 	if filters.GetKind() != "" {
-		query.Where("data->>'k' = ?", filters.GetKind())
+		query.Where("data->>'kind' = ?", filters.GetKind())
 	}
 	if filters.GetMethod() != "" {
-		query.Where("data->>'m' = ?", filters.GetMethod())
+		query.Where("data->>'method' = ?", filters.GetMethod())
 	}
 	if filters.GetNamespace() != "" {
-		query.Where("data->>'ns' = ?", filters.GetNamespace())
+		query.Where("data->>'namespace' = ?", filters.GetNamespace())
 	}
 	if filters.GetCluster() != "" {
-		query.Where("data->>'cn' = ?", filters.GetCluster())
+		query.Where("data->>'cluster_name' = ?", filters.GetCluster())
 	}
 	if filters.GetTimefrom() != "" {
 		diff := strings.Split(filters.GetTimefrom(), "-")[1]
@@ -103,7 +223,7 @@ func buildRelayAuditQuery(query *bun.SelectQuery, filters query.QueryFilters) *b
 	}
 	if len(filters.GetProjects()) > 0 {
 		for _, project := range filters.GetProjects() {
-			query.Where("data->>'pr' = ?", project)
+			query.Where("data->>'project' = ?", project)
 		}
 	}
 	return query
