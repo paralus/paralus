@@ -59,8 +59,8 @@ func CreateIdentity(c *ory.APIClient) *ory.Identity {
 
 	email, _ := RandomCredentials()
 
-	identity, _, err := c.IdentityAPI.CreateIdentity(ctx).CreateIdentityBody(*ory.NewCreateIdentityBody("default", map[string]interface{}{"email": email,}})).Execute()
+	identity, _, err := c.IdentityAPI.CreateIdentity(ctx).CreateIdentityBody(*ory.NewCreateIdentityBody("default", map[string]interface{}{"email": email})).Execute()
 	ExitOnError(err)
-	
+
 	return identity
 }

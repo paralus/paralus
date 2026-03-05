@@ -89,40 +89,89 @@ func (s *roleService) deleteRolePermissionMapping(ctx context.Context, db bun.ID
 }
 
 func (s *roleService) createRolePermissionMapping(ctx context.Context, db bun.IDB, role *rolev3.Role, ids parsedIds) (*rolev3.Role, error) {
-	perms := role.GetSpec().GetRolepermissions()
 
+	// Deduplicate permissions (safety guard)
+	rawPerms := role.GetSpec().GetRolepermissions()
+
+	permSet := make(map[string]struct{})
+	var perms []string
+
+	for _, p := range rawPerms {
+		if _, exists := permSet[p]; !exists {
+			permSet[p] = struct{}{}
+			perms = append(perms, p)
+		}
+	}
+
+	// fmt.Println("Permissions for role:", role.GetMetadata().GetName())
+	for _, p := range perms {
+		fmt.Println(" -", p)
+	}
+
+	// -----------------------------
+	// Remove existing Casbin mappings (idempotent)
+	_, _ = s.azc.DeleteRolePermissionMappings(
+		ctx,
+		&authzv1.FilteredRolePermissionMapping{
+			Role: role.GetMetadata().GetName(),
+		},
+	)
+
+	// -----------------------------
+	// Remove existing DB mappings (idempotent)
+	_, _ = db.NewDelete().
+		Model((*models.ResourceRolePermission)(nil)).
+		Where("resource_role_id = ?", ids.Id).
+		Exec(ctx)
+
+	// -----------------------------
+	// Build DB mapping entries
 	var items []models.ResourceRolePermission
+
 	for _, p := range perms {
 		entity, err := dao.GetIdByName(ctx, db, p, &models.ResourcePermission{})
 		if err != nil {
 			return role, fmt.Errorf("unable to find role permission '%v'", p)
 		}
-		if prm, ok := entity.(*models.ResourcePermission); ok {
-			items = append(items, models.ResourceRolePermission{
-				ResourceRoleId:       ids.Id,
-				ResourcePermissionId: prm.ID,
-			})
-		} else {
-			return role, fmt.Errorf("unable to find role permission '%v'", p)
+
+		prm, ok := entity.(*models.ResourcePermission)
+		if !ok {
+			return role, fmt.Errorf("invalid permission type for '%v'", p)
 		}
+
+		items = append(items, models.ResourceRolePermission{
+			ResourceRoleId:       ids.Id,
+			ResourcePermissionId: prm.ID,
+		})
 	}
+
+	// -----------------------------
+	// Insert DB mappings
 	if len(items) > 0 {
 		_, err := dao.Create(ctx, db, &items)
 		if err != nil {
 			return role, err
 		}
 
+		// -----------------------------
+		// Create Casbin mappings (clean list)
 		crpm := authzv1.RolePermissionMappingList{
-			RolePermissionMappingList: []*authzv1.RolePermissionMapping{{
-				Role:       role.GetMetadata().GetName(),
-				Permission: role.Spec.Rolepermissions,
-			}},
+			RolePermissionMappingList: []*authzv1.RolePermissionMapping{
+				{
+					Role:       role.GetMetadata().GetName(),
+					Permission: perms, // use deduplicated perms
+				},
+			},
 		}
+
 		success, err := s.azc.CreateRolePermissionMappings(ctx, &crpm)
 		if err != nil || !success.Res {
 			return role, fmt.Errorf("unable to create mapping in authz; %v", err)
 		}
 	}
+
+	// // fmt.Println("Creating Casbin mappings for role:", role.GetMetadata().GetName())
+
 	return role, nil
 }
 
@@ -283,7 +332,7 @@ func (s *roleService) Update(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 	}
 
 	if rle, ok := entity.(*models.Role); ok {
-		if rle.Builtin {
+		if rle.Builtin && !IsInternalRequest(ctx) {
 			return role, fmt.Errorf("builtin role '%v' cannot be updated", name)
 		}
 		//update role details
@@ -347,7 +396,7 @@ func (s *roleService) Delete(ctx context.Context, role *rolev3.Role) (*rolev3.Ro
 	}
 
 	if rle, ok := entity.(*models.Role); ok {
-		if rle.Builtin {
+		if rle.Builtin && !IsInternalRequest(ctx) {
 			return role, fmt.Errorf("builtin role '%v' cannot be deleted", name)
 		}
 

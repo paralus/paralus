@@ -204,23 +204,52 @@ func (s *authzService) fromRolePermissionMappingList(ctx context.Context, r *aut
 	}
 
 	res := [][]string{}
+	policySet := make(map[string]struct{}) // DEDUPE MAP
+
 	for i, mapping := range r.GetRolePermissionMappingList() {
+
+		role := mapping.GetRole()
+
 		for _, permission := range mapping.GetPermission() {
-			rules := [][]string{}
+
 			for _, rpm := range s.mappingCache[permission] {
+
 				for _, method := range rpm.methods {
-					rule := []string{rpm.url, mapping.GetRole(), method}
+
+					rule := []string{
+						rpm.url,
+						role,
+						method,
+					}
+
 					for _, field := range rule {
 						if field == "" {
-							return res, fmt.Errorf("index %d: mapping elements do not meet definition", i)
+							return res, fmt.Errorf(
+								"index %d: mapping elements do not meet definition",
+								i,
+							)
 						}
 					}
-					rules = append(rules, rule)
+
+					// Build uniqueness key
+					key := fmt.Sprintf("%s|%s|%s",
+						rpm.url,
+						role,
+						method,
+					)
+
+					// Skip duplicates
+					if _, exists := policySet[key]; exists {
+						continue
+					}
+
+					policySet[key] = struct{}{}
+					res = append(res, rule)
 				}
 			}
-			res = append(res, rules...)
 		}
 	}
+
 	return res, nil
 }
 

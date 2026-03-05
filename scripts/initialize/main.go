@@ -277,12 +277,17 @@ func main() {
 		log.Fatal("unable to create org:", err)
 	}
 	// this is used to figure out if the request originated internally so as to not override `builtin`
+	// --------------------
+	// RECONCILE BUILTIN ROLES (Declarative + Safe)
+
 	internalCtx := context.WithValue(context.Background(), common.SessionInternalKey, true)
-	for scope := range data {
-		for name := range data[scope] {
-			perms := data[scope][name]
-			fmt.Println(scope, name, len(perms))
-			role := &rolev3.Role{
+
+	// Build desired roles map from roles.json
+	desiredRoles := make(map[string]*rolev3.Role)
+
+	for scope, roles := range data {
+		for name, perms := range roles {
+			desiredRoles[name] = &rolev3.Role{
 				Metadata: &commonv3.Metadata{
 					Name:         name,
 					Partner:      *partner,
@@ -296,16 +301,58 @@ func main() {
 					Builtin:         true,
 				},
 			}
+		}
+	}
 
-			_, err := rs.Create(internalCtx, role)
+	// Fetch existing roles from DB
+	existingList, err := rs.List(context.Background(), &rolev3.Role{
+		Metadata: &commonv3.Metadata{
+			Partner:      *partner,
+			Organization: *org,
+		},
+	})
+	if err != nil {
+		log.Fatal("unable to list roles:", err)
+	}
+
+	// Track existing builtin roles
+	existingBuiltin := make(map[string]*rolev3.Role)
+	for _, r := range existingList.Items {
+		if r.Spec.Builtin {
+			existingBuiltin[r.Metadata.Name] = r
+		}
+	}
+
+	// Reconcile desired roles
+	for name, desiredRole := range desiredRoles {
+
+		if existing, exists := existingBuiltin[name]; exists {
+
+			// Role exists → Update (fully replace permissions)
+			desiredRole.Metadata.Id = existing.Metadata.Id
+
+			_, err := rs.Update(internalCtx, desiredRole)
 			if err != nil {
-				if strings.Contains(err.Error(), "already exists") {
-					// role already present, safe to ignore
-					continue
-				}
-				log.Fatalf("unable to create role %s: %v", name, err)
+				log.Fatalf("failed updating builtin role %s: %v", name, err)
 			}
 
+		} else {
+			// Role missing → Create
+			_, err := rs.Create(internalCtx, desiredRole)
+			if err != nil {
+				log.Fatalf("failed creating builtin role %s: %v", name, err)
+			}
+		}
+	}
+
+	//Delete orphan builtin roles (present in DB but removed from JSON)
+	for name, existing := range existingBuiltin {
+		if _, found := desiredRoles[name]; !found {
+
+			_, err := rs.Delete(internalCtx, existing)
+			if err != nil {
+				log.Fatalf("failed deleting orphan builtin role %s: %v", name, err)
+			}
 		}
 	}
 	//default "All Local Users" group should be created
