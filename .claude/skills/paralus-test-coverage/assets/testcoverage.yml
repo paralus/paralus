@@ -1,0 +1,38 @@
+# go-test-coverage config for paralus/paralus
+# Combines unit + integration profiles (see assets/ci-coverage.yml)
+profile: cover_unit.out,cover_integration.out
+
+threshold:
+  # Option A (default): every file must clear 70%, so an under-covered
+  # changed file fails the PR. Legacy files not yet brought up to par
+  # should get a temporary `override` entry below rather than lowering
+  # this globally.
+  file: 70
+
+  # Leave package-level unset (0) unless the team wants a stricter
+  # per-package floor in addition to the file-level one.
+  package: 0
+
+  # Overall project coverage must stay at or above 70%.
+  total: 70
+
+# Temporary exemptions for legacy files still being brought up to 70%.
+# Remove each line as the file is improved.
+override: []
+  # - path: ^internal/legacy/foo\.go$
+  #   threshold: 40
+
+exclude:
+  paths:
+    - \.pb\.go$        # generated protobuf code
+    - \.pb\.gw\.go$     # generated grpc-gateway code
+    - ^test/            # test helpers/fixtures, not product code
+    - _mock\.go$
+
+force-annotation-comment: false
+
+# Uncomment to switch to Option B (diff-based "don't regress" gating)
+# described in SKILL.md instead of / in addition to the file threshold above.
+# diff:
+#   base-breakdown-file-name: coverage-breakdown-main.json
+#   threshold: -0.5
