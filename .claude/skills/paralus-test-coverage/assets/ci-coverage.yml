@@ -1,0 +1,71 @@
+name: Test coverage
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  unit:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22" # match go.mod
+
+      - name: Run unit tests
+        run: |
+          go test ./... -race -coverprofile=cover_unit.out -covermode=atomic -coverpkg=./...
+
+      - name: Upload unit coverage profile
+        uses: actions/upload-artifact@v4
+        with:
+          name: cover-unit
+          path: cover_unit.out
+
+  integration:
+    name: Integration tests (testcontainers)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      # ubuntu-latest runners ship with Docker already available, which is
+      # all testcontainers-go needs for Postgres / Elasticsearch / Kratos.
+      - name: Run integration tests
+        run: |
+          go test -tags=integration ./... -coverprofile=cover_integration.out -covermode=atomic -coverpkg=./...
+
+      - name: Upload integration coverage profile
+        uses: actions/upload-artifact@v4
+        with:
+          name: cover-integration
+          path: cover_integration.out
+
+  coverage-gate:
+    name: Coverage gate (70%)
+    needs: [unit, integration]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: cover-unit
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: cover-integration
+
+      - name: Check test coverage
+        uses: vladopajic/go-test-coverage@v2
+        with:
+          config: ./.testcoverage.yml
+          # profile is a comma-separated list combining both suites,
+          # matching the `profile:` field set in .testcoverage.yml

@@ -6,4 +6,4 @@ bin
 tmp
 audit.log
 buf.lock
-.vscode
+.vscodecover.out
