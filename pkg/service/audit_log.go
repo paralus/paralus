@@ -61,8 +61,24 @@ func ValidateUserAuditReadRequest(ctx context.Context, projects []string, db *bu
 	}
 	_log.Infow("fetching auditlogs", "account", sd)
 
+	// MustParse panics on an empty string and crash-loops the pod. IdP sessions
+	// and the documented lowercase metadata migration can leave partner or
+	// organization empty (issue 344). Return an error instead.
+	accountID, err := parseSessionUUID("account", sd.Account)
+	if err != nil {
+		return err
+	}
+	partnerID, err := parseSessionUUID("partner", sd.Partner)
+	if err != nil {
+		return err
+	}
+	organizationID, err := parseSessionUUID("organization", sd.Organization)
+	if err != nil {
+		return err
+	}
+
 	// let's check if user has organization scoped roles associated
-	isOrgAdmin, err := dao.IsOrgAdmin(ctx, db, uuid.MustParse(sd.Account), uuid.MustParse(sd.Partner))
+	isOrgAdmin, err := dao.IsOrgAdmin(ctx, db, accountID, partnerID)
 	if err != nil {
 		return err
 	}
@@ -70,7 +86,7 @@ func ValidateUserAuditReadRequest(ctx context.Context, projects []string, db *bu
 		return prerr
 	}
 
-	isOrgReadOnly, err := dao.IsOrgReadOnly(ctx, db, uuid.MustParse(sd.Account), uuid.MustParse(sd.Organization), uuid.MustParse(sd.Partner))
+	isOrgReadOnly, err := dao.IsOrgReadOnly(ctx, db, accountID, organizationID, partnerID)
 	if err != nil {
 		return err
 	}
@@ -79,7 +95,7 @@ func ValidateUserAuditReadRequest(ctx context.Context, projects []string, db *bu
 		return prerr
 	}
 
-	sap, err := dao.GetAccountPermissions(ctx, db, uuid.MustParse(sd.Account), uuid.MustParse(sd.Organization), uuid.MustParse(sd.Partner))
+	sap, err := dao.GetAccountPermissions(ctx, db, accountID, organizationID, partnerID)
 	if err != nil {
 		return err
 	}
@@ -109,4 +125,12 @@ func ValidateUserAuditReadRequest(ctx context.Context, projects []string, db *bu
 		}
 	}
 	return prerr
+}
+
+func parseSessionUUID(field, value string) (uuid.UUID, error) {
+	id, err := uuid.Parse(value)
+	if err != nil {
+		return uuid.Nil, fmt.Errorf("invalid session %s: %w", field, err)
+	}
+	return id, nil
 }

@@ -1,3 +1,10 @@
+## Unreleased
+
+### Bug Fixes
+
+- Audit log authorization no longer panics the process when the session account, partner, or organization is missing or not a UUID (for example an IdP login whose Kratos `metadata_public` has no partner). Empty values now return an error instead of crashing the pod. Fixes #344.
+- Session and Kratos public-metadata reads accept both `Organization`/`Partner` and the lowercase `organization`/`partner` keys from the documented upgrade SQL.
+
 ## [v0.3.0](https://github.com/paralus/paralus/compare/v0.2.9...v0.3.0) (2026-01-14)
 
 ### Dependencies

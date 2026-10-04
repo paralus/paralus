@@ -93,12 +93,13 @@ func (ac *authContext) authenticate(ctx context.Context, req *commonv3.IsRequest
 			res.Status = commonv3.RequestStatus_RequestAllowed
 			res.SessionData.Account = session.Identity.GetId()
 			if session.Identity.HasMetadataPublic() {
-				m := session.Identity.MetadataPublic.(map[string]interface{})
-				if org, ok := m["Organization"].(string); ok {
-					res.SessionData.Organization = org
-				}
-				if part, ok := m["Partner"].(string); ok {
-					res.SessionData.Partner = part
+				// Keys are case-sensitive. Create() writes "Organization"/"Partner"
+				// (encoding/json default), but the documented upgrade SQL sets
+				// lowercase "organization"/"partner". Missing either leaves an empty
+				// UUID that audit-log authz used to panic on (uuid.MustParse).
+				if m, ok := session.Identity.MetadataPublic.(map[string]interface{}); ok {
+					res.SessionData.Organization = metadataString(m, "Organization", "organization")
+					res.SessionData.Partner = metadataString(m, "Partner", "partner")
 				}
 			}
 
@@ -157,4 +158,14 @@ func (ac *authContext) authorize(ctx context.Context, req *commonv3.IsRequestAll
 	// the following would already be set in auth, but just in case
 	res.Status = commonv3.RequestStatus_RequestAllowed
 	return nil
+}
+
+// metadataString returns the first non-empty string value among keys.
+func metadataString(m map[string]interface{}, keys ...string) string {
+	for _, k := range keys {
+		if v, ok := m[k].(string); ok && v != "" {
+			return v
+		}
+	}
+	return ""
 }

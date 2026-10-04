@@ -109,17 +109,23 @@ func (k *kratosAuthProvider) GetPublicMetadata(ctx context.Context, id string) (
 	if identity.HasMetadataPublic() {
 		meta := identity.GetMetadataPublic()
 		if m, ok := meta.(map[string]interface{}); ok {
-			fr, ok := m["ForceReset"].(bool)
-			if ok {
+			if fr, ok := m["ForceReset"].(bool); ok {
+				ipm.ForceReset = fr
+			} else if fr, ok := m["forceReset"].(bool); ok {
 				ipm.ForceReset = fr
 			}
-			if org, ok := m["Organization"].(string); ok {
-				ipm.Organization = org
-			}
-			if part, ok := m["Partner"].(string); ok {
-				ipm.Partner = part
-			}
+			ipm.Organization = metadataString(m, "Organization", "organization")
+			ipm.Partner = metadataString(m, "Partner", "partner")
 		}
 	}
 	return ipm, nil
+}
+
+func metadataString(m map[string]interface{}, keys ...string) string {
+	for _, key := range keys {
+		if v, ok := m[key].(string); ok && v != "" {
+			return v
+		}
+	}
+	return ""
 }
