@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"math/rand"
-	"time"
+	"crypto/rand"
+	"math/big"
 
 	"github.com/google/uuid"
 )
@@ -87,21 +87,35 @@ func DiffU(before, after []uuid.UUID) ([]uuid.UUID, []uuid.UUID, []uuid.UUID) {
 	return cu, uu, du
 }
 
+// randIntn returns a uniform random int in [0, n) from crypto/rand.
+func randIntn(n int) int {
+	v, err := rand.Int(rand.Reader, big.NewInt(int64(n)))
+	if err != nil {
+		panic("crypto/rand unavailable: " + err.Error())
+	}
+	return int(v.Int64())
+}
+
+// GetRandomPassword returns a password containing at least one digit and one
+// special character. It uses crypto/rand: these passwords are handed out for
+// new users (including the initial org admin), so they must not be derivable
+// from the creation timestamp as with a time-seeded math/rand.
 func GetRandomPassword(length int) string {
-	rand.Seed(time.Now().UnixNano())
 	digits := "0123456789"
 	specials := "~=+%^*/()[]{}/!@#$?|"
 	all := "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
 		"abcdefghijklmnopqrstuvwxyz" +
 		digits + specials
 	buf := make([]byte, length)
-	buf[0] = digits[rand.Intn(len(digits))]
-	buf[1] = specials[rand.Intn(len(specials))]
+	buf[0] = digits[randIntn(len(digits))]
+	buf[1] = specials[randIntn(len(specials))]
 	for i := 2; i < length; i++ {
-		buf[i] = all[rand.Intn(len(all))]
+		buf[i] = all[randIntn(len(all))]
 	}
-	rand.Shuffle(len(buf), func(i, j int) {
+	// Fisher-Yates shuffle
+	for i := len(buf) - 1; i > 0; i-- {
+		j := randIntn(i + 1)
 		buf[i], buf[j] = buf[j], buf[i]
-	})
+	}
 	return string(buf)
 }
