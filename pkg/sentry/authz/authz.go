@@ -541,7 +541,7 @@ func GetAuthorization(ctx context.Context, req *sentryrpc.GetUserAuthorizationRe
 		var namespaces []string
 		_log.Infow("authorization", "project", project, "user", sa.Name, "permissions", permissions)
 		groups = append(groups, permissions...)
-		// need to get the namesapces assigned to this user.
+		// need to get the namespaces assigned to this user.
 		ns1, _ := getAccountProjectNamespace(ctx, project, accountID, ns)
 		ns2, _ := getGroupAccountProjectNamespace(ctx, project, accountID, ns)
 		if len(ns1) > 0 {

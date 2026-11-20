@@ -201,7 +201,7 @@ func ListFilteredUsers(
 	return users, nil
 }
 
-// ListFilteredUsersWithGroup is ListFilteredUsers but with Group fileter as well
+// ListFilteredUsersWithGroup is ListFilteredUsers but with Group filter as well
 func ListFilteredUsersWithGroup(
 	ctx context.Context,
 	db bun.IDB,

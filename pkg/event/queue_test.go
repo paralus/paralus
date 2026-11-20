@@ -86,7 +86,7 @@ func TestUniqueScopedResourceQueue(t *testing.T) {
 					case "7w2lnkp":
 						atomic.AddInt32(&con3, 1)
 					default:
-						t.Log("unexpeced id", item.ID)
+						t.Log("unexpected id", item.ID)
 					}
 					time.Sleep(time.Millisecond * 1)
 				}

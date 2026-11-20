@@ -23,7 +23,7 @@ const (
 
 // ClusterEventHandler is the interface for handling cluster events
 type ClusterEventHandler interface {
-	// ClusterHook should be registred in cluster service to listen on
+	// ClusterHook should be registered in cluster service to listen on
 	// Cluster create/update/delete
 	ClusterHook() event.Handler
 

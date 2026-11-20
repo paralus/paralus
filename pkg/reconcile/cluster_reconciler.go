@@ -262,7 +262,7 @@ func (r *clusterReconciler) handleClusterBootstrapAgent(ctx context.Context, clu
 
 	if err := try(); err != nil {
 		_log.Infow("unable to create cluster bootstrap agent", "error", err)
-		err = errors.Wrap(err, "unable to create cluster boostrap agent")
+		err = errors.Wrap(err, "unable to create cluster bootstrap agent")
 		sErr := onFailure(err.Error())
 		if sErr != nil {
 			_log.Infow("unable to update status", "error", err)

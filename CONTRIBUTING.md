@@ -165,7 +165,7 @@ build(deps): update kratos sdk to v0.11.0
 ```
 feat: support SAML based IdP
 
-New support for SAML based IdP. More deatils about how to configure SAML IdP is availble at paralus.io/docs/saml
+New support for SAML based IdP. More details about how to configure SAML IdP is available at paralus.io/docs/saml
 
 Closes #111
 ```
