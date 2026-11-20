@@ -105,10 +105,10 @@ func newClusterCondition(conditionType infrav3.ClusterConditionType) func(status
 }
 
 // SetClusterCondition sets condition in cluster conditions
-var SetClusterCondition = func(c *infrav3.Cluster, condtition *infrav3.ClusterCondition) {
+var SetClusterCondition = func(c *infrav3.Cluster, condition *infrav3.ClusterCondition) {
 	for i, ec := range c.Spec.ClusterData.ClusterStatus.Conditions {
-		if ec.Type == condtition.Type {
-			c.Spec.ClusterData.ClusterStatus.Conditions[i] = condtition
+		if ec.Type == condition.Type {
+			c.Spec.ClusterData.ClusterStatus.Conditions[i] = condition
 			break
 		}
 	}

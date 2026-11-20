@@ -159,7 +159,7 @@ func (a *applier) Apply(ctx context.Context, obj ctrlclient.Object, opts ...Opti
 		return err
 	}
 
-	//refresh client before applying a unknow object
+	//refresh client before applying a unknown object
 	if !util.KnownObject(gvk) && a.dynamic {
 		c, err := client.New()
 		if err != nil {

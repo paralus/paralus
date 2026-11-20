@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	// ErrInvalidObject is retuned for invalid object
+	// ErrInvalidObject is returned for invalid object
 	ErrInvalidObject = errors.New("object does not support object interface")
 	json             = k8sapijson.CaseSensitiveJsonIterator()
 )

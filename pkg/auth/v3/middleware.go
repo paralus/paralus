@@ -80,7 +80,7 @@ func serveHTTP(opt Option,
 		}
 	}
 	// Auth is primarily done via grpc endpoints, this is only used
-	// for endoints which do not go through grpc As of now, it is just
+	// for endpoints which do not go through grpc As of now, it is just
 	// prompt.
 	var poResp dao.ProjectOrg
 

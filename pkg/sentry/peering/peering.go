@@ -64,8 +64,8 @@ func GetPeerCache(cache *ristretto.Cache, key interface{}) (string, bool) {
 			rand.Seed(time.Now().UnixNano())
 			min := 0
 			max := cnt - 1
-			indx := rand.Intn(max-min+1) + min
-			return cacheItems[indx].Relayip, found
+			index := rand.Intn(max-min+1) + min
+			return cacheItems[index].Relayip, found
 		}
 		return cacheItems[0].Relayip, found
 	}
@@ -250,7 +250,7 @@ func ClientSurveyRPC(ctx context.Context, stream sentryrpc.RelayPeerService_Rela
 
 	relayIP = ip()
 
-	//Send a empty clustersni meesage to init the channel
+	//Send a empty clustersni message to init the channel
 	msg := &sentryrpc.PeerSurveyResponse{
 		Relayuuid:  relayUUID,
 		Relayip:    relayIP,

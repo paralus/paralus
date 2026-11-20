@@ -112,7 +112,7 @@ func DecodePrivateKey(privKey []byte, f PasswordFunc) (crypto.PrivateKey, error)
 	case rsaKeyType:
 		return x509.ParsePKCS1PrivateKey(b)
 	default:
-		return nil, fmt.Errorf("type %s is not suported", p.Type)
+		return nil, fmt.Errorf("type %s is not supported", p.Type)
 	}
 
 }

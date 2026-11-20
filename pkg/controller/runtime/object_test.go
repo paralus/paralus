@@ -150,7 +150,7 @@ func TestStructuredPatch(t *testing.T) {
 			return
 		}
 	} else {
-		t.Error("exptected appsv1.Deployment got, ", reflect.TypeOf(ro))
+		t.Error("expected appsv1.Deployment got, ", reflect.TypeOf(ro))
 	}
 
 }
